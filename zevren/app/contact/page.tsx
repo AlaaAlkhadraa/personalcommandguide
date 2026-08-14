@@ -44,9 +44,7 @@ export default function ContactPage() {
             <div>
               <h2 className="text-lg font-semibold text-white">Office</h2>
               <address className="mt-4 text-sm not-italic leading-relaxed text-muted">
-                {SITE_CONFIG.address.street}
-                <br />
-                {SITE_CONFIG.address.postalCode} {SITE_CONFIG.address.city}
+                {SITE_CONFIG.address.city}
                 <br />
                 {SITE_CONFIG.address.country}
               </address>

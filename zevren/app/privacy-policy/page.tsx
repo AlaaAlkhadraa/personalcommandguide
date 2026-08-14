@@ -20,9 +20,8 @@ export default function PrivacyPolicyPage() {
             <p>Last updated: 14 August 2026</p>
 
             <p>
-              {SITE_CONFIG.legalName} (&ldquo;ZEVREN&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;), based at
+              {SITE_CONFIG.legalName} (&ldquo;ZEVREN&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;), based in
               {" "}
-              {SITE_CONFIG.address.street}, {SITE_CONFIG.address.postalCode}{" "}
               {SITE_CONFIG.address.city}, the Netherlands, is responsible for
               the processing of personal data as described in this privacy
               policy. We comply with the EU General Data Protection

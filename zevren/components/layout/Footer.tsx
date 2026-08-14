@@ -67,9 +67,7 @@ export function Footer() {
             {SITE_CONFIG.phoneDisplay}
           </a>
           <address className="text-sm not-italic leading-relaxed text-muted">
-            {SITE_CONFIG.address.street}
-            <br />
-            {SITE_CONFIG.address.postalCode} {SITE_CONFIG.address.city}
+            {SITE_CONFIG.address.city}
             <br />
             {SITE_CONFIG.address.country}
           </address>

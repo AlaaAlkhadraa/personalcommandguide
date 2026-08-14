@@ -18,8 +18,6 @@ export const SITE_CONFIG = {
   phone: "+31 43 123 4567",
   phoneDisplay: "043 123 4567",
   address: {
-    street: "Vrijthof 15",
-    postalCode: "6211 LD",
     city: "Maastricht",
     country: "Netherlands",
   },

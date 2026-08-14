@@ -64,8 +64,6 @@ const organizationJsonLd = {
   telephone: SITE_CONFIG.phone,
   address: {
     "@type": "PostalAddress",
-    streetAddress: SITE_CONFIG.address.street,
-    postalCode: SITE_CONFIG.address.postalCode,
     addressLocality: SITE_CONFIG.address.city,
     addressCountry: "NL",
   },
