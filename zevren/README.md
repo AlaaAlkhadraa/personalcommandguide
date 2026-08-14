@@ -191,10 +191,9 @@ pull request gets its own preview URL.
 - [ ] `npm audit` run and any critical vulnerabilities resolved
 - [ ] Resend (or whichever email service you choose) connected with its
       own, non-shared API key
-- [ ] The office phone number in `lib/constants.ts` is still a placeholder
-      — replace it with the real number (email, VAT and KvK numbers, the
-      LinkedIn URL, and the city are already the real ones; add a street
-      address there too if you want one on the site)
+- [ ] Contact details in `lib/constants.ts` (phone, email, VAT and KvK
+      numbers, LinkedIn URL, city) are all real — add a street address
+      there too if you want one shown on the site
 
 **Why does every page render dynamically (SSR) instead of statically?**
 The CSP uses a nonce generated per request by `middleware.ts`, so

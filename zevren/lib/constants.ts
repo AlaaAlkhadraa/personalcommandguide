@@ -15,8 +15,8 @@ export const SITE_CONFIG = {
     "ZEVREN builds websites and online stores for businesses in the Netherlands and across Europe. Fast, secure, and built to bring in customers — no templates, no filler.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.zevren.nl",
   email: "info@zevren.nl",
-  phone: "+31 43 123 4567",
-  phoneDisplay: "043 123 4567",
+  phone: "+31 6 30958710",
+  phoneDisplay: "06 30 95 87 10",
   address: {
     city: "Maastricht",
     country: "Netherlands",
