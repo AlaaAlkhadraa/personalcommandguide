@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   description: SITE_CONFIG.description,
   applicationName: SITE_CONFIG.name,
   keywords: [
-    "web design agency Amsterdam",
+    "web design agency Maastricht",
     "website development Netherlands",
     "custom website design",
     "Next.js developer Europe",

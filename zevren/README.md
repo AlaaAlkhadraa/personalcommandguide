@@ -1,6 +1,6 @@
 # ZEVREN — company website
 
-Website for ZEVREN, a web development studio based in Amsterdam. Built with
+Website for ZEVREN, a web development studio based in Maastricht. Built with
 Next.js 15 (App Router), TypeScript and Tailwind CSS.
 
 ## Contents

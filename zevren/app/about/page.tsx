@@ -7,7 +7,7 @@ import { buildMetadata } from "@/lib/seo";
 export const metadata = buildMetadata({
   title: "About",
   description:
-    "ZEVREN is a small web development studio based in Amsterdam. Read how we work and why we deliberately stay small.",
+    "ZEVREN is a small web development studio based in Maastricht. Read how we work and why we deliberately stay small.",
   path: "/about",
 });
 
@@ -50,7 +50,7 @@ export default function AboutPage() {
             </h2>
             <p className="leading-relaxed text-muted">
               We started out as two developers building freelance online
-              stores for local businesses in Amsterdam. What stood out: most
+              stores for local businesses in Maastricht. What stood out: most
               clients had already worked with an agency before, and hadn&apos;t
               left over the design — they left because the site was slow,
               hard to manage, or because nobody picked up the phone after

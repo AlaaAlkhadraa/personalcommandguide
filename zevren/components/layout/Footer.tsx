@@ -97,7 +97,7 @@ export function Footer() {
           <span>
             &copy; {year} {SITE_CONFIG.legalName}. All rights reserved.
           </span>
-          <span>Built in Amsterdam.</span>
+          <span>Built in Maastricht.</span>
         </div>
       </div>
     </footer>

@@ -7,7 +7,7 @@ export function Hero() {
       <div className="container-page grid items-center gap-16 py-20 lg:grid-cols-2 lg:py-28">
         <div className="flex animate-fade-up flex-col gap-6">
           <span className="w-fit rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-medium uppercase tracking-[0.2em] text-accent">
-            Web development from Amsterdam
+            Web development
           </span>
           <h1 className="text-4xl font-semibold leading-[1.1] text-white sm:text-5xl lg:text-6xl">
             Websites that sell,

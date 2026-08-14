@@ -109,7 +109,7 @@ export default function TermsPage() {
             <p>
               Dutch law applies to all agreements with ZEVREN. Disputes are
               submitted in the first instance to the competent court in the
-              Amsterdam district, unless mandatory law provides otherwise.
+              Limburg district, unless mandatory law provides otherwise.
             </p>
 
             <h2>Contact</h2>
