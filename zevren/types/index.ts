@@ -25,9 +25,11 @@ export interface PortfolioItem {
   name: string;
   category: string;
   summary: string;
+  challenge: string;
+  solution: string;
   result: string;
   year: string;
-  tags: string[];
+  features: string[];
 }
 
 export interface Testimonial {

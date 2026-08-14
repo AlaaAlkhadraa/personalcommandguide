@@ -132,106 +132,174 @@ export const SERVICES: Service[] = [
 
 export const PORTFOLIO_ITEMS: PortfolioItem[] = [
   {
-    slug: "noordkaap-makelaars",
-    name: "Noordkaap Makelaars",
-    category: "Real estate",
+    slug: "northgate-logistics",
+    name: "NorthGate Logistics",
+    category: "Logistics",
     summary:
-      "A property listing site with a live feed from their CRM, so new listings go live without any manual work.",
-    result: "43% more enquiries through the contact form within 3 months.",
+      "A booking and tracking portal for a Benelux freight forwarder, replacing a spreadsheet-and-email quote process.",
+    challenge:
+      "NorthGate handled every quote request by phone or email, which meant a full day's turnaround during busy periods and no way for clients to track a shipment once it left the depot.",
+    solution:
+      "We built a client portal with a live quote calculator tied into their transport management system, plus shipment tracking clients can check themselves — cutting response time and support calls at once.",
+    result: "Quote requests now processed in minutes instead of a full day.",
     year: "2025",
-    tags: ["Next.js", "CRM integration", "SEO"],
+    features: [
+      "Real-time shipment quote calculator",
+      "Client portal with order tracking",
+      "Multilingual support (NL/EN/DE)",
+      "Integration with their transport management system",
+      "Performance-tuned for low-bandwidth warehouse networks",
+    ],
   },
   {
-    slug: "havenlicht-koffie",
-    name: "Havenlicht Koffie",
-    category: "E-commerce",
+    slug: "van-dijk-accountancy",
+    name: "Van Dijk Accountancy",
+    category: "Accounting",
     summary:
-      "Online store for a coffee roastery in Rotterdam, with subscriptions and a stock system linked to their point of sale.",
-    result: "Load time down from 4.1s to 0.9s, conversion up 27%.",
+      "Website and secure client portal for a mid-sized accountancy firm, replacing email attachments with structured document exchange.",
+    challenge:
+      "Sensitive financial documents were going back and forth by email, which made both the firm and their clients uneasy and left no clear audit trail.",
+    solution:
+      "We built a secure portal with two-factor login where clients upload and receive documents directly, plus a booking form for consultations so the front desk isn't fielding every scheduling call.",
+    result: "85% of client document exchange now happens through the portal.",
     year: "2024",
-    tags: ["Online store", "Subscriptions", "Performance"],
+    features: [
+      "Secure client document portal",
+      "Two-factor authentication",
+      "Consultation booking form",
+      "GDPR-compliant data handling",
+      "SEO-optimised service pages",
+    ],
   },
   {
-    slug: "bureau-linden",
-    name: "Bureau Linden",
-    category: "Professional services",
+    slug: "blueline-garage",
+    name: "BlueLine Garage",
+    category: "Automotive",
     summary:
-      "Redesign of an accountancy firm's website, with a client portal for exchanging documents securely.",
-    result: "Portal now handles 90% of document exchange, no more email attachments.",
+      "A booking-first website for an independent garage, letting customers reserve a maintenance slot and get an instant price indication.",
+    challenge:
+      "Customers could only book by phone during opening hours, and BlueLine was losing appointments to competitors with online booking.",
+    solution:
+      "We built a booking flow that shows real garage availability and gives an instant price range per service, so customers can book a slot on a Sunday evening without picking up the phone.",
+    result: "Online bookings now account for 40% of all appointments.",
     year: "2024",
-    tags: ["Client portal", "Security", "UX"],
+    features: [
+      "Live appointment booking with calendar sync",
+      "Instant price indication by service type",
+      "Mobile-first design for on-the-go bookings",
+      "Automated confirmation & reminder emails",
+      "Google Business Profile integration",
+    ],
   },
   {
-    slug: "molenwerf-interieur",
-    name: "Molenwerf Interieur",
-    category: "E-commerce",
+    slug: "urban-bistro-maastricht",
+    name: "Urban Bistro Maastricht",
+    category: "Restaurant",
     summary:
-      "Online store for custom furniture with a configurator that lets customers choose fabric, colour and dimensions.",
-    result: "Average order value up €340 thanks to the configurator.",
+      "A menu-driven restaurant website with table reservations, built to load fast on mobile where most of their traffic comes from.",
+    challenge:
+      "Their old site was a single slow-loading page with a PDF menu, and reservations only came in by phone — a poor fit for a mostly mobile, often international audience.",
+    solution:
+      "We rebuilt the site around a fast, image-rich menu the kitchen can update themselves, with a reservation system that sends automatic reminders to cut down on no-shows.",
+    result: "Mobile load time down to 1.1s; no-shows dropped after adding reminders.",
     year: "2023",
-    tags: ["Configurator", "Online store", "UI design"],
+    features: [
+      "Table reservations with automated reminders",
+      "Seasonal menu management via CMS",
+      "Mobile-first, image-heavy design without the slowdown",
+      "Multilingual menu (NL/EN/FR)",
+      "Google Maps & opening hours integration",
+    ],
   },
   {
-    slug: "studio-verhoeven",
-    name: "Studio Verhoeven",
-    category: "Architecture",
+    slug: "delta-build-group",
+    name: "Delta Build Group",
+    category: "Construction",
     summary:
-      "Portfolio site for an architecture practice, built around large imagery without giving up load speed.",
-    result: "Bounce rate down 31% after the relaunch.",
+      "A project showcase and lead-generation site for a construction and renovation contractor, built to convert visitors researching a build.",
+    challenge:
+      "Delta had strong word-of-mouth but almost no online presence, and their few web leads were low quality — people who hadn't understood what the company actually does.",
+    solution:
+      "We built a site structured around their real services and project types, with a multi-step quote form that filters for serious enquiries before they land in the inbox.",
+    result: "Quote requests up 55% in the first quarter after launch.",
     year: "2023",
-    tags: ["Portfolio", "Image optimisation", "Design"],
+    features: [
+      "Project portfolio with before/after galleries",
+      "Multi-step quote request form",
+      "Service-area pages for local SEO",
+      "Downloadable brochures per service",
+      "Fast-loading galleries for large project photos",
+    ],
   },
   {
-    slug: "de-vries-advocaten",
-    name: "De Vries Advocaten",
-    category: "Legal",
+    slug: "vitacare-clinic",
+    name: "VitaCare Clinic",
+    category: "Healthcare",
     summary:
-      "New website with clear practice-area pages, so visitors land directly on the right lawyer.",
-    result: "Direct phone enquiries doubled compared to the old site.",
+      "A patient-facing website for a multi-practitioner health clinic, with online appointment booking and clear information per specialism.",
+    challenge:
+      "Patients had to call during narrow opening hours to book with a specific practitioner, and the phone lines were constantly busy.",
+    solution:
+      "We built online booking tied to each practitioner's real calendar, plus clear specialism pages so patients land on the right page instead of guessing over the phone.",
+    result: "Phone volume for scheduling dropped by a third within two months.",
     year: "2022",
-    tags: ["Content structure", "SEO", "Accessibility"],
+    features: [
+      "Online appointment booking per practitioner",
+      "Practitioner & specialism directory",
+      "Accessible design (WCAG-aware)",
+      "Multilingual patient information (NL/EN)",
+      "Secure online intake form",
+    ],
   },
 ];
 
 export const TESTIMONIALS: Testimonial[] = [
   {
-    name: "Rob Hendriksen",
+    name: "Mark Willemsen",
+    role: "Operations Manager",
+    company: "NorthGate Logistics",
+    quote:
+      "We used to quote by phone and email, which meant a full day's delay on busy weeks. ZEVREN built a portal tied into our own systems, and now a quote takes minutes. That's not a nice-to-have for us, that's the business.",
+    rating: 5,
+  },
+  {
+    name: "Sanne van Dijk",
     role: "Owner",
-    company: "Noordkaap Makelaars",
+    company: "Van Dijk Accountancy",
     quote:
-      "ZEVREN asked about our numbers in the first conversation, not our colour preferences. That built trust early on. The result simply works, and when something comes up they reply the same day.",
+      "Client documents used to sit in email threads, which never sat right with me. ZEVREN built a proper portal with two-factor login, and explained the security choices in language I could actually evaluate.",
     rating: 5,
   },
   {
-    name: "Merel Bakker",
-    role: "Marketing",
-    company: "Havenlicht Koffie",
+    name: "Kevin de Boer",
+    role: "Owner",
+    company: "BlueLine Garage",
     quote:
-      "We'd already been through two agencies that mostly delivered nice pictures. ZEVREN delivered a store that actually loads faster and sells more, with explanations I could follow without an IT background.",
+      "Online bookings are now almost half our appointments. ZEVREN asked how the garage actually runs before designing anything, which is why the booking flow matches how we work instead of the other way round.",
     rating: 5,
   },
   {
-    name: "Thomas van Linden",
-    role: "Partner",
-    company: "Bureau Linden",
+    name: "Lotte Peters",
+    role: "Owner",
+    company: "Urban Bistro Maastricht",
     quote:
-      "The client portal had to meet strict security requirements. They took that seriously without turning it into a massive project. Straightforward, pleasant collaboration.",
+      "Our old site took forever to load on a phone, which is how most guests find us. The new one is fast and I update the menu myself. No-shows dropped once the reminder emails went in.",
     rating: 5,
   },
   {
-    name: "Anouk Verhoeven",
-    role: "Architect",
-    company: "Studio Verhoeven",
+    name: "Sander Kok",
+    role: "Director",
+    company: "Delta Build Group",
     quote:
-      "I wanted a site where our work takes centre stage without getting slow from all the imagery. That's exactly how they solved it. Maintenance has been smooth ever since.",
+      "We had plenty of word-of-mouth but a website that did nothing for us. ZEVREN built something that actually filters enquiries, so the calls we get now are from people who know what we do.",
     rating: 5,
   },
   {
-    name: "Daan de Vries",
-    role: "Managing partner",
-    company: "De Vries Advocaten",
+    name: "Fenna de Groot",
+    role: "Practice Manager",
+    company: "VitaCare Clinic",
     quote:
-      "Concrete, down-to-earth, and they stick to the schedule. No surprises on the invoice afterwards. For a firm like ours, that matters just as much as the end result.",
+      "Our phone lines were constantly busy with scheduling calls. Online booking tied to each practitioner's calendar solved that almost immediately, and patients tell us it's easier too.",
     rating: 5,
   },
 ];

@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { SITE_CONFIG } from "@/lib/constants";
+import { PORTFOLIO_ITEMS, SITE_CONFIG } from "@/lib/constants";
 
 const routes = [
   { path: "/", priority: 1, changeFrequency: "weekly" as const },
@@ -15,10 +15,19 @@ const routes = [
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();
 
-  return routes.map((route) => ({
+  const staticRoutes = routes.map((route) => ({
     url: `${SITE_CONFIG.url}${route.path}`,
     lastModified,
     changeFrequency: route.changeFrequency,
     priority: route.priority,
   }));
+
+  const portfolioRoutes = PORTFOLIO_ITEMS.map((item) => ({
+    url: `${SITE_CONFIG.url}/portfolio/${item.slug}`,
+    lastModified,
+    changeFrequency: "monthly" as const,
+    priority: 0.6,
+  }));
+
+  return [...staticRoutes, ...portfolioRoutes];
 }
