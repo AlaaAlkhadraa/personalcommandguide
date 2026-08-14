@@ -8,7 +8,7 @@ import { buildMetadata } from "@/lib/seo";
 export const metadata = buildMetadata({
   title: "Reviews",
   description:
-    "Lees wat klanten van ZEVREN vinden van de samenwerking, communicatie en resultaten van hun website of webshop.",
+    "Read what ZEVREN clients think about the collaboration, communication and results of their website or online store.",
   path: "/reviews",
 });
 
@@ -21,8 +21,8 @@ export default function ReviewsPage() {
     <>
       <PageHero
         eyebrow="Reviews"
-        title="Wat klanten van de samenwerking vinden"
-        description={`Gemiddelde score van ${average} op basis van ${TESTIMONIALS.length} beoordelingen van klanten die we recent hebben opgeleverd.`}
+        title="What clients say about working with us"
+        description={`An average rating of ${average} based on ${TESTIMONIALS.length} reviews from clients we've recently delivered for.`}
       />
       <section className="py-20">
         <Container>

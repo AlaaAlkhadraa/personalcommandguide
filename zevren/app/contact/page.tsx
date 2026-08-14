@@ -7,7 +7,7 @@ import { buildMetadata } from "@/lib/seo";
 export const metadata = buildMetadata({
   title: "Contact",
   description:
-    "Neem contact op met ZEVREN voor een website of webshop. Plan een gesprek of stuur een bericht via het formulier.",
+    "Get in touch with ZEVREN about a website or online store. Book a call or send a message through the form.",
   path: "/contact",
 });
 
@@ -16,8 +16,8 @@ export default function ContactPage() {
     <>
       <PageHero
         eyebrow="Contact"
-        title="Vertel ons over je project"
-        description="Vul het formulier in of neem direct contact op. We reageren doorgaans binnen één werkdag."
+        title="Tell us about your project"
+        description="Fill in the form or reach out directly. We typically reply within one business day."
       />
       <section className="py-20">
         <Container className="grid gap-16 lg:grid-cols-[1fr_1.3fr]">
@@ -42,7 +42,7 @@ export default function ContactPage() {
               </div>
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-white">Kantoor</h2>
+              <h2 className="text-lg font-semibold text-white">Office</h2>
               <address className="mt-4 text-sm not-italic leading-relaxed text-muted">
                 {SITE_CONFIG.address.street}
                 <br />
@@ -53,12 +53,12 @@ export default function ContactPage() {
             </div>
             <div>
               <h2 className="text-lg font-semibold text-white">
-                Wat je kunt verwachten
+                What to expect
               </h2>
               <ul className="mt-4 flex flex-col gap-2 text-sm text-muted">
-                <li>Reactie binnen één werkdag</li>
-                <li>Een kort, vrijblijvend kennismakingsgesprek</li>
-                <li>Een vast voorstel met prijs en planning</li>
+                <li>A reply within one business day</li>
+                <li>A short, no-obligation introductory call</li>
+                <li>A fixed proposal with price and timeline</li>
               </ul>
             </div>
           </div>

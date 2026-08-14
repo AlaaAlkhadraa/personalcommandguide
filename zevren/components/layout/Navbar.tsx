@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NAV_LINKS, SITE_CONFIG } from "@/lib/constants";
@@ -47,15 +48,22 @@ export function Navbar() {
       }`}
     >
       <div className="container-page flex h-20 items-center justify-between">
-        <Link
-          href="/"
-          className="font-logo text-xl font-bold tracking-wide text-white"
-        >
-          ZEVREN
+        <Link href="/" className="flex items-center gap-2.5">
+          <Image
+            src="/logo-mark.png"
+            alt=""
+            width={32}
+            height={29}
+            priority
+            className="h-8 w-auto"
+          />
+          <span className="font-logo text-xl font-bold tracking-wide text-white">
+            ZEVREN
+          </span>
         </Link>
 
         <nav
-          aria-label="Hoofdnavigatie"
+          aria-label="Main navigation"
           className="hidden items-center gap-8 lg:flex"
         >
           {NAV_LINKS.map((link) => {
@@ -78,7 +86,7 @@ export function Navbar() {
 
         <div className="hidden lg:block">
           <Button href="/contact" className="text-sm">
-            Plan een gesprek
+            Book a call
           </Button>
         </div>
 
@@ -87,7 +95,7 @@ export function Navbar() {
           onClick={() => setIsOpen((prev) => !prev)}
           aria-expanded={isOpen}
           aria-controls="mobile-menu"
-          aria-label={isOpen ? "Sluit menu" : "Open menu"}
+          aria-label={isOpen ? "Close menu" : "Open menu"}
           className="flex h-10 w-10 items-center justify-center rounded-lg text-white lg:hidden"
         >
           <span className="relative flex h-4 w-6 flex-col justify-between">
@@ -118,7 +126,7 @@ export function Navbar() {
       >
         <div className="overflow-hidden">
           <nav
-            aria-label="Mobiele navigatie"
+            aria-label="Mobile navigation"
             className="container-page flex flex-col gap-1 py-4"
           >
             {NAV_LINKS.map((link) => (
@@ -131,12 +139,12 @@ export function Navbar() {
               </Link>
             ))}
             <div className="mt-2 flex flex-col gap-3 py-2">
-              <Button href="/contact">Plan een gesprek</Button>
+              <Button href="/contact">Book a call</Button>
               <a
                 href={`tel:${SITE_CONFIG.phone}`}
                 className="text-center text-sm text-muted hover:text-white"
               >
-                of bel {SITE_CONFIG.phoneDisplay}
+                or call {SITE_CONFIG.phoneDisplay}
               </a>
             </div>
           </nav>

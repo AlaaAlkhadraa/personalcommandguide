@@ -5,9 +5,9 @@ import { Button } from "@/components/ui/Button";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata = buildMetadata({
-  title: "Over ons",
+  title: "About",
   description:
-    "ZEVREN is een klein webdevelopment bureau uit Amsterdam. Lees hoe we werken en waarom we bewust klein blijven.",
+    "ZEVREN is a small web development studio based in Amsterdam. Read how we work and why we deliberately stay small.",
   path: "/about",
 });
 
@@ -15,22 +15,22 @@ const VALUES = [
   {
     title: "Direct contact",
     description:
-      "Je schakelt met de mensen die ook daadwerkelijk aan je project werken, niet met een accountmanager die alles doorzet.",
+      "You talk to the people actually working on your project, not an account manager relaying messages back and forth.",
   },
   {
-    title: "Eerlijk advies",
+    title: "Honest advice",
     description:
-      "Als een idee niet gaat werken voor je doelgroep, zeggen we dat liever van tevoren dan dat we het stilzwijgend bouwen.",
+      "If an idea isn't going to work for your audience, we'd rather say so upfront than quietly build it anyway.",
   },
   {
-    title: "Vaste prijs, geen verrassingen",
+    title: "Fixed price, no surprises",
     description:
-      "We werken met een vast voorstel per project. Wijzigt de scope, dan bespreken we dat eerst — nooit een onverwachte regel op de factuur.",
+      "We work with a fixed proposal per project. If the scope changes, we discuss it first — never an unexpected line on the invoice.",
   },
   {
-    title: "Onderhoud hoort erbij",
+    title: "Maintenance is part of the deal",
     description:
-      "Een website die je na oplevering nooit meer bijwerkt, is over een jaar een risico. We denken daar vooraf al over na.",
+      "A website you never update after launch is a liability a year later. We think about that before we even start building.",
   },
 ];
 
@@ -38,40 +38,41 @@ export default function AboutPage() {
   return (
     <>
       <PageHero
-        eyebrow="Over ons"
-        title="Een klein bureau, met opzet"
-        description="ZEVREN is opgericht in 2021 vanuit een simpel idee: veel bureaus verkopen mooie ontwerpen, maar leveren trage, moeilijk te onderhouden websites op. Wij wilden het andersom doen."
+        eyebrow="About"
+        title="A small studio, on purpose"
+        description="ZEVREN was founded in 2021 on a simple idea: a lot of agencies sell beautiful designs but deliver slow, hard-to-maintain websites. We wanted to do it the other way round."
       />
       <section className="py-20">
         <Container className="grid gap-16 lg:grid-cols-[1.1fr_1fr]">
           <div className="flex flex-col gap-6">
             <h2 className="text-2xl font-semibold text-white sm:text-3xl">
-              Ons verhaal
+              Our story
             </h2>
             <p className="leading-relaxed text-muted">
-              We zijn begonnen als twee developers die freelance webshops
-              bouwden voor lokale ondernemers in Amsterdam. Wat opviel: de
-              meeste klanten hadden al een bureau gehad, en waren daar niet om
-              het ontwerp weggegaan, maar omdat de site traag was, moeilijk te
-              beheren, of omdat er na oplevering niemand meer opnam.
+              We started out as two developers building freelance online
+              stores for local businesses in Amsterdam. What stood out: most
+              clients had already worked with an agency before, and hadn&apos;t
+              left over the design — they left because the site was slow,
+              hard to manage, or because nobody picked up the phone after
+              launch.
             </p>
             <p className="leading-relaxed text-muted">
-              Dat is de reden dat ZEVREN bestaat uit een klein, vast team in
-              plaats van een groeiend bureau met wisselende freelancers. We
-              nemen bewust een beperkt aantal projecten tegelijk aan, zodat
-              elk project de aandacht krijgt die het verdient — van het eerste
-              gesprek tot lang na livegang.
+              That&apos;s why ZEVREN is a small, fixed team rather than a growing
+              agency with rotating freelancers. We deliberately take on a
+              limited number of projects at a time, so every project gets the
+              attention it deserves — from the first conversation to long
+              after launch.
             </p>
             <p className="leading-relaxed text-muted">
-              Inmiddels werken we met ondernemers door heel Nederland en
-              daarbuiten, van eenmanszaken tot kantoren met twintig man
-              personeel. De aanpak is steeds hetzelfde: eerst begrijpen wat je
-              bezoeker moet doen, dan pas ontwerpen en bouwen.
+              Today we work with businesses across the Netherlands and
+              beyond, from sole traders to firms with twenty staff. The
+              approach stays the same: understand what your visitor needs to
+              do first, then design and build.
             </p>
           </div>
           <div className="flex flex-col gap-4">
             <h2 className="text-2xl font-semibold text-white sm:text-3xl">
-              Hoe we werken
+              How we work
             </h2>
             <div className="grid gap-4">
               {VALUES.map((value) => (
@@ -91,13 +92,13 @@ export default function AboutPage() {
       <section className="border-t border-white/5 bg-surface/30 py-20">
         <Container className="flex flex-col items-center gap-6 text-center">
           <h2 className="max-w-xl text-3xl font-semibold text-white">
-            Benieuwd of we bij jouw project passen?
+            Wondering if we&apos;re a fit for your project?
           </h2>
           <p className="max-w-lg text-muted">
-            Plan een kort gesprek. Geen verplichtingen, gewoon een eerlijk
-            beeld van wat mogelijk is.
+            Book a short call. No commitment, just an honest picture of
+            what&apos;s possible.
           </p>
-          <Button href="/contact">Neem contact op</Button>
+          <Button href="/contact">Get in touch</Button>
         </Container>
       </section>
     </>

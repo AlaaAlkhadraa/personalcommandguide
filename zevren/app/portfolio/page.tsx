@@ -7,7 +7,7 @@ import { buildMetadata } from "@/lib/seo";
 export const metadata = buildMetadata({
   title: "Portfolio",
   description:
-    "Een overzicht van websites en webshops die ZEVREN heeft gebouwd voor ondernemers in Nederland, met de resultaten die ze hebben opgeleverd.",
+    "An overview of websites and online stores ZEVREN has built for businesses in the Netherlands, with the results they delivered.",
   path: "/portfolio",
 });
 
@@ -16,8 +16,8 @@ export default function PortfolioPage() {
     <>
       <PageHero
         eyebrow="Portfolio"
-        title="Projecten waar we de cijfers bij durven te noemen"
-        description="Geen portfolio vol mooie plaatjes zonder context. Bij elk project laten we zien wat het daadwerkelijk heeft opgeleverd."
+        title="Projects where we back up the numbers"
+        description="No portfolio full of pretty pictures without context. For every project we show what it actually delivered."
       />
       <section className="py-20">
         <Container>
@@ -64,9 +64,9 @@ export default function PortfolioPage() {
       <section className="border-t border-white/5 bg-surface/30 py-20">
         <Container className="flex flex-col items-center gap-6 text-center">
           <h2 className="max-w-xl text-3xl font-semibold text-white">
-            Jouw project kan de volgende zijn
+            Your project could be next
           </h2>
-          <Button href="/contact">Vraag een offerte aan</Button>
+          <Button href="/contact">Request a quote</Button>
         </Container>
       </section>
     </>

@@ -7,11 +7,11 @@ import type { ContactFormValues } from "@/types";
 type Status = "idle" | "loading" | "success" | "error";
 
 const BUDGET_OPTIONS = [
-  { value: "", label: "Maak een keuze (optioneel)" },
-  { value: "onder-5k", label: "Onder €5.000" },
-  { value: "5k-10k", label: "€5.000 – €10.000" },
-  { value: "10k-25k", label: "€10.000 – €25.000" },
-  { value: "boven-25k", label: "Boven €25.000" },
+  { value: "", label: "Select an option (optional)" },
+  { value: "under-5k", label: "Under €5,000" },
+  { value: "5k-10k", label: "€5,000 – €10,000" },
+  { value: "10k-25k", label: "€10,000 – €25,000" },
+  { value: "over-25k", label: "Over €25,000" },
 ];
 
 export function ContactForm() {
@@ -49,7 +49,7 @@ export function ContactForm() {
           setErrors(data.fieldErrors);
         } else {
           setServerError(
-            data?.message ?? "Er ging iets mis. Probeer het later opnieuw."
+            data?.message ?? "Something went wrong. Please try again later."
           );
         }
         setStatus("error");
@@ -60,7 +60,7 @@ export function ContactForm() {
       event.currentTarget.reset();
     } catch {
       setServerError(
-        "Er kon geen verbinding worden gemaakt. Controleer je internetverbinding en probeer het opnieuw."
+        "Couldn't connect. Check your internet connection and try again."
       );
       setStatus("error");
     }
@@ -72,9 +72,9 @@ export function ContactForm() {
         role="status"
         className="flex flex-col gap-3 rounded-2xl border border-primary/30 bg-primary/10 p-8 text-center"
       >
-        <h2 className="text-xl font-semibold text-white">Bericht verstuurd</h2>
+        <h2 className="text-xl font-semibold text-white">Message sent</h2>
         <p className="text-sm text-muted">
-          Bedankt voor je bericht. We reageren doorgaans binnen één werkdag.
+          Thanks for reaching out. We typically reply within one business day.
         </p>
       </div>
     );
@@ -99,7 +99,7 @@ export function ContactForm() {
       <div className="grid gap-6 sm:grid-cols-2">
         <div className="flex flex-col gap-2">
           <label htmlFor="name" className="text-sm font-medium text-white">
-            Naam <span aria-hidden="true">*</span>
+            Name <span aria-hidden="true">*</span>
           </label>
           <input
             id="name"
@@ -110,7 +110,7 @@ export function ContactForm() {
             aria-invalid={Boolean(errors.name)}
             aria-describedby={errors.name ? "name-error" : undefined}
             className="rounded-lg border border-white/15 bg-surface px-4 py-3 text-sm text-white placeholder:text-muted/60 focus:border-accent"
-            placeholder="Jouw naam"
+            placeholder="Your name"
           />
           {errors.name && (
             <p id="name-error" className="text-sm text-red-400">
@@ -121,7 +121,7 @@ export function ContactForm() {
 
         <div className="flex flex-col gap-2">
           <label htmlFor="email" className="text-sm font-medium text-white">
-            E-mailadres <span aria-hidden="true">*</span>
+            Email address <span aria-hidden="true">*</span>
           </label>
           <input
             id="email"
@@ -132,7 +132,7 @@ export function ContactForm() {
             aria-invalid={Boolean(errors.email)}
             aria-describedby={errors.email ? "email-error" : undefined}
             className="rounded-lg border border-white/15 bg-surface px-4 py-3 text-sm text-white placeholder:text-muted/60 focus:border-accent"
-            placeholder="jij@bedrijf.nl"
+            placeholder="you@company.com"
           />
           {errors.email && (
             <p id="email-error" className="text-sm text-red-400">
@@ -143,7 +143,7 @@ export function ContactForm() {
 
         <div className="flex flex-col gap-2">
           <label htmlFor="company" className="text-sm font-medium text-white">
-            Bedrijfsnaam
+            Company name
           </label>
           <input
             id="company"
@@ -151,13 +151,13 @@ export function ContactForm() {
             type="text"
             autoComplete="organization"
             className="rounded-lg border border-white/15 bg-surface px-4 py-3 text-sm text-white placeholder:text-muted/60 focus:border-accent"
-            placeholder="Optioneel"
+            placeholder="Optional"
           />
         </div>
 
         <div className="flex flex-col gap-2">
           <label htmlFor="budget" className="text-sm font-medium text-white">
-            Indicatie budget
+            Estimated budget
           </label>
           <select
             id="budget"
@@ -176,7 +176,7 @@ export function ContactForm() {
 
       <div className="flex flex-col gap-2">
         <label htmlFor="message" className="text-sm font-medium text-white">
-          Vertel iets over je project <span aria-hidden="true">*</span>
+          Tell us about your project <span aria-hidden="true">*</span>
         </label>
         <textarea
           id="message"
@@ -186,7 +186,7 @@ export function ContactForm() {
           aria-invalid={Boolean(errors.message)}
           aria-describedby={errors.message ? "message-error" : undefined}
           className="resize-none rounded-lg border border-white/15 bg-surface px-4 py-3 text-sm text-white placeholder:text-muted/60 focus:border-accent"
-          placeholder="Waar loop je tegenaan, en wat wil je bereiken?"
+          placeholder="What are you running into, and what do you want to achieve?"
         />
         {errors.message && (
           <p id="message-error" className="text-sm text-red-400">
@@ -206,13 +206,13 @@ export function ContactForm() {
         disabled={status === "loading"}
         className="w-full sm:w-fit"
       >
-        {status === "loading" ? "Bezig met versturen…" : "Verstuur bericht"}
+        {status === "loading" ? "Sending…" : "Send message"}
       </SubmitButton>
 
       <p className="text-xs text-muted">
-        Door dit formulier te versturen ga je akkoord met ons{" "}
+        By submitting this form you agree to our{" "}
         <a href="/privacy-policy" className="underline hover:text-white">
-          privacybeleid
+          privacy policy
         </a>
         .
       </p>

@@ -9,16 +9,16 @@ export default function NotFound() {
           404
         </span>
         <h1 className="text-3xl font-semibold text-white sm:text-4xl">
-          Deze pagina bestaat niet (meer)
+          This page doesn&apos;t exist (anymore)
         </h1>
         <p className="max-w-md text-muted">
-          De pagina die je zoekt is verplaatst of bestaat niet. Ga terug naar
-          de homepage of bekijk onze diensten.
+          The page you&apos;re looking for has moved or no longer exists. Go
+          back to the homepage or take a look at our services.
         </p>
         <div className="flex flex-col gap-4 sm:flex-row">
-          <Button href="/">Naar de homepage</Button>
+          <Button href="/">Back to homepage</Button>
           <Button href="/contact" variant="secondary">
-            Neem contact op
+            Get in touch
           </Button>
         </div>
       </Container>

@@ -10,7 +10,7 @@ export function Testimonials() {
       <Container className="flex flex-col gap-12">
         <SectionHeading
           eyebrow="Reviews"
-          title="Wat klanten zeggen"
+          title="What clients say"
           align="center"
         />
         <div className="grid gap-6 lg:grid-cols-3">

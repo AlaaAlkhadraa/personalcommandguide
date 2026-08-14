@@ -35,20 +35,16 @@ export const metadata: Metadata = {
   description: SITE_CONFIG.description,
   applicationName: SITE_CONFIG.name,
   keywords: [
-    "website laten maken",
-    "webshop laten maken",
-    "webdesign bureau Amsterdam",
-    "Next.js ontwikkelaar Nederland",
-    "maatwerk website",
+    "web design agency Amsterdam",
+    "website development Netherlands",
+    "custom website design",
+    "Next.js developer Europe",
+    "ecommerce website development",
   ],
   authors: [{ name: SITE_CONFIG.name, url: SITE_CONFIG.url }],
-  icons: {
-    icon: "/favicon.svg",
-    shortcut: "/favicon.svg",
-  },
   openGraph: {
     type: "website",
-    locale: "nl_NL",
+    locale: "en_GB",
     siteName: SITE_CONFIG.name,
     url: SITE_CONFIG.url,
   },
@@ -63,7 +59,7 @@ const organizationJsonLd = {
   name: SITE_CONFIG.name,
   legalName: SITE_CONFIG.legalName,
   url: SITE_CONFIG.url,
-  logo: `${SITE_CONFIG.url}/favicon.svg`,
+  logo: `${SITE_CONFIG.url}/logo-mark.png`,
   email: SITE_CONFIG.email,
   telephone: SITE_CONFIG.phone,
   address: {
@@ -73,7 +69,7 @@ const organizationJsonLd = {
     addressLocality: SITE_CONFIG.address.city,
     addressCountry: "NL",
   },
-  sameAs: [SITE_CONFIG.social.linkedin, SITE_CONFIG.social.instagram],
+  sameAs: [SITE_CONFIG.social.linkedin],
 };
 
 const websiteJsonLd = {
@@ -81,7 +77,7 @@ const websiteJsonLd = {
   "@type": "WebSite",
   name: SITE_CONFIG.name,
   url: SITE_CONFIG.url,
-  inLanguage: "nl-NL",
+  inLanguage: "en",
 };
 
 export default async function RootLayout({
@@ -90,7 +86,7 @@ export default async function RootLayout({
   const nonce = (await headers()).get("x-nonce") ?? undefined;
 
   return (
-    <html lang="nl" className={`${inter.variable} ${spaceGrotesk.variable} ${orbitron.variable}`}>
+    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable} ${orbitron.variable}`}>
       <body className="flex min-h-screen flex-col">
         <JsonLd data={organizationJsonLd} nonce={nonce} />
         <JsonLd data={websiteJsonLd} nonce={nonce} />
@@ -98,7 +94,7 @@ export default async function RootLayout({
           href="#main-content"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-white"
         >
-          Ga naar hoofdinhoud
+          Skip to main content
         </a>
         <Navbar />
         <main id="main-content" className="flex-1">

@@ -3,7 +3,7 @@ export function StarRating({ rating }: { rating: number }) {
     <div
       className="flex gap-1 text-accent"
       role="img"
-      aria-label={`${rating} van de 5 sterren`}
+      aria-label={`${rating} out of 5 stars`}
     >
       {Array.from({ length: 5 }).map((_, i) => (
         <svg

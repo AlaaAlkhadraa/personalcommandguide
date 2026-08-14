@@ -13,11 +13,11 @@ export function PortfolioPreview() {
         <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
           <SectionHeading
             eyebrow="Portfolio"
-            title="Recent opgeleverd"
-            description="Een paar projecten waar we trots op zijn — en waarvan we de resultaten kunnen onderbouwen."
+            title="Recently delivered"
+            description="A few projects we're proud of — and whose results we can back up."
           />
           <Button href="/portfolio" variant="secondary" className="shrink-0">
-            Alle projecten
+            All projects
           </Button>
         </div>
         <div className="grid gap-6 lg:grid-cols-3">

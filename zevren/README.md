@@ -1,104 +1,107 @@
-# ZEVREN — bedrijfswebsite
+# ZEVREN — company website
 
-Website voor ZEVREN, een webdevelopment bureau uit Amsterdam. Gebouwd met
-Next.js 15 (App Router), TypeScript en Tailwind CSS.
+Website for ZEVREN, a web development studio based in Amsterdam. Built with
+Next.js 15 (App Router), TypeScript and Tailwind CSS.
 
-## Inhoud
+## Contents
 
 - [Stack](#stack)
-- [Projectstructuur](#projectstructuur)
-- [Lokaal opzetten](#lokaal-opzetten)
-- [Contactformulier](#contactformulier)
+- [Project structure](#project-structure)
+- [Local setup](#local-setup)
+- [Contact form](#contact-form)
 - [GitHub](#github)
-- [Deployen naar Vercel](#deployen-naar-vercel)
-- [Domein koppelen (zevren.nl)](#domein-koppelen-zevrennl)
-- [Beveiligingschecklist vóór livegang](#beveiligingschecklist-vóór-livegang)
-- [Onderhoudschecklist](#onderhoudschecklist)
+- [Deploying to Vercel](#deploying-to-vercel)
+- [Connecting the domain (zevren.nl)](#connecting-the-domain-zevrennl)
+- [Security checklist before launch](#security-checklist-before-launch)
+- [Maintenance checklist](#maintenance-checklist)
 
-## Beeldmateriaal
+## Imagery
 
-Er zit bewust geen stockfotografie in dit project — de laptop/mobiel-mockups
-op de homepage (`components/home/DeviceMockups.tsx`) zijn met CSS getekend,
-net als de portfolio-kaarten. Dat is beter voor laadtijd dan placeholder-
-foto's, en voorkomt dat de site er sjabloonachtig uitziet met generieke
-stockbeelden. Zodra er echte productfoto's, teamfoto's of klantlogo's zijn,
-voeg je die toe met `next/image` (bijvoorbeeld in `PortfolioPreview.tsx` en
-`about/page.tsx`) zodat ze automatisch worden geoptimaliseerd naar WebP/AVIF.
+There's deliberately no stock photography in this project — the laptop/
+mobile mockups on the homepage (`components/home/DeviceMockups.tsx`) are
+drawn with CSS, as are the portfolio cards. That's better for load time
+than placeholder photos, and keeps the site from looking templated with
+generic stock imagery. The brand mark in the navbar and footer
+(`public/logo-mark.png`) is your uploaded logo, cropped and processed to a
+transparent PNG. Once there are real product photos, team photos or client
+logos, add them with `next/image` (e.g. in `PortfolioPreview.tsx` and
+`about/page.tsx`) so they get optimised to WebP/AVIF automatically.
 
 ## Stack
 
 - **Next.js 15** — App Router, React Server Components
 - **TypeScript** — strict mode
-- **Tailwind CSS** — met een eigen design-token set (navy/blue palette)
-- **Zod** — validatie van het contactformulier
-- **next/font** — Orbitron (logo), Space Grotesk (koppen), Inter (body)
+- **Tailwind CSS** — with a custom design token set (navy/blue palette)
+- **Zod** — contact form validation
+- **next/font** — Orbitron (logo), Space Grotesk (headings), Inter (body)
 
-## Projectstructuur
+## Project structure
 
 ```
-app/                  Routes (App Router), elke map = een pagina
-  api/contact/         Route handler voor het contactformulier
+app/                  Routes (App Router), each folder = a page
+  api/contact/         Route handler for the contact form
   services/ portfolio/ reviews/ about/ contact/
   privacy-policy/ terms-and-conditions/
   layout.tsx           Root layout, fonts, metadata, structured data
   sitemap.ts robots.ts opengraph-image.tsx twitter-image.tsx
+  icon.png apple-icon.png  Favicon / app icon (from your logo)
 components/
   layout/               Navbar, Footer
-  home/                 Secties van de homepage (Hero, FAQ, Process, ...)
+  home/                 Homepage sections (Hero, FAQ, Process, ...)
   contact/              ContactForm
-  ui/                   Herbruikbare primitives (Button, Card, Icon, ...)
+  ui/                   Reusable primitives (Button, Card, Icon, ...)
   seo/                  JsonLd helper
 lib/
-  constants.ts          Alle site-content (diensten, portfolio, testimonials, FAQ)
-  seo.ts                Metadata-helper per pagina
-  validations/contact.ts Zod-schema voor het contactformulier
-types/                 Gedeelde TypeScript types
-public/                Statische bestanden (favicon)
+  constants.ts          All site content (services, portfolio, testimonials, FAQ)
+  seo.ts                Per-page metadata helper
+  validations/contact.ts Zod schema for the contact form
+types/                 Shared TypeScript types
+public/                Static files (logo-mark.png)
 ```
 
-Content aanpassen (teksten, diensten, portfolio, testimonials, FAQ) doe je in
-`lib/constants.ts` — dat is de enige plek waar dit soort inhoud staat.
+Edit content (copy, services, portfolio, testimonials, FAQ) in
+`lib/constants.ts` — that's the single place this kind of content lives.
 
-## Lokaal opzetten
+## Local setup
 
-Vereisten: Node.js 18.18 of hoger (Node 20+ aanbevolen).
+Requirements: Node.js 18.18 or later (Node 20+ recommended).
 
 ```bash
-# Dependencies installeren
+# Install dependencies
 npm install
 
-# Development server starten
+# Start the development server
 npm run dev
 ```
 
-Open http://localhost:3000. Wijzigingen worden automatisch herladen.
+Open http://localhost:3000. Changes reload automatically.
 
-Overige scripts:
+Other scripts:
 
 ```bash
-npm run build       # Productie-build
-npm run start       # Productie-server (na build)
+npm run build       # Production build
+npm run start       # Production server (after build)
 npm run lint        # ESLint
-npm run typecheck   # TypeScript, zonder output te schrijven
+npm run typecheck   # TypeScript, without emitting output
 ```
 
-Kopieer `.env.example` naar `.env.local` als je de site-URL wilt overschrijven
-of de Resend-integratie gaat toevoegen (zie hieronder). Voor lokaal draaien is
-dit niet verplicht.
+Copy `.env.example` to `.env.local` if you want to override the site URL or
+wire up the Resend integration (see below). Neither is required to run
+locally.
 
-## Contactformulier
+## Contact form
 
-Het formulier (`components/contact/ContactForm.tsx`) post naar
-`app/api/contact/route.ts`. Die route:
+The form (`components/contact/ContactForm.tsx`) posts to
+`app/api/contact/route.ts`. That route:
 
-1. Valideert de invoer met Zod (`lib/validations/contact.ts`).
-2. Controleert een verborgen honeypot-veld tegen spam.
-3. Past een eenvoudige, in-memory rate limit toe per IP-adres.
-4. Accepteert en logt de aanvraag server-side.
+1. Validates input with Zod (`lib/validations/contact.ts`).
+2. Checks a hidden honeypot field against spam.
+3. Applies a simple in-memory rate limit per IP address.
+4. Accepts and logs the submission server-side.
 
-**E-mailverzending is nog niet aangesloten.** Er staat een duidelijke `TODO`
-in `app/api/contact/route.ts` met een kant-en-klaar voorbeeld om
-[Resend](https://resend.com) aan te sluiten. Kort samengevat:
+**Email delivery isn't wired up yet.** There's a clear `TODO` in
+`app/api/contact/route.ts` with a ready-to-use example for connecting
+[Resend](https://resend.com). In short:
 
 ```bash
 npm install resend
@@ -113,104 +116,105 @@ await resend.emails.send({
   from: "ZEVREN website <noreply@zevren.nl>",
   to: process.env.CONTACT_INBOX_EMAIL!,
   replyTo: email,
-  subject: `Nieuwe aanvraag van ${name}`,
+  subject: `New enquiry from ${name}`,
   text: `...`,
 });
 ```
 
-Zet daarna `RESEND_API_KEY` en `CONTACT_INBOX_EMAIL` in je environment
-variables (lokaal in `.env.local`, in productie in Vercel).
+Then set `RESEND_API_KEY` and `CONTACT_INBOX_EMAIL` in your environment
+variables (locally in `.env.local`, in production in Vercel).
 
 ## GitHub
 
-Als je met een nieuwe repository begint:
+If you're starting a new repository:
 
 ```bash
 git init
 git add .
 git commit -m "Initial commit: ZEVREN website"
 git branch -M main
-git remote add origin https://github.com/<jouw-account>/zevren-website.git
+git remote add origin https://github.com/<your-account>/zevren-website.git
 git push -u origin main
 ```
 
-Werk je in een bestaande repository (zoals deze), maak dan een feature branch
-per wijziging en open een pull request in plaats van rechtstreeks naar main te
-pushen.
+Working in an existing repository (like this one)? Create a feature branch
+per change and open a pull request instead of pushing straight to main.
 
-## Deployen naar Vercel
+## Deploying to Vercel
 
-1. Ga naar [vercel.com](https://vercel.com) en log in met je GitHub-account.
-2. Klik op **Add New → Project** en selecteer deze repository.
-3. Vercel herkent Next.js automatisch — de standaardinstellingen (build
-   command `next build`, output `.next`) zijn correct, niets aanpassen nodig.
-4. Voeg onder **Environment Variables** toe wat je gebruikt:
+1. Go to [vercel.com](https://vercel.com) and sign in with your GitHub
+   account.
+2. Click **Add New → Project** and select this repository.
+3. Vercel detects Next.js automatically — the default settings (build
+   command `next build`, output `.next`) are correct, nothing to change.
+4. Under **Environment Variables**, add what you're using:
    - `NEXT_PUBLIC_SITE_URL` → `https://www.zevren.nl`
-   - `RESEND_API_KEY` en `CONTACT_INBOX_EMAIL` (zodra Resend is aangesloten)
-5. Klik op **Deploy**. Na een paar minuten staat de site live op een
-   `*.vercel.app`-domein.
+   - `RESEND_API_KEY` and `CONTACT_INBOX_EMAIL` (once Resend is connected)
+5. Click **Deploy**. Within a couple of minutes the site is live on a
+   `*.vercel.app` domain.
 
-Elke push naar `main` triggert automatisch een nieuwe productie-deploy; elke
-pull request krijgt een eigen preview-URL.
+Every push to `main` automatically triggers a new production deploy; every
+pull request gets its own preview URL.
 
-## Domein koppelen (zevren.nl)
+## Connecting the domain (zevren.nl)
 
-1. Ga in het Vercel-project naar **Settings → Domains**.
-2. Voer `zevren.nl` in en klik op **Add**. Doe hetzelfde voor `www.zevren.nl`
-   en stel één van de twee in als de canonical (aanbevolen: `www.zevren.nl`
-   met een redirect vanaf het kale domein, of andersom — consistent met
-   `NEXT_PUBLIC_SITE_URL`).
-3. Vercel toont de benodigde DNS-records. Log in bij je domeinregistrar (bijv.
-   TransIP, Vimexx of een andere Nederlandse registrar) en voeg toe:
-   - Een `A`-record voor `zevren.nl` naar het IP-adres dat Vercel aangeeft, of
-   - Een `CNAME`-record voor `www` naar `cname.vercel-dns.com`
-4. Wacht tot de DNS-wijziging is doorgevoerd (meestal binnen een uur, kan tot
-   24 uur duren). Vercel geeft automatisch een geldig SSL-certificaat uit
-   zodra de DNS correct staat.
-5. Controleer na koppeling dat `NEXT_PUBLIC_SITE_URL` in de
-   productie-environment variables overeenkomt met het uiteindelijke domein,
-   zodat canonical URLs, sitemap en structured data kloppen.
+1. In the Vercel project, go to **Settings → Domains**.
+2. Enter `zevren.nl` and click **Add**. Do the same for `www.zevren.nl` and
+   set one of the two as canonical (recommended: `www.zevren.nl` with a
+   redirect from the bare domain, or the other way round — just keep it
+   consistent with `NEXT_PUBLIC_SITE_URL`).
+3. Vercel shows the required DNS records. Log in with your domain
+   registrar and add:
+   - An `A` record for `zevren.nl` pointing to the IP address Vercel gives
+     you, or
+   - A `CNAME` record for `www` pointing to `cname.vercel-dns.com`
+4. Wait for the DNS change to propagate (usually within an hour, can take
+   up to 24 hours). Vercel automatically issues a valid SSL certificate
+   once the DNS is correctly set.
+5. After connecting, verify that `NEXT_PUBLIC_SITE_URL` in the production
+   environment variables matches the final domain, so canonical URLs, the
+   sitemap and structured data are all correct.
 
-## Beveiligingschecklist vóór livegang
+## Security checklist before launch
 
-- [ ] `NEXT_PUBLIC_SITE_URL` staat op het definitieve productiedomein
-- [ ] Alle environment variables staan in Vercel, niet in de repository
-- [ ] `.env.local` staat in `.gitignore` (staat er al) en is nooit gecommit
-- [ ] Security headers zijn actief (gecontroleerd via
-      [securityheaders.com](https://securityheaders.com) na livegang):
+- [ ] `NEXT_PUBLIC_SITE_URL` is set to the final production domain
+- [ ] All environment variables live in Vercel, not in the repository
+- [ ] `.env.local` is in `.gitignore` (already is) and was never committed
+- [ ] Security headers are active (verify with
+      [securityheaders.com](https://securityheaders.com) after launch):
       CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy,
-      Permissions-Policy — allemaal geconfigureerd in `next.config.ts`
-- [ ] Contactformulier getest op zowel geldige als ongeldige invoer
-- [ ] Honeypot-veld getest (verborgen veld invullen moet de submission
-      stilzwijgend negeren)
-- [ ] `npm audit` uitgevoerd en kritieke kwetsbaarheden opgelost
-- [ ] Resend (of gekozen e-maildienst) aangesloten met een eigen, niet-gedeelde
-      API key
-- [ ] Alle placeholder-gegevens in `lib/constants.ts` (adres, KvK, BTW,
-      telefoonnummer) vervangen door de echte bedrijfsgegevens
-- [ ] robots.txt en sitemap.xml gecontroleerd op het productiedomein
+      Permissions-Policy — all configured in `next.config.ts` and
+      `middleware.ts`
+- [ ] Contact form tested with both valid and invalid input
+- [ ] Honeypot field tested (filling in the hidden field should silently
+      swallow the submission)
+- [ ] `npm audit` run and any critical vulnerabilities resolved
+- [ ] Resend (or whichever email service you choose) connected with its
+      own, non-shared API key
+- [ ] The office phone number and street address in `lib/constants.ts` are
+      still placeholders — replace them with the real details (email, VAT
+      and KvK numbers, and the LinkedIn URL are already the real ones)
 
-**Waarom draait elke pagina dynamisch (SSR) in plaats van statisch?** De CSP
-gebruikt een nonce die middleware.ts per request genereert (zie
-`middleware.ts`), zodat script-src géén `unsafe-inline` nodig heeft. Een
-nonce moet overeenkomen tussen de CSP-header en de HTML van hetzelfde
-request — dat is onverenigbaar met vooraf gegenereerde statische pagina's.
-Dit is de door Next.js gedocumenteerde aanpak voor een strikte CSP en heeft
-op Vercel geen merkbare invloed op laadtijd of Lighthouse-score, omdat de
-respons alsnog server-side wordt gerenderd binnen enkele tientallen
-milliseconden.
+**Why does every page render dynamically (SSR) instead of statically?**
+The CSP uses a nonce generated per request by `middleware.ts`, so
+script-src doesn't need `unsafe-inline`. A nonce has to match between the
+CSP header and the HTML of the same request — which is incompatible with
+pre-generated static pages. This is Next.js's documented approach for a
+strict CSP, and it has no noticeable effect on load time or Lighthouse
+score on Vercel, since the response is still server-rendered within tens
+of milliseconds.
 
-## Onderhoudschecklist
+## Maintenance checklist
 
-Periodiek (maandelijks aanbevolen):
+Periodically (monthly recommended):
 
-- [ ] `npm outdated` en `npm audit` controleren, dependencies bijwerken
-- [ ] Next.js, React en Tailwind op een recente minor/patch-versie houden
-- [ ] Lighthouse-score controleren (mobiel en desktop) na grotere wijzigingen
-- [ ] Contactformulier end-to-end testen (verzenden, foutafhandeling)
-- [ ] Uptime en Core Web Vitals in de gaten houden via Vercel Analytics of
-      een externe monitor
-- [ ] Inhoud in `lib/constants.ts` actueel houden (portfolio, testimonials,
-      prijsindicaties in de FAQ)
-- [ ] Back-up van de repository is altijd geborgd via GitHub — geen aparte
-      actie nodig zolang er regelmatig wordt gepusht
+- [ ] Check `npm outdated` and `npm audit`, update dependencies
+- [ ] Keep Next.js, React and Tailwind on a recent minor/patch version
+- [ ] Check Lighthouse score (mobile and desktop) after larger changes
+- [ ] Test the contact form end to end (sending, error handling)
+- [ ] Monitor uptime and Core Web Vitals via Vercel Analytics or an
+      external monitor
+- [ ] Keep content in `lib/constants.ts` current (portfolio, testimonials,
+      pricing indications in the FAQ)
+- [ ] The repository is always backed up via GitHub — no separate action
+      needed as long as you push regularly

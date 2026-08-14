@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
 
   if (isRateLimited(ip)) {
     return NextResponse.json(
-      { message: "Te veel aanvragen. Probeer het over een minuut opnieuw." },
+      { message: "Too many requests. Please try again in a minute." },
       { status: 429 }
     );
   }
@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
     body = await request.json();
   } catch {
     return NextResponse.json(
-      { message: "Ongeldige aanvraag." },
+      { message: "Invalid request." },
       { status: 400 }
     );
   }
@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
       if (value?.[0]) flatErrors[key] = value[0];
     }
     return NextResponse.json(
-      { message: "Controleer de ingevulde velden.", fieldErrors: flatErrors },
+      { message: "Please check the fields below.", fieldErrors: flatErrors },
       { status: 400 }
     );
   }
@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
   // Honeypot triggered: silently report success so bots don't learn to
   // adapt, without actually processing the submission.
   if (result.data.website) {
-    return NextResponse.json({ message: "Bericht verstuurd." }, { status: 200 });
+    return NextResponse.json({ message: "Message sent." }, { status: 200 });
   }
 
   const { name, email, company, budget } = result.data;
@@ -79,8 +79,8 @@ export async function POST(request: NextRequest) {
   //     from: "ZEVREN website <noreply@zevren.nl>",
   //     to: process.env.CONTACT_INBOX_EMAIL!,
   //     replyTo: email,
-  //     subject: `Nieuwe aanvraag van ${name}`,
-  //     text: `Naam: ${name}\nE-mail: ${email}\nBedrijf: ${company || "-"}\nBudget: ${budget || "-"}\n\n${message}`,
+  //     subject: `New enquiry from ${name}`,
+  //     text: `Name: ${name}\nEmail: ${email}\nCompany: ${company || "-"}\nBudget: ${budget || "-"}\n\n${result.data.message}`,
   //   });
   //
   // Until then, submissions are validated and accepted but not delivered.
@@ -92,5 +92,5 @@ export async function POST(request: NextRequest) {
     budget: budget || undefined,
   });
 
-  return NextResponse.json({ message: "Bericht verstuurd." }, { status: 200 });
+  return NextResponse.json({ message: "Message sent." }, { status: 200 });
 }

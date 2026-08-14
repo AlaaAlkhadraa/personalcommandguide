@@ -45,7 +45,7 @@ export default async function TwitterImage() {
             lineHeight: 1.15,
           }}
         >
-          Websites die verkopen, niet alleen die er goed uitzien
+          Websites that sell, not just websites that look good
         </div>
         <div
           style={{
@@ -55,7 +55,7 @@ export default async function TwitterImage() {
             color: "#94A3B8",
           }}
         >
-          Webdevelopment voor ondernemers in Nederland en Europa
+          Web development for businesses in the Netherlands and Europe
         </div>
       </div>
     ),

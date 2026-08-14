@@ -4,121 +4,117 @@ import { SITE_CONFIG } from "@/lib/constants";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata = buildMetadata({
-  title: "Algemene voorwaarden",
+  title: "Terms & Conditions",
   description:
-    "De algemene voorwaarden die van toepassing zijn op offertes en overeenkomsten van ZEVREN.",
+    "The terms and conditions that apply to quotes and agreements with ZEVREN.",
   path: "/terms-and-conditions",
 });
 
 export default function TermsPage() {
   return (
     <>
-      <PageHero eyebrow="Juridisch" title="Algemene voorwaarden" />
+      <PageHero eyebrow="Legal" title="Terms & Conditions" />
       <section className="py-16">
         <Container>
           <div className="prose prose-invert max-w-3xl prose-headings:font-heading prose-a:text-accent">
-            <p>Laatst bijgewerkt: 14 augustus 2026</p>
+            <p>Last updated: 14 August 2026</p>
             <p>
-              Deze algemene voorwaarden zijn van toepassing op alle offertes,
-              overeenkomsten en werkzaamheden van {SITE_CONFIG.legalName}{" "}
-              (KvK {SITE_CONFIG.kvk}), hierna te noemen &ldquo;ZEVREN&rdquo;.
+              These terms and conditions apply to all quotes, agreements and
+              work carried out by {SITE_CONFIG.legalName}{" "}
+              (Dutch Chamber of Commerce, KvK {SITE_CONFIG.kvk}), hereinafter
+              referred to as &ldquo;ZEVREN&rdquo;.
             </p>
 
-            <h2>1. Toepasselijkheid</h2>
+            <h2>1. Applicability</h2>
             <p>
-              Deze voorwaarden gelden voor iedere offerte en overeenkomst
-              tussen ZEVREN en een opdrachtgever, tenzij partijen schriftelijk
-              anders zijn overeengekomen. Eventuele inkoop- of andere
-              voorwaarden van de opdrachtgever worden uitdrukkelijk van de
-              hand gewezen.
+              These terms apply to every quote and agreement between ZEVREN
+              and a client, unless the parties have agreed otherwise in
+              writing. Any purchasing or other terms put forward by the
+              client are explicitly rejected.
             </p>
 
-            <h2>2. Offertes en totstandkoming overeenkomst</h2>
+            <h2>2. Quotes and formation of the agreement</h2>
             <p>
-              Offertes van ZEVREN zijn vrijblijvend en 30 dagen geldig, tenzij
-              anders vermeld. Een overeenkomst komt tot stand op het moment
-              dat de opdrachtgever de offerte schriftelijk (waaronder per
-              e-mail) bevestigt.
+              Quotes from ZEVREN are non-binding and valid for 30 days unless
+              stated otherwise. An agreement comes into effect once the
+              client confirms the quote in writing (including by email).
             </p>
 
-            <h2>3. Uitvoering van de overeenkomst</h2>
+            <h2>3. Performance of the agreement</h2>
             <p>
-              ZEVREN voert de overeenkomst naar beste inzicht en vermogen uit.
-              Genoemde levertermijnen zijn indicatief en gelden niet als
-              fatale termijn, tenzij uitdrukkelijk anders overeengekomen.
-              Vertraging die ontstaat doordat de opdrachtgever benodigde
-              content, feedback of goedkeuring niet tijdig aanlevert, komt
-              niet voor rekening van ZEVREN.
+              ZEVREN carries out the agreement to the best of its ability.
+              Any delivery timelines stated are indicative and don&apos;t
+              constitute a strict deadline unless explicitly agreed
+              otherwise. Delays caused by the client not providing required
+              content, feedback or approval on time are not ZEVREN&apos;s
+              responsibility.
             </p>
 
-            <h2>4. Prijzen en betaling</h2>
+            <h2>4. Pricing and payment</h2>
             <p>
-              Alle prijzen zijn in euro&apos;s en exclusief btw, tenzij anders
-              vermeld. Tenzij anders overeengekomen factureert ZEVREN 50% bij
-              aanvang van het project en de resterende 50% bij oplevering.
-              Facturen dienen binnen 14 dagen na factuurdatum te worden
-              voldaan. Bij overschrijding van deze termijn is de opdrachtgever
-              van rechtswege in verzuim en is de wettelijke handelsrente
-              verschuldigd.
+              All prices are in euros and exclusive of VAT unless stated
+              otherwise. Unless agreed otherwise, ZEVREN invoices 50% at the
+              start of the project and the remaining 50% on delivery.
+              Invoices must be paid within 14 days of the invoice date. If
+              this term is exceeded, the client is automatically in default
+              and statutory commercial interest becomes payable.
             </p>
 
-            <h2>5. Wijzigingen in de opdracht (meerwerk)</h2>
+            <h2>5. Changes to the assignment (additional work)</h2>
             <p>
-              Wijzigingen in de oorspronkelijke opdracht, op verzoek van de
-              opdrachtgever, worden pas uitgevoerd na schriftelijke
-              goedkeuring van de daaruit voortvloeiende meerkosten en
-              eventuele aanpassing van de planning.
+              Changes to the original assignment, requested by the client,
+              are only carried out after written approval of the resulting
+              additional costs and any adjustment to the timeline.
             </p>
 
-            <h2>6. Intellectueel eigendom</h2>
+            <h2>6. Intellectual property</h2>
             <p>
-              Na volledige betaling verkrijgt de opdrachtgever het recht om de
-              opgeleverde website of applicatie te gebruiken voor het
-              overeengekomen doel. Onderliggende broncode, componenten en
-              werkwijzen die ZEVREN al bezat vóór aanvang van het project of
-              die generiek herbruikbaar zijn, blijven eigendom van ZEVREN.
+              Upon full payment, the client obtains the right to use the
+              delivered website or application for the agreed purpose.
+              Underlying source code, components and methods that ZEVREN
+              already owned before the start of the project, or that are
+              generically reusable, remain the property of ZEVREN.
             </p>
 
-            <h2>7. Onderhoud en garantie</h2>
+            <h2>7. Maintenance and warranty</h2>
             <p>
-              Na oplevering geldt een garantietermijn van 30 dagen waarin
-              ZEVREN kosteloos gebreken herstelt die aantoonbaar het gevolg
-              zijn van fouten in de oplevering. Deze garantie geldt niet voor
-              wijzigingen die na oplevering door de opdrachtgever of derden
-              zijn aangebracht. Onderhoud na deze periode wordt alleen
-              geboden onder een separaat onderhoudsabonnement.
+              A warranty period of 30 days applies after delivery, during
+              which ZEVREN fixes defects free of charge that are
+              demonstrably the result of errors in the delivery. This
+              warranty doesn&apos;t cover changes made after delivery by the
+              client or third parties. Maintenance beyond this period is
+              only provided under a separate maintenance plan.
             </p>
 
-            <h2>8. Aansprakelijkheid</h2>
+            <h2>8. Liability</h2>
             <p>
-              De aansprakelijkheid van ZEVREN voor schade die voortvloeit uit
-              de uitvoering van de overeenkomst is beperkt tot het bedrag dat
-              voor de betreffende opdracht in rekening is gebracht, met een
-              maximum van €10.000. ZEVREN is nooit aansprakelijk voor
-              indirecte schade, waaronder gederfde winst of gevolgschade.
-              Deze beperking geldt niet in geval van opzet of bewuste
-              roekeloosheid van ZEVREN.
+              ZEVREN&apos;s liability for damages arising from the
+              performance of the agreement is limited to the amount invoiced
+              for the relevant assignment, with a maximum of €10,000. ZEVREN
+              is never liable for indirect damages, including lost profit or
+              consequential loss. This limitation doesn&apos;t apply in
+              cases of intent or deliberate recklessness on ZEVREN&apos;s
+              part.
             </p>
 
-            <h2>9. Opzegging en ontbinding</h2>
+            <h2>9. Termination and dissolution</h2>
             <p>
-              Beide partijen kunnen de overeenkomst schriftelijk opzeggen met
-              inachtneming van een redelijke termijn. Bij tussentijdse
-              beëindiging is de opdrachtgever verplicht het reeds uitgevoerde
-              werk te vergoeden, tegen het overeengekomen tarief.
+              Either party may terminate the agreement in writing, observing
+              a reasonable notice period. In the event of early termination,
+              the client is required to pay for work already carried out, at
+              the agreed rate.
             </p>
 
-            <h2>10. Toepasselijk recht en geschillen</h2>
+            <h2>10. Governing law and disputes</h2>
             <p>
-              Op alle overeenkomsten met ZEVREN is Nederlands recht van
-              toepassing. Geschillen worden in eerste instantie voorgelegd
-              aan de bevoegde rechter in het arrondissement Amsterdam, tenzij
-              dwingend recht anders bepaalt.
+              Dutch law applies to all agreements with ZEVREN. Disputes are
+              submitted in the first instance to the competent court in the
+              Amsterdam district, unless mandatory law provides otherwise.
             </p>
 
             <h2>Contact</h2>
             <p>
-              Vragen over deze voorwaarden? Neem contact op via{" "}
+              Questions about these terms? Reach out via{" "}
               <a href={`mailto:${SITE_CONFIG.email}`}>{SITE_CONFIG.email}</a>.
             </p>
           </div>

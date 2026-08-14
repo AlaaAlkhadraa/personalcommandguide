@@ -4,112 +4,107 @@ import { SITE_CONFIG } from "@/lib/constants";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata = buildMetadata({
-  title: "Privacybeleid",
+  title: "Privacy Policy",
   description:
-    "Lees hoe ZEVREN omgaat met persoonsgegevens die worden verzameld via de website en het contactformulier.",
+    "Read how ZEVREN handles personal data collected through the website and the contact form.",
   path: "/privacy-policy",
 });
 
 export default function PrivacyPolicyPage() {
   return (
     <>
-      <PageHero eyebrow="Juridisch" title="Privacybeleid" />
+      <PageHero eyebrow="Legal" title="Privacy Policy" />
       <section className="py-16">
         <Container>
           <div className="prose prose-invert max-w-3xl prose-headings:font-heading prose-a:text-accent">
-            <p>Laatst bijgewerkt: 14 augustus 2026</p>
+            <p>Last updated: 14 August 2026</p>
 
             <p>
-              {SITE_CONFIG.legalName} (&ldquo;ZEVREN&rdquo;, &ldquo;wij&rdquo;, &ldquo;ons&rdquo;), gevestigd aan
+              {SITE_CONFIG.legalName} (&ldquo;ZEVREN&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;), based at
               {" "}
               {SITE_CONFIG.address.street}, {SITE_CONFIG.address.postalCode}{" "}
-              {SITE_CONFIG.address.city}, is verantwoordelijk voor de
-              verwerking van persoonsgegevens zoals beschreven in dit
-              privacybeleid. We houden ons aan de Algemene Verordening
-              Gegevensbescherming (AVG).
+              {SITE_CONFIG.address.city}, the Netherlands, is responsible for
+              the processing of personal data as described in this privacy
+              policy. We comply with the EU General Data Protection
+              Regulation (GDPR).
             </p>
 
-            <h2>Welke gegevens we verwerken</h2>
+            <h2>What data we process</h2>
             <p>
-              Wanneer je het contactformulier op deze website invult,
-              verwerken we de gegevens die je zelf aanlevert: je naam,
-              e-mailadres, eventueel je bedrijfsnaam en de inhoud van je
-              bericht. We verzamelen geen gegevens via het formulier die je
-              niet zelf hebt ingevuld.
+              When you fill in the contact form on this website, we process
+              the data you provide yourself: your name, email address,
+              optionally your company name, and the content of your message.
+              We don&apos;t collect any data through the form beyond what you
+              enter.
             </p>
 
-            <h2>Waarom we deze gegevens verwerken</h2>
+            <h2>Why we process this data</h2>
             <p>
-              We gebruiken deze gegevens uitsluitend om te reageren op je
-              aanvraag en, als daar een opdracht uit volgt, om de
-              overeenkomst met je uit te voeren. De grondslag hiervoor is
-              artikel 6 lid 1 sub b AVG (uitvoering van een overeenkomst of
-              precontractuele maatregelen) en, waar van toepassing, ons
-              gerechtvaardigd belang om vragen van geïnteresseerde bedrijven
-              te beantwoorden.
+              We use this data solely to respond to your enquiry and, if it
+              leads to an engagement, to carry out the agreement with you.
+              The legal basis for this is Article 6(1)(b) GDPR (performance
+              of a contract or steps taken prior to entering into a
+              contract) and, where applicable, our legitimate interest in
+              answering enquiries from prospective clients.
             </p>
 
-            <h2>Bewaartermijn</h2>
+            <h2>Retention period</h2>
             <p>
-              Gegevens uit het contactformulier bewaren we maximaal 24
-              maanden na het laatste contactmoment, tenzij er een
-              overeenkomst uit voortvloeit. In dat geval bewaren we gegevens
-              zolang als nodig is voor de uitvoering van de overeenkomst en
-              de wettelijke bewaartermijnen die daarna gelden, zoals de
-              fiscale bewaarplicht van 7 jaar voor administratieve gegevens.
+              We keep contact form data for a maximum of 24 months after the
+              last point of contact, unless it leads to an agreement. In
+              that case we keep data for as long as necessary to perform the
+              agreement, plus any statutory retention periods that follow,
+              such as the 7-year retention obligation for financial records
+              under Dutch tax law.
             </p>
 
-            <h2>Delen met derden</h2>
+            <h2>Sharing with third parties</h2>
             <p>
-              We verkopen geen persoonsgegevens aan derden. We maken gebruik
-              van een beperkt aantal verwerkers om deze website en onze
-              dienstverlening te laten functioneren, zoals onze
-              hostingpartij (Vercel) en, zodra geconfigureerd, een
-              e-maildienst voor het afhandelen van formulierinzendingen (
-              Resend). Met deze partijen zijn verwerkersovereenkomsten
-              afgesloten waar de AVG dat vereist.
+              We don&apos;t sell personal data to third parties. We use a
+              limited number of processors to operate this website and our
+              services, such as our hosting provider (Vercel) and, once
+              configured, an email service for handling form submissions
+              (Resend). Data processing agreements are in place with these
+              parties wherever the GDPR requires one.
             </p>
 
             <h2>Cookies</h2>
             <p>
-              Deze website gebruikt geen trackingcookies. Er worden geen
-              analytics- of marketingcookies geplaatst zonder dat je daar
-              vooraf toestemming voor hebt gegeven. Mocht dat in de toekomst
-              veranderen, dan werken we dit privacybeleid bij en vragen we om
-              expliciete toestemming waar dat wettelijk vereist is.
+              This website doesn&apos;t use tracking cookies. No analytics or
+              marketing cookies are placed without your prior consent. If
+              that changes in the future, we&apos;ll update this privacy
+              policy and ask for explicit consent wherever legally required.
             </p>
 
-            <h2>Beveiliging</h2>
+            <h2>Security</h2>
             <p>
-              We nemen passende technische en organisatorische maatregelen om
-              persoonsgegevens te beschermen tegen verlies of onrechtmatige
-              verwerking, waaronder versleutelde verbindingen (HTTPS),
-              beperkte toegang tot gegevens en actuele beveiligingsupdates
-              van de systemen die we gebruiken.
+              We take appropriate technical and organisational measures to
+              protect personal data against loss or unlawful processing,
+              including encrypted connections (HTTPS), restricted access to
+              data, and up-to-date security patches for the systems we use.
             </p>
 
-            <h2>Jouw rechten</h2>
+            <h2>Your rights</h2>
             <p>
-              Je hebt het recht om je persoonsgegevens in te zien, te laten
-              corrigeren of te laten verwijderen. Ook kun je bezwaar maken
-              tegen de verwerking van je gegevens of ons vragen de
-              verwerking te beperken. Neem hiervoor contact met ons op via{" "}
+              You have the right to access, correct or have your personal
+              data deleted. You can also object to the processing of your
+              data or ask us to restrict it. To do so, contact us at{" "}
               <a href={`mailto:${SITE_CONFIG.email}`}>{SITE_CONFIG.email}</a>.
-              Je hebt daarnaast het recht om een klacht in te dienen bij de
-              Autoriteit Persoonsgegevens.
+              You also have the right to lodge a complaint with the Dutch
+              Data Protection Authority (Autoriteit Persoonsgegevens).
             </p>
 
-            <h2>Wijzigingen</h2>
+            <h2>Changes</h2>
             <p>
-              We kunnen dit privacybeleid van tijd tot tijd aanpassen. De
-              meest actuele versie staat altijd op deze pagina.
+              We may update this privacy policy from time to time. The most
+              current version is always available on this page.
             </p>
 
             <h2>Contact</h2>
             <p>
-              Vragen over dit privacybeleid? Neem contact op via{" "}
+              Questions about this privacy policy? Reach out via{" "}
               <a href={`mailto:${SITE_CONFIG.email}`}>{SITE_CONFIG.email}</a>{" "}
-              of {SITE_CONFIG.phoneDisplay}.
+              or {SITE_CONFIG.phoneDisplay}.
             </p>
           </div>
         </Container>

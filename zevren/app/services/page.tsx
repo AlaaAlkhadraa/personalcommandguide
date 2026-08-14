@@ -6,9 +6,9 @@ import { SERVICES } from "@/lib/constants";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata = buildMetadata({
-  title: "Diensten",
+  title: "Services",
   description:
-    "Maatwerk websites, webshops, UX/UI design, SEO, onderhoud en webapplicaties. Bekijk wat ZEVREN voor jouw bedrijf kan bouwen.",
+    "Custom websites, online stores, UX/UI design, SEO, maintenance and web applications. See what ZEVREN can build for your business.",
   path: "/services",
 });
 
@@ -16,9 +16,9 @@ export default function ServicesPage() {
   return (
     <>
       <PageHero
-        eyebrow="Diensten"
-        title="Eén team, van eerste schets tot livegang"
-        description="We houden ons bewust tot een beperkt aantal diensten die we goed beheersen, in plaats van alles een beetje te doen."
+        eyebrow="Services"
+        title="One team, from first sketch to launch"
+        description="We deliberately stick to a limited set of services we're genuinely good at, rather than doing a bit of everything."
       />
       <section className="py-20">
         <Container className="flex flex-col gap-20">
@@ -71,13 +71,13 @@ export default function ServicesPage() {
       <section className="border-t border-white/5 bg-surface/30 py-20">
         <Container className="flex flex-col items-center gap-6 text-center">
           <h2 className="max-w-xl text-3xl font-semibold text-white">
-            Niet zeker welke dienst bij je past?
+            Not sure which service fits?
           </h2>
           <p className="max-w-lg text-muted">
-            Vertel ons in een kort gesprek wat je nodig hebt. We adviseren
-            eerlijk, ook als het antwoord &ldquo;nog niet&rdquo; is.
+            Tell us what you need in a short call. We&apos;ll give you an
+            honest answer, even if that answer is &ldquo;not yet&rdquo;.
           </p>
-          <Button href="/contact">Plan een gesprek</Button>
+          <Button href="/contact">Book a call</Button>
         </Container>
       </section>
     </>

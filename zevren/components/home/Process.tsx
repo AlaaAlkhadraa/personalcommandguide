@@ -7,9 +7,9 @@ export function Process() {
     <section className="border-t border-white/5 bg-surface/30 py-24">
       <Container className="flex flex-col gap-12">
         <SectionHeading
-          eyebrow="Werkwijze"
-          title="Hoe een project bij ons verloopt"
-          description="Vijf stappen, van eerste gesprek tot livegang. Elke stap heeft een duidelijk resultaat, zodat je altijd weet waar je project staat."
+          eyebrow="Process"
+          title="How a project runs with us"
+          description="Five steps, from first conversation to launch. Every step has a clear outcome, so you always know where your project stands."
         />
         <ol className="grid gap-6 lg:grid-cols-5">
           {PROCESS_STEPS.map((step) => (

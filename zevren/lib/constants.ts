@@ -10,125 +10,123 @@ import type {
 export const SITE_CONFIG = {
   name: "ZEVREN",
   legalName: "ZEVREN Digital B.V.",
-  tagline: "Websites die verkopen, niet alleen die er goed uitzien.",
+  tagline: "Websites that sell, not just websites that look good.",
   description:
-    "ZEVREN bouwt websites en webshops voor ondernemers in Nederland en Europa. Snel, veilig en gemaakt om klanten op te leveren — geen sjablonen, geen ruis.",
+    "ZEVREN builds websites and online stores for businesses in the Netherlands and across Europe. Fast, secure, and built to bring in customers — no templates, no filler.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.zevren.nl",
-  email: "hallo@zevren.nl",
+  email: "info@zevren.nl",
   phone: "+31 20 123 4567",
   phoneDisplay: "020 123 4567",
   address: {
     street: "Keizersgracht 241",
     postalCode: "1016 EA",
     city: "Amsterdam",
-    country: "Nederland",
+    country: "Netherlands",
   },
-  kvk: "88123456",
-  btw: "NL863456789B01",
+  kvk: "92008674",
+  btw: "NL003953113B07",
   social: {
-    linkedin: "https://www.linkedin.com/company/zevren",
-    instagram: "https://www.instagram.com/zevren.nl",
+    linkedin: "https://www.linkedin.com/company/zevren/",
   },
   foundedYear: 2021,
 } as const;
 
 export const NAV_LINKS: NavLink[] = [
   { label: "Home", href: "/" },
-  { label: "Diensten", href: "/services" },
+  { label: "Services", href: "/services" },
   { label: "Portfolio", href: "/portfolio" },
   { label: "Reviews", href: "/reviews" },
-  { label: "Over ons", href: "/about" },
+  { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
 ];
 
 export const FOOTER_LEGAL_LINKS: NavLink[] = [
-  { label: "Privacybeleid", href: "/privacy-policy" },
-  { label: "Algemene voorwaarden", href: "/terms-and-conditions" },
+  { label: "Privacy Policy", href: "/privacy-policy" },
+  { label: "Terms & Conditions", href: "/terms-and-conditions" },
 ];
 
 export const SERVICES: Service[] = [
   {
     slug: "websites",
-    title: "Maatwerk websites",
-    summary:
-      "Een website die is opgebouwd rond jouw aanbod, niet rond een thema.",
+    title: "Custom websites",
+    summary: "A website built around what you sell, not around a theme.",
     description:
-      "We beginnen bij wat je bezoeker moet doen — bellen, boeken, bestellen — en bouwen de site daaromheen. Geen bouwblokken-thema met jouw logo erop, maar een ontwerp en codebase die van jou zijn.",
+      "We start with what your visitor needs to do — call, book, buy — and build the site around that. Not a page-builder theme with your logo on it, but a design and codebase that are actually yours.",
     features: [
-      "Ontwerp op maat, geen thema",
-      "Next.js voor snelheid en betrouwbaarheid",
-      "Zelf teksten en beelden aanpassen via een CMS naar keuze",
-      "Volledig responsive, getest op echte apparaten",
+      "Custom design, no themes",
+      "Next.js for speed and reliability",
+      "Edit your own text and images through a CMS of your choice",
+      "Fully responsive, tested on real devices",
     ],
     icon: "code",
   },
   {
     slug: "webshops",
-    title: "Webshops",
-    summary: "E-commerce die is ingericht op conversie, niet op vinkjes.",
+    title: "Online stores",
+    summary: "E-commerce set up to convert, not just to tick boxes.",
     description:
-      "Van productpagina tot afrekenen: elke stap is er een die we los durven te verantwoorden. We bouwen op een platform dat past bij je assortiment en volume, en houden het beheerbaar voor je eigen team.",
+      "From product page to checkout: every step is one we can account for on its own. We build on a platform that fits your catalogue and volume, and keep it manageable for your own team.",
     features: [
-      "Betaalproviders zoals iDEAL, Mollie en Stripe",
-      "Voorraad- en ordersynchronisatie",
-      "Snelle productpagina's, ook met veel varianten",
-      "Ingericht op herhaalaankopen, niet alleen eerste verkoop",
+      "Payment providers including iDEAL, Mollie and Stripe",
+      "Stock and order syncing",
+      "Fast product pages, even with many variants",
+      "Built for repeat purchases, not just the first sale",
     ],
     icon: "cart",
   },
   {
     slug: "ux-ui-design",
     title: "UX & UI design",
-    summary: "Ontwerp dat beslissingen makkelijker maakt, niet mooier lijkt.",
+    summary: "Design that makes decisions easier, not just nicer to look at.",
     description:
-      "Voordat er een pixel wordt getekend, brengen we de route van je bezoeker in kaart. Het resultaat is een interface die duidelijk maakt wat de volgende stap is — op elk schermformaat.",
+      "Before a single pixel is drawn, we map out your visitor's route. The result is an interface that makes the next step obvious — on every screen size.",
     features: [
-      "Wireframes en klikbare prototypes",
-      "Design system met herbruikbare componenten",
-      "Toegankelijkheid vanaf de eerste schets",
-      "Gebruikerstests met echte bezoekers waar mogelijk",
+      "Wireframes and clickable prototypes",
+      "A design system with reusable components",
+      "Accessibility considered from the first sketch",
+      "User testing with real visitors wherever possible",
     ],
     icon: "layers",
   },
   {
     slug: "seo",
-    title: "SEO & vindbaarheid",
-    summary: "Technisch fundament eerst, daarna pas de rest.",
+    title: "SEO & findability",
+    summary: "The technical foundation first, everything else after.",
     description:
-      "Een snelle, technisch schone site is het beste startpunt voor SEO dat er is. We regelen de basis goed — structuur, snelheid, metadata — en geven je concrete vervolgstappen, geen dashboard vol vage scores.",
+      "A fast, technically clean site is the best starting point for SEO there is. We get the fundamentals right — structure, speed, metadata — and give you concrete next steps, not a dashboard full of vague scores.",
     features: [
-      "Technische SEO-audit en directe fixes",
-      "Structured data en metadata per pagina",
-      "Core Web Vitals geoptimaliseerd",
-      "Contentadvies gebaseerd op zoekintentie",
+      "Technical SEO audit with fixes applied directly",
+      "Structured data and metadata on every page",
+      "Core Web Vitals optimised",
+      "Content advice based on search intent",
     ],
     icon: "search",
   },
   {
-    slug: "onderhoud",
-    title: "Onderhoud & support",
-    summary: "Iemand die opneemt als de site een keer hapert.",
+    slug: "maintenance",
+    title: "Maintenance & support",
+    summary: "Someone who picks up when the site acts up.",
     description:
-      "Een website is nooit echt 'klaar'. We monitoren uptime en beveiligingsupdates, maken back-ups en lossen kleine wijzigingen op zonder dat je daar een ticketsysteem voor hoeft te openen.",
+      "A website is never really 'finished'. We monitor uptime and security updates, take backups, and handle small changes without making you open a support ticket for it.",
     features: [
-      "Beveiligingsupdates en dependency-onderhoud",
-      "Dagelijkse back-ups met herstelgarantie",
-      "Uptime-monitoring met directe melding",
-      "Vast aanspreekpunt, geen wisselend supportteam",
+      "Security updates and dependency maintenance",
+      "Daily backups with a recovery guarantee",
+      "Uptime monitoring with instant alerts",
+      "One point of contact, not a rotating support team",
     ],
     icon: "wrench",
   },
   {
-    slug: "web-applicaties",
-    title: "Webapplicaties",
-    summary: "Maatwerk software voor processen die geen kant-en-klare tool aankan.",
+    slug: "web-applications",
+    title: "Web applications",
+    summary: "Custom software for processes an off-the-shelf tool can't handle.",
     description:
-      "Klantportalen, interne tools, boekingssystemen — als een bestaand pakket je proces niet past, bouwen we iets dat dat wel doet. Met dezelfde aandacht voor snelheid en beveiliging als onze websites.",
+      "Client portals, internal tools, booking systems — if an existing package doesn't fit your process, we build something that does. With the same attention to speed and security as our websites.",
     features: [
-      "Klantportalen en dashboards op maat",
-      "Koppelingen met bestaande systemen via API's",
-      "Rolgebaseerde toegang en autorisatie",
-      "Schaalbare architectuur vanaf dag één",
+      "Custom client portals and dashboards",
+      "Integrations with existing systems via APIs",
+      "Role-based access and authorisation",
+      "Scalable architecture from day one",
     ],
     icon: "compass",
   },
@@ -138,72 +136,72 @@ export const PORTFOLIO_ITEMS: PortfolioItem[] = [
   {
     slug: "noordkaap-makelaars",
     name: "Noordkaap Makelaars",
-    category: "Vastgoed",
+    category: "Real estate",
     summary:
-      "Een woningaanbod-site met live koppeling naar hun CRM, zodat nieuwe woningen zonder handmatig werk online staan.",
-    result: "43% meer aanvragen via het contactformulier binnen 3 maanden.",
+      "A property listing site with a live feed from their CRM, so new listings go live without any manual work.",
+    result: "43% more enquiries through the contact form within 3 months.",
     year: "2025",
-    tags: ["Next.js", "CRM-koppeling", "SEO"],
+    tags: ["Next.js", "CRM integration", "SEO"],
   },
   {
     slug: "havenlicht-koffie",
     name: "Havenlicht Koffie",
     category: "E-commerce",
     summary:
-      "Webshop voor een koffiebranderij uit Rotterdam, met abonnementen en een voorraadsysteem gekoppeld aan hun kassasysteem.",
-    result: "Laadtijd van 4,1s naar 0,9s, conversie steeg met 27%.",
+      "Online store for a coffee roastery in Rotterdam, with subscriptions and a stock system linked to their point of sale.",
+    result: "Load time down from 4.1s to 0.9s, conversion up 27%.",
     year: "2024",
-    tags: ["Webshop", "Abonnementen", "Performance"],
+    tags: ["Online store", "Subscriptions", "Performance"],
   },
   {
     slug: "bureau-linden",
     name: "Bureau Linden",
-    category: "Zakelijke dienstverlening",
+    category: "Professional services",
     summary:
-      "Herontwerp van de website van een accountantskantoor, met een klantportaal voor het uitwisselen van documenten.",
-    result: "Portaal verwerkt nu 90% van de documentuitwisseling, geen e-mailbijlagen meer.",
+      "Redesign of an accountancy firm's website, with a client portal for exchanging documents securely.",
+    result: "Portal now handles 90% of document exchange, no more email attachments.",
     year: "2024",
-    tags: ["Klantportaal", "Beveiliging", "UX"],
+    tags: ["Client portal", "Security", "UX"],
   },
   {
     slug: "molenwerf-interieur",
     name: "Molenwerf Interieur",
     category: "E-commerce",
     summary:
-      "Webshop voor maatwerk meubels met een configurator waarmee klanten stof, kleur en afmetingen kunnen kiezen.",
-    result: "Gemiddelde bestelwaarde met €340 gestegen door de configurator.",
+      "Online store for custom furniture with a configurator that lets customers choose fabric, colour and dimensions.",
+    result: "Average order value up €340 thanks to the configurator.",
     year: "2023",
-    tags: ["Configurator", "Webshop", "UI design"],
+    tags: ["Configurator", "Online store", "UI design"],
   },
   {
     slug: "studio-verhoeven",
     name: "Studio Verhoeven",
-    category: "Architectuur",
+    category: "Architecture",
     summary:
-      "Portfolio-site voor een architectenbureau, gebouwd rond grote beeldvoering zonder in te leveren op laadtijd.",
-    result: "Bounce rate met 31% verlaagd na de relaunch.",
+      "Portfolio site for an architecture practice, built around large imagery without giving up load speed.",
+    result: "Bounce rate down 31% after the relaunch.",
     year: "2023",
-    tags: ["Portfolio", "Beeldoptimalisatie", "Design"],
+    tags: ["Portfolio", "Image optimisation", "Design"],
   },
   {
     slug: "de-vries-advocaten",
     name: "De Vries Advocaten",
-    category: "Juridisch",
+    category: "Legal",
     summary:
-      "Nieuwe website met heldere specialisatiepagina's, zodat bezoekers direct bij de juiste advocaat terechtkomen.",
-    result: "Directe telefonische aanvragen verdubbeld ten opzichte van de oude site.",
+      "New website with clear practice-area pages, so visitors land directly on the right lawyer.",
+    result: "Direct phone enquiries doubled compared to the old site.",
     year: "2022",
-    tags: ["Content-structuur", "SEO", "Toegankelijkheid"],
+    tags: ["Content structure", "SEO", "Accessibility"],
   },
 ];
 
 export const TESTIMONIALS: Testimonial[] = [
   {
     name: "Rob Hendriksen",
-    role: "Eigenaar",
+    role: "Owner",
     company: "Noordkaap Makelaars",
     quote:
-      "ZEVREN vroeg in het eerste gesprek al naar onze cijfers, niet naar onze kleurvoorkeur. Dat gaf vertrouwen. Het resultaat werkt gewoon, en als er iets is reageren ze dezelfde dag.",
+      "ZEVREN asked about our numbers in the first conversation, not our colour preferences. That built trust early on. The result simply works, and when something comes up they reply the same day.",
     rating: 5,
   },
   {
@@ -211,7 +209,7 @@ export const TESTIMONIALS: Testimonial[] = [
     role: "Marketing",
     company: "Havenlicht Koffie",
     quote:
-      "We hadden al twee bureaus gehad die vooral mooie plaatjes leverden. ZEVREN leverde een shop die daadwerkelijk sneller laadt en meer omzet, met uitleg die ik zonder IT-achtergrond kon volgen.",
+      "We'd already been through two agencies that mostly delivered nice pictures. ZEVREN delivered a store that actually loads faster and sells more, with explanations I could follow without an IT background.",
     rating: 5,
   },
   {
@@ -219,7 +217,7 @@ export const TESTIMONIALS: Testimonial[] = [
     role: "Partner",
     company: "Bureau Linden",
     quote:
-      "Het klantportaal moest aan strenge eisen voldoen wat betreft beveiliging. Ze hebben dat serieus genomen zonder er een heel project van te maken. Prettige, directe samenwerking.",
+      "The client portal had to meet strict security requirements. They took that seriously without turning it into a massive project. Straightforward, pleasant collaboration.",
     rating: 5,
   },
   {
@@ -227,7 +225,7 @@ export const TESTIMONIALS: Testimonial[] = [
     role: "Architect",
     company: "Studio Verhoeven",
     quote:
-      "Ik wilde een site waarop ons werk centraal staat zonder dat die traag wordt van alle beelden. Dat hebben ze precies zo opgelost. Onderhoud loopt sindsdien soepel.",
+      "I wanted a site where our work takes centre stage without getting slow from all the imagery. That's exactly how they solved it. Maintenance has been smooth ever since.",
     rating: 5,
   },
   {
@@ -235,7 +233,7 @@ export const TESTIMONIALS: Testimonial[] = [
     role: "Managing partner",
     company: "De Vries Advocaten",
     quote:
-      "Concreet, nuchter en ze houden zich aan planning. Geen verrassingen achteraf op de factuur. Voor een kantoor als het onze is dat net zo belangrijk als het eindresultaat.",
+      "Concrete, down-to-earth, and they stick to the schedule. No surprises on the invoice afterwards. For a firm like ours, that matters just as much as the end result.",
     rating: 5,
   },
 ];
@@ -243,65 +241,65 @@ export const TESTIMONIALS: Testimonial[] = [
 export const PROCESS_STEPS: ProcessStep[] = [
   {
     step: "01",
-    title: "Kennismaking & scope",
+    title: "Discovery & scope",
     description:
-      "We bespreken wat je nodig hebt en wat je bezoeker moet doen. Daaruit volgt een vast voorstel met prijs en planning — geen losse uren zonder eindpunt.",
+      "We discuss what you need and what your visitor needs to do. That turns into a fixed proposal with price and timeline — no open-ended hours with no end point.",
   },
   {
     step: "02",
-    title: "Structuur & wireframes",
+    title: "Structure & wireframes",
     description:
-      "Voordat er design komt, bepalen we de opbouw: welke pagina's, welke content, welke route naar conversie. Dit leggen we vast in wireframes die je kunt goedkeuren.",
+      "Before any design happens, we settle the structure: which pages, which content, which route to conversion. This gets laid out in wireframes for you to approve.",
   },
   {
     step: "03",
     title: "Design",
     description:
-      "We ontwerpen in jouw huisstijl, met aandacht voor herkenbaarheid en leesbaarheid. Je ziet en reageert op ontwerpen voordat we beginnen met bouwen.",
+      "We design in your brand style, with attention to recognisability and readability. You see and react to designs before we start building.",
   },
   {
     step: "04",
     title: "Development",
     description:
-      "We bouwen de site met Next.js, testen op echte apparaten en browsers, en houden je tussentijds op de hoogte via een preview-omgeving.",
+      "We build the site with Next.js, test on real devices and browsers, and keep you updated along the way through a preview environment.",
   },
   {
     step: "05",
-    title: "Lancering & nazorg",
+    title: "Launch & aftercare",
     description:
-      "Na livegang controleren we alles nogmaals: snelheid, formulieren, tracking. Daarna blijven we bereikbaar voor onderhoud of uitbreidingen.",
+      "After launch we check everything again: speed, forms, tracking. After that we stay reachable for maintenance or future additions.",
   },
 ];
 
 export const FAQ_ITEMS: FaqItem[] = [
   {
-    question: "Wat kost een website bij ZEVREN?",
+    question: "What does a website from ZEVREN cost?",
     answer:
-      "Dat hangt af van de omvang. Een website op maat begint doorgaans rond €3.500, een webshop rond €6.500. Na het eerste gesprek ontvang je een vast voorstel, zodat je vooraf weet waar je aan toe bent.",
+      "That depends on scope. A custom website typically starts around €3,500, an online store around €6,500. After the first conversation you get a fixed proposal, so you know where you stand before we start.",
   },
   {
-    question: "Hoe lang duurt een project?",
+    question: "How long does a project take?",
     answer:
-      "Een website op maat duurt gemiddeld 4 tot 6 weken, een webshop 6 tot 10 weken. Dit hangt sterk af van hoe snel we content en feedback van jouw kant ontvangen.",
+      "A custom website takes 4 to 6 weeks on average, an online store 6 to 10 weeks. This depends heavily on how quickly we receive content and feedback from your side.",
   },
   {
-    question: "Kan ik zelf de content aanpassen na oplevering?",
+    question: "Can I edit the content myself after launch?",
     answer:
-      "Ja. We koppelen een CMS naar keuze zodat je teksten, afbeeldingen en producten zelf kunt beheren, zonder dat je daarvoor moet kunnen programmeren.",
+      "Yes. We connect a CMS of your choice so you can manage text, images and products yourself, without needing to write code.",
   },
   {
-    question: "Bij wie ligt het onderhoud na livegang?",
+    question: "Who handles maintenance after launch?",
     answer:
-      "Dat is aan jou. Je kunt kiezen voor een onderhoudsabonnement waarbij wij updates, back-ups en monitoring verzorgen, of we dragen de site volledig aan je over.",
+      "That's up to you. You can choose a maintenance plan where we handle updates, backups and monitoring, or we hand the site over to you completely.",
   },
   {
-    question: "Werken jullie ook met bedrijven buiten Nederland?",
+    question: "Do you work with businesses outside the Netherlands?",
     answer:
-      "Zeker. We werken met klanten in heel Europa en vergaderen dan via videobellen. Onze documentatie en communicatie zijn ook in het Engels beschikbaar.",
+      "Definitely. We work with clients across Europe and meet over video calls. Our documentation and communication are available in English as well.",
   },
   {
-    question: "Bouwen jullie ook mee aan bestaande websites?",
+    question: "Do you also work on existing websites?",
     answer:
-      "Ja, we nemen regelmatig bestaande projecten over — voor een redesign, een snelheidsprobleem of om verder te bouwen aan een applicatie die iemand anders is gestart.",
+      "Yes, we regularly take over existing projects — for a redesign, a speed problem, or to keep building on an application someone else started.",
   },
 ];

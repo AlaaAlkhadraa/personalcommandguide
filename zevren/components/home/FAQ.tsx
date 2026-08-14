@@ -7,8 +7,8 @@ export function FAQ() {
     <section className="py-24">
       <Container className="flex flex-col gap-12">
         <SectionHeading
-          eyebrow="Veelgestelde vragen"
-          title="Nog vragen? Deze horen we het vaakst"
+          eyebrow="Frequently asked questions"
+          title="Still have questions? These come up most"
         />
         <div className="mx-auto flex w-full max-w-3xl flex-col gap-3">
           {FAQ_ITEMS.map((item) => (
