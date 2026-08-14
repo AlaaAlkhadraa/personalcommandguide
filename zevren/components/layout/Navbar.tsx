@@ -48,14 +48,17 @@ export function Navbar() {
       }`}
     >
       <div className="container-page flex h-20 items-center justify-between">
-        <Link href="/" className="flex items-center gap-2.5">
+        <Link
+          href="/"
+          className="group flex items-center gap-2.5 py-2 -my-2"
+        >
           <Image
             src="/logo-mark.png"
             alt=""
             width={32}
             height={29}
             priority
-            className="h-8 w-auto"
+            className="h-8 w-auto drop-shadow-[0_0_10px_rgba(37,99,235,0.55)] transition-[filter] duration-300 group-hover:drop-shadow-[0_0_14px_rgba(96,165,250,0.7)]"
           />
           <span className="font-logo text-xl font-bold tracking-wide text-white">
             ZEVREN
@@ -96,7 +99,7 @@ export function Navbar() {
           aria-expanded={isOpen}
           aria-controls="mobile-menu"
           aria-label={isOpen ? "Close menu" : "Open menu"}
-          className="flex h-10 w-10 items-center justify-center rounded-lg text-white lg:hidden"
+          className="-mr-1 flex h-11 w-11 items-center justify-center rounded-lg text-white lg:hidden"
         >
           <span className="relative flex h-4 w-6 flex-col justify-between">
             <span

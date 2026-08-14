@@ -188,7 +188,17 @@ pull request gets its own preview URL.
 - [ ] Contact form tested with both valid and invalid input
 - [ ] Honeypot field tested (filling in the hidden field should silently
       swallow the submission)
-- [ ] `npm audit` run and any critical vulnerabilities resolved
+- [ ] `npm audit` run and any critical vulnerabilities resolved — as of
+      this writing, `npm audit` flags 3 high-severity issues in `postcss`
+      and `sharp`, both bundled *inside* `next@15.5.23` itself (the latest
+      stable 15.x release) rather than top-level dependencies of this
+      project. They affect build-time CSS/source-map processing and image
+      transforms on attacker-supplied files — not something an anonymous
+      visitor can trigger against the deployed site as it stands, since
+      there's no user-upload or user-image feature. The real fix is
+      Next.js 16, a breaking major version; re-run `npm audit` before
+      launch in case a patched 15.x has shipped since, and plan the
+      Next 16 upgrade as a deliberate follow-up rather than doing it here
 - [ ] Resend (or whichever email service you choose) connected with its
       own, non-shared API key
 - [ ] Contact details in `lib/constants.ts` (phone, email, VAT and KvK

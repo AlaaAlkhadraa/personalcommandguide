@@ -21,11 +21,15 @@ export function ContactForm() {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    // The DOM nulls event.currentTarget once synchronous dispatch finishes,
+    // so it must be captured now — reading it after the awaits below would
+    // throw when calling form.reset() and get mistaken for a network error.
+    const form = event.currentTarget;
     setStatus("loading");
     setErrors({});
     setServerError(null);
 
-    const formData = new FormData(event.currentTarget);
+    const formData = new FormData(form);
     const payload: ContactFormValues = {
       name: String(formData.get("name") ?? ""),
       email: String(formData.get("email") ?? ""),
@@ -57,7 +61,7 @@ export function ContactForm() {
       }
 
       setStatus("success");
-      event.currentTarget.reset();
+      form.reset();
     } catch {
       setServerError(
         "Couldn't connect. Check your internet connection and try again."

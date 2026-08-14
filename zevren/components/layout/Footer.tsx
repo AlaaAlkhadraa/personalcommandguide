@@ -15,7 +15,7 @@ export function Footer() {
               alt=""
               width={32}
               height={29}
-              className="h-8 w-auto"
+              className="h-8 w-auto drop-shadow-[0_0_10px_rgba(37,99,235,0.55)]"
             />
             <span className="font-logo text-xl font-bold tracking-wide text-white">
               ZEVREN
