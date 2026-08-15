@@ -19,9 +19,10 @@ export function WorkPreview() {
             All concepts
           </Button>
         </div>
-        <div className="grid gap-6 sm:grid-cols-2">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {WORK_ITEMS.map((item) => {
             const Preview = WORK_PREVIEWS[item.slug];
+            const isReal = item.kind === "real";
             return (
               <Link
                 key={item.slug}
@@ -36,8 +37,14 @@ export function WorkPreview() {
                     <span className="text-xs font-semibold uppercase tracking-wider text-accent">
                       {item.category}
                     </span>
-                    <span className="rounded-full border border-white/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted">
-                      Website concept
+                    <span
+                      className={`rounded-full border px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${
+                        isReal
+                          ? "border-emerald-400/30 text-emerald-400"
+                          : "border-white/10 text-muted"
+                      }`}
+                    >
+                      {isReal ? "Real project" : "Website concept"}
                     </span>
                   </div>
                   <h3 className="text-lg font-semibold text-white">{item.name}</h3>
@@ -45,7 +52,7 @@ export function WorkPreview() {
                     {item.description}
                   </p>
                   <span className="mt-auto flex items-center gap-1 pt-2 text-sm font-medium text-accent transition-transform group-hover:translate-x-1">
-                    View concept
+                    {isReal ? "View project" : "View concept"}
                     <span aria-hidden="true">&rarr;</span>
                   </span>
                 </div>

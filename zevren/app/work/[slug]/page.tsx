@@ -31,7 +31,7 @@ export async function generateMetadata({
   }
 
   return buildMetadata({
-    title: `${project.name} (website concept)`,
+    title: `${project.name} (${project.kind === "real" ? "project" : "website concept"})`,
     description: project.description,
     path: `/work/${project.slug}`,
   });
@@ -46,6 +46,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   }
 
   const Demo = WORK_DEMOS[project.slug];
+  const isReal = project.kind === "real";
 
   return (
     <>
@@ -56,11 +57,15 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             className="flex w-fit items-center gap-1.5 text-sm font-medium text-muted transition-colors hover:text-white"
           >
             <span aria-hidden="true">&larr;</span>
-            All concepts
+            All {isReal ? "projects" : "concepts"}
           </Link>
           <div className="flex flex-wrap items-center gap-3">
-            <span className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
-              Website concept
+            <span
+              className={`text-sm font-semibold uppercase tracking-[0.2em] ${
+                isReal ? "text-emerald-400" : "text-accent"
+              }`}
+            >
+              {isReal ? "Real project" : "Website concept"}
             </span>
             <span className="rounded-full border border-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-muted">
               {project.category}
@@ -129,12 +134,13 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           <div className="flex flex-col gap-4 sm:flex-row">
             <Button href="/contact">Start a project</Button>
             <Button href="/work" variant="secondary">
-              See more concepts
+              See more {isReal ? "work" : "concepts"}
             </Button>
           </div>
           <p className="pt-6 text-xs text-muted">
-            ZEVREN CONCEPT: a website concept created by ZEVREN to demonstrate
-            how this type of digital experience could work.
+            {isReal
+              ? "ZEVREN REAL PROJECT: a website created by ZEVREN for a real business."
+              : "ZEVREN CONCEPT: a website concept created by ZEVREN to demonstrate how this type of digital experience could work."}
           </p>
         </Container>
       </section>

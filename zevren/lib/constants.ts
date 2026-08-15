@@ -193,6 +193,22 @@ export const WORK_ITEMS: WorkItem[] = [
       "Viewing requests",
     ],
   },
+  {
+    slug: "ellezone",
+    name: "ElleZone",
+    category: "E-commerce",
+    description:
+      "A premium webshop concept for ElleZone, a portion-control glass spice jar with a built-in scoop.",
+    whatWeExplored:
+      "This concept explores what a focused, single-product webshop launch could look like, from a product page through to checkout, wishlist and a simple account view.",
+    keyFeatures: [
+      "Product variants",
+      "Wishlist",
+      "Shopping cart",
+      "Checkout flow",
+      "Account overview",
+    ],
+  },
 ];
 
 export const WHY_ZEVREN: ValueItem[] = [

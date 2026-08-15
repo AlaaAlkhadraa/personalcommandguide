@@ -21,6 +21,7 @@ export interface WorkItem {
   description: string;
   whatWeExplored: string;
   keyFeatures: string[];
+  kind?: "concept" | "real";
 }
 
 export interface ProcessStep {
