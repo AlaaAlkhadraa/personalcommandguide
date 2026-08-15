@@ -22,12 +22,16 @@ ZEVREN is a new studio with no real clients yet, and the site is written to
 reflect that honestly rather than pretend otherwise. Keep this in mind when
 editing content in `lib/constants.ts`:
 
-- The projects in `WORK_ITEMS` are concept projects, not real client work.
-  Every project card and project page is labelled "Concept project" on
-  purpose, and the project pages end with a line stating they were created
-  to demonstrate ZEVREN's approach, not delivered for a real client. Once
-  there is real client work, replace concepts with real projects one at a
-  time rather than mixing the two without labelling them differently.
+- The projects in `WORK_ITEMS` (Barbershop Website, Garage Website, Online
+  Store, Property Platform) are website concepts, not real client work.
+  Each one is a genuinely interactive demo (booking flow, shopping cart,
+  property search, and so on) built with local mock data, not a static
+  screenshot. Every project card and project page is labelled "Website
+  concept", and the project pages end with a "ZEVREN CONCEPT" line stating
+  they were created to demonstrate how that kind of digital experience
+  could work, not delivered for a real client. Once there is real client
+  work, replace concepts with real projects one at a time rather than
+  mixing the two without labelling them differently.
 - There is no testimonials section and no star ratings anywhere in the
   project, and none should be added until there are real reviews to show.
 - There are no invented statistics (project counts, ratings, "founded in
@@ -57,13 +61,17 @@ app/                  Routes (App Router), each folder = a page
 components/
   layout/               Navbar, Footer
   home/                 Homepage sections (Hero, FAQ, Process, ...)
-  work/                 ProjectMockup (the concept preview visual)
+  work/                 registry.tsx (slug -> preview/demo), previews/
+  demos/                The 4 interactive concept demos (barbershop, garage,
+                        store, property), each a self-contained client
+                        component with its own visual identity
   services/             PricingSection
   contact/              ContactForm
   ui/                   Reusable primitives (Button, Card, Icon, ...)
   seo/                  JsonLd helper
 lib/
   constants.ts          All site content (services, work concepts, pricing, FAQ)
+  demos/                Local mock data for the 4 interactive concept demos
   seo.ts                Per-page metadata helper
   validations/contact.ts Zod schema for the contact form
 types/                 Shared TypeScript types

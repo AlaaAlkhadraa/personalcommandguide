@@ -14,10 +14,11 @@ export const metadata = buildMetadata({
 const VALUES = [
   {
     title: "Direct communication",
-    description: "You work directly with the people working on your project.",
+    description:
+      "You work directly with the person working on your project.",
   },
   {
-    title: "Honest advice",
+    title: "Straightforward advice",
     description: "If something is unnecessary, we will say so.",
   },
   {
@@ -26,7 +27,7 @@ const VALUES = [
   },
   {
     title: "Long term thinking",
-    description: "The website should remain useful as your business grows.",
+    description: "The website should remain useful as your business develops.",
   },
 ];
 
@@ -36,7 +37,7 @@ export default function AboutPage() {
       <PageHero
         eyebrow="About"
         title="An independent web studio in Maastricht"
-        description="ZEVREN is an independent web studio based in Maastricht, Netherlands. We build modern websites and digital experiences for businesses that want to improve the way they present themselves online."
+        description="ZEVREN is an independent web studio based in Maastricht, Netherlands. We build websites and digital products for businesses that want a better way to present themselves online."
       />
       <section className="py-20">
         <Container className="grid gap-16 lg:grid-cols-[1.1fr_1fr]">
@@ -45,13 +46,12 @@ export default function AboutPage() {
               How we work
             </h2>
             <p className="leading-relaxed text-muted">
-              We are keeping the studio small so we can stay close to every
-              project and communicate directly with our clients.
+              We keep things simple: understand the business, build what is
+              needed and avoid adding things just for the sake of it.
             </p>
             <p className="leading-relaxed text-muted">
-              We are currently building our portfolio and looking for
-              businesses that care about quality, clear communication and a
-              strong online presence.
+              We are keeping the studio small so we can stay close to every
+              project and communicate directly with the people we work with.
             </p>
           </div>
           <div className="flex flex-col gap-4">
@@ -79,8 +79,8 @@ export default function AboutPage() {
             Wondering if we&apos;re a fit for your project?
           </h2>
           <p className="max-w-lg text-muted">
-            Book a short call. No commitment, just an honest picture of
-            what&apos;s possible.
+            Tell us about your business and what you are looking to build.
+            We will get back to you with an honest answer.
           </p>
           <Button href="/contact">Start a project</Button>
         </Container>

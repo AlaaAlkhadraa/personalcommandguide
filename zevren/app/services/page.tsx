@@ -9,7 +9,7 @@ import { buildMetadata } from "@/lib/seo";
 export const metadata = buildMetadata({
   title: "Services",
   description:
-    "Custom websites, online stores, web applications, UX/UI design, SEO foundations and maintenance. See what ZEVREN can build for your business.",
+    "Websites, online stores, web applications and website support. See what ZEVREN can build for your business.",
   path: "/services",
 });
 
@@ -19,7 +19,7 @@ export default function ServicesPage() {
       <PageHero
         eyebrow="Services"
         title="What we build"
-        description="We stick to a limited set of services we are genuinely good at, rather than doing a bit of everything."
+        description="We focus on a small number of services and build each project around what the business actually needs."
       />
       <section className="py-20">
         <Container className="flex flex-col gap-20">

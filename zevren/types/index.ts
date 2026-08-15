@@ -12,22 +12,15 @@ export interface Service {
   icon: ServiceIcon;
 }
 
-export type ServiceIcon =
-  | "code"
-  | "layers"
-  | "cart"
-  | "search"
-  | "wrench"
-  | "compass";
+export type ServiceIcon = "code" | "cart" | "wrench" | "compass";
 
 export interface WorkItem {
   slug: string;
   name: string;
-  industry: string;
-  summary: string;
-  idea: string;
-  approach: string;
-  whatWeBuilt: string[];
+  category: string;
+  description: string;
+  whatWeExplored: string;
+  keyFeatures: string[];
 }
 
 export interface ProcessStep {

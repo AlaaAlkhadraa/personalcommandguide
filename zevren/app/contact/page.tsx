@@ -17,7 +17,7 @@ export default function ContactPage() {
       <PageHero
         eyebrow="Contact"
         title="Let's talk about your project."
-        description="Tell us a little about your business and what you are looking to build. We will review your request and get back to you to discuss the next step."
+        description="Tell us a little about your business and what you are looking to build. We will review your request and get back to you with the next step."
       />
       <section className="py-20">
         <Container className="grid gap-16 lg:grid-cols-[1fr_1.3fr]">
@@ -55,8 +55,8 @@ export default function ContactPage() {
               </h2>
               <ul className="mt-4 flex flex-col gap-2 text-sm text-muted">
                 <li>A reply within one business day</li>
-                <li>A short, no-obligation introductory call</li>
-                <li>A fixed proposal with price and timeline</li>
+                <li>A clear answer about your project</li>
+                <li>A price and timeline if we are a good fit</li>
               </ul>
             </div>
           </div>

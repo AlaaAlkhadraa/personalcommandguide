@@ -11,9 +11,9 @@ import type {
 export const SITE_CONFIG = {
   name: "ZEVREN",
   legalName: "ZEVREN Digital B.V.",
-  tagline: "Websites built to make your business look serious.",
+  tagline: "Websites that make your business easier to choose.",
   description:
-    "ZEVREN creates modern, fast and user friendly websites for businesses that want a stronger online presence.",
+    "We design and build modern websites for businesses that want a clear, professional presence online.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.zevren.nl",
   email: "info@zevren.nl",
   phone: "+31 6 30958710",
@@ -43,10 +43,10 @@ export const FOOTER_LEGAL_LINKS: NavLink[] = [
 
 export const SERVICES: Service[] = [
   {
-    slug: "custom-websites",
-    title: "Custom Websites",
+    slug: "websites",
+    title: "Websites",
     summary:
-      "Modern websites designed around your business, your customers and what you actually need.",
+      "Modern websites designed around your business, your customers and what you need the website to achieve.",
     description:
       "We start by understanding what your website needs to do, then design and build around that. Not a page builder theme with your logo on it.",
     features: [
@@ -61,13 +61,13 @@ export const SERVICES: Service[] = [
     slug: "online-stores",
     title: "Online Stores",
     summary:
-      "Clean and easy to use online stores designed to make products simple to discover and purchase.",
+      "Clean online stores that make it easy for customers to browse products and place orders.",
     description:
       "From browsing to checkout, every step is designed to be simple. We set up a store you can manage yourself once it is live.",
     features: [
       "Secure checkout and payments",
       "Easy product management",
-      "Built to handle growth",
+      "Clear product pages",
       "Works well on mobile",
     ],
     icon: "cart",
@@ -76,52 +76,22 @@ export const SERVICES: Service[] = [
     slug: "web-applications",
     title: "Web Applications",
     summary:
-      "Custom dashboards, portals and web tools when a normal website is not enough.",
+      "Custom dashboards, portals and web tools for businesses that need more than a standard website.",
     description:
       "When an off the shelf tool does not fit how your business works, we build something that does.",
     features: [
       "Client portals and dashboards",
       "Booking and scheduling tools",
       "Connects with the systems you use",
-      "Built to be maintained long term",
+      "Built around your specific process",
     ],
     icon: "compass",
   },
   {
-    slug: "ux-ui-design",
-    title: "UX and UI Design",
+    slug: "website-support",
+    title: "Website Support",
     summary:
-      "Clear interfaces that make websites easier to understand, navigate and use.",
-    description:
-      "Good design is not just how it looks. We design around how people actually use a website.",
-    features: [
-      "Wireframes before visual design",
-      "A consistent design system",
-      "Designed with accessibility in mind",
-      "Tested across screen sizes",
-    ],
-    icon: "layers",
-  },
-  {
-    slug: "seo-foundations",
-    title: "SEO Foundations",
-    summary:
-      "A technically solid website with a clear structure and a strong starting point for search engines.",
-    description:
-      "We build every site with clean structure, fast loading and proper metadata, the foundation search engines look for.",
-    features: [
-      "Clean site structure",
-      "Metadata on every page",
-      "Fast loading pages",
-      "Built to be found",
-    ],
-    icon: "search",
-  },
-  {
-    slug: "maintenance-support",
-    title: "Maintenance and Support",
-    summary:
-      "Ongoing updates, improvements and technical support after launch.",
+      "Ongoing updates, fixes and improvements after your website goes live.",
     description:
       "A website needs upkeep after launch. We keep it updated, secure and running well.",
     features: [
@@ -136,161 +106,122 @@ export const SERVICES: Service[] = [
 
 export const PRICING_PLANS: PricingPlan[] = [
   {
-    name: "Starter Website",
+    name: "Websites",
     price: "From €499",
-    description: "For smaller websites and simple business needs.",
+    description: "For a professional website built around your business.",
   },
   {
-    name: "Business Website",
-    price: "From €899",
-    description: "For a complete professional business website.",
+    name: "Online Stores",
+    price: "From €999",
+    description: "For businesses that want to sell products online.",
   },
   {
-    name: "Online Store",
-    price: "From €1,299",
-    description: "For businesses that need an online shop.",
-  },
-  {
-    name: "Custom Web Application",
-    price: "From €1,999",
+    name: "Custom Web Projects",
+    price: "From €1,499",
     description:
-      "For dashboards, portals, booking systems and other custom web applications.",
+      "For web applications, portals and anything beyond a standard website.",
   },
 ];
 
 export const WORK_ITEMS: WorkItem[] = [
   {
-    slug: "northgate-logistics",
-    name: "NorthGate Logistics",
-    industry: "Logistics",
-    summary:
-      "A concept exploring how a logistics company could offer a clearer online experience for requesting quotes and tracking shipments.",
-    idea: "This concept explores how a logistics company could give customers a clearer way to request quotes and track shipments online, instead of relying on phone calls and emails.",
-    approach:
-      "We focused on a simple quote request flow and a clean way to present shipment information, so the important details are easy to find.",
-    whatWeBuilt: [
-      "Quote request form",
-      "Service overview pages",
-      "Shipment tracking layout",
-      "Responsive design",
-    ],
-  },
-  {
-    slug: "van-dijk-accountancy",
-    name: "Van Dijk Accountancy",
-    industry: "Accounting",
-    summary:
-      "A concept for an accountancy firm that needed a more secure and structured way to exchange documents with clients.",
-    idea: "This concept looks at how an accountancy firm could move away from emailing sensitive documents back and forth, towards a more structured, secure process.",
-    approach:
-      "We designed a simple client portal concept alongside a straightforward booking flow for consultations.",
-    whatWeBuilt: [
-      "Client portal concept",
-      "Consultation booking form",
-      "Service pages",
-      "Responsive design",
-    ],
-  },
-  {
-    slug: "blueline-garage",
-    name: "BlueLine Garage",
-    industry: "Automotive",
-    summary:
-      "A concept for an independent garage that wanted customers to book appointments online instead of by phone.",
-    idea: "This concept explores how a garage could let customers book a maintenance slot and see an estimated price without calling during opening hours.",
-    approach:
-      "We focused on a simple booking flow with clear service pricing, designed to work well on mobile.",
-    whatWeBuilt: [
-      "Appointment booking flow",
-      "Service pricing overview",
+    slug: "barbershop-website",
+    name: "Barbershop Website",
+    category: "Barbershop",
+    description:
+      "A modern barbershop website with online booking, service selection and a simple customer experience.",
+    whatWeExplored:
+      "This concept explores how a modern barbershop could make appointments easier for customers through a simple, mobile first website.",
+    keyFeatures: [
+      "Online appointment booking",
+      "Service selection",
+      "Barber selection",
+      "Available time slots",
       "Mobile first design",
-      "Contact experience",
     ],
   },
   {
-    slug: "urban-bistro-maastricht",
-    name: "Urban Bistro Maastricht",
-    industry: "Restaurant",
-    summary:
-      "A concept for a restaurant that needed a fast, mobile friendly site with an easy way to manage the menu.",
-    idea: "This concept explores how a restaurant could present its menu and take reservations without a slow, hard to update website.",
-    approach:
-      "We kept the design fast and image led, with a menu structure that is easy to update and a simple reservation flow.",
-    whatWeBuilt: [
-      "Reservation flow",
-      "Menu presentation",
-      "Mobile first, image led design",
-      "Contact and location details",
+    slug: "garage-website",
+    name: "Garage Website",
+    category: "Automotive",
+    description:
+      "A professional garage website focused on servicing, inspections and online appointments.",
+    whatWeExplored:
+      "This concept explores how a garage could let customers book a service online and share their vehicle details in advance, instead of everything happening over the phone.",
+    keyFeatures: [
+      "Online service booking",
+      "Vehicle registration field",
+      "Vehicle details",
+      "Appointment scheduling",
+      "Service overview",
     ],
   },
   {
-    slug: "delta-build-group",
-    name: "Delta Build Group",
-    industry: "Construction",
-    summary:
-      "A concept for a construction company that wanted its project work to actually generate enquiries online.",
-    idea: "This concept explores how a construction company could showcase project types and turn website visitors into real enquiries.",
-    approach:
-      "We structured the site around clear service and project categories, with a quote form designed to filter serious enquiries.",
-    whatWeBuilt: [
-      "Project showcase layout",
-      "Multi step quote form",
-      "Service pages",
-      "Responsive design",
+    slug: "online-store",
+    name: "Online Store",
+    category: "E-commerce",
+    description:
+      "A complete online store for premium home and lifestyle products, from browsing to checkout.",
+    whatWeExplored:
+      "This concept explores what a premium home goods store could look like online, from product discovery through to a simple, clear checkout.",
+    keyFeatures: [
+      "Product catalogue",
+      "Product filtering",
+      "Shopping cart",
+      "Checkout flow",
+      "Order confirmation",
     ],
   },
   {
-    slug: "vitacare-clinic",
-    name: "VitaCare Clinic",
-    industry: "Healthcare",
-    summary:
-      "A concept for a multi practitioner clinic that wanted patients to book appointments online.",
-    idea: "This concept explores how a clinic could let patients book directly with the right practitioner, instead of everyone calling the same front desk.",
-    approach:
-      "We focused on a clear practitioner and specialism overview, with a straightforward booking flow.",
-    whatWeBuilt: [
-      "Practitioner booking flow",
-      "Specialism directory",
-      "Accessible design",
-      "Secure intake form",
+    slug: "property-platform",
+    name: "Property Platform",
+    category: "Custom Web Application",
+    description:
+      "A property rental platform with search, filtering and viewing requests, built as a custom web application.",
+    whatWeExplored:
+      "This concept explores how a property platform could help renters search, filter and request viewings without calling every listing individually.",
+    keyFeatures: [
+      "Property search",
+      "Advanced filtering",
+      "Property details",
+      "Saved properties",
+      "Viewing requests",
     ],
   },
 ];
 
 export const WHY_ZEVREN: ValueItem[] = [
   {
-    title: "Direct communication",
-    description:
-      "You communicate directly with the people working on your project.",
+    title: "Small by design",
+    description: "You work directly with the person building your website.",
   },
   {
-    title: "Built around your business",
-    description:
-      "We design the website around your business instead of forcing you into a generic layout.",
+    title: "No unnecessary extras",
+    description: "We focus on what your business actually needs.",
   },
   {
-    title: "Clear communication",
-    description:
-      "You know what is being built, what it costs and what happens next.",
+    title: "Clear pricing",
+    description: "You know what you are paying for before we start.",
   },
   {
-    title: "Built to grow",
-    description: "The website is built with room for future improvements.",
+    title: "Built properly",
+    description:
+      "Responsive design, clean structure and a website that works across devices.",
   },
 ];
 
 export const PROCESS_STEPS: ProcessStep[] = [
   {
     step: "01",
-    title: "Discovery",
+    title: "Tell us what you need",
     description:
-      "We learn about your business, your customers and what the website needs to achieve.",
+      "We learn about your business and what you want the website to do.",
   },
   {
     step: "02",
-    title: "Structure",
+    title: "Plan",
     description:
-      "We plan the pages, content and user flow before development starts.",
+      "We decide what pages, content and features are actually needed.",
   },
   {
     step: "03",
@@ -300,14 +231,14 @@ export const PROCESS_STEPS: ProcessStep[] = [
   },
   {
     step: "04",
-    title: "Development",
+    title: "Build",
     description:
-      "We build the website and make sure it works properly across devices.",
+      "We develop the website and make sure everything works properly.",
   },
   {
     step: "05",
     title: "Launch",
-    description: "We test everything and prepare the website for launch.",
+    description: "We test the website and prepare it for launch.",
   },
 ];
 
@@ -334,6 +265,6 @@ export const FAQ_ITEMS: FaqItem[] = [
   {
     question: "Do you provide support after launch?",
     answer:
-      "Yes. Maintenance and support can be arranged after the website goes live.",
+      "Yes. Support can be arranged after the website goes live, from small fixes to bigger changes.",
   },
 ];

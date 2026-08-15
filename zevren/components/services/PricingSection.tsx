@@ -10,9 +10,9 @@ export function PricingSection() {
         <SectionHeading
           eyebrow="Pricing"
           title="Starting prices"
-          description="Professional quality at a fair price. Every project is scoped individually, these are the starting points."
+          description="Every project is priced based on what you actually need."
         />
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-6 sm:grid-cols-3">
           {PRICING_PLANS.map((plan) => (
             <Card key={plan.name} className="flex flex-col gap-3">
               <h3 className="text-base font-semibold text-white">
