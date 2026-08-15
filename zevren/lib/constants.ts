@@ -137,22 +137,22 @@ export const SERVICES: Service[] = [
 export const PRICING_PLANS: PricingPlan[] = [
   {
     name: "Starter Website",
-    price: "From €299",
+    price: "From €499",
     description: "A small, focused website to get your business online.",
   },
   {
     name: "Business Website",
-    price: "From €499",
+    price: "From €799",
     description: "A complete website built around your business and content.",
   },
   {
     name: "Online Store",
-    price: "From €799",
+    price: "From €1,199",
     description: "For businesses that want to sell products online.",
   },
   {
     name: "Custom Web Application",
-    price: "From €1,299",
+    price: "From €1,999",
     description:
       "For web applications, portals and anything beyond a standard website.",
   },
@@ -226,18 +226,18 @@ export const WORK_ITEMS: WorkItem[] = [
   },
   {
     slug: "property-platform",
-    name: "Property Platform",
+    name: "Property Management Platform",
     category: "Custom Web Application",
     description:
-      "A property rental platform with search, filtering and viewing requests, built as a custom web application.",
+      "A property management dashboard for landlords, built as a custom web application: properties, bookings, calendar and messages in one place.",
     whatWeExplored:
-      "This concept explores how a property platform could help renters search, filter and request viewings without calling every listing individually.",
+      "This concept explores what a real internal tool could look like, not just a marketing website. A landlord managing several properties needs bookings, availability and guest messages in one dashboard instead of spreadsheets and email.",
     keyFeatures: [
-      "Property search",
-      "Advanced filtering",
-      "Property details",
-      "Saved properties",
-      "Viewing requests",
+      "Bookings and revenue overview",
+      "Interactive availability calendar",
+      "Booking request approvals",
+      "Guest messaging",
+      "Property management",
     ],
   },
   {
@@ -330,7 +330,7 @@ export const FAQ_ITEMS: FaqItem[] = [
   {
     question: "How much does a website cost?",
     answer:
-      "Most ZEVREN projects start from €299. The final price depends on the size and requirements of the project.",
+      "Most ZEVREN projects start from €499. The final price depends on the size and requirements of the project.",
   },
   {
     question: "How long does a website take?",

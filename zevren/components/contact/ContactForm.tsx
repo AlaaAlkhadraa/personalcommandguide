@@ -17,7 +17,7 @@ const NEEDS_VALUES = [
   "not-sure",
 ];
 
-const BUDGET_VALUES = ["", "under-1.5k", "1.5k-3k", "3k-5k", "5k-plus", "not-sure"];
+const BUDGET_VALUES = ["", "under-800", "800-1.5k", "1.5k-3k", "3k-plus", "not-sure"];
 
 export function ContactForm({ dict }: { dict: Dictionary["contact"]["form"] }) {
   const [status, setStatus] = useState<Status>("idle");

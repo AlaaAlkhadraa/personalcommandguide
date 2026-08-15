@@ -1,92 +1,122 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { PROPERTIES, type Property } from "@/lib/demos/property-data";
 import {
-  PROPERTIES,
-  PROPERTY_LOCATIONS,
-  PROPERTY_TYPES,
-  VIEWING_DATES,
-  VIEWING_TIME_SLOTS,
-  type Property,
-} from "@/lib/demos/property-data";
+  DASHBOARD_BOOKINGS,
+  DASHBOARD_MESSAGES,
+  REVENUE_BY_MONTH,
+  generateMonthDays,
+  type DashboardBooking,
+  type DashboardMessage,
+} from "@/lib/demos/property-dashboard-data";
 import type { Dictionary } from "@/lib/i18n/dictionary-type";
-
-type View = "search" | "detail";
-
-interface ViewingForm {
-  name: string;
-  email: string;
-  phone: string;
-  date: string;
-  time: string;
-}
-
-const EMPTY_VIEWING: ViewingForm = { name: "", email: "", phone: "", date: "", time: "" };
-
-const PRICE_CEILINGS = [
-  { label: "Any price", value: Infinity },
-  { label: "Up to €1,000", value: 1000 },
-  { label: "Up to €1,500", value: 1500 },
-  { label: "Up to €2,000", value: 2000 },
-];
 
 interface PropertyDemoProps {
   dict: Dictionary["demos"]["property"];
   common: Dictionary["demoCommon"];
 }
 
+type Tab = "overview" | "properties" | "property-detail" | "calendar" | "bookings" | "messages" | "settings";
+
+const TAB_ORDER: Exclude<Tab, "property-detail">[] = [
+  "overview",
+  "properties",
+  "calendar",
+  "bookings",
+  "messages",
+  "settings",
+];
+
 export function PropertyDemo({ dict, common }: PropertyDemoProps) {
-  const [view, setView] = useState<View>("search");
-  const [query, setQuery] = useState("");
-  const [location, setLocation] = useState("Any location");
-  const [type, setType] = useState("Any type");
-  const [maxPrice, setMaxPrice] = useState(Infinity);
-  const [saved, setSaved] = useState<string[]>([]);
+  const [tab, setTab] = useState<Tab>("overview");
   const [activeProperty, setActiveProperty] = useState<Property | null>(null);
-  const [viewingForm, setViewingForm] = useState<ViewingForm>(EMPTY_VIEWING);
-  const [viewingErrors, setViewingErrors] = useState<Partial<ViewingForm>>({});
-  const [viewingSent, setViewingSent] = useState(false);
+  const [statuses, setStatuses] = useState<Record<string, "active" | "draft">>(
+    () => Object.fromEntries(PROPERTIES.map((p) => [p.id, "active"]))
+  );
+  const [calendarPropertyId, setCalendarPropertyId] = useState(PROPERTIES[0]!.id);
+  const [blockedDays, setBlockedDays] = useState<Record<string, number[]>>({});
+  const [bookings, setBookings] = useState<DashboardBooking[]>(DASHBOARD_BOOKINGS);
+  const [messages, setMessages] = useState<DashboardMessage[]>(DASHBOARD_MESSAGES);
+  const [activeMessageId, setActiveMessageId] = useState<string | null>(DASHBOARD_MESSAGES[0]?.id ?? null);
+  const [replyText, setReplyText] = useState("");
+  const [businessName, setBusinessName] = useState("Nestly Property Management");
+  const [saved, setSaved] = useState(false);
 
-  const results = useMemo(() => {
-    return PROPERTIES.filter((p) => {
-      if (location !== "Any location" && p.location !== location) return false;
-      if (type !== "Any type" && p.type !== type) return false;
-      if (p.price > maxPrice) return false;
-      if (query.trim()) {
-        const q = query.trim().toLowerCase();
-        if (!p.title.toLowerCase().includes(q) && !p.location.toLowerCase().includes(q)) {
-          return false;
-        }
-      }
-      return true;
+  const activeBookingsCount = bookings.filter((b) => b.status !== "declined").length;
+  const revenueThisMonth = REVENUE_BY_MONTH[REVENUE_BY_MONTH.length - 1]!.revenue;
+  const occupancy = useMemo(() => {
+    const totals = PROPERTIES.map((p) => {
+      const days = generateMonthDays(p.id, blockedDays[p.id] ?? []);
+      return days.filter((d) => d.status !== "available").length / days.length;
     });
-  }, [location, type, maxPrice, query]);
+    return Math.round((totals.reduce((a, b) => a + b, 0) / totals.length) * 100);
+  }, [blockedDays]);
 
-  function toggleSave(id: string) {
-    setSaved((prev) => (prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]));
-  }
+  const recentActivity = useMemo(() => {
+    const bookingEvents = bookings.slice(0, 3).map((b) => ({
+      id: `activity-${b.id}`,
+      text: `${b.guestName} — ${PROPERTIES.find((p) => p.id === b.propertyId)?.title ?? ""}`,
+    }));
+    const messageEvents = messages.filter((m) => m.unread).map((m) => ({
+      id: `activity-${m.id}`,
+      text: `${m.guestName} — ${PROPERTIES.find((p) => p.id === m.propertyId)?.title ?? ""}`,
+    }));
+    return [...messageEvents, ...bookingEvents].slice(0, 5);
+  }, [bookings, messages]);
 
   function openProperty(p: Property) {
     setActiveProperty(p);
-    setViewingSent(false);
-    setViewingForm(EMPTY_VIEWING);
-    setViewingErrors({});
-    setView("detail");
+    setTab("property-detail");
   }
 
-  function handleViewingSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const nextErrors: Partial<ViewingForm> = {};
-    if (viewingForm.name.trim().length < 2) nextErrors.name = "Enter your full name.";
-    if (!/^\S+@\S+\.\S+$/.test(viewingForm.email)) nextErrors.email = "Enter a valid email address.";
-    if (viewingForm.phone.trim().length < 6) nextErrors.phone = "Enter a valid phone number.";
-    if (!viewingForm.date) nextErrors.date = "Select a preferred date.";
-    if (!viewingForm.time) nextErrors.time = "Select a preferred time.";
-    setViewingErrors(nextErrors);
-    if (Object.keys(nextErrors).length === 0) {
-      setViewingSent(true);
-    }
+  function toggleStatus(id: string) {
+    setStatuses((prev) => ({ ...prev, [id]: prev[id] === "active" ? "draft" : "active" }));
   }
+
+  function toggleDay(day: number) {
+    setBlockedDays((prev) => {
+      const current = prev[calendarPropertyId] ?? [];
+      const isBlocked = current.includes(day);
+      return {
+        ...prev,
+        [calendarPropertyId]: isBlocked ? current.filter((d) => d !== day) : [...current, day],
+      };
+    });
+  }
+
+  function updateBookingStatus(id: string, status: "confirmed" | "declined") {
+    setBookings((prev) => prev.map((b) => (b.id === id ? { ...b, status } : b)));
+  }
+
+  function sendReply() {
+    if (!activeMessageId || !replyText.trim()) return;
+    setMessages((prev) =>
+      prev.map((m) =>
+        m.id === activeMessageId
+          ? { ...m, unread: false, thread: [...m.thread, { from: "host", text: replyText.trim(), time: "Now" }] }
+          : m
+      )
+    );
+    setReplyText("");
+  }
+
+  function selectMessage(id: string) {
+    setActiveMessageId(id);
+    setMessages((prev) => prev.map((m) => (m.id === id ? { ...m, unread: false } : m)));
+  }
+
+  const tabLabel: Record<Exclude<Tab, "property-detail">, string> = {
+    overview: dict.navOverview,
+    properties: dict.navProperties,
+    calendar: dict.navCalendar,
+    bookings: dict.navBookings,
+    messages: dict.navMessages,
+    settings: dict.navSettings,
+  };
+
+  const activeMessage = messages.find((m) => m.id === activeMessageId) ?? null;
+  const calendarDays = generateMonthDays(calendarPropertyId, blockedDays[calendarPropertyId] ?? []);
 
   return (
     <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white text-slate-900">
@@ -94,386 +124,367 @@ export function PropertyDemo({ dict, common }: PropertyDemoProps) {
       <nav className="flex items-center justify-between border-b border-slate-200 bg-white/95 px-5 py-4 sm:px-8">
         <button
           type="button"
-          onClick={() => setView("search")}
+          onClick={() => setTab("overview")}
           className="font-heading text-lg font-semibold tracking-wide text-slate-900"
         >
           NESTLY
         </button>
-        <div className="hidden items-center gap-6 text-sm text-slate-500 sm:flex">
-          <span>{dict.navRent}</span>
-          <span>
-            {dict.navSaved} ({saved.length})
-          </span>
-          <span>{dict.navHowItWorks}</span>
-        </div>
-        <span className="rounded-full bg-teal-600 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-white">
-          {dict.listProperty}
+        <span className="rounded-full border border-teal-600/30 bg-teal-50 px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-teal-700">
+          {dict.conceptBadge}
         </span>
       </nav>
 
-      {view === "search" && (
-        <>
-          {/* Hero search */}
-          <section className="border-b border-slate-200 bg-[radial-gradient(circle_at_15%_0%,rgba(13,148,136,0.10),transparent_50%),radial-gradient(circle_at_85%_20%,rgba(79,70,229,0.10),transparent_50%)] px-5 py-14 sm:px-8 sm:py-20">
-            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-teal-700">
-              {dict.heroBadge}
-            </span>
-            <h2 className="mt-4 max-w-xl font-heading text-3xl font-semibold leading-tight text-slate-900 sm:text-4xl">
-              {dict.heroHeading}
-            </h2>
-            <p className="mt-4 max-w-lg text-sm leading-relaxed text-slate-500">
-              {dict.heroSubtitle}
-            </p>
-            <div className="mt-6 flex flex-col gap-3 rounded-xl border border-slate-200 bg-white p-3 shadow-sm sm:flex-row sm:items-center">
-              <input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder={dict.searchPlaceholder}
-                className="flex-1 rounded-lg border border-slate-200 px-3 py-2.5 text-sm text-slate-900 outline-none focus:border-teal-600"
-              />
-              <button
-                type="button"
-                onClick={() => document.getElementById("results")?.scrollIntoView({ block: "nearest" })}
-                className="rounded-lg bg-teal-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-teal-500"
-              >
-                {dict.searchButton}
-              </button>
-            </div>
-          </section>
+      <div className="flex flex-col sm:flex-row">
+        <aside className="flex gap-2 overflow-x-auto border-b border-slate-200 bg-slate-50 p-3 sm:w-48 sm:flex-col sm:overflow-visible sm:border-b-0 sm:border-r sm:p-4">
+          {TAB_ORDER.map((id) => (
+            <button
+              key={id}
+              type="button"
+              onClick={() => setTab(id)}
+              className={`shrink-0 rounded-md px-3 py-2 text-left text-sm font-medium transition-colors ${
+                tab === id || (id === "properties" && tab === "property-detail")
+                  ? "bg-teal-600 text-white"
+                  : "text-slate-600 hover:bg-slate-200/60"
+              }`}
+            >
+              {tabLabel[id]}
+            </button>
+          ))}
+        </aside>
 
-          {/* Filters */}
-          <section className="border-b border-slate-200 px-5 py-8 sm:px-8">
-            <div className="flex flex-wrap gap-3">
-              <select
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-teal-600"
-              >
-                <option value="Any location">{dict.anyLocation}</option>
-                {PROPERTY_LOCATIONS.map((l) => (
-                  <option key={l} value={l}>
-                    {l}
-                  </option>
-                ))}
-              </select>
-              <select
-                value={type}
-                onChange={(e) => setType(e.target.value)}
-                className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-teal-600"
-              >
-                <option value="Any type">{dict.anyType}</option>
-                {PROPERTY_TYPES.map((t) => (
-                  <option key={t} value={t}>
-                    {t}
-                  </option>
-                ))}
-              </select>
-              <select
-                value={maxPrice === Infinity ? "Any price" : String(maxPrice)}
-                onChange={(e) => {
-                  const found = PRICE_CEILINGS.find((c) => c.label === e.target.value);
-                  setMaxPrice(found ? found.value : Infinity);
-                }}
-                className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-teal-600"
-              >
-                <option value="Any price">{dict.anyPrice}</option>
-                {PRICE_CEILINGS.slice(1).map((c) => (
-                  <option key={c.label} value={c.label}>
-                    {c.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </section>
-
-          {/* Property grid */}
-          <section id="results" className="px-5 py-12 sm:px-8">
-            <p className="mb-6 text-xs font-semibold uppercase tracking-[0.3em] text-teal-700">
-              {results.length} {dict.resultsFound}
-            </p>
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {results.map((p) => (
-                <div
-                  key={p.id}
-                  className="group relative flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white transition-shadow hover:shadow-lg"
-                >
-                  <button
-                    type="button"
-                    onClick={() => openProperty(p)}
-                    className={`relative h-40 w-full bg-gradient-to-br text-left ${p.swatch}`}
-                  >
-                    <span className="absolute left-3 top-3 rounded-full bg-white/90 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-slate-700">
-                      {p.type}
-                    </span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => toggleSave(p.id)}
-                    aria-label={saved.includes(p.id) ? "Remove from saved" : "Save property"}
-                    className={`absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 ${
-                      saved.includes(p.id) ? "text-red-500" : "text-slate-400"
-                    }`}
-                  >
-                    <svg viewBox="0 0 20 20" className="h-4 w-4" fill={saved.includes(p.id) ? "currentColor" : "none"} stroke="currentColor" strokeWidth={1.6}>
-                      <path d="M10 17s-6-4-6-8.5A3.5 3.5 0 0 1 10 6a3.5 3.5 0 0 1 6 2.5C16 13 10 17 10 17Z" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </button>
-                  <div className="flex flex-1 flex-col gap-2 p-4">
-                    <span className="text-sm font-medium text-slate-900">{p.title}</span>
-                    <span className="text-xs text-slate-500">{p.location}</span>
-                    <div className="flex items-center gap-3 text-xs text-slate-500">
-                      <span>
-                        {p.bedrooms} {dict.bedrooms}
-                      </span>
-                      <span>
-                        {p.bathrooms} {dict.bathrooms}
-                      </span>
-                      <span>{p.size} m&sup2;</span>
-                    </div>
-                    <div className="mt-1 flex items-center justify-between">
-                      <span className="text-sm font-semibold text-slate-900">
-                        &euro;{p.price.toLocaleString()} / month
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => openProperty(p)}
-                        className="text-xs font-semibold text-teal-700 hover:text-teal-600"
-                      >
-                        {dict.viewDetails}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-              {results.length === 0 && (
-                <p className="col-span-full text-sm text-slate-500">
-                  No properties match these filters. Try widening your search.
-                </p>
-              )}
-            </div>
-          </section>
-
-          {/* How it works */}
-          <section className="border-t border-slate-200 bg-slate-50 px-5 py-14 sm:px-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-teal-700">
-              {dict.howItWorksHeading}
-            </p>
-            <div className="mt-6 grid gap-6 sm:grid-cols-3">
-              {[
-                { title: "Search", body: "Filter by location, price and property type." },
-                { title: "Compare", body: "Save properties and compare details side by side." },
-                { title: "Request a viewing", body: "Pick a time that works and we confirm the rest." },
-              ].map((s) => (
-                <div key={s.title} className="rounded-xl border border-slate-200 bg-white p-5">
-                  <p className="text-sm font-semibold text-slate-900">{s.title}</p>
-                  <p className="mt-1.5 text-sm leading-relaxed text-slate-500">{s.body}</p>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* CTA */}
-          <section className="border-t border-slate-200 px-5 py-14 text-center sm:px-8">
-            <p className="text-lg font-semibold text-slate-900">
-              Have a property to list?
-            </p>
-            <p className="mt-2 text-sm text-slate-500">
-              Reach renters actively searching in your area.
-            </p>
-          </section>
-        </>
-      )}
-
-      {view === "detail" && activeProperty && (
-        <section className="px-5 py-12 sm:px-8">
-          <button
-            type="button"
-            onClick={() => setView("search")}
-            className="mb-6 text-xs font-medium text-slate-500 hover:text-teal-700"
-          >
-            &larr; {dict.backToSearch}
-          </button>
-
-          <div className="grid gap-3 sm:grid-cols-3">
-            <div className={`h-56 rounded-xl bg-gradient-to-br sm:col-span-2 sm:h-72 ${activeProperty.swatch}`} />
-            <div className="grid grid-rows-2 gap-3">
-              <div className={`rounded-xl bg-gradient-to-br ${activeProperty.swatch} opacity-80`} />
-              <div className={`rounded-xl bg-gradient-to-br ${activeProperty.swatch} opacity-60`} />
-            </div>
-          </div>
-
-          <div className="mt-8 grid gap-10 sm:grid-cols-[1.3fr_1fr]">
+        <div className="flex-1 p-5 sm:p-8">
+          {tab === "overview" && (
             <div className="flex flex-col gap-6">
-              <div>
-                <div className="flex items-center justify-between gap-3">
-                  <h2 className="font-heading text-2xl font-semibold text-slate-900">
-                    {activeProperty.title}
-                  </h2>
-                  <button
-                    type="button"
-                    onClick={() => toggleSave(activeProperty.id)}
-                    className={`flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium ${
-                      saved.includes(activeProperty.id)
-                        ? "border-red-300 text-red-500"
-                        : "border-slate-200 text-slate-500"
-                    }`}
-                  >
-                    {saved.includes(activeProperty.id) ? dict.saved : dict.save}
-                  </button>
+              <h2 className="text-lg font-semibold text-slate-900">{dict.overviewHeading}</h2>
+              <div className="grid gap-4 sm:grid-cols-4">
+                <div className="rounded-lg border border-slate-200 p-4">
+                  <p className="text-xs text-slate-500">{dict.statProperties}</p>
+                  <p className="mt-1 text-2xl font-semibold text-slate-900">{PROPERTIES.length}</p>
                 </div>
-                <p className="mt-1 text-sm text-slate-500">{activeProperty.location}</p>
-                <p className="mt-3 text-xl font-semibold text-slate-900">
-                  &euro;{activeProperty.price.toLocaleString()} / month
-                </p>
+                <div className="rounded-lg border border-slate-200 p-4">
+                  <p className="text-xs text-slate-500">{dict.statActiveBookings}</p>
+                  <p className="mt-1 text-2xl font-semibold text-slate-900">{activeBookingsCount}</p>
+                </div>
+                <div className="rounded-lg border border-slate-200 p-4">
+                  <p className="text-xs text-slate-500">{dict.statRevenue}</p>
+                  <p className="mt-1 text-2xl font-semibold text-slate-900">&euro;{revenueThisMonth.toLocaleString()}</p>
+                </div>
+                <div className="rounded-lg border border-slate-200 p-4">
+                  <p className="text-xs text-slate-500">{dict.statOccupancy}</p>
+                  <p className="mt-1 text-2xl font-semibold text-slate-900">{occupancy}%</p>
+                </div>
               </div>
 
-              <div className="flex flex-wrap gap-6 text-sm text-slate-600">
-                <span>
-                  {activeProperty.bedrooms} {dict.bedrooms}
-                </span>
-                <span>
-                  {activeProperty.bathrooms} {dict.bathrooms}
-                </span>
-                <span>{activeProperty.size} m&sup2;</span>
+              <div className="flex flex-col gap-3">
+                {REVENUE_BY_MONTH.map((m) => {
+                  const max = Math.max(...REVENUE_BY_MONTH.map((x) => x.revenue));
+                  return (
+                    <div key={m.month} className="flex items-center gap-3">
+                      <span className="w-10 text-xs text-slate-500">{m.month}</span>
+                      <div className="h-3 flex-1 overflow-hidden rounded-full bg-slate-100">
+                        <div
+                          className="h-full rounded-full bg-teal-600"
+                          style={{ width: `${(m.revenue / max) * 100}%` }}
+                        />
+                      </div>
+                      <span className="w-20 text-right text-xs text-slate-600">&euro;{m.revenue.toLocaleString()}</span>
+                    </div>
+                  );
+                })}
               </div>
-
-              <p className="text-sm leading-relaxed text-slate-600">
-                {activeProperty.description}
-              </p>
 
               <div>
                 <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
-                  Amenities
+                  {dict.recentActivityHeading}
                 </p>
-                <div className="flex flex-wrap gap-2">
-                  {activeProperty.amenities.map((a) => (
-                    <span
-                      key={a}
-                      className="rounded-full border border-slate-200 px-3 py-1 text-xs text-slate-600"
-                    >
-                      {a}
-                    </span>
+                <div className="flex flex-col gap-2">
+                  {recentActivity.map((a) => (
+                    <div key={a.id} className="rounded-lg border border-slate-200 px-4 py-2.5 text-sm text-slate-700">
+                      {a.text}
+                    </div>
                   ))}
                 </div>
               </div>
-
-              <p className="text-sm font-medium text-teal-700">{activeProperty.available}</p>
             </div>
+          )}
 
-            <div className="h-fit rounded-xl border border-slate-200 bg-slate-50 p-5">
-              {!viewingSent ? (
-                <>
-                  <p className="text-sm font-semibold text-slate-900">{dict.requestViewing}</p>
-                  <form onSubmit={handleViewingSubmit} className="mt-4 flex flex-col gap-3">
-                    <div>
-                      <label className="mb-1 block text-xs font-medium text-slate-500">
-                        {common.fullName}
-                      </label>
-                      <input
-                        value={viewingForm.name}
-                        onChange={(e) => setViewingForm({ ...viewingForm, name: e.target.value })}
-                        className="w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-teal-600"
-                        placeholder={common.namePlaceholder}
-                      />
-                      {viewingErrors.name && (
-                        <p className="mt-1 text-xs text-red-600">{viewingErrors.name}</p>
-                      )}
-                    </div>
-                    <div>
-                      <label className="mb-1 block text-xs font-medium text-slate-500">
-                        {common.email}
-                      </label>
-                      <input
-                        value={viewingForm.email}
-                        onChange={(e) => setViewingForm({ ...viewingForm, email: e.target.value })}
-                        className="w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-teal-600"
-                        placeholder={common.emailPlaceholder}
-                      />
-                      {viewingErrors.email && (
-                        <p className="mt-1 text-xs text-red-600">{viewingErrors.email}</p>
-                      )}
-                    </div>
-                    <div>
-                      <label className="mb-1 block text-xs font-medium text-slate-500">
-                        {common.phone}
-                      </label>
-                      <input
-                        value={viewingForm.phone}
-                        onChange={(e) => setViewingForm({ ...viewingForm, phone: e.target.value })}
-                        className="w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-teal-600"
-                        placeholder={common.phonePlaceholder}
-                      />
-                      {viewingErrors.phone && (
-                        <p className="mt-1 text-xs text-red-600">{viewingErrors.phone}</p>
-                      )}
-                    </div>
-                    <div>
-                      <label className="mb-1 block text-xs font-medium text-slate-500">
-                        {dict.preferredDate}
-                      </label>
-                      <select
-                        value={viewingForm.date}
-                        onChange={(e) => setViewingForm({ ...viewingForm, date: e.target.value })}
-                        className="w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-teal-600"
-                      >
-                        <option value="">{dict.selectDate}</option>
-                        {VIEWING_DATES.map((d) => (
-                          <option key={d.id} value={d.label}>
-                            {d.label}
-                          </option>
-                        ))}
-                      </select>
-                      {viewingErrors.date && (
-                        <p className="mt-1 text-xs text-red-600">{viewingErrors.date}</p>
-                      )}
-                    </div>
-                    <div>
-                      <label className="mb-1 block text-xs font-medium text-slate-500">
-                        {dict.preferredTime}
-                      </label>
-                      <select
-                        value={viewingForm.time}
-                        onChange={(e) => setViewingForm({ ...viewingForm, time: e.target.value })}
-                        className="w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-teal-600"
-                      >
-                        <option value="">{dict.selectTime}</option>
-                        {VIEWING_TIME_SLOTS.map((t) => (
-                          <option key={t} value={t}>
-                            {t}
-                          </option>
-                        ))}
-                      </select>
-                      {viewingErrors.time && (
-                        <p className="mt-1 text-xs text-red-600">{viewingErrors.time}</p>
-                      )}
-                    </div>
+          {tab === "properties" && (
+            <div className="flex flex-col gap-4">
+              <h2 className="text-lg font-semibold text-slate-900">{dict.propertiesHeading}</h2>
+              <div className="grid gap-4 sm:grid-cols-2">
+                {PROPERTIES.map((p) => (
+                  <div key={p.id} className="flex flex-col overflow-hidden rounded-xl border border-slate-200">
                     <button
-                      type="submit"
-                      className="mt-2 rounded-full bg-teal-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-teal-500"
-                    >
-                      {dict.requestViewingButton}
-                    </button>
-                  </form>
-                </>
-              ) : (
-                <div className="flex flex-col items-center gap-3 py-4 text-center">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-teal-600/10 text-teal-600">
-                    <svg viewBox="0 0 20 20" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={2}>
-                      <path d="m4 10 4 4 8-8" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
+                      type="button"
+                      onClick={() => openProperty(p)}
+                      className={`h-28 w-full bg-gradient-to-br text-left ${p.swatch}`}
+                    />
+                    <div className="flex flex-col gap-2 p-4">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-sm font-medium text-slate-900">{p.title}</span>
+                        <span
+                          className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${
+                            statuses[p.id] === "active"
+                              ? "bg-emerald-100 text-emerald-700"
+                              : "bg-slate-200 text-slate-600"
+                          }`}
+                        >
+                          {statuses[p.id] === "active" ? dict.statusActive : dict.statusDraft}
+                        </span>
+                      </div>
+                      <span className="text-xs text-slate-500">{p.location}</span>
+                      <div className="mt-1 flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => openProperty(p)}
+                          className="rounded-full border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:border-teal-600/60"
+                        >
+                          {common.continueLabel}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => toggleStatus(p.id)}
+                          className="rounded-full border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:border-teal-600/60"
+                        >
+                          {statuses[p.id] === "active" ? dict.markDraft : dict.markActive}
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                  <p className="text-base font-semibold text-slate-900">
-                    {dict.viewingReceivedTitle}
-                  </p>
-                  <p className="text-sm leading-relaxed text-slate-500">
-                    {dict.viewingReceivedBody}
-                  </p>
-                </div>
-              )}
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
-      )}
+          )}
+
+          {tab === "property-detail" && activeProperty && (
+            <div className="flex flex-col gap-4">
+              <button
+                type="button"
+                onClick={() => setTab("properties")}
+                className="w-fit text-xs font-medium text-slate-500 hover:text-teal-700"
+              >
+                &larr; {dict.backToProperties}
+              </button>
+              <div className={`h-40 rounded-xl bg-gradient-to-br sm:h-56 ${activeProperty.swatch}`} />
+              <h2 className="text-xl font-semibold text-slate-900">{activeProperty.title}</h2>
+              <p className="text-sm text-slate-500">{activeProperty.location}</p>
+              <div className="flex flex-wrap gap-6 text-sm text-slate-600">
+                <span>{activeProperty.bedrooms} bed</span>
+                <span>{activeProperty.bathrooms} bath</span>
+                <span>{activeProperty.size} m&sup2;</span>
+                <span>
+                  &euro;{activeProperty.price} {dict.pricePerNight}
+                </span>
+              </div>
+              <p className="text-sm leading-relaxed text-slate-600">{activeProperty.description}</p>
+              <div className="flex flex-wrap gap-2">
+                {activeProperty.amenities.map((a) => (
+                  <span key={a} className="rounded-full border border-slate-200 px-3 py-1 text-xs text-slate-600">
+                    {a}
+                  </span>
+                ))}
+              </div>
+              <button
+                type="button"
+                onClick={() => toggleStatus(activeProperty.id)}
+                className="mt-2 w-fit rounded-full border border-slate-300 px-4 py-2 text-xs font-semibold text-slate-700 hover:border-teal-600/60"
+              >
+                {statuses[activeProperty.id] === "active" ? dict.markDraft : dict.markActive}
+              </button>
+            </div>
+          )}
+
+          {tab === "calendar" && (
+            <div className="flex flex-col gap-4">
+              <h2 className="text-lg font-semibold text-slate-900">{dict.calendarHeading}</h2>
+              <div>
+                <label className="mb-1.5 block text-xs font-medium text-slate-500">{dict.selectProperty}</label>
+                <select
+                  value={calendarPropertyId}
+                  onChange={(e) => setCalendarPropertyId(e.target.value)}
+                  className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-teal-600"
+                >
+                  {PROPERTIES.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.title}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <p className="text-xs text-slate-500">{dict.blockDayHint}</p>
+              <div className="grid grid-cols-6 gap-1.5 sm:grid-cols-10">
+                {calendarDays.map(({ day, status }) => (
+                  <button
+                    key={day}
+                    type="button"
+                    disabled={status === "booked"}
+                    onClick={() => toggleDay(day)}
+                    className={`flex h-9 items-center justify-center rounded-md text-xs font-medium transition-colors ${
+                      status === "booked"
+                        ? "cursor-not-allowed bg-slate-200 text-slate-400"
+                        : status === "blocked"
+                          ? "bg-amber-200 text-amber-900 hover:bg-amber-300"
+                          : "border border-slate-200 text-slate-700 hover:border-teal-600/60"
+                    }`}
+                  >
+                    {day}
+                  </button>
+                ))}
+              </div>
+              <div className="flex flex-wrap gap-4 text-xs text-slate-500">
+                <span className="flex items-center gap-1.5">
+                  <span className="h-2.5 w-2.5 rounded-sm border border-slate-300" /> {dict.legendAvailable}
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="h-2.5 w-2.5 rounded-sm bg-slate-200" /> {dict.legendBooked}
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="h-2.5 w-2.5 rounded-sm bg-amber-200" /> {dict.legendBlocked}
+                </span>
+              </div>
+            </div>
+          )}
+
+          {tab === "bookings" && (
+            <div className="flex flex-col gap-4">
+              <h2 className="text-lg font-semibold text-slate-900">{dict.bookingsHeading}</h2>
+              <div className="flex flex-col gap-2">
+                {bookings.map((b) => (
+                  <div
+                    key={b.id}
+                    className="flex flex-col gap-2 rounded-lg border border-slate-200 px-4 py-3 text-sm sm:flex-row sm:items-center sm:justify-between"
+                  >
+                    <div>
+                      <p className="font-medium text-slate-900">
+                        {b.guestName} &middot; {PROPERTIES.find((p) => p.id === b.propertyId)?.title}
+                      </p>
+                      <p className="text-xs text-slate-500">
+                        {b.checkIn} &ndash; {b.checkOut} &middot; &euro;{b.total.toLocaleString()}
+                      </p>
+                    </div>
+                    {b.status === "pending" ? (
+                      <div className="flex gap-2">
+                        <button
+                          type="button"
+                          onClick={() => updateBookingStatus(b.id, "confirmed")}
+                          className="rounded-full bg-teal-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-teal-500"
+                        >
+                          {dict.approve}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => updateBookingStatus(b.id, "declined")}
+                          className="rounded-full border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-600 hover:border-red-400 hover:text-red-600"
+                        >
+                          {dict.decline}
+                        </button>
+                      </div>
+                    ) : (
+                      <span
+                        className={`w-fit rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${
+                          b.status === "confirmed" ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-700"
+                        }`}
+                      >
+                        {b.status === "confirmed" ? dict.statusConfirmed : dict.statusDeclined}
+                      </span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {tab === "messages" && (
+            <div className="flex flex-col gap-4 sm:flex-row sm:gap-6">
+              <div className="flex flex-col gap-2 sm:w-64">
+                <h2 className="text-lg font-semibold text-slate-900">{dict.messagesHeading}</h2>
+                {messages.map((m) => (
+                  <button
+                    key={m.id}
+                    type="button"
+                    onClick={() => selectMessage(m.id)}
+                    className={`flex flex-col gap-0.5 rounded-lg border px-3 py-2.5 text-left text-sm transition-colors ${
+                      activeMessageId === m.id
+                        ? "border-teal-600 bg-teal-50"
+                        : "border-slate-200 hover:border-teal-600/40"
+                    }`}
+                  >
+                    <span className="flex items-center gap-1.5 font-medium text-slate-900">
+                      {m.unread && <span className="h-1.5 w-1.5 rounded-full bg-teal-600" />}
+                      {m.guestName}
+                    </span>
+                    <span className="text-xs text-slate-500">
+                      {PROPERTIES.find((p) => p.id === m.propertyId)?.title}
+                    </span>
+                  </button>
+                ))}
+              </div>
+              <div className="flex flex-1 flex-col gap-3 rounded-lg border border-slate-200 p-4">
+                {activeMessage ? (
+                  <>
+                    <div className="flex flex-1 flex-col gap-2 overflow-y-auto">
+                      {activeMessage.thread.map((entry, i) => (
+                        <div
+                          key={i}
+                          className={`max-w-[80%] rounded-lg px-3 py-2 text-sm ${
+                            entry.from === "host"
+                              ? "self-end bg-teal-600 text-white"
+                              : "self-start bg-slate-100 text-slate-800"
+                          }`}
+                        >
+                          {entry.text}
+                        </div>
+                      ))}
+                    </div>
+                    <div className="flex gap-2">
+                      <input
+                        value={replyText}
+                        onChange={(e) => setReplyText(e.target.value)}
+                        placeholder={dict.replyPlaceholder}
+                        className="flex-1 rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-teal-600"
+                      />
+                      <button
+                        type="button"
+                        onClick={sendReply}
+                        className="rounded-md bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-500"
+                      >
+                        {dict.send}
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <p className="text-sm text-slate-500">{dict.noMessageSelected}</p>
+                )}
+              </div>
+            </div>
+          )}
+
+          {tab === "settings" && (
+            <div className="flex flex-col gap-4">
+              <h2 className="text-lg font-semibold text-slate-900">{dict.settingsHeading}</h2>
+              <div className="max-w-sm">
+                <label className="mb-1.5 block text-xs font-medium text-slate-500">{dict.businessNameLabel}</label>
+                <input
+                  value={businessName}
+                  onChange={(e) => {
+                    setBusinessName(e.target.value);
+                    setSaved(false);
+                  }}
+                  className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-teal-600"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={() => setSaved(true)}
+                className="w-fit rounded-full bg-teal-600 px-5 py-2 text-xs font-semibold text-white hover:bg-teal-500"
+              >
+                {dict.saveChanges}
+              </button>
+              {saved && <p className="text-xs text-emerald-600">{dict.savedConfirmation}</p>}
+            </div>
+          )}
+        </div>
+      </div>
 
       {/* Footer */}
       <footer className="border-t border-slate-200 px-5 py-6 text-center text-xs text-slate-400 sm:px-8">
