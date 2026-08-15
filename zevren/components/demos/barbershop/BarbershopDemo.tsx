@@ -24,6 +24,21 @@ const STEP_LABELS: Record<Step, string> = {
   done: "Done",
 };
 
+const GALLERY_SWATCHES = [
+  "from-amber-400/40 to-neutral-900",
+  "from-amber-900/50 to-neutral-950",
+  "from-amber-300/30 to-neutral-900",
+  "from-neutral-800 to-amber-950/40",
+  "from-amber-500/30 to-neutral-950",
+  "from-amber-900/40 to-neutral-900",
+];
+
+const DEMO_REVIEWS = [
+  { name: "Tom V.", text: "Booked online in a minute, no waiting when I arrived." },
+  { name: "Lucas B.", text: "Clean, sharp fade every time. Easy to book a slot that suits me." },
+  { name: "Daan H.", text: "Good vibe, good cut, and the booking flow is dead simple." },
+];
+
 interface Details {
   name: string;
   email: string;
@@ -38,11 +53,19 @@ export function BarbershopDemo() {
   const [time, setTime] = useState<string | null>(null);
   const [details, setDetails] = useState<Details>({ name: "", email: "", phone: "" });
   const [errors, setErrors] = useState<Partial<Details>>({});
+  const [cancelled, setCancelled] = useState(false);
 
   const stepIndex = STEP_ORDER.indexOf(step);
 
   function goTo(next: Step) {
     setStep(next);
+  }
+
+  function rescheduleAppointment() {
+    setDateId(null);
+    setTime(null);
+    setCancelled(false);
+    goTo("datetime");
   }
 
   function handleDetailsSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -68,6 +91,7 @@ export function BarbershopDemo() {
     setTime(null);
     setDetails({ name: "", email: "", phone: "" });
     setErrors({});
+    setCancelled(false);
     setStep("service");
   }
 
@@ -147,6 +171,49 @@ export function BarbershopDemo() {
               <div className="mx-auto h-14 w-14 rounded-full bg-gradient-to-br from-amber-400/40 to-amber-900/40" />
               <p className="mt-3 text-sm font-medium text-neutral-100">{b.name}</p>
               <p className="text-xs text-neutral-500">{b.role}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Gallery */}
+      <section className="border-b border-amber-900/30 px-5 py-12 sm:px-8">
+        <h3 className="text-xs font-semibold uppercase tracking-[0.3em] text-amber-400">
+          Gallery
+        </h3>
+        <div className="mt-6 grid grid-cols-3 gap-2 sm:grid-cols-6">
+          {GALLERY_SWATCHES.map((swatch, i) => (
+            <div
+              key={i}
+              className={`aspect-square rounded-lg bg-gradient-to-br ${swatch}`}
+            />
+          ))}
+        </div>
+      </section>
+
+      {/* Reviews */}
+      <section className="border-b border-amber-900/30 px-5 py-12 sm:px-8">
+        <h3 className="text-xs font-semibold uppercase tracking-[0.3em] text-amber-400">
+          Reviews
+        </h3>
+        <p className="mt-1 text-xs text-neutral-600">Demo reviews for illustration only.</p>
+        <div className="mt-6 grid gap-4 sm:grid-cols-3">
+          {DEMO_REVIEWS.map((review) => (
+            <div
+              key={review.name}
+              className="rounded-xl border border-white/5 bg-white/[0.02] p-4"
+            >
+              <div className="flex gap-0.5 text-amber-400">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <svg key={i} viewBox="0 0 20 20" className="h-3.5 w-3.5" fill="currentColor">
+                    <path d="M10 1.5 12.6 7l6 .9-4.3 4.2 1 6-5.3-2.8L4.7 18.1l1-6L1.4 7.9l6-.9Z" />
+                  </svg>
+                ))}
+              </div>
+              <p className="mt-2 text-sm leading-relaxed text-neutral-300">
+                &ldquo;{review.text}&rdquo;
+              </p>
+              <p className="mt-2 text-xs font-medium text-neutral-500">{review.name}</p>
             </div>
           ))}
         </div>
@@ -419,7 +486,7 @@ export function BarbershopDemo() {
             </div>
           )}
 
-          {step === "done" && service && barber && dateId && time && (
+          {step === "done" && service && barber && dateId && time && !cancelled && (
             <div className="flex flex-col items-center gap-4 py-4 text-center">
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-amber-400/15 text-amber-400">
                 <svg viewBox="0 0 20 20" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={2}>
@@ -433,12 +500,50 @@ export function BarbershopDemo() {
                 <p>{time}</p>
                 <p>{barber.name}</p>
               </div>
+              <div className="mt-2 flex flex-wrap items-center justify-center gap-4">
+                <button
+                  type="button"
+                  onClick={rescheduleAppointment}
+                  className="text-xs font-medium text-neutral-400 hover:text-white"
+                >
+                  Reschedule
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setCancelled(true)}
+                  className="text-xs font-medium text-neutral-400 hover:text-red-400"
+                >
+                  Cancel appointment
+                </button>
+                <button
+                  type="button"
+                  onClick={reset}
+                  className="text-xs font-medium text-amber-400 hover:text-amber-300"
+                >
+                  Book another appointment
+                </button>
+              </div>
+            </div>
+          )}
+
+          {step === "done" && cancelled && (
+            <div className="flex flex-col items-center gap-4 py-4 text-center">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/5 text-neutral-400">
+                <svg viewBox="0 0 20 20" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={2}>
+                  <path d="m5 5 10 10M15 5 5 15" strokeLinecap="round" />
+                </svg>
+              </div>
+              <p className="text-lg font-semibold text-white">Appointment cancelled</p>
+              <p className="text-sm text-neutral-400">
+                Your appointment has been cancelled. You can book a new one at
+                any time.
+              </p>
               <button
                 type="button"
                 onClick={reset}
                 className="mt-2 text-xs font-medium text-amber-400 hover:text-amber-300"
               >
-                Book another appointment
+                Book a new appointment
               </button>
             </div>
           )}

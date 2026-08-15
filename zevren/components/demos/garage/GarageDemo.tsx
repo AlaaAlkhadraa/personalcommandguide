@@ -42,6 +42,21 @@ const EMPTY_FORM: FormState = {
   mileage: "",
 };
 
+const GALLERY_SWATCHES = [
+  "from-orange-500/30 to-slate-900",
+  "from-slate-700 to-slate-950",
+  "from-orange-600/20 to-slate-900",
+  "from-slate-600 to-orange-950/30",
+  "from-orange-500/25 to-slate-950",
+  "from-slate-700 to-slate-900",
+];
+
+const DEMO_REVIEWS = [
+  { name: "Marieke S.", text: "Booked my APK online, no phone calls needed. Straightforward." },
+  { name: "Bram K.", text: "Clear pricing before I even arrived, no surprises on the invoice." },
+  { name: "Youssef E.", text: "Easy to add my kenteken and details ahead of time." },
+];
+
 export function GarageDemo() {
   const [step, setStep] = useState<Step>("service");
   const [service, setService] = useState<GarageService | null>(null);
@@ -49,11 +64,19 @@ export function GarageDemo() {
   const [time, setTime] = useState<string | null>(null);
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
   const [errors, setErrors] = useState<Partial<FormState>>({});
+  const [cancelled, setCancelled] = useState(false);
 
   const stepIndex = STEP_ORDER.indexOf(step);
 
   function update<K extends keyof FormState>(key: K, value: string) {
     setForm((f) => ({ ...f, [key]: value }));
+  }
+
+  function rescheduleAppointment() {
+    setDateId(null);
+    setTime(null);
+    setCancelled(false);
+    setStep("datetime");
   }
 
   function handleDetailsSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -78,6 +101,7 @@ export function GarageDemo() {
     setTime(null);
     setForm(EMPTY_FORM);
     setErrors({});
+    setCancelled(false);
     setStep("service");
   }
 
@@ -153,6 +177,49 @@ export function GarageDemo() {
           APK inspections and repairs for all makes and models, with clear
           pricing and no surprises on the invoice.
         </p>
+      </section>
+
+      {/* Gallery */}
+      <section className="border-b border-slate-700/60 px-5 py-12 sm:px-8">
+        <h3 className="text-xs font-semibold uppercase tracking-[0.3em] text-orange-500">
+          Gallery
+        </h3>
+        <div className="mt-6 grid grid-cols-3 gap-2 sm:grid-cols-6">
+          {GALLERY_SWATCHES.map((swatch, i) => (
+            <div
+              key={i}
+              className={`aspect-square rounded-md bg-gradient-to-br ${swatch}`}
+            />
+          ))}
+        </div>
+      </section>
+
+      {/* Reviews */}
+      <section className="border-b border-slate-700/60 px-5 py-12 sm:px-8">
+        <h3 className="text-xs font-semibold uppercase tracking-[0.3em] text-orange-500">
+          Reviews
+        </h3>
+        <p className="mt-1 text-xs text-slate-600">Demo reviews for illustration only.</p>
+        <div className="mt-6 grid gap-4 sm:grid-cols-3">
+          {DEMO_REVIEWS.map((review) => (
+            <div
+              key={review.name}
+              className="rounded-lg border border-slate-700/60 bg-slate-800/40 p-4"
+            >
+              <div className="flex gap-0.5 text-orange-500">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <svg key={i} viewBox="0 0 20 20" className="h-3.5 w-3.5" fill="currentColor">
+                    <path d="M10 1.5 12.6 7l6 .9-4.3 4.2 1 6-5.3-2.8L4.7 18.1l1-6L1.4 7.9l6-.9Z" />
+                  </svg>
+                ))}
+              </div>
+              <p className="mt-2 text-sm leading-relaxed text-slate-300">
+                &ldquo;{review.text}&rdquo;
+              </p>
+              <p className="mt-2 text-xs font-medium text-slate-500">{review.name}</p>
+            </div>
+          ))}
+        </div>
       </section>
 
       {/* Booking */}
@@ -454,7 +521,7 @@ export function GarageDemo() {
             </div>
           )}
 
-          {step === "done" && service && dateId && time && (
+          {step === "done" && service && dateId && time && !cancelled && (
             <div className="flex flex-col items-center gap-4 py-4 text-center">
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-orange-500/15 text-orange-500">
                 <svg viewBox="0 0 20 20" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={2}>
@@ -472,12 +539,50 @@ export function GarageDemo() {
                 </p>
                 <p>{form.kenteken}</p>
               </div>
+              <div className="mt-2 flex flex-wrap items-center justify-center gap-4">
+                <button
+                  type="button"
+                  onClick={rescheduleAppointment}
+                  className="text-xs font-medium text-slate-400 hover:text-white"
+                >
+                  Reschedule
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setCancelled(true)}
+                  className="text-xs font-medium text-slate-400 hover:text-red-400"
+                >
+                  Cancel appointment
+                </button>
+                <button
+                  type="button"
+                  onClick={reset}
+                  className="text-xs font-medium text-orange-500 hover:text-orange-400"
+                >
+                  Book another appointment
+                </button>
+              </div>
+            </div>
+          )}
+
+          {step === "done" && cancelled && (
+            <div className="flex flex-col items-center gap-4 py-4 text-center">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/5 text-slate-400">
+                <svg viewBox="0 0 20 20" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={2}>
+                  <path d="m5 5 10 10M15 5 5 15" strokeLinecap="round" />
+                </svg>
+              </div>
+              <p className="text-lg font-semibold text-white">Appointment cancelled</p>
+              <p className="text-sm text-slate-400">
+                Your service appointment has been cancelled. You can book a
+                new one at any time.
+              </p>
               <button
                 type="button"
                 onClick={reset}
                 className="mt-2 text-xs font-medium text-orange-500 hover:text-orange-400"
               >
-                Book another appointment
+                Book a new appointment
               </button>
             </div>
           )}
