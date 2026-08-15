@@ -10,7 +10,7 @@ import type {
 
 export const SITE_CONFIG = {
   name: "ZEVREN",
-  legalName: "ZEVREN Digital B.V.",
+  legalName: "ZEVREN",
   tagline: "Websites that make your business easier to choose.",
   description:
     "We design and build modern websites for businesses that want a clear, professional presence online.",
