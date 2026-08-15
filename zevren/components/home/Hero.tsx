@@ -24,8 +24,7 @@ export function Hero() {
             </Button>
           </div>
           <p className="pt-6 text-sm text-muted">
-            Based in Maastricht. Working with businesses across the
-            Netherlands.
+            Based in Maastricht. Working with businesses worldwide.
           </p>
         </div>
         <WebsitePreview />

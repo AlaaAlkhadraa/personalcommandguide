@@ -106,17 +106,22 @@ export const SERVICES: Service[] = [
 
 export const PRICING_PLANS: PricingPlan[] = [
   {
-    name: "Websites",
-    price: "From €499",
-    description: "For a professional website built around your business.",
+    name: "Starter Website",
+    price: "From €399",
+    description: "A small, focused website to get your business online.",
   },
   {
-    name: "Online Stores",
+    name: "Business Website",
+    price: "From €699",
+    description: "A complete website built around your business and content.",
+  },
+  {
+    name: "Online Store",
     price: "From €999",
     description: "For businesses that want to sell products online.",
   },
   {
-    name: "Custom Web Projects",
+    name: "Custom Web Application",
     price: "From €1,499",
     description:
       "For web applications, portals and anything beyond a standard website.",
@@ -260,7 +265,7 @@ export const FAQ_ITEMS: FaqItem[] = [
   {
     question: "Do you work with businesses outside Maastricht?",
     answer:
-      "Yes. ZEVREN is based in Maastricht and works remotely with businesses across the Netherlands.",
+      "Yes. Maastricht is where the studio is based, not a limit on who we work with. We work remotely with businesses across the Netherlands and internationally.",
   },
   {
     question: "Do you provide support after launch?",
