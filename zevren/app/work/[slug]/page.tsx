@@ -26,14 +26,14 @@ export async function generateMetadata({
   if (!project) {
     return buildMetadata({
       title: "Project not found",
-      description: "This website concept could not be found.",
+      description: "This project could not be found.",
       path: `/work/${slug}`,
       noIndex: true,
     });
   }
 
   return buildMetadata({
-    title: `${project.name} (${project.kind === "real" ? "project" : "website concept"})`,
+    title: project.name,
     description: project.description,
     path: `/work/${project.slug}`,
   });
@@ -62,7 +62,6 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     "accounting-firm": "accounting",
   };
   const demoDict = dict.demos[demoDictKey[project.slug]!];
-  const isReal = project.kind === "real";
 
   return (
     <>
@@ -73,20 +72,11 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             className="flex w-fit items-center gap-1.5 text-sm font-medium text-muted transition-colors hover:text-white"
           >
             <span aria-hidden="true">&larr;</span>
-            {isReal ? w.allProjects : w.allConcepts}
+            {w.allProjects}
           </Link>
-          <div className="flex flex-wrap items-center gap-3">
-            <span
-              className={`text-sm font-semibold uppercase tracking-[0.2em] ${
-                isReal ? "text-emerald-400" : "text-accent"
-              }`}
-            >
-              {isReal ? w.realProject : w.websiteConcept}
-            </span>
-            <span className="rounded-full border border-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-muted">
-              {copy.category}
-            </span>
-          </div>
+          <span className="w-fit rounded-full border border-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-muted">
+            {copy.category}
+          </span>
           <h1 className="max-w-3xl text-4xl font-semibold leading-tight text-white sm:text-5xl">
             {project.name}
           </h1>
@@ -147,12 +137,9 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           <div className="flex flex-col gap-4 sm:flex-row">
             <Button href="/contact">{w.startProject}</Button>
             <Button href="/work" variant="secondary">
-              {isReal ? w.seeMoreWork : w.seeMoreConcepts}
+              {w.seeMoreWork}
             </Button>
           </div>
-          <p className="pt-6 text-xs text-muted">
-            {isReal ? w.realDisclaimer : w.conceptDisclaimer}
-          </p>
         </Container>
       </section>
     </>

@@ -99,7 +99,7 @@ export function BarbershopDemo({ dict, common }: BarbershopDemoProps) {
       {/* Navigation */}
       <nav className="flex items-center justify-between border-b border-amber-900/30 bg-neutral-950/95 px-5 py-4 sm:px-8">
         <span className="font-heading text-lg font-semibold tracking-wide text-amber-400">
-          IRONSIDE <span className="text-neutral-100">BARBERSHOP</span>
+          ZEVEN <span className="text-neutral-100">CUTS</span>
         </span>
         <div className="hidden items-center gap-6 text-sm text-neutral-400 sm:flex">
           <span>{dict.navServices}</span>
@@ -588,7 +588,7 @@ export function BarbershopDemo({ dict, common }: BarbershopDemoProps) {
 
       {/* Footer */}
       <footer className="px-5 py-6 text-center text-xs text-neutral-600 sm:px-8">
-        Ironside Barbershop &middot; {common.footerTagline}
+        Zeven Cuts &middot; {common.footerTagline}
       </footer>
     </div>
   );

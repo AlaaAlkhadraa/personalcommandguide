@@ -42,10 +42,10 @@ const es: Dictionary = {
     },
     work: {
       eyebrow: "Proyectos",
-      title: "Conceptos de sitios web",
+      title: "Sitios seleccionados",
       subtitle:
-        "Una selección de conceptos de sitios web creados por ZEVREN para explorar diferentes sectores, diseños y experiencias digitales.",
-      allConcepts: "Todos los conceptos",
+        "Una selección de sitios web creados por ZEVREN para diferentes sectores y diseños.",
+      allConcepts: "Todos los proyectos",
     },
     why: {
       eyebrow: "Por qué ZEVREN",
@@ -165,7 +165,7 @@ const es: Dictionary = {
       starter: { name: "Sitio Starter", price: "499", description: "Un sitio pequeño y enfocado para llevar tu negocio a internet." },
       business: { name: "Sitio Business", price: "799", description: "Un sitio completo construido en torno a tu negocio y tu contenido." },
       store: { name: "Tienda online", price: "1.199", description: "Para empresas que quieren vender productos online." },
-      custom: { name: "Aplicación web a medida", price: "1.999", description: "Para aplicaciones web, portales y todo lo que va más allá de un sitio estándar." },
+      custom: { name: "Aplicación web a medida", price: "1.799", description: "Para aplicaciones web, portales y todo lo que va más allá de un sitio estándar." },
     },
   },
   whyZevren: {
@@ -269,9 +269,9 @@ const es: Dictionary = {
   },
   work: {
     eyebrow: "Proyectos",
-    title: "Conceptos de sitios web",
+    title: "Sitios seleccionados",
     subtitle:
-      "Una selección de conceptos de sitios web creados por ZEVREN para explorar diferentes sectores, diseños y experiencias digitales. Cada uno es una demo funcional, no una captura de pantalla estática.",
+      "Una selección de sitios web creados por ZEVREN para diferentes sectores. Cada uno es interactivo, no una captura de pantalla estática.",
     concept: "Concepto",
     websiteConcept: "Concepto de sitio web",
     realProject: "Proyecto real",

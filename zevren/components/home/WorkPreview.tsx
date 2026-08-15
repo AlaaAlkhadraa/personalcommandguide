@@ -29,7 +29,6 @@ export function WorkPreview({ dict, homeDict }: WorkPreviewProps) {
           {WORK_ITEMS.map((item) => {
             const Preview = WORK_PREVIEWS[item.slug];
             const copy = dict.items[item.slug as keyof typeof dict.items];
-            const isReal = item.kind === "real";
             return (
               <Link
                 key={item.slug}
@@ -40,24 +39,13 @@ export function WorkPreview({ dict, homeDict }: WorkPreviewProps) {
                   {Preview && <Preview className="h-full w-full" />}
                 </div>
                 <div className="flex flex-1 flex-col gap-3 p-6">
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="text-xs font-semibold uppercase tracking-wider text-accent">
-                      {copy.category}
-                    </span>
-                    <span
-                      className={`rounded-full border px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${
-                        isReal
-                          ? "border-emerald-400/30 text-emerald-400"
-                          : "border-white/10 text-muted"
-                      }`}
-                    >
-                      {isReal ? dict.realProject : dict.websiteConcept}
-                    </span>
-                  </div>
+                  <span className="text-xs font-semibold uppercase tracking-wider text-accent">
+                    {copy.category}
+                  </span>
                   <h3 className="text-lg font-semibold text-white">{item.name}</h3>
                   <p className="text-sm leading-relaxed text-muted">{copy.description}</p>
                   <span className="mt-auto flex items-center gap-1 pt-2 text-sm font-medium text-accent transition-transform group-hover:translate-x-1">
-                    {isReal ? dict.viewProject : dict.viewConcept}
+                    {dict.viewProject}
                     <span aria-hidden="true">&rarr;</span>
                   </span>
                 </div>

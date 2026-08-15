@@ -152,7 +152,7 @@ export const PRICING_PLANS: PricingPlan[] = [
   },
   {
     name: "Custom Web Application",
-    price: "From €1,999",
+    price: "From €1,799",
     description:
       "For web applications, portals and anything beyond a standard website.",
   },
@@ -178,7 +178,7 @@ export const WORK_ITEMS: WorkItem[] = [
   },
   {
     slug: "barbershop-website",
-    name: "Barbershop Website",
+    name: "Zeven Cuts",
     category: "Barbershop",
     description:
       "A modern barbershop website with online booking, service selection and a simple customer experience.",
@@ -206,22 +206,6 @@ export const WORK_ITEMS: WorkItem[] = [
       "Vehicle details",
       "Appointment scheduling",
       "Service overview",
-    ],
-  },
-  {
-    slug: "online-store",
-    name: "Online Store",
-    category: "E-commerce",
-    description:
-      "A complete online store for premium home and lifestyle products, from browsing to checkout.",
-    whatWeExplored:
-      "This concept explores what a premium home goods store could look like online, from product discovery through to a simple, clear checkout.",
-    keyFeatures: [
-      "Product catalogue",
-      "Product filtering",
-      "Shopping cart",
-      "Checkout flow",
-      "Order confirmation",
     ],
   },
   {

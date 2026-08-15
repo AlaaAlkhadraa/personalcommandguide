@@ -42,10 +42,10 @@ const de: Dictionary = {
     },
     work: {
       eyebrow: "Arbeiten",
-      title: "Website-Konzepte",
+      title: "Ausgewählte Websites",
       subtitle:
-        "Eine Auswahl an Website-Konzepten, die ZEVREN entwickelt hat, um verschiedene Branchen, Layouts und digitale Erlebnisse zu erkunden.",
-      allConcepts: "Alle Konzepte",
+        "Eine Auswahl an Websites, die ZEVREN für verschiedene Branchen und Layouts entwickelt hat.",
+      allConcepts: "Alle Arbeiten",
     },
     why: {
       eyebrow: "Warum ZEVREN",
@@ -165,7 +165,7 @@ const de: Dictionary = {
       starter: { name: "Starter-Website", price: "499", description: "Eine kleine, fokussierte Website, um online zu starten." },
       business: { name: "Business-Website", price: "799", description: "Eine vollständige Website, aufgebaut rund um Ihr Unternehmen und Ihre Inhalte." },
       store: { name: "Onlineshop", price: "1.199", description: "Für Unternehmen, die Produkte online verkaufen möchten." },
-      custom: { name: "Individuelle Webanwendung", price: "1.999", description: "Für Webanwendungen, Portale und alles jenseits einer Standard-Website." },
+      custom: { name: "Individuelle Webanwendung", price: "1.799", description: "Für Webanwendungen, Portale und alles jenseits einer Standard-Website." },
     },
   },
   whyZevren: {
@@ -269,9 +269,9 @@ const de: Dictionary = {
   },
   work: {
     eyebrow: "Arbeiten",
-    title: "Website-Konzepte",
+    title: "Ausgewählte Websites",
     subtitle:
-      "Eine Auswahl an Website-Konzepten, die ZEVREN entwickelt hat, um verschiedene Branchen, Layouts und digitale Erlebnisse zu erkunden. Jedes ist eine funktionierende Demo, kein statischer Screenshot.",
+      "Eine Auswahl an Websites, die ZEVREN für verschiedene Branchen entwickelt hat. Jede ist interaktiv, kein statischer Screenshot.",
     concept: "Konzept",
     websiteConcept: "Website-Konzept",
     realProject: "Reales Projekt",

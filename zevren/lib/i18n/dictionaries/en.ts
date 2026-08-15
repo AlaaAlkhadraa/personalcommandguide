@@ -42,10 +42,10 @@ const en: Dictionary = {
     },
     work: {
       eyebrow: "Work",
-      title: "Website concepts",
+      title: "Selected websites",
       subtitle:
-        "A selection of website concepts created by ZEVREN to explore different industries, layouts and digital experiences.",
-      allConcepts: "All concepts",
+        "A selection of websites built by ZEVREN across different industries and layouts.",
+      allConcepts: "All work",
     },
     why: {
       eyebrow: "Why ZEVREN",
@@ -165,7 +165,7 @@ const en: Dictionary = {
       starter: { name: "Starter Website", price: "499", description: "A small, focused website to get your business online." },
       business: { name: "Business Website", price: "799", description: "A complete website built around your business and content." },
       store: { name: "Online Store", price: "1,199", description: "For businesses that want to sell products online." },
-      custom: { name: "Custom Web Application", price: "1,999", description: "For web applications, portals and anything beyond a standard website." },
+      custom: { name: "Custom Web Application", price: "1,799", description: "For web applications, portals and anything beyond a standard website." },
     },
   },
   whyZevren: {
@@ -269,9 +269,9 @@ const en: Dictionary = {
   },
   work: {
     eyebrow: "Work",
-    title: "Website concepts",
+    title: "Selected websites",
     subtitle:
-      "A selection of website concepts created by ZEVREN to explore different industries, layouts and digital experiences. Each one is a working demo, not a static screenshot.",
+      "A selection of websites built by ZEVREN across different industries. Each one is interactive, not a static screenshot.",
     concept: "Concept",
     websiteConcept: "Website concept",
     realProject: "Real project",

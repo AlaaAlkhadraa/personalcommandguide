@@ -42,10 +42,10 @@ const nl: Dictionary = {
     },
     work: {
       eyebrow: "Werk",
-      title: "Websiteconcepten",
+      title: "Geselecteerde websites",
       subtitle:
-        "Een selectie van websiteconcepten die ZEVREN heeft gemaakt om verschillende sectoren, indelingen en digitale ervaringen te verkennen.",
-      allConcepts: "Alle concepten",
+        "Een selectie van websites die ZEVREN heeft gebouwd voor verschillende sectoren en indelingen.",
+      allConcepts: "Al het werk",
     },
     why: {
       eyebrow: "Waarom ZEVREN",
@@ -165,7 +165,7 @@ const nl: Dictionary = {
       starter: { name: "Starter Website", price: "499", description: "Een kleine, gerichte website om je bedrijf online te krijgen." },
       business: { name: "Business Website", price: "799", description: "Een complete website, gebouwd rond je bedrijf en content." },
       store: { name: "Webshop", price: "1.199", description: "Voor bedrijven die producten online willen verkopen." },
-      custom: { name: "Maatwerk Webapplicatie", price: "1.999", description: "Voor webapplicaties, portalen en alles wat verder gaat dan een standaardwebsite." },
+      custom: { name: "Maatwerk Webapplicatie", price: "1.799", description: "Voor webapplicaties, portalen en alles wat verder gaat dan een standaardwebsite." },
     },
   },
   whyZevren: {
@@ -269,9 +269,9 @@ const nl: Dictionary = {
   },
   work: {
     eyebrow: "Werk",
-    title: "Websiteconcepten",
+    title: "Geselecteerde websites",
     subtitle:
-      "Een selectie van websiteconcepten die ZEVREN heeft gemaakt om verschillende sectoren, indelingen en digitale ervaringen te verkennen. Elk concept is een werkende demo, geen statische screenshot.",
+      "Een selectie van websites die ZEVREN heeft gebouwd voor verschillende sectoren. Elke website is interactief, geen statische screenshot.",
     concept: "Concept",
     websiteConcept: "Websiteconcept",
     realProject: "Echt project",
