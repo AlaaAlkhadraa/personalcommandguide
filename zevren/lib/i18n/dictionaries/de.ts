@@ -261,7 +261,15 @@ const de: Dictionary = {
     seeMoreWork: "Weitere Arbeiten ansehen",
     conceptDisclaimer: "ZEVREN-KONZEPT: ein Website-Konzept, das ZEVREN entwickelt hat, um zu zeigen, wie diese Art von digitalem Erlebnis funktionieren könnte.",
     realDisclaimer: "ZEVREN REALES PROJEKT: eine Website, die ZEVREN für ein reales Unternehmen entwickelt hat.",
+    visitLiveWebsite: "Live-Website besuchen",
+    liveWebsiteNote: "Dies ist ein reales, live geschaltetes Projekt. Besuchen Sie die Website, um sie vollständig zu sehen.",
     items: {
+      "tajex-logistics": {
+        category: "Logistik",
+        description: "Die Live-Website für Tajex Logistics, ein Logistikunternehmen. Entworfen und entwickelt von ZEVREN.",
+        whatWeExplored: "Dies ist ein reales, abgeschlossenes Projekt. ZEVREN hat die Website für Tajex Logistics entworfen und entwickelt, mit Fokus auf einen klaren, professionellen Online-Auftritt für das Unternehmen.",
+        keyFeatures: ["Individuelles Webdesign", "Responsive auf allen Geräten", "Professioneller Unternehmensauftritt", "Für einen realen Kunden umgesetzt"],
+      },
       "barbershop-website": {
         category: "Friseursalon",
         description: "Eine moderne Friseur-Website mit Online-Buchung, Serviceauswahl und einfacher Kundenerfahrung.",

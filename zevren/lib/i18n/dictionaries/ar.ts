@@ -252,7 +252,15 @@ const ar: Dictionary = {
     seeMoreWork: "شاهد أعمال أكتر",
     conceptDisclaimer: "مفهوم ZEVREN: مفهوم موقع أنشأته ZEVREN لتوضيح كيف ممكن يشتغل هاد النوع من التجربة الرقمية.",
     realDisclaimer: "مشروع ZEVREN الحقيقي: موقع أنشأته ZEVREN لشركة حقيقية.",
+    visitLiveWebsite: "زوروا الموقع الحقيقي",
+    liveWebsiteNote: "هاد مشروع حقيقي وموجود عالإنترنت فعلياً. زوروا الموقع لتشوفوه كامل.",
     items: {
+      "tajex-logistics": {
+        category: "لوجستيات",
+        description: "الموقع الحقيقي لشركة Tajex Logistics، شركة لوجستيات. صممته وبناه ZEVREN.",
+        whatWeExplored: "هاد مشروع حقيقي وتم تسليمه فعلياً. ZEVREN صمم وبنى موقع Tajex Logistics، بالتركيز على حضور أونلاين واضح واحترافي للشركة.",
+        keyFeatures: ["تصميم موقع خاص", "متجاوب على كل الأجهزة", "حضور احترافي للشركة", "تم تسليمه لعميل حقيقي"],
+      },
       "barbershop-website": {
         category: "صالون حلاقة",
         description: "موقع حديث لصالون حلاقة فيه حجز أونلاين واختيار خدمة وتجربة بسيطة للزبون.",

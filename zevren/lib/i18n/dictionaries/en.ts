@@ -261,7 +261,15 @@ const en: Dictionary = {
     seeMoreWork: "See more work",
     conceptDisclaimer: "ZEVREN CONCEPT: a website concept created by ZEVREN to demonstrate how this type of digital experience could work.",
     realDisclaimer: "ZEVREN REAL PROJECT: a website created by ZEVREN for a real business.",
+    visitLiveWebsite: "Visit live website",
+    liveWebsiteNote: "This is a real, live project. Visit the website to see it in full.",
     items: {
+      "tajex-logistics": {
+        category: "Logistics",
+        description: "The live website for Tajex Logistics, a logistics company. Designed and built by ZEVREN.",
+        whatWeExplored: "This is a real, delivered project. ZEVREN designed and built the website for Tajex Logistics, focused on a clear, professional online presence for the business.",
+        keyFeatures: ["Custom website design", "Responsive across devices", "Professional business presence", "Delivered for a real client"],
+      },
       "barbershop-website": {
         category: "Barbershop",
         description: "A modern barbershop website with online booking, service selection and a simple customer experience.",

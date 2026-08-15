@@ -130,6 +130,23 @@ export const PRICING_PLANS: PricingPlan[] = [
 
 export const WORK_ITEMS: WorkItem[] = [
   {
+    slug: "tajex-logistics",
+    name: "Tajex Logistics",
+    category: "Logistics",
+    kind: "real",
+    liveUrl: "https://tajexlogistics.nl",
+    description:
+      "The live website for Tajex Logistics, a logistics company. Designed and built by ZEVREN.",
+    whatWeExplored:
+      "This is a real, delivered project. ZEVREN designed and built the website for Tajex Logistics, focused on a clear, professional online presence for the business.",
+    keyFeatures: [
+      "Custom website design",
+      "Responsive across devices",
+      "Professional business presence",
+      "Delivered for a real client",
+    ],
+  },
+  {
     slug: "barbershop-website",
     name: "Barbershop Website",
     category: "Barbershop",

@@ -126,7 +126,10 @@ export interface Dictionary {
     seeMoreWork: string;
     conceptDisclaimer: string;
     realDisclaimer: string;
+    visitLiveWebsite: string;
+    liveWebsiteNote: string;
     items: Record<
+      | "tajex-logistics"
       | "barbershop-website"
       | "garage-website"
       | "online-store"

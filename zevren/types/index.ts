@@ -22,6 +22,7 @@ export interface WorkItem {
   whatWeExplored: string;
   keyFeatures: string[];
   kind?: "concept" | "real";
+  liveUrl?: string;
 }
 
 export interface ProcessStep {

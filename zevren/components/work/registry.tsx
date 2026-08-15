@@ -1,5 +1,6 @@
 import type { ComponentType } from "react";
 import type { Dictionary } from "@/lib/i18n/dictionary-type";
+import { TajexPreview } from "@/components/work/previews/TajexPreview";
 import { BarbershopPreview } from "@/components/work/previews/BarbershopPreview";
 import { GaragePreview } from "@/components/work/previews/GaragePreview";
 import { StorePreview } from "@/components/work/previews/StorePreview";
@@ -14,6 +15,7 @@ import { EllezoneDemo } from "@/components/demos/ellezone/EllezoneDemo";
 import { AccountingDemo } from "@/components/demos/accounting/AccountingDemo";
 
 export const WORK_PREVIEWS: Record<string, ComponentType<{ className?: string }>> = {
+  "tajex-logistics": TajexPreview,
   "barbershop-website": BarbershopPreview,
   "garage-website": GaragePreview,
   "online-store": StorePreview,

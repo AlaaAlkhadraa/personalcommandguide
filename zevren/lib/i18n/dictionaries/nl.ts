@@ -261,7 +261,15 @@ const nl: Dictionary = {
     seeMoreWork: "Bekijk meer werk",
     conceptDisclaimer: "ZEVREN CONCEPT: een websiteconcept gemaakt door ZEVREN om te laten zien hoe dit soort digitale ervaring zou kunnen werken.",
     realDisclaimer: "ZEVREN ECHT PROJECT: een website gemaakt door ZEVREN voor een echt bedrijf.",
+    visitLiveWebsite: "Bekijk live website",
+    liveWebsiteNote: "Dit is een echt, live project. Bezoek de website om het volledig te zien.",
     items: {
+      "tajex-logistics": {
+        category: "Logistiek",
+        description: "De live website voor Tajex Logistics, een logistiek bedrijf. Ontworpen en gebouwd door ZEVREN.",
+        whatWeExplored: "Dit is een echt, opgeleverd project. ZEVREN heeft de website voor Tajex Logistics ontworpen en gebouwd, gericht op een duidelijke, professionele online aanwezigheid voor het bedrijf.",
+        keyFeatures: ["Website op maat", "Responsive op alle apparaten", "Professionele bedrijfsuitstraling", "Opgeleverd voor een echte klant"],
+      },
       "barbershop-website": {
         category: "Kapperszaak",
         description: "Een moderne kapperswebsite met online boeken, dienstkeuze en een eenvoudige klantervaring.",

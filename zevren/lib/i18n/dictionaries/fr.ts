@@ -261,7 +261,15 @@ const fr: Dictionary = {
     seeMoreWork: "Voir plus de réalisations",
     conceptDisclaimer: "CONCEPT ZEVREN : un concept de site web créé par ZEVREN pour démontrer comment ce type d'expérience numérique pourrait fonctionner.",
     realDisclaimer: "PROJET RÉEL ZEVREN : un site web créé par ZEVREN pour une entreprise réelle.",
+    visitLiveWebsite: "Visiter le site en ligne",
+    liveWebsiteNote: "Il s'agit d'un projet réel et en ligne. Visitez le site pour le voir dans son intégralité.",
     items: {
+      "tajex-logistics": {
+        category: "Logistique",
+        description: "Le site web en ligne de Tajex Logistics, une entreprise de logistique. Conçu et développé par ZEVREN.",
+        whatWeExplored: "Il s'agit d'un projet réel et livré. ZEVREN a conçu et développé le site web de Tajex Logistics, avec une présence en ligne claire et professionnelle pour l'entreprise.",
+        keyFeatures: ["Design de site sur mesure", "Adapté à tous les appareils", "Présence professionnelle en ligne", "Livré pour un client réel"],
+      },
       "barbershop-website": {
         category: "Salon de coiffure",
         description: "Un site web moderne pour barbier avec réservation en ligne, choix du service et une expérience client simple.",
