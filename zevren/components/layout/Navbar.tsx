@@ -89,7 +89,7 @@ export function Navbar() {
 
         <div className="hidden lg:block">
           <Button href="/contact" className="text-sm">
-            Book a call
+            Start a project
           </Button>
         </div>
 
@@ -142,7 +142,7 @@ export function Navbar() {
               </Link>
             ))}
             <div className="mt-2 flex flex-col gap-3 py-2">
-              <Button href="/contact">Book a call</Button>
+              <Button href="/contact">Start a project</Button>
               <a
                 href={`tel:${SITE_CONFIG.phone}`}
                 className="text-center text-sm text-muted hover:text-white"

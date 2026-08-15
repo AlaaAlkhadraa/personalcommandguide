@@ -20,24 +20,14 @@ export type ServiceIcon =
   | "wrench"
   | "compass";
 
-export interface PortfolioItem {
+export interface WorkItem {
   slug: string;
   name: string;
-  category: string;
+  industry: string;
   summary: string;
-  challenge: string;
-  solution: string;
-  result: string;
-  year: string;
-  features: string[];
-}
-
-export interface Testimonial {
-  name: string;
-  role: string;
-  company: string;
-  quote: string;
-  rating: number;
+  idea: string;
+  approach: string;
+  whatWeBuilt: string[];
 }
 
 export interface ProcessStep {
@@ -51,10 +41,22 @@ export interface FaqItem {
   answer: string;
 }
 
+export interface PricingPlan {
+  name: string;
+  price: string;
+  description: string;
+}
+
+export interface ValueItem {
+  title: string;
+  description: string;
+}
+
 export interface ContactFormValues {
   name: string;
   email: string;
   company?: string;
+  needs?: string;
   budget?: string;
   message: string;
   website: string;

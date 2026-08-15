@@ -17,6 +17,12 @@ export const contactFormSchema = z.object({
     .max(120, "Company name is too long.")
     .optional()
     .or(z.literal("")),
+  needs: z
+    .string()
+    .trim()
+    .max(60, "Invalid value.")
+    .optional()
+    .or(z.literal("")),
   budget: z
     .string()
     .trim()

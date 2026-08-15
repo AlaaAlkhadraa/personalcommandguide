@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 import { SITE_CONFIG } from "@/lib/constants";
 
 export const runtime = "edge";
-export const alt = `${SITE_CONFIG.name} — ${SITE_CONFIG.tagline}`;
+export const alt = `${SITE_CONFIG.name} | ${SITE_CONFIG.tagline}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -45,7 +45,7 @@ export default async function TwitterImage() {
             lineHeight: 1.15,
           }}
         >
-          Websites that sell, not just websites that look good
+          Websites built to make your business look serious
         </div>
         <div
           style={{
@@ -55,7 +55,7 @@ export default async function TwitterImage() {
             color: "#94A3B8",
           }}
         >
-          Web development for businesses in the Netherlands and Europe
+          Independent web studio based in Maastricht, Netherlands
         </div>
       </div>
     ),

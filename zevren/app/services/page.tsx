@@ -2,13 +2,14 @@ import { PageHero } from "@/components/ui/PageHero";
 import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
 import { Button } from "@/components/ui/Button";
+import { PricingSection } from "@/components/services/PricingSection";
 import { SERVICES } from "@/lib/constants";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata = buildMetadata({
   title: "Services",
   description:
-    "Custom websites, online stores, UX/UI design, SEO, maintenance and web applications. See what ZEVREN can build for your business.",
+    "Custom websites, online stores, web applications, UX/UI design, SEO foundations and maintenance. See what ZEVREN can build for your business.",
   path: "/services",
 });
 
@@ -17,8 +18,8 @@ export default function ServicesPage() {
     <>
       <PageHero
         eyebrow="Services"
-        title="One team, from first sketch to launch"
-        description="We deliberately stick to a limited set of services we're genuinely good at, rather than doing a bit of everything."
+        title="What we build"
+        description="We stick to a limited set of services we are genuinely good at, rather than doing a bit of everything."
       />
       <section className="py-20">
         <Container className="flex flex-col gap-20">
@@ -68,7 +69,8 @@ export default function ServicesPage() {
           ))}
         </Container>
       </section>
-      <section className="border-t border-white/5 bg-surface/30 py-20">
+      <PricingSection />
+      <section className="py-20">
         <Container className="flex flex-col items-center gap-6 text-center">
           <h2 className="max-w-xl text-3xl font-semibold text-white">
             Not sure which service fits?
@@ -77,7 +79,7 @@ export default function ServicesPage() {
             Tell us what you need in a short call. We&apos;ll give you an
             honest answer, even if that answer is &ldquo;not yet&rdquo;.
           </p>
-          <Button href="/contact">Book a call</Button>
+          <Button href="/contact">Start a project</Button>
         </Container>
       </section>
     </>

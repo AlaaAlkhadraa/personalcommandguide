@@ -28,7 +28,7 @@ export default function Error({
         </h1>
         <p className="max-w-md text-muted">
           That&apos;s on us, not you. Try again, or head back to the
-          homepage — if it keeps happening, let us know.
+          homepage. If it keeps happening, let us know.
         </p>
         <div className="flex flex-col gap-4 sm:flex-row">
           <SubmitButton type="button" onClick={reset}>

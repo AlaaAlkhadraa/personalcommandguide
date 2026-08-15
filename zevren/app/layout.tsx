@@ -29,17 +29,17 @@ const orbitron = Orbitron({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_CONFIG.url),
   title: {
-    default: `${SITE_CONFIG.name} — ${SITE_CONFIG.tagline}`,
+    default: `${SITE_CONFIG.name} | ${SITE_CONFIG.tagline}`,
     template: `%s | ${SITE_CONFIG.name}`,
   },
   description: SITE_CONFIG.description,
   applicationName: SITE_CONFIG.name,
   keywords: [
-    "web design agency Maastricht",
+    "web studio Maastricht",
     "website development Netherlands",
     "custom website design",
-    "Next.js developer Europe",
-    "ecommerce website development",
+    "Next.js developer Netherlands",
+    "online store development",
   ],
   authors: [{ name: SITE_CONFIG.name, url: SITE_CONFIG.url }],
   openGraph: {

@@ -7,7 +7,7 @@ import { buildMetadata } from "@/lib/seo";
 export const metadata = buildMetadata({
   title: "Contact",
   description:
-    "Get in touch with ZEVREN about a website or online store. Book a call or send a message through the form.",
+    "Tell ZEVREN about your website, online store or web application project. Send a message through the form and we will get back to you.",
   path: "/contact",
 });
 
@@ -16,8 +16,8 @@ export default function ContactPage() {
     <>
       <PageHero
         eyebrow="Contact"
-        title="Tell us about your project"
-        description="Fill in the form or reach out directly. We typically reply within one business day."
+        title="Let's talk about your project."
+        description="Tell us a little about your business and what you are looking to build. We will review your request and get back to you to discuss the next step."
       />
       <section className="py-20">
         <Container className="grid gap-16 lg:grid-cols-[1fr_1.3fr]">

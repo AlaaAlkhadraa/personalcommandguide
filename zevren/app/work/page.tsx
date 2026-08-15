@@ -2,41 +2,43 @@ import Link from "next/link";
 import { PageHero } from "@/components/ui/PageHero";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
-import { ProjectMockup } from "@/components/portfolio/ProjectMockup";
-import { PORTFOLIO_ITEMS } from "@/lib/constants";
+import { ProjectMockup } from "@/components/work/ProjectMockup";
+import { WORK_ITEMS } from "@/lib/constants";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata = buildMetadata({
-  title: "Portfolio",
+  title: "Work",
   description:
-    "An overview of websites and online stores ZEVREN has built for businesses in the Netherlands, with the results they delivered.",
-  path: "/portfolio",
+    "A selection of website concepts created by ZEVREN to explore different industries and digital experiences.",
+  path: "/work",
 });
 
-export default function PortfolioPage() {
+export default function WorkPage() {
   return (
     <>
       <PageHero
-        eyebrow="Portfolio"
-        title="Projects where we back up the numbers"
-        description="ZEVREN builds custom websites and web applications for businesses across the Netherlands — from logistics and healthcare to hospitality and construction. No portfolio full of pretty pictures without context: for every project below, we show what it actually delivered."
+        eyebrow="Work"
+        title="Selected concepts"
+        description="A selection of website concepts created by ZEVREN to explore different industries and digital experiences. These are concept projects, not work delivered for real clients."
       />
       <section className="py-20">
         <Container>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {PORTFOLIO_ITEMS.map((item, index) => (
+            {WORK_ITEMS.map((item, index) => (
               <Link
                 key={item.slug}
-                href={`/portfolio/${item.slug}`}
+                href={`/work/${item.slug}`}
                 className="group flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-surface/50 transition-colors hover:border-primary/40"
               >
-                <ProjectMockup variant={index} className="h-40" />
+                <ProjectMockup variant={index} className="h-40" showConceptBadge />
                 <div className="flex flex-1 flex-col gap-3 p-6">
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between gap-2">
                     <span className="text-xs font-semibold uppercase tracking-wider text-accent">
-                      {item.category}
+                      {item.industry}
                     </span>
-                    <span className="text-xs text-muted">{item.year}</span>
+                    <span className="rounded-full border border-white/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted">
+                      Concept project
+                    </span>
                   </div>
                   <h2 className="text-lg font-semibold text-white">
                     {item.name}
@@ -44,11 +46,8 @@ export default function PortfolioPage() {
                   <p className="text-sm leading-relaxed text-muted">
                     {item.summary}
                   </p>
-                  <p className="text-sm font-medium text-white">
-                    {item.result}
-                  </p>
                   <ul className="flex flex-col gap-1.5 pt-1">
-                    {item.features.slice(0, 3).map((feature) => (
+                    {item.whatWeBuilt.slice(0, 3).map((feature) => (
                       <li
                         key={feature}
                         className="flex items-start gap-2 text-xs text-white/70"
@@ -91,7 +90,7 @@ export default function PortfolioPage() {
           <h2 className="max-w-xl text-3xl font-semibold text-white">
             Your project could be next
           </h2>
-          <Button href="/contact">Request a quote</Button>
+          <Button href="/contact">Start a project</Button>
         </Container>
       </section>
     </>

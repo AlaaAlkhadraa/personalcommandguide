@@ -1,10 +1,11 @@
-# ZEVREN — company website
+# ZEVREN company website
 
-Website for ZEVREN, a web development studio based in Maastricht. Built with
+Website for ZEVREN, an independent web studio based in Maastricht. Built with
 Next.js 15 (App Router), TypeScript and Tailwind CSS.
 
 ## Contents
 
+- [Content and honesty](#content-and-honesty)
 - [Stack](#stack)
 - [Project structure](#project-structure)
 - [Local setup](#local-setup)
@@ -15,17 +16,23 @@ Next.js 15 (App Router), TypeScript and Tailwind CSS.
 - [Security checklist before launch](#security-checklist-before-launch)
 - [Maintenance checklist](#maintenance-checklist)
 
-## Imagery
+## Content and honesty
 
-There's deliberately no stock photography in this project — the laptop/
-mobile mockups on the homepage (`components/home/DeviceMockups.tsx`) are
-drawn with CSS, as are the portfolio cards. That's better for load time
-than placeholder photos, and keeps the site from looking templated with
-generic stock imagery. The brand mark in the navbar and footer
-(`public/logo-mark.png`) is your uploaded logo, cropped and processed to a
-transparent PNG. Once there are real product photos, team photos or client
-logos, add them with `next/image` (e.g. in `PortfolioPreview.tsx` and
-`about/page.tsx`) so they get optimised to WebP/AVIF automatically.
+ZEVREN is a new studio with no real clients yet, and the site is written to
+reflect that honestly rather than pretend otherwise. Keep this in mind when
+editing content in `lib/constants.ts`:
+
+- The projects in `WORK_ITEMS` are concept projects, not real client work.
+  Every project card and project page is labelled "Concept project" on
+  purpose, and the project pages end with a line stating they were created
+  to demonstrate ZEVREN's approach, not delivered for a real client. Once
+  there is real client work, replace concepts with real projects one at a
+  time rather than mixing the two without labelling them differently.
+- There is no testimonials section and no star ratings anywhere in the
+  project, and none should be added until there are real reviews to show.
+- There are no invented statistics (project counts, ratings, "founded in
+  ..." claims). If you add a real number later (real project count, a
+  founding date, a real review), it can go back in, but only if it is true.
 
 ## Stack
 
@@ -40,27 +47,31 @@ logos, add them with `next/image` (e.g. in `PortfolioPreview.tsx` and
 ```
 app/                  Routes (App Router), each folder = a page
   api/contact/         Route handler for the contact form
-  services/ portfolio/ reviews/ about/ contact/
+  services/ work/ about/ contact/
+  work/[slug]/         Individual concept project pages
   privacy-policy/ terms-and-conditions/
   layout.tsx           Root layout, fonts, metadata, structured data
   sitemap.ts robots.ts opengraph-image.tsx twitter-image.tsx
   icon.png apple-icon.png  Favicon / app icon (from your logo)
+  error.tsx global-error.tsx not-found.tsx  Branded error/404 pages
 components/
   layout/               Navbar, Footer
   home/                 Homepage sections (Hero, FAQ, Process, ...)
+  work/                 ProjectMockup (the concept preview visual)
+  services/             PricingSection
   contact/              ContactForm
   ui/                   Reusable primitives (Button, Card, Icon, ...)
   seo/                  JsonLd helper
 lib/
-  constants.ts          All site content (services, portfolio, testimonials, FAQ)
+  constants.ts          All site content (services, work concepts, pricing, FAQ)
   seo.ts                Per-page metadata helper
   validations/contact.ts Zod schema for the contact form
 types/                 Shared TypeScript types
 public/                Static files (logo-mark.png)
 ```
 
-Edit content (copy, services, portfolio, testimonials, FAQ) in
-`lib/constants.ts` — that's the single place this kind of content lives.
+Edit content (copy, services, work concepts, pricing, FAQ) in
+`lib/constants.ts`. That's the single place this kind of content lives.
 
 ## Local setup
 
@@ -145,7 +156,7 @@ per change and open a pull request instead of pushing straight to main.
 1. Go to [vercel.com](https://vercel.com) and sign in with your GitHub
    account.
 2. Click **Add New → Project** and select this repository.
-3. Vercel detects Next.js automatically — the default settings (build
+3. Vercel detects Next.js automatically. The default settings (build
    command `next build`, output `.next`) are correct, nothing to change.
 4. Under **Environment Variables**, add what you're using:
    - `NEXT_PUBLIC_SITE_URL` → `https://www.zevren.nl`
@@ -161,7 +172,7 @@ pull request gets its own preview URL.
 1. In the Vercel project, go to **Settings → Domains**.
 2. Enter `zevren.nl` and click **Add**. Do the same for `www.zevren.nl` and
    set one of the two as canonical (recommended: `www.zevren.nl` with a
-   redirect from the bare domain, or the other way round — just keep it
+   redirect from the bare domain, or the other way round, just keep it
    consistent with `NEXT_PUBLIC_SITE_URL`).
 3. Vercel shows the required DNS records. Log in with your domain
    registrar and add:
@@ -183,32 +194,34 @@ pull request gets its own preview URL.
 - [ ] Security headers are active (verify with
       [securityheaders.com](https://securityheaders.com) after launch):
       CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy,
-      Permissions-Policy — all configured in `next.config.ts` and
+      Permissions-Policy, all configured in `next.config.ts` and
       `middleware.ts`
 - [ ] Contact form tested with both valid and invalid input
 - [ ] Honeypot field tested (filling in the hidden field should silently
       swallow the submission)
-- [ ] `npm audit` run and any critical vulnerabilities resolved — as of
+- [ ] `npm audit` run and any critical vulnerabilities resolved. As of
       this writing, `npm audit` flags 3 high-severity issues in `postcss`
       and `sharp`, both bundled *inside* `next@15.5.23` itself (the latest
       stable 15.x release) rather than top-level dependencies of this
       project. They affect build-time CSS/source-map processing and image
-      transforms on attacker-supplied files — not something an anonymous
+      transforms on attacker-supplied files, not something an anonymous
       visitor can trigger against the deployed site as it stands, since
       there's no user-upload or user-image feature. The real fix is
-      Next.js 16, a breaking major version; re-run `npm audit` before
+      Next.js 16, a breaking major version. Re-run `npm audit` before
       launch in case a patched 15.x has shipped since, and plan the
       Next 16 upgrade as a deliberate follow-up rather than doing it here
 - [ ] Resend (or whichever email service you choose) connected with its
       own, non-shared API key
 - [ ] Contact details in `lib/constants.ts` (phone, email, VAT and KvK
-      numbers, LinkedIn URL, city) are all real — add a street address
+      numbers, LinkedIn URL, city) are all real. Add a street address
       there too if you want one shown on the site
+- [ ] No fake statistics, testimonials or history have crept back in (see
+      [Content and honesty](#content-and-honesty))
 
 **Why does every page render dynamically (SSR) instead of statically?**
 The CSP uses a nonce generated per request by `middleware.ts`, so
 script-src doesn't need `unsafe-inline`. A nonce has to match between the
-CSP header and the HTML of the same request — which is incompatible with
+CSP header and the HTML of the same request, which is incompatible with
 pre-generated static pages. This is Next.js's documented approach for a
 strict CSP, and it has no noticeable effect on load time or Lighthouse
 score on Vercel, since the response is still server-rendered within tens
@@ -224,7 +237,8 @@ Periodically (monthly recommended):
 - [ ] Test the contact form end to end (sending, error handling)
 - [ ] Monitor uptime and Core Web Vitals via Vercel Analytics or an
       external monitor
-- [ ] Keep content in `lib/constants.ts` current (portfolio, testimonials,
-      pricing indications in the FAQ)
-- [ ] The repository is always backed up via GitHub — no separate action
+- [ ] Keep content in `lib/constants.ts` current (work concepts, pricing,
+      FAQ), and replace concept projects with real work as it becomes
+      available
+- [ ] The repository is always backed up via GitHub, no separate action
       needed as long as you push regularly

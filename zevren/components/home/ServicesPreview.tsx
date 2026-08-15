@@ -12,7 +12,7 @@ export function ServicesPreview() {
         <SectionHeading
           eyebrow="Services"
           title="What we're good at"
-          description="From a first website to an online store or custom application — we work with a small team so the lines stay short."
+          description="From a first website to an online store or a custom application. We keep the team small so communication stays direct."
         />
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {SERVICES.map((service) => (

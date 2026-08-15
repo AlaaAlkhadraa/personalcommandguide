@@ -6,12 +6,23 @@ import type { ContactFormValues } from "@/types";
 
 type Status = "idle" | "loading" | "success" | "error";
 
+const NEEDS_OPTIONS = [
+  { value: "", label: "Select an option" },
+  { value: "new-website", label: "New website" },
+  { value: "redesign", label: "Website redesign" },
+  { value: "online-store", label: "Online store" },
+  { value: "web-application", label: "Web application" },
+  { value: "maintenance", label: "Website maintenance" },
+  { value: "not-sure", label: "Not sure yet" },
+];
+
 const BUDGET_OPTIONS = [
   { value: "", label: "Select an option (optional)" },
-  { value: "under-5k", label: "Under €5,000" },
-  { value: "5k-10k", label: "€5,000 – €10,000" },
-  { value: "10k-25k", label: "€10,000 – €25,000" },
-  { value: "over-25k", label: "Over €25,000" },
+  { value: "under-1.5k", label: "Under €1,500" },
+  { value: "1.5k-3k", label: "€1,500 to €3,000" },
+  { value: "3k-5k", label: "€3,000 to €5,000" },
+  { value: "5k-plus", label: "€5,000+" },
+  { value: "not-sure", label: "Not sure yet" },
 ];
 
 export function ContactForm() {
@@ -22,7 +33,7 @@ export function ContactForm() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     // The DOM nulls event.currentTarget once synchronous dispatch finishes,
-    // so it must be captured now — reading it after the awaits below would
+    // so it must be captured now. Reading it after the awaits below would
     // throw when calling form.reset() and get mistaken for a network error.
     const form = event.currentTarget;
     setStatus("loading");
@@ -34,6 +45,7 @@ export function ContactForm() {
       name: String(formData.get("name") ?? ""),
       email: String(formData.get("email") ?? ""),
       company: String(formData.get("company") ?? ""),
+      needs: String(formData.get("needs") ?? ""),
       budget: String(formData.get("budget") ?? ""),
       message: String(formData.get("message") ?? ""),
       website: String(formData.get("website") ?? ""),
@@ -86,7 +98,7 @@ export function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-6">
-      {/* Honeypot field — hidden from real visitors via off-screen
+      {/* Honeypot field, hidden from real visitors via off-screen
           positioning (not display:none, which some bots skip), and never
           reachable by keyboard. Any value here marks the submission spam. */}
       <div className="absolute left-[-9999px] top-auto" aria-hidden="true">
@@ -147,7 +159,7 @@ export function ContactForm() {
 
         <div className="flex flex-col gap-2">
           <label htmlFor="company" className="text-sm font-medium text-white">
-            Company name
+            Company
           </label>
           <input
             id="company"
@@ -160,14 +172,32 @@ export function ContactForm() {
         </div>
 
         <div className="flex flex-col gap-2">
+          <label htmlFor="needs" className="text-sm font-medium text-white">
+            What do you need?
+          </label>
+          <select
+            id="needs"
+            name="needs"
+            defaultValue=""
+            className="rounded-lg border border-white/15 bg-surface px-4 py-3 text-sm text-white focus:border-accent"
+          >
+            {NEEDS_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="flex flex-col gap-2 sm:col-span-2">
           <label htmlFor="budget" className="text-sm font-medium text-white">
-            Estimated budget
+            Budget
           </label>
           <select
             id="budget"
             name="budget"
             defaultValue=""
-            className="rounded-lg border border-white/15 bg-surface px-4 py-3 text-sm text-white focus:border-accent"
+            className="rounded-lg border border-white/15 bg-surface px-4 py-3 text-sm text-white focus:border-accent sm:max-w-xs"
           >
             {BUDGET_OPTIONS.map((option) => (
               <option key={option.value} value={option.value}>

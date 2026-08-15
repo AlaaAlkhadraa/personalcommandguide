@@ -92,9 +92,11 @@ function LayoutBlocks({ variant }: { variant: number }) {
 export function ProjectMockup({
   variant = 0,
   className = "",
+  showConceptBadge = false,
 }: {
   variant?: number;
   className?: string;
+  showConceptBadge?: boolean;
 }) {
   const gradient = GRADIENTS[variant % GRADIENTS.length];
 
@@ -109,6 +111,25 @@ export function ProjectMockup({
         <span className="h-2 w-2 rounded-full bg-white/20" />
         <div className="ml-3 h-3 flex-1 max-w-[140px] rounded-full bg-white/10" />
       </div>
+
+      <div className="flex items-center justify-between border-b border-white/10 px-4 py-2.5">
+        <div className="flex items-center gap-1.5">
+          <span className="h-2 w-2 rounded-sm bg-accent/70" />
+          <div className="h-2 w-12 rounded-full bg-white/25" />
+        </div>
+        <div className="hidden items-center gap-2.5 sm:flex">
+          <div className="h-1.5 w-6 rounded-full bg-white/15" />
+          <div className="h-1.5 w-6 rounded-full bg-white/15" />
+          <div className="h-1.5 w-6 rounded-full bg-white/15" />
+        </div>
+      </div>
+
+      {showConceptBadge && (
+        <span className="absolute right-3 top-[52px] rounded-full border border-white/15 bg-navy/70 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-accent backdrop-blur-sm">
+          Concept
+        </span>
+      )}
+
       <div className="p-5">
         <LayoutBlocks variant={variant} />
       </div>

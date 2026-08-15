@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ message: "Message sent." }, { status: 200 });
   }
 
-  const { name, email, company, budget } = result.data;
+  const { name, email, company, needs, budget } = result.data;
 
   // TODO(resend): send the notification email once RESEND_API_KEY is
   // configured. Example:
@@ -80,15 +80,16 @@ export async function POST(request: NextRequest) {
   //     to: process.env.CONTACT_INBOX_EMAIL!,
   //     replyTo: email,
   //     subject: `New enquiry from ${name}`,
-  //     text: `Name: ${name}\nEmail: ${email}\nCompany: ${company || "-"}\nBudget: ${budget || "-"}\n\n${result.data.message}`,
+  //     text: `Name: ${name}\nEmail: ${email}\nCompany: ${company || "-"}\nNeeds: ${needs || "-"}\nBudget: ${budget || "-"}\n\n${result.data.message}`,
   //   });
   //
   // Until then, submissions are validated and accepted but not delivered.
-  // Log server-side only — never log to a location a client can read.
+  // Log server-side only, never log to a location a client can read.
   console.info("[contact] new submission received", {
     name,
     email,
     company: company || undefined,
+    needs: needs || undefined,
     budget: budget || undefined,
   });
 
