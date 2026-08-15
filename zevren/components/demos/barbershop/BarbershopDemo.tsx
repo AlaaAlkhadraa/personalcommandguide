@@ -11,18 +11,16 @@ import {
   type Barber,
   type BarberService,
 } from "@/lib/demos/barbershop-data";
+import type { Dictionary } from "@/lib/i18n/dictionary-type";
 
 type Step = "service" | "barber" | "datetime" | "details" | "review" | "done";
 
 const STEP_ORDER: Step[] = ["service", "barber", "datetime", "details", "review"];
-const STEP_LABELS: Record<Step, string> = {
-  service: "Service",
-  barber: "Barber",
-  datetime: "Date & time",
-  details: "Your details",
-  review: "Confirm",
-  done: "Done",
-};
+
+interface BarbershopDemoProps {
+  dict: Dictionary["demos"]["barbershop"];
+  common: Dictionary["demoCommon"];
+}
 
 const GALLERY_SWATCHES = [
   "from-amber-400/40 to-neutral-900",
@@ -45,7 +43,8 @@ interface Details {
   phone: string;
 }
 
-export function BarbershopDemo() {
+export function BarbershopDemo({ dict, common }: BarbershopDemoProps) {
+  const STEP_LABELS: Record<Step, string> = dict.steps;
   const [step, setStep] = useState<Step>("service");
   const [service, setService] = useState<BarberService | null>(null);
   const [barber, setBarber] = useState<Barber | null>(null);
@@ -103,43 +102,42 @@ export function BarbershopDemo() {
           IRONSIDE <span className="text-neutral-100">BARBERSHOP</span>
         </span>
         <div className="hidden items-center gap-6 text-sm text-neutral-400 sm:flex">
-          <span>Services</span>
-          <span>Team</span>
-          <span>Hours</span>
-          <span>Contact</span>
+          <span>{dict.navServices}</span>
+          <span>{dict.navTeam}</span>
+          <span>{dict.navHours}</span>
+          <span>{dict.navContact}</span>
         </div>
         <a
           href="#booking"
           className="rounded-full bg-amber-400 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-neutral-950 transition-colors hover:bg-amber-300"
         >
-          Book now
+          {dict.bookNow}
         </a>
       </nav>
 
       {/* Hero */}
       <section className="border-b border-amber-900/30 bg-[radial-gradient(circle_at_20%_10%,rgba(251,191,36,0.12),transparent_55%)] px-5 py-14 sm:px-8 sm:py-20">
         <span className="text-xs font-semibold uppercase tracking-[0.3em] text-amber-400">
-          Maastricht
+          {dict.heroLocation}
         </span>
         <h2 className="mt-4 max-w-lg font-heading text-3xl font-semibold leading-tight text-white sm:text-4xl">
-          Sharp cuts, no waiting around.
+          {dict.heroHeading}
         </h2>
         <p className="mt-4 max-w-md text-sm leading-relaxed text-neutral-400">
-          Book your appointment online in under a minute and walk in right on
-          time.
+          {dict.heroSubtitle}
         </p>
         <a
           href="#booking"
           className="mt-6 inline-flex w-fit items-center rounded-full border border-amber-400/60 px-5 py-2.5 text-sm font-semibold text-amber-400 transition-colors hover:bg-amber-400/10"
         >
-          Book an appointment
+          {dict.heroCta}
         </a>
       </section>
 
       {/* Services / Prices */}
       <section className="border-b border-amber-900/30 px-5 py-12 sm:px-8">
         <h3 className="text-xs font-semibold uppercase tracking-[0.3em] text-amber-400">
-          Services
+          {dict.servicesHeading}
         </h3>
         <div className="mt-6 grid gap-3 sm:grid-cols-2">
           {BARBER_SERVICES.map((s) => (
@@ -160,7 +158,7 @@ export function BarbershopDemo() {
       {/* Team */}
       <section className="border-b border-amber-900/30 px-5 py-12 sm:px-8">
         <h3 className="text-xs font-semibold uppercase tracking-[0.3em] text-amber-400">
-          Our barbers
+          {dict.teamHeading}
         </h3>
         <div className="mt-6 grid gap-4 sm:grid-cols-3">
           {BARBERS.map((b) => (
@@ -179,7 +177,7 @@ export function BarbershopDemo() {
       {/* Gallery */}
       <section className="border-b border-amber-900/30 px-5 py-12 sm:px-8">
         <h3 className="text-xs font-semibold uppercase tracking-[0.3em] text-amber-400">
-          Gallery
+          {dict.galleryHeading}
         </h3>
         <div className="mt-6 grid grid-cols-3 gap-2 sm:grid-cols-6">
           {GALLERY_SWATCHES.map((swatch, i) => (
@@ -194,9 +192,9 @@ export function BarbershopDemo() {
       {/* Reviews */}
       <section className="border-b border-amber-900/30 px-5 py-12 sm:px-8">
         <h3 className="text-xs font-semibold uppercase tracking-[0.3em] text-amber-400">
-          Reviews
+          {dict.reviewsHeading}
         </h3>
-        <p className="mt-1 text-xs text-neutral-600">Demo reviews for illustration only.</p>
+        <p className="mt-1 text-xs text-neutral-600">{common.demoNote}</p>
         <div className="mt-6 grid gap-4 sm:grid-cols-3">
           {DEMO_REVIEWS.map((review) => (
             <div
@@ -222,7 +220,7 @@ export function BarbershopDemo() {
       {/* Booking */}
       <section id="booking" className="border-b border-amber-900/30 px-5 py-12 sm:px-8">
         <h3 className="text-xs font-semibold uppercase tracking-[0.3em] text-amber-400">
-          Book an appointment
+          {dict.bookingHeading}
         </h3>
 
         {step !== "done" && (
@@ -296,7 +294,7 @@ export function BarbershopDemo() {
                 onClick={() => goTo("service")}
                 className="mt-1 text-xs font-medium text-neutral-500 hover:text-amber-400 sm:col-span-3 sm:text-left"
               >
-                &larr; Back
+                &larr; {common.back}
               </button>
             </div>
           )}
@@ -305,7 +303,7 @@ export function BarbershopDemo() {
             <div className="flex flex-col gap-6">
               <div>
                 <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-neutral-500">
-                  Select a date
+                  {dict.selectDate}
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {BARBER_DATES.map((d) => (
@@ -331,7 +329,7 @@ export function BarbershopDemo() {
               {dateId && (
                 <div>
                   <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-neutral-500">
-                    Select a time
+                    {dict.selectTime}
                   </p>
                   <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
                     {BARBER_TIME_SLOTS.map((t, i) => {
@@ -364,7 +362,7 @@ export function BarbershopDemo() {
                   onClick={() => goTo("barber")}
                   className="text-xs font-medium text-neutral-500 hover:text-amber-400"
                 >
-                  &larr; Back
+                  &larr; {common.back}
                 </button>
                 <button
                   type="button"
@@ -372,7 +370,7 @@ export function BarbershopDemo() {
                   onClick={() => goTo("details")}
                   className="rounded-full bg-amber-400 px-5 py-2 text-xs font-semibold uppercase tracking-wider text-neutral-950 transition-colors hover:bg-amber-300 disabled:cursor-not-allowed disabled:opacity-40"
                 >
-                  Continue
+                  {common.continueLabel}
                 </button>
               </div>
             </div>
@@ -382,37 +380,37 @@ export function BarbershopDemo() {
             <form onSubmit={handleDetailsSubmit} className="flex flex-col gap-4">
               <div>
                 <label className="mb-1.5 block text-xs font-medium text-neutral-400">
-                  Full name
+                  {common.fullName}
                 </label>
                 <input
                   value={details.name}
                   onChange={(e) => setDetails({ ...details, name: e.target.value })}
                   className="w-full rounded-lg border border-white/10 bg-neutral-900 px-3 py-2.5 text-sm text-neutral-100 outline-none focus:border-amber-400"
-                  placeholder="Jane Doe"
+                  placeholder={common.namePlaceholder}
                 />
                 {errors.name && <p className="mt-1 text-xs text-red-400">{errors.name}</p>}
               </div>
               <div>
                 <label className="mb-1.5 block text-xs font-medium text-neutral-400">
-                  Email address
+                  {common.email}
                 </label>
                 <input
                   value={details.email}
                   onChange={(e) => setDetails({ ...details, email: e.target.value })}
                   className="w-full rounded-lg border border-white/10 bg-neutral-900 px-3 py-2.5 text-sm text-neutral-100 outline-none focus:border-amber-400"
-                  placeholder="jane@example.com"
+                  placeholder={common.emailPlaceholder}
                 />
                 {errors.email && <p className="mt-1 text-xs text-red-400">{errors.email}</p>}
               </div>
               <div>
                 <label className="mb-1.5 block text-xs font-medium text-neutral-400">
-                  Phone number
+                  {common.phone}
                 </label>
                 <input
                   value={details.phone}
                   onChange={(e) => setDetails({ ...details, phone: e.target.value })}
                   className="w-full rounded-lg border border-white/10 bg-neutral-900 px-3 py-2.5 text-sm text-neutral-100 outline-none focus:border-amber-400"
-                  placeholder="06 12345678"
+                  placeholder={common.phonePlaceholder}
                 />
                 {errors.phone && <p className="mt-1 text-xs text-red-400">{errors.phone}</p>}
               </div>
@@ -422,13 +420,13 @@ export function BarbershopDemo() {
                   onClick={() => goTo("datetime")}
                   className="text-xs font-medium text-neutral-500 hover:text-amber-400"
                 >
-                  &larr; Back
+                  &larr; {common.back}
                 </button>
                 <button
                   type="submit"
                   className="rounded-full bg-amber-400 px-5 py-2 text-xs font-semibold uppercase tracking-wider text-neutral-950 transition-colors hover:bg-amber-300"
                 >
-                  Continue
+                  {common.continueLabel}
                 </button>
               </div>
             </form>
@@ -437,31 +435,31 @@ export function BarbershopDemo() {
           {step === "review" && service && barber && dateId && time && (
             <div className="flex flex-col gap-5">
               <p className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
-                Review your appointment
+                {dict.reviewHeading}
               </p>
               <dl className="grid gap-3 text-sm sm:grid-cols-2">
                 <div>
-                  <dt className="text-neutral-500">Service</dt>
+                  <dt className="text-neutral-500">{dict.summaryService}</dt>
                   <dd className="text-neutral-100">{service.name}</dd>
                 </div>
                 <div>
-                  <dt className="text-neutral-500">Barber</dt>
+                  <dt className="text-neutral-500">{dict.summaryBarber}</dt>
                   <dd className="text-neutral-100">{barber.name}</dd>
                 </div>
                 <div>
-                  <dt className="text-neutral-500">Date</dt>
+                  <dt className="text-neutral-500">{dict.summaryDate}</dt>
                   <dd className="text-neutral-100">{BARBER_DATE_FULL_LABELS[dateId]}</dd>
                 </div>
                 <div>
-                  <dt className="text-neutral-500">Time</dt>
+                  <dt className="text-neutral-500">{dict.summaryTime}</dt>
                   <dd className="text-neutral-100">{time}</dd>
                 </div>
                 <div>
-                  <dt className="text-neutral-500">Name</dt>
+                  <dt className="text-neutral-500">{dict.summaryName}</dt>
                   <dd className="text-neutral-100">{details.name}</dd>
                 </div>
                 <div>
-                  <dt className="text-neutral-500">Contact</dt>
+                  <dt className="text-neutral-500">{dict.summaryContact}</dt>
                   <dd className="text-neutral-100">
                     {details.email} &middot; {details.phone}
                   </dd>
@@ -473,14 +471,14 @@ export function BarbershopDemo() {
                   onClick={() => goTo("details")}
                   className="text-xs font-medium text-neutral-500 hover:text-amber-400"
                 >
-                  &larr; Back
+                  &larr; {common.back}
                 </button>
                 <button
                   type="button"
                   onClick={confirmBooking}
                   className="rounded-full bg-amber-400 px-5 py-2 text-xs font-semibold uppercase tracking-wider text-neutral-950 transition-colors hover:bg-amber-300"
                 >
-                  Confirm appointment
+                  {dict.confirmAppointment}
                 </button>
               </div>
             </div>
@@ -493,7 +491,7 @@ export function BarbershopDemo() {
                   <path d="m4 10 4 4 8-8" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </div>
-              <p className="text-lg font-semibold text-white">Appointment confirmed</p>
+              <p className="text-lg font-semibold text-white">{dict.confirmedTitle}</p>
               <div className="text-sm leading-relaxed text-neutral-300">
                 <p>{service.name}</p>
                 <p>{BARBER_DATE_FULL_LABELS[dateId]}</p>
@@ -506,21 +504,21 @@ export function BarbershopDemo() {
                   onClick={rescheduleAppointment}
                   className="text-xs font-medium text-neutral-400 hover:text-white"
                 >
-                  Reschedule
+                  {common.reschedule}
                 </button>
                 <button
                   type="button"
                   onClick={() => setCancelled(true)}
                   className="text-xs font-medium text-neutral-400 hover:text-red-400"
                 >
-                  Cancel appointment
+                  {common.cancelAppointment}
                 </button>
                 <button
                   type="button"
                   onClick={reset}
                   className="text-xs font-medium text-amber-400 hover:text-amber-300"
                 >
-                  Book another appointment
+                  {common.bookAnother}
                 </button>
               </div>
             </div>
@@ -533,17 +531,14 @@ export function BarbershopDemo() {
                   <path d="m5 5 10 10M15 5 5 15" strokeLinecap="round" />
                 </svg>
               </div>
-              <p className="text-lg font-semibold text-white">Appointment cancelled</p>
-              <p className="text-sm text-neutral-400">
-                Your appointment has been cancelled. You can book a new one at
-                any time.
-              </p>
+              <p className="text-lg font-semibold text-white">{common.cancelledTitle}</p>
+              <p className="text-sm text-neutral-400">{common.cancelledBody}</p>
               <button
                 type="button"
                 onClick={reset}
                 className="mt-2 text-xs font-medium text-amber-400 hover:text-amber-300"
               >
-                Book a new appointment
+                {common.bookNew}
               </button>
             </div>
           )}
@@ -554,26 +549,26 @@ export function BarbershopDemo() {
       <section className="grid gap-8 border-b border-amber-900/30 px-5 py-12 sm:grid-cols-3 sm:px-8">
         <div>
           <h4 className="text-xs font-semibold uppercase tracking-[0.3em] text-amber-400">
-            Opening hours
+            {common.hoursHeading}
           </h4>
           <dl className="mt-4 flex flex-col gap-1.5 text-sm text-neutral-400">
             <div className="flex justify-between gap-4">
-              <dt>Mon - Fri</dt>
+              <dt>{common.monFri}</dt>
               <dd>09:00 - 18:00</dd>
             </div>
             <div className="flex justify-between gap-4">
-              <dt>Saturday</dt>
+              <dt>{common.saturday}</dt>
               <dd>09:00 - 17:00</dd>
             </div>
             <div className="flex justify-between gap-4">
-              <dt>Sunday</dt>
-              <dd>Closed</dd>
+              <dt>{common.sunday}</dt>
+              <dd>{common.closed}</dd>
             </div>
           </dl>
         </div>
         <div>
           <h4 className="text-xs font-semibold uppercase tracking-[0.3em] text-amber-400">
-            Location
+            {common.locationHeading}
           </h4>
           <p className="mt-4 text-sm leading-relaxed text-neutral-400">
             Maastricht, Netherlands
@@ -581,7 +576,7 @@ export function BarbershopDemo() {
         </div>
         <div>
           <h4 className="text-xs font-semibold uppercase tracking-[0.3em] text-amber-400">
-            Contact
+            {common.contactHeading}
           </h4>
           <p className="mt-4 text-sm leading-relaxed text-neutral-400">
             hello@ironsidebarbershop.nl
@@ -593,7 +588,7 @@ export function BarbershopDemo() {
 
       {/* Footer */}
       <footer className="px-5 py-6 text-center text-xs text-neutral-600 sm:px-8">
-        Ironside Barbershop &middot; a website concept by ZEVREN
+        Ironside Barbershop &middot; {common.footerTagline}
       </footer>
     </div>
   );

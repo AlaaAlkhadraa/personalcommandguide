@@ -12,6 +12,7 @@ import {
   PORTAL_TASKS,
   VAT_OVERVIEW,
 } from "@/lib/demos/accounting-data";
+import type { Dictionary } from "@/lib/i18n/dictionary-type";
 
 type Area = "site" | "portal";
 type PortalTab = "dashboard" | "invoices" | "documents" | "tasks" | "vat" | "financial" | "messages";
@@ -25,14 +26,14 @@ interface AppointmentForm {
 
 const EMPTY_APPOINTMENT: AppointmentForm = { name: "", email: "", phone: "", reason: "" };
 
-const PORTAL_TABS: { id: PortalTab; label: string }[] = [
-  { id: "dashboard", label: "Dashboard" },
-  { id: "invoices", label: "Invoices" },
-  { id: "documents", label: "Documents" },
-  { id: "tasks", label: "Tasks" },
-  { id: "vat", label: "VAT overview" },
-  { id: "financial", label: "Financial overview" },
-  { id: "messages", label: "Messages" },
+const PORTAL_TAB_IDS: PortalTab[] = [
+  "dashboard",
+  "invoices",
+  "documents",
+  "tasks",
+  "vat",
+  "financial",
+  "messages",
 ];
 
 function Logo() {
@@ -56,13 +57,28 @@ function Logo() {
   );
 }
 
-export function AccountingDemo() {
+interface AccountingDemoProps {
+  dict: Dictionary["demos"]["accounting"];
+  common: Dictionary["demoCommon"];
+}
+
+export function AccountingDemo({ dict, common }: AccountingDemoProps) {
   const [area, setArea] = useState<Area>("site");
   const [portalTab, setPortalTab] = useState<PortalTab>("dashboard");
   const [tasks, setTasks] = useState(PORTAL_TASKS);
   const [appointment, setAppointment] = useState<AppointmentForm>(EMPTY_APPOINTMENT);
   const [errors, setErrors] = useState<Partial<AppointmentForm>>({});
   const [submitted, setSubmitted] = useState(false);
+
+  const portalTabLabel: Record<PortalTab, string> = {
+    dashboard: dict.dashboard,
+    invoices: dict.invoices,
+    documents: dict.documents,
+    tasks: dict.tasks,
+    vat: dict.vatOverview,
+    financial: dict.financialOverview,
+    messages: dict.messages,
+  };
 
   function toggleTask(id: string) {
     setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, done: !t.done } : t)));
@@ -89,17 +105,17 @@ export function AccountingDemo() {
           <Logo />
         </button>
         <div className="hidden items-center gap-6 text-sm text-stone-500 sm:flex">
-          <a href="#services" className="hover:text-[#0f1b2d]">Services</a>
-          <a href="#pricing" className="hover:text-[#0f1b2d]">Pricing</a>
-          <a href="#about" className="hover:text-[#0f1b2d]">About</a>
-          <a href="#contact" className="hover:text-[#0f1b2d]">Contact</a>
+          <a href="#services" className="hover:text-[#0f1b2d]">{dict.navServices}</a>
+          <a href="#pricing" className="hover:text-[#0f1b2d]">{dict.navPricing}</a>
+          <a href="#about" className="hover:text-[#0f1b2d]">{dict.navAbout}</a>
+          <a href="#contact" className="hover:text-[#0f1b2d]">{dict.navContact}</a>
         </div>
         <button
           type="button"
           onClick={() => setArea(area === "portal" ? "site" : "portal")}
           className="rounded-md border border-[#b8860b]/40 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-[#0f1b2d] transition-colors hover:bg-[#b8860b]/10"
         >
-          {area === "portal" ? "Back to website" : "Client Portal (Demo)"}
+          {area === "portal" ? dict.backToWebsite : dict.portalDemo}
         </button>
       </nav>
 
@@ -111,24 +127,23 @@ export function AccountingDemo() {
               Accountants
             </span>
             <h2 className="mt-4 max-w-lg font-heading text-3xl font-semibold leading-tight text-[#0f1b2d] sm:text-4xl">
-              Clear bookkeeping, without the jargon.
+              {dict.heroHeading}
             </h2>
             <p className="mt-4 max-w-md text-sm leading-relaxed text-stone-600">
-              Bergendal Accountants handles your bookkeeping, BTW and jaarrekening,
-              so you can stay focused on running your business.
+              {dict.heroSubtitle}
             </p>
             <a
               href="#contact"
               className="mt-6 inline-flex w-fit items-center rounded-md bg-[#0f1b2d] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#1c2e47]"
             >
-              Request an appointment
+              {dict.requestAppointment}
             </a>
           </section>
 
           {/* Services */}
           <section id="services" className="border-b border-stone-200 px-5 py-12 sm:px-8">
             <h3 className="text-xs font-semibold uppercase tracking-[0.3em] text-[#b8860b]">
-              Services
+              {dict.servicesHeading}
             </h3>
             <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {ACCOUNTING_SERVICES.map((s) => (
@@ -143,7 +158,7 @@ export function AccountingDemo() {
           {/* Pricing */}
           <section id="pricing" className="border-b border-stone-200 px-5 py-12 sm:px-8">
             <h3 className="text-xs font-semibold uppercase tracking-[0.3em] text-[#b8860b]">
-              Pricing
+              {dict.pricingHeading}
             </h3>
             <div className="mt-6 grid gap-4 sm:grid-cols-3">
               {ACCOUNTING_PLANS.map((plan) => (
@@ -170,69 +185,66 @@ export function AccountingDemo() {
           {/* About */}
           <section id="about" className="border-b border-stone-200 px-5 py-12 sm:px-8">
             <h3 className="text-xs font-semibold uppercase tracking-[0.3em] text-[#b8860b]">
-              About
+              {dict.aboutHeading}
             </h3>
             <p className="mt-4 max-w-xl text-sm leading-relaxed text-stone-600">
-              Bergendal Accountants works with freelancers and small businesses
-              across the Netherlands, handling bookkeeping, VAT and annual
-              accounts with clear, direct communication and no unnecessary
-              paperwork.
+              {dict.aboutBody}
             </p>
           </section>
 
           {/* Contact / Appointment request */}
           <section id="contact" className="px-5 py-12 sm:px-8">
             <h3 className="text-xs font-semibold uppercase tracking-[0.3em] text-[#b8860b]">
-              Request an appointment
+              {dict.contactHeading}
             </h3>
             {!submitted ? (
               <form onSubmit={handleAppointmentSubmit} className="mt-6 grid max-w-xl gap-4">
                 <div>
                   <label className="mb-1.5 block text-xs font-medium text-stone-500">
-                    Full name
+                    {dict.fullName}
                   </label>
                   <input
                     value={appointment.name}
                     onChange={(e) => setAppointment({ ...appointment, name: e.target.value })}
                     className="w-full rounded-md border border-stone-300 bg-white px-3 py-2.5 text-sm text-stone-900 outline-none focus:border-[#b8860b]"
-                    placeholder="Jan de Vries"
+                    placeholder={common.namePlaceholder}
                   />
                   {errors.name && <p className="mt-1 text-xs text-red-600">{errors.name}</p>}
                 </div>
                 <div>
                   <label className="mb-1.5 block text-xs font-medium text-stone-500">
-                    Email address
+                    {common.email}
                   </label>
                   <input
                     value={appointment.email}
                     onChange={(e) => setAppointment({ ...appointment, email: e.target.value })}
                     className="w-full rounded-md border border-stone-300 bg-white px-3 py-2.5 text-sm text-stone-900 outline-none focus:border-[#b8860b]"
-                    placeholder="jan@example.com"
+                    placeholder={common.emailPlaceholder}
                   />
                   {errors.email && <p className="mt-1 text-xs text-red-600">{errors.email}</p>}
                 </div>
                 <div>
                   <label className="mb-1.5 block text-xs font-medium text-stone-500">
-                    Phone number
+                    {dict.phone}
                   </label>
                   <input
                     value={appointment.phone}
                     onChange={(e) => setAppointment({ ...appointment, phone: e.target.value })}
                     className="w-full rounded-md border border-stone-300 bg-white px-3 py-2.5 text-sm text-stone-900 outline-none focus:border-[#b8860b]"
-                    placeholder="06 12345678"
+                    placeholder={common.phonePlaceholder}
                   />
                   {errors.phone && <p className="mt-1 text-xs text-red-600">{errors.phone}</p>}
                 </div>
                 <div>
                   <label className="mb-1.5 block text-xs font-medium text-stone-500">
-                    Reason for the appointment
+                    {dict.reason}
                   </label>
                   <select
                     value={appointment.reason}
                     onChange={(e) => setAppointment({ ...appointment, reason: e.target.value })}
                     className="w-full rounded-md border border-stone-300 bg-white px-3 py-2.5 text-sm text-stone-900 outline-none focus:border-[#b8860b]"
                   >
-                    <option value="">Select a reason</option>
+                    <option value="">{dict.selectReason}</option>
                     {APPOINTMENT_REASONS.map((r) => (
                       <option key={r} value={r}>{r}</option>
                     ))}
@@ -243,7 +255,7 @@ export function AccountingDemo() {
                   type="submit"
                   className="mt-2 w-fit rounded-md bg-[#0f1b2d] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#1c2e47]"
                 >
-                  Request appointment
+                  {dict.requestAppointment}
                 </button>
               </form>
             ) : (
@@ -253,17 +265,14 @@ export function AccountingDemo() {
                     <path d="m4 10 4 4 8-8" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </div>
-                <p className="text-base font-semibold text-[#0f1b2d]">Appointment request received</p>
-                <p className="text-sm text-stone-600">
-                  Thank you, {appointment.name}. We will get back to you to
-                  schedule your appointment.
-                </p>
+                <p className="text-base font-semibold text-[#0f1b2d]">{dict.appointmentReceivedTitle}</p>
+                <p className="text-sm text-stone-600">{dict.appointmentReceivedBody}</p>
               </div>
             )}
           </section>
 
           <footer className="border-t border-stone-200 px-5 py-6 text-center text-xs text-stone-400 sm:px-8">
-            Bergendal Accountants &middot; a website concept by ZEVREN
+            Bergendal Accountants &middot; {common.footerTagline}
           </footer>
         </>
       )}
@@ -271,43 +280,41 @@ export function AccountingDemo() {
       {area === "portal" && (
         <div className="flex flex-col sm:flex-row">
           <aside className="flex gap-2 overflow-x-auto border-b border-stone-200 bg-stone-50 p-3 sm:w-48 sm:flex-col sm:overflow-visible sm:border-b-0 sm:border-r sm:p-4">
-            {PORTAL_TABS.map((tab) => (
+            {PORTAL_TAB_IDS.map((id) => (
               <button
-                key={tab.id}
+                key={id}
                 type="button"
-                onClick={() => setPortalTab(tab.id)}
+                onClick={() => setPortalTab(id)}
                 className={`shrink-0 rounded-md px-3 py-2 text-left text-sm font-medium transition-colors ${
-                  portalTab === tab.id
+                  portalTab === id
                     ? "bg-[#0f1b2d] text-white"
                     : "text-stone-600 hover:bg-stone-200/60"
                 }`}
               >
-                {tab.label}
+                {portalTabLabel[id]}
               </button>
             ))}
           </aside>
 
           <div className="flex-1 p-5 sm:p-8">
-            <p className="mb-6 text-xs text-stone-400">
-              Demo client portal, not connected to a real login system.
-            </p>
+            <p className="mb-6 text-xs text-stone-400">{dict.portalNote}</p>
 
             {portalTab === "dashboard" && (
               <div className="grid gap-4 sm:grid-cols-3">
                 <div className="rounded-lg border border-stone-200 p-4">
-                  <p className="text-xs text-stone-500">Open invoices</p>
+                  <p className="text-xs text-stone-500">{dict.openInvoices}</p>
                   <p className="mt-1 text-2xl font-semibold text-[#0f1b2d]">
                     {PORTAL_INVOICES.filter((i) => i.status !== "Paid").length}
                   </p>
                 </div>
                 <div className="rounded-lg border border-stone-200 p-4">
-                  <p className="text-xs text-stone-500">Open tasks</p>
+                  <p className="text-xs text-stone-500">{dict.openTasks}</p>
                   <p className="mt-1 text-2xl font-semibold text-[#0f1b2d]">
                     {tasks.filter((t) => !t.done).length}
                   </p>
                 </div>
                 <div className="rounded-lg border border-stone-200 p-4">
-                  <p className="text-xs text-stone-500">Unread messages</p>
+                  <p className="text-xs text-stone-500">{dict.unreadMessages}</p>
                   <p className="mt-1 text-2xl font-semibold text-[#0f1b2d]">
                     {PORTAL_MESSAGES.length}
                   </p>

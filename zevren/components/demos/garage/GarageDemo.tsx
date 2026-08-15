@@ -10,17 +10,16 @@ import {
   isGarageSlotAvailable,
   type GarageService,
 } from "@/lib/demos/garage-data";
+import type { Dictionary } from "@/lib/i18n/dictionary-type";
 
 type Step = "service" | "datetime" | "details" | "review" | "done";
 
 const STEP_ORDER: Step[] = ["service", "datetime", "details", "review"];
-const STEP_LABELS: Record<Step, string> = {
-  service: "Service",
-  datetime: "Date & time",
-  details: "Vehicle & contact",
-  review: "Confirm",
-  done: "Done",
-};
+
+interface GarageDemoProps {
+  dict: Dictionary["demos"]["garage"];
+  common: Dictionary["demoCommon"];
+}
 
 interface FormState {
   name: string;
@@ -57,7 +56,8 @@ const DEMO_REVIEWS = [
   { name: "Youssef E.", text: "Easy to add my kenteken and details ahead of time." },
 ];
 
-export function GarageDemo() {
+export function GarageDemo({ dict, common }: GarageDemoProps) {
+  const STEP_LABELS: Record<Step, string> = dict.steps;
   const [step, setStep] = useState<Step>("service");
   const [service, setService] = useState<GarageService | null>(null);
   const [dateId, setDateId] = useState<string | null>(null);
@@ -113,43 +113,42 @@ export function GarageDemo() {
           STEENBERG <span className="text-orange-500">AUTOSERVICE</span>
         </span>
         <div className="hidden items-center gap-6 text-sm text-slate-400 sm:flex">
-          <span>Services</span>
-          <span>About</span>
-          <span>Hours</span>
-          <span>Contact</span>
+          <span>{dict.navServices}</span>
+          <span>{dict.navAbout}</span>
+          <span>{dict.navHours}</span>
+          <span>{dict.navContact}</span>
         </div>
         <a
           href="#booking"
           className="rounded-md bg-orange-500 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-slate-950 transition-colors hover:bg-orange-400"
         >
-          Book service
+          {dict.bookService}
         </a>
       </nav>
 
       {/* Hero */}
       <section className="border-b border-slate-700/60 bg-[radial-gradient(circle_at_80%_0%,rgba(249,115,22,0.12),transparent_50%)] px-5 py-14 sm:px-8 sm:py-20">
         <span className="text-xs font-semibold uppercase tracking-[0.3em] text-orange-500">
-          Maastricht
+          {dict.heroLocation}
         </span>
         <h2 className="mt-4 max-w-lg font-heading text-3xl font-semibold leading-tight text-white sm:text-4xl">
-          Servicing, APK and repairs, booked online.
+          {dict.heroHeading}
         </h2>
         <p className="mt-4 max-w-md text-sm leading-relaxed text-slate-400">
-          Choose a service, pick a time and add your vehicle details before
-          you arrive.
+          {dict.heroSubtitle}
         </p>
         <a
           href="#booking"
           className="mt-6 inline-flex w-fit items-center rounded-md border border-orange-500/60 px-5 py-2.5 text-sm font-semibold text-orange-500 transition-colors hover:bg-orange-500/10"
         >
-          Book an appointment
+          {dict.heroCta}
         </a>
       </section>
 
       {/* Services */}
       <section className="border-b border-slate-700/60 px-5 py-12 sm:px-8">
         <h3 className="text-xs font-semibold uppercase tracking-[0.3em] text-orange-500">
-          Services
+          {dict.servicesHeading}
         </h3>
         <div className="mt-6 grid gap-3 sm:grid-cols-2">
           {GARAGE_SERVICES.map((s) => (
@@ -170,7 +169,7 @@ export function GarageDemo() {
       {/* About */}
       <section className="border-b border-slate-700/60 px-5 py-12 sm:px-8">
         <h3 className="text-xs font-semibold uppercase tracking-[0.3em] text-orange-500">
-          About us
+          {dict.aboutHeading}
         </h3>
         <p className="mt-4 max-w-xl text-sm leading-relaxed text-slate-400">
           Steenberg Autoservice is an independent garage handling maintenance,
@@ -182,7 +181,7 @@ export function GarageDemo() {
       {/* Gallery */}
       <section className="border-b border-slate-700/60 px-5 py-12 sm:px-8">
         <h3 className="text-xs font-semibold uppercase tracking-[0.3em] text-orange-500">
-          Gallery
+          {dict.galleryHeading}
         </h3>
         <div className="mt-6 grid grid-cols-3 gap-2 sm:grid-cols-6">
           {GALLERY_SWATCHES.map((swatch, i) => (
@@ -197,9 +196,9 @@ export function GarageDemo() {
       {/* Reviews */}
       <section className="border-b border-slate-700/60 px-5 py-12 sm:px-8">
         <h3 className="text-xs font-semibold uppercase tracking-[0.3em] text-orange-500">
-          Reviews
+          {dict.reviewsHeading}
         </h3>
-        <p className="mt-1 text-xs text-slate-600">Demo reviews for illustration only.</p>
+        <p className="mt-1 text-xs text-slate-600">{common.demoNote}</p>
         <div className="mt-6 grid gap-4 sm:grid-cols-3">
           {DEMO_REVIEWS.map((review) => (
             <div
@@ -225,7 +224,7 @@ export function GarageDemo() {
       {/* Booking */}
       <section id="booking" className="border-b border-slate-700/60 px-5 py-12 sm:px-8">
         <h3 className="text-xs font-semibold uppercase tracking-[0.3em] text-orange-500">
-          Book a service
+          {dict.bookingHeading}
         </h3>
 
         {step !== "done" && (
@@ -278,7 +277,7 @@ export function GarageDemo() {
             <div className="flex flex-col gap-6">
               <div>
                 <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-500">
-                  Select a date
+                  {dict.selectDate}
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {GARAGE_DATES.map((d) => (
@@ -304,7 +303,7 @@ export function GarageDemo() {
               {dateId && (
                 <div>
                   <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-500">
-                    Select a time
+                    {dict.selectTime}
                   </p>
                   <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
                     {GARAGE_TIME_SLOTS.map((t, i) => {
@@ -337,7 +336,7 @@ export function GarageDemo() {
                   onClick={() => setStep("service")}
                   className="text-xs font-medium text-slate-500 hover:text-orange-400"
                 >
-                  &larr; Back
+                  &larr; {common.back}
                 </button>
                 <button
                   type="button"
@@ -345,7 +344,7 @@ export function GarageDemo() {
                   onClick={() => setStep("details")}
                   className="rounded-md bg-orange-500 px-5 py-2 text-xs font-semibold uppercase tracking-wider text-slate-950 transition-colors hover:bg-orange-400 disabled:cursor-not-allowed disabled:opacity-40"
                 >
-                  Continue
+                  {common.continueLabel}
                 </button>
               </div>
             </div>
@@ -356,43 +355,43 @@ export function GarageDemo() {
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
                   <label className="mb-1.5 block text-xs font-medium text-slate-400">
-                    Full name
+                    {common.fullName}
                   </label>
                   <input
                     value={form.name}
                     onChange={(e) => update("name", e.target.value)}
                     className="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2.5 text-sm text-slate-100 outline-none focus:border-orange-500"
-                    placeholder="Jan Jansen"
+                    placeholder={common.namePlaceholder}
                   />
                   {errors.name && <p className="mt-1 text-xs text-red-400">{errors.name}</p>}
                 </div>
                 <div>
                   <label className="mb-1.5 block text-xs font-medium text-slate-400">
-                    Email address
+                    {common.email}
                   </label>
                   <input
                     value={form.email}
                     onChange={(e) => update("email", e.target.value)}
                     className="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2.5 text-sm text-slate-100 outline-none focus:border-orange-500"
-                    placeholder="jan@example.com"
+                    placeholder={common.emailPlaceholder}
                   />
                   {errors.email && <p className="mt-1 text-xs text-red-400">{errors.email}</p>}
                 </div>
                 <div>
                   <label className="mb-1.5 block text-xs font-medium text-slate-400">
-                    Phone number
+                    {common.phone}
                   </label>
                   <input
                     value={form.phone}
                     onChange={(e) => update("phone", e.target.value)}
                     className="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2.5 text-sm text-slate-100 outline-none focus:border-orange-500"
-                    placeholder="06 12345678"
+                    placeholder={common.phonePlaceholder}
                   />
                   {errors.phone && <p className="mt-1 text-xs text-red-400">{errors.phone}</p>}
                 </div>
                 <div>
                   <label className="mb-1.5 block text-xs font-medium text-slate-400">
-                    Kenteken
+                    {dict.kenteken}
                   </label>
                   <input
                     value={form.kenteken}
@@ -406,14 +405,14 @@ export function GarageDemo() {
                 </div>
                 <div>
                   <label className="mb-1.5 block text-xs font-medium text-slate-400">
-                    Car brand
+                    {dict.carBrand}
                   </label>
                   <select
                     value={form.brand}
                     onChange={(e) => update("brand", e.target.value)}
                     className="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2.5 text-sm text-slate-100 outline-none focus:border-orange-500"
                   >
-                    <option value="">Select brand</option>
+                    <option value="">{dict.selectBrand}</option>
                     {CAR_BRANDS.map((b) => (
                       <option key={b} value={b}>
                         {b}
@@ -424,7 +423,7 @@ export function GarageDemo() {
                 </div>
                 <div>
                   <label className="mb-1.5 block text-xs font-medium text-slate-400">
-                    Model
+                    {dict.model}
                   </label>
                   <input
                     value={form.model}
@@ -436,7 +435,7 @@ export function GarageDemo() {
                 </div>
                 <div>
                   <label className="mb-1.5 block text-xs font-medium text-slate-400">
-                    Mileage (km)
+                    {dict.mileage}
                   </label>
                   <input
                     value={form.mileage}
@@ -455,13 +454,13 @@ export function GarageDemo() {
                   onClick={() => setStep("datetime")}
                   className="text-xs font-medium text-slate-500 hover:text-orange-400"
                 >
-                  &larr; Back
+                  &larr; {common.back}
                 </button>
                 <button
                   type="submit"
                   className="rounded-md bg-orange-500 px-5 py-2 text-xs font-semibold uppercase tracking-wider text-slate-950 transition-colors hover:bg-orange-400"
                 >
-                  Continue
+                  {common.continueLabel}
                 </button>
               </div>
             </form>
@@ -470,33 +469,33 @@ export function GarageDemo() {
           {step === "review" && service && dateId && time && (
             <div className="flex flex-col gap-5">
               <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-                Review your appointment
+                {dict.reviewHeading}
               </p>
               <dl className="grid gap-3 text-sm sm:grid-cols-2">
                 <div>
-                  <dt className="text-slate-500">Service</dt>
+                  <dt className="text-slate-500">{dict.summaryService}</dt>
                   <dd className="text-slate-100">{service.name}</dd>
                 </div>
                 <div>
-                  <dt className="text-slate-500">Date</dt>
+                  <dt className="text-slate-500">{dict.summaryDate}</dt>
                   <dd className="text-slate-100">{GARAGE_DATE_FULL_LABELS[dateId]}</dd>
                 </div>
                 <div>
-                  <dt className="text-slate-500">Time</dt>
+                  <dt className="text-slate-500">{dict.summaryTime}</dt>
                   <dd className="text-slate-100">{time}</dd>
                 </div>
                 <div>
-                  <dt className="text-slate-500">Vehicle</dt>
+                  <dt className="text-slate-500">{dict.summaryVehicle}</dt>
                   <dd className="text-slate-100">
                     {form.brand} {form.model} &middot; {form.kenteken}
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-slate-500">Mileage</dt>
+                  <dt className="text-slate-500">{dict.summaryMileage}</dt>
                   <dd className="text-slate-100">{form.mileage} km</dd>
                 </div>
                 <div>
-                  <dt className="text-slate-500">Contact</dt>
+                  <dt className="text-slate-500">{dict.summaryContact}</dt>
                   <dd className="text-slate-100">
                     {form.name} &middot; {form.email}
                   </dd>
@@ -508,14 +507,14 @@ export function GarageDemo() {
                   onClick={() => setStep("details")}
                   className="text-xs font-medium text-slate-500 hover:text-orange-400"
                 >
-                  &larr; Back
+                  &larr; {common.back}
                 </button>
                 <button
                   type="button"
                   onClick={() => setStep("done")}
                   className="rounded-md bg-orange-500 px-5 py-2 text-xs font-semibold uppercase tracking-wider text-slate-950 transition-colors hover:bg-orange-400"
                 >
-                  Confirm appointment
+                  {dict.confirmAppointment}
                 </button>
               </div>
             </div>
@@ -528,12 +527,12 @@ export function GarageDemo() {
                   <path d="m4 10 4 4 8-8" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </div>
-              <p className="text-lg font-semibold text-white">Service appointment confirmed</p>
+              <p className="text-lg font-semibold text-white">{dict.confirmedTitle}</p>
               <div className="text-sm leading-relaxed text-slate-300">
                 <p>{service.name}</p>
                 <p>{GARAGE_DATE_FULL_LABELS[dateId]}</p>
                 <p>{time}</p>
-                <p className="pt-2 text-slate-500">Vehicle:</p>
+                <p className="pt-2 text-slate-500">{dict.vehicleLabel}</p>
                 <p>
                   {form.brand} {form.model}
                 </p>
@@ -545,21 +544,21 @@ export function GarageDemo() {
                   onClick={rescheduleAppointment}
                   className="text-xs font-medium text-slate-400 hover:text-white"
                 >
-                  Reschedule
+                  {common.reschedule}
                 </button>
                 <button
                   type="button"
                   onClick={() => setCancelled(true)}
                   className="text-xs font-medium text-slate-400 hover:text-red-400"
                 >
-                  Cancel appointment
+                  {common.cancelAppointment}
                 </button>
                 <button
                   type="button"
                   onClick={reset}
                   className="text-xs font-medium text-orange-500 hover:text-orange-400"
                 >
-                  Book another appointment
+                  {common.bookAnother}
                 </button>
               </div>
             </div>
@@ -572,17 +571,14 @@ export function GarageDemo() {
                   <path d="m5 5 10 10M15 5 5 15" strokeLinecap="round" />
                 </svg>
               </div>
-              <p className="text-lg font-semibold text-white">Appointment cancelled</p>
-              <p className="text-sm text-slate-400">
-                Your service appointment has been cancelled. You can book a
-                new one at any time.
-              </p>
+              <p className="text-lg font-semibold text-white">{common.cancelledTitle}</p>
+              <p className="text-sm text-slate-400">{common.cancelledBody}</p>
               <button
                 type="button"
                 onClick={reset}
                 className="mt-2 text-xs font-medium text-orange-500 hover:text-orange-400"
               >
-                Book a new appointment
+                {common.bookNew}
               </button>
             </div>
           )}
@@ -593,26 +589,26 @@ export function GarageDemo() {
       <section className="grid gap-8 border-b border-slate-700/60 px-5 py-12 sm:grid-cols-3 sm:px-8">
         <div>
           <h4 className="text-xs font-semibold uppercase tracking-[0.3em] text-orange-500">
-            Opening hours
+            {common.hoursHeading}
           </h4>
           <dl className="mt-4 flex flex-col gap-1.5 text-sm text-slate-400">
             <div className="flex justify-between gap-4">
-              <dt>Mon - Fri</dt>
+              <dt>{common.monFri}</dt>
               <dd>08:00 - 17:30</dd>
             </div>
             <div className="flex justify-between gap-4">
-              <dt>Saturday</dt>
+              <dt>{common.saturday}</dt>
               <dd>09:00 - 13:00</dd>
             </div>
             <div className="flex justify-between gap-4">
-              <dt>Sunday</dt>
-              <dd>Closed</dd>
+              <dt>{common.sunday}</dt>
+              <dd>{common.closed}</dd>
             </div>
           </dl>
         </div>
         <div>
           <h4 className="text-xs font-semibold uppercase tracking-[0.3em] text-orange-500">
-            Location
+            {common.locationHeading}
           </h4>
           <p className="mt-4 text-sm leading-relaxed text-slate-400">
             Maastricht, Netherlands
@@ -620,7 +616,7 @@ export function GarageDemo() {
         </div>
         <div>
           <h4 className="text-xs font-semibold uppercase tracking-[0.3em] text-orange-500">
-            Contact
+            {common.contactHeading}
           </h4>
           <p className="mt-4 text-sm leading-relaxed text-slate-400">
             info@steenbergautoservice.nl
@@ -632,7 +628,7 @@ export function GarageDemo() {
 
       {/* Footer */}
       <footer className="px-5 py-6 text-center text-xs text-slate-600 sm:px-8">
-        Steenberg Autoservice &middot; a website concept by ZEVREN
+        Steenberg Autoservice &middot; {common.footerTagline}
       </footer>
     </div>
   );

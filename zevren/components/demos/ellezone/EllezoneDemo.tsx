@@ -7,6 +7,7 @@ import {
   ELLEZONE_PRODUCTS,
   type EllezoneProduct,
 } from "@/lib/demos/ellezone-data";
+import type { Dictionary } from "@/lib/i18n/dictionary-type";
 
 interface CartLine {
   product: EllezoneProduct;
@@ -41,7 +42,12 @@ function lineKey(productId: string, colorId: string) {
   return `${productId}__${colorId}`;
 }
 
-export function EllezoneDemo() {
+interface EllezoneDemoProps {
+  dict: Dictionary["demos"]["ellezone"];
+  common: Dictionary["demoCommon"];
+}
+
+export function EllezoneDemo({ dict, common }: EllezoneDemoProps) {
   const [view, setView] = useState<View>("home");
   const [query, setQuery] = useState("");
   const [colorFilter, setColorFilter] = useState<string>("all");
@@ -165,13 +171,13 @@ export function EllezoneDemo() {
         </button>
         <div className="hidden items-center gap-6 text-sm text-stone-500 sm:flex">
           <button type="button" onClick={() => setView("shop")} className="hover:text-violet-700">
-            Shop
+            {dict.navShop}
           </button>
           <button type="button" onClick={() => setView("wishlist")} className="hover:text-violet-700">
-            Wishlist ({wishlist.length})
+            {dict.navWishlist} ({wishlist.length})
           </button>
           <button type="button" onClick={() => setView("account")} className="hover:text-violet-700">
-            My Account
+            {dict.navAccount}
           </button>
         </div>
         <button
@@ -179,7 +185,7 @@ export function EllezoneDemo() {
           onClick={() => setCartOpen(true)}
           className="relative flex items-center gap-2 rounded-full border border-violet-200 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-violet-700 transition-colors hover:border-violet-400"
         >
-          Cart
+          {dict.cart}
           {cartCount > 0 && (
             <span className="flex h-5 w-5 items-center justify-center rounded-full bg-violet-600 text-[10px] font-semibold text-white">
               {cartCount}
@@ -194,22 +200,20 @@ export function EllezoneDemo() {
             <div className="grid items-center gap-10 sm:grid-cols-2">
               <div>
                 <span className="text-xs font-semibold uppercase tracking-[0.3em] text-violet-600">
-                  Power of Possibility
+                  {dict.heroTagline}
                 </span>
                 <h2 className="mt-4 max-w-md font-heading text-3xl font-semibold leading-tight text-stone-900 sm:text-4xl">
-                  Make cooking easier, one jar at a time.
+                  {dict.heroHeading}
                 </h2>
                 <p className="mt-4 max-w-sm text-sm leading-relaxed text-stone-600">
-                  A portion-control glass spice jar with a built-in scoop.
-                  BPA-free, food-safe, and made to keep your spices within
-                  reach.
+                  {dict.heroSubtitle}
                 </p>
                 <button
                   type="button"
                   onClick={() => setView("shop")}
                   className="mt-6 rounded-full bg-violet-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-violet-500"
                 >
-                  Shop the spice jar
+                  {dict.shopButton}
                 </button>
               </div>
               <div className="relative h-56 overflow-hidden rounded-2xl sm:h-72">
@@ -237,7 +241,7 @@ export function EllezoneDemo() {
 
           <section className="px-5 py-12 sm:px-8">
             <h3 className="text-xs font-semibold uppercase tracking-[0.3em] text-violet-600">
-              Shop by pack
+              {dict.shopByPackHeading}
             </h3>
             <div className="mt-6 grid gap-5 sm:grid-cols-3">
               {ELLEZONE_PRODUCTS.map((p) => (
@@ -279,7 +283,7 @@ export function EllezoneDemo() {
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search products"
+              placeholder={dict.searchPlaceholder}
               className="flex-1 rounded-md border border-violet-200 px-3 py-2 text-sm text-stone-900 outline-none focus:border-violet-500"
             />
             <div className="flex gap-2">
@@ -292,7 +296,7 @@ export function EllezoneDemo() {
                     : "border-violet-200 text-stone-600 hover:border-violet-400"
                 }`}
               >
-                All colours
+                {dict.allColours}
               </button>
               {["white", "charcoal"].map((c) => (
                 <button
@@ -377,7 +381,7 @@ export function EllezoneDemo() {
             onClick={backToShop}
             className="mb-6 text-xs font-medium text-stone-500 hover:text-violet-700"
           >
-            &larr; Back to shop
+            &larr; {common.back}
           </button>
           <div className="grid gap-8 sm:grid-cols-2">
             <div className="grid grid-cols-2 gap-3">
@@ -422,7 +426,7 @@ export function EllezoneDemo() {
               </p>
               <div>
                 <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-stone-500">
-                  Colour
+                  {dict.colour}
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {activeProduct.variants.map((v) => (
@@ -447,7 +451,7 @@ export function EllezoneDemo() {
                   onClick={addToCart}
                   className="rounded-full bg-violet-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-violet-500"
                 >
-                  Add to cart
+                  {dict.addToCart}
                 </button>
                 <button
                   type="button"
@@ -458,7 +462,7 @@ export function EllezoneDemo() {
                       : "border-violet-200 text-stone-600 hover:border-violet-400"
                   }`}
                 >
-                  {wishlist.includes(activeProduct.id) ? "Saved" : "Save to wishlist"}
+                  {wishlist.includes(activeProduct.id) ? dict.savedLabel : dict.saveToWishlist}
                 </button>
               </div>
             </div>
@@ -468,11 +472,9 @@ export function EllezoneDemo() {
 
       {view === "wishlist" && (
         <section className="px-5 py-12 sm:px-8">
-          <h2 className="font-heading text-2xl font-semibold text-stone-900">Wishlist</h2>
+          <h2 className="font-heading text-2xl font-semibold text-stone-900">{dict.wishlistHeading}</h2>
           {wishlist.length === 0 ? (
-            <p className="mt-4 text-sm text-stone-500">
-              Nothing saved yet. Browse the shop and tap the heart icon to save a product.
-            </p>
+            <p className="mt-4 text-sm text-stone-500">{dict.wishlistEmpty}</p>
           ) : (
             <div className="mt-6 grid gap-5 sm:grid-cols-3">
               {ELLEZONE_PRODUCTS.filter((p) => wishlist.includes(p.id)).map((p) => (
@@ -506,14 +508,12 @@ export function EllezoneDemo() {
 
       {view === "account" && (
         <section className="px-5 py-12 sm:px-8">
-          <h2 className="font-heading text-2xl font-semibold text-stone-900">My Account</h2>
-          <p className="mt-2 text-xs text-stone-400">
-            Demo account view, not connected to a real login system.
-          </p>
+          <h2 className="font-heading text-2xl font-semibold text-stone-900">{dict.accountHeading}</h2>
+          <p className="mt-2 text-xs text-stone-400">{dict.accountNote}</p>
           <div className="mt-8 grid gap-8 sm:grid-cols-2">
             <div>
               <h3 className="text-xs font-semibold uppercase tracking-wider text-stone-500">
-                Profile
+                {dict.profileHeading}
               </h3>
               <div className="mt-3 flex flex-col gap-2 text-sm text-stone-600">
                 <span>{customer.name || "No name saved yet"}</span>
@@ -522,10 +522,10 @@ export function EllezoneDemo() {
             </div>
             <div>
               <h3 className="text-xs font-semibold uppercase tracking-wider text-stone-500">
-                Order history
+                {dict.orderHistoryHeading}
               </h3>
               {orderHistory.length === 0 ? (
-                <p className="mt-3 text-sm text-stone-500">No orders yet.</p>
+                <p className="mt-3 text-sm text-stone-500">{dict.noOrdersYet}</p>
               ) : (
                 <div className="mt-3 flex flex-col gap-3">
                   {orderHistory.map((order) => (
@@ -549,36 +549,33 @@ export function EllezoneDemo() {
             onClick={() => setView("shop")}
             className="mb-6 text-xs font-medium text-stone-500 hover:text-violet-700"
           >
-            &larr; Continue shopping
+            &larr; {common.back}
           </button>
-          <h2 className="font-heading text-2xl font-semibold text-stone-900">Checkout</h2>
-          <p className="mt-1 text-xs text-stone-400">
-            This is a demo checkout. No payment is collected and no real card
-            information should be entered.
-          </p>
+          <h2 className="font-heading text-2xl font-semibold text-stone-900">{dict.checkoutHeading}</h2>
+          <p className="mt-1 text-xs text-stone-400">{dict.checkoutNote}</p>
           <div className="mt-6 grid gap-10 sm:grid-cols-[1.2fr_1fr]">
             <form onSubmit={handleCheckoutSubmit} className="flex flex-col gap-4">
               <div>
                 <label className="mb-1.5 block text-xs font-medium text-stone-500">
-                  Full name
+                  {common.fullName}
                 </label>
                 <input
                   value={customer.name}
                   onChange={(e) => setCustomer({ ...customer, name: e.target.value })}
                   className="w-full rounded-md border border-violet-200 bg-white px-3 py-2.5 text-sm text-stone-900 outline-none focus:border-violet-500"
-                  placeholder="Jane Doe"
+                  placeholder={common.namePlaceholder}
                 />
                 {errors.name && <p className="mt-1 text-xs text-red-600">{errors.name}</p>}
               </div>
               <div>
                 <label className="mb-1.5 block text-xs font-medium text-stone-500">
-                  Email address
+                  {common.email}
                 </label>
                 <input
                   value={customer.email}
                   onChange={(e) => setCustomer({ ...customer, email: e.target.value })}
                   className="w-full rounded-md border border-violet-200 bg-white px-3 py-2.5 text-sm text-stone-900 outline-none focus:border-violet-500"
-                  placeholder="jane@example.com"
+                  placeholder={common.emailPlaceholder}
                 />
                 {errors.email && <p className="mt-1 text-xs text-red-600">{errors.email}</p>}
               </div>
@@ -597,7 +594,7 @@ export function EllezoneDemo() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="mb-1.5 block text-xs font-medium text-stone-500">
-                    Postal code
+                    {dict.postalCode}
                   </label>
                   <input
                     value={customer.postalCode}
@@ -624,7 +621,7 @@ export function EllezoneDemo() {
               </div>
               <div>
                 <label className="mb-1.5 block text-xs font-medium text-stone-500">
-                  Country
+                  {dict.country}
                 </label>
                 <select
                   value={customer.country}
@@ -640,12 +637,12 @@ export function EllezoneDemo() {
                 type="submit"
                 className="mt-2 w-fit rounded-full bg-violet-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-violet-500"
               >
-                Place order (demo)
+                {dict.placeOrderDemo}
               </button>
             </form>
             <div className="flex flex-col gap-3 rounded-xl border border-violet-100 bg-violet-50/30 p-5 h-fit">
               <p className="text-xs font-semibold uppercase tracking-wider text-stone-500">
-                Order summary
+                {dict.orderSummary}
               </p>
               {cart.map((l) => (
                 <div
@@ -663,11 +660,11 @@ export function EllezoneDemo() {
                 <span>&euro;{subtotal.toFixed(2)}</span>
               </div>
               <div className="flex items-center justify-between text-sm text-stone-700">
-                <span>Shipping</span>
-                <span>{shipping === 0 ? "Free" : `€${shipping.toFixed(2)}`}</span>
+                <span>{dict.shipping}</span>
+                <span>{shipping === 0 ? dict.free : `€${shipping.toFixed(2)}`}</span>
               </div>
               <div className="flex items-center justify-between border-t border-violet-100 pt-3 text-sm font-semibold text-stone-900">
-                <span>Total</span>
+                <span>{dict.total}</span>
                 <span>&euro;{total.toFixed(2)}</span>
               </div>
             </div>
@@ -682,14 +679,13 @@ export function EllezoneDemo() {
               <path d="m4 10 4 4 8-8" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </div>
-          <p className="text-xl font-semibold text-stone-900">Order confirmed</p>
+          <p className="text-xl font-semibold text-stone-900">{dict.orderConfirmedTitle}</p>
           <p className="max-w-sm text-sm leading-relaxed text-stone-600">
-            Thank you for your order. This was a demo checkout, no payment was
-            taken.
+            {dict.orderConfirmedBody}
           </p>
           {orderNumber && (
             <p className="text-sm text-stone-500">
-              Order number: <span className="font-semibold text-stone-900">{orderNumber}</span>
+              {dict.orderNumber} <span className="font-semibold text-stone-900">{orderNumber}</span>
             </p>
           )}
           <button
@@ -697,14 +693,14 @@ export function EllezoneDemo() {
             onClick={backToShop}
             className="mt-2 rounded-full border border-violet-200 px-5 py-2 text-xs font-semibold uppercase tracking-wider text-stone-700 transition-colors hover:border-violet-400"
           >
-            Back to shop
+            {common.back}
           </button>
         </section>
       )}
 
       {/* Footer */}
       <footer className="border-t border-violet-100 px-5 py-6 text-center text-xs text-stone-400 sm:px-8">
-        ElleZone &middot; a website concept by ZEVREN
+        ElleZone &middot; {common.footerTagline}
       </footer>
 
       {/* Cart drawer */}
@@ -713,7 +709,7 @@ export function EllezoneDemo() {
           <div className="flex h-full w-full max-w-sm flex-col bg-white p-5 sm:p-6">
             <div className="flex items-center justify-between">
               <p className="text-sm font-semibold uppercase tracking-wider text-stone-900">
-                Your cart
+                {dict.cart}
               </p>
               <button
                 type="button"

@@ -9,6 +9,7 @@ import {
   VIEWING_TIME_SLOTS,
   type Property,
 } from "@/lib/demos/property-data";
+import type { Dictionary } from "@/lib/i18n/dictionary-type";
 
 type View = "search" | "detail";
 
@@ -29,7 +30,12 @@ const PRICE_CEILINGS = [
   { label: "Up to €2,000", value: 2000 },
 ];
 
-export function PropertyDemo() {
+interface PropertyDemoProps {
+  dict: Dictionary["demos"]["property"];
+  common: Dictionary["demoCommon"];
+}
+
+export function PropertyDemo({ dict, common }: PropertyDemoProps) {
   const [view, setView] = useState<View>("search");
   const [query, setQuery] = useState("");
   const [location, setLocation] = useState("Any location");
@@ -94,12 +100,14 @@ export function PropertyDemo() {
           NESTLY
         </button>
         <div className="hidden items-center gap-6 text-sm text-slate-500 sm:flex">
-          <span>Rent</span>
-          <span>Saved ({saved.length})</span>
-          <span>How it works</span>
+          <span>{dict.navRent}</span>
+          <span>
+            {dict.navSaved} ({saved.length})
+          </span>
+          <span>{dict.navHowItWorks}</span>
         </div>
         <span className="rounded-full bg-teal-600 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-white">
-          List a property
+          {dict.listProperty}
         </span>
       </nav>
 
@@ -108,19 +116,19 @@ export function PropertyDemo() {
           {/* Hero search */}
           <section className="border-b border-slate-200 bg-[radial-gradient(circle_at_15%_0%,rgba(13,148,136,0.10),transparent_50%),radial-gradient(circle_at_85%_20%,rgba(79,70,229,0.10),transparent_50%)] px-5 py-14 sm:px-8 sm:py-20">
             <span className="text-xs font-semibold uppercase tracking-[0.3em] text-teal-700">
-              Rental platform
+              {dict.heroBadge}
             </span>
             <h2 className="mt-4 max-w-xl font-heading text-3xl font-semibold leading-tight text-slate-900 sm:text-4xl">
-              Find your next place to live.
+              {dict.heroHeading}
             </h2>
             <p className="mt-4 max-w-lg text-sm leading-relaxed text-slate-500">
-              Search, filter and request a viewing, all in one place.
+              {dict.heroSubtitle}
             </p>
             <div className="mt-6 flex flex-col gap-3 rounded-xl border border-slate-200 bg-white p-3 shadow-sm sm:flex-row sm:items-center">
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search by city or keyword"
+                placeholder={dict.searchPlaceholder}
                 className="flex-1 rounded-lg border border-slate-200 px-3 py-2.5 text-sm text-slate-900 outline-none focus:border-teal-600"
               />
               <button
@@ -128,7 +136,7 @@ export function PropertyDemo() {
                 onClick={() => document.getElementById("results")?.scrollIntoView({ block: "nearest" })}
                 className="rounded-lg bg-teal-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-teal-500"
               >
-                Search
+                {dict.searchButton}
               </button>
             </div>
           </section>
@@ -141,9 +149,11 @@ export function PropertyDemo() {
                 onChange={(e) => setLocation(e.target.value)}
                 className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-teal-600"
               >
-                <option>Any location</option>
+                <option value="Any location">{dict.anyLocation}</option>
                 {PROPERTY_LOCATIONS.map((l) => (
-                  <option key={l}>{l}</option>
+                  <option key={l} value={l}>
+                    {l}
+                  </option>
                 ))}
               </select>
               <select
@@ -151,9 +161,11 @@ export function PropertyDemo() {
                 onChange={(e) => setType(e.target.value)}
                 className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-teal-600"
               >
-                <option>Any type</option>
+                <option value="Any type">{dict.anyType}</option>
                 {PROPERTY_TYPES.map((t) => (
-                  <option key={t}>{t}</option>
+                  <option key={t} value={t}>
+                    {t}
+                  </option>
                 ))}
               </select>
               <select
@@ -164,8 +176,11 @@ export function PropertyDemo() {
                 }}
                 className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-teal-600"
               >
-                {PRICE_CEILINGS.map((c) => (
-                  <option key={c.label}>{c.label}</option>
+                <option value="Any price">{dict.anyPrice}</option>
+                {PRICE_CEILINGS.slice(1).map((c) => (
+                  <option key={c.label} value={c.label}>
+                    {c.label}
+                  </option>
                 ))}
               </select>
             </div>
@@ -174,7 +189,7 @@ export function PropertyDemo() {
           {/* Property grid */}
           <section id="results" className="px-5 py-12 sm:px-8">
             <p className="mb-6 text-xs font-semibold uppercase tracking-[0.3em] text-teal-700">
-              {results.length} {results.length === 1 ? "property" : "properties"} found
+              {results.length} {dict.resultsFound}
             </p>
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {results.map((p) => (
@@ -207,8 +222,12 @@ export function PropertyDemo() {
                     <span className="text-sm font-medium text-slate-900">{p.title}</span>
                     <span className="text-xs text-slate-500">{p.location}</span>
                     <div className="flex items-center gap-3 text-xs text-slate-500">
-                      <span>{p.bedrooms} bed</span>
-                      <span>{p.bathrooms} bath</span>
+                      <span>
+                        {p.bedrooms} {dict.bedrooms}
+                      </span>
+                      <span>
+                        {p.bathrooms} {dict.bathrooms}
+                      </span>
                       <span>{p.size} m&sup2;</span>
                     </div>
                     <div className="mt-1 flex items-center justify-between">
@@ -220,7 +239,7 @@ export function PropertyDemo() {
                         onClick={() => openProperty(p)}
                         className="text-xs font-semibold text-teal-700 hover:text-teal-600"
                       >
-                        View details
+                        {dict.viewDetails}
                       </button>
                     </div>
                   </div>
@@ -237,7 +256,7 @@ export function PropertyDemo() {
           {/* How it works */}
           <section className="border-t border-slate-200 bg-slate-50 px-5 py-14 sm:px-8">
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-teal-700">
-              How it works
+              {dict.howItWorksHeading}
             </p>
             <div className="mt-6 grid gap-6 sm:grid-cols-3">
               {[
@@ -272,7 +291,7 @@ export function PropertyDemo() {
             onClick={() => setView("search")}
             className="mb-6 text-xs font-medium text-slate-500 hover:text-teal-700"
           >
-            &larr; Back to search
+            &larr; {dict.backToSearch}
           </button>
 
           <div className="grid gap-3 sm:grid-cols-3">
@@ -299,7 +318,7 @@ export function PropertyDemo() {
                         : "border-slate-200 text-slate-500"
                     }`}
                   >
-                    {saved.includes(activeProperty.id) ? "Saved" : "Save"}
+                    {saved.includes(activeProperty.id) ? dict.saved : dict.save}
                   </button>
                 </div>
                 <p className="mt-1 text-sm text-slate-500">{activeProperty.location}</p>
@@ -309,8 +328,12 @@ export function PropertyDemo() {
               </div>
 
               <div className="flex flex-wrap gap-6 text-sm text-slate-600">
-                <span>{activeProperty.bedrooms} bedrooms</span>
-                <span>{activeProperty.bathrooms} bathrooms</span>
+                <span>
+                  {activeProperty.bedrooms} {dict.bedrooms}
+                </span>
+                <span>
+                  {activeProperty.bathrooms} {dict.bathrooms}
+                </span>
                 <span>{activeProperty.size} m&sup2;</span>
               </div>
 
@@ -340,17 +363,17 @@ export function PropertyDemo() {
             <div className="h-fit rounded-xl border border-slate-200 bg-slate-50 p-5">
               {!viewingSent ? (
                 <>
-                  <p className="text-sm font-semibold text-slate-900">Request a viewing</p>
+                  <p className="text-sm font-semibold text-slate-900">{dict.requestViewing}</p>
                   <form onSubmit={handleViewingSubmit} className="mt-4 flex flex-col gap-3">
                     <div>
                       <label className="mb-1 block text-xs font-medium text-slate-500">
-                        Full name
+                        {common.fullName}
                       </label>
                       <input
                         value={viewingForm.name}
                         onChange={(e) => setViewingForm({ ...viewingForm, name: e.target.value })}
                         className="w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-teal-600"
-                        placeholder="Jane Doe"
+                        placeholder={common.namePlaceholder}
                       />
                       {viewingErrors.name && (
                         <p className="mt-1 text-xs text-red-600">{viewingErrors.name}</p>
@@ -358,13 +381,13 @@ export function PropertyDemo() {
                     </div>
                     <div>
                       <label className="mb-1 block text-xs font-medium text-slate-500">
-                        Email address
+                        {common.email}
                       </label>
                       <input
                         value={viewingForm.email}
                         onChange={(e) => setViewingForm({ ...viewingForm, email: e.target.value })}
                         className="w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-teal-600"
-                        placeholder="jane@example.com"
+                        placeholder={common.emailPlaceholder}
                       />
                       {viewingErrors.email && (
                         <p className="mt-1 text-xs text-red-600">{viewingErrors.email}</p>
@@ -372,13 +395,13 @@ export function PropertyDemo() {
                     </div>
                     <div>
                       <label className="mb-1 block text-xs font-medium text-slate-500">
-                        Phone number
+                        {common.phone}
                       </label>
                       <input
                         value={viewingForm.phone}
                         onChange={(e) => setViewingForm({ ...viewingForm, phone: e.target.value })}
                         className="w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-teal-600"
-                        placeholder="06 12345678"
+                        placeholder={common.phonePlaceholder}
                       />
                       {viewingErrors.phone && (
                         <p className="mt-1 text-xs text-red-600">{viewingErrors.phone}</p>
@@ -386,14 +409,14 @@ export function PropertyDemo() {
                     </div>
                     <div>
                       <label className="mb-1 block text-xs font-medium text-slate-500">
-                        Preferred date
+                        {dict.preferredDate}
                       </label>
                       <select
                         value={viewingForm.date}
                         onChange={(e) => setViewingForm({ ...viewingForm, date: e.target.value })}
                         className="w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-teal-600"
                       >
-                        <option value="">Select a date</option>
+                        <option value="">{dict.selectDate}</option>
                         {VIEWING_DATES.map((d) => (
                           <option key={d.id} value={d.label}>
                             {d.label}
@@ -406,14 +429,14 @@ export function PropertyDemo() {
                     </div>
                     <div>
                       <label className="mb-1 block text-xs font-medium text-slate-500">
-                        Preferred time
+                        {dict.preferredTime}
                       </label>
                       <select
                         value={viewingForm.time}
                         onChange={(e) => setViewingForm({ ...viewingForm, time: e.target.value })}
                         className="w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-teal-600"
                       >
-                        <option value="">Select a time</option>
+                        <option value="">{dict.selectTime}</option>
                         {VIEWING_TIME_SLOTS.map((t) => (
                           <option key={t} value={t}>
                             {t}
@@ -428,7 +451,7 @@ export function PropertyDemo() {
                       type="submit"
                       className="mt-2 rounded-full bg-teal-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-teal-500"
                     >
-                      Request viewing
+                      {dict.requestViewingButton}
                     </button>
                   </form>
                 </>
@@ -440,10 +463,10 @@ export function PropertyDemo() {
                     </svg>
                   </div>
                   <p className="text-base font-semibold text-slate-900">
-                    Viewing request received
+                    {dict.viewingReceivedTitle}
                   </p>
                   <p className="text-sm leading-relaxed text-slate-500">
-                    We will review your request and get back to you.
+                    {dict.viewingReceivedBody}
                   </p>
                 </div>
               )}
@@ -454,7 +477,7 @@ export function PropertyDemo() {
 
       {/* Footer */}
       <footer className="border-t border-slate-200 px-5 py-6 text-center text-xs text-slate-400 sm:px-8">
-        Nestly &middot; a website concept by ZEVREN
+        Nestly &middot; {common.footerTagline}
       </footer>
     </div>
   );

@@ -48,10 +48,20 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   }
 
   const locale = await getLocale();
-  const { work: w } = getDictionary(locale);
+  const dict = getDictionary(locale);
+  const w = dict.work;
   const copy = w.items[project.slug as keyof typeof w.items];
 
   const Demo = WORK_DEMOS[project.slug];
+  const demoDictKey: Record<string, keyof typeof dict.demos> = {
+    "barbershop-website": "barbershop",
+    "garage-website": "garage",
+    "online-store": "store",
+    "property-platform": "property",
+    ellezone: "ellezone",
+    "accounting-firm": "accounting",
+  };
+  const demoDict = dict.demos[demoDictKey[project.slug]!];
   const isReal = project.kind === "real";
 
   return (
@@ -85,7 +95,9 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       </section>
 
       <section className="py-16">
-        <Container>{Demo && <Demo />}</Container>
+        <Container>
+          {Demo && demoDict && <Demo dict={demoDict} common={dict.demoCommon} />}
+        </Container>
       </section>
 
       <section className="pb-20">
