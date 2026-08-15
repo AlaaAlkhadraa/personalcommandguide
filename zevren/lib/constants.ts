@@ -209,6 +209,22 @@ export const WORK_ITEMS: WorkItem[] = [
       "Account overview",
     ],
   },
+  {
+    slug: "accounting-firm",
+    name: "Bergendal Accountants",
+    category: "Professional Services",
+    description:
+      "A website and client portal concept for a Dutch accounting firm, from bookkeeping to VAT and annual accounts.",
+    whatWeExplored:
+      "This concept explores how an accounting firm could pair a clear marketing website with a simple client portal, so clients can see invoices, documents and deadlines in one place.",
+    keyFeatures: [
+      "Service and pricing pages",
+      "Appointment request",
+      "Client portal dashboard",
+      "Invoices and documents",
+      "VAT and financial overview",
+    ],
+  },
 ];
 
 export const WHY_ZEVREN: ValueItem[] = [
