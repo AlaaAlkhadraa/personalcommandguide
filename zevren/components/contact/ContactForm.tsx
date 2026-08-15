@@ -3,29 +3,23 @@
 import { useState, type FormEvent } from "react";
 import { SubmitButton } from "@/components/ui/Button";
 import type { ContactFormValues } from "@/types";
+import type { Dictionary } from "@/lib/i18n/dictionary-type";
 
 type Status = "idle" | "loading" | "success" | "error";
 
-const NEEDS_OPTIONS = [
-  { value: "", label: "Select an option" },
-  { value: "new-website", label: "New website" },
-  { value: "redesign", label: "Website redesign" },
-  { value: "online-store", label: "Online store" },
-  { value: "web-application", label: "Web application" },
-  { value: "maintenance", label: "Website maintenance" },
-  { value: "not-sure", label: "Not sure yet" },
+const NEEDS_VALUES = [
+  "",
+  "new-website",
+  "redesign",
+  "online-store",
+  "web-application",
+  "maintenance",
+  "not-sure",
 ];
 
-const BUDGET_OPTIONS = [
-  { value: "", label: "Select an option (optional)" },
-  { value: "under-1.5k", label: "Under €1,500" },
-  { value: "1.5k-3k", label: "€1,500 to €3,000" },
-  { value: "3k-5k", label: "€3,000 to €5,000" },
-  { value: "5k-plus", label: "€5,000+" },
-  { value: "not-sure", label: "Not sure yet" },
-];
+const BUDGET_VALUES = ["", "under-1.5k", "1.5k-3k", "3k-5k", "5k-plus", "not-sure"];
 
-export function ContactForm() {
+export function ContactForm({ dict }: { dict: Dictionary["contact"]["form"] }) {
   const [status, setStatus] = useState<Status>("idle");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [serverError, setServerError] = useState<string | null>(null);
@@ -64,9 +58,7 @@ export function ContactForm() {
         if (data?.fieldErrors) {
           setErrors(data.fieldErrors);
         } else {
-          setServerError(
-            data?.message ?? "Something went wrong. Please try again later."
-          );
+          setServerError(data?.message ?? dict.genericError);
         }
         setStatus("error");
         return;
@@ -75,9 +67,7 @@ export function ContactForm() {
       setStatus("success");
       form.reset();
     } catch {
-      setServerError(
-        "Couldn't connect. Check your internet connection and try again."
-      );
+      setServerError(dict.connectError);
       setStatus("error");
     }
   }
@@ -88,10 +78,8 @@ export function ContactForm() {
         role="status"
         className="flex flex-col gap-3 rounded-2xl border border-primary/30 bg-primary/10 p-8 text-center"
       >
-        <h2 className="text-xl font-semibold text-white">Message sent</h2>
-        <p className="text-sm text-muted">
-          Thanks for reaching out. We typically reply within one business day.
-        </p>
+        <h2 className="text-xl font-semibold text-white">{dict.successTitle}</h2>
+        <p className="text-sm text-muted">{dict.successBody}</p>
       </div>
     );
   }
@@ -115,7 +103,7 @@ export function ContactForm() {
       <div className="grid gap-6 sm:grid-cols-2">
         <div className="flex flex-col gap-2">
           <label htmlFor="name" className="text-sm font-medium text-white">
-            Name <span aria-hidden="true">*</span>
+            {dict.nameLabel} <span aria-hidden="true">*</span>
           </label>
           <input
             id="name"
@@ -126,7 +114,7 @@ export function ContactForm() {
             aria-invalid={Boolean(errors.name)}
             aria-describedby={errors.name ? "name-error" : undefined}
             className="rounded-lg border border-white/15 bg-surface px-4 py-3 text-sm text-white placeholder:text-muted/60 focus:border-accent"
-            placeholder="Your name"
+            placeholder={dict.namePlaceholder}
           />
           {errors.name && (
             <p id="name-error" className="text-sm text-red-400">
@@ -137,7 +125,7 @@ export function ContactForm() {
 
         <div className="flex flex-col gap-2">
           <label htmlFor="email" className="text-sm font-medium text-white">
-            Email address <span aria-hidden="true">*</span>
+            {dict.emailLabel} <span aria-hidden="true">*</span>
           </label>
           <input
             id="email"
@@ -148,7 +136,7 @@ export function ContactForm() {
             aria-invalid={Boolean(errors.email)}
             aria-describedby={errors.email ? "email-error" : undefined}
             className="rounded-lg border border-white/15 bg-surface px-4 py-3 text-sm text-white placeholder:text-muted/60 focus:border-accent"
-            placeholder="you@company.com"
+            placeholder={dict.emailPlaceholder}
           />
           {errors.email && (
             <p id="email-error" className="text-sm text-red-400">
@@ -159,7 +147,7 @@ export function ContactForm() {
 
         <div className="flex flex-col gap-2">
           <label htmlFor="company" className="text-sm font-medium text-white">
-            Company
+            {dict.companyLabel}
           </label>
           <input
             id="company"
@@ -167,13 +155,13 @@ export function ContactForm() {
             type="text"
             autoComplete="organization"
             className="rounded-lg border border-white/15 bg-surface px-4 py-3 text-sm text-white placeholder:text-muted/60 focus:border-accent"
-            placeholder="Optional"
+            placeholder={dict.companyPlaceholder}
           />
         </div>
 
         <div className="flex flex-col gap-2">
           <label htmlFor="needs" className="text-sm font-medium text-white">
-            What do you need?
+            {dict.needsLabel}
           </label>
           <select
             id="needs"
@@ -181,9 +169,9 @@ export function ContactForm() {
             defaultValue=""
             className="rounded-lg border border-white/15 bg-surface px-4 py-3 text-sm text-white focus:border-accent"
           >
-            {NEEDS_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
+            {dict.needsOptions.map((label, index) => (
+              <option key={NEEDS_VALUES[index]} value={NEEDS_VALUES[index]}>
+                {label}
               </option>
             ))}
           </select>
@@ -191,7 +179,7 @@ export function ContactForm() {
 
         <div className="flex flex-col gap-2 sm:col-span-2">
           <label htmlFor="budget" className="text-sm font-medium text-white">
-            Budget
+            {dict.budgetLabel}
           </label>
           <select
             id="budget"
@@ -199,9 +187,9 @@ export function ContactForm() {
             defaultValue=""
             className="rounded-lg border border-white/15 bg-surface px-4 py-3 text-sm text-white focus:border-accent sm:max-w-xs"
           >
-            {BUDGET_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
+            {dict.budgetOptions.map((label, index) => (
+              <option key={BUDGET_VALUES[index]} value={BUDGET_VALUES[index]}>
+                {label}
               </option>
             ))}
           </select>
@@ -210,7 +198,7 @@ export function ContactForm() {
 
       <div className="flex flex-col gap-2">
         <label htmlFor="message" className="text-sm font-medium text-white">
-          Tell us about your project <span aria-hidden="true">*</span>
+          {dict.messageLabel} <span aria-hidden="true">*</span>
         </label>
         <textarea
           id="message"
@@ -220,7 +208,7 @@ export function ContactForm() {
           aria-invalid={Boolean(errors.message)}
           aria-describedby={errors.message ? "message-error" : undefined}
           className="resize-none rounded-lg border border-white/15 bg-surface px-4 py-3 text-sm text-white placeholder:text-muted/60 focus:border-accent"
-          placeholder="What are you running into, and what do you want to achieve?"
+          placeholder={dict.messagePlaceholder}
         />
         {errors.message && (
           <p id="message-error" className="text-sm text-red-400">
@@ -240,13 +228,13 @@ export function ContactForm() {
         disabled={status === "loading"}
         className="w-full sm:w-fit"
       >
-        {status === "loading" ? "Sending…" : "Send message"}
+        {status === "loading" ? dict.sendingButton : dict.sendButton}
       </SubmitButton>
 
       <p className="text-xs text-muted">
-        By submitting this form you agree to our{" "}
+        {dict.privacyPrefix}{" "}
         <a href="/privacy-policy" className="underline hover:text-white">
-          privacy policy
+          {dict.privacyLink}
         </a>
         .
       </p>

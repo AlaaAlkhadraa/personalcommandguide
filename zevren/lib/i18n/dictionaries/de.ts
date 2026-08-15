@@ -1,0 +1,305 @@
+import type { Dictionary } from "@/lib/i18n/dictionary-type";
+
+const de: Dictionary = {
+  nav: {
+    work: "Arbeiten",
+    services: "Leistungen",
+    about: "Über uns",
+    contact: "Kontakt",
+    startProject: "Projekt starten",
+    orCall: "oder rufen Sie an",
+  },
+  footer: {
+    description:
+      "Wir gestalten und entwickeln moderne Websites für Unternehmen, die einen klaren, professionellen Online-Auftritt wollen.",
+    navigationHeading: "Navigation",
+    contactHeading: "Kontakt",
+    officeHeading: "Büro",
+    companyHeading: "Unternehmen",
+    allRightsReserved: "Alle Rechte vorbehalten.",
+    builtIn: "Gebaut in Maastricht.",
+    privacyPolicy: "Datenschutzerklärung",
+    termsAndConditions: "AGB",
+  },
+  home: {
+    hero: {
+      badge: "Web-Studio in Maastricht",
+      titleBefore: "Websites, die es leichter machen,",
+      titleHighlight: "sich für Ihr Unternehmen zu entscheiden",
+      subtitle:
+        "Wir gestalten und entwickeln moderne Websites für Unternehmen, die einen klaren, professionellen Online-Auftritt wollen.",
+      ctaPrimary: "Projekt starten",
+      ctaSecondary: "Unsere Arbeiten ansehen",
+      trustLine: "Ansässig in Maastricht. Wir arbeiten mit Unternehmen weltweit.",
+    },
+    services: {
+      eyebrow: "Leistungen",
+      title: "Worin wir gut sind",
+      subtitle:
+        "Von der ersten Website bis zum Onlineshop oder einer individuellen Anwendung. Wir halten das Team klein, damit die Kommunikation direkt bleibt.",
+      learnMore: "Mehr erfahren",
+    },
+    work: {
+      eyebrow: "Arbeiten",
+      title: "Website-Konzepte",
+      subtitle:
+        "Eine Auswahl an Website-Konzepten, die ZEVREN entwickelt hat, um verschiedene Branchen, Layouts und digitale Erlebnisse zu erkunden.",
+      allConcepts: "Alle Konzepte",
+    },
+    why: {
+      eyebrow: "Warum ZEVREN",
+      title: "Warum mit ZEVREN arbeiten?",
+    },
+    process: {
+      eyebrow: "Ablauf",
+      title: "So läuft ein Projekt bei uns ab",
+      subtitle:
+        "Fünf Schritte, vom ersten Gespräch bis zum Launch. Jeder Schritt hat ein klares Ergebnis, damit Sie immer wissen, wo Ihr Projekt steht.",
+    },
+    faq: {
+      eyebrow: "Häufig gestellte Fragen",
+      title: "Noch Fragen? Das kommt am häufigsten vor",
+    },
+    finalCta: {
+      title: "Bereit, Ihr Projekt zu starten?",
+      subtitle:
+        "Kein Verkaufsgespräch. Erzählen Sie uns von Ihrem Projekt, wir melden uns und besprechen den nächsten Schritt.",
+      ctaPrimary: "Projekt starten",
+      ctaSecondary: "Unsere Leistungen ansehen",
+    },
+  },
+  services: {
+    eyebrow: "Leistungen",
+    title: "Was wir bauen",
+    subtitle:
+      "Wir konzentrieren uns auf wenige Leistungen und richten jedes Projekt danach aus, was das Unternehmen wirklich braucht.",
+    pricingEyebrow: "Preise",
+    pricingTitle: "Startpreise",
+    pricingSubtitle: "Jedes Projekt wird danach bepreist, was Sie wirklich brauchen.",
+    pricingNote: "Der endgültige Preis hängt vom Umfang und den Anforderungen des Projekts ab.",
+    from: "Ab",
+    notSureTitle: "Nicht sicher, welche Leistung passt?",
+    notSureBody:
+      'Erzählen Sie uns in einem kurzen Gespräch, was Sie brauchen. Wir geben Ihnen eine ehrliche Antwort, auch wenn diese Antwort „noch nicht" lautet.',
+    notSureCta: "Projekt starten",
+    list: {
+      websites: {
+        title: "Websites",
+        summary:
+          "Moderne Websites, gestaltet rund um Ihr Unternehmen, Ihre Kunden und das, was die Website erreichen soll.",
+        description:
+          "Wir beginnen damit zu verstehen, was Ihre Website leisten muss, und gestalten und entwickeln darauf aufbauend. Kein Baukasten-Theme mit Ihrem Logo drauf.",
+        features: [
+          "Individuelles Design, keine Vorlage",
+          "Mit Next.js für Geschwindigkeit gebaut",
+          "Inhalte, die Sie selbst bearbeiten können",
+          "Funktioniert gut auf jedem Gerät",
+        ],
+      },
+      "online-stores": {
+        title: "Onlineshops",
+        summary:
+          "Übersichtliche Onlineshops, die es Kunden leicht machen, Produkte zu durchsuchen und zu bestellen.",
+        description:
+          "Vom Stöbern bis zur Kasse ist jeder Schritt einfach gehalten. Wir richten einen Shop ein, den Sie selbst verwalten können, sobald er live ist.",
+        features: [
+          "Sichere Zahlung an der Kasse",
+          "Einfache Produktverwaltung",
+          "Klare Produktseiten",
+          "Funktioniert gut auf Mobilgeräten",
+        ],
+      },
+      "web-applications": {
+        title: "Webanwendungen",
+        summary:
+          "Individuelle Dashboards, Portale und Web-Tools für Unternehmen, die mehr als eine Standard-Website brauchen.",
+        description:
+          "Wenn eine Standardlösung nicht zu Ihrer Arbeitsweise passt, entwickeln wir etwas, das passt.",
+        features: [
+          "Kundenportale und Dashboards",
+          "Buchungs- und Terminplanungstools",
+          "Verbindung zu Ihren bestehenden Systemen",
+          "Gebaut nach Ihrem spezifischen Prozess",
+        ],
+      },
+      "website-support": {
+        title: "Website-Betreuung",
+        summary: "Laufende Updates, Fehlerbehebungen und Verbesserungen nach dem Launch Ihrer Website.",
+        description: "Eine Website braucht Pflege nach dem Launch. Wir halten sie aktuell, sicher und funktionsfähig.",
+        features: [
+          "Sicherheitsupdates",
+          "Regelmäßige Backups",
+          "Kleine Änderungen schnell umgesetzt",
+          "Ein fester Ansprechpartner",
+        ],
+      },
+    },
+  },
+  pricing: {
+    plans: {
+      starter: { name: "Starter-Website", price: "399", description: "Eine kleine, fokussierte Website, um online zu starten." },
+      business: { name: "Business-Website", price: "699", description: "Eine vollständige Website, aufgebaut rund um Ihr Unternehmen und Ihre Inhalte." },
+      store: { name: "Onlineshop", price: "999", description: "Für Unternehmen, die Produkte online verkaufen möchten." },
+      custom: { name: "Individuelle Webanwendung", price: "1.499", description: "Für Webanwendungen, Portale und alles jenseits einer Standard-Website." },
+    },
+  },
+  whyZevren: {
+    items: [
+      { title: "Bewusst klein", description: "Sie arbeiten direkt mit der Person, die Ihre Website baut." },
+      { title: "Keine unnötigen Extras", description: "Wir konzentrieren uns darauf, was Ihr Unternehmen wirklich braucht." },
+      { title: "Klare Preise", description: "Sie wissen, wofür Sie bezahlen, bevor wir beginnen." },
+      { title: "Richtig gebaut", description: "Responsives Design, saubere Struktur und eine Website, die auf allen Geräten funktioniert." },
+    ],
+  },
+  process: {
+    steps: [
+      { title: "Sagen Sie uns, was Sie brauchen", description: "Wir lernen Ihr Unternehmen kennen und erfahren, was die Website leisten soll." },
+      { title: "Planen", description: "Wir legen fest, welche Seiten, Inhalte und Funktionen wirklich nötig sind." },
+      { title: "Gestalten", description: "Wir entwickeln die visuelle Richtung und verfeinern sie mit Ihrem Feedback." },
+      { title: "Entwickeln", description: "Wir entwickeln die Website und stellen sicher, dass alles richtig funktioniert." },
+      { title: "Launch", description: "Wir testen die Website und bereiten sie auf den Launch vor." },
+    ],
+  },
+  faq: {
+    items: [
+      { question: "Was kostet eine Website?", answer: "Die meisten ZEVREN-Projekte starten ab 399 €. Der endgültige Preis hängt vom Umfang und den Anforderungen des Projekts ab." },
+      { question: "Wie lange dauert eine Website?", answer: "Die Dauer hängt vom Projekt ab. Wir geben Ihnen eine klare Einschätzung, bevor die Entwicklung beginnt." },
+      { question: "Können Sie eine bestehende Website neu gestalten?", answer: "Ja. Wir können eine bestehende Website verbessern oder bei Bedarf neu aufbauen." },
+      { question: "Arbeiten Sie auch mit Unternehmen außerhalb von Maastricht?", answer: "Ja. Maastricht ist der Sitz des Studios, keine Grenze dafür, mit wem wir arbeiten. Wir arbeiten remote mit Unternehmen in den Niederlanden und international." },
+      { question: "Bieten Sie Support nach dem Launch?", answer: "Ja. Support kann nach dem Launch vereinbart werden, von kleinen Korrekturen bis zu größeren Änderungen." },
+    ],
+  },
+  about: {
+    eyebrow: "Über uns",
+    title: "Ein unabhängiges Web-Studio in Maastricht",
+    subtitle:
+      "ZEVREN ist ein unabhängiges Web-Studio mit Sitz in Maastricht, Niederlande. Wir entwickeln Websites und digitale Produkte für Unternehmen, die sich online besser präsentieren möchten.",
+    howWeWorkTitle: "Wie wir arbeiten",
+    howWeWorkP1: "Wir halten es einfach: das Unternehmen verstehen, bauen, was gebraucht wird, und nichts hinzufügen, nur um des Hinzufügens willen.",
+    howWeWorkP2: "Wir halten das Studio klein, damit wir jedem Projekt nahe bleiben und direkt mit den Menschen kommunizieren, mit denen wir arbeiten.",
+    valuesTitle: "Was uns wichtig ist",
+    values: [
+      { title: "Direkte Kommunikation", description: "Sie arbeiten direkt mit der Person, die an Ihrem Projekt arbeitet." },
+      { title: "Ehrliche Beratung", description: "Wenn etwas unnötig ist, sagen wir das auch." },
+      { title: "Keine unnötige Komplexität", description: "Wir konzentrieren uns darauf, was Ihre Website wirklich braucht." },
+      { title: "Langfristiges Denken", description: "Die Website soll nützlich bleiben, während sich Ihr Unternehmen weiterentwickelt." },
+    ],
+    ctaTitle: "Nicht sicher, ob wir zu Ihrem Projekt passen?",
+    ctaBody: "Erzählen Sie uns von Ihrem Unternehmen und was Sie bauen möchten. Wir geben Ihnen eine ehrliche Antwort.",
+    ctaButton: "Projekt starten",
+  },
+  contact: {
+    eyebrow: "Kontakt",
+    title: "Lassen Sie uns über Ihr Projekt sprechen.",
+    subtitle:
+      "Erzählen Sie uns kurz von Ihrem Unternehmen und was Sie bauen möchten. Wir prüfen Ihre Anfrage und melden uns mit dem nächsten Schritt.",
+    directContactTitle: "Direkter Kontakt",
+    officeTitle: "Büro",
+    expectTitle: "Was Sie erwarten können",
+    expectItems: [
+      "Eine Antwort innerhalb eines Werktags",
+      "Eine klare Antwort zu Ihrem Projekt",
+      "Preis und Zeitplan, falls wir zueinander passen",
+    ],
+    form: {
+      nameLabel: "Name",
+      namePlaceholder: "Ihr Name",
+      emailLabel: "E-Mail-Adresse",
+      emailPlaceholder: "sie@unternehmen.de",
+      companyLabel: "Unternehmen",
+      companyPlaceholder: "Optional",
+      needsLabel: "Was brauchen Sie?",
+      needsOptions: [
+        "Option auswählen",
+        "Neue Website",
+        "Website-Relaunch",
+        "Onlineshop",
+        "Webanwendung",
+        "Website-Wartung",
+        "Noch nicht sicher",
+      ],
+      budgetLabel: "Budget",
+      budgetOptions: [
+        "Option auswählen (optional)",
+        "Unter 1.500 €",
+        "1.500 € bis 3.000 €",
+        "3.000 € bis 5.000 €",
+        "5.000 €+",
+        "Noch nicht sicher",
+      ],
+      messageLabel: "Erzählen Sie uns von Ihrem Projekt",
+      messagePlaceholder: "Wo hakt es, und was möchten Sie erreichen?",
+      sendButton: "Nachricht senden",
+      sendingButton: "Wird gesendet…",
+      successTitle: "Nachricht gesendet",
+      successBody: "Danke für Ihre Nachricht. Wir antworten in der Regel innerhalb eines Werktags.",
+      connectError: "Keine Verbindung möglich. Prüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.",
+      genericError: "Etwas ist schiefgelaufen. Bitte versuchen Sie es später erneut.",
+      privacyPrefix: "Mit dem Absenden dieses Formulars stimmen Sie unserer",
+      privacyLink: "Datenschutzerklärung zu",
+    },
+  },
+  work: {
+    eyebrow: "Arbeiten",
+    title: "Website-Konzepte",
+    subtitle:
+      "Eine Auswahl an Website-Konzepten, die ZEVREN entwickelt hat, um verschiedene Branchen, Layouts und digitale Erlebnisse zu erkunden. Jedes ist eine funktionierende Demo, kein statischer Screenshot.",
+    concept: "Konzept",
+    websiteConcept: "Website-Konzept",
+    realProject: "Reales Projekt",
+    viewConcept: "Konzept ansehen",
+    viewProject: "Projekt ansehen",
+    allConcepts: "Alle Konzepte",
+    allProjects: "Alle Projekte",
+    whatWeExplored: "Was wir untersucht haben",
+    keyFeatures: "Wichtigste Funktionen",
+    ctaTitle: "Ihr Projekt könnte das nächste sein",
+    startProject: "Projekt starten",
+    detailCtaTitle: "Möchten Sie so etwas für Ihr Unternehmen?",
+    detailCtaBody: "Jedes Projekt beginnt mit einem Gespräch darüber, was Sie wirklich brauchen, keine Vorlage, die wir anpassen.",
+    seeMoreConcepts: "Weitere Konzepte ansehen",
+    seeMoreWork: "Weitere Arbeiten ansehen",
+    conceptDisclaimer: "ZEVREN-KONZEPT: ein Website-Konzept, das ZEVREN entwickelt hat, um zu zeigen, wie diese Art von digitalem Erlebnis funktionieren könnte.",
+    realDisclaimer: "ZEVREN REALES PROJEKT: eine Website, die ZEVREN für ein reales Unternehmen entwickelt hat.",
+    items: {
+      "barbershop-website": {
+        category: "Friseursalon",
+        description: "Eine moderne Friseur-Website mit Online-Buchung, Serviceauswahl und einfacher Kundenerfahrung.",
+        whatWeExplored: "Dieses Konzept untersucht, wie ein moderner Friseursalon Terminvereinbarungen über eine einfache, mobile-first Website erleichtern könnte.",
+        keyFeatures: ["Online-Terminbuchung", "Serviceauswahl", "Friseurauswahl", "Verfügbare Zeitfenster", "Mobile-first Design"],
+      },
+      "garage-website": {
+        category: "Kfz-Werkstatt",
+        description: "Eine professionelle Werkstatt-Website mit Fokus auf Wartung, Inspektionen und Online-Termine.",
+        whatWeExplored: "Dieses Konzept untersucht, wie eine Werkstatt Kunden ermöglichen könnte, einen Service online zu buchen und Fahrzeugdaten im Voraus mitzuteilen, statt alles am Telefon zu klären.",
+        keyFeatures: ["Online-Serviceterminbuchung", "Kennzeichenfeld", "Fahrzeugdaten", "Terminplanung", "Serviceübersicht"],
+      },
+      "online-store": {
+        category: "E-Commerce",
+        description: "Ein vollständiger Onlineshop für hochwertige Wohn- und Lifestyle-Produkte, vom Stöbern bis zur Kasse.",
+        whatWeExplored: "Dieses Konzept untersucht, wie ein hochwertiger Wohnaccessoires-Shop online aussehen könnte, von der Produktentdeckung bis zu einer einfachen, klaren Kasse.",
+        keyFeatures: ["Produktkatalog", "Produktfilter", "Warenkorb", "Checkout-Prozess", "Bestellbestätigung"],
+      },
+      "property-platform": {
+        category: "Individuelle Webanwendung",
+        description: "Eine Immobilien-Vermietungsplattform mit Suche, Filtern und Besichtigungsanfragen, entwickelt als individuelle Webanwendung.",
+        whatWeExplored: "Dieses Konzept untersucht, wie eine Immobilienplattform Mietern helfen könnte, zu suchen, zu filtern und Besichtigungen anzufragen, ohne jedes Angebot einzeln anrufen zu müssen.",
+        keyFeatures: ["Immobiliensuche", "Erweiterte Filter", "Immobiliendetails", "Gespeicherte Immobilien", "Besichtigungsanfragen"],
+      },
+      ellezone: {
+        category: "E-Commerce",
+        description: "Ein Premium-Webshop-Konzept für ElleZone, ein Gewürzglas mit integrierter Portionierschaufel.",
+        whatWeExplored: "Dieses Konzept untersucht, wie der Launch eines fokussierten Webshops für ein einzelnes Produkt aussehen könnte, von der Produktseite über den Checkout bis zur Wunschliste und einer einfachen Kontoübersicht.",
+        keyFeatures: ["Produktvarianten", "Wunschliste", "Warenkorb", "Checkout-Prozess", "Kontoübersicht"],
+      },
+      "accounting-firm": {
+        category: "Professionelle Dienstleistungen",
+        description: "Ein Website- und Kundenportal-Konzept für ein niederländisches Steuerbüro, von der Buchhaltung bis zur Umsatzsteuer und Jahresabschlüssen.",
+        whatWeExplored: "Dieses Konzept untersucht, wie ein Steuerbüro eine klare Website mit einem einfachen Kundenportal kombinieren könnte, damit Kunden Rechnungen, Dokumente und Fristen an einem Ort sehen.",
+        keyFeatures: ["Service- und Preisseiten", "Terminanfrage", "Kundenportal-Dashboard", "Rechnungen und Dokumente", "Umsatzsteuer- und Finanzübersicht"],
+      },
+    },
+  },
+};
+
+export default de;

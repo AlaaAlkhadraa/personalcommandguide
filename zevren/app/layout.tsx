@@ -5,6 +5,9 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { SITE_CONFIG } from "@/lib/constants";
+import { getLocale } from "@/lib/i18n/get-locale";
+import { getDictionary } from "@/lib/i18n/get-dictionary";
+import { isRtl } from "@/lib/i18n/config";
 import "./globals.css";
 
 const inter = Inter({
@@ -82,9 +85,16 @@ export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const nonce = (await headers()).get("x-nonce") ?? undefined;
+  const locale = await getLocale();
+  const dict = getDictionary(locale);
+  const dir = isRtl(locale) ? "rtl" : "ltr";
 
   return (
-    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable} ${orbitron.variable}`}>
+    <html
+      lang={locale}
+      dir={dir}
+      className={`${inter.variable} ${spaceGrotesk.variable} ${orbitron.variable}`}
+    >
       <body className="flex min-h-screen flex-col">
         <JsonLd data={organizationJsonLd} nonce={nonce} />
         <JsonLd data={websiteJsonLd} nonce={nonce} />
@@ -94,11 +104,11 @@ export default async function RootLayout({
         >
           Skip to main content
         </a>
-        <Navbar />
+        <Navbar locale={locale} dict={dict.nav} />
         <main id="main-content" className="flex-1">
           {children}
         </main>
-        <Footer />
+        <Footer locale={locale} dict={dict.footer} navDict={dict.nav} />
       </body>
     </html>
   );

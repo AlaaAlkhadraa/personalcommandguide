@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/Button";
 import { WORK_PREVIEWS } from "@/components/work/registry";
 import { WORK_ITEMS } from "@/lib/constants";
 import { buildMetadata } from "@/lib/seo";
+import { getLocale } from "@/lib/i18n/get-locale";
+import { getDictionary } from "@/lib/i18n/get-dictionary";
 
 export const metadata = buildMetadata({
   title: "Work",
@@ -13,19 +15,19 @@ export const metadata = buildMetadata({
   path: "/work",
 });
 
-export default function WorkPage() {
+export default async function WorkPage() {
+  const locale = await getLocale();
+  const { work: w } = getDictionary(locale);
+
   return (
     <>
-      <PageHero
-        eyebrow="Work"
-        title="Website concepts"
-        description="A selection of website concepts created by ZEVREN to explore different industries, layouts and digital experiences. Each one is a working demo, not a static screenshot."
-      />
+      <PageHero eyebrow={w.eyebrow} title={w.title} description={w.subtitle} />
       <section className="py-20">
         <Container>
           <div className="grid gap-8 sm:grid-cols-2">
             {WORK_ITEMS.map((item) => {
               const Preview = WORK_PREVIEWS[item.slug];
+              const copy = w.items[item.slug as keyof typeof w.items];
               const isReal = item.kind === "real";
               return (
                 <Link
@@ -39,7 +41,7 @@ export default function WorkPage() {
                   <div className="flex flex-1 flex-col gap-3 p-6">
                     <div className="flex items-center justify-between gap-2">
                       <span className="text-xs font-semibold uppercase tracking-wider text-accent">
-                        {item.category}
+                        {copy.category}
                       </span>
                       <span
                         className={`rounded-full border px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${
@@ -48,15 +50,13 @@ export default function WorkPage() {
                             : "border-white/10 text-muted"
                         }`}
                       >
-                        {isReal ? "Real project" : "Website concept"}
+                        {isReal ? w.realProject : w.websiteConcept}
                       </span>
                     </div>
                     <h2 className="text-lg font-semibold text-white">{item.name}</h2>
-                    <p className="text-sm leading-relaxed text-muted">
-                      {item.description}
-                    </p>
+                    <p className="text-sm leading-relaxed text-muted">{copy.description}</p>
                     <span className="mt-auto flex w-fit items-center gap-1.5 rounded-full border border-white/15 px-4 py-2 text-xs font-semibold text-white transition-colors group-hover:border-accent/60 group-hover:text-accent">
-                      {isReal ? "View project" : "View concept"}
+                      {isReal ? w.viewProject : w.viewConcept}
                       <span
                         aria-hidden="true"
                         className="transition-transform group-hover:translate-x-1"
@@ -73,10 +73,8 @@ export default function WorkPage() {
       </section>
       <section className="border-t border-white/5 bg-surface/30 py-20">
         <Container className="flex flex-col items-center gap-6 text-center">
-          <h2 className="max-w-xl text-3xl font-semibold text-white">
-            Your project could be next
-          </h2>
-          <Button href="/contact">Start a project</Button>
+          <h2 className="max-w-xl text-3xl font-semibold text-white">{w.ctaTitle}</h2>
+          <Button href="/contact">{w.startProject}</Button>
         </Container>
       </section>
     </>

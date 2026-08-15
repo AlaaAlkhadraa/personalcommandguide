@@ -6,8 +6,18 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NAV_LINKS, SITE_CONFIG } from "@/lib/constants";
 import { Button } from "@/components/ui/Button";
+import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
+import type { Locale } from "@/lib/i18n/config";
+import type { Dictionary } from "@/lib/i18n/dictionary-type";
 
-export function Navbar() {
+interface NavbarProps {
+  locale: Locale;
+  dict: Dictionary["nav"];
+}
+
+const NAV_LABEL_KEYS = ["work", "services", "about", "contact"] as const;
+
+export function Navbar({ locale, dict }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
@@ -69,7 +79,7 @@ export function Navbar() {
           aria-label="Main navigation"
           className="hidden items-center gap-8 lg:flex"
         >
-          {NAV_LINKS.map((link) => {
+          {NAV_LINKS.map((link, index) => {
             const isActive =
               link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
             return (
@@ -81,15 +91,16 @@ export function Navbar() {
                   isActive ? "text-white" : "text-muted hover:text-white"
                 }`}
               >
-                {link.label}
+                {dict[NAV_LABEL_KEYS[index]!]}
               </Link>
             );
           })}
         </nav>
 
-        <div className="hidden lg:block">
+        <div className="hidden items-center gap-4 lg:flex">
+          <LanguageSwitcher locale={locale} />
           <Button href="/contact" className="text-sm">
-            Start a project
+            {dict.startProject}
           </Button>
         </div>
 
@@ -99,7 +110,7 @@ export function Navbar() {
           aria-expanded={isOpen}
           aria-controls="mobile-menu"
           aria-label={isOpen ? "Close menu" : "Open menu"}
-          className="-mr-1 flex h-11 w-11 items-center justify-center rounded-lg text-white lg:hidden"
+          className="-me-1 flex h-11 w-11 items-center justify-center rounded-lg text-white lg:hidden"
         >
           <span className="relative flex h-4 w-6 flex-col justify-between">
             <span
@@ -132,22 +143,25 @@ export function Navbar() {
             aria-label="Mobile navigation"
             className="container-page flex flex-col gap-1 py-4"
           >
-            {NAV_LINKS.map((link) => (
+            {NAV_LINKS.map((link, index) => (
               <Link
                 key={link.href}
                 href={link.href}
                 className="rounded-lg px-3 py-3 text-base font-medium text-white/90 transition-colors hover:bg-white/5"
               >
-                {link.label}
+                {dict[NAV_LABEL_KEYS[index]!]}
               </Link>
             ))}
             <div className="mt-2 flex flex-col gap-3 py-2">
-              <Button href="/contact">Start a project</Button>
+              <div className="px-3">
+                <LanguageSwitcher locale={locale} />
+              </div>
+              <Button href="/contact">{dict.startProject}</Button>
               <a
                 href={`tel:${SITE_CONFIG.phone}`}
                 className="text-center text-sm text-muted hover:text-white"
               >
-                or call {SITE_CONFIG.phoneDisplay}
+                {dict.orCall} {SITE_CONFIG.phoneDisplay}
               </a>
             </div>
           </nav>

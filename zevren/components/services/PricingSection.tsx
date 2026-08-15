@@ -1,35 +1,39 @@
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Card } from "@/components/ui/Card";
 import { Container } from "@/components/ui/Container";
-import { PRICING_PLANS } from "@/lib/constants";
+import type { Dictionary } from "@/lib/i18n/dictionary-type";
 
-export function PricingSection() {
+interface PricingSectionProps {
+  dict: Dictionary["services"];
+  pricingDict: Dictionary["pricing"];
+}
+
+const PLAN_KEYS = ["starter", "business", "store", "custom"] as const;
+
+export function PricingSection({ dict, pricingDict }: PricingSectionProps) {
   return (
     <section className="border-t border-white/5 bg-surface/30 py-20">
       <Container className="flex flex-col gap-12">
         <SectionHeading
-          eyebrow="Pricing"
-          title="Starting prices"
-          description="Every project is priced based on what you actually need."
+          eyebrow={dict.pricingEyebrow}
+          title={dict.pricingTitle}
+          description={dict.pricingSubtitle}
         />
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {PRICING_PLANS.map((plan) => (
-            <Card key={plan.name} className="flex flex-col gap-3">
-              <h3 className="text-base font-semibold text-white">
-                {plan.name}
-              </h3>
-              <span className="text-2xl font-semibold text-white">
-                {plan.price}
-              </span>
-              <p className="text-sm leading-relaxed text-muted">
-                {plan.description}
-              </p>
-            </Card>
-          ))}
+          {PLAN_KEYS.map((key) => {
+            const plan = pricingDict.plans[key];
+            return (
+              <Card key={key} className="flex flex-col gap-3">
+                <h3 className="text-base font-semibold text-white">{plan.name}</h3>
+                <span className="text-2xl font-semibold text-white">
+                  {dict.from} €{plan.price}
+                </span>
+                <p className="text-sm leading-relaxed text-muted">{plan.description}</p>
+              </Card>
+            );
+          })}
         </div>
-        <p className="text-sm text-muted">
-          Final pricing depends on the scope and requirements of the project.
-        </p>
+        <p className="text-sm text-muted">{dict.pricingNote}</p>
       </Container>
     </section>
   );

@@ -283,7 +283,7 @@ export const FAQ_ITEMS: FaqItem[] = [
   {
     question: "How much does a website cost?",
     answer:
-      "Most ZEVREN projects start from €499. The final price depends on the size and requirements of the project.",
+      "Most ZEVREN projects start from €399. The final price depends on the size and requirements of the project.",
   },
   {
     question: "How long does a website take?",

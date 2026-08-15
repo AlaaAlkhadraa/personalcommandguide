@@ -1,8 +1,19 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FOOTER_LEGAL_LINKS, NAV_LINKS, SITE_CONFIG } from "@/lib/constants";
+import type { Locale } from "@/lib/i18n/config";
+import type { Dictionary } from "@/lib/i18n/dictionary-type";
 
-export function Footer() {
+const NAV_LABEL_KEYS = ["work", "services", "about", "contact"] as const;
+const LEGAL_LABEL_KEYS = ["privacyPolicy", "termsAndConditions"] as const;
+
+interface FooterProps {
+  locale: Locale;
+  dict: Dictionary["footer"];
+  navDict: Dictionary["nav"];
+}
+
+export function Footer({ dict, navDict }: FooterProps) {
   const year = new Date().getFullYear();
 
   return (
@@ -22,7 +33,7 @@ export function Footer() {
             </span>
           </Link>
           <p className="max-w-sm text-sm leading-relaxed text-muted">
-            {SITE_CONFIG.description}
+            {dict.description}
           </p>
           <div className="flex gap-4 pt-2">
             <a
@@ -40,20 +51,20 @@ export function Footer() {
         </div>
 
         <nav aria-label="Page navigation" className="flex flex-col gap-3">
-          <span className="text-sm font-semibold text-white">Navigation</span>
-          {NAV_LINKS.map((link) => (
+          <span className="text-sm font-semibold text-white">{dict.navigationHeading}</span>
+          {NAV_LINKS.map((link, index) => (
             <Link
               key={link.href}
               href={link.href}
               className="text-sm text-muted transition-colors hover:text-white"
             >
-              {link.label}
+              {navDict[NAV_LABEL_KEYS[index]!]}
             </Link>
           ))}
         </nav>
 
         <div className="flex flex-col gap-3">
-          <span className="text-sm font-semibold text-white">Contact</span>
+          <span className="text-sm font-semibold text-white">{dict.contactHeading}</span>
           <a
             href={`mailto:${SITE_CONFIG.email}`}
             className="text-sm text-muted transition-colors hover:text-white"
@@ -74,14 +85,14 @@ export function Footer() {
         </div>
 
         <div className="flex flex-col gap-3">
-          <span className="text-sm font-semibold text-white">Company</span>
-          {FOOTER_LEGAL_LINKS.map((link) => (
+          <span className="text-sm font-semibold text-white">{dict.companyHeading}</span>
+          {FOOTER_LEGAL_LINKS.map((link, index) => (
             <Link
               key={link.href}
               href={link.href}
               className="text-sm text-muted transition-colors hover:text-white"
             >
-              {link.label}
+              {dict[LEGAL_LABEL_KEYS[index]!]}
             </Link>
           ))}
           <span className="pt-2 text-xs text-muted">
@@ -93,9 +104,9 @@ export function Footer() {
       <div className="border-t border-white/10">
         <div className="container-page flex flex-col items-center justify-between gap-2 py-6 text-xs text-muted sm:flex-row">
           <span>
-            &copy; {year} {SITE_CONFIG.legalName}. All rights reserved.
+            &copy; {year} {SITE_CONFIG.legalName}. {dict.allRightsReserved}
           </span>
-          <span>Built in Maastricht.</span>
+          <span>{dict.builtIn}</span>
         </div>
       </div>
     </footer>

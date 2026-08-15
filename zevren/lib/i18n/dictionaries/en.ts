@@ -1,0 +1,305 @@
+import type { Dictionary } from "@/lib/i18n/dictionary-type";
+
+const en: Dictionary = {
+  nav: {
+    work: "Work",
+    services: "Services",
+    about: "About",
+    contact: "Contact",
+    startProject: "Start a project",
+    orCall: "or call",
+  },
+  footer: {
+    description:
+      "We design and build modern websites for businesses that want a clear, professional presence online.",
+    navigationHeading: "Navigation",
+    contactHeading: "Contact",
+    officeHeading: "Office",
+    companyHeading: "Company",
+    allRightsReserved: "All rights reserved.",
+    builtIn: "Built in Maastricht.",
+    privacyPolicy: "Privacy Policy",
+    termsAndConditions: "Terms & Conditions",
+  },
+  home: {
+    hero: {
+      badge: "Web studio in Maastricht",
+      titleBefore: "Websites that make your",
+      titleHighlight: "business easier to choose",
+      subtitle:
+        "We design and build modern websites for businesses that want a clear, professional presence online.",
+      ctaPrimary: "Start a project",
+      ctaSecondary: "See our work",
+      trustLine: "Based in Maastricht. Working with businesses worldwide.",
+    },
+    services: {
+      eyebrow: "Services",
+      title: "What we're good at",
+      subtitle:
+        "From a first website to an online store or a custom application. We keep the team small so communication stays direct.",
+      learnMore: "Learn more",
+    },
+    work: {
+      eyebrow: "Work",
+      title: "Website concepts",
+      subtitle:
+        "A selection of website concepts created by ZEVREN to explore different industries, layouts and digital experiences.",
+      allConcepts: "All concepts",
+    },
+    why: {
+      eyebrow: "Why ZEVREN",
+      title: "Why work with ZEVREN?",
+    },
+    process: {
+      eyebrow: "Process",
+      title: "How a project runs with us",
+      subtitle:
+        "Five steps, from first conversation to launch. Every step has a clear outcome, so you always know where your project stands.",
+    },
+    faq: {
+      eyebrow: "Frequently asked questions",
+      title: "Still have questions? These come up most",
+    },
+    finalCta: {
+      title: "Ready to start your project?",
+      subtitle:
+        "No sales pitch. Tell us about your project and we'll get back to you to talk through the next step.",
+      ctaPrimary: "Start a project",
+      ctaSecondary: "See our services",
+    },
+  },
+  services: {
+    eyebrow: "Services",
+    title: "What we build",
+    subtitle:
+      "We focus on a small number of services and build each project around what the business actually needs.",
+    pricingEyebrow: "Pricing",
+    pricingTitle: "Starting prices",
+    pricingSubtitle: "Every project is priced based on what you actually need.",
+    pricingNote: "Final pricing depends on the scope and requirements of the project.",
+    from: "From",
+    notSureTitle: "Not sure which service fits?",
+    notSureBody:
+      'Tell us what you need in a short call. We\'ll give you an honest answer, even if that answer is "not yet".',
+    notSureCta: "Start a project",
+    list: {
+      websites: {
+        title: "Websites",
+        summary:
+          "Modern websites designed around your business, your customers and what you need the website to achieve.",
+        description:
+          "We start by understanding what your website needs to do, then design and build around that. Not a page builder theme with your logo on it.",
+        features: [
+          "Custom design, not a template",
+          "Built with Next.js for speed",
+          "Content you can edit yourself",
+          "Works well on every device",
+        ],
+      },
+      "online-stores": {
+        title: "Online Stores",
+        summary:
+          "Clean online stores that make it easy for customers to browse products and place orders.",
+        description:
+          "From browsing to checkout, every step is designed to be simple. We set up a store you can manage yourself once it is live.",
+        features: [
+          "Secure checkout and payments",
+          "Easy product management",
+          "Clear product pages",
+          "Works well on mobile",
+        ],
+      },
+      "web-applications": {
+        title: "Web Applications",
+        summary:
+          "Custom dashboards, portals and web tools for businesses that need more than a standard website.",
+        description:
+          "When an off the shelf tool does not fit how your business works, we build something that does.",
+        features: [
+          "Client portals and dashboards",
+          "Booking and scheduling tools",
+          "Connects with the systems you use",
+          "Built around your specific process",
+        ],
+      },
+      "website-support": {
+        title: "Website Support",
+        summary: "Ongoing updates, fixes and improvements after your website goes live.",
+        description: "A website needs upkeep after launch. We keep it updated, secure and running well.",
+        features: [
+          "Security updates",
+          "Regular backups",
+          "Small changes handled quickly",
+          "One point of contact",
+        ],
+      },
+    },
+  },
+  pricing: {
+    plans: {
+      starter: { name: "Starter Website", price: "399", description: "A small, focused website to get your business online." },
+      business: { name: "Business Website", price: "699", description: "A complete website built around your business and content." },
+      store: { name: "Online Store", price: "999", description: "For businesses that want to sell products online." },
+      custom: { name: "Custom Web Application", price: "1,499", description: "For web applications, portals and anything beyond a standard website." },
+    },
+  },
+  whyZevren: {
+    items: [
+      { title: "Small by design", description: "You work directly with the person building your website." },
+      { title: "No unnecessary extras", description: "We focus on what your business actually needs." },
+      { title: "Clear pricing", description: "You know what you are paying for before we start." },
+      { title: "Built properly", description: "Responsive design, clean structure and a website that works across devices." },
+    ],
+  },
+  process: {
+    steps: [
+      { title: "Tell us what you need", description: "We learn about your business and what you want the website to do." },
+      { title: "Plan", description: "We decide what pages, content and features are actually needed." },
+      { title: "Design", description: "We create the visual direction and refine it with your feedback." },
+      { title: "Build", description: "We develop the website and make sure everything works properly." },
+      { title: "Launch", description: "We test the website and prepare it for launch." },
+    ],
+  },
+  faq: {
+    items: [
+      { question: "How much does a website cost?", answer: "Most ZEVREN projects start from €399. The final price depends on the size and requirements of the project." },
+      { question: "How long does a website take?", answer: "The timeline depends on the project. We will give you a clear estimate before development starts." },
+      { question: "Can you redesign an existing website?", answer: "Yes. We can improve an existing website or rebuild it when necessary." },
+      { question: "Do you work with businesses outside Maastricht?", answer: "Yes. Maastricht is where the studio is based, not a limit on who we work with. We work remotely with businesses across the Netherlands and internationally." },
+      { question: "Do you provide support after launch?", answer: "Yes. Support can be arranged after the website goes live, from small fixes to bigger changes." },
+    ],
+  },
+  about: {
+    eyebrow: "About",
+    title: "An independent web studio in Maastricht",
+    subtitle:
+      "ZEVREN is an independent web studio based in Maastricht, Netherlands. We build websites and digital products for businesses that want a better way to present themselves online.",
+    howWeWorkTitle: "How we work",
+    howWeWorkP1: "We keep things simple: understand the business, build what is needed and avoid adding things just for the sake of it.",
+    howWeWorkP2: "We are keeping the studio small so we can stay close to every project and communicate directly with the people we work with.",
+    valuesTitle: "What matters to us",
+    values: [
+      { title: "Direct communication", description: "You work directly with the person working on your project." },
+      { title: "Straightforward advice", description: "If something is unnecessary, we will say so." },
+      { title: "No unnecessary complexity", description: "We focus on what your website actually needs." },
+      { title: "Long term thinking", description: "The website should remain useful as your business develops." },
+    ],
+    ctaTitle: "Wondering if we're a fit for your project?",
+    ctaBody: "Tell us about your business and what you are looking to build. We will get back to you with an honest answer.",
+    ctaButton: "Start a project",
+  },
+  contact: {
+    eyebrow: "Contact",
+    title: "Let's talk about your project.",
+    subtitle:
+      "Tell us a little about your business and what you are looking to build. We will review your request and get back to you with the next step.",
+    directContactTitle: "Direct contact",
+    officeTitle: "Office",
+    expectTitle: "What to expect",
+    expectItems: [
+      "A reply within one business day",
+      "A clear answer about your project",
+      "A price and timeline if we are a good fit",
+    ],
+    form: {
+      nameLabel: "Name",
+      namePlaceholder: "Your name",
+      emailLabel: "Email address",
+      emailPlaceholder: "you@company.com",
+      companyLabel: "Company",
+      companyPlaceholder: "Optional",
+      needsLabel: "What do you need?",
+      needsOptions: [
+        "Select an option",
+        "New website",
+        "Website redesign",
+        "Online store",
+        "Web application",
+        "Website maintenance",
+        "Not sure yet",
+      ],
+      budgetLabel: "Budget",
+      budgetOptions: [
+        "Select an option (optional)",
+        "Under €1,500",
+        "€1,500 to €3,000",
+        "€3,000 to €5,000",
+        "€5,000+",
+        "Not sure yet",
+      ],
+      messageLabel: "Tell us about your project",
+      messagePlaceholder: "What are you running into, and what do you want to achieve?",
+      sendButton: "Send message",
+      sendingButton: "Sending…",
+      successTitle: "Message sent",
+      successBody: "Thanks for reaching out. We typically reply within one business day.",
+      connectError: "Couldn't connect. Check your internet connection and try again.",
+      genericError: "Something went wrong. Please try again later.",
+      privacyPrefix: "By submitting this form you agree to our",
+      privacyLink: "privacy policy",
+    },
+  },
+  work: {
+    eyebrow: "Work",
+    title: "Website concepts",
+    subtitle:
+      "A selection of website concepts created by ZEVREN to explore different industries, layouts and digital experiences. Each one is a working demo, not a static screenshot.",
+    concept: "Concept",
+    websiteConcept: "Website concept",
+    realProject: "Real project",
+    viewConcept: "View concept",
+    viewProject: "View project",
+    allConcepts: "All concepts",
+    allProjects: "All projects",
+    whatWeExplored: "What we explored",
+    keyFeatures: "Key features",
+    ctaTitle: "Your project could be next",
+    startProject: "Start a project",
+    detailCtaTitle: "Want something like this for your business?",
+    detailCtaBody: "Every project starts with a conversation about what you actually need, not a template we adapt.",
+    seeMoreConcepts: "See more concepts",
+    seeMoreWork: "See more work",
+    conceptDisclaimer: "ZEVREN CONCEPT: a website concept created by ZEVREN to demonstrate how this type of digital experience could work.",
+    realDisclaimer: "ZEVREN REAL PROJECT: a website created by ZEVREN for a real business.",
+    items: {
+      "barbershop-website": {
+        category: "Barbershop",
+        description: "A modern barbershop website with online booking, service selection and a simple customer experience.",
+        whatWeExplored: "This concept explores how a modern barbershop could make appointments easier for customers through a simple, mobile first website.",
+        keyFeatures: ["Online appointment booking", "Service selection", "Barber selection", "Available time slots", "Mobile first design"],
+      },
+      "garage-website": {
+        category: "Automotive",
+        description: "A professional garage website focused on servicing, inspections and online appointments.",
+        whatWeExplored: "This concept explores how a garage could let customers book a service online and share their vehicle details in advance, instead of everything happening over the phone.",
+        keyFeatures: ["Online service booking", "Vehicle registration field", "Vehicle details", "Appointment scheduling", "Service overview"],
+      },
+      "online-store": {
+        category: "E-commerce",
+        description: "A complete online store for premium home and lifestyle products, from browsing to checkout.",
+        whatWeExplored: "This concept explores what a premium home goods store could look like online, from product discovery through to a simple, clear checkout.",
+        keyFeatures: ["Product catalogue", "Product filtering", "Shopping cart", "Checkout flow", "Order confirmation"],
+      },
+      "property-platform": {
+        category: "Custom Web Application",
+        description: "A property rental platform with search, filtering and viewing requests, built as a custom web application.",
+        whatWeExplored: "This concept explores how a property platform could help renters search, filter and request viewings without calling every listing individually.",
+        keyFeatures: ["Property search", "Advanced filtering", "Property details", "Saved properties", "Viewing requests"],
+      },
+      ellezone: {
+        category: "E-commerce",
+        description: "A premium webshop concept for ElleZone, a portion-control glass spice jar with a built-in scoop.",
+        whatWeExplored: "This concept explores what a focused, single-product webshop launch could look like, from a product page through to checkout, wishlist and a simple account view.",
+        keyFeatures: ["Product variants", "Wishlist", "Shopping cart", "Checkout flow", "Account overview"],
+      },
+      "accounting-firm": {
+        category: "Professional Services",
+        description: "A website and client portal concept for a Dutch accounting firm, from bookkeeping to VAT and annual accounts.",
+        whatWeExplored: "This concept explores how an accounting firm could pair a clear marketing website with a simple client portal, so clients can see invoices, documents and deadlines in one place.",
+        keyFeatures: ["Service and pricing pages", "Appointment request", "Client portal dashboard", "Invoices and documents", "VAT and financial overview"],
+      },
+    },
+  },
+};
+
+export default en;
