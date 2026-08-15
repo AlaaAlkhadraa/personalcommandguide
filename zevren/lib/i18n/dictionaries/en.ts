@@ -20,6 +20,7 @@ const en: Dictionary = {
     builtIn: "Built in Maastricht.",
     privacyPolicy: "Privacy Policy",
     termsAndConditions: "Terms & Conditions",
+    languagesHeading: "Available in English, Dutch, German, French, Spanish and Arabic.",
   },
   home: {
     hero: {
@@ -122,6 +123,30 @@ const en: Dictionary = {
           "Built around your specific process",
         ],
       },
+      "ui-ux-design": {
+        title: "UI/UX Design",
+        summary: "Interfaces that are easy to use, not just nice to look at.",
+        description:
+          "Before any code gets written, we work out how the site should feel to use. Clear layouts, sensible navigation, no guessing what to click.",
+        features: [
+          "Wireframes and layout planning",
+          "Consistent visual system",
+          "Designed for real content",
+          "Built with accessibility in mind",
+        ],
+      },
+      "seo-foundations": {
+        title: "SEO Foundations",
+        summary: "The technical basics that help your site get found on search engines.",
+        description:
+          "We handle the technical side of SEO, structure, page speed, metadata, so your content has a fair chance to rank.",
+        features: [
+          "Clean, semantic HTML structure",
+          "Fast page load times",
+          "Proper titles and meta descriptions",
+          "Sitemap and search engine setup",
+        ],
+      },
       "website-support": {
         title: "Website Support",
         summary: "Ongoing updates, fixes and improvements after your website goes live.",
@@ -137,10 +162,10 @@ const en: Dictionary = {
   },
   pricing: {
     plans: {
-      starter: { name: "Starter Website", price: "399", description: "A small, focused website to get your business online." },
-      business: { name: "Business Website", price: "699", description: "A complete website built around your business and content." },
-      store: { name: "Online Store", price: "999", description: "For businesses that want to sell products online." },
-      custom: { name: "Custom Web Application", price: "1,499", description: "For web applications, portals and anything beyond a standard website." },
+      starter: { name: "Starter Website", price: "299", description: "A small, focused website to get your business online." },
+      business: { name: "Business Website", price: "499", description: "A complete website built around your business and content." },
+      store: { name: "Online Store", price: "799", description: "For businesses that want to sell products online." },
+      custom: { name: "Custom Web Application", price: "1,299", description: "For web applications, portals and anything beyond a standard website." },
     },
   },
   whyZevren: {
@@ -162,11 +187,14 @@ const en: Dictionary = {
   },
   faq: {
     items: [
-      { question: "How much does a website cost?", answer: "Most ZEVREN projects start from €399. The final price depends on the size and requirements of the project." },
+      { question: "How much does a website cost?", answer: "Most ZEVREN projects start from €299. The final price depends on the size and requirements of the project." },
       { question: "How long does a website take?", answer: "The timeline depends on the project. We will give you a clear estimate before development starts." },
       { question: "Can you redesign an existing website?", answer: "Yes. We can improve an existing website or rebuild it when necessary." },
-      { question: "Do you work with businesses outside Maastricht?", answer: "Yes. Maastricht is where the studio is based, not a limit on who we work with. We work remotely with businesses across the Netherlands and internationally." },
+      { question: "Do you work with businesses outside the Netherlands?", answer: "Yes. Maastricht is where the studio is based, not a limit on who we work with. We work remotely with businesses anywhere." },
+      { question: "Can you build an online store?", answer: "Yes. From a simple product catalogue to a full store with checkout, we can build it and set it up so you can manage it yourself." },
+      { question: "Can you build custom web applications?", answer: "Yes. If a standard website is not enough, we build dashboards, portals and tools built around how your business actually works." },
       { question: "Do you provide support after launch?", answer: "Yes. Support can be arranged after the website goes live, from small fixes to bigger changes." },
+      { question: "Can I update the website myself?", answer: "Yes. We build websites so you can edit the content yourself, and we are available if you need something changed for you." },
     ],
   },
   about: {
@@ -263,6 +291,8 @@ const en: Dictionary = {
     realDisclaimer: "ZEVREN REAL PROJECT: a website created by ZEVREN for a real business.",
     visitLiveWebsite: "Visit live website",
     liveWebsiteNote: "This is a real, live project. Visit the website to see it in full.",
+    realProjectsHeading: "Real projects",
+    conceptProjectsHeading: "Website concepts",
     items: {
       "tajex-logistics": {
         category: "Logistics",
@@ -381,6 +411,9 @@ const en: Dictionary = {
       selectDate: "Select a date",
       selectTime: "Select a time",
       kenteken: "Kenteken",
+      lookupButton: "Look up vehicle",
+      lookupNote: "Demo vehicle lookup. Not connected to the RDW register.",
+      vehicleFoundLabel: "Vehicle found:",
       carBrand: "Car brand",
       selectBrand: "Select brand",
       model: "Model",

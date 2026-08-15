@@ -56,6 +56,17 @@ const DEMO_REVIEWS = [
   { name: "Youssef E.", text: "Easy to add my kenteken and details ahead of time." },
 ];
 
+const LOOKUP_MODELS = ["3 Series", "A4", "Golf", "C-Class", "Corolla", "Model 3", "Civic", "Astra"];
+
+function lookupVehicleByPlate(plate: string) {
+  const seed = [...plate].reduce((sum, char) => sum + char.charCodeAt(0), 0);
+  return {
+    brand: CAR_BRANDS[seed % CAR_BRANDS.length]!,
+    model: LOOKUP_MODELS[seed % LOOKUP_MODELS.length]!,
+    year: 2014 + (seed % 10),
+  };
+}
+
 export function GarageDemo({ dict, common }: GarageDemoProps) {
   const STEP_LABELS: Record<Step, string> = dict.steps;
   const [step, setStep] = useState<Step>("service");
@@ -65,11 +76,19 @@ export function GarageDemo({ dict, common }: GarageDemoProps) {
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
   const [errors, setErrors] = useState<Partial<FormState>>({});
   const [cancelled, setCancelled] = useState(false);
+  const [lookupResult, setLookupResult] = useState<{ brand: string; model: string; year: number } | null>(null);
 
   const stepIndex = STEP_ORDER.indexOf(step);
 
   function update<K extends keyof FormState>(key: K, value: string) {
     setForm((f) => ({ ...f, [key]: value }));
+  }
+
+  function lookupVehicle() {
+    if (form.kenteken.trim().length < 5) return;
+    const result = lookupVehicleByPlate(form.kenteken.trim());
+    setLookupResult(result);
+    setForm((f) => ({ ...f, brand: result.brand, model: result.model }));
   }
 
   function rescheduleAppointment() {
@@ -102,6 +121,7 @@ export function GarageDemo({ dict, common }: GarageDemoProps) {
     setForm(EMPTY_FORM);
     setErrors({});
     setCancelled(false);
+    setLookupResult(null);
     setStep("service");
   }
 
@@ -393,15 +413,34 @@ export function GarageDemo({ dict, common }: GarageDemoProps) {
                   <label className="mb-1.5 block text-xs font-medium text-slate-400">
                     {dict.kenteken}
                   </label>
-                  <input
-                    value={form.kenteken}
-                    onChange={(e) => update("kenteken", e.target.value.toUpperCase())}
-                    className="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2.5 text-sm uppercase text-slate-100 outline-none focus:border-orange-500"
-                    placeholder="12-ABC-3"
-                  />
+                  <div className="flex gap-2">
+                    <input
+                      value={form.kenteken}
+                      onChange={(e) => {
+                        update("kenteken", e.target.value.toUpperCase());
+                        setLookupResult(null);
+                      }}
+                      className="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2.5 text-sm uppercase text-slate-100 outline-none focus:border-orange-500"
+                      placeholder="12-ABC-3"
+                    />
+                    <button
+                      type="button"
+                      onClick={lookupVehicle}
+                      disabled={form.kenteken.trim().length < 5}
+                      className="shrink-0 rounded-md border border-orange-500/60 px-3 py-2.5 text-xs font-semibold uppercase tracking-wide text-orange-500 transition-colors hover:bg-orange-500/10 disabled:cursor-not-allowed disabled:opacity-40"
+                    >
+                      {dict.lookupButton}
+                    </button>
+                  </div>
                   {errors.kenteken && (
                     <p className="mt-1 text-xs text-red-400">{errors.kenteken}</p>
                   )}
+                  {lookupResult && (
+                    <p className="mt-1.5 text-xs text-slate-400">
+                      {dict.vehicleFoundLabel} {lookupResult.brand} {lookupResult.model} ({lookupResult.year})
+                    </p>
+                  )}
+                  <p className="mt-1 text-[11px] text-slate-500">{dict.lookupNote}</p>
                 </div>
                 <div>
                   <label className="mb-1.5 block text-xs font-medium text-slate-400">

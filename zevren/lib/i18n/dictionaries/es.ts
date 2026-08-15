@@ -20,6 +20,7 @@ const es: Dictionary = {
     builtIn: "Creado en Maastricht.",
     privacyPolicy: "Política de privacidad",
     termsAndConditions: "Términos y condiciones",
+    languagesHeading: "Disponible en inglés, neerlandés, alemán, francés, español y árabe.",
   },
   home: {
     hero: {
@@ -122,6 +123,30 @@ const es: Dictionary = {
           "Construido según tu proceso específico",
         ],
       },
+      "ui-ux-design": {
+        title: "Diseño UI/UX",
+        summary: "Interfaces agradables de usar, no solo bonitas de ver.",
+        description:
+          "Antes de escribir código, definimos cómo debe sentirse el sitio al usarlo. Diseño claro, navegación lógica, sin adivinar dónde hacer clic.",
+        features: [
+          "Wireframes y planificación de diseño",
+          "Sistema visual coherente",
+          "Diseñado para contenido real",
+          "Pensado con la accesibilidad en mente",
+        ],
+      },
+      "seo-foundations": {
+        title: "Bases de SEO",
+        summary: "La base técnica que ayuda a que tu sitio se encuentre en los buscadores.",
+        description:
+          "Nos encargamos del lado técnico del SEO, estructura, velocidad de carga, metadatos, para que tu contenido tenga una oportunidad real de posicionarse.",
+        features: [
+          "Estructura HTML limpia y semántica",
+          "Tiempos de carga rápidos",
+          "Títulos y meta descripciones adecuados",
+          "Sitemap y configuración para buscadores",
+        ],
+      },
       "website-support": {
         title: "Soporte de sitios web",
         summary: "Actualizaciones, correcciones y mejoras continuas después de que tu sitio esté en línea.",
@@ -137,10 +162,10 @@ const es: Dictionary = {
   },
   pricing: {
     plans: {
-      starter: { name: "Sitio Starter", price: "399", description: "Un sitio pequeño y enfocado para llevar tu negocio a internet." },
-      business: { name: "Sitio Business", price: "699", description: "Un sitio completo construido en torno a tu negocio y tu contenido." },
-      store: { name: "Tienda online", price: "999", description: "Para empresas que quieren vender productos online." },
-      custom: { name: "Aplicación web a medida", price: "1.499", description: "Para aplicaciones web, portales y todo lo que va más allá de un sitio estándar." },
+      starter: { name: "Sitio Starter", price: "299", description: "Un sitio pequeño y enfocado para llevar tu negocio a internet." },
+      business: { name: "Sitio Business", price: "499", description: "Un sitio completo construido en torno a tu negocio y tu contenido." },
+      store: { name: "Tienda online", price: "799", description: "Para empresas que quieren vender productos online." },
+      custom: { name: "Aplicación web a medida", price: "1.299", description: "Para aplicaciones web, portales y todo lo que va más allá de un sitio estándar." },
     },
   },
   whyZevren: {
@@ -162,11 +187,14 @@ const es: Dictionary = {
   },
   faq: {
     items: [
-      { question: "¿Cuánto cuesta un sitio web?", answer: "La mayoría de los proyectos de ZEVREN parten desde 399 €. El precio final depende del alcance y los requisitos del proyecto." },
+      { question: "¿Cuánto cuesta un sitio web?", answer: "La mayoría de los proyectos de ZEVREN parten desde 299 €. El precio final depende del alcance y los requisitos del proyecto." },
       { question: "¿Cuánto tarda un sitio web?", answer: "El plazo depende del proyecto. Te daremos una estimación clara antes de comenzar el desarrollo." },
       { question: "¿Pueden rediseñar un sitio web existente?", answer: "Sí. Podemos mejorar un sitio existente o reconstruirlo si es necesario." },
-      { question: "¿Trabajan con empresas fuera de Maastricht?", answer: "Sí. Maastricht es donde tiene su sede el estudio, no un límite de con quién trabajamos. Trabajamos de forma remota con empresas en toda Holanda e internacionalmente." },
+      { question: "¿Trabajan con empresas fuera de los Países Bajos?", answer: "Sí. Maastricht es donde tiene su sede el estudio, no un límite de con quién trabajamos. Trabajamos de forma remota con empresas en cualquier lugar." },
+      { question: "¿Pueden crear una tienda online?", answer: "Sí. Desde un catálogo de productos sencillo hasta una tienda completa con pago, la construimos y la configuramos para que puedas gestionarla tú mismo." },
+      { question: "¿Pueden desarrollar aplicaciones web a medida?", answer: "Sí. Si un sitio web estándar no es suficiente, creamos paneles, portales y herramientas adaptadas a cómo trabaja realmente tu negocio." },
       { question: "¿Ofrecen soporte después del lanzamiento?", answer: "Sí. El soporte se puede organizar después de que el sitio esté en línea, desde pequeñas correcciones hasta cambios más grandes." },
+      { question: "¿Puedo actualizar el sitio web yo mismo?", answer: "Sí. Construimos los sitios para que puedas editar el contenido tú mismo, y estamos disponibles si prefieres que nosotros hagamos el cambio." },
     ],
   },
   about: {
@@ -261,6 +289,8 @@ const es: Dictionary = {
     seeMoreWork: "Ver más proyectos",
     conceptDisclaimer: "CONCEPTO ZEVREN: un concepto de sitio web creado por ZEVREN para demostrar cómo podría funcionar este tipo de experiencia digital.",
     realDisclaimer: "PROYECTO REAL ZEVREN: un sitio web creado por ZEVREN para una empresa real.",
+    realProjectsHeading: "Proyectos reales",
+    conceptProjectsHeading: "Conceptos de sitios web",
     visitLiveWebsite: "Visitar sitio web en vivo",
     liveWebsiteNote: "Este es un proyecto real y en funcionamiento. Visita el sitio web para verlo completo.",
     items: {
@@ -381,6 +411,9 @@ const es: Dictionary = {
       selectDate: "Selecciona una fecha",
       selectTime: "Selecciona una hora",
       kenteken: "Matrícula",
+      lookupButton: "Consultar vehículo",
+      lookupNote: "Consulta de vehículo de demostración. No conectada al registro RDW neerlandés.",
+      vehicleFoundLabel: "Vehículo encontrado:",
       carBrand: "Marca del vehículo",
       selectBrand: "Selecciona la marca",
       model: "Modelo",

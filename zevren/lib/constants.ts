@@ -88,6 +88,36 @@ export const SERVICES: Service[] = [
     icon: "compass",
   },
   {
+    slug: "ui-ux-design",
+    title: "UI/UX Design",
+    summary:
+      "Interfaces that are easy to use, not just nice to look at.",
+    description:
+      "Before any code gets written, we work out how the site should feel to use. Clear layouts, sensible navigation, no guessing what to click.",
+    features: [
+      "Wireframes and layout planning",
+      "Consistent visual system",
+      "Designed for real content",
+      "Built with accessibility in mind",
+    ],
+    icon: "layers",
+  },
+  {
+    slug: "seo-foundations",
+    title: "SEO Foundations",
+    summary:
+      "The technical basics that help your site get found on search engines.",
+    description:
+      "We handle the technical side of SEO, structure, page speed, metadata, so your content has a fair chance to rank.",
+    features: [
+      "Clean, semantic HTML structure",
+      "Fast page load times",
+      "Proper titles and meta descriptions",
+      "Sitemap and search engine setup",
+    ],
+    icon: "search",
+  },
+  {
     slug: "website-support",
     title: "Website Support",
     summary:
@@ -107,22 +137,22 @@ export const SERVICES: Service[] = [
 export const PRICING_PLANS: PricingPlan[] = [
   {
     name: "Starter Website",
-    price: "From €399",
+    price: "From €299",
     description: "A small, focused website to get your business online.",
   },
   {
     name: "Business Website",
-    price: "From €699",
+    price: "From €499",
     description: "A complete website built around your business and content.",
   },
   {
     name: "Online Store",
-    price: "From €999",
+    price: "From €799",
     description: "For businesses that want to sell products online.",
   },
   {
     name: "Custom Web Application",
-    price: "From €1,499",
+    price: "From €1,299",
     description:
       "For web applications, portals and anything beyond a standard website.",
   },
@@ -300,7 +330,7 @@ export const FAQ_ITEMS: FaqItem[] = [
   {
     question: "How much does a website cost?",
     answer:
-      "Most ZEVREN projects start from €399. The final price depends on the size and requirements of the project.",
+      "Most ZEVREN projects start from €299. The final price depends on the size and requirements of the project.",
   },
   {
     question: "How long does a website take?",
@@ -312,13 +342,28 @@ export const FAQ_ITEMS: FaqItem[] = [
     answer: "Yes. We can improve an existing website or rebuild it when necessary.",
   },
   {
-    question: "Do you work with businesses outside Maastricht?",
+    question: "Do you work with businesses outside the Netherlands?",
     answer:
-      "Yes. Maastricht is where the studio is based, not a limit on who we work with. We work remotely with businesses across the Netherlands and internationally.",
+      "Yes. Maastricht is where the studio is based, not a limit on who we work with. We work remotely with businesses anywhere.",
+  },
+  {
+    question: "Can you build an online store?",
+    answer:
+      "Yes. From a simple product catalogue to a full store with checkout, we can build it and set it up so you can manage it yourself.",
+  },
+  {
+    question: "Can you build custom web applications?",
+    answer:
+      "Yes. If a standard website is not enough, we build dashboards, portals and tools built around how your business actually works.",
   },
   {
     question: "Do you provide support after launch?",
     answer:
       "Yes. Support can be arranged after the website goes live, from small fixes to bigger changes.",
+  },
+  {
+    question: "Can I update the website myself?",
+    answer:
+      "Yes. We build websites so you can edit the content yourself, and we are available if you need something changed for you.",
   },
 ];

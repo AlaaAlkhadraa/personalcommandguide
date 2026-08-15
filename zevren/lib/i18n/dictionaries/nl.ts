@@ -20,6 +20,7 @@ const nl: Dictionary = {
     builtIn: "Gebouwd in Maastricht.",
     privacyPolicy: "Privacybeleid",
     termsAndConditions: "Algemene Voorwaarden",
+    languagesHeading: "Beschikbaar in het Engels, Nederlands, Duits, Frans, Spaans en Arabisch.",
   },
   home: {
     hero: {
@@ -122,6 +123,30 @@ const nl: Dictionary = {
           "Gebouwd rond jouw specifieke proces",
         ],
       },
+      "ui-ux-design": {
+        title: "UI/UX Design",
+        summary: "Interfaces die prettig zijn om te gebruiken, niet alleen mooi om te zien.",
+        description:
+          "Voordat er code wordt geschreven, bepalen we hoe de site moet aanvoelen. Duidelijke indeling, logische navigatie, geen giswerk.",
+        features: [
+          "Wireframes en indeling",
+          "Consistent visueel systeem",
+          "Ontworpen voor echte content",
+          "Gebouwd met toegankelijkheid in gedachten",
+        ],
+      },
+      "seo-foundations": {
+        title: "SEO-basis",
+        summary: "De technische basis die helpt om gevonden te worden in zoekmachines.",
+        description:
+          "Wij regelen de technische kant van SEO, structuur, laadsnelheid, metadata, zodat je content een eerlijke kans krijgt om te ranken.",
+        features: [
+          "Schone, semantische HTML-structuur",
+          "Snelle laadtijden",
+          "Correcte titels en metabeschrijvingen",
+          "Sitemap en zoekmachine-instellingen",
+        ],
+      },
       "website-support": {
         title: "Website-ondersteuning",
         summary: "Doorlopende updates, reparaties en verbeteringen nadat je website live is.",
@@ -137,10 +162,10 @@ const nl: Dictionary = {
   },
   pricing: {
     plans: {
-      starter: { name: "Starter Website", price: "399", description: "Een kleine, gerichte website om je bedrijf online te krijgen." },
-      business: { name: "Business Website", price: "699", description: "Een complete website, gebouwd rond je bedrijf en content." },
-      store: { name: "Webshop", price: "999", description: "Voor bedrijven die producten online willen verkopen." },
-      custom: { name: "Maatwerk Webapplicatie", price: "1.499", description: "Voor webapplicaties, portalen en alles wat verder gaat dan een standaardwebsite." },
+      starter: { name: "Starter Website", price: "299", description: "Een kleine, gerichte website om je bedrijf online te krijgen." },
+      business: { name: "Business Website", price: "499", description: "Een complete website, gebouwd rond je bedrijf en content." },
+      store: { name: "Webshop", price: "799", description: "Voor bedrijven die producten online willen verkopen." },
+      custom: { name: "Maatwerk Webapplicatie", price: "1.299", description: "Voor webapplicaties, portalen en alles wat verder gaat dan een standaardwebsite." },
     },
   },
   whyZevren: {
@@ -162,11 +187,14 @@ const nl: Dictionary = {
   },
   faq: {
     items: [
-      { question: "Wat kost een website?", answer: "De meeste ZEVREN-projecten beginnen vanaf €399. De uiteindelijke prijs hangt af van de omvang en eisen van het project." },
+      { question: "Wat kost een website?", answer: "De meeste ZEVREN-projecten beginnen vanaf €299. De uiteindelijke prijs hangt af van de omvang en eisen van het project." },
       { question: "Hoe lang duurt een website?", answer: "De doorlooptijd hangt af van het project. We geven je een duidelijke inschatting voordat de ontwikkeling begint." },
       { question: "Kunnen jullie een bestaande website vernieuwen?", answer: "Ja. We kunnen een bestaande website verbeteren of, indien nodig, opnieuw opbouwen." },
-      { question: "Werken jullie ook met bedrijven buiten Maastricht?", answer: "Ja. Maastricht is waar de studio is gevestigd, geen grens voor wie we helpen. We werken op afstand met bedrijven in heel Nederland en internationaal." },
+      { question: "Werken jullie ook met bedrijven buiten Nederland?", answer: "Ja. Maastricht is waar de studio is gevestigd, geen grens voor wie we helpen. We werken op afstand met bedrijven overal." },
+      { question: "Kunnen jullie een webshop bouwen?", answer: "Ja. Van een simpele productcatalogus tot een volledige webshop met afrekenen, we bouwen het en zetten het zo op dat je het zelf kunt beheren." },
+      { question: "Kunnen jullie maatwerk webapplicaties bouwen?", answer: "Ja. Als een standaardwebsite niet genoeg is, bouwen we dashboards, portalen en tools die aansluiten op hoe jouw bedrijf echt werkt." },
       { question: "Bieden jullie ondersteuning na de lancering?", answer: "Ja. Ondersteuning kan worden geregeld nadat de website live staat, van kleine reparaties tot grotere aanpassingen." },
+      { question: "Kan ik de website zelf aanpassen?", answer: "Ja. We bouwen websites zodat je zelf de content kunt bewerken, en we staan klaar als je iets voor je uitgevoerd wilt hebben." },
     ],
   },
   about: {
@@ -261,6 +289,8 @@ const nl: Dictionary = {
     seeMoreWork: "Bekijk meer werk",
     conceptDisclaimer: "ZEVREN CONCEPT: een websiteconcept gemaakt door ZEVREN om te laten zien hoe dit soort digitale ervaring zou kunnen werken.",
     realDisclaimer: "ZEVREN ECHT PROJECT: een website gemaakt door ZEVREN voor een echt bedrijf.",
+    realProjectsHeading: "Echte projecten",
+    conceptProjectsHeading: "Websiteconcepten",
     visitLiveWebsite: "Bekijk live website",
     liveWebsiteNote: "Dit is een echt, live project. Bezoek de website om het volledig te zien.",
     items: {
@@ -381,6 +411,9 @@ const nl: Dictionary = {
       selectDate: "Kies een datum",
       selectTime: "Kies een tijd",
       kenteken: "Kenteken",
+      lookupButton: "Voertuig opzoeken",
+      lookupNote: "Demo voertuigopzoeking. Niet gekoppeld aan het RDW-kentekenregister.",
+      vehicleFoundLabel: "Voertuig gevonden:",
       carBrand: "Automerk",
       selectBrand: "Kies merk",
       model: "Model",

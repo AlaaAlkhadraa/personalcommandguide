@@ -102,10 +102,11 @@ export function Footer({ dict, navDict }: FooterProps) {
       </div>
 
       <div className="border-t border-white/10">
-        <div className="container-page flex flex-col items-center justify-between gap-2 py-6 text-xs text-muted sm:flex-row">
+        <div className="container-page flex flex-col items-center justify-between gap-2 py-6 text-center text-xs text-muted sm:flex-row sm:text-start">
           <span>
             &copy; {year} {SITE_CONFIG.legalName}. {dict.allRightsReserved}
           </span>
+          <span>{dict.languagesHeading}</span>
           <span>{dict.builtIn}</span>
         </div>
       </div>

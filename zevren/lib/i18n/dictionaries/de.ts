@@ -20,6 +20,7 @@ const de: Dictionary = {
     builtIn: "Gebaut in Maastricht.",
     privacyPolicy: "Datenschutzerklärung",
     termsAndConditions: "AGB",
+    languagesHeading: "Verfügbar auf Englisch, Niederländisch, Deutsch, Französisch, Spanisch und Arabisch.",
   },
   home: {
     hero: {
@@ -122,6 +123,30 @@ const de: Dictionary = {
           "Gebaut nach Ihrem spezifischen Prozess",
         ],
       },
+      "ui-ux-design": {
+        title: "UI/UX-Design",
+        summary: "Oberflächen, die sich gut bedienen lassen, nicht nur gut aussehen.",
+        description:
+          "Bevor Code geschrieben wird, klären wir, wie sich die Website anfühlen soll. Klare Layouts, sinnvolle Navigation, kein Rätselraten.",
+        features: [
+          "Wireframes und Layout-Planung",
+          "Konsistentes visuelles System",
+          "Für echte Inhalte gestaltet",
+          "Mit Barrierefreiheit im Blick entwickelt",
+        ],
+      },
+      "seo-foundations": {
+        title: "SEO-Grundlagen",
+        summary: "Die technische Basis, die hilft, in Suchmaschinen gefunden zu werden.",
+        description:
+          "Wir kümmern uns um die technische Seite von SEO, Struktur, Ladezeit, Metadaten, damit Ihre Inhalte eine faire Chance haben zu ranken.",
+        features: [
+          "Sauberer, semantischer HTML-Aufbau",
+          "Schnelle Ladezeiten",
+          "Passende Titel und Meta-Beschreibungen",
+          "Sitemap und Suchmaschinen-Einrichtung",
+        ],
+      },
       "website-support": {
         title: "Website-Betreuung",
         summary: "Laufende Updates, Fehlerbehebungen und Verbesserungen nach dem Launch Ihrer Website.",
@@ -137,10 +162,10 @@ const de: Dictionary = {
   },
   pricing: {
     plans: {
-      starter: { name: "Starter-Website", price: "399", description: "Eine kleine, fokussierte Website, um online zu starten." },
-      business: { name: "Business-Website", price: "699", description: "Eine vollständige Website, aufgebaut rund um Ihr Unternehmen und Ihre Inhalte." },
-      store: { name: "Onlineshop", price: "999", description: "Für Unternehmen, die Produkte online verkaufen möchten." },
-      custom: { name: "Individuelle Webanwendung", price: "1.499", description: "Für Webanwendungen, Portale und alles jenseits einer Standard-Website." },
+      starter: { name: "Starter-Website", price: "299", description: "Eine kleine, fokussierte Website, um online zu starten." },
+      business: { name: "Business-Website", price: "499", description: "Eine vollständige Website, aufgebaut rund um Ihr Unternehmen und Ihre Inhalte." },
+      store: { name: "Onlineshop", price: "799", description: "Für Unternehmen, die Produkte online verkaufen möchten." },
+      custom: { name: "Individuelle Webanwendung", price: "1.299", description: "Für Webanwendungen, Portale und alles jenseits einer Standard-Website." },
     },
   },
   whyZevren: {
@@ -162,11 +187,14 @@ const de: Dictionary = {
   },
   faq: {
     items: [
-      { question: "Was kostet eine Website?", answer: "Die meisten ZEVREN-Projekte starten ab 399 €. Der endgültige Preis hängt vom Umfang und den Anforderungen des Projekts ab." },
+      { question: "Was kostet eine Website?", answer: "Die meisten ZEVREN-Projekte starten ab 299 €. Der endgültige Preis hängt vom Umfang und den Anforderungen des Projekts ab." },
       { question: "Wie lange dauert eine Website?", answer: "Die Dauer hängt vom Projekt ab. Wir geben Ihnen eine klare Einschätzung, bevor die Entwicklung beginnt." },
       { question: "Können Sie eine bestehende Website neu gestalten?", answer: "Ja. Wir können eine bestehende Website verbessern oder bei Bedarf neu aufbauen." },
-      { question: "Arbeiten Sie auch mit Unternehmen außerhalb von Maastricht?", answer: "Ja. Maastricht ist der Sitz des Studios, keine Grenze dafür, mit wem wir arbeiten. Wir arbeiten remote mit Unternehmen in den Niederlanden und international." },
+      { question: "Arbeiten Sie auch mit Unternehmen außerhalb der Niederlande?", answer: "Ja. Maastricht ist der Sitz des Studios, keine Grenze dafür, mit wem wir arbeiten. Wir arbeiten remote mit Unternehmen überall." },
+      { question: "Können Sie einen Onlineshop bauen?", answer: "Ja. Von einem einfachen Produktkatalog bis zu einem vollständigen Shop mit Checkout, wir bauen ihn und richten ihn so ein, dass Sie ihn selbst verwalten können." },
+      { question: "Können Sie individuelle Webanwendungen entwickeln?", answer: "Ja. Wenn eine Standard-Website nicht ausreicht, bauen wir Dashboards, Portale und Tools, die genau zu Ihrer Arbeitsweise passen." },
       { question: "Bieten Sie Support nach dem Launch?", answer: "Ja. Support kann nach dem Launch vereinbart werden, von kleinen Korrekturen bis zu größeren Änderungen." },
+      { question: "Kann ich die Website selbst aktualisieren?", answer: "Ja. Wir bauen Websites so, dass Sie die Inhalte selbst bearbeiten können, und stehen bereit, wenn Sie etwas für Sie erledigt haben möchten." },
     ],
   },
   about: {
@@ -261,6 +289,8 @@ const de: Dictionary = {
     seeMoreWork: "Weitere Arbeiten ansehen",
     conceptDisclaimer: "ZEVREN-KONZEPT: ein Website-Konzept, das ZEVREN entwickelt hat, um zu zeigen, wie diese Art von digitalem Erlebnis funktionieren könnte.",
     realDisclaimer: "ZEVREN REALES PROJEKT: eine Website, die ZEVREN für ein reales Unternehmen entwickelt hat.",
+    realProjectsHeading: "Reale Projekte",
+    conceptProjectsHeading: "Website-Konzepte",
     visitLiveWebsite: "Live-Website besuchen",
     liveWebsiteNote: "Dies ist ein reales, live geschaltetes Projekt. Besuchen Sie die Website, um sie vollständig zu sehen.",
     items: {
@@ -381,6 +411,9 @@ const de: Dictionary = {
       selectDate: "Datum wählen",
       selectTime: "Uhrzeit wählen",
       kenteken: "Kennzeichen",
+      lookupButton: "Fahrzeug abfragen",
+      lookupNote: "Demo-Fahrzeugabfrage. Nicht mit dem niederländischen RDW-Register verbunden.",
+      vehicleFoundLabel: "Fahrzeug gefunden:",
       carBrand: "Automarke",
       selectBrand: "Marke wählen",
       model: "Modell",

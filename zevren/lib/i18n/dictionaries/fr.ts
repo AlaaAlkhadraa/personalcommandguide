@@ -20,6 +20,7 @@ const fr: Dictionary = {
     builtIn: "Conçu à Maastricht.",
     privacyPolicy: "Politique de confidentialité",
     termsAndConditions: "Conditions générales",
+    languagesHeading: "Disponible en anglais, néerlandais, allemand, français, espagnol et arabe.",
   },
   home: {
     hero: {
@@ -122,6 +123,30 @@ const fr: Dictionary = {
           "Conçu autour de votre processus spécifique",
         ],
       },
+      "ui-ux-design": {
+        title: "Design UI/UX",
+        summary: "Des interfaces agréables à utiliser, pas seulement belles à regarder.",
+        description:
+          "Avant d'écrire du code, nous définissons comment le site doit se ressentir à l'usage. Mise en page claire, navigation logique, rien à deviner.",
+        features: [
+          "Wireframes et plan de mise en page",
+          "Système visuel cohérent",
+          "Conçu pour du contenu réel",
+          "Pensé pour l'accessibilité",
+        ],
+      },
+      "seo-foundations": {
+        title: "Bases SEO",
+        summary: "Les fondamentaux techniques pour être trouvé sur les moteurs de recherche.",
+        description:
+          "Nous prenons en charge le volet technique du SEO, structure, vitesse de chargement, métadonnées, pour donner à votre contenu une vraie chance d'être bien classé.",
+        features: [
+          "Structure HTML propre et sémantique",
+          "Temps de chargement rapides",
+          "Titres et méta-descriptions adaptés",
+          "Sitemap et configuration pour les moteurs de recherche",
+        ],
+      },
       "website-support": {
         title: "Maintenance de site",
         summary: "Mises à jour, corrections et améliorations continues après la mise en ligne de votre site.",
@@ -137,10 +162,10 @@ const fr: Dictionary = {
   },
   pricing: {
     plans: {
-      starter: { name: "Site Starter", price: "399", description: "Un site petit et ciblé pour lancer votre présence en ligne." },
-      business: { name: "Site Business", price: "699", description: "Un site complet construit autour de votre entreprise et de votre contenu." },
-      store: { name: "Boutique en ligne", price: "999", description: "Pour les entreprises qui veulent vendre des produits en ligne." },
-      custom: { name: "Application web sur mesure", price: "1 499", description: "Pour les applications web, portails et tout ce qui va au-delà d'un site standard." },
+      starter: { name: "Site Starter", price: "299", description: "Un site petit et ciblé pour lancer votre présence en ligne." },
+      business: { name: "Site Business", price: "499", description: "Un site complet construit autour de votre entreprise et de votre contenu." },
+      store: { name: "Boutique en ligne", price: "799", description: "Pour les entreprises qui veulent vendre des produits en ligne." },
+      custom: { name: "Application web sur mesure", price: "1 299", description: "Pour les applications web, portails et tout ce qui va au-delà d'un site standard." },
     },
   },
   whyZevren: {
@@ -162,11 +187,14 @@ const fr: Dictionary = {
   },
   faq: {
     items: [
-      { question: "Combien coûte un site web ?", answer: "La plupart des projets ZEVREN démarrent à partir de 399 €. Le tarif final dépend de l'ampleur et des exigences du projet." },
+      { question: "Combien coûte un site web ?", answer: "La plupart des projets ZEVREN démarrent à partir de 299 €. Le tarif final dépend de l'ampleur et des exigences du projet." },
       { question: "Combien de temps prend un site web ?", answer: "Le délai dépend du projet. Nous vous donnerons une estimation claire avant le début du développement." },
       { question: "Pouvez-vous refaire un site existant ?", answer: "Oui. Nous pouvons améliorer un site existant ou le reconstruire si nécessaire." },
-      { question: "Travaillez-vous avec des entreprises en dehors de Maastricht ?", answer: "Oui. Maastricht est le siège du studio, pas une limite à qui nous aidons. Nous travaillons à distance avec des entreprises aux Pays-Bas et à l'international." },
+      { question: "Travaillez-vous avec des entreprises en dehors des Pays-Bas ?", answer: "Oui. Maastricht est le siège du studio, pas une limite à qui nous aidons. Nous travaillons à distance avec des entreprises partout." },
+      { question: "Pouvez-vous créer une boutique en ligne ?", answer: "Oui. D'un simple catalogue de produits à une boutique complète avec paiement, nous la construisons et la configurons pour que vous puissiez la gérer vous-même." },
+      { question: "Pouvez-vous développer des applications web sur mesure ?", answer: "Oui. Si un site standard ne suffit pas, nous construisons des tableaux de bord, portails et outils adaptés à votre façon de travailler." },
       { question: "Proposez-vous un support après le lancement ?", answer: "Oui. Un support peut être mis en place après la mise en ligne du site, des petites corrections aux modifications plus importantes." },
+      { question: "Puis-je mettre à jour le site moi-même ?", answer: "Oui. Nous construisons les sites pour que vous puissiez modifier le contenu vous-même, et nous restons disponibles si vous préférez que nous nous en chargions." },
     ],
   },
   about: {
@@ -261,6 +289,8 @@ const fr: Dictionary = {
     seeMoreWork: "Voir plus de réalisations",
     conceptDisclaimer: "CONCEPT ZEVREN : un concept de site web créé par ZEVREN pour démontrer comment ce type d'expérience numérique pourrait fonctionner.",
     realDisclaimer: "PROJET RÉEL ZEVREN : un site web créé par ZEVREN pour une entreprise réelle.",
+    realProjectsHeading: "Projets réels",
+    conceptProjectsHeading: "Concepts de sites web",
     visitLiveWebsite: "Visiter le site en ligne",
     liveWebsiteNote: "Il s'agit d'un projet réel et en ligne. Visitez le site pour le voir dans son intégralité.",
     items: {
@@ -381,6 +411,9 @@ const fr: Dictionary = {
       selectDate: "Choisir une date",
       selectTime: "Choisir un horaire",
       kenteken: "Immatriculation",
+      lookupButton: "Rechercher le véhicule",
+      lookupNote: "Recherche de véhicule de démonstration. Non connectée au registre RDW néerlandais.",
+      vehicleFoundLabel: "Véhicule trouvé :",
       carBrand: "Marque du véhicule",
       selectBrand: "Choisir la marque",
       model: "Modèle",

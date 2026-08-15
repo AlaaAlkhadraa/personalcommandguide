@@ -17,6 +17,7 @@ export interface Dictionary {
     builtIn: string;
     privacyPolicy: string;
     termsAndConditions: string;
+    languagesHeading: string;
   };
   home: {
     hero: {
@@ -48,7 +49,12 @@ export interface Dictionary {
     notSureBody: string;
     notSureCta: string;
     list: Record<
-      "websites" | "online-stores" | "web-applications" | "website-support",
+      | "websites"
+      | "online-stores"
+      | "web-applications"
+      | "ui-ux-design"
+      | "seo-foundations"
+      | "website-support",
       { title: string; summary: string; description: string; features: string[] }
     >;
   };
@@ -128,6 +134,8 @@ export interface Dictionary {
     realDisclaimer: string;
     visitLiveWebsite: string;
     liveWebsiteNote: string;
+    realProjectsHeading: string;
+    conceptProjectsHeading: string;
     items: Record<
       | "tajex-logistics"
       | "barbershop-website"
@@ -212,6 +220,9 @@ export interface Dictionary {
       selectDate: string;
       selectTime: string;
       kenteken: string;
+      lookupButton: string;
+      lookupNote: string;
+      vehicleFoundLabel: string;
       carBrand: string;
       selectBrand: string;
       model: string;
