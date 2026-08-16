@@ -7,38 +7,30 @@ import { ZMark } from "@/components/three/ZMark";
 interface Scene3DProps {
   reducedMotion: boolean;
   scrollProgressRef: React.RefObject<number>;
+  /** Mobile gets a lighter scene: fewer particles, no floor reflection, lower dpr. */
+  lowPower?: boolean;
 }
 
-export function Scene3D({ reducedMotion, scrollProgressRef }: Scene3DProps) {
+export function Scene3D({ reducedMotion, scrollProgressRef, lowPower = false }: Scene3DProps) {
   return (
     <Canvas
-      camera={{ position: [0.5, 0.45, 6.4], fov: 42 }}
-      dpr={[1, 1.75]}
-      gl={{ antialias: true, alpha: true }}
+      camera={{ position: [0.4, 0.35, 5.6], fov: 42 }}
+      dpr={lowPower ? [1, 1.25] : [1, 1.75]}
+      gl={{ antialias: !lowPower, alpha: true }}
     >
-      <ambientLight intensity={0.12} />
+      <ambientLight intensity={0.35} />
 
-      {/* Key light, cool and from the front-right */}
-      <spotLight
-        position={[4, 4, 5]}
-        angle={0.6}
-        penumbra={1}
-        intensity={90}
-        color="#93c5fd"
-      />
-      {/* Rim light from behind-left to separate the Z from the background */}
-      <pointLight position={[-4, 1.5, -3]} intensity={55} color="#1d4ed8" />
-      {/* Blue spill onto the platform and floor. Kept well below and in
-          front so it grazes the rocks rather than blowing out the Z face. */}
+      {/* Key light, cool and front-right */}
+      <spotLight position={[4, 4, 5]} angle={0.6} penumbra={1} intensity={70} color="#bfdbfe" />
+      {/* Rim light from behind-left to separate the Z from the dark background */}
+      <pointLight position={[-4, 1.5, -3]} intensity={45} color="#1d4ed8" />
+      {/* Blue spill low and in front, grazing the base */}
       <pointLight position={[0, -2.1, 2.4]} intensity={16} color="#3b82f6" />
-      {/* Soft top fill */}
-      <pointLight position={[0, 4, 1]} intensity={18} color="#ffffff" />
+      <pointLight position={[0, 4, 1]} intensity={14} color="#ffffff" />
 
-      {/* Procedural environment: no external HDR fetch, so it works under
-          the site's strict connect-src CSP. */}
+      {/* Procedural environment: no external HDR fetch, so it works under the
+          site's strict connect-src CSP. */}
       <Environment resolution={256}>
-        {/* Small, bright, well-separated sources so the metal picks up
-            distinct specular streaks instead of a uniform blue wash. */}
         <Lightformer intensity={3} color="#ffffff" position={[3.5, 2.5, 3]} scale={[1.6, 4, 1]} />
         <Lightformer intensity={2.2} color="#60a5fa" position={[-3.5, 1, 2.5]} scale={[1.2, 3.5, 1]} />
         <Lightformer intensity={1.6} color="#1d4ed8" position={[0, 3.5, -2]} scale={[5, 1.2, 1]} />
@@ -46,9 +38,14 @@ export function Scene3D({ reducedMotion, scrollProgressRef }: Scene3DProps) {
 
       <ZMark reducedMotion={reducedMotion} scrollProgressRef={scrollProgressRef} />
 
+      {/* No ground plane here on purpose: the model ships with its own rock
+          base, and any added floor renders darker than the page background,
+          showing as a visible slab behind the hero. Reflections come from the
+          environment map on the model's own material instead. */}
+
       {!reducedMotion && (
         <Sparkles
-          count={90}
+          count={lowPower ? 35 : 80}
           scale={9}
           size={1.6}
           speed={0.22}

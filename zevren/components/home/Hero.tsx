@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useRef } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/Button";
 import { useWebGLSupport } from "@/lib/hooks/use-webgl-support";
@@ -17,6 +17,7 @@ export function Hero({ dict }: { dict: Dictionary["home"]["hero"] }) {
   const webGLSupported = useWebGLSupport();
   const reducedMotion = useReducedMotion();
   const scrollProgressRef = useRef(0);
+  const [lowPower, setLowPower] = useState(false);
 
   useEffect(() => {
     function handleScroll() {
@@ -27,6 +28,16 @@ export function Hero({ dict }: { dict: Dictionary["home"]["hero"] }) {
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Narrow viewports get the lighter scene (no floor reflection, fewer
+  // particles, lower dpr) so the hero stays smooth on phones.
+  useEffect(() => {
+    const query = window.matchMedia("(max-width: 767px)");
+    const update = () => setLowPower(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
   }, []);
 
   return (
@@ -63,6 +74,7 @@ export function Hero({ dict }: { dict: Dictionary["home"]["hero"] }) {
               <Scene3D
                 reducedMotion={reducedMotion}
                 scrollProgressRef={scrollProgressRef}
+                lowPower={lowPower}
               />
             </Suspense>
           ) : (
