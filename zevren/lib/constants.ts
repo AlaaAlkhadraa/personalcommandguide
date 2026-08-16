@@ -178,7 +178,7 @@ export const WORK_ITEMS: WorkItem[] = [
   },
   {
     slug: "barbershop-website",
-    name: "Zeven Cuts",
+    name: "Barbershop Website",
     category: "Barbershop",
     description:
       "A modern barbershop website with online booking, service selection and a simple customer experience.",
