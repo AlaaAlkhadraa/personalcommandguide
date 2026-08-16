@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { WORK_DEMOS } from "@/components/work/registry";
+import { TajexDemo } from "@/components/demos/tajex/TajexDemo";
 import { WORK_ITEMS } from "@/lib/constants";
 import { buildMetadata } from "@/lib/seo";
 import { getLocale } from "@/lib/i18n/get-locale";
@@ -86,14 +87,10 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
       <section className="py-16">
         <Container>
-          {Demo && demoDict && <Demo dict={demoDict} common={dict.demoCommon} />}
-          {!Demo && project.liveUrl && (
-            <div className="flex flex-col items-center gap-5 rounded-2xl border border-emerald-400/20 bg-emerald-400/5 px-6 py-16 text-center">
-              <p className="max-w-md text-sm leading-relaxed text-muted">{w.liveWebsiteNote}</p>
-              <Button href={project.liveUrl} external>
-                {w.visitLiveWebsite}
-              </Button>
-            </div>
+          {project.slug === "tajex-logistics" ? (
+            <TajexDemo common={dict.demoCommon} />
+          ) : (
+            Demo && demoDict && <Demo dict={demoDict} common={dict.demoCommon} />
           )}
         </Container>
       </section>

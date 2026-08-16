@@ -296,9 +296,9 @@ const de: Dictionary = {
     items: {
       "tajex-logistics": {
         category: "Logistik",
-        description: "Die Live-Website für Tajex Logistics, ein Logistikunternehmen. Entworfen und entwickelt von ZEVREN.",
-        whatWeExplored: "Dies ist ein reales, abgeschlossenes Projekt. ZEVREN hat die Website für Tajex Logistics entworfen und entwickelt, mit Fokus auf einen klaren, professionellen Online-Auftritt für das Unternehmen.",
-        keyFeatures: ["Individuelles Webdesign", "Responsive auf allen Geräten", "Professioneller Unternehmensauftritt", "Für einen realen Kunden umgesetzt"],
+        description: "Internationale Logistik, RoRo-Transport, Container, Spedition und Zoll, zwischen Europa und dem Nahen Osten.",
+        whatWeExplored: "Tajex Logistics ist ein reales, abgeschlossenes Projekt. Diese Seite zeigt die Struktur, Dienstleistungen und Sendungsverfolgung der Website, nachgebaut als interaktives Projekt innerhalb von ZEVREN, neben der echten Live-Website.",
+        keyFeatures: ["Dienstleistungsseiten für Transport, Container und Spedition", "Sendungsverfolgung mit Status", "Angebotsanfrage", "Zoll und grenzüberschreitende Logistik"],
       },
       "barbershop-website": {
         category: "Friseursalon",

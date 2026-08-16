@@ -296,9 +296,9 @@ const nl: Dictionary = {
     items: {
       "tajex-logistics": {
         category: "Logistiek",
-        description: "De live website voor Tajex Logistics, een logistiek bedrijf. Ontworpen en gebouwd door ZEVREN.",
-        whatWeExplored: "Dit is een echt, opgeleverd project. ZEVREN heeft de website voor Tajex Logistics ontworpen en gebouwd, gericht op een duidelijke, professionele online aanwezigheid voor het bedrijf.",
-        keyFeatures: ["Website op maat", "Responsive op alle apparaten", "Professionele bedrijfsuitstraling", "Opgeleverd voor een echte klant"],
+        description: "Internationale logistiek, RoRo-transport, containers, forwarding en douane, tussen Europa en het Midden-Oosten.",
+        whatWeExplored: "Tajex Logistics is een echt, opgeleverd project. Deze pagina toont de structuur, diensten en track & trace van de site, herbouwd als interactief project binnen ZEVREN, naast de echte live website.",
+        keyFeatures: ["Dienstenpagina's voor transport, containers en forwarding", "Track & trace met zendingsstatus", "Offerteaanvraag", "Douane en grensoverschrijdende logistiek"],
       },
       "barbershop-website": {
         category: "Kapperszaak",

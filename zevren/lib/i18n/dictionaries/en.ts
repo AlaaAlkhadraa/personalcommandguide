@@ -296,9 +296,9 @@ const en: Dictionary = {
     items: {
       "tajex-logistics": {
         category: "Logistics",
-        description: "The live website for Tajex Logistics, a logistics company. Designed and built by ZEVREN.",
-        whatWeExplored: "This is a real, delivered project. ZEVREN designed and built the website for Tajex Logistics, focused on a clear, professional online presence for the business.",
-        keyFeatures: ["Custom website design", "Responsive across devices", "Professional business presence", "Delivered for a real client"],
+        description: "International logistics, RoRo transport, containers, forwarding and customs, connecting Europe and the Middle East.",
+        whatWeExplored: "Tajex Logistics is a real, delivered project. This page shows the site's structure, services and track-and-trace flow rebuilt as an interactive project inside ZEVREN, alongside the actual live website.",
+        keyFeatures: ["Service pages for transport, containers and forwarding", "Track and trace with shipment status", "Quote request flow", "Customs and cross-border logistics"],
       },
       "barbershop-website": {
         category: "Barbershop",

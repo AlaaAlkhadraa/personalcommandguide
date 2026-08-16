@@ -166,14 +166,14 @@ export const WORK_ITEMS: WorkItem[] = [
     kind: "real",
     liveUrl: "https://tajexlogistics.nl",
     description:
-      "The live website for Tajex Logistics, a logistics company. Designed and built by ZEVREN.",
+      "International logistics, RoRo transport, containers, forwarding and customs, connecting Europe and the Middle East.",
     whatWeExplored:
-      "This is a real, delivered project. ZEVREN designed and built the website for Tajex Logistics, focused on a clear, professional online presence for the business.",
+      "Tajex Logistics is a real, delivered project. This page shows the site's structure, services and track-and-trace flow rebuilt as an interactive project inside ZEVREN, alongside the actual live website.",
     keyFeatures: [
-      "Custom website design",
-      "Responsive across devices",
-      "Professional business presence",
-      "Delivered for a real client",
+      "Service pages for transport, containers and forwarding",
+      "Track and trace with shipment status",
+      "Quote request flow",
+      "Customs and cross-border logistics",
     ],
   },
   {
