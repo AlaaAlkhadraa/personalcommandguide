@@ -23,6 +23,9 @@ const config: Config = {
         logo: ["var(--font-orbitron)"],
         heading: ["var(--font-space-grotesk)"],
         body: ["var(--font-inter)"],
+        // Scoped to the Tajex concept, which follows its own brand.
+        tajex: ["var(--font-tajex)", "system-ui", "sans-serif"],
+        "tajex-mono": ["var(--font-tajex-mono)", "ui-monospace", "monospace"],
       },
       backgroundImage: {
         "grid-glow":

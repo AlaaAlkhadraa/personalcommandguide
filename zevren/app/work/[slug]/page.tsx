@@ -93,7 +93,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       <section className="py-16">
         <Container>
           {project.slug === "tajex-logistics" ? (
-            <TajexDemo common={dict.demoCommon} />
+            <TajexDemo />
           ) : (
             Demo && demoDict && <Demo dict={demoDict} common={dict.demoCommon} />
           )}

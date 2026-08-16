@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
-import { Inter, Orbitron, Space_Grotesk } from "next/font/google";
+import {
+  IBM_Plex_Mono,
+  Inter,
+  Orbitron,
+  Plus_Jakarta_Sans,
+  Space_Grotesk,
+} from "next/font/google";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -27,6 +33,24 @@ const orbitron = Orbitron({
   variable: "--font-orbitron",
   display: "swap",
   weight: ["600", "700"],
+});
+
+// Only the Tajex concept uses these two. preload is off so the other pages do
+// not fetch font files they never render with.
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-tajex",
+  display: "swap",
+  preload: false,
+  weight: ["400", "500", "600", "700", "800"],
+});
+
+const plexMono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  variable: "--font-tajex-mono",
+  display: "swap",
+  preload: false,
+  weight: ["400", "500", "600"],
 });
 
 export const metadata: Metadata = {
@@ -93,7 +117,7 @@ export default async function RootLayout({
     <html
       lang={locale}
       dir={dir}
-      className={`${inter.variable} ${spaceGrotesk.variable} ${orbitron.variable}`}
+      className={`${inter.variable} ${spaceGrotesk.variable} ${orbitron.variable} ${plusJakarta.variable} ${plexMono.variable}`}
     >
       <body className="flex min-h-screen flex-col">
         <JsonLd data={organizationJsonLd} nonce={nonce} />
