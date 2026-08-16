@@ -26,6 +26,8 @@ const config: Config = {
         // Scoped to the Tajex concept, which follows its own brand.
         tajex: ["var(--font-tajex)", "system-ui", "sans-serif"],
         "tajex-mono": ["var(--font-tajex-mono)", "ui-monospace", "monospace"],
+        // Shared by the concept demos for small uppercase labels.
+        mono: ["var(--font-tajex-mono)", "ui-monospace", "monospace"],
       },
       backgroundImage: {
         "grid-glow":

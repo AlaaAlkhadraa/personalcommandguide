@@ -192,6 +192,33 @@ export interface Dictionary {
       summaryContact: string;
       confirmAppointment: string;
       confirmedTitle: string;
+      site: {
+        navHome: string;
+        navGallery: string;
+        navAbout: string;
+        navBook: string;
+        heroCtaSecondary: string;
+        servicesSubtitle: string;
+        teamSubtitle: string;
+        gallerySubtitle: string;
+        reviewsSubtitle: string;
+        whyHeading: string;
+        why: { title: string; description: string }[];
+        aboutHeading: string;
+        aboutSubtitle: string;
+        aboutParagraphs: string[];
+        hoursNote: string;
+        contactSubtitle: string;
+        addressLabel: string;
+        formHeading: string;
+        formMessage: string;
+        formSubmit: string;
+        formSuccessTitle: string;
+        formSuccessBody: string;
+        formErrors: { name: string; email: string; message: string };
+        ctaTitle: string;
+        ctaBody: string;
+      };
     };
     garage: {
       navServices: string;
