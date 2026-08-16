@@ -119,6 +119,7 @@ export interface TajexCopy {
     phone: string;
     trackLabel: string;
     trackValue: string;
+    openInMaps: string;
     checklistEyebrow: string;
     checklistTitle: string;
     checklistSubtitle: string;
@@ -681,6 +682,7 @@ export const TAJEX_COPY: Record<TajexLang, TajexCopy> = {
       phone: "+31 (0) 6288 322 67",
       trackLabel: "Zending volgen",
       trackValue: "Open track & trace",
+      openInMaps: "Bekijk op Google Maps",
       checklistEyebrow: "Een scherpe offerte",
       checklistTitle: "Wat we van je nodig hebben",
       checklistSubtitle:
@@ -1090,6 +1092,7 @@ export const TAJEX_COPY: Record<TajexLang, TajexCopy> = {
       phone: "+31 (0) 6288 322 67",
       trackLabel: "Track a shipment",
       trackValue: "Open track & trace",
+      openInMaps: "View on Google Maps",
       checklistEyebrow: "A sharp quote",
       checklistTitle: "What we need from you",
       checklistSubtitle:
@@ -1199,3 +1202,7 @@ export const TAJEX_SHIPMENT = {
   destination: "Latakia",
   cargo: "20ft container",
 };
+
+/** Address used for the Google Maps embed on the contact page. */
+export const TAJEX_MAP_QUERY =
+  "TAJEX LOGISTICS BV, Europalaan 35-12, 6199 AB Maastricht, Netherlands";

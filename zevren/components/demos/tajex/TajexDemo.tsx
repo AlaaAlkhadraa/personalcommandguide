@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import {
   TAJEX_COPY,
+  TAJEX_MAP_QUERY,
   TAJEX_SHIPMENT,
   type TajexLang,
   type TajexService,
@@ -13,7 +14,6 @@ import {
   CheckIcon,
   ChevronIcon,
   ContactIcon,
-  MapScene,
   PortBackdrop,
   PostScene,
   SearchIcon,
@@ -790,7 +790,26 @@ export function TajexDemo() {
                 </div>
               </div>
 
-              <MapScene pinLabel={t.contact.addressLines[0] ?? ""} className="mt-12 h-56 rounded-2xl sm:h-64" />
+              {/* Real Google Maps embed. The keyless output=embed form is used
+                  on purpose so no API key ends up in the client bundle. */}
+              <div className="mt-12 overflow-hidden rounded-2xl border border-[#E6EAF2]">
+                <iframe
+                  title={`${t.contact.addressLines.join(", ")}`}
+                  src={`https://www.google.com/maps?q=${encodeURIComponent(TAJEX_MAP_QUERY)}&z=15&output=embed`}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="h-64 w-full border-0 sm:h-80"
+                />
+              </div>
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(TAJEX_MAP_QUERY)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-4 inline-flex items-center gap-1.5 font-tajex-mono text-[11px] uppercase tracking-[0.14em] text-[#E8264C] hover:underline"
+              >
+                {t.contact.openInMaps}
+                <ArrowIcon className="h-3.5 w-3.5" />
+              </a>
             </Shell>
           </section>
 
