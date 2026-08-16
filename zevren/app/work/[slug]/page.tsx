@@ -63,7 +63,6 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     "accounting-firm": "accounting",
   };
   const demoDict = dict.demos[demoDictKey[project.slug]!];
-  const isReal = project.kind === "real";
 
   return (
     <>
@@ -77,12 +76,8 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             {w.allProjects}
           </Link>
           <div className="flex flex-wrap items-center gap-3">
-            <span
-              className={`text-sm font-semibold uppercase tracking-[0.2em] ${
-                isReal ? "text-emerald-400" : "text-accent"
-              }`}
-            >
-              {isReal ? w.realProject : w.websiteConcept}
+            <span className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
+              {w.websiteConcept}
             </span>
             <span className="rounded-full border border-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-muted">
               {copy.category}
@@ -144,11 +139,11 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           <div className="flex flex-col gap-4 sm:flex-row">
             <Button href="/contact">{w.startProject}</Button>
             <Button href="/work" variant="secondary">
-              {isReal ? w.seeMoreWork : w.seeMoreConcepts}
+              {w.seeMoreConcepts}
             </Button>
           </div>
           <p className="pt-6 text-xs text-muted">
-            {isReal ? w.realDisclaimer : w.conceptDisclaimer}
+            {w.conceptDisclaimer}
           </p>
         </Container>
       </section>

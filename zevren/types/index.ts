@@ -21,7 +21,6 @@ export interface WorkItem {
   description: string;
   whatWeExplored: string;
   keyFeatures: string[];
-  kind?: "concept" | "real";
   liveUrl?: string;
 }
 

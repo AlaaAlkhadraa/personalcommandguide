@@ -24,7 +24,6 @@ function WorkCard({
 }) {
   const Preview = WORK_PREVIEWS[item.slug];
   const copy = w.items[item.slug as keyof typeof w.items];
-  const isReal = item.kind === "real";
 
   return (
     <Link
@@ -39,20 +38,14 @@ function WorkCard({
           <span className="text-xs font-semibold uppercase tracking-wider text-accent">
             {copy.category}
           </span>
-          <span
-            className={`rounded-full border px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${
-              isReal
-                ? "border-emerald-400/30 text-emerald-400"
-                : "border-white/10 text-muted"
-            }`}
-          >
-            {isReal ? w.realProject : w.websiteConcept}
+          <span className="rounded-full border border-white/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted">
+            {w.websiteConcept}
           </span>
         </div>
         <h2 className="text-lg font-semibold text-white">{item.name}</h2>
         <p className="text-sm leading-relaxed text-muted">{copy.description}</p>
         <span className="mt-auto flex w-fit items-center gap-1.5 rounded-full border border-white/15 px-4 py-2 text-xs font-semibold text-white transition-colors group-hover:border-accent/60 group-hover:text-accent">
-          {isReal ? w.viewProject : w.viewConcept}
+          {w.viewConcept}
           <span
             aria-hidden="true"
             className="transition-transform group-hover:translate-x-1"

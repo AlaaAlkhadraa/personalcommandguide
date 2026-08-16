@@ -117,9 +117,7 @@ export interface Dictionary {
     subtitle: string;
     concept: string;
     websiteConcept: string;
-    realProject: string;
     viewConcept: string;
-    viewProject: string;
     allConcepts: string;
     allProjects: string;
     whatWeExplored: string;
@@ -129,13 +127,7 @@ export interface Dictionary {
     detailCtaTitle: string;
     detailCtaBody: string;
     seeMoreConcepts: string;
-    seeMoreWork: string;
     conceptDisclaimer: string;
-    realDisclaimer: string;
-    visitLiveWebsite: string;
-    liveWebsiteNote: string;
-    realProjectsHeading: string;
-    conceptProjectsHeading: string;
     items: Record<
       | "tajex-logistics"
       | "barbershop-website"

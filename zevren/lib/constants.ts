@@ -163,12 +163,11 @@ export const WORK_ITEMS: WorkItem[] = [
     slug: "tajex-logistics",
     name: "Tajex Logistics",
     category: "Logistics",
-    kind: "real",
     liveUrl: "https://tajexlogistics.nl",
     description:
       "International logistics, RoRo transport, containers, forwarding and customs, connecting Europe and the Middle East.",
     whatWeExplored:
-      "Tajex Logistics is a real, delivered project. This page shows the site's structure, services and track-and-trace flow rebuilt as an interactive project inside ZEVREN, alongside the actual live website.",
+      "This concept explores how an international logistics company could present transport, containers, forwarding and customs online, with track and trace and a quote request built straight into the site.",
     keyFeatures: [
       "Service pages for transport, containers and forwarding",
       "Track and trace with shipment status",
