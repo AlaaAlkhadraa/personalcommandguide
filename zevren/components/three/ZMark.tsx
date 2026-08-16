@@ -106,21 +106,24 @@ export function ZMark({ reducedMotion, scrollProgressRef }: ZMarkProps) {
 
     const scrollProgress = scrollProgressRef.current ?? 0;
 
+    // Mouse and touch parallax, eased so it never snaps. This is a direct
+    // response to the visitor's own input, so it stays on under reduced
+    // motion: what that setting asks us to drop is unsolicited animation,
+    // and freezing the model entirely reads as a broken 3D scene.
+    target.current.y = state.pointer.x * 0.3 - 0.35;
+    target.current.x = -state.pointer.y * 0.16;
+
+    outer.rotation.y += (target.current.y - outer.rotation.y) * Math.min(delta * 2.2, 1);
+    outer.rotation.x += (target.current.x - outer.rotation.x) * Math.min(delta * 2.2, 1);
+
     if (reducedMotion) {
-      outer.rotation.set(0, -0.35, 0);
+      // Drop everything that moves on its own: no idle drift, no float.
       inner.position.y = 0;
       outer.position.y = -scrollProgress * 0.6;
       return;
     }
 
     const t = state.clock.elapsedTime;
-
-    // Mouse parallax, eased so it never snaps.
-    target.current.y = state.pointer.x * 0.3 - 0.35;
-    target.current.x = -state.pointer.y * 0.16;
-
-    outer.rotation.y += (target.current.y - outer.rotation.y) * Math.min(delta * 2.2, 1);
-    outer.rotation.x += (target.current.x - outer.rotation.x) * Math.min(delta * 2.2, 1);
 
     // Slow idle drift plus a gentle float.
     outer.rotation.y += Math.sin(t * 0.18) * 0.0006;

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { useWebGLSupport } from "@/lib/hooks/use-webgl-support";
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import { StaticZFallback } from "@/components/three/StaticZFallback";
+import { SceneErrorBoundary } from "@/components/three/SceneErrorBoundary";
 import type { Dictionary } from "@/lib/i18n/dictionary-type";
 
 const Scene3D = dynamic(
@@ -70,13 +71,15 @@ export function Hero({ dict }: { dict: Dictionary["home"]["hero"] }) {
           {webGLSupported === false ? (
             <StaticZFallback />
           ) : webGLSupported === true ? (
-            <Suspense fallback={<StaticZFallback />}>
-              <Scene3D
-                reducedMotion={reducedMotion}
-                scrollProgressRef={scrollProgressRef}
-                lowPower={lowPower}
-              />
-            </Suspense>
+            <SceneErrorBoundary>
+              <Suspense fallback={<StaticZFallback />}>
+                <Scene3D
+                  reducedMotion={reducedMotion}
+                  scrollProgressRef={scrollProgressRef}
+                  lowPower={lowPower}
+                />
+              </Suspense>
+            </SceneErrorBoundary>
           ) : (
             <div className="h-full w-full" />
           )}
