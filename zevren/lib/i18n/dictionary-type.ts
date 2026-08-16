@@ -256,6 +256,31 @@ export interface Dictionary {
       confirmAppointment: string;
       confirmedTitle: string;
       vehicleLabel: string;
+      site: {
+        navHome: string;
+        navPrices: string;
+        navBook: string;
+        heroCtaSecondary: string;
+        servicesSubtitle: string;
+        whyHeading: string;
+        why: { title: string; description: string }[];
+        aboutSubtitle: string;
+        aboutParagraphs: string[];
+        hoursNote: string;
+        contactSubtitle: string;
+        addressLabel: string;
+        formHeading: string;
+        formMessage: string;
+        formSubmit: string;
+        formSuccessTitle: string;
+        formSuccessBody: string;
+        formErrors: { name: string; email: string; message: string };
+        ctaTitle: string;
+        ctaBody: string;
+        apkHeading: string;
+        apkBody: string;
+        apkPoints: string[];
+      };
     };
     store: {
       navShop: string;
