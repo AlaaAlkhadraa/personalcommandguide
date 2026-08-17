@@ -2,13 +2,13 @@
 
 import { Suspense, useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
-import Image from "next/image";
-import { Button } from "@/components/ui/Button";
+import { ArrowButton } from "@/components/ui/ArrowButton";
+import { Icon } from "@/components/ui/Icon";
 import { useWebGLSupport } from "@/lib/hooks/use-webgl-support";
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import { StaticZFallback } from "@/components/three/StaticZFallback";
 import { SceneErrorBoundary } from "@/components/three/SceneErrorBoundary";
-import { IMAGES } from "@/lib/assets";
+import { HeroEnvironment } from "@/components/home/HeroEnvironment";
 import type { Dictionary } from "@/lib/i18n/dictionary-type";
 
 // The 3D scene is its own chunk and never lands in the initial bundle. A
@@ -23,6 +23,10 @@ export function Hero({ dict }: { dict: Dictionary["home"]["hero"] }) {
   const reducedMotion = useReducedMotion();
   const scrollProgressRef = useRef(0);
   const [lowPower, setLowPower] = useState(false);
+  // Which slot the mark renders into. Tracked in state rather than shown and
+  // hidden with CSS, because two mounted <Canvas>es would mean two WebGL
+  // contexts and two decodes of the same 1.25 MB model for one visible mark.
+  const [isWide, setIsWide] = useState<boolean | null>(null);
 
   useEffect(() => {
     function handleScroll() {
@@ -45,93 +49,126 @@ export function Hero({ dict }: { dict: Dictionary["home"]["hero"] }) {
     return () => query.removeEventListener("change", update);
   }, []);
 
-  const horizon = IMAGES["hero-horizon"];
-  const floor = IMAGES["hero-floor"];
+  useEffect(() => {
+    const query = window.matchMedia("(min-width: 1024px)");
+    const update = () => setIsWide(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+
+  const mark = (
+    <Mark
+      webGLSupported={webGLSupported}
+      reducedMotion={reducedMotion}
+      scrollProgressRef={scrollProgressRef}
+      lowPower={lowPower}
+    />
+  );
 
   return (
-    <section className="relative overflow-hidden bg-navy">
-      {/* Environment, in three quiet layers. Each one is dimmed hard and
-          masked at the edges: the point is depth behind the Z, not a picture
-          competing with the headline. */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 select-none">
-        <Image
-          src={floor.src}
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          placeholder="blur"
-          blurDataURL={floor.blurDataURL}
-          className="object-cover object-bottom opacity-[0.28] [mask-image:linear-gradient(to_top,black,transparent_75%)]"
-        />
-        <div className="absolute inset-0 bg-hero-glow" />
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-navy to-transparent" />
-      </div>
+    <section className="relative isolate overflow-hidden bg-navy">
+      <HeroEnvironment />
 
-      <div className="container-page relative grid items-center gap-12 py-20 lg:grid-cols-2 lg:gap-16 lg:py-28">
-        <div className="flex animate-fade-up flex-col gap-6">
-          <span className="w-fit rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-xs font-medium uppercase tracking-[0.2em] text-accent">
-            {dict.badge}
+      {/* The mark sits behind the copy on wide screens and above it on
+          narrow ones, so the headline never lands on top of the Z. */}
+      {isWide === true && (
+        <div className="pointer-events-none absolute inset-y-0 end-0 flex w-[62%] items-center justify-center">
+          <div className="pointer-events-auto relative aspect-square w-full max-w-3xl">
+            {mark}
+          </div>
+        </div>
+      )}
+
+      {/* pointer-events-none on the container, auto on the column that
+          actually holds content: the container spans the full width and sits
+          above the mark in paint order, so without this it swallowed every
+          pointer move over the empty half and the model stopped responding. */}
+      <div className="container-page pointer-events-none relative flex flex-col gap-10 pb-14 pt-16 lg:min-h-[42rem] lg:justify-center lg:pb-24 lg:pt-24">
+        <div className="pointer-events-auto flex max-w-xl flex-col gap-6 lg:max-w-[34rem]">
+          <span className="flex items-center gap-4">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-accent">
+              {dict.badge}
+            </span>
+            <span aria-hidden="true" className="h-px w-16 bg-gradient-to-r from-accent to-transparent" />
           </span>
-          <h1 className="font-heading text-4xl font-semibold leading-[1.08] text-white sm:text-5xl lg:text-6xl">
+
+          <h1 className="font-heading text-[2.6rem] font-bold uppercase leading-[0.95] tracking-[-0.02em] text-white sm:text-6xl lg:text-[4.25rem]">
             {dict.titleBefore}{" "}
-            <span className="text-gradient">{dict.titleHighlight}</span>.
+            <span className="text-accent">{dict.titleHighlight}</span>
           </h1>
-          <p className="max-w-lg text-lg leading-relaxed text-muted">
+
+          <p className="max-w-lg text-base leading-relaxed text-muted sm:text-lg">
             {dict.subtitle}
           </p>
-          <div className="flex flex-col gap-4 pt-2 sm:flex-row">
-            <Button href="/contact">{dict.ctaPrimary}</Button>
-            <Button href="/projects" variant="secondary">
+
+          <div className="flex flex-col gap-3 pt-2 sm:flex-row">
+            <ArrowButton href="/contact">{dict.ctaPrimary}</ArrowButton>
+            <ArrowButton href="/projects" variant="outline">
               {dict.ctaSecondary}
-            </Button>
-          </div>
-          <p className="pt-6 text-sm text-muted">{dict.trustLine}</p>
-        </div>
-
-        <div className="relative mx-auto w-full max-w-xl">
-          {/* Glow behind the model, so it sits in the scene instead of on top
-              of a flat panel. */}
-          <Image
-            src={horizon.src}
-            alt=""
-            aria-hidden="true"
-            width={horizon.width}
-            height={horizon.height}
-            priority
-            sizes="(max-width: 1024px) 90vw, 40vw"
-            placeholder="blur"
-            blurDataURL={horizon.blurDataURL}
-            className="pointer-events-none absolute inset-0 h-full w-full select-none rounded-full object-cover opacity-40 blur-2xl"
-          />
-
-          <div className="relative aspect-square w-full">
-            {webGLSupported === false ? (
-              <StaticZFallback />
-            ) : webGLSupported === true ? (
-              <SceneErrorBoundary>
-                <Suspense fallback={<StaticZFallback />}>
-                  <Scene3D
-                    reducedMotion={reducedMotion}
-                    scrollProgressRef={scrollProgressRef}
-                    lowPower={lowPower}
-                  />
-                </Suspense>
-              </SceneErrorBoundary>
-            ) : (
-              <div className="h-full w-full" />
-            )}
+            </ArrowButton>
           </div>
 
-          {/* The model responds to the pointer, which is invisible until you
-              try it. One quiet line is enough of a hint. */}
-          {webGLSupported === true && (
-            <p className="pointer-events-none absolute inset-x-0 bottom-0 text-center text-[11px] uppercase tracking-[0.25em] text-muted/60">
-              {dict.interactHint}
-            </p>
-          )}
+          <div className="flex items-center gap-4 pt-6">
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-primary/40 bg-primary/10 text-accent">
+              <Icon name="globe" className="h-5 w-5" />
+            </span>
+            <span className="flex flex-col">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white">
+                {dict.basedIn}
+              </span>
+              <span className="text-[11px] uppercase tracking-[0.14em] text-muted">
+                {dict.worldwide}
+              </span>
+            </span>
+            <span
+              aria-hidden="true"
+              className="hidden h-px flex-1 bg-gradient-to-r from-white/20 to-transparent sm:block"
+            />
+          </div>
         </div>
+
+        {/* On narrow screens the mark moves into the flow, under the copy. */}
+        {isWide === false && (
+          <div className="pointer-events-auto relative mx-auto aspect-square w-full max-w-md">
+            {mark}
+          </div>
+        )}
       </div>
+
+      {webGLSupported === true && (
+        <p className="pointer-events-none absolute bottom-8 end-6 hidden flex-col items-end gap-2 text-[10px] uppercase tracking-[0.22em] text-muted/70 xl:flex">
+          <span>{dict.scroll}</span>
+          <span aria-hidden="true" className="h-12 w-px bg-gradient-to-b from-muted/50 to-transparent" />
+        </p>
+      )}
     </section>
+  );
+}
+
+function Mark({
+  webGLSupported,
+  reducedMotion,
+  scrollProgressRef,
+  lowPower,
+}: {
+  webGLSupported: boolean | null;
+  reducedMotion: boolean;
+  scrollProgressRef: React.RefObject<number>;
+  lowPower: boolean;
+}) {
+  if (webGLSupported === false) return <StaticZFallback />;
+  if (webGLSupported === null) return <div className="h-full w-full" />;
+
+  return (
+    <SceneErrorBoundary>
+      <Suspense fallback={<StaticZFallback />}>
+        <Scene3D
+          reducedMotion={reducedMotion}
+          scrollProgressRef={scrollProgressRef}
+          lowPower={lowPower}
+        />
+      </Suspense>
+    </SceneErrorBoundary>
   );
 }

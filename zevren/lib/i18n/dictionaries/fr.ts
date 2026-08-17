@@ -2,6 +2,7 @@ import type { Dictionary } from "@/lib/i18n/dictionary-type";
 
 const fr: Dictionary = {
   nav: {
+    discipline: "Design & développement web",
     home: "Accueil",
     services: "Services",
     projects: "Projets",
@@ -26,18 +27,16 @@ const fr: Dictionary = {
   },
   home: {
     hero: {
-      badge: "Design & développement web",
+      badge: "Solutions digitales",
       titleBefore: "Des solutions digitales",
       titleHighlight: "qui font grandir",
       subtitle:
-        "Nous concevons et développons des sites web modernes pour les entreprises qui veulent une présence en ligne claire et professionnelle.",
-      ctaPrimary:
-        "Démarrer un projet",
-      ctaSecondary:
-        "Voir nos réalisations",
-      interactHint: "Faites glisser pour tourner",
-      trustLine:
-        "Basés à Maastricht. Nous travaillons avec des entreprises du monde entier.",
+        "Nous créons des sites, des applications web et des solutions digitales performantes qui aident les entreprises à se démarquer, à toucher leurs clients et à grandir à l'international.",
+      ctaPrimary: "Démarrer un projet",
+      ctaSecondary: "Voir nos réalisations",
+      basedIn: "Basés à Maastricht",
+      worldwide: "Au service d'entreprises partout dans le monde",
+      scroll: "Faites défiler",
     },
     services: {
       eyebrow: "Services",
@@ -91,6 +90,7 @@ const fr: Dictionary = {
     notSureCta: "Démarrer un projet",
     list: {
       "web-design": {
+        tagline: "Moderne et responsive",
         title: "Design web",
         summary:
           "Des sites modernes conçus autour de votre activité, de vos clients et de l'objectif du site.",
@@ -104,6 +104,7 @@ const fr: Dictionary = {
         ],
       },
       "ecommerce": {
+        tagline: "Des boutiques performantes",
         title: "E-commerce",
         summary:
           "Des boutiques en ligne où le client trouve et commande facilement.",
@@ -117,6 +118,7 @@ const fr: Dictionary = {
         ],
       },
       "web-applications": {
+        tagline: "Des solutions évolutives",
         title: "Applications web",
         summary:
           "Tableaux de bord, portails et outils internes pour les entreprises qui dépassent le simple site.",
@@ -130,6 +132,7 @@ const fr: Dictionary = {
         ],
       },
       "ui-ux-design": {
+        tagline: "Des expériences intuitives",
         title: "Design UI/UX",
         summary:
           "Des interfaces agréables à utiliser, pas seulement à regarder.",
@@ -143,6 +146,7 @@ const fr: Dictionary = {
         ],
       },
       "maintenance": {
+        tagline: "Un suivi fiable",
         title: "Maintenance",
         summary:
           "Mises à jour, corrections et améliorations après la mise en ligne.",
@@ -156,6 +160,7 @@ const fr: Dictionary = {
         ],
       },
       "global-focus": {
+        tagline: "Partout dans le monde",
         title: "Portée internationale",
         summary:
           "Basés à Maastricht, nous travaillons avec des entreprises d'autres pays et d'autres langues.",
@@ -201,6 +206,17 @@ const fr: Dictionary = {
       store: { name: "Boutique en ligne", price: "1 199", description: "Pour les entreprises qui veulent vendre des produits en ligne." },
       custom: { name: "Application web sur mesure", price: "1 799", description: "Pour les applications web, portails et tout ce qui va au-delà d'un site standard." },
     },
+  },
+  heroFacts: {
+    eyebrow: "Où en est ZEVREN aujourd'hui",
+    conceptsLabel: "Concepts interactifs",
+    languagesLabel: "Langues",
+    spotsLabel: "Places fondatrices libres",
+    basedLabel: "Basés à",
+    basedValue: "Maastricht",
+    cta: "Construisons quelque chose de bien",
+    note:
+      "Ces chiffres décrivent le studio lui-même. ZEVREN n'a pas encore de projets clients à présenter, et n'en revendique donc aucun ici.",
   },
   globalFocus: {
     eyebrow: "Portée internationale",

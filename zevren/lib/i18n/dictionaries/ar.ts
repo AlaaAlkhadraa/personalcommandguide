@@ -2,6 +2,7 @@ import type { Dictionary } from "@/lib/i18n/dictionary-type";
 
 const ar: Dictionary = {
   nav: {
+    discipline: "تصميم وتطوير الويب",
     home: "الرئيسية",
     services: "خدماتنا",
     projects: "مشاريعنا",
@@ -25,18 +26,16 @@ const ar: Dictionary = {
   },
   home: {
     hero: {
-      badge: "تصميم وتطوير الويب",
+      badge: "حلول رقمية",
       titleBefore: "حلول رقمية",
       titleHighlight: "تدفع نمو أعمالك",
       subtitle:
-        "نصمم ونبني مواقع إلكترونية حديثة للشركات التي تريد حضوراً واضحاً واحترافياً على الإنترنت.",
-      ctaPrimary:
-        "ابدأ مشروعك",
-      ctaSecondary:
-        "شاهد أعمالنا",
-      interactHint: "اسحب للتدوير",
-      trustLine:
-        "مقرنا في ماستريخت، ونعمل مع شركات حول العالم.",
+        "نصنع مواقع وتطبيقات وحلولاً رقمية عالية الأداء تساعد الشركات على التميّز والوصول إلى عملائها والنمو في أي سوق.",
+      ctaPrimary: "ابدأ مشروعك",
+      ctaSecondary: "شاهد أعمالنا",
+      basedIn: "مقرنا في ماستريخت",
+      worldwide: "نعمل مع شركات حول العالم",
+      scroll: "مرّر للأسفل",
     },
     services: {
       eyebrow: "خدماتنا",
@@ -87,6 +86,7 @@ const ar: Dictionary = {
     notSureBody: 'خبرنا شو محتاج بمكالمة قصيرة. رح نعطيك جواب صريح، حتى لو كان الجواب "لسا لأ".',
     list: {
       "web-design": {
+        tagline: "حديث ومتجاوب",
         title: "تصميم المواقع",
         summary:
           "مواقع حديثة مصممة حول عملك وعملائك وما يجب أن يحققه الموقع.",
@@ -100,6 +100,7 @@ const ar: Dictionary = {
         ],
       },
       "ecommerce": {
+        tagline: "متاجر إلكترونية قوية",
         title: "المتاجر الإلكترونية",
         summary:
           "متاجر إلكترونية تسهّل على العميل التصفح وإتمام الطلب.",
@@ -113,6 +114,7 @@ const ar: Dictionary = {
         ],
       },
       "web-applications": {
+        tagline: "حلول قابلة للتوسع",
         title: "تطبيقات الويب",
         summary:
           "لوحات تحكم وبوابات وأدوات داخلية للشركات التي تحتاج أكثر من موقع.",
@@ -126,6 +128,7 @@ const ar: Dictionary = {
         ],
       },
       "ui-ux-design": {
+        tagline: "تجارب سهلة وبديهية",
         title: "تصميم واجهات وتجربة",
         summary:
           "واجهات سهلة الاستخدام، لا جميلة الشكل فقط.",
@@ -139,6 +142,7 @@ const ar: Dictionary = {
         ],
       },
       "maintenance": {
+        tagline: "دعم يمكن الاعتماد عليه",
         title: "الصيانة",
         summary:
           "تحديثات وإصلاحات وتحسينات بعد إطلاق موقعك.",
@@ -152,6 +156,7 @@ const ar: Dictionary = {
         ],
       },
       "global-focus": {
+        tagline: "نعمل حول العالم",
         title: "حضور دولي",
         summary:
           "مقرنا في ماستريخت، ونعمل مع شركات في بلدان ولغات أخرى.",
@@ -197,6 +202,17 @@ const ar: Dictionary = {
       store: { name: "متجر إلكتروني", price: "1,199", description: "للشركات اللي بدها تبيع منتجاتها أونلاين." },
       custom: { name: "تطبيق ويب مخصص", price: "1,799", description: "لتطبيقات الويب والبوابات وكل شي أبعد من موقع عادي." },
     },
+  },
+  heroFacts: {
+    eyebrow: "أين تقف ZEVREN اليوم",
+    conceptsLabel: "مفاهيم تفاعلية",
+    languagesLabel: "لغات",
+    spotsLabel: "أماكن تأسيسية متاحة",
+    basedLabel: "المقر",
+    basedValue: "ماستريخت",
+    cta: "لنبنِ شيئاً جيداً",
+    note:
+      "هذه الأرقام تصف الاستوديو نفسه. ليس لدى ZEVREN مشاريع عملاء لعرضها بعد، ولذلك لا يُدّعى أي منها هنا.",
   },
   globalFocus: {
     eyebrow: "حضور دولي",

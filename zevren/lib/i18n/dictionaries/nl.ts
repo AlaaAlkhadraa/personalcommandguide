@@ -2,6 +2,7 @@ import type { Dictionary } from "@/lib/i18n/dictionary-type";
 
 const nl: Dictionary = {
   nav: {
+    discipline: "Webdesign & development",
     home: "Home",
     services: "Diensten",
     projects: "Projecten",
@@ -26,18 +27,16 @@ const nl: Dictionary = {
   },
   home: {
     hero: {
-      badge: "Webdesign & development",
-      titleBefore: "Digitale oplossingen",
-      titleHighlight: "die groei mogelijk maken",
+      badge: "Digitale oplossingen",
+      titleBefore: "Digitale oplossingen die",
+      titleHighlight: "groei mogelijk maken",
       subtitle:
-        "We ontwerpen en bouwen moderne websites voor bedrijven die een duidelijke, professionele online aanwezigheid willen.",
-      ctaPrimary:
-        "Start een project",
-      ctaSecondary:
-        "Bekijk ons werk",
-      interactHint: "Sleep om te draaien",
-      trustLine:
-        "Gevestigd in Maastricht. We werken met bedrijven over de hele wereld.",
+        "Wij maken snelle websites, webapplicaties en digitale oplossingen waarmee bedrijven opvallen, klanten bereiken en internationaal kunnen groeien.",
+      ctaPrimary: "Start een project",
+      ctaSecondary: "Bekijk ons werk",
+      basedIn: "Gevestigd in Maastricht",
+      worldwide: "Werkend met bedrijven wereldwijd",
+      scroll: "Scroll verder",
     },
     services: {
       eyebrow: "Diensten",
@@ -91,6 +90,7 @@ const nl: Dictionary = {
     notSureCta: "Start een project",
     list: {
       "web-design": {
+        tagline: "Modern & responsive",
         title: "Webdesign",
         summary:
           "Moderne websites, ontworpen rond uw bedrijf, uw klanten en wat de site moet bereiken.",
@@ -104,6 +104,7 @@ const nl: Dictionary = {
         ],
       },
       "ecommerce": {
+        tagline: "Krachtige webshops",
         title: "E-commerce",
         summary:
           "Webshops waarin klanten makkelijk producten bekijken en bestellen.",
@@ -117,6 +118,7 @@ const nl: Dictionary = {
         ],
       },
       "web-applications": {
+        tagline: "Schaalbare oplossingen",
         title: "Webapplicaties",
         summary:
           "Dashboards, portalen en interne tools voor bedrijven die meer nodig hebben dan een website.",
@@ -130,6 +132,7 @@ const nl: Dictionary = {
         ],
       },
       "ui-ux-design": {
+        tagline: "Intuïtieve ervaringen",
         title: "UI/UX-design",
         summary:
           "Interfaces die prettig werken, niet alleen mooi ogen.",
@@ -143,6 +146,7 @@ const nl: Dictionary = {
         ],
       },
       "maintenance": {
+        tagline: "Ondersteuning waar u op kunt bouwen",
         title: "Onderhoud",
         summary:
           "Updates, fixes en verbeteringen nadat uw website live is.",
@@ -156,6 +160,7 @@ const nl: Dictionary = {
         ],
       },
       "global-focus": {
+        tagline: "Wereldwijd werkzaam",
         title: "Internationale focus",
         summary:
           "Gevestigd in Maastricht, werkend met bedrijven in andere landen en andere talen.",
@@ -201,6 +206,17 @@ const nl: Dictionary = {
       store: { name: "Webshop", price: "1.199", description: "Voor bedrijven die producten online willen verkopen." },
       custom: { name: "Maatwerk Webapplicatie", price: "1.799", description: "Voor webapplicaties, portalen en alles wat verder gaat dan een standaardwebsite." },
     },
+  },
+  heroFacts: {
+    eyebrow: "Waar ZEVREN nu staat",
+    conceptsLabel: "Interactieve concepten",
+    languagesLabel: "Talen",
+    spotsLabel: "Founding-plekken vrij",
+    basedLabel: "Gevestigd in",
+    basedValue: "Maastricht",
+    cta: "Laten we iets goeds bouwen",
+    note:
+      "Deze cijfers gaan over de studio zelf. ZEVREN heeft nog geen klantprojecten om te tonen, dus die worden hier niet geclaimd.",
   },
   globalFocus: {
     eyebrow: "Internationale focus",

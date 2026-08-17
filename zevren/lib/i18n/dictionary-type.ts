@@ -2,6 +2,7 @@ import type { ServiceSlug } from "@/types";
 
 export interface Dictionary {
   nav: {
+    discipline: string;
     home: string;
     services: string;
     projects: string;
@@ -31,8 +32,9 @@ export interface Dictionary {
       subtitle: string;
       ctaPrimary: string;
       ctaSecondary: string;
-      trustLine: string;
-      interactHint: string;
+      basedIn: string;
+      worldwide: string;
+      scroll: string;
     };
     services: { eyebrow: string; title: string; subtitle: string; learnMore: string };
     work: { eyebrow: string; title: string; subtitle: string; allConcepts: string };
@@ -55,7 +57,14 @@ export interface Dictionary {
     notSureCta: string;
     list: Record<
       ServiceSlug,
-      { title: string; summary: string; description: string; features: string[] }
+      {
+        title: string;
+        /** Two or three words for the hero strip. */
+        tagline: string;
+        summary: string;
+        description: string;
+        features: string[];
+      }
     >;
   };
   campaign: {
@@ -87,6 +96,16 @@ export interface Dictionary {
       "starter" | "business" | "store" | "custom",
       { name: string; price: string; description: string }
     >;
+  };
+  heroFacts: {
+    eyebrow: string;
+    conceptsLabel: string;
+    languagesLabel: string;
+    spotsLabel: string;
+    basedLabel: string;
+    basedValue: string;
+    cta: string;
+    note: string;
   };
   globalFocus: {
     eyebrow: string;

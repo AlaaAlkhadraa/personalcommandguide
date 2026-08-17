@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NAV_LINKS, SITE_CONFIG } from "@/lib/constants";
+import { ArrowButton } from "@/components/ui/ArrowButton";
 import { Button } from "@/components/ui/Button";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 import type { Locale } from "@/lib/i18n/config";
@@ -56,10 +57,7 @@ export function Navbar({ locale, dict }: NavbarProps) {
       }`}
     >
       <div className="container-page flex h-20 items-center justify-between">
-        <Link
-          href="/"
-          className="group flex items-center gap-2.5 py-2 -my-2"
-        >
+        <Link href="/" className="group -my-2 flex items-center gap-3 py-2">
           <Image
             src="/logo-mark.png"
             alt=""
@@ -68,8 +66,18 @@ export function Navbar({ locale, dict }: NavbarProps) {
             priority
             className="h-8 w-auto drop-shadow-[0_0_10px_rgba(37,99,235,0.55)] transition-[filter] duration-300 group-hover:drop-shadow-[0_0_14px_rgba(96,165,250,0.7)]"
           />
-          <span className="font-logo text-xl font-bold tracking-wide text-white">
-            ZEVREN
+          <span className="flex flex-col leading-none">
+            <span className="font-logo text-xl font-bold tracking-[0.32em] text-white">
+              ZEVREN
+            </span>
+            {/* The discipline line is decorative next to the wordmark; the
+                accessible name of the link is already "ZEVREN". */}
+            <span
+              aria-hidden="true"
+              className="mt-1.5 hidden text-[9px] font-medium uppercase tracking-[0.28em] text-accent/80 sm:block"
+            >
+              {dict.discipline}
+            </span>
           </span>
         </Link>
 
@@ -85,8 +93,8 @@ export function Navbar({ locale, dict }: NavbarProps) {
                 key={link.href}
                 href={link.href}
                 aria-current={isActive ? "page" : undefined}
-                className={`relative py-1 text-sm font-medium transition-colors duration-200 ${
-                  isActive ? "text-white" : "text-muted hover:text-white"
+                className={`relative py-1 text-[11px] font-semibold uppercase tracking-[0.16em] transition-colors duration-200 ${
+                  isActive ? "text-accent" : "text-white/70 hover:text-white"
                 }`}
               >
                 {link.key ? dict[link.key] : link.label}
@@ -94,7 +102,7 @@ export function Navbar({ locale, dict }: NavbarProps) {
                     centre on hover so the whole item reads as one target. */}
                 <span
                   aria-hidden="true"
-                  className={`absolute -bottom-0.5 left-0 h-px w-full origin-center bg-accent transition-transform duration-300 ${
+                  className={`absolute -bottom-1.5 left-0 h-px w-full origin-center bg-accent shadow-[0_0_8px_rgba(96,165,250,0.8)] transition-transform duration-300 ${
                     isActive ? "scale-x-100" : "scale-x-0"
                   }`}
                 />
@@ -105,9 +113,9 @@ export function Navbar({ locale, dict }: NavbarProps) {
 
         <div className="hidden items-center gap-4 lg:flex">
           <LanguageSwitcher locale={locale} />
-          <Button href="/contact" className="text-sm">
+          <ArrowButton href="/contact" variant="outline" className="px-5 py-3">
             {dict.startProject}
-          </Button>
+          </ArrowButton>
         </div>
 
         <button

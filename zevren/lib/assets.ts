@@ -200,6 +200,55 @@ export const IMAGES = {
     blurDataURL:
       "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAABQAgCdASoQABAABABoJYwCdAEQYxht4HsFeAAA/vRUxZN18HJ+UQ533cnluo7IXNfO9YIy47qI87LP2+/m9w2LvhuhqkQTeyjULT6DeRG1c7kt8nwAAA==",
   },
+  "env-city": {
+    src: "/v2/env-city.webp",
+    width: 1400,
+    height: 848,
+    blurDataURL:
+      "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAAAQAgCdASoQABAABABoJZgCdAEPAOIppkoAAP7zIluJjAY9oza+jJk1Hp8X0C2attI7s6S8dNqT0/aYHjz7Bf9DZsMZ4AAA",
+  },
+  "env-floor": {
+    src: "/v2/env-floor.webp",
+    width: 1400,
+    height: 848,
+    blurDataURL:
+      "data:image/webp;base64,UklGRkYAAABXRUJQVlA4IDoAAADwAQCdASoQABAABABoJYgCdAD0YRPkcAAA/s9frry3Dtw14F6SGivBwAM/Ss08QA83NAWPr6HO9oAA",
+  },
+  "env-fog": {
+    src: "/v2/env-fog.webp",
+    width: 1400,
+    height: 766,
+    blurDataURL:
+      "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAAAQAgCdASoQABAABABoJaACdAD0pcsJ0MbAAP7CYVrXH7T7jG+2HEdYWFa3GKf0UYDh37IooQpqpM/DD6PG+kDcz7xSaG1AAAA=",
+  },
+  "env-map": {
+    src: "/v2/env-map.webp",
+    width: 1600,
+    height: 1600,
+    blurDataURL:
+      "data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAAAQAgCdASoQABAABABoJbACdAEN5bdMtgUAAP7vZ3CJrqmE6kvTp5ZvwCtLYR/FvTUKMDGerLSl7KW+OQNKOAAA",
+  },
+  "rock-a": {
+    src: "/v2/rock-a.webp",
+    width: 512,
+    height: 512,
+    blurDataURL:
+      "data:image/webp;base64,UklGRugAAABXRUJQVlA4WAoAAAAQAAAADwAADwAAQUxQSIMAAAABcBIATGUNeV+FQtIASQTk7FWgwzQh8OcJQAF6EGAF7v/2IkSEwrZtm+ydtGfAjWrQxuhBwRsH6wNi8HZ4weowUkoU0a2P7TbKpdaSaXMDKIu0t87c205o1eBjbnzcyC1HP+hApR8v7IWCNpgqv4FrQiOD7Mgl8iDxH8R/+uMfQfxnAABWUDggPgAAAHABAJ0BKhAAEAAEAGglLsAjABFgAP7wt6ssOKy91Fj7tv4SfsTmzbxmgO0ThVqT0VnzQRjpGsyXCVjBAAAA",
+  },
+  "rock-b": {
+    src: "/v2/rock-b.webp",
+    width: 512,
+    height: 512,
+    blurDataURL:
+      "data:image/webp;base64,UklGRu4AAABXRUJQVlA4WAoAAAAQAAAADwAADwAAQUxQSIMAAAABcBIATGUNeV+FQtIASQTk7FWgwzQh8OcJQAF6EGAF7v/2IkSEwrZtm+ydtGfAjWrQxuhBwRsH6wNi8HZ4weowUkoU0a2P7TbKpdaSaXMDKIu0t87c205o1eBjbnzcyC1HP+hApR8v7IWCNpgqv4FrQiOD7Mgl8iDxH8R/+uMfQfxnAABWUDggRAAAABACAJ0BKhAAEAAEAGgllAJ0AN0pMfoi/AAA/vMHM+FTJ27VDv3kv2CWsdGdWQaJCReDOmIjteRrH8UAAYBz3SBNmwAA",
+  },
+  "rock-c": {
+    src: "/v2/rock-c.webp",
+    width: 512,
+    height: 512,
+    blurDataURL:
+      "data:image/webp;base64,UklGRugAAABXRUJQVlA4WAoAAAAQAAAADwAADwAAQUxQSIMAAAABcBIATGUNeV+FQtIASQTk7FWgwzQh8OcJQAF6EGAF7v/2IkSEwrZtm+ydtGfAjWrQxuhBwRsH6wNi8HZ4weowUkoU0a2P7TbKpdaSaXMDKIu0t87c205o1eBjbnzcyC1HP+hApR8v7IWCNpgqv4FrQiOD7Mgl8iDxH8R/+uMfQfxnAABWUDggPgAAABACAJ0BKhAAEAAEAGglkAJ0AQ70ltyYvAAA/uv8R+jvkePjXsFd1lZSfiTN5gKd1Yrs5k94ynMPBXXXAAAA",
+  },
 } as const satisfies Record<string, SiteImage>;
 
 export type ImageKey = keyof typeof IMAGES;

@@ -1,4 +1,6 @@
 import { Hero } from "@/components/home/Hero";
+import { HeroServiceStrip } from "@/components/home/HeroServiceStrip";
+import { HeroFacts } from "@/components/home/HeroFacts";
 import { FoundingSection } from "@/components/campaign/FoundingSection";
 import { ServicesPreview } from "@/components/home/ServicesPreview";
 import { ProjectsPreview } from "@/components/home/ProjectsPreview";
@@ -25,6 +27,8 @@ export default async function HomePage() {
   return (
     <>
       <Hero dict={dict.home.hero} />
+      <HeroServiceStrip dict={dict.services} />
+      <HeroFacts dict={dict.heroFacts} />
       <FoundingSection dict={dict.campaign} />
       <ServicesPreview dict={dict.services} homeDict={dict.home.services} />
       <ProjectsPreview dict={dict.work} homeDict={dict.home.work} />
