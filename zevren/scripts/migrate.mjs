@@ -26,12 +26,13 @@ if (driver === "pglite") {
   await run((sql) => db.exec(sql));
   await db.close();
 } else {
-  if (!process.env.DATABASE_URL) {
-    console.error("DATABASE_URL is not set.");
+  const url = process.env.DATABASE_URL ?? process.env.POSTGRES_URL;
+  if (!url) {
+    console.error("Set DATABASE_URL (or POSTGRES_URL).");
     process.exit(1);
   }
   const { default: postgres } = await import("postgres");
-  const client = postgres(process.env.DATABASE_URL, { max: 1, onnotice: () => {} });
+  const client = postgres(url, { max: 1, onnotice: () => {} });
   await run((sql) => client.unsafe(sql));
   await client.end();
 }

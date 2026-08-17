@@ -22,8 +22,13 @@ const schema = z.object({
    * Postgres connection string. Required in production; without it the app
    * still renders but every write endpoint fails closed with a 503 instead of
    * silently accepting and dropping submissions.
+   *
+   * POSTGRES_URL is the name Vercel's Postgres integration injects, so both
+   * are accepted and DATABASE_URL wins when they disagree. Neither is ever
+   * sent to the client or written to a log.
    */
   DATABASE_URL: z.string().min(1).optional(),
+  POSTGRES_URL: z.string().min(1).optional(),
 
   /**
    * Local development and the test suite can run against an embedded Postgres
@@ -66,7 +71,10 @@ function read(): ServerEnv {
     const keys = Object.keys(parsed.error.flatten().fieldErrors).join(", ");
     throw new Error(`Invalid server environment. Check: ${keys}`);
   }
-  return parsed.data;
+  return {
+    ...parsed.data,
+    DATABASE_URL: parsed.data.DATABASE_URL ?? parsed.data.POSTGRES_URL,
+  };
 }
 
 let cached: ServerEnv | null = null;
@@ -95,7 +103,7 @@ export function assertProductionConfig(): void {
   if (e.NODE_ENV !== "production") return;
   const missing: string[] = [];
   if (e.DATABASE_DRIVER !== "postgres") missing.push("DATABASE_DRIVER must be postgres");
-  if (!e.DATABASE_URL) missing.push("DATABASE_URL");
+  if (!e.DATABASE_URL) missing.push("DATABASE_URL or POSTGRES_URL");
   if (!e.AUTH_SECRET) missing.push("AUTH_SECRET");
   if (!e.APP_ORIGIN) missing.push("APP_ORIGIN");
   if (missing.length) {
