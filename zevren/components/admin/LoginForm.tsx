@@ -3,12 +3,15 @@
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 
+import { useCsrfToken } from "@/lib/use-csrf-token";
+
 /**
  * Admin sign-in. The form holds no secrets: the CSRF token it carries is
  * useless without the paired HttpOnly cookie, and the session cookie the
  * server sets is never readable from JavaScript.
  */
-export function LoginForm({ csrfToken }: { csrfToken: string }) {
+export function LoginForm({ csrfToken: initialToken }: { csrfToken: string | null }) {
+  const csrfToken = useCsrfToken(initialToken);
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -24,12 +27,15 @@ export function LoginForm({ csrfToken }: { csrfToken: string }) {
     try {
       const response = await fetch("/api/admin/login", {
         method: "POST",
-        headers: { "Content-Type": "application/json", "x-csrf-token": csrfToken },
+        headers: {
+          "Content-Type": "application/json",
+          ...(csrfToken ? { "x-csrf-token": csrfToken } : {}),
+        },
         credentials: "same-origin",
         body: JSON.stringify({
           email: String(data.get("email") ?? ""),
           password: String(data.get("password") ?? ""),
-          csrfToken,
+          csrfToken: csrfToken ?? undefined,
         }),
       });
 
@@ -57,7 +63,11 @@ export function LoginForm({ csrfToken }: { csrfToken: string }) {
         <p className="mt-2 text-sm text-muted">This area is restricted to ZEVREN staff.</p>
       </div>
 
-      <form onSubmit={onSubmit} noValidate className="flex flex-col gap-5">
+      {/* method="post" matters even though submitting is handled in JavaScript:
+          if a click lands before hydration, the browser falls back to a native
+          submit, and a GET would put the password in the URL, the history and
+          the Referer header. */}
+      <form onSubmit={onSubmit} method="post" noValidate className="flex flex-col gap-5">
         <div className="flex flex-col gap-2">
           <label htmlFor="admin-email" className="text-sm font-medium text-white">
             Email

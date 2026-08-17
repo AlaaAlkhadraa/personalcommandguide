@@ -3,6 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+import { useCsrfToken } from "@/lib/use-csrf-token";
+
 export interface AdminSubmission {
   id: string;
   kind: string;
@@ -14,8 +16,11 @@ export interface AdminSubmission {
   message: string;
   status: string;
   locale: string | null;
+  campaign: string | null;
   emailedAt: string | null;
   createdAt: string;
+  /** True when this submission holds one of the ten founding spots. */
+  founding: boolean;
 }
 
 const STATUSES = ["new", "read", "archived"] as const;
@@ -26,16 +31,20 @@ const STATUSES = ["new", "read", "archived"] as const;
  * containing markup or a script tag from executing when staff read it.
  */
 export function SubmissionsTable({
-  csrfToken,
+  csrfToken: initialToken,
   email,
   items,
   total,
+  founding,
 }: {
-  csrfToken: string;
+  csrfToken: string | null;
   email: string;
   items: AdminSubmission[];
   total: number;
+  /** Live spot count, so staff can see the public counter from here. */
+  founding: { claimed: number; total: number; open: number };
 }) {
+  const csrfToken = useCsrfToken(initialToken);
   const router = useRouter();
   const [busyId, setBusyId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -47,9 +56,12 @@ export function SubmissionsTable({
     try {
       const response = await fetch("/api/admin/submissions", {
         method: "PATCH",
-        headers: { "Content-Type": "application/json", "x-csrf-token": csrfToken },
+        headers: {
+          "Content-Type": "application/json",
+          ...(csrfToken ? { "x-csrf-token": csrfToken } : {}),
+        },
         credentials: "same-origin",
-        body: JSON.stringify({ id, status, csrfToken }),
+        body: JSON.stringify({ id, status, csrfToken: csrfToken ?? undefined }),
       });
       if (!response.ok) {
         const payload = (await response.json().catch(() => null)) as { message?: string } | null;
@@ -64,12 +76,53 @@ export function SubmissionsTable({
     }
   }
 
+  /**
+   * Takes or gives back a founding spot. This is the only way the public
+   * counter moves, and it is behind the admin session plus a CSRF token.
+   */
+  async function setFounding(item: AdminSubmission, claim: boolean) {
+    setBusyId(item.id);
+    setError(null);
+    try {
+      const response = await fetch("/api/admin/founding", {
+        method: claim ? "POST" : "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          ...(csrfToken ? { "x-csrf-token": csrfToken } : {}),
+        },
+        credentials: "same-origin",
+        body: JSON.stringify(
+          claim
+            ? {
+                submissionId: item.id,
+                businessName: item.company || item.name,
+                csrfToken: csrfToken ?? undefined,
+              }
+            : { submissionId: item.id, csrfToken: csrfToken ?? undefined }
+        ),
+      });
+      if (!response.ok) {
+        const payload = (await response.json().catch(() => null)) as { message?: string } | null;
+        setError(payload?.message ?? "Could not update the founding spots.");
+        return;
+      }
+      router.refresh();
+    } catch {
+      setError("Could not reach the server.");
+    } finally {
+      setBusyId(null);
+    }
+  }
+
   async function signOut() {
     await fetch("/api/admin/logout", {
       method: "POST",
-      headers: { "Content-Type": "application/json", "x-csrf-token": csrfToken },
+      headers: {
+        "Content-Type": "application/json",
+        ...(csrfToken ? { "x-csrf-token": csrfToken } : {}),
+      },
       credentials: "same-origin",
-      body: JSON.stringify({ csrfToken }),
+      body: JSON.stringify({ csrfToken: csrfToken ?? undefined }),
     }).catch(() => null);
     router.replace("/admin/login");
     router.refresh();
@@ -82,6 +135,13 @@ export function SubmissionsTable({
           <h1 className="text-2xl font-semibold text-white">Submissions</h1>
           <p className="mt-1 text-sm text-muted">
             {total} total. Signed in as {email}.
+          </p>
+          <p className="mt-1 text-sm text-muted">
+            Founding 10:{" "}
+            <span className="font-medium tabular-nums text-accent">
+              {founding.claimed} / {founding.total}
+            </span>{" "}
+            claimed, {founding.open} open. This is the number the public counter shows.
           </p>
         </div>
         <button
@@ -122,16 +182,23 @@ export function SubmissionsTable({
                     {item.emailedAt ? " · emailed" : ""}
                   </span>
                 </span>
-                <span
-                  className={`rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider ${
-                    item.status === "new"
-                      ? "bg-primary/20 text-accent"
-                      : item.status === "read"
-                        ? "bg-white/10 text-muted"
-                        : "bg-white/5 text-muted"
-                  }`}
-                >
-                  {item.status}
+                <span className="flex items-center gap-2">
+                  {item.founding && (
+                    <span className="rounded-full bg-primary/20 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-accent">
+                      Founding
+                    </span>
+                  )}
+                  <span
+                    className={`rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider ${
+                      item.status === "new"
+                        ? "bg-primary/20 text-accent"
+                        : item.status === "read"
+                          ? "bg-white/10 text-muted"
+                          : "bg-white/5 text-muted"
+                    }`}
+                  >
+                    {item.status}
+                  </span>
                 </span>
               </button>
 
@@ -153,6 +220,10 @@ export function SubmissionsTable({
                     <div>
                       <dt className="text-xs uppercase tracking-wider text-muted">Locale</dt>
                       <dd className="text-white">{item.locale || "-"}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-xs uppercase tracking-wider text-muted">Campaign</dt>
+                      <dd className="text-white">{item.campaign || "-"}</dd>
                     </div>
                   </dl>
 
@@ -178,6 +249,20 @@ export function SubmissionsTable({
                     >
                       Reply
                     </a>
+                    <button
+                      type="button"
+                      disabled={
+                        busyId === item.id || (!item.founding && founding.open === 0)
+                      }
+                      onClick={() => setFounding(item, !item.founding)}
+                      className={`rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-wider transition-colors disabled:opacity-40 ${
+                        item.founding
+                          ? "border border-primary/50 bg-primary/15 text-accent hover:border-accent"
+                          : "border border-white/15 text-white hover:border-accent"
+                      }`}
+                    >
+                      {item.founding ? "Release founding spot" : "Give founding spot"}
+                    </button>
                   </div>
                 </div>
               )}

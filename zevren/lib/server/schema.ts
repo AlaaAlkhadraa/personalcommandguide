@@ -34,6 +34,8 @@ export const submissions = pgTable(
     ipHash: text("ip_hash"),
     userAgent: text("user_agent"),
     locale: text("locale"),
+    /** Set when the submission arrived through a campaign, e.g. "founding-10". */
+    campaign: text("campaign"),
     status: text("status").notNull().default("new"),
     emailedAt: timestamp("emailed_at", { withTimezone: true }),
     emailError: text("email_error"),
@@ -42,6 +44,28 @@ export const submissions = pgTable(
   (t) => ({
     createdIdx: index("submissions_created_idx").on(t.createdAt),
     fingerprintIdx: index("submissions_fingerprint_idx").on(t.fingerprint, t.createdAt),
+    campaignIdx: index("submissions_campaign_idx").on(t.campaign),
+  })
+);
+
+/**
+ * Founding 10 spots that have actually been taken. Only staff write here, so
+ * the public counter cannot be moved by anyone filling in a form.
+ */
+export const foundingClaims = pgTable(
+  "founding_claims",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    submissionId: uuid("submission_id").references(() => submissions.id, {
+      onDelete: "set null",
+    }),
+    businessName: text("business_name").notNull(),
+    note: text("note"),
+    claimedAt: timestamp("claimed_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => ({
+    claimedIdx: index("founding_claims_claimed_idx").on(t.claimedAt),
+    submissionIdx: uniqueIndex("founding_claims_submission_idx").on(t.submissionId),
   })
 );
 

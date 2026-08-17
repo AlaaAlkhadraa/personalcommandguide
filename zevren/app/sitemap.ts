@@ -3,6 +3,7 @@ import { WORK_ITEMS, SITE_CONFIG } from "@/lib/constants";
 
 const routes = [
   { path: "/", priority: 1, changeFrequency: "weekly" as const },
+  { path: "/founding-10", priority: 0.9, changeFrequency: "weekly" as const },
   { path: "/services", priority: 0.9, changeFrequency: "monthly" as const },
   { path: "/work", priority: 0.9, changeFrequency: "weekly" as const },
   { path: "/about", priority: 0.7, changeFrequency: "monthly" as const },

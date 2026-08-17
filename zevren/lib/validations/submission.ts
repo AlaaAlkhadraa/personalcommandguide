@@ -41,6 +41,9 @@ export const submissionSchema = contactFormSchema
       .optional()
       .or(z.literal("")),
     locale: z.enum(["en", "nl", "de", "fr", "es", "ar"]).optional(),
+    // Only campaigns this build knows about are accepted, so the column
+    // cannot be used as free-text storage by anyone posting to the endpoint.
+    campaign: z.enum(["founding-10"]).optional(),
     csrfToken: z.string().max(200).optional(),
     /**
      * Milliseconds between the form rendering and the submit. A real visitor

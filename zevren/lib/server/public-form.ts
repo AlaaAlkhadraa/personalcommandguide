@@ -143,6 +143,7 @@ export async function handlePublicSubmission(
         `Needs: ${data.needs || "-"}`,
         `Budget: ${data.budget || "-"}`,
         `Locale: ${data.locale ?? "-"}`,
+        `Campaign: ${data.campaign ?? "-"}`,
         "",
         data.message,
         "",

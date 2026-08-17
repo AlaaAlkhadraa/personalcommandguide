@@ -33,7 +33,18 @@ export function ContactForm({ dict }: { dict: Dictionary["contact"]["form"] }) {
   // CSRF token paired with an HttpOnly cookie the server sets. It is not a
   // secret on its own: without the cookie it cannot authorise anything.
   const [csrfToken, setCsrfToken] = useState<string | null>(null);
+  // Preselected from the campaign links. Validated against the option list
+  // below before it is used, so a crafted URL cannot inject a value.
+  const [needs, setNeeds] = useState("");
+  const [campaign, setCampaign] = useState<string | null>(null);
   const mountedAt = useRef<number>(Date.now());
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const type = params.get("type");
+    if (type && NEEDS_VALUES.includes(type)) setNeeds(type);
+    if (params.get("campaign") === "founding-10") setCampaign("founding-10");
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -66,6 +77,7 @@ export function ContactForm({ dict }: { dict: Dictionary["contact"]["form"] }) {
       csrfToken?: string;
       elapsedMs: number;
       locale?: string;
+      campaign?: string;
     } = {
       name: String(formData.get("name") ?? ""),
       email: String(formData.get("email") ?? ""),
@@ -77,6 +89,7 @@ export function ContactForm({ dict }: { dict: Dictionary["contact"]["form"] }) {
       csrfToken: csrfToken ?? undefined,
       elapsedMs: Date.now() - mountedAt.current,
       locale: readLocale(),
+      ...(campaign ? { campaign } : {}),
     };
 
     // A filled needs or budget makes this a project brief rather than a plain
@@ -127,8 +140,10 @@ export function ContactForm({ dict }: { dict: Dictionary["contact"]["form"] }) {
     );
   }
 
+  // Submitting runs in JavaScript, but a click landing before hydration falls
+  // back to a native submit; method="post" keeps the message out of the URL.
   return (
-    <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-6">
+    <form onSubmit={handleSubmit} method="post" noValidate className="flex flex-col gap-6">
       {/* Honeypot field, hidden from real visitors via off-screen
           positioning (not display:none, which some bots skip), and never
           reachable by keyboard. Any value here marks the submission spam. */}
@@ -209,7 +224,8 @@ export function ContactForm({ dict }: { dict: Dictionary["contact"]["form"] }) {
           <select
             id="needs"
             name="needs"
-            defaultValue=""
+            value={needs}
+            onChange={(event) => setNeeds(event.target.value)}
             className="rounded-lg border border-white/15 bg-surface px-4 py-3 text-sm text-white focus:border-accent"
           >
             {dict.needsOptions.map((label, index) => (

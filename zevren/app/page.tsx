@@ -1,4 +1,5 @@
 import { Hero } from "@/components/home/Hero";
+import { FoundingSection } from "@/components/campaign/FoundingSection";
 import { ServicesPreview } from "@/components/home/ServicesPreview";
 import { WorkPreview } from "@/components/home/WorkPreview";
 import { WhyZevren } from "@/components/home/WhyZevren";
@@ -23,6 +24,7 @@ export default async function HomePage() {
   return (
     <>
       <Hero dict={dict.home.hero} />
+      <FoundingSection dict={dict.campaign} />
       <ServicesPreview dict={dict.services} homeDict={dict.home.services} />
       <WorkPreview dict={dict.work} homeDict={dict.home.work} />
       <WhyZevren dict={dict.whyZevren} homeDict={dict.home.why} />

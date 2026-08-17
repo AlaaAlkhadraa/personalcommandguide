@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
 
 import { SubmissionsTable } from "@/components/admin/SubmissionsTable";
-import { issueCsrfToken } from "@/lib/server/csrf";
+import { claimedSubmissionIds, getFoundingStatus } from "@/lib/server/campaign";
+import { readCsrfToken } from "@/lib/server/csrf";
 import { databaseConfigured } from "@/lib/server/db";
 import { getSessionUserFromHeaders } from "@/lib/server/session";
 import { listSubmissions } from "@/lib/server/submissions";
@@ -15,7 +16,7 @@ export default async function AdminPage() {
   const user = await getSessionUserFromHeaders();
   if (!user || user.role !== "admin") redirect("/admin/login");
 
-  const csrfToken = await issueCsrfToken();
+  const csrfToken = await readCsrfToken();
 
   if (!databaseConfigured()) {
     return (
@@ -28,17 +29,24 @@ export default async function AdminPage() {
     );
   }
 
-  const { items, total } = await listSubmissions({ limit: 50 });
+  const [{ items, total }, status, claimedIds] = await Promise.all([
+    listSubmissions({ limit: 50 }),
+    getFoundingStatus(),
+    claimedSubmissionIds(),
+  ]);
+  const claimed = new Set(claimedIds);
 
   return (
     <SubmissionsTable
       csrfToken={csrfToken}
       email={user.email}
       total={total}
+      founding={{ claimed: status.claimed, total: status.total, open: status.open }}
       items={items.map((item) => ({
         ...item,
         createdAt: item.createdAt.toISOString(),
         emailedAt: item.emailedAt ? item.emailedAt.toISOString() : null,
+        founding: claimed.has(item.id),
       }))}
     />
   );

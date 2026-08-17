@@ -38,8 +38,23 @@ function tokenFor(secret: string): string {
 }
 
 /**
+ * Reads the token for an existing secret cookie, without minting one.
+ *
+ * Next only permits a cookie to be written from a route handler or a server
+ * action, so a page render must not try to create the secret. Pages call this
+ * and hand the result to the client component, which asks /api/csrf for a
+ * token when there is none yet.
+ */
+export async function readCsrfToken(): Promise<string | null> {
+  const store = await cookies();
+  const secret = store.get(csrfCookieName())?.value;
+  if (!secret || secret.length < 32) return null;
+  return tokenFor(secret);
+}
+
+/**
  * Issues (or reuses) the CSRF secret cookie and returns the token the client
- * should echo back. Safe to call from a server component or a GET route.
+ * should echo back. Only callable from a route handler or a server action.
  */
 export async function issueCsrfToken(): Promise<string> {
   const store = await cookies();

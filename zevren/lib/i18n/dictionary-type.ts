@@ -58,6 +58,30 @@ export interface Dictionary {
       { title: string; summary: string; description: string; features: string[] }
     >;
   };
+  campaign: {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    intro: string;
+    body: string;
+    counterClaimed: string;
+    counterOpen: string;
+    counterNote: string;
+    counterClosed: string;
+    openLabel: string;
+    pricingEyebrow: string;
+    pricingTitle: string;
+    regularLabel: string;
+    foundingLabel: string;
+    pricingNote: string;
+    cta: string;
+    ctaSecondary: string;
+    location: string;
+    whatYouGet: string;
+    points: { title: string; description: string }[];
+    metaTitle: string;
+    metaDescription: string;
+  };
   pricing: {
     plans: Record<
       "starter" | "business" | "store" | "custom",

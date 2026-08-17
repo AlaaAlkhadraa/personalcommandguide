@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 
 import { LoginForm } from "@/components/admin/LoginForm";
-import { issueCsrfToken } from "@/lib/server/csrf";
+import { readCsrfToken } from "@/lib/server/csrf";
 import { getSessionUserFromHeaders } from "@/lib/server/session";
 
 export const dynamic = "force-dynamic";
@@ -12,6 +12,6 @@ export default async function AdminLoginPage() {
   const user = await getSessionUserFromHeaders();
   if (user) redirect("/admin");
 
-  const csrfToken = await issueCsrfToken();
+  const csrfToken = await readCsrfToken();
   return <LoginForm csrfToken={csrfToken} />;
 }
