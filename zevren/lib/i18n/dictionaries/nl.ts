@@ -2,9 +2,11 @@ import type { Dictionary } from "@/lib/i18n/dictionary-type";
 
 const nl: Dictionary = {
   nav: {
-    work: "Werk",
+    home: "Home",
     services: "Diensten",
+    projects: "Projecten",
     about: "Over ons",
+    process: "Werkwijze",
     contact: "Contact",
     startProject: "Start een project",
     orCall: "of bel",
@@ -24,14 +26,18 @@ const nl: Dictionary = {
   },
   home: {
     hero: {
-      badge: "Webstudio in Maastricht",
-      titleBefore: "Websites die het",
-      titleHighlight: "makkelijker maken om voor jouw bedrijf te kiezen",
+      badge: "Webdesign & development",
+      titleBefore: "Digitale oplossingen",
+      titleHighlight: "die groei mogelijk maken",
       subtitle:
         "We ontwerpen en bouwen moderne websites voor bedrijven die een duidelijke, professionele online aanwezigheid willen.",
-      ctaPrimary: "Start een project",
-      ctaSecondary: "Bekijk ons werk",
-      trustLine: "Gevestigd in Maastricht. We werken met bedrijven over de hele wereld.",
+      ctaPrimary:
+        "Start een project",
+      ctaSecondary:
+        "Bekijk ons werk",
+      interactHint: "Sleep om te draaien",
+      trustLine:
+        "Gevestigd in Maastricht. We werken met bedrijven over de hele wereld.",
     },
     services: {
       eyebrow: "Diensten",
@@ -55,7 +61,7 @@ const nl: Dictionary = {
       eyebrow: "Proces",
       title: "Zo verloopt een project bij ons",
       subtitle:
-        "Vijf stappen, van het eerste gesprek tot de lancering. Elke stap heeft een duidelijk resultaat, zodat je altijd weet waar je project staat.",
+        "Vier stappen, van het eerste gesprek tot de lancering. Elke stap heeft een duidelijk resultaat, zodat je altijd weet waar je project staat.",
     },
     faq: {
       eyebrow: "Veelgestelde vragen",
@@ -84,78 +90,82 @@ const nl: Dictionary = {
       'Vertel ons in een kort gesprek wat je nodig hebt. We geven je een eerlijk antwoord, ook als dat antwoord "nog niet" is.',
     notSureCta: "Start een project",
     list: {
-      websites: {
-        title: "Websites",
+      "web-design": {
+        title: "Webdesign",
         summary:
-          "Moderne websites ontworpen rond jouw bedrijf, jouw klanten en wat de website moet bereiken.",
+          "Moderne websites, ontworpen rond uw bedrijf, uw klanten en wat de site moet bereiken.",
         description:
-          "We beginnen met begrijpen wat je website moet doen, en ontwerpen en bouwen daaromheen. Geen paginabouwer-thema met jouw logo erop.",
+          "We beginnen met begrijpen wat uw website moet doen, en ontwerpen en bouwen daaromheen. Geen kant-en-klaar thema met uw logo erop.",
         features: [
-          "Ontwerp op maat, geen sjabloon",
+          "Eigen ontwerp, geen template",
           "Gebouwd met Next.js voor snelheid",
-          "Content die je zelf kunt aanpassen",
-          "Werkt goed op elk apparaat",
+          "Nette, semantische structuur die zoekmachines lezen",
+          "Werkt goed op elk schermformaat",
         ],
       },
-      "online-stores": {
-        title: "Webshops",
+      "ecommerce": {
+        title: "E-commerce",
         summary:
-          "Overzichtelijke webshops die het makkelijk maken voor klanten om producten te bekijken en te bestellen.",
+          "Webshops waarin klanten makkelijk producten bekijken en bestellen.",
         description:
-          "Van bladeren tot afrekenen, elke stap is eenvoudig gehouden. We zetten een webshop op die je zelf kunt beheren zodra hij live staat.",
+          "Van de eerste productpagina tot het bevestigingsscherm is elke stap eenvoudig gehouden. U krijgt een winkel die u zelf kunt beheren zodra die live staat.",
         features: [
-          "Veilig afrekenen en betalen",
-          "Eenvoudig producten beheren",
-          "Duidelijke productpagina's",
-          "Werkt goed op mobiel",
+          "Veilige checkout en betalingen",
+          "Productbeheer dat u zelf aankunt",
+          "Productpagina's gericht op verkopen",
+          "Mobiel als uitgangspunt",
         ],
       },
       "web-applications": {
         title: "Webapplicaties",
         summary:
-          "Op maat gemaakte dashboards, portalen en webtools voor bedrijven die meer nodig hebben dan een standaardwebsite.",
+          "Dashboards, portalen en interne tools voor bedrijven die meer nodig hebben dan een website.",
         description:
-          "Als een kant-en-klare tool niet past bij hoe jouw bedrijf werkt, bouwen we iets dat wel past.",
+          "Als een standaardpakket niet past bij hoe uw bedrijf echt werkt, bouwen wij iets dat dat wel doet.",
         features: [
           "Klantportalen en dashboards",
-          "Boekings- en planningstools",
-          "Koppelt met de systemen die je gebruikt",
-          "Gebouwd rond jouw specifieke proces",
+          "Boek- en planningstools",
+          "Koppelt met de systemen die u al gebruikt",
+          "Gebouwd rond uw eigen proces",
         ],
       },
       "ui-ux-design": {
-        title: "UI/UX Design",
-        summary: "Interfaces die prettig zijn om te gebruiken, niet alleen mooi om te zien.",
+        title: "UI/UX-design",
+        summary:
+          "Interfaces die prettig werken, niet alleen mooi ogen.",
         description:
-          "Voordat er code wordt geschreven, bepalen we hoe de site moet aanvoelen. Duidelijke indeling, logische navigatie, geen giswerk.",
+          "Voordat er code komt, bepalen we hoe de site moet aanvoelen. Heldere opbouw, logische navigatie, geen gokken waar u moet klikken.",
         features: [
           "Wireframes en indeling",
-          "Consistent visueel systeem",
-          "Ontworpen voor echte content",
-          "Gebouwd met toegankelijkheid in gedachten",
+          "Een consistent visueel systeem",
+          "Ontworpen rond echte content",
+          "Toegankelijkheid vanaf het begin",
         ],
       },
-      "seo-foundations": {
-        title: "SEO-basis",
-        summary: "De technische basis die helpt om gevonden te worden in zoekmachines.",
+      "maintenance": {
+        title: "Onderhoud",
+        summary:
+          "Updates, fixes en verbeteringen nadat uw website live is.",
         description:
-          "Wij regelen de technische kant van SEO, structuur, laadsnelheid, metadata, zodat je content een eerlijke kans krijgt om te ranken.",
+          "Een website heeft onderhoud nodig na de lancering. Wij houden hem actueel, veilig en snel, en verwerken wijzigingen als uw bedrijf verandert.",
         features: [
-          "Schone, semantische HTML-structuur",
-          "Snelle laadtijden",
-          "Correcte titels en metabeschrijvingen",
-          "Sitemap en zoekmachine-instellingen",
+          "Beveiligings- en pakketupdates",
+          "Regelmatige back-ups",
+          "Kleine wijzigingen snel geregeld",
+          "Eén aanspreekpunt",
         ],
       },
-      "website-support": {
-        title: "Website-ondersteuning",
-        summary: "Doorlopende updates, reparaties en verbeteringen nadat je website live is.",
-        description: "Een website heeft onderhoud nodig na lancering. Wij houden hem actueel, veilig en goed werkend.",
+      "global-focus": {
+        title: "Internationale focus",
+        summary:
+          "Gevestigd in Maastricht, werkend met bedrijven in andere landen en andere talen.",
+        description:
+          "Waar uw klanten zitten hoeft niet te matchen met waar wij zitten. We bouwen meertalige sites en werken op afstand over tijdzones heen, met hetzelfde directe contact.",
         features: [
-          "Beveiligingsupdates",
-          "Regelmatige back-ups",
-          "Kleine aanpassingen snel verwerkt",
-          "Eén vast aanspreekpunt",
+          "Meertalige sites, ook rechts naar links",
+          "Samenwerken op afstand over tijdzones",
+          "Heldere communicatie in Nederlands en Engels",
+          "Eén persoon op uw project",
         ],
       },
     },
@@ -192,6 +202,16 @@ const nl: Dictionary = {
       custom: { name: "Maatwerk Webapplicatie", price: "1.799", description: "Voor webapplicaties, portalen en alles wat verder gaat dan een standaardwebsite." },
     },
   },
+  globalFocus: {
+    eyebrow: "Internationale focus",
+    title: "Eén studio in Maastricht, klanten in meer dan één land.",
+    body:
+      "Waar uw klanten zitten hoeft niet te matchen met waar wij zitten. Projecten lopen op afstand, in de taal die uw klanten echt lezen, met dezelfde persoon op uw project van het eerste gesprek tot de lancering.",
+    basedLabel: "Gevestigd in",
+    basedValue: "Maastricht, Nederland",
+    languagesLabel: "Site beschikbaar in",
+    imageAlt: "Een wereldbol boven een stad bij nacht",
+  },
   whyZevren: {
     items: [
       { title: "Klein, met opzet", description: "Je werkt rechtstreeks met de persoon die je website bouwt." },
@@ -202,11 +222,30 @@ const nl: Dictionary = {
   },
   process: {
     steps: [
-      { title: "Vertel ons wat je nodig hebt", description: "We leren je bedrijf kennen en wat de website moet doen." },
-      { title: "Plannen", description: "We bepalen welke pagina's, content en functies daadwerkelijk nodig zijn." },
-      { title: "Ontwerpen", description: "We bepalen de visuele richting en verfijnen deze met jouw feedback." },
-      { title: "Bouwen", description: "We ontwikkelen de website en zorgen dat alles goed werkt." },
-      { title: "Lanceren", description: "We testen de website en bereiden hem voor op de lancering." },
+      {
+        title: "Discovery",
+        description: "We leren wat uw bedrijf doet, voor wie en wat de website moet bereiken.",
+        detail:
+          "Voordat er iets ontworpen wordt, spreken we het doel af, welke pagina's echt nodig zijn en welke content er moet komen. Hier wordt de omvang bepaald, zodat er halverwege niets onverwachts opduikt.",
+      },
+      {
+        title: "Design",
+        description: "We maken de visuele richting en verfijnen die met uw feedback tot het klopt.",
+        detail:
+          "U ziet de echte opbouw met uw eigen content, geen placeholder. We werken het ontwerp samen door tot structuur, toon en detail passen bij hoe u wilt overkomen.",
+      },
+      {
+        title: "Development",
+        description: "We bouwen de site zoals het hoort: responsive, snel en onderhoudbaar.",
+        detail:
+          "Het ontwerp wordt een werkende site, netjes geschreven zodat die later uit te breiden is. Alles wordt tijdens het bouwen gecontroleerd op desktop, tablet en telefoon.",
+      },
+      {
+        title: "Launch",
+        description: "We testen alles, zetten het live en zorgen dat u ermee overweg kunt.",
+        detail:
+          "Formulieren, links, snelheid, vindbaarheid en statistieken worden voor de lancering gecontroleerd. Na livegang krijgt u wat u nodig heeft om de site draaiende te houden.",
+      },
     ],
   },
   faq: {
@@ -279,6 +318,11 @@ const nl: Dictionary = {
         "€3.000+",
         "Nog niet zeker",
       ],
+      projectInfoLabel: "Projectinformatie",
+      projectInfoPlaceholder:
+        "Pagina's of functies die u in gedachten heeft, een bestaande website, een deadline",
+      projectInfoHint:
+        "Optioneel. Alles wat helpt om de omvang van het project in te schatten.",
       messageLabel: "Vertel ons over je project",
       messagePlaceholder: "Waar loop je tegenaan en wat wil je bereiken?",
       sendButton: "Bericht versturen",
@@ -330,9 +374,11 @@ const nl: Dictionary = {
       },
       "online-store": {
         category: "E-commerce",
-        description: "Een complete webshop voor premium woon- en lifestyleproducten, van bladeren tot afrekenen.",
-        whatWeExplored: "Dit concept onderzoekt hoe een premium woonwinkel er online uit zou kunnen zien, van productontdekking tot een eenvoudige, duidelijke checkout.",
-        keyFeatures: ["Productcatalogus", "Productfilters", "Winkelwagen", "Afrekenproces", "Orderbevestiging"],
+        description:
+          "Een premium elektronicawinkel als concept: koptelefoons, speakers en wearables, van het productoverzicht tot een bevestigde bestelling.",
+        whatWeExplored:
+          "Dit concept onderzoekt hoe een elektronicamerk rechtstreeks online kan verkopen, met productfotografie die de pagina draagt en een checkout die de klant niet in de weg zit.",
+        keyFeatures: ["Productoverzicht en detailpagina's", "Kleur- en variantkeuze", "Winkelwagen", "Checkout", "Orderbevestiging"],
       },
       "property-platform": {
         category: "Maatwerk Webapplicatie",
@@ -501,9 +547,10 @@ const nl: Dictionary = {
       navShop: "Shop",
       cart: "Winkelwagen",
       newSeason: "Nieuw seizoen",
-      heroHeading: "Premium woon- en lifestyleproducten.",
-      heroSubtitle: "Doordachte producten voor thuis, gemaakt van natuurlijke materialen en gebouwd om lang mee te gaan.",
-      shopByPack: "Alle kleuren",
+      heroHeading: "Premium audio, wearables en mobiel.",
+      heroSubtitle:
+        "Doordachte elektronica, gemaakt om langer mee te gaan dan één productcyclus.",
+      shopByPack: "Alle categorieën",
       backToShop: "Terug naar de shop",
       addToCart: "In winkelwagen",
       yourCart: "Jouw winkelwagen",

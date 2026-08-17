@@ -2,9 +2,11 @@ import type { Dictionary } from "@/lib/i18n/dictionary-type";
 
 const en: Dictionary = {
   nav: {
-    work: "Work",
+    home: "Home",
     services: "Services",
-    about: "About",
+    projects: "Projects",
+    about: "About Us",
+    process: "Process",
     contact: "Contact",
     startProject: "Start a project",
     orCall: "or call",
@@ -24,14 +26,18 @@ const en: Dictionary = {
   },
   home: {
     hero: {
-      badge: "Web studio in Maastricht",
-      titleBefore: "Websites that make your",
-      titleHighlight: "business easier to choose",
+      badge: "Web design & development",
+      titleBefore: "Digital solutions",
+      titleHighlight: "that drive growth",
       subtitle:
         "We design and build modern websites for businesses that want a clear, professional presence online.",
-      ctaPrimary: "Start a project",
-      ctaSecondary: "See our work",
-      trustLine: "Based in Maastricht. Working with businesses worldwide.",
+      ctaPrimary:
+        "Start a project",
+      ctaSecondary:
+        "See our work",
+      interactHint: "Drag to rotate",
+      trustLine:
+        "Based in Maastricht. Working with businesses worldwide.",
     },
     services: {
       eyebrow: "Services",
@@ -55,7 +61,7 @@ const en: Dictionary = {
       eyebrow: "Process",
       title: "How a project runs with us",
       subtitle:
-        "Five steps, from first conversation to launch. Every step has a clear outcome, so you always know where your project stands.",
+        "Four steps, from first conversation to launch. Every step has a clear outcome, so you always know where your project stands.",
     },
     faq: {
       eyebrow: "Frequently asked questions",
@@ -84,78 +90,82 @@ const en: Dictionary = {
       'Tell us what you need in a short call. We\'ll give you an honest answer, even if that answer is "not yet".',
     notSureCta: "Start a project",
     list: {
-      websites: {
-        title: "Websites",
+      "web-design": {
+        title: "Web Design",
         summary:
-          "Modern websites designed around your business, your customers and what you need the website to achieve.",
+          "Modern websites designed around your business, your customers and what the site has to achieve.",
         description:
-          "We start by understanding what your website needs to do, then design and build around that. Not a page builder theme with your logo on it.",
+          "We start by understanding what your website needs to do, then design and build around that. Not a page builder theme with your logo dropped on top.",
         features: [
           "Custom design, not a template",
           "Built with Next.js for speed",
-          "Content you can edit yourself",
-          "Works well on every device",
+          "Clean, semantic structure search engines can read",
+          "Works properly on every screen size",
         ],
       },
-      "online-stores": {
-        title: "Online Stores",
+      "ecommerce": {
+        title: "E-commerce",
         summary:
-          "Clean online stores that make it easy for customers to browse products and place orders.",
+          "Online stores that make it easy for customers to browse products and place an order.",
         description:
-          "From browsing to checkout, every step is designed to be simple. We set up a store you can manage yourself once it is live.",
+          "From the first product page to the confirmation screen, every step is designed to be simple. You get a store you can manage yourself once it is live.",
         features: [
           "Secure checkout and payments",
-          "Easy product management",
-          "Clear product pages",
-          "Works well on mobile",
+          "Product management you can handle",
+          "Product pages built to convert",
+          "Designed mobile first",
         ],
       },
       "web-applications": {
         title: "Web Applications",
         summary:
-          "Custom dashboards, portals and web tools for businesses that need more than a standard website.",
+          "Dashboards, portals and internal tools for businesses that need more than a website.",
         description:
-          "When an off the shelf tool does not fit how your business works, we build something that does.",
+          "When an off the shelf tool does not fit how your business actually works, we build something that does.",
         features: [
           "Client portals and dashboards",
           "Booking and scheduling tools",
-          "Connects with the systems you use",
+          "Connects with the systems you already use",
           "Built around your specific process",
         ],
       },
       "ui-ux-design": {
         title: "UI/UX Design",
-        summary: "Interfaces that are easy to use, not just nice to look at.",
+        summary:
+          "Interfaces that are easy to use, not only pleasant to look at.",
         description:
-          "Before any code gets written, we work out how the site should feel to use. Clear layouts, sensible navigation, no guessing what to click.",
+          "Before any code is written we work out how the site should feel to use. Clear layouts, sensible navigation, no guessing what to click.",
         features: [
           "Wireframes and layout planning",
-          "Consistent visual system",
-          "Designed for real content",
-          "Built with accessibility in mind",
+          "A consistent visual system",
+          "Designed around real content",
+          "Accessibility considered from the start",
         ],
       },
-      "seo-foundations": {
-        title: "SEO Foundations",
-        summary: "The technical basics that help your site get found on search engines.",
+      "maintenance": {
+        title: "Maintenance",
+        summary:
+          "Updates, fixes and improvements after your website goes live.",
         description:
-          "We handle the technical side of SEO, structure, page speed, metadata, so your content has a fair chance to rank.",
+          "A website needs upkeep after launch. We keep it updated, secure and running well, and handle changes as your business moves.",
         features: [
-          "Clean, semantic HTML structure",
-          "Fast page load times",
-          "Proper titles and meta descriptions",
-          "Sitemap and search engine setup",
-        ],
-      },
-      "website-support": {
-        title: "Website Support",
-        summary: "Ongoing updates, fixes and improvements after your website goes live.",
-        description: "A website needs upkeep after launch. We keep it updated, secure and running well.",
-        features: [
-          "Security updates",
+          "Security and dependency updates",
           "Regular backups",
           "Small changes handled quickly",
           "One point of contact",
+        ],
+      },
+      "global-focus": {
+        title: "Global Focus",
+        summary:
+          "Based in Maastricht, working with businesses in other countries and other languages.",
+        description:
+          "Where your customers are does not have to match where we are. We build multilingual sites and work remotely across time zones, with the same direct contact either way.",
+        features: [
+          "Multilingual sites, right to left included",
+          "Remote collaboration across time zones",
+          "Clear communication in English and Dutch",
+          "One person on your project throughout",
         ],
       },
     },
@@ -192,6 +202,16 @@ const en: Dictionary = {
       custom: { name: "Custom Web Application", price: "1,799", description: "For web applications, portals and anything beyond a standard website." },
     },
   },
+  globalFocus: {
+    eyebrow: "Global focus",
+    title: "One studio in Maastricht, clients in more than one country.",
+    body:
+      "Where your customers are does not have to match where we are. Projects run remotely, in the language your customers actually read, with the same person on your project from the first call to launch.",
+    basedLabel: "Based in",
+    basedValue: "Maastricht, Netherlands",
+    languagesLabel: "Site available in",
+    imageAlt: "A globe over a city at night",
+  },
   whyZevren: {
     items: [
       { title: "Small by design", description: "You work directly with the person building your website." },
@@ -202,11 +222,30 @@ const en: Dictionary = {
   },
   process: {
     steps: [
-      { title: "Tell us what you need", description: "We learn about your business and what you want the website to do." },
-      { title: "Plan", description: "We decide what pages, content and features are actually needed." },
-      { title: "Design", description: "We create the visual direction and refine it with your feedback." },
-      { title: "Build", description: "We develop the website and make sure everything works properly." },
-      { title: "Launch", description: "We test the website and prepare it for launch." },
+      {
+        title: "Discovery",
+        description: "We learn what your business does, who it serves and what the website has to achieve.",
+        detail:
+          "Before anything is designed we agree on the goal, the pages that are actually needed and the content that has to exist. This is where scope gets decided, so nothing surprising appears halfway through.",
+      },
+      {
+        title: "Design",
+        description: "We create the visual direction and refine it with your feedback until it is right.",
+        detail:
+          "You see the real layout with your own content, not a placeholder mockup. We work through the design together until the structure, tone and detail match how you want the business to come across.",
+      },
+      {
+        title: "Development",
+        description: "We build the site properly: responsive, fast and easy to maintain.",
+        detail:
+          "The design becomes a working site, written cleanly so it can be extended later. Everything is checked across desktop, tablet and phone as it is built rather than at the end.",
+      },
+      {
+        title: "Launch",
+        description: "We test everything, put it live and make sure you know how to use it.",
+        detail:
+          "Forms, links, speed, search visibility and analytics are checked before launch. After going live you get what you need to keep the site running, and we stay available for changes.",
+      },
     ],
   },
   faq: {
@@ -279,6 +318,11 @@ const en: Dictionary = {
         "€3,000+",
         "Not sure yet",
       ],
+      projectInfoLabel: "Project information",
+      projectInfoPlaceholder:
+        "Pages or features you have in mind, an existing website, a deadline",
+      projectInfoHint:
+        "Optional. Anything that helps us understand the size of the project.",
       messageLabel: "Tell us about your project",
       messagePlaceholder: "What are you running into, and what do you want to achieve?",
       sendButton: "Send message",
@@ -330,9 +374,11 @@ const en: Dictionary = {
       },
       "online-store": {
         category: "E-commerce",
-        description: "A complete online store for premium home and lifestyle products, from browsing to checkout.",
-        whatWeExplored: "This concept explores what a premium home goods store could look like online, from product discovery through to a simple, clear checkout.",
-        keyFeatures: ["Product catalogue", "Product filtering", "Shopping cart", "Checkout flow", "Order confirmation"],
+        description:
+          "A premium electronics store concept: headphones, speakers and wearables, from the product grid through to a confirmed order.",
+        whatWeExplored:
+          "This concept explores how a consumer electronics brand could sell directly online, with product photography carrying the page and a checkout that stays out of the customer's way.",
+        keyFeatures: ["Product grid and detail pages", "Colour and variant selection", "Shopping cart", "Checkout flow", "Order confirmation"],
       },
       "property-platform": {
         category: "Custom Web Application",
@@ -501,9 +547,10 @@ const en: Dictionary = {
       navShop: "Shop",
       cart: "Cart",
       newSeason: "New season",
-      heroHeading: "Premium home and lifestyle products.",
-      heroSubtitle: "Considered pieces for the home, made with natural materials and built to last.",
-      shopByPack: "All colours",
+      heroHeading: "Premium audio, wearables and mobile.",
+      heroSubtitle:
+        "Considered electronics, built to last longer than one product cycle.",
+      shopByPack: "All categories",
       backToShop: "Back to shop",
       addToCart: "Add to cart",
       yourCart: "Your cart",

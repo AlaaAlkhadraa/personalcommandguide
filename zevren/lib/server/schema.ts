@@ -27,6 +27,8 @@ export const submissions = pgTable(
     company: text("company"),
     needs: text("needs"),
     budget: text("budget"),
+    /** Optional structured detail about the project, separate from the message. */
+    projectInfo: text("project_info"),
     message: text("message").notNull(),
     /** sha256 of kind+email+message, used to collapse duplicate submits. */
     fingerprint: text("fingerprint").notNull(),

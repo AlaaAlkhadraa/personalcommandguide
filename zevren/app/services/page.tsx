@@ -1,9 +1,12 @@
+import Image from "next/image";
+
 import { PageHero } from "@/components/ui/PageHero";
 import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
 import { Button } from "@/components/ui/Button";
 import { PricingSection } from "@/components/services/PricingSection";
 import { SERVICES } from "@/lib/constants";
+import { IMAGES } from "@/lib/assets";
 import { buildMetadata } from "@/lib/seo";
 import { getLocale } from "@/lib/i18n/get-locale";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
@@ -11,7 +14,7 @@ import { getDictionary } from "@/lib/i18n/get-dictionary";
 export const metadata = buildMetadata({
   title: "Services",
   description:
-    "Websites, online stores, web applications and website support. See what ZEVREN can build for your business.",
+    "Web design, e-commerce, web applications, UI/UX design and maintenance. See what ZEVREN can build for your business.",
   path: "/services",
 });
 
@@ -26,7 +29,8 @@ export default async function ServicesPage() {
       <section className="py-20">
         <Container className="flex flex-col gap-20">
           {SERVICES.map((service, index) => {
-            const copy = s.list[service.slug as keyof typeof s.list];
+            const copy = s.list[service.slug];
+            const art = IMAGES[service.image];
             return (
               <div
                 key={service.slug}
@@ -34,13 +38,30 @@ export default async function ServicesPage() {
                 className="scroll-mt-28 grid gap-10 border-t border-white/10 pt-14 lg:grid-cols-[1fr_1.4fr] lg:gap-16"
               >
                 <div className="flex flex-col gap-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/15 text-accent">
-                    <Icon name={service.icon} />
+                  <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-white/10">
+                    <Image
+                      src={art.src}
+                      alt=""
+                      aria-hidden="true"
+                      fill
+                      loading="lazy"
+                      sizes="(max-width: 1024px) 100vw, 30vw"
+                      placeholder="blur"
+                      blurDataURL={art.blurDataURL}
+                      className="object-cover opacity-70"
+                    />
+                    <div
+                      aria-hidden="true"
+                      className="absolute inset-0 bg-gradient-to-t from-navy/90 to-transparent"
+                    />
+                    <div className="absolute bottom-4 left-4 flex h-11 w-11 items-center justify-center rounded-xl bg-primary/25 text-accent backdrop-blur-sm">
+                      <Icon name={service.icon} className="h-5 w-5" />
+                    </div>
                   </div>
                   <span className="text-xs font-semibold uppercase tracking-wider text-muted">
                     {String(index + 1).padStart(2, "0")}
                   </span>
-                  <h2 className="text-2xl font-semibold text-white sm:text-3xl">
+                  <h2 className="font-heading text-2xl font-semibold text-white sm:text-3xl">
                     {copy.title}
                   </h2>
                 </div>

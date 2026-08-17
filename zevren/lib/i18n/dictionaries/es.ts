@@ -2,9 +2,11 @@ import type { Dictionary } from "@/lib/i18n/dictionary-type";
 
 const es: Dictionary = {
   nav: {
-    work: "Proyectos",
+    home: "Inicio",
     services: "Servicios",
+    projects: "Proyectos",
     about: "Nosotros",
+    process: "Proceso",
     contact: "Contacto",
     startProject: "Iniciar un proyecto",
     orCall: "o llama al",
@@ -24,14 +26,18 @@ const es: Dictionary = {
   },
   home: {
     hero: {
-      badge: "Estudio web en Maastricht",
-      titleBefore: "Webs que facilitan elegir",
-      titleHighlight: "tu empresa",
+      badge: "Diseño y desarrollo web",
+      titleBefore: "Soluciones digitales",
+      titleHighlight: "que impulsan el crecimiento",
       subtitle:
         "Diseñamos y construimos sitios web modernos para empresas que quieren una presencia online clara y profesional.",
-      ctaPrimary: "Iniciar un proyecto",
-      ctaSecondary: "Ver nuestros proyectos",
-      trustLine: "Con sede en Maastricht. Trabajamos con empresas de todo el mundo.",
+      ctaPrimary:
+        "Iniciar un proyecto",
+      ctaSecondary:
+        "Ver nuestros proyectos",
+      interactHint: "Arrastra para girar",
+      trustLine:
+        "Con sede en Maastricht. Trabajamos con empresas de todo el mundo.",
     },
     services: {
       eyebrow: "Servicios",
@@ -55,7 +61,7 @@ const es: Dictionary = {
       eyebrow: "Proceso",
       title: "Así avanza un proyecto con nosotros",
       subtitle:
-        "Cinco pasos, desde la primera conversación hasta el lanzamiento. Cada paso tiene un resultado claro, para que siempre sepas en qué punto está tu proyecto.",
+        "Cuatro pasos, desde la primera conversación hasta el lanzamiento. Cada paso tiene un resultado claro, para que siempre sepas en qué punto está tu proyecto.",
     },
     faq: {
       eyebrow: "Preguntas frecuentes",
@@ -84,78 +90,82 @@ const es: Dictionary = {
       'Cuéntanos qué necesitas en una llamada breve. Te daremos una respuesta honesta, aunque esa respuesta sea "todavía no".',
     notSureCta: "Iniciar un proyecto",
     list: {
-      websites: {
-        title: "Sitios web",
+      "web-design": {
+        title: "Diseño web",
         summary:
-          "Sitios web modernos diseñados en torno a tu empresa, tus clientes y lo que necesitas que el sitio logre.",
+          "Sitios modernos diseñados en torno a su empresa, sus clientes y lo que la web debe lograr.",
         description:
-          "Empezamos por entender qué debe hacer tu sitio web, y luego diseñamos y construimos a partir de eso. No es una plantilla con tu logo encima.",
+          "Primero entendemos qué debe hacer su web y diseñamos y construimos a partir de ahí. No una plantilla con su logotipo encima.",
         features: [
-          "Diseño a medida, no una plantilla",
-          "Construido con Next.js para mayor velocidad",
-          "Contenido que puedes editar tú mismo",
-          "Funciona bien en todos los dispositivos",
+          "Diseño propio, no una plantilla",
+          "Construido con Next.js para ir rápido",
+          "Estructura limpia que los buscadores entienden",
+          "Funciona bien en cualquier pantalla",
         ],
       },
-      "online-stores": {
-        title: "Tiendas online",
+      "ecommerce": {
+        title: "E-commerce",
         summary:
-          "Tiendas online claras que facilitan a los clientes explorar productos y realizar pedidos.",
+          "Tiendas online donde el cliente encuentra y compra sin fricción.",
         description:
-          "Desde la navegación hasta el pago, cada paso está pensado para ser sencillo. Configuramos una tienda que podrás gestionar tú mismo una vez esté activa.",
+          "Desde la primera ficha de producto hasta la confirmación, cada paso es sencillo. La tienda la gestiona usted una vez publicada.",
         features: [
-          "Pago seguro",
-          "Gestión de productos sencilla",
-          "Páginas de producto claras",
-          "Funciona bien en móvil",
+          "Pago y pedido seguros",
+          "Gestión de productos manejable",
+          "Fichas pensadas para vender",
+          "Diseñado primero para móvil",
         ],
       },
       "web-applications": {
         title: "Aplicaciones web",
         summary:
-          "Paneles, portales y herramientas web a medida para empresas que necesitan más que un sitio web estándar.",
+          "Paneles, portales y herramientas internas para empresas que necesitan más que una web.",
         description:
-          "Cuando una herramienta estándar no encaja con la forma de trabajar de tu empresa, construimos algo que sí encaja.",
+          "Cuando una herramienta estándar no encaja con su forma de trabajar, construimos una que sí.",
         features: [
-          "Portales de clientes y paneles",
-          "Herramientas de reservas y planificación",
-          "Conexión con los sistemas que ya usas",
-          "Construido según tu proceso específico",
+          "Portales de cliente y paneles",
+          "Herramientas de reserva y planificación",
+          "Se conecta con los sistemas que ya usa",
+          "Construido sobre su proceso concreto",
         ],
       },
       "ui-ux-design": {
         title: "Diseño UI/UX",
-        summary: "Interfaces agradables de usar, no solo bonitas de ver.",
+        summary:
+          "Interfaces fáciles de usar, no solo agradables de ver.",
         description:
-          "Antes de escribir código, definimos cómo debe sentirse el sitio al usarlo. Diseño claro, navegación lógica, sin adivinar dónde hacer clic.",
+          "Antes de escribir código decidimos cómo debe sentirse el sitio. Estructura clara, navegación lógica, sin dudas sobre dónde pulsar.",
         features: [
-          "Wireframes y planificación de diseño",
-          "Sistema visual coherente",
-          "Diseñado para contenido real",
-          "Pensado con la accesibilidad en mente",
+          "Wireframes y planificación",
+          "Un sistema visual coherente",
+          "Diseñado sobre contenido real",
+          "Accesibilidad desde el principio",
         ],
       },
-      "seo-foundations": {
-        title: "Bases de SEO",
-        summary: "La base técnica que ayuda a que tu sitio se encuentre en los buscadores.",
+      "maintenance": {
+        title: "Mantenimiento",
+        summary:
+          "Actualizaciones, arreglos y mejoras después de publicar la web.",
         description:
-          "Nos encargamos del lado técnico del SEO, estructura, velocidad de carga, metadatos, para que tu contenido tenga una oportunidad real de posicionarse.",
-        features: [
-          "Estructura HTML limpia y semántica",
-          "Tiempos de carga rápidos",
-          "Títulos y meta descripciones adecuados",
-          "Sitemap y configuración para buscadores",
-        ],
-      },
-      "website-support": {
-        title: "Soporte de sitios web",
-        summary: "Actualizaciones, correcciones y mejoras continuas después de que tu sitio esté en línea.",
-        description: "Un sitio web necesita mantenimiento tras el lanzamiento. Lo mantenemos actualizado, seguro y funcionando bien.",
+          "Una web necesita cuidado tras el lanzamiento. La mantenemos actualizada, segura y rápida, y aplicamos los cambios que surjan.",
         features: [
           "Actualizaciones de seguridad",
           "Copias de seguridad periódicas",
           "Cambios pequeños resueltos rápido",
-          "Un único punto de contacto",
+          "Un único contacto",
+        ],
+      },
+      "global-focus": {
+        title: "Enfoque internacional",
+        summary:
+          "Con base en Maastricht, trabajando con empresas de otros países y otros idiomas.",
+        description:
+          "Dónde están sus clientes no tiene por qué coincidir con dónde estamos nosotros. Creamos sitios multilingües y trabajamos en remoto entre husos horarios.",
+        features: [
+          "Sitios multilingües, también de derecha a izquierda",
+          "Colaboración remota entre husos horarios",
+          "Comunicación clara en español e inglés",
+          "Una sola persona en su proyecto",
         ],
       },
     },
@@ -192,6 +202,16 @@ const es: Dictionary = {
       custom: { name: "Aplicación web a medida", price: "1.799", description: "Para aplicaciones web, portales y todo lo que va más allá de un sitio estándar." },
     },
   },
+  globalFocus: {
+    eyebrow: "Enfoque internacional",
+    title: "Un estudio en Maastricht, clientes en más de un país.",
+    body:
+      "Dónde están sus clientes no tiene por qué coincidir con dónde estamos nosotros. Los proyectos se llevan en remoto, en el idioma que sus clientes leen de verdad, con la misma persona desde la primera llamada hasta el lanzamiento.",
+    basedLabel: "Con base en",
+    basedValue: "Maastricht, Países Bajos",
+    languagesLabel: "Sitio disponible en",
+    imageAlt: "Un globo terráqueo sobre una ciudad de noche",
+  },
   whyZevren: {
     items: [
       { title: "Pequeños por diseño", description: "Trabajas directamente con la persona que construye tu sitio web." },
@@ -202,11 +222,30 @@ const es: Dictionary = {
   },
   process: {
     steps: [
-      { title: "Cuéntanos qué necesitas", description: "Conocemos tu empresa y qué quieres que haga el sitio web." },
-      { title: "Planificar", description: "Decidimos qué páginas, contenido y funciones son realmente necesarias." },
-      { title: "Diseñar", description: "Creamos la dirección visual y la afinamos con tus comentarios." },
-      { title: "Construir", description: "Desarrollamos el sitio web y nos aseguramos de que todo funcione correctamente." },
-      { title: "Lanzar", description: "Probamos el sitio web y lo preparamos para el lanzamiento." },
+      {
+        title: "Discovery",
+        description: "Aprendemos qué hace su empresa, para quién y qué debe lograr la web.",
+        detail:
+          "Antes de diseñar nada acordamos el objetivo, las páginas realmente necesarias y el contenido que debe existir. Aquí se decide el alcance, para que no aparezcan sorpresas a mitad de camino.",
+      },
+      {
+        title: "Design",
+        description: "Creamos la dirección visual y la refinamos con sus comentarios.",
+        detail:
+          "Ve la maquetación real con su propio contenido, no un mockup de relleno. Trabajamos el diseño juntos hasta que estructura, tono y detalle encajen.",
+      },
+      {
+        title: "Development",
+        description: "Construimos el sitio como corresponde: responsive, rápido y mantenible.",
+        detail:
+          "El diseño se convierte en un sitio que funciona, escrito con limpieza para poder ampliarlo. Todo se comprueba en escritorio, tableta y móvil durante la construcción.",
+      },
+      {
+        title: "Launch",
+        description: "Probamos todo, lo publicamos y nos aseguramos de que sepa usarlo.",
+        detail:
+          "Formularios, enlaces, velocidad, visibilidad y analítica se revisan antes de publicar. Después recibe lo necesario para mantener el sitio en marcha.",
+      },
     ],
   },
   faq: {
@@ -279,6 +318,11 @@ const es: Dictionary = {
         "3.000 €+",
         "Aún no lo sé",
       ],
+      projectInfoLabel: "Información del proyecto",
+      projectInfoPlaceholder:
+        "Páginas o funciones que tiene en mente, una web existente, una fecha límite",
+      projectInfoHint:
+        "Opcional. Cualquier cosa que ayude a entender el tamaño del proyecto.",
       messageLabel: "Cuéntanos sobre tu proyecto",
       messagePlaceholder: "¿Con qué te estás encontrando y qué quieres lograr?",
       sendButton: "Enviar mensaje",
@@ -329,10 +373,12 @@ const es: Dictionary = {
         keyFeatures: ["Reserva de servicio online", "Campo de matrícula", "Datos del vehículo", "Programación de citas", "Resumen de servicios"],
       },
       "online-store": {
-        category: "Comercio electrónico",
-        description: "Una tienda online completa para productos premium de hogar y estilo de vida, desde la navegación hasta el pago.",
-        whatWeExplored: "Este concepto explora cómo podría verse online una tienda premium de artículos para el hogar, desde el descubrimiento de productos hasta un pago simple y claro.",
-        keyFeatures: ["Catálogo de productos", "Filtrado de productos", "Carrito de compra", "Proceso de pago", "Confirmación de pedido"],
+        category: "E-commerce",
+        description:
+          "Una tienda de electrónica premium como concepto: auriculares, altavoces y wearables, desde la parrilla de producto hasta el pedido confirmado.",
+        whatWeExplored:
+          "Este concepto explora cómo una marca de electrónica podría vender directamente online, con la fotografía de producto sosteniendo la página y un checkout que no estorba.",
+        keyFeatures: ["Parrilla y fichas de producto", "Selección de color y variante", "Carrito", "Proceso de pago", "Confirmación de pedido"],
       },
       "property-platform": {
         category: "Aplicación web a medida",
@@ -501,9 +547,10 @@ const es: Dictionary = {
       navShop: "Tienda",
       cart: "Carrito",
       newSeason: "Nueva temporada",
-      heroHeading: "Productos premium de hogar y estilo de vida.",
-      heroSubtitle: "Piezas cuidadas para el hogar, hechas con materiales naturales y pensadas para durar.",
-      shopByPack: "Todos los colores",
+      heroHeading: "Audio premium, wearables y móvil.",
+      heroSubtitle:
+        "Electrónica pensada para durar más de un ciclo de producto.",
+      shopByPack: "Todas las categorías",
       backToShop: "Volver a la tienda",
       addToCart: "Añadir al carrito",
       yourCart: "Tu carrito",

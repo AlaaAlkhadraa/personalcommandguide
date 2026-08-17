@@ -26,6 +26,10 @@ const BUDGET = ["", "under-800", "800-1.5k", "1.5k-3k", "3k-plus", "not-sure"] a
 /** Rejects control characters that have no place in a name or company field. */
 const noControlChars = (value: string) => !/[\u0000-\u001F\u007F]/.test(value);
 
+/** Same, but for fields a visitor types across several lines. */
+const noControlCharsAllowingNewlines = (value: string) =>
+  !/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/.test(value);
+
 export const submissionSchema = contactFormSchema
   .extend({
     // Constrained to the exact option values the form renders. A hand-crafted
@@ -38,6 +42,15 @@ export const submissionSchema = contactFormSchema
       .trim()
       .max(120, "Company name is too long.")
       .refine(noControlChars, "Invalid value.")
+      .optional()
+      .or(z.literal("")),
+    projectInfo: z
+      .string()
+      .trim()
+      .max(2000, "Project information is too long, keep it under 2000 characters.")
+      // Multi-line, so newlines and tabs are allowed here; only the truly
+      // meaningless control characters are rejected.
+      .refine(noControlCharsAllowingNewlines, "Invalid value.")
       .optional()
       .or(z.literal("")),
     locale: z.enum(["en", "nl", "de", "fr", "es", "ar"]).optional(),

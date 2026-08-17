@@ -84,6 +84,7 @@ export function ContactForm({ dict }: { dict: Dictionary["contact"]["form"] }) {
       company: String(formData.get("company") ?? ""),
       needs: String(formData.get("needs") ?? ""),
       budget: String(formData.get("budget") ?? ""),
+      projectInfo: String(formData.get("projectInfo") ?? ""),
       message: String(formData.get("message") ?? ""),
       website: String(formData.get("website") ?? ""),
       csrfToken: csrfToken ?? undefined,
@@ -95,7 +96,9 @@ export function ContactForm({ dict }: { dict: Dictionary["contact"]["form"] }) {
     // A filled needs or budget makes this a project brief rather than a plain
     // message, so it goes to the endpoint that records it as one.
     const endpoint =
-      payload.needs || payload.budget ? "/api/project-request" : "/api/contact";
+      payload.needs || payload.budget || payload.projectInfo
+        ? "/api/project-request"
+        : "/api/contact";
 
     try {
       const response = await fetch(endpoint, {
@@ -253,6 +256,31 @@ export function ContactForm({ dict }: { dict: Dictionary["contact"]["form"] }) {
             ))}
           </select>
         </div>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <label htmlFor="projectInfo" className="text-sm font-medium text-white">
+          {dict.projectInfoLabel}
+        </label>
+        <textarea
+          id="projectInfo"
+          name="projectInfo"
+          rows={4}
+          aria-invalid={Boolean(errors.projectInfo)}
+          aria-describedby={
+            errors.projectInfo ? "projectInfo-error" : "projectInfo-hint"
+          }
+          className="resize-none rounded-lg border border-white/15 bg-surface px-4 py-3 text-sm text-white placeholder:text-muted/60 focus:border-accent"
+          placeholder={dict.projectInfoPlaceholder}
+        />
+        <p id="projectInfo-hint" className="text-xs text-muted">
+          {dict.projectInfoHint}
+        </p>
+        {errors.projectInfo && (
+          <p id="projectInfo-error" className="text-sm text-red-400">
+            {errors.projectInfo}
+          </p>
+        )}
       </div>
 
       <div className="flex flex-col gap-2">

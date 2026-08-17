@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
-import { WORK_DEMOS } from "@/components/work/registry";
+import { WORK_DEMOS } from "@/components/projects/registry";
 import { TajexDemo } from "@/components/demos/tajex/TajexDemo";
 import { WORK_ITEMS } from "@/lib/constants";
 import { buildMetadata } from "@/lib/seo";
@@ -28,7 +28,7 @@ export async function generateMetadata({
     return buildMetadata({
       title: "Project not found",
       description: "This project could not be found.",
-      path: `/work/${slug}`,
+      path: `/projects/${slug}`,
       noIndex: true,
     });
   }
@@ -36,7 +36,7 @@ export async function generateMetadata({
   return buildMetadata({
     title: project.name,
     description: project.description,
-    path: `/work/${project.slug}`,
+    path: `/projects/${project.slug}`,
   });
 }
 
@@ -69,7 +69,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       <section className="border-b border-white/5 bg-grid-glow py-20 sm:py-24">
         <Container className="flex flex-col gap-6">
           <Link
-            href="/work"
+            href="/projects"
             className="flex w-fit items-center gap-1.5 text-sm font-medium text-muted transition-colors hover:text-white"
           >
             <span aria-hidden="true">&larr;</span>
@@ -138,7 +138,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           <p className="max-w-lg text-muted">{w.detailCtaBody}</p>
           <div className="flex flex-col gap-4 sm:flex-row">
             <Button href="/contact">{w.startProject}</Button>
-            <Button href="/work" variant="secondary">
+            <Button href="/projects" variant="secondary">
               {w.seeMoreConcepts}
             </Button>
           </div>

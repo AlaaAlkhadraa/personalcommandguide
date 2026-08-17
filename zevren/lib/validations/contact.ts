@@ -29,6 +29,12 @@ export const contactFormSchema = z.object({
     .max(60, "Invalid value.")
     .optional()
     .or(z.literal("")),
+  projectInfo: z
+    .string()
+    .trim()
+    .max(2000, "Project information is too long, keep it under 2000 characters.")
+    .optional()
+    .or(z.literal("")),
   message: z
     .string()
     .trim()

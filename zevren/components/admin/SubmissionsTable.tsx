@@ -13,6 +13,7 @@ export interface AdminSubmission {
   company: string | null;
   needs: string | null;
   budget: string | null;
+  projectInfo: string | null;
   message: string;
   status: string;
   locale: string | null;
@@ -226,6 +227,17 @@ export function SubmissionsTable({
                       <dd className="text-white">{item.campaign || "-"}</dd>
                     </div>
                   </dl>
+
+                  {item.projectInfo && (
+                    <div className="flex flex-col gap-1">
+                      <span className="text-xs uppercase tracking-wider text-muted">
+                        Project information
+                      </span>
+                      <p className="whitespace-pre-wrap rounded-xl border border-white/10 bg-surface/50 p-4 text-sm leading-relaxed text-white">
+                        {item.projectInfo}
+                      </p>
+                    </div>
+                  )}
 
                   <p className="whitespace-pre-wrap rounded-xl border border-white/10 bg-surface/50 p-4 text-sm leading-relaxed text-white">
                     {item.message}

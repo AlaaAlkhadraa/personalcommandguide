@@ -15,8 +15,6 @@ interface NavbarProps {
   dict: Dictionary["nav"];
 }
 
-const NAV_LABEL_KEYS = ["work", "services", "about", "contact"] as const;
-
 export function Navbar({ locale, dict }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -77,9 +75,9 @@ export function Navbar({ locale, dict }: NavbarProps) {
 
         <nav
           aria-label="Main navigation"
-          className="hidden items-center gap-8 lg:flex"
+          className="hidden items-center gap-7 lg:flex"
         >
-          {NAV_LINKS.map((link, index) => {
+          {NAV_LINKS.map((link) => {
             const isActive =
               link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
             return (
@@ -87,11 +85,19 @@ export function Navbar({ locale, dict }: NavbarProps) {
                 key={link.href}
                 href={link.href}
                 aria-current={isActive ? "page" : undefined}
-                className={`text-sm font-medium transition-colors duration-200 ${
+                className={`relative py-1 text-sm font-medium transition-colors duration-200 ${
                   isActive ? "text-white" : "text-muted hover:text-white"
                 }`}
               >
-                {dict[NAV_LABEL_KEYS[index]!]}
+                {link.key ? dict[link.key] : link.label}
+                {/* Underline marks the current section. It grows from the
+                    centre on hover so the whole item reads as one target. */}
+                <span
+                  aria-hidden="true"
+                  className={`absolute -bottom-0.5 left-0 h-px w-full origin-center bg-accent transition-transform duration-300 ${
+                    isActive ? "scale-x-100" : "scale-x-0"
+                  }`}
+                />
               </Link>
             );
           })}
@@ -143,15 +149,22 @@ export function Navbar({ locale, dict }: NavbarProps) {
             aria-label="Mobile navigation"
             className="container-page flex flex-col gap-1 py-4"
           >
-            {NAV_LINKS.map((link, index) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="rounded-lg px-3 py-3 text-base font-medium text-white/90 transition-colors hover:bg-white/5"
-              >
-                {dict[NAV_LABEL_KEYS[index]!]}
-              </Link>
-            ))}
+            {NAV_LINKS.map((link) => {
+              const isActive =
+                link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  aria-current={isActive ? "page" : undefined}
+                  className={`rounded-lg px-3 py-3 text-base font-medium transition-colors ${
+                    isActive ? "bg-white/5 text-white" : "text-white/90 hover:bg-white/5"
+                  }`}
+                >
+                  {link.key ? dict[link.key] : link.label}
+                </Link>
+              );
+            })}
             <div className="mt-2 flex flex-col gap-3 py-2">
               <div className="px-3">
                 <LanguageSwitcher locale={locale} />

@@ -1,13 +1,16 @@
+import Image from "next/image";
+
 import { PageHero } from "@/components/ui/PageHero";
 import { Container } from "@/components/ui/Container";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { IMAGES } from "@/lib/assets";
 import { buildMetadata } from "@/lib/seo";
 import { getLocale } from "@/lib/i18n/get-locale";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 
 export const metadata = buildMetadata({
-  title: "About",
+  title: "About Us",
   description:
     "ZEVREN is an independent web studio based in Maastricht, Netherlands. Read how we work and what we focus on.",
   path: "/about",
@@ -16,12 +19,24 @@ export const metadata = buildMetadata({
 export default async function AboutPage() {
   const locale = await getLocale();
   const { about: a } = getDictionary(locale);
+  const backdrop = IMAGES["atmos-wave"];
 
   return (
     <>
       <PageHero eyebrow={a.eyebrow} title={a.title} description={a.subtitle} />
-      <section className="py-20">
-        <Container className="grid gap-16 lg:grid-cols-[1.1fr_1fr]">
+      <section className="relative overflow-hidden py-20">
+        <Image
+          src={backdrop.src}
+          alt=""
+          aria-hidden="true"
+          fill
+          loading="lazy"
+          sizes="100vw"
+          placeholder="blur"
+          blurDataURL={backdrop.blurDataURL}
+          className="pointer-events-none select-none object-cover opacity-[0.15] [mask-image:linear-gradient(to_bottom,black,transparent)]"
+        />
+        <Container className="relative grid gap-16 lg:grid-cols-[1.1fr_1fr]">
           <div className="flex flex-col gap-6">
             <h2 className="text-2xl font-semibold text-white sm:text-3xl">
               {a.howWeWorkTitle}

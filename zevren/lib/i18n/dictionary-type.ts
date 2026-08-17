@@ -1,8 +1,12 @@
+import type { ServiceSlug } from "@/types";
+
 export interface Dictionary {
   nav: {
-    work: string;
+    home: string;
     services: string;
+    projects: string;
     about: string;
+    process: string;
     contact: string;
     startProject: string;
     orCall: string;
@@ -28,6 +32,7 @@ export interface Dictionary {
       ctaPrimary: string;
       ctaSecondary: string;
       trustLine: string;
+      interactHint: string;
     };
     services: { eyebrow: string; title: string; subtitle: string; learnMore: string };
     work: { eyebrow: string; title: string; subtitle: string; allConcepts: string };
@@ -49,12 +54,7 @@ export interface Dictionary {
     notSureBody: string;
     notSureCta: string;
     list: Record<
-      | "websites"
-      | "online-stores"
-      | "web-applications"
-      | "ui-ux-design"
-      | "seo-foundations"
-      | "website-support",
+      ServiceSlug,
       { title: string; summary: string; description: string; features: string[] }
     >;
   };
@@ -88,8 +88,19 @@ export interface Dictionary {
       { name: string; price: string; description: string }
     >;
   };
+  globalFocus: {
+    eyebrow: string;
+    title: string;
+    body: string;
+    basedLabel: string;
+    basedValue: string;
+    languagesLabel: string;
+    imageAlt: string;
+  };
   whyZevren: { items: { title: string; description: string }[] };
-  process: { steps: { title: string; description: string }[] };
+  process: {
+    steps: { title: string; description: string; detail: string }[];
+  };
   faq: { items: { question: string; answer: string }[] };
   about: {
     eyebrow: string;
@@ -123,6 +134,9 @@ export interface Dictionary {
       needsOptions: string[];
       budgetLabel: string;
       budgetOptions: string[];
+      projectInfoLabel: string;
+      projectInfoPlaceholder: string;
+      projectInfoHint: string;
       messageLabel: string;
       messagePlaceholder: string;
       sendButton: string;

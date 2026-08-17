@@ -48,7 +48,7 @@ export default async function FoundingPage() {
             <p className="max-w-xl text-base leading-relaxed text-muted">{c.body}</p>
             <div className="flex flex-col gap-4 pt-2 sm:flex-row">
               {!status.soldOut && <Button href={claimHref()}>{c.cta}</Button>}
-              <Button href="/work" variant="secondary">
+              <Button href="/projects" variant="secondary">
                 {c.ctaSecondary}
               </Button>
             </div>

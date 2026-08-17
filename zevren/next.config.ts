@@ -41,12 +41,17 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
-      { source: "/portfolio", destination: "/work", permanent: true },
+      // The section was called Portfolio, then Work, and is now Projects.
+      // Both old paths keep working so nothing that was linked or indexed
+      // under them turns into a 404.
+      { source: "/portfolio", destination: "/projects", permanent: true },
       {
         source: "/portfolio/:slug",
-        destination: "/work/:slug",
+        destination: "/projects/:slug",
         permanent: true,
       },
+      { source: "/work", destination: "/projects", permanent: true },
+      { source: "/work/:slug", destination: "/projects/:slug", permanent: true },
       { source: "/reviews", destination: "/", permanent: true },
     ];
   },

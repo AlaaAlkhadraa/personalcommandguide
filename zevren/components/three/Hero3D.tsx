@@ -76,7 +76,7 @@ export function Hero3D() {
               Start a project
             </Link>
             <Link
-              href="/work"
+              href="/projects"
               className="rounded-full border border-white/20 px-6 py-3 text-sm font-semibold text-white transition-colors hover:border-white/40"
             >
               See our work

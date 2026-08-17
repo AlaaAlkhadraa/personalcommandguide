@@ -44,7 +44,7 @@ export async function FoundingSection({ dict }: { dict: Dictionary["campaign"] }
 
           <div className="flex flex-col gap-4 pt-2 sm:flex-row">
             {!status.soldOut && <Button href={claimHref()}>{dict.cta}</Button>}
-            <Button href="/work" variant="secondary">
+            <Button href="/projects" variant="secondary">
               {dict.ctaSecondary}
             </Button>
           </div>

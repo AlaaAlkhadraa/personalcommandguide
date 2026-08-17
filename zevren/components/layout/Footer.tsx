@@ -4,7 +4,6 @@ import { FOOTER_LEGAL_LINKS, NAV_LINKS, SITE_CONFIG } from "@/lib/constants";
 import type { Locale } from "@/lib/i18n/config";
 import type { Dictionary } from "@/lib/i18n/dictionary-type";
 
-const NAV_LABEL_KEYS = ["work", "services", "about", "contact"] as const;
 const LEGAL_LABEL_KEYS = ["privacyPolicy", "termsAndConditions"] as const;
 
 interface FooterProps {
@@ -52,13 +51,13 @@ export function Footer({ dict, navDict }: FooterProps) {
 
         <nav aria-label="Page navigation" className="flex flex-col gap-3">
           <span className="text-sm font-semibold text-white">{dict.navigationHeading}</span>
-          {NAV_LINKS.map((link, index) => (
+          {NAV_LINKS.filter((link) => link.href !== "/").map((link) => (
             <Link
               key={link.href}
               href={link.href}
               className="text-sm text-muted transition-colors hover:text-white"
             >
-              {navDict[NAV_LABEL_KEYS[index]!]}
+              {link.key ? navDict[link.key] : link.label}
             </Link>
           ))}
         </nav>
