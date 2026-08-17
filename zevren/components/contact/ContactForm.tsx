@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { SubmitButton } from "@/components/ui/Button";
 import type { ContactFormValues } from "@/types";
 import type { Dictionary } from "@/lib/i18n/dictionary-type";
@@ -19,10 +19,37 @@ const NEEDS_VALUES = [
 
 const BUDGET_VALUES = ["", "under-800", "800-1.5k", "1.5k-3k", "3k-plus", "not-sure"];
 
+/** Reads the locale cookie so the submission is stored with its language. */
+function readLocale(): string | undefined {
+  if (typeof document === "undefined") return undefined;
+  const match = document.cookie.match(/(?:^|;\s*)zevren_locale=([a-z]{2})(?:;|$)/);
+  return match?.[1];
+}
+
 export function ContactForm({ dict }: { dict: Dictionary["contact"]["form"] }) {
   const [status, setStatus] = useState<Status>("idle");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [serverError, setServerError] = useState<string | null>(null);
+  // CSRF token paired with an HttpOnly cookie the server sets. It is not a
+  // secret on its own: without the cookie it cannot authorise anything.
+  const [csrfToken, setCsrfToken] = useState<string | null>(null);
+  const mountedAt = useRef<number>(Date.now());
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/csrf", { credentials: "same-origin" })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data: { token?: string } | null) => {
+        if (!cancelled && data?.token) setCsrfToken(data.token);
+      })
+      .catch(() => {
+        // Leave the token unset: the submit below surfaces a reload prompt
+        // rather than silently posting something the server will refuse.
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -35,7 +62,11 @@ export function ContactForm({ dict }: { dict: Dictionary["contact"]["form"] }) {
     setServerError(null);
 
     const formData = new FormData(form);
-    const payload: ContactFormValues = {
+    const payload: ContactFormValues & {
+      csrfToken?: string;
+      elapsedMs: number;
+      locale?: string;
+    } = {
       name: String(formData.get("name") ?? ""),
       email: String(formData.get("email") ?? ""),
       company: String(formData.get("company") ?? ""),
@@ -43,12 +74,24 @@ export function ContactForm({ dict }: { dict: Dictionary["contact"]["form"] }) {
       budget: String(formData.get("budget") ?? ""),
       message: String(formData.get("message") ?? ""),
       website: String(formData.get("website") ?? ""),
+      csrfToken: csrfToken ?? undefined,
+      elapsedMs: Date.now() - mountedAt.current,
+      locale: readLocale(),
     };
 
+    // A filled needs or budget makes this a project brief rather than a plain
+    // message, so it goes to the endpoint that records it as one.
+    const endpoint =
+      payload.needs || payload.budget ? "/api/project-request" : "/api/contact";
+
     try {
-      const response = await fetch("/api/contact", {
+      const response = await fetch(endpoint, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(csrfToken ? { "x-csrf-token": csrfToken } : {}),
+        },
+        credentials: "same-origin",
         body: JSON.stringify(payload),
       });
 

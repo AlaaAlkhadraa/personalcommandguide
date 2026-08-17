@@ -250,3 +250,95 @@ Periodically (monthly recommended):
       available
 - [ ] The repository is always backed up via GitHub, no separate action
       needed as long as you push regularly
+
+## Backend
+
+The site is a Next.js app with a server-side backend for its forms and a
+private admin area. Everything below runs on the server; nothing in this
+section is reachable from the browser bundle.
+
+### Layout
+
+| Path | Purpose |
+| --- | --- |
+| `lib/server/env.ts` | Validated server configuration. Imports `server-only`, so a client import is a build error. |
+| `lib/server/db.ts` | Drizzle handle. Postgres in production, an embedded Postgres for local work. |
+| `lib/server/schema.ts` | Tables: submissions, admin users, sessions, rate limits, audit log. |
+| `lib/server/crypto.ts` | scrypt password hashing, keyed hashing, constant-time comparison. |
+| `lib/server/session.ts` | Opaque server-side sessions with absolute and idle expiry. |
+| `lib/server/csrf.ts` | Signed double-submit CSRF tokens. |
+| `lib/server/rate-limit.ts` | Fixed-window limiter shared across instances via the database. |
+| `lib/server/public-form.ts` | The pipeline behind both public write endpoints. |
+| `app/api/*` | Route handlers. |
+| `app/admin/*` | Admin area, `noindex`, session-gated on the server. |
+
+### Endpoints
+
+| Method | Route | Auth | Notes |
+| --- | --- | --- | --- |
+| GET | `/api/csrf` | none | Issues a CSRF token and its paired HttpOnly cookie. |
+| POST | `/api/contact` | CSRF + same-origin | Plain message. |
+| POST | `/api/project-request` | CSRF + same-origin | Project brief (needs or budget filled in). |
+| POST | `/api/admin/login` | CSRF + same-origin | Rate limited per client and per account. |
+| POST | `/api/admin/logout` | CSRF + session | Revokes the session server-side. |
+| GET | `/api/admin/submissions` | session | Paginated listing. |
+| PATCH | `/api/admin/submissions` | CSRF + session | Status change, fixed set of values. |
+
+Any other method on these routes returns 405. No route ever emits an
+`Access-Control-Allow-Origin` header, so the API is same-origin only.
+
+### Submission flow
+
+`browser -> same-origin check -> rate limit -> CSRF -> schema validation ->
+bot heuristics -> duplicate check -> database insert -> email -> 200`
+
+The success response is sent only after a row exists. Email is best effort and
+its outcome is recorded on the row; a mail outage never turns into a lost
+message or a false confirmation.
+
+### Setup
+
+```bash
+cp .env.example .env.local          # then fill it in
+openssl rand -base64 48             # value for AUTH_SECRET
+npm run db:migrate                  # create the tables
+ADMIN_EMAIL=you@example.com ADMIN_PASSWORD='...' npm run admin:create
+```
+
+The admin password is read from the environment, never from an argument, so it
+does not land in shell history or `ps` output. No credential is stored in the
+repository.
+
+Local development without a Postgres server:
+
+```bash
+DATABASE_DRIVER=pglite npm run db:migrate
+```
+
+The embedded driver is refused when `NODE_ENV=production`, so a deployment
+cannot silently fall back to a non-durable database.
+
+### Security notes
+
+- Passwords: scrypt (N=2^16, r=8) with a per-password salt, parameters stored
+  alongside the hash. Verification is constant-time and spends the same work
+  when the account does not exist, so login timing does not enumerate users.
+- Sessions: 256-bit opaque tokens; the database stores a keyed hash. HttpOnly,
+  Secure, SameSite=Strict, `__Host-` prefixed in production. Absolute and idle
+  expiry, revocable, and re-read from the database on every request.
+- CSRF: signed double-submit token plus an independent Origin/Referer check.
+- Injection: every statement goes through Drizzle's parameter binding. No
+  query string is built from user input.
+- XSS: submissions render as React text children. There is no
+  `dangerouslySetInnerHTML` anywhere in the app.
+- SSRF: the only outbound request is to a hard-coded email endpoint, with
+  redirects refused. No request body influences a URL.
+- Errors: handlers return fixed messages and log detail server-side only.
+
+### Known dependency advisories
+
+`npm audit` reports two findings against the postcss that Next.js 15 pins
+internally. They are build-time issues in a tool that only processes CSS
+authored in this repository, not request-time exposure, and the published fix
+is a major upgrade to Next.js 16. That upgrade is deliberately not bundled
+with this work; it needs its own pass with the full visual regression suite.

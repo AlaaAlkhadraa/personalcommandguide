@@ -7,8 +7,8 @@ import { methodNotAllowed, withErrorHandling } from "@/lib/server/http";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-export const POST = withErrorHandling("contact", (request: NextRequest) =>
-  handlePublicSubmission(request, "contact")
+export const POST = withErrorHandling("project-request", (request: NextRequest) =>
+  handlePublicSubmission(request, "project")
 );
 
 // Every other verb, including the CORS preflight, is refused. The endpoint is
