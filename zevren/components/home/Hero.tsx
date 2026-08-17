@@ -70,15 +70,15 @@ export function Hero({ dict }: { dict: Dictionary["home"]["hero"] }) {
     <section className="relative isolate overflow-hidden bg-navy">
       <HeroEnvironment />
 
-      {/* The mark sits behind the copy on wide screens and above it on
-          narrow ones, so the headline never lands on top of the Z. */}
-      {isWide === true && (
-        <div className="pointer-events-none absolute inset-y-0 end-0 flex w-[62%] items-center justify-center">
-          <div className="pointer-events-auto relative aspect-square w-full max-w-3xl">
-            {mark}
-          </div>
+      {/* Two slots, one canvas. The slots are laid out with CSS so the space is
+          reserved from the first paint, but only the one matching the current
+          breakpoint receives the mark: two mounted canvases would mean two
+          WebGL contexts and two decodes of the same model for one visible Z. */}
+      <div className="pointer-events-none absolute inset-y-0 end-0 hidden w-[62%] items-center justify-center lg:flex">
+        <div className="pointer-events-auto relative aspect-square w-full max-w-3xl">
+          {isWide === true && mark}
         </div>
-      )}
+      </div>
 
       {/* pointer-events-none on the container, auto on the column that
           actually holds content: the container spans the full width and sits
@@ -109,31 +109,26 @@ export function Hero({ dict }: { dict: Dictionary["home"]["hero"] }) {
             </ArrowButton>
           </div>
 
-          <div className="flex items-center gap-4 pt-6">
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-primary/40 bg-primary/10 text-accent">
-              <Icon name="globe" className="h-5 w-5" />
-            </span>
-            <span className="flex flex-col">
-              <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white">
-                {dict.basedIn}
-              </span>
-              <span className="text-[11px] uppercase tracking-[0.14em] text-muted">
-                {dict.worldwide}
-              </span>
-            </span>
+          {/* Desktop keeps the location line inside the copy column. On a
+              phone it belongs under the Z, so it is rendered there instead. */}
+          <div className="hidden items-center gap-4 pt-6 lg:flex">
+            <LocationBadge dict={dict} />
             <span
               aria-hidden="true"
-              className="hidden h-px flex-1 bg-gradient-to-r from-white/20 to-transparent sm:block"
+              className="h-px flex-1 bg-gradient-to-r from-white/20 to-transparent"
             />
           </div>
         </div>
 
-        {/* On narrow screens the mark moves into the flow, under the copy. */}
-        {isWide === false && (
-          <div className="pointer-events-auto relative mx-auto aspect-square w-full max-w-md">
-            {mark}
-          </div>
-        )}
+        {/* On a phone the mark is the lower half of the hero: full bleed to the
+            screen edges, with the copy above it and the location line below. */}
+        <div className="pointer-events-auto relative -mx-6 aspect-square w-[calc(100%+3rem)] lg:hidden">
+          {isWide === false && mark}
+        </div>
+
+        <div className="flex items-center gap-4 lg:hidden">
+          <LocationBadge dict={dict} />
+        </div>
       </div>
 
       {webGLSupported === true && (
@@ -142,7 +137,71 @@ export function Hero({ dict }: { dict: Dictionary["home"]["hero"] }) {
           <span aria-hidden="true" className="h-12 w-px bg-gradient-to-b from-muted/50 to-transparent" />
         </p>
       )}
+
+      {/* Phone scroll cue. Sits in the flow rather than pinned, so it lands at
+          the end of the hero instead of floating over the Z. `relative` is
+          load-bearing: the environment layer is absolutely positioned, and a
+          static sibling would paint underneath it however late it comes. */}
+      <div className="container-page relative flex flex-col items-center gap-3 pb-10 lg:hidden">
+        <span className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/80">
+          {dict.scroll}
+        </span>
+        <span className="flex w-full items-center gap-4">
+          <span aria-hidden="true" className="h-px flex-1 bg-gradient-to-r from-transparent to-white/15" />
+          <MouseGlyph reducedMotion={reducedMotion} />
+          <span aria-hidden="true" className="h-px flex-1 bg-gradient-to-l from-transparent to-white/15" />
+        </span>
+      </div>
     </section>
+  );
+}
+
+/** "Based in Maastricht / working with businesses worldwide". */
+function LocationBadge({ dict }: { dict: Dictionary["home"]["hero"] }) {
+  return (
+    <>
+      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-primary/40 bg-primary/10 text-accent">
+        <Icon name="globe" className="h-5 w-5" />
+      </span>
+      <span className="flex flex-col">
+        <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white">
+          {dict.basedIn}
+        </span>
+        <span className="text-[11px] uppercase tracking-[0.14em] text-accent">
+          {dict.worldwide}
+        </span>
+      </span>
+    </>
+  );
+}
+
+/**
+ * The scroll cue under the phone hero. The wheel only travels when the
+ * visitor has not asked for reduced motion; the glyph still reads as a mouse
+ * when it is still, so nothing is lost by holding it.
+ */
+function MouseGlyph({ reducedMotion }: { reducedMotion: boolean }) {
+  return (
+    <svg
+      viewBox="0 0 24 38"
+      aria-hidden="true"
+      className="h-9 w-6 text-white/60"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.4}
+    >
+      <rect x="1" y="1" width="22" height="36" rx="11" />
+      <circle cx="12" cy="10" r="1.8" fill="currentColor" stroke="none">
+        {!reducedMotion && (
+          <animate
+            attributeName="cy"
+            values="10;16;10"
+            dur="2.2s"
+            repeatCount="indefinite"
+          />
+        )}
+      </circle>
+    </svg>
   );
 }
 

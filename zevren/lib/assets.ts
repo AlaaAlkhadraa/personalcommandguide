@@ -358,6 +358,13 @@ export const IMAGES = {
     blurDataURL:
       "data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAADQAQCdASoQABAAAwBSJZwAAqGV89Lu8AD++Tl0oxMtan0UPD1VRAa9CzxX+NOxGdkKnl36JjPQp7n9QHTSiMI+n+xU2Ce1q71SHAAA",
   },
+  "project-ellezone": {
+    src: "/v2/project-ellezone.webp",
+    width: 1400,
+    height: 1120,
+    blurDataURL:
+      "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAADQAQCdASoQAA0AAwBSJQBOgBTAdD/BAAD+64V+xKRh0CoBvofYBtXT+hOL8Z1hSAxGkp6bDKIKH0PKD6Y9JGe7iNyiZhZBzH92VCaI0P9R4/cgAAA=",
+  },
 } as const satisfies Record<string, SiteImage>;
 
 export type ImageKey = keyof typeof IMAGES;

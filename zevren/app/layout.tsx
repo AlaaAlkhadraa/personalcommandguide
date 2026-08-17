@@ -89,7 +89,7 @@ const organizationJsonLd = {
   name: SITE_CONFIG.name,
   legalName: SITE_CONFIG.legalName,
   url: SITE_CONFIG.url,
-  logo: `${SITE_CONFIG.url}/logo-mark.png`,
+  logo: `${SITE_CONFIG.url}/zevren-wordmark.png`,
   email: SITE_CONFIG.email,
   telephone: SITE_CONFIG.phone,
   address: {

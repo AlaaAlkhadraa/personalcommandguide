@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FOOTER_LEGAL_LINKS, NAV_LINKS, SERVICES, SITE_CONFIG, WORK_ITEMS } from "@/lib/constants";
 import { IMAGES } from "@/lib/assets";
+import { Wordmark } from "@/components/layout/Wordmark";
 import type { Locale } from "@/lib/i18n/config";
 import type { Dictionary } from "@/lib/i18n/dictionary-type";
 
@@ -35,25 +36,8 @@ export function Footer({ dict, navDict, servicesDict, workDict }: FooterProps) {
 
       <div className="container-page relative grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr_1fr]">
         <div className="flex flex-col gap-4">
-          <Link href="/" className="flex items-center gap-3">
-            <Image
-              src="/logo-mark.png"
-              alt=""
-              width={32}
-              height={29}
-              className="h-8 w-auto drop-shadow-[0_0_10px_rgba(37,99,235,0.55)]"
-            />
-            <span className="flex flex-col leading-none">
-              <span className="font-logo text-xl font-bold tracking-[0.32em] text-white">
-                ZEVREN
-              </span>
-              <span
-                aria-hidden="true"
-                className="mt-1.5 text-[9px] font-medium uppercase tracking-[0.24em] text-accent/80"
-              >
-                {navDict.discipline}
-              </span>
-            </span>
+          <Link href="/" className="group flex w-fit items-center">
+            <Wordmark discipline={navDict.discipline} />
           </Link>
           <p className="max-w-sm text-sm leading-relaxed text-muted">
             {dict.description}

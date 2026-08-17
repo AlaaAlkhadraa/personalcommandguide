@@ -1,5 +1,7 @@
 import Image from "next/image";
 
+import { IMAGES } from "@/lib/assets";
+
 /**
  * ElleZone, the single-product webshop concept.
  *
@@ -78,12 +80,14 @@ export function EllezonePreview({ className = "" }: { className?: string }) {
 
         <div className="relative min-h-[92px] overflow-hidden rounded-lg bg-[#EFEBF7]">
           <Image
-            src="/ellezone/spice-jar-lifestyle.jpg"
+            src={IMAGES["project-ellezone"].src}
             alt=""
             fill
             loading="lazy"
             sizes="200px"
-            className="object-cover object-[50%_62%]"
+            placeholder="blur"
+            blurDataURL={IMAGES["project-ellezone"].blurDataURL}
+            className="object-cover object-[62%_58%]"
           />
         </div>
       </div>

@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NAV_LINKS, SITE_CONFIG } from "@/lib/constants";
 import { ArrowButton } from "@/components/ui/ArrowButton";
 import { Icon } from "@/components/ui/Icon";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
+import { Wordmark } from "@/components/layout/Wordmark";
 import type { Locale } from "@/lib/i18n/config";
 import type { Dictionary } from "@/lib/i18n/dictionary-type";
 
@@ -57,28 +57,8 @@ export function Navbar({ locale, dict }: NavbarProps) {
       }`}
     >
       <div className="container-page flex h-20 items-center justify-between">
-        <Link href="/" className="group -my-2 flex items-center gap-3 py-2">
-          <Image
-            src="/logo-mark.png"
-            alt=""
-            width={32}
-            height={29}
-            priority
-            className="h-8 w-auto drop-shadow-[0_0_10px_rgba(37,99,235,0.55)] transition-[filter] duration-300 group-hover:drop-shadow-[0_0_14px_rgba(96,165,250,0.7)]"
-          />
-          <span className="flex flex-col leading-none">
-            <span className="font-logo text-xl font-bold tracking-[0.32em] text-white">
-              ZEVREN
-            </span>
-            {/* The discipline line is decorative next to the wordmark; the
-                accessible name of the link is already "ZEVREN". */}
-            <span
-              aria-hidden="true"
-              className="mt-1.5 hidden text-[9px] font-medium uppercase tracking-[0.28em] text-accent/80 sm:block"
-            >
-              {dict.discipline}
-            </span>
-          </span>
+        <Link href="/" className="group -my-2 flex items-center py-2">
+          <Wordmark discipline={dict.discipline} priority />
         </Link>
 
         <nav

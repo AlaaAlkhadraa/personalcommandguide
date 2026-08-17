@@ -234,7 +234,7 @@ export const WORK_ITEMS: WorkItem[] = [
       "Checkout flow",
       "Account overview",
     ],
-    image: "store-desk",
+    image: "project-ellezone",
   },
   {
     slug: "accounting-firm",
