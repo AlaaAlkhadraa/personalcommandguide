@@ -1,7 +1,11 @@
+import Image from "next/image";
+
+import { IMAGES, type ImageKey } from "@/lib/assets";
+
 /**
- * Visual pieces for the barbershop concept. No photography is available in
- * this environment, so the shop shots are drawn as flat scenes in the same
- * black / brass palette.
+ * Visual pieces for the Ironside concept. The interior photography supplied
+ * with the concept carries the hero and the gallery; the mark and the icons
+ * stay drawn so they scale and take the brass colour from one place.
  */
 
 export const BRASS = "#C9A55F";
@@ -89,98 +93,61 @@ export function Star({ className = "" }: { className?: string }) {
 }
 
 /** Wide shot used behind the hero. */
+/**
+ * The room the concept is set in. This is the photograph supplied with the
+ * concept rather than a drawing of one, so the hero carries the weight the
+ * design intends. The caller positions this layer, which already gives the
+ * fill image its containing block.
+ */
 export function ShopBackdrop({ className = "" }: { className?: string }) {
+  const shot = IMAGES["barber-hero"];
   return (
-    <svg aria-hidden="true" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" className={className}>
-      <defs>
-        <linearGradient id="bs-wall" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#151517" />
-          <stop offset="100%" stopColor="#0B0B0C" />
-        </linearGradient>
-      </defs>
-      <rect width="1200" height="600" fill="url(#bs-wall)" />
-      {/* mirrors */}
-      {[160, 500, 840].map((x) => (
-        <g key={x}>
-          <rect x={x} y="90" width="220" height="270" rx="110" fill="#101012" stroke={BRASS} strokeOpacity="0.35" strokeWidth="3" />
-          <rect x={x + 24} y="120" width="172" height="210" rx="86" fill="#17171a" />
-        </g>
-      ))}
-      {/* counter */}
-      <rect y="392" width="1200" height="18" fill="#1b1b1e" />
-      <rect y="410" width="1200" height="190" fill="#0E0E10" />
-      {/* chairs */}
-      {[270, 610, 950].map((x) => (
-        <g key={x} opacity="0.85">
-          <rect x={x - 60} y="430" width="120" height="70" rx="14" fill="#1d1d21" />
-          <rect x={x - 46} y="500" width="92" height="16" rx="8" fill="#151518" />
-          <rect x={x - 10} y="516" width="20" height="60" fill="#151518" />
-          <rect x={x - 52} y="576" width="104" height="12" rx="6" fill={BRASS} opacity="0.5" />
-        </g>
-      ))}
-      {/* warm bulbs */}
-      {[100, 380, 660, 940, 1150].map((x) => (
-        <circle key={x} cx={x} cy="48" r="9" fill={BRASS} opacity="0.55" />
-      ))}
-    </svg>
+    <div aria-hidden="true" className={className}>
+      <Image
+        src={shot.src}
+        alt=""
+        fill
+        priority
+        sizes="100vw"
+        placeholder="blur"
+        blurDataURL={shot.blurDataURL}
+        className="object-cover object-[58%_center]"
+      />
+    </div>
   );
 }
 
-const GALLERY_VARIANTS = ["chair", "tools", "counter", "pole", "mirror", "sign"] as const;
-export type GalleryVariant = (typeof GALLERY_VARIANTS)[number];
-export const GALLERY_SET: GalleryVariant[] = [...GALLERY_VARIANTS];
+/**
+ * The gallery. Every frame is a real photograph of the shop: four details
+ * from the supplied interior and two from the second room, warmed to the
+ * same light so the set reads as one place.
+ */
+export const GALLERY_SET = [
+  "barber-chair",
+  "barber-mirrors",
+  "barber-sign",
+  "barber-stations",
+  "barber-shelf",
+  "barber-lounge",
+] as const satisfies readonly ImageKey[];
+
+export type GalleryVariant = (typeof GALLERY_SET)[number];
 
 /** Square tile used in the gallery grid. */
 export function GalleryTile({ variant, className = "" }: { variant: GalleryVariant; className?: string }) {
+  const shot = IMAGES[variant];
   return (
-    <svg aria-hidden="true" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice" className={className}>
-      <rect width="200" height="200" fill="#111113" />
-      {variant === "chair" && (
-        <g>
-          <rect x="45" y="70" width="110" height="60" rx="14" fill="#1e1e22" />
-          <rect x="58" y="130" width="84" height="14" rx="7" fill="#17171a" />
-          <rect x="92" y="144" width="16" height="40" fill="#17171a" />
-          <rect x="60" y="184" width="80" height="10" rx="5" fill={BRASS} opacity="0.55" />
-          <circle cx="100" cy="46" r="16" fill="#26262b" />
-        </g>
-      )}
-      {variant === "tools" && (
-        <g stroke={BRASS} strokeWidth="4" fill="none" opacity="0.8">
-          <circle cx="62" cy="140" r="14" />
-          <circle cx="112" cy="140" r="14" />
-          <path d="M72 130 140 55M102 130 34 55" />
-        </g>
-      )}
-      {variant === "counter" && (
-        <g>
-          <rect y="120" width="200" height="12" fill="#1d1d21" />
-          <rect y="132" width="200" height="68" fill="#141416" />
-          {[40, 75, 110, 145].map((x, i) => (
-            <rect key={x} x={x} y={92 - i * 4} width="14" height="28" rx="4" fill={BRASS} opacity="0.45" />
-          ))}
-        </g>
-      )}
-      {variant === "pole" && (
-        <g>
-          <rect x="82" y="30" width="36" height="140" rx="18" fill="#1a1a1e" stroke={BRASS} strokeWidth="2" />
-          {[0, 1, 2, 3, 4].map((i) => (
-            <path key={i} d={`M82 ${50 + i * 26} 118 ${36 + i * 26}`} stroke={BRASS} strokeWidth="7" opacity="0.55" />
-          ))}
-        </g>
-      )}
-      {variant === "mirror" && (
-        <g>
-          <rect x="45" y="25" width="110" height="150" rx="55" fill="#17171a" stroke={BRASS} strokeOpacity="0.5" strokeWidth="3" />
-          <rect x="63" y="45" width="74" height="110" rx="37" fill="#1f1f24" />
-        </g>
-      )}
-      {variant === "sign" && (
-        <g>
-          <rect x="28" y="70" width="144" height="60" rx="8" fill="#17171a" stroke={BRASS} strokeOpacity="0.6" strokeWidth="2" />
-          <path d="M52 100h96" stroke={BRASS} strokeWidth="6" opacity="0.7" />
-          <path d="M62 86h76M62 114h60" stroke="#3a3a40" strokeWidth="4" />
-        </g>
-      )}
-    </svg>
+    <div aria-hidden="true" className={`${className} relative overflow-hidden bg-[#111113]`}>
+      <Image
+        src={shot.src}
+        alt=""
+        fill
+        loading="lazy"
+        sizes="(max-width: 640px) 50vw, 33vw"
+        placeholder="blur"
+        blurDataURL={shot.blurDataURL}
+        className="object-cover transition-transform duration-700 hover:scale-105"
+      />
+    </div>
   );
 }

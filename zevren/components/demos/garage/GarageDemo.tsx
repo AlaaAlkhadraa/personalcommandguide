@@ -1,6 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
+
+import { IMAGES, type ImageKey } from "@/lib/assets";
 import {
   CAR_BRANDS,
   GARAGE_DATES,
@@ -64,17 +67,30 @@ interface Message {
 
 /* ------------------------------- art ------------------------------- */
 
+/**
+ * The brand lockup supplied with the concept. It ships on solid black, so it
+ * is blended rather than masked: screen leaves pure black transparent over a
+ * dark ground and keeps the chrome and orange intact, with no cut-out edges.
+ *
+ * The mark carries the brand name, so the accessible name is spelled out
+ * alongside it rather than left to the image.
+ */
 function Wordmark({ className = "" }: { className?: string }) {
+  const logo = IMAGES["garage-logo"];
   return (
-    <span className={`inline-flex items-center gap-2.5 ${className}`}>
-      <svg viewBox="0 0 28 28" className="h-7 w-7" aria-hidden="true">
-        <rect width="28" height="28" rx="7" fill="#151A21" stroke={ORANGE} strokeWidth="1.5" />
-        <path d="M6 18h16M8.5 18l1.5-5h8l1.5 5" stroke={ORANGE} strokeWidth="1.6" fill="none" strokeLinejoin="round" />
-        <circle cx="10" cy="19.5" r="1.6" fill={ORANGE} />
-        <circle cx="18" cy="19.5" r="1.6" fill={ORANGE} />
-      </svg>
-      <span className="font-heading text-[15px] font-bold uppercase tracking-[0.14em] text-[#E7EAEE]">
-        {GARAGE.name} <span style={{ color: ORANGE }}>{GARAGE.suffix}</span>
+    <span className={`inline-flex items-center ${className}`}>
+      <Image
+        src={logo.src}
+        alt=""
+        aria-hidden="true"
+        width={logo.width}
+        height={logo.height}
+        priority
+        sizes="200px"
+        className="h-7 w-auto mix-blend-screen"
+      />
+      <span className="sr-only">
+        {GARAGE.name} {GARAGE.suffix}
       </span>
     </span>
   );
@@ -137,93 +153,62 @@ function Icon({ name, className = "" }: { name: string; className?: string }) {
   );
 }
 
+/**
+ * The workshop the concept is set in. This is the photograph supplied with
+ * the concept, not a drawing of one, so the hero carries the same weight the
+ * design intends.
+ */
 function WorkshopBackdrop({ className = "" }: { className?: string }) {
+  const shot = IMAGES["garage-hero"];
+  // The caller positions this absolutely, which is already a containing block
+  // for the fill image. Adding `relative` here would fight that and collapse
+  // the layer to nothing.
   return (
-    <svg aria-hidden="true" viewBox="0 0 1200 560" preserveAspectRatio="xMidYMid slice" className={className}>
-      <rect width="1200" height="560" fill="#10141A" />
-      {/* roller shutter */}
-      <g opacity="0.5">
-        {Array.from({ length: 16 }).map((_, i) => (
-          <rect key={i} y={30 + i * 18} width="1200" height="12" fill={i % 2 ? "#161B23" : "#1B212B"} />
-        ))}
-      </g>
-      {/* lift + car silhouette */}
-      <g opacity="0.85">
-        <rect x="330" y="470" width="520" height="16" rx="4" fill="#1E2530" />
-        <rect x="560" y="386" width="24" height="84" fill="#1E2530" />
-        <path d="M380 386h420l-46-70H426z" fill="#1A202A" />
-        <rect x="368" y="330" width="444" height="58" rx="16" fill="#222A36" />
-        <circle cx="452" cy="392" r="26" fill="#12161C" />
-        <circle cx="728" cy="392" r="26" fill="#12161C" />
-      </g>
-      {/* hazard stripe */}
-      <g opacity="0.35">
-        {Array.from({ length: 40 }).map((_, i) => (
-          <path key={i} d={`M${i * 34 - 20} 560 L${i * 34 + 6} 512 h20 L${i * 34} 560 Z`} fill={ORANGE} />
-        ))}
-      </g>
-      {/* strip lights */}
-      {[220, 600, 980].map((x) => (
-        <rect key={x} x={x - 90} y="16" width="180" height="8" rx="4" fill="#E9F0FF" opacity="0.25" />
-      ))}
-    </svg>
+    <div aria-hidden="true" className={className}>
+      <Image
+        src={shot.src}
+        alt=""
+        fill
+        priority
+        sizes="100vw"
+        placeholder="blur"
+        blurDataURL={shot.blurDataURL}
+        // Anchored low and right so the car and the workshop sign both stay in
+        // frame when the band is much wider than the photograph.
+        className="object-cover object-[58%_62%]"
+      />
+    </div>
   );
 }
 
-function BayTile({ variant, className = "" }: { variant: number; className?: string }) {
+/**
+ * The six bays in the gallery. Every tile is a real photograph from the
+ * concept's own set, so the gallery shows the work rather than a pattern.
+ */
+const GALLERY_SHOTS = [
+  "garage-apk",
+  "garage-engine",
+  "garage-brakes",
+  "garage-diagnostics",
+  "garage-hero",
+  "project-garage",
+] as const;
+
+function BayPhoto({ imageKey, className = "" }: { imageKey: ImageKey; className?: string }) {
+  const shot = IMAGES[imageKey];
   return (
-    <svg
-      aria-hidden="true"
-      viewBox="0 0 200 200"
-      preserveAspectRatio="xMidYMid slice"
-      className={className}
-      // The second row mirrors and re-tints the first so the six bays do not
-      // read as the same three tiles printed twice.
-      style={variant >= 3 ? { transform: "scaleX(-1)" } : undefined}
-    >
-      <rect width="200" height="200" fill={variant >= 3 ? "#171D25" : "#141920"} />
-      {variant % 3 === 0 && (
-        <g>
-          <rect x="20" y="120" width="160" height="10" rx="3" fill="#1E2530" />
-          <rect x="94" y="80" width="12" height="40" fill="#1E2530" />
-          <rect x="46" y="52" width="108" height="30" rx="10" fill="#232B38" />
-          <circle cx="70" cy="86" r="14" fill="#0F1319" />
-          <circle cx="130" cy="86" r="14" fill="#0F1319" />
-          <path d="M0 176h200" stroke={ORANGE} strokeWidth="8" opacity="0.5" />
-        </g>
-      )}
-      {variant % 3 === 1 && (
-        <g stroke={ORANGE} strokeWidth="5" fill="none" opacity="0.8">
-          <circle cx="100" cy="100" r="46" />
-          <circle cx="100" cy="100" r="16" />
-          {/* Rounded to three decimals on purpose. Node and the browser can
-              disagree on the last bit of a trig result, and an unrounded
-              coordinate then renders as a different attribute on the server
-              than on the client, which React reports as a hydration mismatch. */}
-          {[0, 60, 120, 180, 240, 300].map((a) => {
-            const x = (100 + 40 * Math.cos((a * Math.PI) / 180)).toFixed(3);
-            const y = (100 + 40 * Math.sin((a * Math.PI) / 180)).toFixed(3);
-            return <path key={a} d={`M100 100 ${x} ${y}`} />;
-          })}
-        </g>
-      )}
-      {variant % 3 === 2 && (
-        <g>
-          {Array.from({ length: 12 }).map((_, i) => (
-            <rect
-              key={i}
-              x={22 + (i % 4) * 42}
-              y={30 + Math.floor(i / 4) * 50}
-              width="32"
-              height="38"
-              rx="4"
-              fill={i % 5 === 0 ? ORANGE : "#1F2733"}
-              opacity={i % 5 === 0 ? 0.7 : 1}
-            />
-          ))}
-        </g>
-      )}
-    </svg>
+    <div aria-hidden="true" className={`${className} relative bg-[#10141A]`}>
+      <Image
+        src={shot.src}
+        alt=""
+        fill
+        loading="lazy"
+        sizes="(max-width: 640px) 50vw, 33vw"
+        placeholder="blur"
+        blurDataURL={shot.blurDataURL}
+        className="object-cover transition-transform duration-700 hover:scale-105"
+      />
+    </div>
   );
 }
 
@@ -332,15 +317,46 @@ function Field({
   );
 }
 
+/**
+ * A photograph per service, from the concept's own set, so the price list
+ * shows the work instead of listing it. Keyed by service id rather than by
+ * position, so reordering the services cannot silently mismatch the images.
+ */
+const SERVICE_SHOTS: Record<string, ImageKey> = {
+  apk: "garage-apk",
+  maintenance: "garage-engine",
+  tyres: "project-garage",
+  brakes: "garage-brakes",
+  "oil-service": "garage-diagnostics",
+};
+
 function ServiceRows({ onPick }: { onPick?: (s: GarageService) => void }) {
   return (
     <div className="mt-9 border-t border-white/8">
       {GARAGE_SERVICES.map((s) => {
+        const shotKey = SERVICE_SHOTS[s.id];
+        const shot = shotKey ? IMAGES[shotKey] : null;
         const body = (
           <>
-            <div>
-              <p className="text-[17px] font-semibold text-[#E7EAEE]">{s.name}</p>
-              <p className="mt-1.5 text-[13px] leading-relaxed text-[#8A93A0]">{s.description}</p>
+            <div className="flex items-center gap-4">
+              {shot && (
+                <span aria-hidden="true" className="relative hidden h-14 w-20 shrink-0 overflow-hidden rounded-md border border-white/10 sm:block">
+                  <Image
+                    src={shot.src}
+                    alt=""
+                    fill
+                    loading="lazy"
+                    sizes="80px"
+                    placeholder="blur"
+                    blurDataURL={shot.blurDataURL}
+                    className="object-cover"
+                  />
+                </span>
+              )}
+              <span className="block">
+                <span className="block text-[17px] font-semibold text-[#E7EAEE]">{s.name}</span>
+                <span className="mt-1.5 block text-[13px] leading-relaxed text-[#8A93A0]">{s.description}</span>
+              </span>
             </div>
             <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-[#6C7784]">{s.duration}</span>
             <span className="font-heading text-[18px] font-bold" style={{ color: ORANGE }}>
@@ -521,8 +537,10 @@ export function GarageDemo({ dict, common }: GarageDemoProps) {
       {view === "home" && (
         <>
           <section className="relative overflow-hidden py-20 sm:py-28">
-            <WorkshopBackdrop className="pointer-events-none absolute inset-0 h-full w-full opacity-70" />
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#0E1116] via-[#0E1116]/93 to-[#0E1116]/45" />
+            <WorkshopBackdrop className="pointer-events-none absolute inset-0 h-full w-full" />
+            {/* Full strength on the right, where the car and the sign are, and
+                darkened under the headline so the type holds. */}
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#0E1116] via-[#0E1116]/88 to-[#0E1116]/15" />
             <Shell className="relative">
               <Eyebrow>{dict.heroLocation}</Eyebrow>
               <h2 className="mt-5 max-w-xl font-heading text-[34px] font-bold leading-[1.04] tracking-[-0.015em] text-[#E7EAEE] sm:text-[48px]">
@@ -577,9 +595,9 @@ export function GarageDemo({ dict, common }: GarageDemoProps) {
             <Shell>
               <Eyebrow>{dict.galleryHeading}</Eyebrow>
               <div className="mt-9 grid grid-cols-2 gap-3 sm:grid-cols-3">
-                {[0, 1, 2, 3, 4, 5].map((v) => (
-                  <div key={v} className="overflow-hidden rounded-lg border border-white/8">
-                    <BayTile variant={v} className="aspect-[4/3] w-full" />
+                {GALLERY_SHOTS.map((key) => (
+                  <div key={key} className="overflow-hidden rounded-lg border border-white/8">
+                    <BayPhoto imageKey={key} className="aspect-[4/3] w-full" />
                   </div>
                 ))}
               </div>

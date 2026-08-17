@@ -256,6 +256,108 @@ export const IMAGES = {
     blurDataURL:
       "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAAAQAgCdASoQABAAA4BaJbACdAEf/x/CgWUAAP713ITxiRNGzbVbtwkA0o5rDKq0qPbhJQJeabw1IiwIbQl+bdBLwtCTnV4Jxq3V5VwAAAA=",
   },
+
+  // Concept photography supplied for Steenberg Autoservice, Ironside and
+  // Nordwave. These are the concepts' own art direction, so they live here
+  // beside the ZEVREN library rather than inside the demo components.
+  "garage-hero": {
+    src: "/v2/garage-hero.webp",
+    width: 1536,
+    height: 1024,
+    blurDataURL:
+      "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAADwAQCdASoQAAsAAwBSJZwAAudl18HG1oAA/vnLKXM9jG4sdrNJ34dgnvoS2v+xYAihhUpoqMApnjoqBRvTpVM1nJiVEPerrkYQAA==",
+  },
+  "garage-logo": {
+    src: "/v2/garage-logo.webp",
+    width: 1200,
+    height: 410,
+    blurDataURL:
+      "data:image/webp;base64,UklGRkIAAABXRUJQVlA4IDYAAACwAQCdASoQAAUAAwBSJZwC7AEO9p5AAP74lDpHS5vB9YQxDNfWSSoIhspMlNOAAm2QCBAAAAA=",
+  },
+  "garage-apk": {
+    src: "/v2/garage-apk.webp",
+    width: 900,
+    height: 1350,
+    blurDataURL:
+      "data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAADQAwCdASoQABgAPt1apkyopSOiMAgBEBuJaQAAXgULsjWXDYGvw4AA/vDsnKsemIw4VaxdiOUlHsL9lGzB2L8K5hN07YRUtXi+Lm4DhIJFL9p8pvFDe3Vobz76fvlbU5SKfayz7M8+/XdBomAAAA==",
+  },
+  "garage-engine": {
+    src: "/v2/garage-engine.webp",
+    width: 900,
+    height: 1350,
+    blurDataURL:
+      "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAAAwAwCdASoQABgAPt1apkyopSOiMAgBEBuJaQAAFOi+UYSAAP7ys0kEpKvMh0K8qpsyZc3WBB+SIouJQfFlwd1lcRMGn4lqBeYw7wr/mP2lhnTpKUs1XEXfjcXBX0gwb3hAAA==",
+  },
+  "garage-brakes": {
+    src: "/v2/garage-brakes.webp",
+    width: 900,
+    height: 1350,
+    blurDataURL:
+      "data:image/webp;base64,UklGRn4AAABXRUJQVlA4IHIAAADwAwCdASoQABgAPt1apkyopSOiMAgBEBuJZwAAYf+FXgm9zMFLGrpAAP71l5lhcjjtkga9F8x3BN68hJE6Fk1i9UGFw4UB5CMH3wfe93XJi/+pASEe29s6yYxn7r9poEgG3wxZw7oPEin7/ghFh1oUAAA=",
+  },
+  "garage-diagnostics": {
+    src: "/v2/garage-diagnostics.webp",
+    width: 900,
+    height: 1350,
+    blurDataURL:
+      "data:image/webp;base64,UklGRogAAABXRUJQVlA4IHwAAADwAwCdASoQABgAPt1cpkyopSOiMAgBEBuJZQAD5FDZBf2R78ZQVRg4AP7Q/4nAkWztX3oQnoK5We96P0qXNiOwPfexds/2dcBYQLkpqe3sSahg1P3dfyOtcv8eZo+bBU4dTWe06DEUW/BfOXrlzRIVK1uc2nIllmN8fAAA",
+  },
+  "barber-hero": {
+    src: "/v2/barber-hero.webp",
+    width: 1536,
+    height: 1024,
+    blurDataURL:
+      "data:image/webp;base64,UklGRkAAAABXRUJQVlA4IDQAAACwAQCdASoQAAsAAwBSJZQAAujbZ3oAAP75wmM+lGdr71wHx8q5EJe0leOyiLM8Do8DgAAA",
+  },
+  "store-hero-shot": {
+    src: "/v2/store-hero-shot.webp",
+    width: 820,
+    height: 366,
+    blurDataURL:
+      "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAACwAQCdASoQAAcAAwBSJQBOgB2Sms5AAP7xioHGPyFpc1YYxZtrZJWx/lXYt1nu57f7kC4E0/pfgHpV5E5g463cAAA=",
+  },
+  "barber-chair": {
+    src: "/v2/barber-chair.webp",
+    width: 600,
+    height: 600,
+    blurDataURL:
+      "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAADQAQCdASoQABAAAwBSJYwCdAEPSddkAAD++co1FvTxr154H8E2c3JJYZwnzEIFJSIrVgLXRU9jYdpteYVRB0kDF7NT5L96WJWkT6QZAAA=",
+  },
+  "barber-sign": {
+    src: "/v2/barber-sign.webp",
+    width: 600,
+    height: 600,
+    blurDataURL:
+      "data:image/webp;base64,UklGRkQAAABXRUJQVlA4IDgAAADwAQCdASoQABAAAwBSJYwCdAERHyFIfgAA/vpkPK31v7jkVszwb5fWh1uJ4BluxD5Lbgj3AaJQAA==",
+  },
+  "barber-mirrors": {
+    src: "/v2/barber-mirrors.webp",
+    width: 600,
+    height: 600,
+    blurDataURL:
+      "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAAAwAgCdASoQABAAAwBSJYwCdAELYSn9f3XjAAD+9HGQnGrO1HqUrFdGirgL6nIFWbNsslm8SlRPA8Y6Mcqw771uCIEjz3vi9C1G5Fwup+yN3rwCAAA=",
+  },
+  "barber-lounge": {
+    src: "/v2/barber-lounge.webp",
+    width: 600,
+    height: 600,
+    blurDataURL:
+      "data:image/webp;base64,UklGRj4AAABXRUJQVlA4IDIAAADQAQCdASoQABAAAwBSJZwAAt4/n/fIAAD++cnAaPAdfmvYj13yJPcax/XmgMMPQBhAAA==",
+  },
+  "barber-shelf": {
+    src: "/v2/barber-shelf.webp",
+    width: 600,
+    height: 600,
+    blurDataURL:
+      "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAAAQAgCdASoQABAAAwBSJZwAAl1vPKT1HbwAAP7w652/Txemdm9L+iyu6pJEnqCyQyAd1le/bGSvtdsQ10GndFUjnP58YLe2fNGR96pDgAA=",
+  },
+  "barber-stations": {
+    src: "/v2/barber-stations.webp",
+    width: 600,
+    height: 600,
+    blurDataURL:
+      "data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAADQAQCdASoQABAAAwBSJZwAAqGV89Lu8AD++Tl0oxMtan0UPD1VRAa9CzxX+NOxGdkKnl36JjPQp7n9QHTSiMI+n+xU2Ce1q71SHAAA",
+  },
 } as const satisfies Record<string, SiteImage>;
 
 export type ImageKey = keyof typeof IMAGES;

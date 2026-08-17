@@ -343,8 +343,10 @@ export function BarbershopDemo({ dict, common }: BarbershopDemoProps) {
       {view === "home" && (
         <>
           <section className="relative overflow-hidden py-20 sm:py-28">
-            <ShopBackdrop className="pointer-events-none absolute inset-0 h-full w-full opacity-60" />
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#0B0B0C] via-[#0B0B0C]/92 to-[#0B0B0C]/45" />
+            <ShopBackdrop className="pointer-events-none absolute inset-0 h-full w-full" />
+            {/* The photograph is left at full strength on the right, where the
+                chair is, and darkened under the headline so the type holds. */}
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#0B0B0C] via-[#0B0B0C]/88 to-[#0B0B0C]/15" />
             <Shell className="relative">
               <Eyebrow>{dict.heroLocation}</Eyebrow>
               <h2 className="mt-5 max-w-lg font-heading text-[36px] font-bold uppercase leading-[1.02] tracking-[-0.01em] text-[#F2EFE9] sm:text-[52px]">

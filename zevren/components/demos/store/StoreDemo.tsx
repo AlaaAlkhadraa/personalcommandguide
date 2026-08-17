@@ -151,17 +151,35 @@ export function StoreDemo({ dict, common }: StoreDemoProps) {
 
       {view === "catalog" && (
         <>
-          {/* Hero */}
-          <section className="border-b border-slate-200 bg-gradient-to-br from-slate-100 to-slate-50 px-5 py-14 sm:px-8 sm:py-20">
-            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-blue-700">
-              {dict.newSeason}
-            </span>
-            <h2 className="mt-4 max-w-lg font-heading text-3xl font-semibold leading-tight text-slate-900 sm:text-4xl">
-              {dict.heroHeading}
-            </h2>
-            <p className="mt-4 max-w-md text-sm leading-relaxed text-slate-600">
-              {dict.heroSubtitle}
-            </p>
+          {/* Hero. The band is the supplied product photograph, anchored right
+              so the headline sits on the dark side of the room. */}
+          <section className="relative overflow-hidden border-b border-slate-200 bg-[#14120F] px-5 py-14 sm:px-8 sm:py-20">
+            <Image
+              src={IMAGES["store-hero-shot"].src}
+              alt=""
+              aria-hidden="true"
+              fill
+              priority
+              sizes="100vw"
+              placeholder="blur"
+              blurDataURL={IMAGES["store-hero-shot"].blurDataURL}
+              className="object-cover object-right"
+            />
+            <span
+              aria-hidden="true"
+              className="absolute inset-0 bg-gradient-to-r from-[#14120F] from-30% via-[#14120F]/55 via-50% to-transparent to-72%"
+            />
+            <div className="relative">
+              <span className="text-xs font-semibold uppercase tracking-[0.3em] text-blue-300">
+                {dict.newSeason}
+              </span>
+              <h2 className="mt-4 max-w-lg font-heading text-3xl font-semibold leading-tight text-white sm:text-4xl">
+                {dict.heroHeading}
+              </h2>
+              <p className="mt-4 max-w-md text-sm leading-relaxed text-white/70">
+                {dict.heroSubtitle}
+              </p>
+            </div>
           </section>
 
           {/* Categories + product grid */}
