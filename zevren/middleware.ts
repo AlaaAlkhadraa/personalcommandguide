@@ -14,13 +14,23 @@ export function middleware(request: NextRequest) {
   // Nonce-based CSP: Next.js reads the nonce off this header and applies it
   // to the inline scripts it injects for hydration, so we can keep
   // script-src free of 'unsafe-inline' while React still boots correctly.
+  //
+  // connect-src allows blob: because three's GLTFLoader unpacks textures
+  // embedded in the .glb into same-origin blob: URLs and fetches them back.
+  // These are created by our own page, not fetched from anywhere external,
+  // so this does not widen the origins the page can talk to.
+  //
+  // frame-src names google.com only so the Tajex concept can embed the real
+  // Google Maps location. Without it the iframe falls back to default-src
+  // 'self' and is blocked. Nothing else may be framed.
   const csp = `
     default-src 'self';
     script-src 'self' 'nonce-${nonce}' 'strict-dynamic' ${isDev ? "'unsafe-eval'" : ""};
     style-src 'self' 'unsafe-inline';
     img-src 'self' data: blob:;
     font-src 'self' data:;
-    connect-src 'self';
+    connect-src 'self' blob:;
+    frame-src https://www.google.com https://maps.google.com;
     frame-ancestors 'none';
     base-uri 'self';
     form-action 'self';

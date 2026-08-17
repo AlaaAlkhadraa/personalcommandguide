@@ -6,7 +6,7 @@ export function BarbershopPreview({ className = "" }: { className?: string }) {
     >
       <div className="flex items-center justify-between px-4 py-3">
         <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-amber-400">
-          Ironside
+          Barbershop
         </span>
         <span className="rounded-full bg-amber-400 px-2.5 py-1 text-[9px] font-semibold uppercase tracking-wider text-neutral-950">
           Book now

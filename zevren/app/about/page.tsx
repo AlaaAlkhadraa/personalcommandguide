@@ -3,6 +3,8 @@ import { Container } from "@/components/ui/Container";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { buildMetadata } from "@/lib/seo";
+import { getLocale } from "@/lib/i18n/get-locale";
+import { getDictionary } from "@/lib/i18n/get-dictionary";
 
 export const metadata = buildMetadata({
   title: "About",
@@ -11,62 +13,31 @@ export const metadata = buildMetadata({
   path: "/about",
 });
 
-const VALUES = [
-  {
-    title: "Direct communication",
-    description:
-      "You work directly with the person working on your project.",
-  },
-  {
-    title: "Straightforward advice",
-    description: "If something is unnecessary, we will say so.",
-  },
-  {
-    title: "No unnecessary complexity",
-    description: "We focus on what your website actually needs.",
-  },
-  {
-    title: "Long term thinking",
-    description: "The website should remain useful as your business develops.",
-  },
-];
+export default async function AboutPage() {
+  const locale = await getLocale();
+  const { about: a } = getDictionary(locale);
 
-export default function AboutPage() {
   return (
     <>
-      <PageHero
-        eyebrow="About"
-        title="An independent web studio in Maastricht"
-        description="ZEVREN is an independent web studio based in Maastricht, Netherlands. We build websites and digital products for businesses that want a better way to present themselves online."
-      />
+      <PageHero eyebrow={a.eyebrow} title={a.title} description={a.subtitle} />
       <section className="py-20">
         <Container className="grid gap-16 lg:grid-cols-[1.1fr_1fr]">
           <div className="flex flex-col gap-6">
             <h2 className="text-2xl font-semibold text-white sm:text-3xl">
-              How we work
+              {a.howWeWorkTitle}
             </h2>
-            <p className="leading-relaxed text-muted">
-              We keep things simple: understand the business, build what is
-              needed and avoid adding things just for the sake of it.
-            </p>
-            <p className="leading-relaxed text-muted">
-              We are keeping the studio small so we can stay close to every
-              project and communicate directly with the people we work with.
-            </p>
+            <p className="leading-relaxed text-muted">{a.howWeWorkP1}</p>
+            <p className="leading-relaxed text-muted">{a.howWeWorkP2}</p>
           </div>
           <div className="flex flex-col gap-4">
             <h2 className="text-2xl font-semibold text-white sm:text-3xl">
-              What matters to us
+              {a.valuesTitle}
             </h2>
             <div className="grid gap-4">
-              {VALUES.map((value) => (
+              {a.values.map((value) => (
                 <Card key={value.title} className="flex flex-col gap-2 p-6">
-                  <h3 className="text-base font-semibold text-white">
-                    {value.title}
-                  </h3>
-                  <p className="text-sm leading-relaxed text-muted">
-                    {value.description}
-                  </p>
+                  <h3 className="text-base font-semibold text-white">{value.title}</h3>
+                  <p className="text-sm leading-relaxed text-muted">{value.description}</p>
                 </Card>
               ))}
             </div>
@@ -75,14 +46,9 @@ export default function AboutPage() {
       </section>
       <section className="border-t border-white/5 bg-surface/30 py-20">
         <Container className="flex flex-col items-center gap-6 text-center">
-          <h2 className="max-w-xl text-3xl font-semibold text-white">
-            Wondering if we&apos;re a fit for your project?
-          </h2>
-          <p className="max-w-lg text-muted">
-            Tell us about your business and what you are looking to build.
-            We will get back to you with an honest answer.
-          </p>
-          <Button href="/contact">Start a project</Button>
+          <h2 className="max-w-xl text-3xl font-semibold text-white">{a.ctaTitle}</h2>
+          <p className="max-w-lg text-muted">{a.ctaBody}</p>
+          <Button href="/contact">{a.ctaButton}</Button>
         </Container>
       </section>
     </>

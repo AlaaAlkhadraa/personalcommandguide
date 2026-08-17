@@ -1,0 +1,145 @@
+"use client";
+
+import { useEffect, useMemo, useRef } from "react";
+import { useFrame } from "@react-three/fiber";
+import { useGLTF } from "@react-three/drei";
+import * as THREE from "three";
+import type { Group } from "three";
+
+interface ZMarkProps {
+  reducedMotion: boolean;
+  scrollProgressRef: React.RefObject<number>;
+}
+
+export const Z_MODEL_URL = "/models/zevren-z.glb";
+
+/**
+ * The supplied GLB is a single mesh with the glow baked into its base colour
+ * texture, so out of the box it is lit but inert. We reuse that same texture
+ * as an emissive map and give the surface some metalness, which makes the
+ * bright blue areas actually emit and the dark stone pick up the scene's
+ * environment reflections, without altering the model itself.
+ */
+function useTunedModel() {
+  // Both decoders are disabled on purpose. The model uses neither, and each
+  // would otherwise fight the site's CSP: Draco's default decoder path is a
+  // CDN (blocked by script-src), and meshopt instantiates WebAssembly, which
+  // needs 'wasm-unsafe-eval'. Turning them off keeps the CSP strict.
+  const { scene } = useGLTF(Z_MODEL_URL, false, false);
+
+  return useMemo(() => {
+    const root = scene.clone(true);
+
+    root.traverse((child) => {
+      if (!(child instanceof THREE.Mesh)) return;
+      child.castShadow = true;
+      child.receiveShadow = true;
+
+      const source = child.material as THREE.MeshStandardMaterial;
+      const map = source.map ?? null;
+
+      // The emissive colour is white, not blue: the texture already contains
+      // the blue glow, so tinting the emissive channel blue stains the dark
+      // stone as well and the whole monument turns flat blue. White at a low
+      // intensity lifts only the areas that are already bright.
+      const tuned = new THREE.MeshStandardMaterial({
+        map,
+        emissiveMap: map,
+        emissive: new THREE.Color("#ffffff"),
+        emissiveIntensity: 0.32,
+        metalness: 0.3,
+        roughness: 0.45,
+        envMapIntensity: 0.9,
+        side: THREE.FrontSide,
+      });
+
+      child.material = tuned;
+    });
+
+    // Normalise: centre on X/Z, sit the base near the origin, and scale to a
+    // predictable size so the hero framing does not depend on how the model
+    // happened to be exported.
+    const box = new THREE.Box3().setFromObject(root);
+    const size = new THREE.Vector3();
+    const centre = new THREE.Vector3();
+    box.getSize(size);
+    box.getCenter(centre);
+
+    const targetHeight = 2.6;
+    const scale = targetHeight / (size.y || 1);
+
+    root.scale.setScalar(scale);
+    root.position.set(
+      -centre.x * scale,
+      -centre.y * scale,
+      -centre.z * scale
+    );
+
+    return root;
+  }, [scene]);
+}
+
+export function ZMark({ reducedMotion, scrollProgressRef }: ZMarkProps) {
+  const outerRef = useRef<Group>(null);
+  const innerRef = useRef<Group>(null);
+  const target = useRef({ x: 0, y: 0 });
+  const model = useTunedModel();
+
+  // Free the GPU-side texture/geometry copies when the hero unmounts.
+  useEffect(() => {
+    return () => {
+      model.traverse((child) => {
+        if (child instanceof THREE.Mesh) {
+          child.geometry?.dispose?.();
+          const m = child.material as THREE.Material | THREE.Material[];
+          if (Array.isArray(m)) m.forEach((mm) => mm.dispose());
+          else m?.dispose?.();
+        }
+      });
+    };
+  }, [model]);
+
+  useFrame((state, delta) => {
+    const outer = outerRef.current;
+    const inner = innerRef.current;
+    if (!outer || !inner) return;
+
+    const scrollProgress = scrollProgressRef.current ?? 0;
+
+    // Mouse and touch parallax, eased so it never snaps. This is a direct
+    // response to the visitor's own input, so it stays on under reduced
+    // motion: what that setting asks us to drop is unsolicited animation,
+    // and freezing the model entirely reads as a broken 3D scene.
+    target.current.y = state.pointer.x * 0.3 - 0.35;
+    target.current.x = -state.pointer.y * 0.16;
+
+    outer.rotation.y += (target.current.y - outer.rotation.y) * Math.min(delta * 2.2, 1);
+    outer.rotation.x += (target.current.x - outer.rotation.x) * Math.min(delta * 2.2, 1);
+
+    if (reducedMotion) {
+      // Drop everything that moves on its own: no idle drift, no float.
+      inner.position.y = 0;
+      outer.position.y = -scrollProgress * 0.6;
+      return;
+    }
+
+    const t = state.clock.elapsedTime;
+
+    // Slow idle drift plus a gentle float.
+    outer.rotation.y += Math.sin(t * 0.18) * 0.0006;
+    inner.position.y = Math.sin(t * 0.7) * 0.06;
+
+    outer.position.y = -scrollProgress * 0.6;
+    outer.scale.setScalar(1 - scrollProgress * 0.12);
+  });
+
+  return (
+    <group ref={outerRef} position={[0, -0.1, 0]}>
+      <group ref={innerRef}>
+        <primitive object={model} />
+      </group>
+    </group>
+  );
+}
+
+useGLTF.preload(Z_MODEL_URL, false, false);

@@ -1,10 +1,19 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
-import { Inter, Orbitron, Space_Grotesk } from "next/font/google";
+import {
+  IBM_Plex_Mono,
+  Inter,
+  Orbitron,
+  Plus_Jakarta_Sans,
+  Space_Grotesk,
+} from "next/font/google";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { SITE_CONFIG } from "@/lib/constants";
+import { getLocale } from "@/lib/i18n/get-locale";
+import { getDictionary } from "@/lib/i18n/get-dictionary";
+import { isRtl } from "@/lib/i18n/config";
 import "./globals.css";
 
 const inter = Inter({
@@ -24,6 +33,24 @@ const orbitron = Orbitron({
   variable: "--font-orbitron",
   display: "swap",
   weight: ["600", "700"],
+});
+
+// Only the Tajex concept uses these two. preload is off so the other pages do
+// not fetch font files they never render with.
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-tajex",
+  display: "swap",
+  preload: false,
+  weight: ["400", "500", "600", "700", "800"],
+});
+
+const plexMono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  variable: "--font-tajex-mono",
+  display: "swap",
+  preload: false,
+  weight: ["400", "500", "600"],
 });
 
 export const metadata: Metadata = {
@@ -82,9 +109,16 @@ export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const nonce = (await headers()).get("x-nonce") ?? undefined;
+  const locale = await getLocale();
+  const dict = getDictionary(locale);
+  const dir = isRtl(locale) ? "rtl" : "ltr";
 
   return (
-    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable} ${orbitron.variable}`}>
+    <html
+      lang={locale}
+      dir={dir}
+      className={`${inter.variable} ${spaceGrotesk.variable} ${orbitron.variable} ${plusJakarta.variable} ${plexMono.variable}`}
+    >
       <body className="flex min-h-screen flex-col">
         <JsonLd data={organizationJsonLd} nonce={nonce} />
         <JsonLd data={websiteJsonLd} nonce={nonce} />
@@ -94,11 +128,11 @@ export default async function RootLayout({
         >
           Skip to main content
         </a>
-        <Navbar />
+        <Navbar locale={locale} dict={dict.nav} />
         <main id="main-content" className="flex-1">
           {children}
         </main>
-        <Footer />
+        <Footer locale={locale} dict={dict.footer} navDict={dict.nav} />
       </body>
     </html>
   );

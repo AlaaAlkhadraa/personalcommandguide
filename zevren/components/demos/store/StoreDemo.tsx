@@ -6,6 +6,7 @@ import {
   STORE_CATEGORIES,
   type Product,
 } from "@/lib/demos/store-data";
+import type { Dictionary } from "@/lib/i18n/dictionary-type";
 
 interface CartLine {
   product: Product;
@@ -28,7 +29,12 @@ function lineKey(productId: string, variantId: string) {
   return `${productId}__${variantId}`;
 }
 
-export function StoreDemo() {
+interface StoreDemoProps {
+  dict: Dictionary["demos"]["store"];
+  common: Dictionary["demoCommon"];
+}
+
+export function StoreDemo({ dict, common }: StoreDemoProps) {
   const [view, setView] = useState<View>("catalog");
   const [category, setCategory] = useState("All");
   const [activeProduct, setActiveProduct] = useState<Product | null>(null);
@@ -118,7 +124,7 @@ export function StoreDemo() {
           MAREN <span className="font-normal text-orange-800">HOME</span>
         </button>
         <div className="hidden items-center gap-6 text-sm text-stone-500 sm:flex">
-          <span>Shop</span>
+          <span>{dict.navShop}</span>
           <span>Lighting</span>
           <span>Textiles</span>
           <span>Kitchen</span>
@@ -128,7 +134,7 @@ export function StoreDemo() {
           onClick={() => setCartOpen(true)}
           className="relative flex items-center gap-2 rounded-full border border-stone-300 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-stone-700 transition-colors hover:border-orange-800/60"
         >
-          Cart
+          {dict.cart}
           {cartCount > 0 && (
             <span className="flex h-5 w-5 items-center justify-center rounded-full bg-orange-800 text-[10px] font-semibold text-white">
               {cartCount}
@@ -142,14 +148,13 @@ export function StoreDemo() {
           {/* Hero */}
           <section className="border-b border-stone-200 bg-gradient-to-br from-stone-100 to-stone-50 px-5 py-14 sm:px-8 sm:py-20">
             <span className="text-xs font-semibold uppercase tracking-[0.3em] text-orange-800">
-              New season
+              {dict.newSeason}
             </span>
             <h2 className="mt-4 max-w-lg font-heading text-3xl font-semibold leading-tight text-stone-900 sm:text-4xl">
-              Premium home and lifestyle products.
+              {dict.heroHeading}
             </h2>
             <p className="mt-4 max-w-md text-sm leading-relaxed text-stone-600">
-              Considered pieces for the home, made with natural materials and
-              built to last.
+              {dict.heroSubtitle}
             </p>
           </section>
 
@@ -204,7 +209,7 @@ export function StoreDemo() {
             onClick={backToCatalog}
             className="mb-6 text-xs font-medium text-stone-500 hover:text-orange-800"
           >
-            &larr; Back to shop
+            &larr; {dict.backToShop}
           </button>
           <div className="grid gap-8 sm:grid-cols-2">
             <div className={`h-64 rounded-xl bg-gradient-to-br sm:h-80 ${activeProduct.swatch}`} />
@@ -247,7 +252,7 @@ export function StoreDemo() {
                 onClick={addToCart}
                 className="mt-2 w-fit rounded-full bg-orange-800 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-orange-700"
               >
-                Add to cart
+                {dict.addToCart}
               </button>
             </div>
           </div>
@@ -261,50 +266,50 @@ export function StoreDemo() {
             onClick={() => setView("catalog")}
             className="mb-6 text-xs font-medium text-stone-500 hover:text-orange-800"
           >
-            &larr; Continue shopping
+            &larr; {dict.backToShop}
           </button>
-          <h2 className="font-heading text-2xl font-semibold text-stone-900">Checkout</h2>
+          <h2 className="font-heading text-2xl font-semibold text-stone-900">{dict.checkoutHeading}</h2>
           <div className="mt-6 grid gap-10 sm:grid-cols-[1.2fr_1fr]">
             <form onSubmit={handleCheckoutSubmit} className="flex flex-col gap-4">
               <div>
                 <label className="mb-1.5 block text-xs font-medium text-stone-500">
-                  Full name
+                  {dict.fullName}
                 </label>
                 <input
                   value={customer.name}
                   onChange={(e) => setCustomer({ ...customer, name: e.target.value })}
                   className="w-full rounded-md border border-stone-300 bg-white px-3 py-2.5 text-sm text-stone-900 outline-none focus:border-orange-800"
-                  placeholder="Jane Doe"
+                  placeholder={common.namePlaceholder}
                 />
                 {errors.name && <p className="mt-1 text-xs text-red-600">{errors.name}</p>}
               </div>
               <div>
                 <label className="mb-1.5 block text-xs font-medium text-stone-500">
-                  Email address
+                  {common.email}
                 </label>
                 <input
                   value={customer.email}
                   onChange={(e) => setCustomer({ ...customer, email: e.target.value })}
                   className="w-full rounded-md border border-stone-300 bg-white px-3 py-2.5 text-sm text-stone-900 outline-none focus:border-orange-800"
-                  placeholder="jane@example.com"
+                  placeholder={common.emailPlaceholder}
                 />
                 {errors.email && <p className="mt-1 text-xs text-red-600">{errors.email}</p>}
               </div>
               <div>
                 <label className="mb-1.5 block text-xs font-medium text-stone-500">
-                  Address
+                  {dict.address}
                 </label>
                 <input
                   value={customer.address}
                   onChange={(e) => setCustomer({ ...customer, address: e.target.value })}
                   className="w-full rounded-md border border-stone-300 bg-white px-3 py-2.5 text-sm text-stone-900 outline-none focus:border-orange-800"
-                  placeholder="Street and house number"
+                  placeholder={dict.addressPlaceholder}
                 />
                 {errors.address && <p className="mt-1 text-xs text-red-600">{errors.address}</p>}
               </div>
               <div>
                 <label className="mb-1.5 block text-xs font-medium text-stone-500">
-                  City
+                  {dict.city}
                 </label>
                 <input
                   value={customer.city}
@@ -318,12 +323,12 @@ export function StoreDemo() {
                 type="submit"
                 className="mt-2 w-fit rounded-full bg-orange-800 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-orange-700"
               >
-                Place order
+                {dict.placeOrder}
               </button>
             </form>
             <div className="flex flex-col gap-3 rounded-xl border border-stone-200 bg-white p-5 h-fit">
               <p className="text-xs font-semibold uppercase tracking-wider text-stone-500">
-                Order summary
+                {dict.orderSummary}
               </p>
               {cart.map((l) => (
                 <div
@@ -337,7 +342,7 @@ export function StoreDemo() {
                 </div>
               ))}
               <div className="mt-2 flex items-center justify-between border-t border-stone-200 pt-3 text-sm font-semibold text-stone-900">
-                <span>Total</span>
+                <span>{dict.subtotal}</span>
                 <span>&euro;{subtotal}</span>
               </div>
             </div>
@@ -352,26 +357,26 @@ export function StoreDemo() {
               <path d="m4 10 4 4 8-8" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </div>
-          <p className="text-xl font-semibold text-stone-900">Order confirmed</p>
+          <p className="text-xl font-semibold text-stone-900">{dict.orderConfirmedTitle}</p>
           <p className="max-w-sm text-sm leading-relaxed text-stone-600">
-            Thank you for your order.
+            {dict.orderConfirmedBody}
           </p>
           <p className="text-sm text-stone-500">
-            Order number: <span className="font-semibold text-stone-900">#ZEV-1024</span>
+            {dict.orderNumber} <span className="font-semibold text-stone-900">#ZEV-1024</span>
           </p>
           <button
             type="button"
             onClick={backToCatalog}
             className="mt-2 rounded-full border border-stone-300 px-5 py-2 text-xs font-semibold uppercase tracking-wider text-stone-700 transition-colors hover:border-orange-800/60"
           >
-            Back to shop
+            {dict.backToShop}
           </button>
         </section>
       )}
 
       {/* Footer */}
       <footer className="border-t border-stone-200 px-5 py-6 text-center text-xs text-stone-400 sm:px-8">
-        Maren Home &middot; a website concept by ZEVREN
+        Maren Home &middot; {common.footerTagline}
       </footer>
 
       {/* Cart drawer */}
@@ -380,7 +385,7 @@ export function StoreDemo() {
           <div className="flex h-full w-full max-w-sm flex-col bg-white p-5 sm:p-6">
             <div className="flex items-center justify-between">
               <p className="text-sm font-semibold uppercase tracking-wider text-stone-900">
-                Your cart
+                {dict.yourCart}
               </p>
               <button
                 type="button"
@@ -395,7 +400,7 @@ export function StoreDemo() {
             </div>
 
             {cart.length === 0 ? (
-              <p className="mt-8 text-sm text-stone-500">Your cart is empty.</p>
+              <p className="mt-8 text-sm text-stone-500">{dict.cartEmpty}</p>
             ) : (
               <div className="mt-6 flex flex-1 flex-col gap-4 overflow-y-auto">
                 {cart.map((l) => {
@@ -443,7 +448,7 @@ export function StoreDemo() {
 
             <div className="mt-6 border-t border-stone-200 pt-4">
               <div className="flex items-center justify-between text-sm font-semibold text-stone-900">
-                <span>Subtotal</span>
+                <span>{dict.subtotal}</span>
                 <span>&euro;{subtotal}</span>
               </div>
               <button
@@ -455,7 +460,7 @@ export function StoreDemo() {
                 }}
                 className="mt-4 w-full rounded-full bg-orange-800 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-orange-700 disabled:cursor-not-allowed disabled:opacity-40"
               >
-                Continue to checkout
+                {dict.continueToCheckout}
               </button>
             </div>
           </div>

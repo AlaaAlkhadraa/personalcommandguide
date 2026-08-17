@@ -1,22 +1,22 @@
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
+import type { Dictionary } from "@/lib/i18n/dictionary-type";
 
-export function FinalCTA() {
+export function FinalCTA({ dict }: { dict: Dictionary["home"]["finalCta"] }) {
   return (
     <section className="py-24">
       <Container>
         <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-hero-glow px-8 py-16 text-center sm:px-16">
           <h2 className="mx-auto max-w-2xl text-3xl font-semibold leading-tight text-white sm:text-4xl">
-            Ready to start your project?
+            {dict.title}
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-muted">
-            No sales pitch. Tell us about your project and we&apos;ll get
-            back to you to talk through the next step.
+            {dict.subtitle}
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Button href="/contact">Start a project</Button>
+            <Button href="/contact">{dict.ctaPrimary}</Button>
             <Button href="/services" variant="secondary">
-              See our services
+              {dict.ctaSecondary}
             </Button>
           </div>
         </div>

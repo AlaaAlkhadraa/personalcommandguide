@@ -8,6 +8,8 @@ const paths: Record<ServiceIcon, string> = {
     "M14.7 6.3a4 4 0 0 1-5.4 5.4L4 17v3h3l5.3-5.3a4 4 0 0 1 5.4-5.4L14.7 6.3Z",
   compass:
     "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM15 9l-2 6-6 2 2-6 6-2Z",
+  layers: "M12 3 3 8l9 5 9-5-9-5ZM3 12l9 5 9-5M3 16l9 5 9-5",
+  search: "M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM21 21l-4.35-4.35",
 };
 
 export function Icon({

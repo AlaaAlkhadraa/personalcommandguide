@@ -1,17 +1,19 @@
-import { FAQ_ITEMS } from "@/lib/constants";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Container } from "@/components/ui/Container";
+import type { Dictionary } from "@/lib/i18n/dictionary-type";
 
-export function FAQ() {
+interface FAQProps {
+  dict: Dictionary["faq"];
+  homeDict: Dictionary["home"]["faq"];
+}
+
+export function FAQ({ dict, homeDict }: FAQProps) {
   return (
     <section className="py-24">
       <Container className="flex flex-col gap-12">
-        <SectionHeading
-          eyebrow="Frequently asked questions"
-          title="Still have questions? These come up most"
-        />
+        <SectionHeading eyebrow={homeDict.eyebrow} title={homeDict.title} />
         <div className="mx-auto flex w-full max-w-3xl flex-col gap-3">
-          {FAQ_ITEMS.map((item) => (
+          {dict.items.map((item) => (
             <details
               key={item.question}
               className="group rounded-xl border border-white/10 bg-surface/50 px-6 py-4 open:border-primary/40"
@@ -25,9 +27,7 @@ export function FAQ() {
                   +
                 </span>
               </summary>
-              <p className="pt-3 text-sm leading-relaxed text-muted">
-                {item.answer}
-              </p>
+              <p className="pt-3 text-sm leading-relaxed text-muted">{item.answer}</p>
             </details>
           ))}
         </div>
