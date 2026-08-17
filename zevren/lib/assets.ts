@@ -249,6 +249,13 @@ export const IMAGES = {
     blurDataURL:
       "data:image/webp;base64,UklGRugAAABXRUJQVlA4WAoAAAAQAAAADwAADwAAQUxQSIMAAAABcBIATGUNeV+FQtIASQTk7FWgwzQh8OcJQAF6EGAF7v/2IkSEwrZtm+ydtGfAjWrQxuhBwRsH6wNi8HZ4weowUkoU0a2P7TbKpdaSaXMDKIu0t87c205o1eBjbnzcyC1HP+hApR8v7IWCNpgqv4FrQiOD7Mgl8iDxH8R/+uMfQfxnAABWUDggPgAAABACAJ0BKhAAEAAEAGglkAJ0AQ70ltyYvAAA/uv8R+jvkePjXsFd1lZSfiTN5gKd1Yrs5k94ynMPBXXXAAAA",
   },
+  "z-still": {
+    src: "/v2/z-still.webp",
+    width: 900,
+    height: 900,
+    blurDataURL:
+      "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAAAQAgCdASoQABAAA4BaJbACdAEf/x/CgWUAAP713ITxiRNGzbVbtwkA0o5rDKq0qPbhJQJeabw1IiwIbQl+bdBLwtCTnV4Jxq3V5VwAAAA=",
+  },
 } as const satisfies Record<string, SiteImage>;
 
 export type ImageKey = keyof typeof IMAGES;

@@ -25,7 +25,13 @@ export default async function ProjectsPage() {
       <section className="py-20">
         <Container className="grid gap-8 sm:grid-cols-2">
           {WORK_ITEMS.map((item, index) => (
-            <ProjectCard key={item.slug} item={item} dict={w} priority={index < 2} />
+            <ProjectCard
+              key={item.slug}
+              item={item}
+              dict={w}
+              priority={index < 2}
+              headingLevel="h2"
+            />
           ))}
         </Container>
       </section>

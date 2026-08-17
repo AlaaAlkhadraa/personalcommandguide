@@ -24,17 +24,17 @@ export function WhyZevren({ dict, homeDict }: WhyZevrenProps) {
           <span aria-hidden="true" className="h-0.5 w-12 bg-accent" />
         </div>
 
-        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
           {dict.items.map((item, index) => (
             <li
               key={item.title}
-              className="flex flex-col gap-2.5 rounded-xl border border-white/10 bg-navy/60 p-5 transition-colors duration-300 hover:border-accent/40"
+              className="flex flex-col gap-2 rounded-xl border border-white/10 bg-navy/60 p-4 transition-colors duration-300 hover:border-accent/40"
             >
               <span className="text-accent">
-                <Icon name={ICONS[index] ?? "layers"} className="h-6 w-6" />
+                <Icon name={ICONS[index] ?? "layers"} className="h-5 w-5" />
               </span>
-              <h3 className="text-[13px] font-semibold text-white">{item.title}</h3>
-              <p className="text-[12px] leading-relaxed text-muted">{item.description}</p>
+              <h3 className="text-[12px] font-semibold leading-tight text-white">{item.title}</h3>
+              <p className="text-[11px] leading-relaxed text-muted">{item.description}</p>
             </li>
           ))}
         </ul>

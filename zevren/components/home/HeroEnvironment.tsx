@@ -40,7 +40,7 @@ export function HeroEnvironment() {
         sizes="(max-width: 1024px) 100vw, 70vw"
         placeholder="blur"
         blurDataURL={city.blurDataURL}
-        className="absolute inset-x-0 bottom-0 h-[58%] w-full object-cover opacity-30 [mask-image:linear-gradient(to_bottom,transparent,black_40%,black_75%,transparent)] lg:inset-x-auto lg:end-0 lg:w-[72%]"
+        className="absolute inset-x-0 bottom-0 h-[62%] w-full object-cover opacity-65 [mask-image:linear-gradient(to_bottom,transparent,black_35%,black_82%,transparent)] lg:inset-x-auto lg:end-0 lg:w-[76%]"
       />
 
       {/* World map with its connection arcs, centred on the mark. */}
@@ -53,7 +53,7 @@ export function HeroEnvironment() {
         sizes="(max-width: 1024px) 100vw, 60vw"
         placeholder="blur"
         blurDataURL={map.blurDataURL}
-        className="absolute start-1/2 top-[6%] h-auto w-[min(115%,52rem)] -translate-x-1/2 object-contain opacity-45 mix-blend-screen [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_70%)] lg:start-[66%] lg:top-[-4%] lg:w-[46rem]"
+        className="absolute start-1/2 top-[2%] h-auto w-[min(125%,58rem)] -translate-x-1/2 object-contain opacity-80 mix-blend-screen [mask-image:radial-gradient(ellipse_at_center,black_38%,transparent_75%)] lg:start-[64%] lg:top-[-10%] lg:w-[54rem]"
       />
 
       {/* Reflective floor. */}
@@ -65,7 +65,7 @@ export function HeroEnvironment() {
         sizes="100vw"
         placeholder="blur"
         blurDataURL={floor.blurDataURL}
-        className="absolute inset-x-0 bottom-0 h-[38%] w-full object-cover object-top opacity-45 [mask-image:linear-gradient(to_bottom,black,transparent_88%)]"
+        className="absolute inset-x-0 bottom-0 h-[40%] w-full object-cover object-top opacity-70 [mask-image:linear-gradient(to_bottom,black,transparent_90%)]"
       />
 
       {/* Ground fog, softening the join between floor and city. */}
@@ -77,18 +77,18 @@ export function HeroEnvironment() {
         sizes="100vw"
         placeholder="blur"
         blurDataURL={fog.blurDataURL}
-        className="absolute inset-x-0 bottom-[6%] h-[34%] w-full object-cover opacity-25 mix-blend-screen [mask-image:linear-gradient(to_top,black,transparent)]"
+        className="absolute inset-x-0 bottom-[4%] h-[36%] w-full object-cover opacity-45 mix-blend-screen [mask-image:linear-gradient(to_top,black,transparent)]"
       />
 
       {/* Glow behind the mark, so it reads as lit rather than pasted on. */}
-      <div className="absolute start-[66%] top-1/2 hidden h-[34rem] w-[34rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/25 blur-[130px] lg:block" />
+      <div className="absolute start-[64%] top-1/2 hidden h-[40rem] w-[40rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/40 blur-[140px] lg:block" />
 
       {/* Floating rocks. Hidden below lg, where they only add clutter. */}
       {(
         [
-          ["rock-a", "start-[45%] top-[16%] w-[7rem] xl:w-[9rem]"],
-          ["rock-b", "end-[3%] top-[30%] w-[6rem] xl:w-[8rem]"],
-          ["rock-c", "end-[26%] bottom-[16%] w-[5rem] xl:w-[6.5rem]"],
+          ["rock-a", "start-[42%] top-[14%] w-[9rem] xl:w-[12rem]"],
+          ["rock-b", "end-[2%] top-[26%] w-[8rem] xl:w-[10.5rem]"],
+          ["rock-c", "end-[22%] bottom-[14%] w-[6.5rem] xl:w-[8.5rem]"],
         ] as const
       ).map(([key, position]) => {
         const rock = IMAGES[key];
@@ -109,8 +109,8 @@ export function HeroEnvironment() {
 
       {/* Vignette, then a left wash that guarantees the headline has ground
           under it whatever the imagery behind happens to be doing. */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_68%_50%,transparent_18%,rgba(5,8,22,0.7)_78%)]" />
-      <div className="absolute inset-y-0 start-0 w-full bg-gradient-to-r from-navy via-navy/80 to-transparent lg:w-[58%] lg:via-navy/70" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_66%_48%,transparent_28%,rgba(5,8,22,0.6)_82%)]" />
+      <div className="absolute inset-y-0 start-0 w-full bg-gradient-to-r from-navy via-navy/85 to-transparent lg:w-[52%] lg:via-navy/60" />
       <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-navy to-transparent" />
     </div>
   );

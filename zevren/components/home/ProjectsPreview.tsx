@@ -1,7 +1,7 @@
 import { WORK_ITEMS } from "@/lib/constants";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Container } from "@/components/ui/Container";
-import { Button } from "@/components/ui/Button";
+import { ArrowButton } from "@/components/ui/ArrowButton";
 import { ProjectCard } from "@/components/projects/ProjectCard";
 import type { Dictionary } from "@/lib/i18n/dictionary-type";
 
@@ -20,20 +20,23 @@ export function ProjectsPreview({ dict, homeDict }: ProjectsPreviewProps) {
   return (
     <section className="border-t border-white/5 bg-surface/30 py-24">
       <Container className="flex flex-col gap-12">
-        <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
-          <SectionHeading
-            eyebrow={homeDict.eyebrow}
-            title={homeDict.title}
-            description={homeDict.subtitle}
-          />
-          <Button href="/projects" variant="secondary" className="shrink-0">
-            {homeDict.allConcepts}
-          </Button>
-        </div>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <SectionHeading
+          eyebrow={homeDict.eyebrow}
+          title={homeDict.title}
+          description={homeDict.subtitle}
+        />
+        {/* Six across on a wide screen, as in the design; the compact tile
+            drops the interface mockup, which is unreadable at that width. */}
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
           {featured.map((item) => (
-            <ProjectCard key={item.slug} item={item} dict={dict} />
+            <ProjectCard key={item.slug} item={item} dict={dict} compact />
           ))}
+        </div>
+
+        <div className="flex justify-center">
+          <ArrowButton href="/projects" variant="outline">
+            {homeDict.allConcepts}
+          </ArrowButton>
         </div>
       </Container>
     </section>

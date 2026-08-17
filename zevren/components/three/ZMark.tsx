@@ -68,7 +68,7 @@ function useTunedModel() {
     // Sized off the longest axis, not the height: the mark is wider than it is
     // tall once it turns, and scaling by height alone let the corners swing
     // outside the canvas and clip.
-    const targetSize = 2.7;
+    const targetSize = 3.15;
     const longest = Math.max(size.x, size.y, size.z) || 1;
     const scale = targetSize / longest;
 

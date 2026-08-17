@@ -18,14 +18,14 @@ export function Scene3D({ reducedMotion, scrollProgressRef, lowPower = false }: 
       dpr={lowPower ? [1, 1.25] : [1, 1.75]}
       gl={{ antialias: !lowPower, alpha: true }}
     >
-      <ambientLight intensity={0.35} />
+      <ambientLight intensity={0.5} />
 
       {/* Key light, cool and front-right */}
-      <spotLight position={[4, 4, 5]} angle={0.6} penumbra={1} intensity={70} color="#bfdbfe" />
+      <spotLight position={[4, 4, 5]} angle={0.6} penumbra={1} intensity={95} color="#dbeafe" />
       {/* Rim light from behind-left to separate the Z from the dark background */}
-      <pointLight position={[-4, 1.5, -3]} intensity={45} color="#1d4ed8" />
+      <pointLight position={[-4, 1.5, -3]} intensity={70} color="#2563eb" />
       {/* Blue spill low and in front, grazing the base */}
-      <pointLight position={[0, -2.1, 2.4]} intensity={16} color="#3b82f6" />
+      <pointLight position={[0, -2.1, 2.4]} intensity={26} color="#3b82f6" />
       <pointLight position={[0, 4, 1]} intensity={14} color="#ffffff" />
 
       {/* Procedural environment: no external HDR fetch, so it works under the
