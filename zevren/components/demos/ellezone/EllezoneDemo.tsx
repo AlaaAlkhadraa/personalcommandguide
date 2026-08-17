@@ -160,18 +160,17 @@ export function EllezoneDemo({ dict, common }: EllezoneDemoProps) {
     <div className="relative overflow-hidden rounded-2xl border border-[#E4DFF0] bg-white text-[#241F2E]">
       {/* Navigation */}
       <nav className="flex items-center justify-between gap-4 border-b border-[#EFEBF7] bg-white px-6 py-5 sm:px-9">
-        <button type="button" onClick={() => setView("home")} className="flex items-center gap-2.5">
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#4C3A78]">
-            <span className="font-heading text-[14px] font-semibold text-white">E</span>
-          </span>
-          <span className="leading-tight text-left">
-            <span className="block font-heading text-[17px] font-semibold tracking-[0.01em] text-[#4C3A78]">
-              ElleZone
-            </span>
-            <span className="mt-0.5 block font-mono text-[8px] uppercase tracking-[0.24em] text-[#6B6577]">
-              Power of possibility
-            </span>
-          </span>
+        <button type="button" onClick={() => setView("home")} aria-label="ElleZone">
+          {/* The brand's own logo. It is a JPEG on white, which sits on the
+              nav's white background without needing a cut-out. */}
+          <Image
+            src="/ellezone/logo.png"
+            alt="ElleZone, power of possibility"
+            width={900}
+            height={665}
+            priority
+            className="h-14 w-auto sm:h-16"
+          />
         </button>
         <div className="hidden items-center gap-7 text-sm text-[#6B6577] sm:flex">
           <button type="button" onClick={() => setView("shop")} className="hover:text-[#4C3A78]">
@@ -703,8 +702,15 @@ export function EllezoneDemo({ dict, common }: EllezoneDemoProps) {
       )}
 
       {/* Footer */}
-      <footer className="border-t border-[#EFEBF7] px-5 py-6 text-center text-xs text-stone-400 sm:px-8">
-        ElleZone &middot; {common.footerTagline}
+      <footer className="flex flex-col items-center gap-3 border-t border-[#EFEBF7] px-5 py-8 text-center sm:px-8">
+        <Image
+          src="/ellezone/logo.png"
+          alt="ElleZone, power of possibility"
+          width={900}
+          height={665}
+          className="h-14 w-auto"
+        />
+        <p className="text-xs text-stone-400">{common.footerTagline}</p>
       </footer>
 
       {/* Cart drawer */}
