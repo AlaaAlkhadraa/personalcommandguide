@@ -15,7 +15,7 @@ interface ProjectsPreviewProps {
  * /projects, so the home page stays a summary rather than a second listing.
  */
 export function ProjectsPreview({ dict, homeDict }: ProjectsPreviewProps) {
-  const featured = WORK_ITEMS.slice(0, 3);
+  const featured = WORK_ITEMS.slice(0, 6);
 
   return (
     <section className="border-t border-white/5 bg-surface/30 py-24">

@@ -15,6 +15,8 @@ export interface Dictionary {
   footer: {
     description: string;
     navigationHeading: string;
+    servicesHeading: string;
+    projectsHeading: string;
     contactHeading: string;
     officeHeading: string;
     companyHeading: string;
@@ -38,10 +40,26 @@ export interface Dictionary {
     };
     services: { eyebrow: string; title: string; subtitle: string; learnMore: string };
     work: { eyebrow: string; title: string; subtitle: string; allConcepts: string };
+    about: {
+      eyebrow: string;
+      titleBefore: string;
+      titleHighlight: string;
+      body: string;
+      cta: string;
+      points: { title: string; description: string }[];
+    };
     why: { eyebrow: string; title: string };
     process: { eyebrow: string; title: string; subtitle: string };
     faq: { eyebrow: string; title: string };
-    finalCta: { title: string; subtitle: string; ctaPrimary: string; ctaSecondary: string };
+    finalCta: {
+      eyebrow: string;
+      title: string;
+      subtitle: string;
+      ctaPrimary: string;
+      ctaSecondary: string;
+      formHeading: string;
+      worldwide: string;
+    };
   };
   services: {
     eyebrow: string;
@@ -59,8 +77,6 @@ export interface Dictionary {
       ServiceSlug,
       {
         title: string;
-        /** Two or three words for the hero strip. */
-        tagline: string;
         summary: string;
         description: string;
         features: string[];
@@ -97,17 +113,18 @@ export interface Dictionary {
       { name: string; price: string; description: string }
     >;
   };
-  heroFacts: {
+  mission: {
     eyebrow: string;
+    titleBefore: string;
+    titleHighlight: string;
     conceptsLabel: string;
     languagesLabel: string;
     spotsLabel: string;
-    basedLabel: string;
-    basedValue: string;
-    cta: string;
-    note: string;
+    responseLabel: string;
+    responseValue: string;
   };
   globalFocus: {
+    cta: string;
     eyebrow: string;
     title: string;
     body: string;

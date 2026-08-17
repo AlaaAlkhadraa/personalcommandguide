@@ -153,7 +153,13 @@ export default async function RootLayout({
         <main id="main-content" className="flex-1">
           {children}
         </main>
-        <Footer locale={locale} dict={dict.footer} navDict={dict.nav} />
+        <Footer
+          locale={locale}
+          dict={dict.footer}
+          navDict={dict.nav}
+          servicesDict={dict.services}
+          workDict={dict.work}
+        />
       </body>
     </html>
   );

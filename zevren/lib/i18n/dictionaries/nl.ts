@@ -15,6 +15,8 @@ const nl: Dictionary = {
   footer: {
     description:
       "We ontwerpen en bouwen moderne websites voor bedrijven die een duidelijke, professionele online aanwezigheid willen.",
+    servicesHeading: "Diensten",
+    projectsHeading: "Projecten",
     navigationHeading: "Navigatie",
     contactHeading: "Contact",
     officeHeading: "Kantoor",
@@ -52,6 +54,36 @@ const nl: Dictionary = {
         "Interactieve conceptwebsites voor verschillende branches, stuk voor stuk volledig gebouwd zodat u erdoorheen kunt klikken in plaats van naar een screenshot te kijken.",
       allConcepts: "Alle projecten",
     },
+    about: {
+      eyebrow: "Over ZEVREN",
+      titleBefore: "Wij zijn een digitale studio gericht op",
+      titleHighlight: "resultaat",
+      body:
+        "ZEVREN combineert design, techniek en een beetje gezond verstand over wat een bedrijf online echt nodig heeft. Bewust klein, zodat u praat met de persoon die uw site bouwt en niet met een accountmanager.",
+      cta: "Meer over ons",
+      points: [
+      {
+        title: "Moderne technologie",
+        description:
+          "Next.js, TypeScript en een opzet die over twee jaar nog te onderhouden is.",
+      },
+      {
+        title: "Gericht op snelheid",
+        description:
+          "Snelle pagina's, kleine bestanden en beelden op maat van het apparaat.",
+      },
+      {
+        title: "Schaalbare oplossingen",
+        description:
+          "Zo opgezet dat functies later toegevoegd kunnen worden zonder herbouw.",
+      },
+      {
+        title: "Zakelijk gedreven",
+        description:
+          "Gebouwd rond wat de site moet bereiken, niet rond een template.",
+      },
+      ],
+    },
     why: {
       eyebrow: "Waarom ZEVREN",
       title: "Waarom met ZEVREN werken?",
@@ -67,11 +99,14 @@ const nl: Dictionary = {
       title: "Nog vragen? Dit komt het vaakst voorbij",
     },
     finalCta: {
-      title: "Klaar om je project te starten?",
+      eyebrow: "Laten we samenwerken",
+      title: "Klaar om iets te bouwen dat opvalt?",
       subtitle:
-        "Geen verkooppraatje. Vertel ons over je project en we nemen contact op om de volgende stap te bespreken.",
+        "Vertel over uw project en we nemen contact op om de volgende stap door te nemen. Geen verkooppraatje.",
       ctaPrimary: "Start een project",
-      ctaSecondary: "Bekijk onze diensten",
+      ctaSecondary: "Bekijk de projecten",
+      formHeading: "Stuur ons een bericht",
+      worldwide: "Werkend met bedrijven wereldwijd",
     },
   },
   services: {
@@ -90,7 +125,6 @@ const nl: Dictionary = {
     notSureCta: "Start een project",
     list: {
       "web-design": {
-        tagline: "Modern & responsive",
         title: "Webdesign",
         summary:
           "Moderne websites, ontworpen rond uw bedrijf, uw klanten en wat de site moet bereiken.",
@@ -104,7 +138,6 @@ const nl: Dictionary = {
         ],
       },
       "ecommerce": {
-        tagline: "Krachtige webshops",
         title: "E-commerce",
         summary:
           "Webshops waarin klanten makkelijk producten bekijken en bestellen.",
@@ -118,7 +151,6 @@ const nl: Dictionary = {
         ],
       },
       "web-applications": {
-        tagline: "Schaalbare oplossingen",
         title: "Webapplicaties",
         summary:
           "Dashboards, portalen en interne tools voor bedrijven die meer nodig hebben dan een website.",
@@ -132,7 +164,6 @@ const nl: Dictionary = {
         ],
       },
       "ui-ux-design": {
-        tagline: "Intuïtieve ervaringen",
         title: "UI/UX-design",
         summary:
           "Interfaces die prettig werken, niet alleen mooi ogen.",
@@ -146,7 +177,6 @@ const nl: Dictionary = {
         ],
       },
       "maintenance": {
-        tagline: "Ondersteuning waar u op kunt bouwen",
         title: "Onderhoud",
         summary:
           "Updates, fixes en verbeteringen nadat uw website live is.",
@@ -160,7 +190,6 @@ const nl: Dictionary = {
         ],
       },
       "global-focus": {
-        tagline: "Wereldwijd werkzaam",
         title: "Internationale focus",
         summary:
           "Gevestigd in Maastricht, werkend met bedrijven in andere landen en andere talen.",
@@ -207,18 +236,18 @@ const nl: Dictionary = {
       custom: { name: "Maatwerk Webapplicatie", price: "1.799", description: "Voor webapplicaties, portalen en alles wat verder gaat dan een standaardwebsite." },
     },
   },
-  heroFacts: {
-    eyebrow: "Waar ZEVREN nu staat",
+  mission: {
+    eyebrow: "Onze missie",
+    titleBefore: "Wij bouwen digitale ervaringen die bedrijven verder",
+    titleHighlight: "brengen.",
     conceptsLabel: "Interactieve concepten",
     languagesLabel: "Talen",
     spotsLabel: "Founding-plekken vrij",
-    basedLabel: "Gevestigd in",
-    basedValue: "Maastricht",
-    cta: "Laten we iets goeds bouwen",
-    note:
-      "Deze cijfers gaan over de studio zelf. ZEVREN heeft nog geen klantprojecten om te tonen, dus die worden hier niet geclaimd.",
+    responseLabel: "Reactietijd",
+    responseValue: "24u",
   },
   globalFocus: {
+    cta: "Start een project",
     eyebrow: "Internationale focus",
     title: "Eén studio in Maastricht, klanten in meer dan één land.",
     body:
@@ -230,10 +259,36 @@ const nl: Dictionary = {
   },
   whyZevren: {
     items: [
-      { title: "Klein, met opzet", description: "Je werkt rechtstreeks met de persoon die je website bouwt." },
-      { title: "Geen overbodige extra's", description: "We richten ons op wat jouw bedrijf daadwerkelijk nodig heeft." },
-      { title: "Duidelijke prijzen", description: "Je weet waarvoor je betaalt voordat we beginnen." },
-      { title: "Goed gebouwd", description: "Responsief design, een nette opzet en een website die op elk apparaat werkt." },
+      {
+        title: "Design op maat",
+        description:
+          "Een opzet rond uw content, geen thema met uw logo erop geplakt.",
+      },
+      {
+        title: "Gebouwd op snelheid",
+        description:
+          "Kleine pagina's, beelden op maat van het apparaat en geen ongevraagde scripts.",
+      },
+      {
+        title: "Echt responsive",
+        description:
+          "Ontworpen vanaf de telefoon, daarna getest op tablet en desktop tijdens het bouwen.",
+      },
+      {
+        title: "Support na livegang",
+        description:
+          "We blijven bereikbaar voor wijzigingen, fixes en de vragen die later komen.",
+      },
+      {
+        title: "Veilig van opzet",
+        description:
+          "Validatie op de server, strikte headers en geen sleutels in de browser.",
+      },
+      {
+        title: "Klaar om te groeien",
+        description:
+          "Zo opgezet dat pagina's en functies erbij kunnen zonder opnieuw te beginnen.",
+      },
     ],
   },
   process: {

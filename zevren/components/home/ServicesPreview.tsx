@@ -1,11 +1,8 @@
-import Image from "next/image";
 import Link from "next/link";
 
 import { SERVICES } from "@/lib/constants";
-import { SectionHeading } from "@/components/ui/SectionHeading";
-import { Icon } from "@/components/ui/Icon";
 import { Container } from "@/components/ui/Container";
-import { IMAGES } from "@/lib/assets";
+import { Icon } from "@/components/ui/Icon";
 import type { Dictionary } from "@/lib/i18n/dictionary-type";
 
 interface ServicesPreviewProps {
@@ -14,75 +11,60 @@ interface ServicesPreviewProps {
 }
 
 /**
- * Six service cards, each with its own image.
+ * Six service cards in one row on desktop, stacked on a phone.
  *
- * The first card spans two columns on wide screens so the grid has a focal
- * point instead of six identical rectangles, which is what makes a card grid
- * read as a template.
+ * The heading sits beside the grid rather than above it, which is what keeps
+ * the row from looking like a generic three-across card wall.
  */
 export function ServicesPreview({ dict, homeDict }: ServicesPreviewProps) {
   return (
-    <section className="py-24">
-      <Container className="flex flex-col gap-12">
-        <SectionHeading
-          eyebrow={homeDict.eyebrow}
-          title={homeDict.title}
-          description={homeDict.subtitle}
-        />
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {SERVICES.map((service, index) => {
+    <section className="border-y border-white/5 bg-surface/20 py-16 lg:py-20">
+      <Container className="grid gap-10 lg:grid-cols-[13rem_1fr] lg:gap-12">
+        <div className="flex flex-col gap-3">
+          <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-accent">
+            {homeDict.eyebrow}
+          </span>
+          <h2 className="font-heading text-2xl font-bold uppercase leading-tight tracking-[-0.01em] text-white sm:text-3xl">
+            {homeDict.title}
+          </h2>
+          <span aria-hidden="true" className="h-0.5 w-12 bg-accent" />
+        </div>
+
+        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+          {SERVICES.map((service) => {
             const copy = dict.list[service.slug];
-            const art = IMAGES[service.image];
-            const wide = index === 0;
-
             return (
-              <Link
-                key={service.slug}
-                href={`/services#${service.slug}`}
-                className={`group relative flex min-h-[15rem] flex-col justify-end overflow-hidden rounded-2xl border border-white/10 bg-surface/60 p-6 transition-colors duration-300 hover:border-accent/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
-                  wide ? "lg:col-span-2 lg:min-h-[19rem]" : ""
-                }`}
-              >
-                <Image
-                  src={art.src}
-                  alt=""
-                  aria-hidden="true"
-                  fill
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  placeholder="blur"
-                  blurDataURL={art.blurDataURL}
-                  className="pointer-events-none select-none object-cover opacity-30 transition-[opacity,transform] duration-500 group-hover:scale-[1.04] group-hover:opacity-45"
-                />
-                {/* Text sits on a gradient rather than the raw photo, so the
-                    contrast holds whatever the image behind it happens to be. */}
-                <div
-                  aria-hidden="true"
-                  className="absolute inset-0 bg-gradient-to-t from-navy via-navy/85 to-navy/25"
-                />
-
-                <div className="relative flex flex-col gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/20 text-accent">
-                    <Icon name={service.icon} className="h-5 w-5" />
-                  </div>
-                  <h3 className="font-heading text-xl font-semibold text-white">
-                    {copy.title}
-                  </h3>
-                  <p
-                    className={`text-sm leading-relaxed text-muted ${
-                      wide ? "max-w-md" : ""
-                    }`}
-                  >
-                    {copy.summary}
-                  </p>
-                  <span className="flex items-center gap-1.5 text-sm font-medium text-accent transition-transform duration-300 group-hover:translate-x-1">
-                    {homeDict.learnMore}
-                    <span aria-hidden="true">&rarr;</span>
+              <li key={service.slug}>
+                <Link
+                  href={`/services#${service.slug}`}
+                  className="group relative flex h-full flex-col gap-3 rounded-xl border border-white/10 bg-navy/60 p-5 transition-[border-color,background-color,transform] duration-300 hover:-translate-y-1 hover:border-accent/50 hover:bg-navy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                >
+                  <span className="text-accent">
+                    <Icon name={service.icon} className="h-7 w-7" />
                   </span>
-                </div>
-              </Link>
+                  <span className="text-[11px] font-semibold uppercase leading-tight tracking-[0.1em] text-white">
+                    {copy.title}
+                  </span>
+                  <span className="text-[11px] leading-relaxed text-muted">
+                    {copy.summary}
+                  </span>
+                  <svg
+                    viewBox="0 0 16 16"
+                    aria-hidden="true"
+                    className="mt-auto h-3 w-3 self-end text-muted/50 transition-[transform,color] duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-accent"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={1.8}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M4 12 12 4M6 4h6v6" />
+                  </svg>
+                </Link>
+              </li>
             );
           })}
-        </div>
+        </ul>
       </Container>
     </section>
   );

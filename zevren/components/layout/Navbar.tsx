@@ -6,7 +6,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NAV_LINKS, SITE_CONFIG } from "@/lib/constants";
 import { ArrowButton } from "@/components/ui/ArrowButton";
-import { Button } from "@/components/ui/Button";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 import type { Locale } from "@/lib/i18n/config";
 import type { Dictionary } from "@/lib/i18n/dictionary-type";
@@ -146,48 +145,87 @@ export function Navbar({ locale, dict }: NavbarProps) {
         </button>
       </div>
 
+      {/* Full-height overlay rather than a collapsing strip: with six items,
+          a CTA, the language switcher and the social row, an accordion left
+          half the menu below the fold on a short phone. */}
       <div
         id="mobile-menu"
-        className={`grid overflow-hidden border-t border-white/10 bg-navy transition-[grid-template-rows] duration-300 ease-in-out lg:hidden ${
-          isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr] border-t-0"
+        className={`fixed inset-x-0 bottom-0 top-20 z-40 flex flex-col overflow-y-auto bg-navy transition-[opacity,transform] duration-300 ease-out lg:hidden ${
+          isOpen
+            ? "translate-y-0 opacity-100"
+            : "pointer-events-none -translate-y-2 opacity-0"
         }`}
+        aria-hidden={!isOpen}
       >
-        <div className="overflow-hidden">
-          <nav
-            aria-label="Mobile navigation"
-            className="container-page flex flex-col gap-1 py-4"
-          >
-            {NAV_LINKS.map((link) => {
-              const isActive =
-                link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  aria-current={isActive ? "page" : undefined}
-                  className={`rounded-lg px-3 py-3 text-base font-medium transition-colors ${
-                    isActive ? "bg-white/5 text-white" : "text-white/90 hover:bg-white/5"
-                  }`}
+        <nav
+          aria-label="Mobile navigation"
+          className="container-page flex flex-1 flex-col gap-1 py-6"
+        >
+          {NAV_LINKS.map((link) => {
+            const isActive =
+              link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                tabIndex={isOpen ? undefined : -1}
+                aria-current={isActive ? "page" : undefined}
+                className={`flex items-center justify-between gap-3 border-b border-white/[0.07] px-1 py-4 text-sm font-semibold uppercase tracking-[0.12em] transition-colors ${
+                  isActive ? "text-accent" : "text-white hover:text-accent"
+                }`}
+              >
+                {link.key ? dict[link.key] : link.label}
+                <svg
+                  viewBox="0 0 16 16"
+                  aria-hidden="true"
+                  className="h-3.5 w-3.5 text-muted/60"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={1.8}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 >
-                  {link.key ? dict[link.key] : link.label}
-                </Link>
-              );
-            })}
-            <div className="mt-2 flex flex-col gap-3 py-2">
-              <div className="px-3">
-                <LanguageSwitcher locale={locale} />
-              </div>
-              <Button href="/contact">{dict.startProject}</Button>
+                  <path d="M6 3l5 5-5 5" />
+                </svg>
+              </Link>
+            );
+          })}
+
+          <div className="mt-8 flex flex-col gap-5">
+            <ArrowButton
+              href="/contact"
+              className="w-full justify-between"
+            >
+              {dict.startProject}
+            </ArrowButton>
+
+            <div className="flex items-center justify-between gap-4">
+              <LanguageSwitcher locale={locale} />
               <a
                 href={`tel:${SITE_CONFIG.phone}`}
-                className="text-center text-sm text-muted hover:text-white"
+                tabIndex={isOpen ? undefined : -1}
+                className="text-sm text-muted transition-colors hover:text-white"
               >
                 {dict.orCall} {SITE_CONFIG.phoneDisplay}
               </a>
             </div>
-          </nav>
-        </div>
+
+            <a
+              href={SITE_CONFIG.social.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              tabIndex={isOpen ? undefined : -1}
+              className="flex h-11 w-11 items-center justify-center rounded-lg border border-white/10 text-muted transition-colors hover:border-accent/50 hover:text-accent"
+              aria-label="ZEVREN on LinkedIn"
+            >
+              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor" aria-hidden="true">
+                <path d="M6.94 8.5H3.56V20h3.38V8.5ZM5.25 3.5a1.96 1.96 0 1 0 0 3.92 1.96 1.96 0 0 0 0-3.92ZM20.44 20h-3.37v-5.6c0-1.34-.03-3.06-1.87-3.06-1.87 0-2.16 1.46-2.16 2.96V20H9.68V8.5h3.24v1.57h.05c.45-.85 1.56-1.75 3.2-1.75 3.42 0 4.05 2.25 4.05 5.18V20Z" />
+              </svg>
+            </a>
+          </div>
+        </nav>
       </div>
+
     </header>
   );
 }

@@ -15,6 +15,8 @@ const en: Dictionary = {
   footer: {
     description:
       "We design and build modern websites for businesses that want a clear, professional presence online.",
+    servicesHeading: "Services",
+    projectsHeading: "Projects",
     navigationHeading: "Navigation",
     contactHeading: "Contact",
     officeHeading: "Office",
@@ -52,6 +54,36 @@ const en: Dictionary = {
         "Interactive concept websites across different industries, each one built end to end so you can click through it rather than look at a screenshot.",
       allConcepts: "All projects",
     },
+    about: {
+      eyebrow: "About ZEVREN",
+      titleBefore: "We are a digital studio focused on",
+      titleHighlight: "results",
+      body:
+        "ZEVREN combines design, engineering and a bit of judgement about what a business actually needs online. Small on purpose, so you talk to the person building your site rather than an account manager.",
+      cta: "More about us",
+      points: [
+      {
+        title: "Modern technologies",
+        description:
+          "Next.js, TypeScript and a build that will still be maintainable in two years.",
+      },
+      {
+        title: "Performance focused",
+        description:
+          "Fast pages, small payloads and images sized for the device asking for them.",
+      },
+      {
+        title: "Scalable solutions",
+        description:
+          "Structured so features can be added later without a rebuild.",
+      },
+      {
+        title: "Business driven",
+        description:
+          "Built around what the site has to achieve, not around a template.",
+      },
+      ],
+    },
     why: {
       eyebrow: "Why ZEVREN",
       title: "Why work with ZEVREN?",
@@ -67,11 +99,14 @@ const en: Dictionary = {
       title: "Still have questions? These come up most",
     },
     finalCta: {
-      title: "Ready to start your project?",
+      eyebrow: "Let's work together",
+      title: "Ready to build something that stands out?",
       subtitle:
-        "No sales pitch. Tell us about your project and we'll get back to you to talk through the next step.",
+        "Tell us about your project and we will come back to you to talk through the next step. No sales pitch.",
       ctaPrimary: "Start a project",
-      ctaSecondary: "See our services",
+      ctaSecondary: "See the projects",
+      formHeading: "Send us a message",
+      worldwide: "Working with businesses worldwide",
     },
   },
   services: {
@@ -90,7 +125,6 @@ const en: Dictionary = {
     notSureCta: "Start a project",
     list: {
       "web-design": {
-        tagline: "Modern & responsive",
         title: "Web Design",
         summary:
           "Modern websites designed around your business, your customers and what the site has to achieve.",
@@ -104,7 +138,6 @@ const en: Dictionary = {
         ],
       },
       "ecommerce": {
-        tagline: "Powerful online stores",
         title: "E-commerce",
         summary:
           "Online stores that make it easy for customers to browse products and place an order.",
@@ -118,7 +151,6 @@ const en: Dictionary = {
         ],
       },
       "web-applications": {
-        tagline: "Scalable solutions",
         title: "Web Applications",
         summary:
           "Dashboards, portals and internal tools for businesses that need more than a website.",
@@ -132,7 +164,6 @@ const en: Dictionary = {
         ],
       },
       "ui-ux-design": {
-        tagline: "Intuitive experiences",
         title: "UI/UX Design",
         summary:
           "Interfaces that are easy to use, not only pleasant to look at.",
@@ -146,7 +177,6 @@ const en: Dictionary = {
         ],
       },
       "maintenance": {
-        tagline: "Support you can trust",
         title: "Maintenance",
         summary:
           "Updates, fixes and improvements after your website goes live.",
@@ -160,7 +190,6 @@ const en: Dictionary = {
         ],
       },
       "global-focus": {
-        tagline: "Working worldwide",
         title: "Global Focus",
         summary:
           "Based in Maastricht, working with businesses in other countries and other languages.",
@@ -207,18 +236,18 @@ const en: Dictionary = {
       custom: { name: "Custom Web Application", price: "1,799", description: "For web applications, portals and anything beyond a standard website." },
     },
   },
-  heroFacts: {
-    eyebrow: "Where ZEVREN stands today",
+  mission: {
+    eyebrow: "Our mission",
+    titleBefore: "We build digital experiences that move businesses",
+    titleHighlight: "forward.",
     conceptsLabel: "Interactive concepts",
     languagesLabel: "Languages",
     spotsLabel: "Founding spots open",
-    basedLabel: "Based in",
-    basedValue: "Maastricht",
-    cta: "Let's build something great",
-    note:
-      "These figures describe the studio itself. ZEVREN has no client projects to report yet, so none are claimed here.",
+    responseLabel: "Reply time",
+    responseValue: "24h",
   },
   globalFocus: {
+    cta: "Start a project",
     eyebrow: "Global focus",
     title: "One studio in Maastricht, clients in more than one country.",
     body:
@@ -230,10 +259,36 @@ const en: Dictionary = {
   },
   whyZevren: {
     items: [
-      { title: "Small by design", description: "You work directly with the person building your website." },
-      { title: "No unnecessary extras", description: "We focus on what your business actually needs." },
-      { title: "Clear pricing", description: "You know what you are paying for before we start." },
-      { title: "Built properly", description: "Responsive design, clean structure and a website that works across devices." },
+      {
+        title: "Design made for you",
+        description:
+          "A layout built around your content, not a theme with your logo dropped on it.",
+      },
+      {
+        title: "Built for speed",
+        description:
+          "Small pages, images sized per device and no scripts you did not ask for.",
+      },
+      {
+        title: "Properly responsive",
+        description:
+          "Designed for phones first, then checked on tablet and desktop as it is built.",
+      },
+      {
+        title: "Support after launch",
+        description:
+          "We stay reachable for changes, fixes and the questions that come later.",
+      },
+      {
+        title: "Secure by default",
+        description:
+          "Validation on the server, strict headers and no secrets in the browser.",
+      },
+      {
+        title: "Ready to grow",
+        description:
+          "Structured so pages and features can be added without starting over.",
+      },
     ],
   },
   process: {

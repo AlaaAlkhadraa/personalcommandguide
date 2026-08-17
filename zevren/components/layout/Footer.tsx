@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { FOOTER_LEGAL_LINKS, NAV_LINKS, SITE_CONFIG } from "@/lib/constants";
+import { FOOTER_LEGAL_LINKS, NAV_LINKS, SERVICES, SITE_CONFIG, WORK_ITEMS } from "@/lib/constants";
+import { IMAGES } from "@/lib/assets";
 import type { Locale } from "@/lib/i18n/config";
 import type { Dictionary } from "@/lib/i18n/dictionary-type";
 
@@ -10,16 +11,31 @@ interface FooterProps {
   locale: Locale;
   dict: Dictionary["footer"];
   navDict: Dictionary["nav"];
+  servicesDict: Dictionary["services"];
+  workDict: Dictionary["work"];
 }
 
-export function Footer({ dict, navDict }: FooterProps) {
+export function Footer({ dict, navDict, servicesDict, workDict }: FooterProps) {
   const year = new Date().getFullYear();
+  const map = IMAGES["env-map"];
 
   return (
-    <footer className="border-t border-white/10 bg-surface/40">
-      <div className="container-page grid gap-12 py-16 lg:grid-cols-[1.2fr_1fr_1fr_1fr]">
+    <footer className="relative overflow-hidden border-t border-white/10 bg-surface/40">
+      <Image
+        src={map.src}
+        alt=""
+        aria-hidden="true"
+        fill
+        loading="lazy"
+        sizes="100vw"
+        placeholder="blur"
+        blurDataURL={map.blurDataURL}
+        className="pointer-events-none select-none object-cover opacity-[0.10] [mask-image:radial-gradient(ellipse_at_70%_40%,black,transparent_75%)]"
+      />
+
+      <div className="container-page relative grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr_1fr]">
         <div className="flex flex-col gap-4">
-          <Link href="/" className="flex items-center gap-2.5">
+          <Link href="/" className="flex items-center gap-3">
             <Image
               src="/logo-mark.png"
               alt=""
@@ -27,8 +43,16 @@ export function Footer({ dict, navDict }: FooterProps) {
               height={29}
               className="h-8 w-auto drop-shadow-[0_0_10px_rgba(37,99,235,0.55)]"
             />
-            <span className="font-logo text-xl font-bold tracking-wide text-white">
-              ZEVREN
+            <span className="flex flex-col leading-none">
+              <span className="font-logo text-xl font-bold tracking-[0.32em] text-white">
+                ZEVREN
+              </span>
+              <span
+                aria-hidden="true"
+                className="mt-1.5 text-[9px] font-medium uppercase tracking-[0.24em] text-accent/80"
+              >
+                {navDict.discipline}
+              </span>
             </span>
           </Link>
           <p className="max-w-sm text-sm leading-relaxed text-muted">
@@ -50,7 +74,9 @@ export function Footer({ dict, navDict }: FooterProps) {
         </div>
 
         <nav aria-label="Page navigation" className="flex flex-col gap-3">
-          <span className="text-sm font-semibold text-white">{dict.navigationHeading}</span>
+          <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white">
+            {dict.navigationHeading}
+          </span>
           {NAV_LINKS.filter((link) => link.href !== "/").map((link) => (
             <Link
               key={link.href}
@@ -62,8 +88,41 @@ export function Footer({ dict, navDict }: FooterProps) {
           ))}
         </nav>
 
+        <nav aria-label={dict.servicesHeading} className="flex flex-col gap-3">
+          <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white">
+            {dict.servicesHeading}
+          </span>
+          {SERVICES.map((service) => (
+            <Link
+              key={service.slug}
+              href={`/services#${service.slug}`}
+              className="text-sm text-muted transition-colors hover:text-white"
+            >
+              {servicesDict.list[service.slug].title}
+            </Link>
+          ))}
+        </nav>
+
+        <nav aria-label={dict.projectsHeading} className="flex flex-col gap-3">
+          <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white">
+            {dict.projectsHeading}
+          </span>
+          {WORK_ITEMS.map((item) => (
+            <Link
+              key={item.slug}
+              href={`/projects/${item.slug}`}
+              className="text-sm text-muted transition-colors hover:text-white"
+            >
+              {item.name}
+              <span className="text-muted/60"> ({workDict.concept})</span>
+            </Link>
+          ))}
+        </nav>
+
         <div className="flex flex-col gap-3">
-          <span className="text-sm font-semibold text-white">{dict.contactHeading}</span>
+          <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white">
+            {dict.contactHeading}
+          </span>
           <a
             href={`mailto:${SITE_CONFIG.email}`}
             className="text-sm text-muted transition-colors hover:text-white"
@@ -84,7 +143,9 @@ export function Footer({ dict, navDict }: FooterProps) {
         </div>
 
         <div className="flex flex-col gap-3">
-          <span className="text-sm font-semibold text-white">{dict.companyHeading}</span>
+          <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white">
+            {dict.companyHeading}
+          </span>
           {FOOTER_LEGAL_LINKS.map((link, index) => (
             <Link
               key={link.href}
@@ -100,7 +161,7 @@ export function Footer({ dict, navDict }: FooterProps) {
         </div>
       </div>
 
-      <div className="border-t border-white/10">
+      <div className="relative border-t border-white/10">
         <div className="container-page flex flex-col items-center justify-between gap-2 py-6 text-center text-xs text-muted sm:flex-row sm:text-start">
           <span>
             &copy; {year} {SITE_CONFIG.legalName}. {dict.allRightsReserved}

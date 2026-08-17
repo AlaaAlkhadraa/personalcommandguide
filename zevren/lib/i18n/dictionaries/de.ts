@@ -15,6 +15,8 @@ const de: Dictionary = {
   footer: {
     description:
       "Wir gestalten und entwickeln moderne Websites für Unternehmen, die einen klaren, professionellen Online-Auftritt wollen.",
+    servicesHeading: "Leistungen",
+    projectsHeading: "Projekte",
     navigationHeading: "Navigation",
     contactHeading: "Kontakt",
     officeHeading: "Büro",
@@ -52,6 +54,36 @@ const de: Dictionary = {
         "Interaktive Konzept-Websites für verschiedene Branchen, jede vollständig gebaut, sodass Sie sich durchklicken können statt einen Screenshot anzusehen.",
       allConcepts: "Alle Projekte",
     },
+    about: {
+      eyebrow: "Über ZEVREN",
+      titleBefore: "Wir sind ein digitales Studio mit Fokus auf",
+      titleHighlight: "Ergebnisse",
+      body:
+        "ZEVREN verbindet Design, Technik und ein Gespür dafür, was ein Unternehmen online wirklich braucht. Bewusst klein, damit Sie mit der Person sprechen, die Ihre Website baut, statt mit einem Account Manager.",
+      cta: "Mehr über uns",
+      points: [
+      {
+        title: "Moderne Technologien",
+        description:
+          "Next.js, TypeScript und ein Aufbau, der in zwei Jahren noch wartbar ist.",
+      },
+      {
+        title: "Auf Tempo ausgelegt",
+        description:
+          "Schnelle Seiten, kleine Dateien und Bilder in der Größe des jeweiligen Geräts.",
+      },
+      {
+        title: "Skalierbare Lösungen",
+        description:
+          "So strukturiert, dass Funktionen später ohne Neubau dazukommen.",
+      },
+      {
+        title: "Am Geschäft orientiert",
+        description:
+          "Gebaut um das Ziel der Website, nicht um eine Vorlage.",
+      },
+      ],
+    },
     why: {
       eyebrow: "Warum ZEVREN",
       title: "Warum mit ZEVREN arbeiten?",
@@ -67,11 +99,14 @@ const de: Dictionary = {
       title: "Noch Fragen? Das kommt am häufigsten vor",
     },
     finalCta: {
-      title: "Bereit, Ihr Projekt zu starten?",
+      eyebrow: "Arbeiten wir zusammen",
+      title: "Bereit, etwas zu bauen, das auffällt?",
       subtitle:
-        "Kein Verkaufsgespräch. Erzählen Sie uns von Ihrem Projekt, wir melden uns und besprechen den nächsten Schritt.",
+        "Erzählen Sie von Ihrem Projekt, und wir melden uns, um den nächsten Schritt zu besprechen. Kein Verkaufsgespräch.",
       ctaPrimary: "Projekt starten",
-      ctaSecondary: "Unsere Leistungen ansehen",
+      ctaSecondary: "Projekte ansehen",
+      formHeading: "Schreiben Sie uns",
+      worldwide: "Arbeit mit Unternehmen weltweit",
     },
   },
   services: {
@@ -90,7 +125,6 @@ const de: Dictionary = {
     notSureCta: "Projekt starten",
     list: {
       "web-design": {
-        tagline: "Modern & responsiv",
         title: "Webdesign",
         summary:
           "Moderne Websites, gestaltet rund um Ihr Unternehmen, Ihre Kunden und das Ziel der Website.",
@@ -104,7 +138,6 @@ const de: Dictionary = {
         ],
       },
       "ecommerce": {
-        tagline: "Starke Onlineshops",
         title: "E-Commerce",
         summary:
           "Onlineshops, in denen Kunden einfach stöbern und bestellen.",
@@ -118,7 +151,6 @@ const de: Dictionary = {
         ],
       },
       "web-applications": {
-        tagline: "Skalierbare Lösungen",
         title: "Webanwendungen",
         summary:
           "Dashboards, Portale und interne Werkzeuge für Unternehmen, die mehr als eine Website brauchen.",
@@ -132,7 +164,6 @@ const de: Dictionary = {
         ],
       },
       "ui-ux-design": {
-        tagline: "Intuitive Erlebnisse",
         title: "UI/UX-Design",
         summary:
           "Oberflächen, die sich gut bedienen lassen, nicht nur gut aussehen.",
@@ -146,7 +177,6 @@ const de: Dictionary = {
         ],
       },
       "maintenance": {
-        tagline: "Support, auf den Sie zählen können",
         title: "Wartung",
         summary:
           "Updates, Korrekturen und Verbesserungen, nachdem Ihre Website live ist.",
@@ -160,7 +190,6 @@ const de: Dictionary = {
         ],
       },
       "global-focus": {
-        tagline: "Weltweit tätig",
         title: "Internationaler Fokus",
         summary:
           "Sitz in Maastricht, Arbeit mit Unternehmen in anderen Ländern und Sprachen.",
@@ -207,18 +236,18 @@ const de: Dictionary = {
       custom: { name: "Individuelle Webanwendung", price: "1.799", description: "Für Webanwendungen, Portale und alles jenseits einer Standard-Website." },
     },
   },
-  heroFacts: {
-    eyebrow: "Wo ZEVREN heute steht",
+  mission: {
+    eyebrow: "Unsere Mission",
+    titleBefore: "Wir bauen digitale Erlebnisse, die Unternehmen nach vorn",
+    titleHighlight: "bringen.",
     conceptsLabel: "Interaktive Konzepte",
     languagesLabel: "Sprachen",
     spotsLabel: "Freie Founding-Plätze",
-    basedLabel: "Sitz in",
-    basedValue: "Maastricht",
-    cta: "Lassen Sie uns etwas Gutes bauen",
-    note:
-      "Diese Zahlen beschreiben das Studio selbst. ZEVREN hat noch keine Kundenprojekte vorzuweisen, also wird hier auch keines behauptet.",
+    responseLabel: "Antwortzeit",
+    responseValue: "24 Std",
   },
   globalFocus: {
+    cta: "Projekt starten",
     eyebrow: "Internationaler Fokus",
     title: "Ein Studio in Maastricht, Kunden in mehr als einem Land.",
     body:
@@ -230,10 +259,36 @@ const de: Dictionary = {
   },
   whyZevren: {
     items: [
-      { title: "Bewusst klein", description: "Sie arbeiten direkt mit der Person, die Ihre Website baut." },
-      { title: "Keine unnötigen Extras", description: "Wir konzentrieren uns darauf, was Ihr Unternehmen wirklich braucht." },
-      { title: "Klare Preise", description: "Sie wissen, wofür Sie bezahlen, bevor wir beginnen." },
-      { title: "Richtig gebaut", description: "Responsives Design, saubere Struktur und eine Website, die auf allen Geräten funktioniert." },
+      {
+        title: "Design für Sie gemacht",
+        description:
+          "Ein Aufbau rund um Ihre Inhalte, kein Theme mit Ihrem Logo darauf.",
+      },
+      {
+        title: "Auf Tempo gebaut",
+        description:
+          "Kleine Seiten, Bilder je Gerät und keine Skripte, die Sie nicht wollten.",
+      },
+      {
+        title: "Wirklich responsiv",
+        description:
+          "Zuerst fürs Handy gestaltet, dann während des Baus auf Tablet und Desktop geprüft.",
+      },
+      {
+        title: "Support nach dem Start",
+        description:
+          "Wir bleiben erreichbar für Änderungen, Korrekturen und spätere Fragen.",
+      },
+      {
+        title: "Sicher von Anfang an",
+        description:
+          "Validierung auf dem Server, strikte Header und keine Schlüssel im Browser.",
+      },
+      {
+        title: "Bereit zu wachsen",
+        description:
+          "So strukturiert, dass Seiten und Funktionen ohne Neuanfang dazukommen.",
+      },
     ],
   },
   process: {

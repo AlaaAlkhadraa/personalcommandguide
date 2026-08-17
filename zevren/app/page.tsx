@@ -1,6 +1,4 @@
 import { Hero } from "@/components/home/Hero";
-import { HeroServiceStrip } from "@/components/home/HeroServiceStrip";
-import { HeroFacts } from "@/components/home/HeroFacts";
 import { FoundingSection } from "@/components/campaign/FoundingSection";
 import { ServicesPreview } from "@/components/home/ServicesPreview";
 import { ProjectsPreview } from "@/components/home/ProjectsPreview";
@@ -8,6 +6,8 @@ import { GlobalFocus } from "@/components/home/GlobalFocus";
 import { WhyZevren } from "@/components/home/WhyZevren";
 import { Process } from "@/components/home/Process";
 import { FAQ } from "@/components/home/FAQ";
+import { AboutBand } from "@/components/home/AboutBand";
+import { Mission } from "@/components/home/Mission";
 import { FinalCTA } from "@/components/home/FinalCTA";
 import { buildMetadata } from "@/lib/seo";
 import { SITE_CONFIG } from "@/lib/constants";
@@ -27,16 +27,16 @@ export default async function HomePage() {
   return (
     <>
       <Hero dict={dict.home.hero} />
-      <HeroServiceStrip dict={dict.services} />
-      <HeroFacts dict={dict.heroFacts} />
-      <FoundingSection dict={dict.campaign} />
       <ServicesPreview dict={dict.services} homeDict={dict.home.services} />
+      <Mission dict={dict.mission} />
       <ProjectsPreview dict={dict.work} homeDict={dict.home.work} />
-      <WhyZevren dict={dict.whyZevren} homeDict={dict.home.why} />
-      <GlobalFocus dict={dict.globalFocus} />
+      <AboutBand dict={dict.home.about} />
       <Process dict={dict.process} homeDict={dict.home.process} />
+      <GlobalFocus dict={dict.globalFocus} />
+      <WhyZevren dict={dict.whyZevren} homeDict={dict.home.why} />
+      <FoundingSection dict={dict.campaign} />
       <FAQ dict={dict.faq} homeDict={dict.home.faq} />
-      <FinalCTA dict={dict.home.finalCta} />
+      <FinalCTA dict={dict.home.finalCta} contactDict={dict.contact} />
     </>
   );
 }

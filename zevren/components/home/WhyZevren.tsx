@@ -1,6 +1,6 @@
-import { SectionHeading } from "@/components/ui/SectionHeading";
-import { Card } from "@/components/ui/Card";
 import { Container } from "@/components/ui/Container";
+import { Icon } from "@/components/ui/Icon";
+import type { ServiceIcon } from "@/types";
 import type { Dictionary } from "@/lib/i18n/dictionary-type";
 
 interface WhyZevrenProps {
@@ -8,19 +8,36 @@ interface WhyZevrenProps {
   homeDict: Dictionary["home"]["why"];
 }
 
+const ICONS: ServiceIcon[] = ["layers", "compass", "code", "wrench", "search", "globe"];
+
 export function WhyZevren({ dict, homeDict }: WhyZevrenProps) {
   return (
-    <section className="py-24">
-      <Container className="flex flex-col gap-12">
-        <SectionHeading eyebrow={homeDict.eyebrow} title={homeDict.title} align="center" />
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {dict.items.map((item) => (
-            <Card key={item.title} className="flex flex-col gap-2">
-              <h3 className="text-base font-semibold text-white">{item.title}</h3>
-              <p className="text-sm leading-relaxed text-muted">{item.description}</p>
-            </Card>
-          ))}
+    <section className="border-b border-white/5 py-16 lg:py-20">
+      <Container className="grid gap-10 lg:grid-cols-[15rem_1fr] lg:gap-12">
+        <div className="flex flex-col gap-3">
+          <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-accent">
+            {homeDict.eyebrow}
+          </span>
+          <h2 className="font-heading text-2xl font-bold uppercase leading-tight tracking-[-0.01em] text-white sm:text-3xl">
+            {homeDict.title}
+          </h2>
+          <span aria-hidden="true" className="h-0.5 w-12 bg-accent" />
         </div>
+
+        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {dict.items.map((item, index) => (
+            <li
+              key={item.title}
+              className="flex flex-col gap-2.5 rounded-xl border border-white/10 bg-navy/60 p-5 transition-colors duration-300 hover:border-accent/40"
+            >
+              <span className="text-accent">
+                <Icon name={ICONS[index] ?? "layers"} className="h-6 w-6" />
+              </span>
+              <h3 className="text-[13px] font-semibold text-white">{item.title}</h3>
+              <p className="text-[12px] leading-relaxed text-muted">{item.description}</p>
+            </li>
+          ))}
+        </ul>
       </Container>
     </section>
   );
