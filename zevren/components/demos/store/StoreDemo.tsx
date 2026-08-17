@@ -125,13 +125,15 @@ export function StoreDemo({ dict, common }: StoreDemoProps) {
           onClick={backToCatalog}
           className="font-heading text-lg font-semibold tracking-wide text-slate-900"
         >
-          MAREN <span className="font-normal text-blue-700">HOME</span>
+          NORD<span className="font-normal text-blue-700">WAVE</span>
         </button>
         <div className="hidden items-center gap-6 text-sm text-slate-500 sm:flex">
           <span>{dict.navShop}</span>
-          <span>Lighting</span>
-          <span>Textiles</span>
-          <span>Kitchen</span>
+          {/* Driven by the catalogue rather than hardcoded, so the header can
+              never advertise a category the shop does not stock. */}
+          {STORE_CATEGORIES.filter((c) => c !== "All").map((category) => (
+            <span key={category}>{category}</span>
+          ))}
         </div>
         <button
           type="button"
@@ -401,7 +403,7 @@ export function StoreDemo({ dict, common }: StoreDemoProps) {
 
       {/* Footer */}
       <footer className="border-t border-slate-200 px-5 py-6 text-center text-xs text-slate-400 sm:px-8">
-        Maren Home &middot; {common.footerTagline}
+        Nordwave &middot; {common.footerTagline}
       </footer>
 
       {/* Cart drawer */}

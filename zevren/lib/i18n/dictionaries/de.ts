@@ -47,11 +47,11 @@ const de: Dictionary = {
       learnMore: "Mehr erfahren",
     },
     work: {
-      eyebrow: "Arbeiten",
-      title: "Ausgewählte Websites",
+      eyebrow: "Projekte",
+      title: "Konzepte, die wir gebaut haben",
       subtitle:
-        "Eine Auswahl an Websites, die ZEVREN für verschiedene Branchen und Layouts entwickelt hat.",
-      allConcepts: "Alle Arbeiten",
+        "Interaktive Konzept-Websites für verschiedene Branchen, jede vollständig gebaut, sodass Sie sich durchklicken können statt einen Screenshot anzusehen.",
+      allConcepts: "Alle Projekte",
     },
     why: {
       eyebrow: "Warum ZEVREN",
@@ -336,10 +336,10 @@ const de: Dictionary = {
     },
   },
   work: {
-    eyebrow: "Arbeiten",
-    title: "Ausgewählte Websites",
+    eyebrow: "Projekte",
+    title: "Konzepte, die wir gebaut haben",
     subtitle:
-      "Eine Auswahl an Websites, die ZEVREN für verschiedene Branchen entwickelt hat. Jede ist interaktiv, kein statischer Screenshot.",
+      "Jedes Projekt hier ist ein Konzept, das ZEVREN entworfen und gebaut hat, um zu zeigen, was möglich ist. Sie sind voll interaktiv, keine statischen Screenshots, und keines davon ist Kundenarbeit.",
     concept: "Konzept",
     websiteConcept: "Website-Konzept",
     viewConcept: "Konzept ansehen",

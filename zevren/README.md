@@ -22,8 +22,10 @@ ZEVREN is a new studio with no real clients yet, and the site is written to
 reflect that honestly rather than pretend otherwise. Keep this in mind when
 editing content in `lib/constants.ts`:
 
-- The projects in `WORK_ITEMS` (Barbershop Website, Garage Website, Online
-  Store, Property Platform) are website concepts, not real client work.
+- Every project in `WORK_ITEMS` is a website concept, not real client work.
+  That includes Tajex Logistics: the site presents it exactly like the other
+  six, with no "real project" or "client" label anywhere. Nordwave Audio,
+  ElleZone, Bergendal Accountants and the rest are invented businesses.
   Each one is a genuinely interactive demo (booking flow, shopping cart,
   property search, and so on) built with local mock data, not a static
   screenshot. Every project card and project page is labelled "Website
@@ -50,9 +52,10 @@ editing content in `lib/constants.ts`:
 
 ```
 app/                  Routes (App Router), each folder = a page
-  api/contact/         Route handler for the contact form
-  services/ work/ about/ contact/
-  work/[slug]/         Individual concept project pages
+  api/                 Route handlers: contact, project-request, csrf, admin
+  services/ projects/ about/ process/ contact/ founding-10/
+  projects/[slug]/     Individual concept project pages
+  admin/               Private submissions area
   privacy-policy/ terms-and-conditions/
   layout.tsx           Root layout, fonts, metadata, structured data
   sitemap.ts robots.ts opengraph-image.tsx twitter-image.tsx
@@ -61,21 +64,31 @@ app/                  Routes (App Router), each folder = a page
 components/
   layout/               Navbar, Footer
   home/                 Homepage sections (Hero, FAQ, Process, ...)
-  work/                 registry.tsx (slug -> preview/demo), previews/
-  demos/                The 4 interactive concept demos (barbershop, garage,
-                        store, property), each a self-contained client
-                        component with its own visual identity
+  projects/             registry.tsx (slug -> preview/demo), previews/,
+                        ProjectCard
+  campaign/             Founding 10 counter, pricing and sections
+  demos/                The 7 interactive concept demos (tajex, barbershop,
+                        garage, store, property, ellezone, accounting), each a
+                        self-contained client component with its own identity
+  three/                The WebGL hero: Scene3D, ZMark, fallback, boundary
   services/             PricingSection
   contact/              ContactForm
   ui/                   Reusable primitives (Button, Card, Icon, ...)
   seo/                  JsonLd helper
 lib/
-  constants.ts          All site content (services, work concepts, pricing, FAQ)
+  constants.ts          Site content (services, project concepts, nav)
+  assets.ts             The curated V2 image library: path, size and blur
+                        placeholder for every image, so components cannot
+                        guess an aspect ratio and cause layout shift
+  campaign.ts           Founding 10 plan and link helpers
+  server/               Everything server-only: db, session, csrf, rate limit
   demos/                Local mock data for the 4 interactive concept demos
   seo.ts                Per-page metadata helper
   validations/contact.ts Zod schema for the contact form
 types/                 Shared TypeScript types
-public/                Static files (logo-mark.png)
+public/
+  v2/                   Curated imagery, WebP, about 900 kB for 26 files
+  models/zevren-z.glb   The 3D mark (1.25 MB after texture recompression)
 ```
 
 Edit content (copy, services, work concepts, pricing, FAQ) in
@@ -334,6 +347,38 @@ cannot silently fall back to a non-durable database.
 - SSRF: the only outbound request is to a hard-coded email endpoint, with
   redirects refused. No request body influences a URL.
 - Errors: handlers return fixed messages and log detail server-side only.
+- Images: every image ships from `public/`. `next.config.ts` declares no
+  `remotePatterns`, so the image optimiser cannot be pointed at a third-party
+  URL and used as an open proxy. There is no upload feature anywhere in the
+  app, so no user-supplied file is ever written or processed.
+- The 3D model is a static asset loaded by the client with both the Draco and
+  meshopt decoders disabled, so no WebAssembly is instantiated and the CSP
+  needs neither `wasm-unsafe-eval` nor a CDN in `script-src`.
+- Founding 10 claims: `POST`/`DELETE /api/admin/founding` sits behind the
+  admin session, the Origin check, a CSRF token and a strict schema. The
+  ten-spot cap is enforced inside the INSERT rather than by read-then-write.
+  Two transactions committing at the same instant under READ COMMITTED could
+  still both pass that check; the counter clamps at ten, and with a
+  two-person admin that race was not judged worth a table lock.
+
+### What this does not claim
+
+This is a serious attempt at production-grade practice, not a guarantee.
+No software can honestly promise it is unhackable, and this one does not.
+Known limitations, stated plainly:
+
+- Rate limiting is a fixed window keyed on a pseudonymised client IP. It
+  slows a single source; it does not stop a distributed flood, and behind a
+  proxy it is only as trustworthy as `TRUST_PROXY` and the platform in front
+  of it.
+- Bot detection is a honeypot plus a fill-time heuristic. A determined script
+  can defeat both. They exist to cut noise, and nothing security-relevant
+  depends on them.
+- The admin area has one role and no second factor. Anyone with the password
+  has full access to submissions.
+- The dependency advisories below are unresolved by choice, not fixed.
+- Everything here was verified locally. Nothing has been tested against the
+  live deployment, because this environment cannot reach it.
 
 ### Known dependency advisories
 

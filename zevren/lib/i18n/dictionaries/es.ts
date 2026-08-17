@@ -48,9 +48,9 @@ const es: Dictionary = {
     },
     work: {
       eyebrow: "Proyectos",
-      title: "Sitios seleccionados",
+      title: "Conceptos que hemos construido",
       subtitle:
-        "Una selección de sitios web creados por ZEVREN para diferentes sectores y diseños.",
+        "Webs conceptuales interactivas para distintos sectores, cada una construida de principio a fin para que pueda navegarla en lugar de mirar una captura.",
       allConcepts: "Todos los proyectos",
     },
     why: {
@@ -337,9 +337,9 @@ const es: Dictionary = {
   },
   work: {
     eyebrow: "Proyectos",
-    title: "Sitios seleccionados",
+    title: "Conceptos que hemos construido",
     subtitle:
-      "Una selección de sitios web creados por ZEVREN para diferentes sectores. Cada uno es interactivo, no una captura de pantalla estática.",
+      "Cada proyecto aquí es un concepto que ZEVREN diseñó y construyó para mostrar lo que es posible. Son totalmente interactivos, no capturas estáticas, y ninguno es trabajo para un cliente.",
     concept: "Concepto",
     websiteConcept: "Concepto de sitio web",
     viewConcept: "Ver concepto",

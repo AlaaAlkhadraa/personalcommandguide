@@ -139,9 +139,9 @@ function PageHeader({
           </button>{" "}
           / {crumb}
         </p>
-        <h1 className="mt-5 max-w-2xl text-[34px] font-extrabold leading-[1.08] tracking-[-0.025em] text-white sm:text-[46px]">
+        <h2 className="mt-5 max-w-2xl text-[34px] font-extrabold leading-[1.08] tracking-[-0.025em] text-white sm:text-[46px]">
           {title}
-        </h1>
+        </h2>
         <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-white/65">{subtitle}</p>
         {chips && (
           <div className="mt-7 flex flex-wrap gap-3">
@@ -316,11 +316,11 @@ export function TajexDemo() {
                 <span>{t.hero.departure}</span>
                 <span>{t.hero.arrival}</span>
               </p>
-              <h1 className="mt-6 max-w-2xl text-[36px] font-extrabold leading-[1.05] tracking-[-0.03em] text-white sm:text-[52px]">
+              <h2 className="mt-6 max-w-2xl text-[36px] font-extrabold leading-[1.05] tracking-[-0.03em] text-white sm:text-[52px]">
                 {t.hero.titleStart}
                 <br />
                 <span className="text-[#E8264C]">{t.hero.titleAccent}</span> {t.hero.titleEnd}
-              </h1>
+              </h2>
               <p className="mt-6 max-w-xl text-[15px] leading-relaxed text-white/70">{t.hero.intro}</p>
 
               <div className="mt-9 flex flex-wrap gap-4">

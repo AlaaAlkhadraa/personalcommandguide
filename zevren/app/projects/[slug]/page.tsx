@@ -4,10 +4,12 @@ import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { WORK_DEMOS } from "@/components/projects/registry";
 import { TajexDemo } from "@/components/demos/tajex/TajexDemo";
-import { WORK_ITEMS } from "@/lib/constants";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { WORK_ITEMS, SITE_CONFIG } from "@/lib/constants";
 import { buildMetadata } from "@/lib/seo";
 import { getLocale } from "@/lib/i18n/get-locale";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
+import { headers } from "next/headers";
 import type { Metadata } from "next";
 
 interface ProjectPageProps {
@@ -63,9 +65,33 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     "accounting-firm": "accounting",
   };
   const demoDict = dict.demos[demoDictKey[project.slug]!];
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
+
+  // Breadcrumbs so a search result shows Home > Projects > this project
+  // rather than a bare URL.
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: dict.nav.home, item: SITE_CONFIG.url },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: dict.nav.projects,
+        item: `${SITE_CONFIG.url}/projects`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: project.name,
+        item: `${SITE_CONFIG.url}/projects/${project.slug}`,
+      },
+    ],
+  };
 
   return (
     <>
+      <JsonLd data={breadcrumbJsonLd} nonce={nonce} />
       <section className="border-b border-white/5 bg-grid-glow py-20 sm:py-24">
         <Container className="flex flex-col gap-6">
           <Link

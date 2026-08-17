@@ -196,9 +196,15 @@ function BayTile({ variant, className = "" }: { variant: number; className?: str
         <g stroke={ORANGE} strokeWidth="5" fill="none" opacity="0.8">
           <circle cx="100" cy="100" r="46" />
           <circle cx="100" cy="100" r="16" />
-          {[0, 60, 120, 180, 240, 300].map((a) => (
-            <path key={a} d={`M100 100 ${100 + 40 * Math.cos((a * Math.PI) / 180)} ${100 + 40 * Math.sin((a * Math.PI) / 180)}`} />
-          ))}
+          {/* Rounded to three decimals on purpose. Node and the browser can
+              disagree on the last bit of a trig result, and an unrounded
+              coordinate then renders as a different attribute on the server
+              than on the client, which React reports as a hydration mismatch. */}
+          {[0, 60, 120, 180, 240, 300].map((a) => {
+            const x = (100 + 40 * Math.cos((a * Math.PI) / 180)).toFixed(3);
+            const y = (100 + 40 * Math.sin((a * Math.PI) / 180)).toFixed(3);
+            return <path key={a} d={`M100 100 ${x} ${y}`} />;
+          })}
         </g>
       )}
       {variant % 3 === 2 && (
@@ -290,9 +296,9 @@ function PageHead({ eyebrow, title, subtitle }: { eyebrow: string; title: string
       <span className="pointer-events-none absolute -right-20 -top-24 h-64 w-64 rounded-full opacity-[0.12] blur-3xl" style={{ background: ORANGE }} />
       <Shell className="relative">
         <Eyebrow>{eyebrow}</Eyebrow>
-        <h1 className="mt-4 max-w-xl font-heading text-[29px] font-bold leading-[1.06] text-[#E7EAEE] sm:text-[40px]">
+        <h2 className="mt-4 max-w-xl font-heading text-[29px] font-bold leading-[1.06] text-[#E7EAEE] sm:text-[40px]">
           {title}
-        </h1>
+        </h2>
         <p className="mt-4 max-w-lg text-[15px] leading-relaxed text-[#8A93A0]">{subtitle}</p>
       </Shell>
     </section>
@@ -519,9 +525,9 @@ export function GarageDemo({ dict, common }: GarageDemoProps) {
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#0E1116] via-[#0E1116]/93 to-[#0E1116]/45" />
             <Shell className="relative">
               <Eyebrow>{dict.heroLocation}</Eyebrow>
-              <h1 className="mt-5 max-w-xl font-heading text-[34px] font-bold leading-[1.04] tracking-[-0.015em] text-[#E7EAEE] sm:text-[48px]">
+              <h2 className="mt-5 max-w-xl font-heading text-[34px] font-bold leading-[1.04] tracking-[-0.015em] text-[#E7EAEE] sm:text-[48px]">
                 {dict.heroHeading}
-              </h1>
+              </h2>
               <p className="mt-5 max-w-md text-[15px] leading-relaxed text-[#8A93A0]">{dict.heroSubtitle}</p>
               <div className="mt-9 flex flex-wrap gap-4">
                 <OrangeButton onClick={() => bookWith()}>{dict.heroCta}</OrangeButton>

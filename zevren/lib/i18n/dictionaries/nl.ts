@@ -47,11 +47,11 @@ const nl: Dictionary = {
       learnMore: "Meer informatie",
     },
     work: {
-      eyebrow: "Werk",
-      title: "Geselecteerde websites",
+      eyebrow: "Projecten",
+      title: "Concepten die we gebouwd hebben",
       subtitle:
-        "Een selectie van websites die ZEVREN heeft gebouwd voor verschillende sectoren en indelingen.",
-      allConcepts: "Al het werk",
+        "Interactieve conceptwebsites voor verschillende branches, stuk voor stuk volledig gebouwd zodat u erdoorheen kunt klikken in plaats van naar een screenshot te kijken.",
+      allConcepts: "Alle projecten",
     },
     why: {
       eyebrow: "Waarom ZEVREN",
@@ -336,10 +336,10 @@ const nl: Dictionary = {
     },
   },
   work: {
-    eyebrow: "Werk",
-    title: "Geselecteerde websites",
+    eyebrow: "Projecten",
+    title: "Concepten die we gebouwd hebben",
     subtitle:
-      "Een selectie van websites die ZEVREN heeft gebouwd voor verschillende sectoren. Elke website is interactief, geen statische screenshot.",
+      "Elk project hier is een concept dat ZEVREN heeft ontworpen en gebouwd om te laten zien wat mogelijk is. Ze zijn volledig interactief, geen statische screenshots, en geen van alle is klantwerk.",
     concept: "Concept",
     websiteConcept: "Websiteconcept",
     viewConcept: "Bekijk concept",

@@ -248,9 +248,9 @@ export function AccountingDemo({ dict, common }: AccountingDemoProps) {
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#0E1A2B] via-[#0E1A2B]/94 to-[#0E1A2B]/55" />
             <Shell className="relative">
               <Eyebrow light>Accountants</Eyebrow>
-              <h1 className="mt-5 max-w-2xl font-heading text-[32px] font-semibold leading-[1.08] tracking-[-0.02em] text-white sm:text-[44px]">
+              <h2 className="mt-5 max-w-2xl font-heading text-[32px] font-semibold leading-[1.08] tracking-[-0.02em] text-white sm:text-[44px]">
                 {dict.heroHeading}
-              </h1>
+              </h2>
               <p className="mt-5 max-w-lg text-[15px] leading-relaxed text-white/65">{dict.heroSubtitle}</p>
               <div className="mt-9 flex flex-wrap gap-4">
                 <button

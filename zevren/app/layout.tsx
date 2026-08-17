@@ -10,10 +10,10 @@ import {
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { SITE_CONFIG } from "@/lib/constants";
+import { SERVICES, SITE_CONFIG } from "@/lib/constants";
 import { getLocale } from "@/lib/i18n/get-locale";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
-import { isRtl } from "@/lib/i18n/config";
+import { isRtl, type Locale } from "@/lib/i18n/config";
 import "./globals.css";
 
 const inter = Inter({
@@ -82,7 +82,10 @@ export const metadata: Metadata = {
 
 const organizationJsonLd = {
   "@context": "https://schema.org",
-  "@type": "Organization",
+  // ProfessionalService rather than a bare Organization: it is the type
+  // search engines use for a business that sells services, and it lets the
+  // service list below be attached to it.
+  "@type": "ProfessionalService",
   name: SITE_CONFIG.name,
   legalName: SITE_CONFIG.legalName,
   url: SITE_CONFIG.url,
@@ -95,15 +98,33 @@ const organizationJsonLd = {
     addressCountry: "NL",
   },
   sameAs: [SITE_CONFIG.social.linkedin],
+  areaServed: "Worldwide",
+  hasOfferCatalog: {
+    "@type": "OfferCatalog",
+    name: "Services",
+    // Generated from the same list the site renders, so the two cannot drift.
+    itemListElement: SERVICES.map((service) => ({
+      "@type": "Offer",
+      itemOffered: {
+        "@type": "Service",
+        name: service.title,
+        description: service.summary,
+        url: `${SITE_CONFIG.url}/services#${service.slug}`,
+      },
+    })),
+  },
 };
 
-const websiteJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  name: SITE_CONFIG.name,
-  url: SITE_CONFIG.url,
-  inLanguage: "en",
-};
+function websiteJsonLd(locale: Locale) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: SITE_CONFIG.name,
+    url: SITE_CONFIG.url,
+    // Reports the language actually being served, not a fixed "en".
+    inLanguage: locale,
+  };
+}
 
 export default async function RootLayout({
   children,
@@ -121,7 +142,7 @@ export default async function RootLayout({
     >
       <body className="flex min-h-screen flex-col">
         <JsonLd data={organizationJsonLd} nonce={nonce} />
-        <JsonLd data={websiteJsonLd} nonce={nonce} />
+        <JsonLd data={websiteJsonLd(locale)} nonce={nonce} />
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-white"

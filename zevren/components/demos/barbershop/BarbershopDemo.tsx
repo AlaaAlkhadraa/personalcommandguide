@@ -123,9 +123,9 @@ function PageHead({ eyebrow, title, subtitle }: { eyebrow: string; title: string
       <span className="pointer-events-none absolute -right-20 -top-24 h-64 w-64 rounded-full bg-[#C9A55F] opacity-[0.10] blur-3xl" />
       <Shell className="relative">
         <Eyebrow>{eyebrow}</Eyebrow>
-        <h1 className="mt-4 max-w-xl font-heading text-[30px] font-bold uppercase leading-[1.05] text-[#F2EFE9] sm:text-[42px]">
+        <h2 className="mt-4 max-w-xl font-heading text-[30px] font-bold uppercase leading-[1.05] text-[#F2EFE9] sm:text-[42px]">
           {title}
-        </h1>
+        </h2>
         <p className="mt-4 max-w-lg text-[15px] leading-relaxed text-[#8E8A83]">{subtitle}</p>
       </Shell>
     </section>
@@ -347,9 +347,9 @@ export function BarbershopDemo({ dict, common }: BarbershopDemoProps) {
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#0B0B0C] via-[#0B0B0C]/92 to-[#0B0B0C]/45" />
             <Shell className="relative">
               <Eyebrow>{dict.heroLocation}</Eyebrow>
-              <h1 className="mt-5 max-w-lg font-heading text-[36px] font-bold uppercase leading-[1.02] tracking-[-0.01em] text-[#F2EFE9] sm:text-[52px]">
+              <h2 className="mt-5 max-w-lg font-heading text-[36px] font-bold uppercase leading-[1.02] tracking-[-0.01em] text-[#F2EFE9] sm:text-[52px]">
                 {dict.heroHeading}
-              </h1>
+              </h2>
               <p className="mt-5 max-w-md text-[15px] leading-relaxed text-[#8E8A83]">{dict.heroSubtitle}</p>
               <div className="mt-9 flex flex-wrap gap-4">
                 <BrassButton onClick={() => bookWith()}>{dict.heroCta}</BrassButton>

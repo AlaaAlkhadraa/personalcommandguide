@@ -47,11 +47,11 @@ const fr: Dictionary = {
       learnMore: "En savoir plus",
     },
     work: {
-      eyebrow: "Réalisations",
-      title: "Sites sélectionnés",
+      eyebrow: "Projets",
+      title: "Des concepts que nous avons construits",
       subtitle:
-        "Une sélection de sites web créés par ZEVREN pour différents secteurs et mises en page.",
-      allConcepts: "Toutes les réalisations",
+        "Des sites concepts interactifs pour différents secteurs, chacun développé de bout en bout pour que vous puissiez cliquer dedans plutôt que regarder une capture d'écran.",
+      allConcepts: "Tous les projets",
     },
     why: {
       eyebrow: "Pourquoi ZEVREN",
@@ -336,10 +336,10 @@ const fr: Dictionary = {
     },
   },
   work: {
-    eyebrow: "Réalisations",
-    title: "Sites sélectionnés",
+    eyebrow: "Projets",
+    title: "Des concepts que nous avons construits",
     subtitle:
-      "Une sélection de sites web créés par ZEVREN pour différents secteurs. Chacun est interactif, pas une simple capture d'écran.",
+      "Chaque projet ici est un concept conçu et développé par ZEVREN pour montrer ce qui est possible. Ils sont entièrement interactifs, pas des captures d'écran, et aucun n'est un travail client.",
     concept: "Concept",
     websiteConcept: "Concept de site web",
     viewConcept: "Voir le concept",

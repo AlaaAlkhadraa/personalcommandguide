@@ -47,11 +47,11 @@ const en: Dictionary = {
       learnMore: "Learn more",
     },
     work: {
-      eyebrow: "Work",
-      title: "Selected websites",
+      eyebrow: "Projects",
+      title: "Concepts we have built",
       subtitle:
-        "A selection of websites built by ZEVREN across different industries and layouts.",
-      allConcepts: "All work",
+        "Interactive concept websites across different industries, each one built end to end so you can click through it rather than look at a screenshot.",
+      allConcepts: "All projects",
     },
     why: {
       eyebrow: "Why ZEVREN",
@@ -336,10 +336,10 @@ const en: Dictionary = {
     },
   },
   work: {
-    eyebrow: "Work",
-    title: "Selected websites",
+    eyebrow: "Projects",
+    title: "Concepts we have built",
     subtitle:
-      "A selection of websites built by ZEVREN across different industries. Each one is interactive, not a static screenshot.",
+      "Every project here is a concept ZEVREN designed and built to show what is possible. They are fully interactive, not static screenshots, and none of them is client work.",
     concept: "Concept",
     websiteConcept: "Website concept",
     viewConcept: "View concept",
