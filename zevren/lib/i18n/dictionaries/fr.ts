@@ -10,6 +10,7 @@ const fr: Dictionary = {
     process: "Méthode",
     contact: "Contact",
     startProject: "Démarrer un projet",
+    madeIn: "Conçu à Maastricht",
     orCall: "ou appelez le",
   },
   footer: {
@@ -247,6 +248,10 @@ const fr: Dictionary = {
     responseValue: "24 h",
   },
   globalFocus: {
+    studioLabel: "Studio",
+    remoteLabel: "À distance",
+    remoteValue: "100%",
+    spokenLabel: "Nous parlons",
     cta: "Démarrer un projet",
     eyebrow: "Portée internationale",
     title: "Un studio à Maastricht, des clients dans plusieurs pays.",

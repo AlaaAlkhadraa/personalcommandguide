@@ -83,10 +83,10 @@ export function Process({ dict, homeDict, detailed = false }: ProcessProps) {
                 </span>
 
                 <div className="flex flex-col gap-1.5">
-                  <span className="font-mono text-[10px] tracking-[0.2em] text-primary-light/70">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <h3 className="text-[13px] font-semibold uppercase tracking-[0.1em] text-white">
+                  <h3 className="flex items-baseline gap-2.5 text-[13px] font-semibold uppercase tracking-[0.1em] text-white">
+                    <span className="font-mono text-[11px] tracking-[0.14em] text-primary-light/70">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
                     {step.title}
                   </h3>
                   <p className="text-[13px] leading-relaxed text-muted">

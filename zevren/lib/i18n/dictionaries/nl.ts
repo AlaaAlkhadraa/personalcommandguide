@@ -10,6 +10,7 @@ const nl: Dictionary = {
     process: "Werkwijze",
     contact: "Contact",
     startProject: "Start een project",
+    madeIn: "Gemaakt in Maastricht",
     orCall: "of bel",
   },
   footer: {
@@ -247,6 +248,10 @@ const nl: Dictionary = {
     responseValue: "24u",
   },
   globalFocus: {
+    studioLabel: "Studio",
+    remoteLabel: "Op afstand",
+    remoteValue: "100%",
+    spokenLabel: "Wij spreken",
     cta: "Start een project",
     eyebrow: "Internationale focus",
     title: "Eén studio in Maastricht, klanten in meer dan één land.",

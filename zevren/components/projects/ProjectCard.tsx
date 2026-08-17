@@ -45,7 +45,7 @@ export function ProjectCard({
       href={`/projects/${item.slug}`}
       className="group flex h-full flex-col overflow-hidden rounded-xl border border-white/10 bg-surface/50 transition-[border-color,transform] duration-300 hover:-translate-y-1 hover:border-accent/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
     >
-      <div className={`relative overflow-hidden ${compact ? "h-40" : "h-60"}`}>
+      <div className={`relative overflow-hidden ${compact ? "h-48 sm:h-40" : "h-60"}`}>
         <Image
           src={art.src}
           alt=""
@@ -93,7 +93,7 @@ export function ProjectCard({
 
         <p
           className={`leading-relaxed text-muted ${
-            compact ? "text-[11px]" : "text-sm"
+            compact ? "text-[12px] sm:text-[11px]" : "text-sm"
           }`}
         >
           {compact ? copy.category : copy.description}
@@ -101,10 +101,12 @@ export function ProjectCard({
 
         <span
           className={`flex items-center gap-1.5 text-accent ${
-            compact ? "mt-auto justify-end" : "mt-auto w-fit rounded-full border border-white/15 px-4 py-2 text-xs font-semibold text-white group-hover:border-accent/60 group-hover:text-accent"
+            compact
+              ? "mt-auto justify-between text-[11px] font-medium sm:justify-end"
+              : "mt-auto w-fit rounded-full border border-white/15 px-4 py-2 text-xs font-semibold text-white group-hover:border-accent/60 group-hover:text-accent"
           }`}
         >
-          {!compact && dict.viewConcept}
+          {compact ? <span className="sm:hidden">{dict.viewConcept}</span> : dict.viewConcept}
           <svg
             viewBox="0 0 16 16"
             aria-hidden="true"

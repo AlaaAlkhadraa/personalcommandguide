@@ -22,12 +22,12 @@ export const SITE_CONFIG = {
 } as const;
 
 export const NAV_LINKS: NavLink[] = [
-  { key: "home", label: "Home", href: "/" },
-  { key: "services", label: "Services", href: "/services" },
-  { key: "projects", label: "Projects", href: "/projects" },
-  { key: "about", label: "About Us", href: "/about" },
-  { key: "process", label: "Process", href: "/process" },
-  { key: "contact", label: "Contact", href: "/contact" },
+  { key: "home", label: "Home", href: "/", icon: "home" },
+  { key: "services", label: "Services", href: "/services", icon: "layers" },
+  { key: "projects", label: "Projects", href: "/projects", icon: "grid" },
+  { key: "about", label: "About Us", href: "/about", icon: "info" },
+  { key: "process", label: "Process", href: "/process", icon: "route" },
+  { key: "contact", label: "Contact", href: "/contact", icon: "mail" },
 ];
 
 export const FOOTER_LEGAL_LINKS: NavLink[] = [

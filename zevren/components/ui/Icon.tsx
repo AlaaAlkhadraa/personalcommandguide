@@ -12,6 +12,13 @@ const paths: Record<ServiceIcon, string> = {
   search: "M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM21 21l-4.35-4.35",
   globe:
     "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM3 12h18M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18Z",
+  home: "M4 11 12 4l8 7M6 10v9h12v-9",
+  grid: "M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z",
+  info: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM12 11v5M12 8h.01",
+  mail: "M3 6h18v12H3zM3 7l9 6 9-6",
+  user: "M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM4 20a8 8 0 0 1 16 0",
+  building: "M4 20V6l7-3v17M11 20h9V10l-9-3M7 9h.01M7 13h.01M15 12h.01M15 16h.01",
+  route: "M6 20V9a3 3 0 0 1 3-3h6a3 3 0 0 0 3-3M6 20a2 2 0 1 1 0-4 2 2 0 0 1 0 4Z",
 };
 
 export function Icon({

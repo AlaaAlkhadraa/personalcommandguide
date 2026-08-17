@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NAV_LINKS, SITE_CONFIG } from "@/lib/constants";
 import { ArrowButton } from "@/components/ui/ArrowButton";
+import { Icon } from "@/components/ui/Icon";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 import type { Locale } from "@/lib/i18n/config";
 import type { Dictionary } from "@/lib/i18n/dictionary-type";
@@ -170,15 +171,20 @@ export function Navbar({ locale, dict }: NavbarProps) {
                 href={link.href}
                 tabIndex={isOpen ? undefined : -1}
                 aria-current={isActive ? "page" : undefined}
-                className={`flex items-center justify-between gap-3 border-b border-white/[0.07] px-1 py-4 text-sm font-semibold uppercase tracking-[0.12em] transition-colors ${
+                className={`flex items-center gap-4 border-b border-white/[0.07] px-1 py-4 text-sm font-semibold uppercase tracking-[0.12em] transition-colors ${
                   isActive ? "text-accent" : "text-white hover:text-accent"
                 }`}
               >
+                {link.icon && (
+                  <span className={isActive ? "text-accent" : "text-muted"}>
+                    <Icon name={link.icon} className="h-5 w-5" />
+                  </span>
+                )}
                 {link.key ? dict[link.key] : link.label}
                 <svg
                   viewBox="0 0 16 16"
                   aria-hidden="true"
-                  className="h-3.5 w-3.5 text-muted/60"
+                  className="ms-auto h-3.5 w-3.5 text-muted/60"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth={1.8}
@@ -210,18 +216,35 @@ export function Navbar({ locale, dict }: NavbarProps) {
               </a>
             </div>
 
-            <a
-              href={SITE_CONFIG.social.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              tabIndex={isOpen ? undefined : -1}
-              className="flex h-11 w-11 items-center justify-center rounded-lg border border-white/10 text-muted transition-colors hover:border-accent/50 hover:text-accent"
-              aria-label="ZEVREN on LinkedIn"
-            >
-              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor" aria-hidden="true">
-                <path d="M6.94 8.5H3.56V20h3.38V8.5ZM5.25 3.5a1.96 1.96 0 1 0 0 3.92 1.96 1.96 0 0 0 0-3.92ZM20.44 20h-3.37v-5.6c0-1.34-.03-3.06-1.87-3.06-1.87 0-2.16 1.46-2.16 2.96V20H9.68V8.5h3.24v1.57h.05c.45-.85 1.56-1.75 3.2-1.75 3.42 0 4.05 2.25 4.05 5.18V20Z" />
-              </svg>
-            </a>
+            <div className="flex items-center gap-3">
+              {/* Only the accounts that actually exist. Placeholder icons for
+                  networks ZEVREN is not on would be links to nowhere. */}
+              <a
+                href={SITE_CONFIG.social.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                tabIndex={isOpen ? undefined : -1}
+                className="flex h-11 w-11 items-center justify-center rounded-lg border border-white/10 text-muted transition-colors hover:border-accent/50 hover:text-accent"
+                aria-label="ZEVREN on LinkedIn"
+              >
+                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor" aria-hidden="true">
+                  <path d="M6.94 8.5H3.56V20h3.38V8.5ZM5.25 3.5a1.96 1.96 0 1 0 0 3.92 1.96 1.96 0 0 0 0-3.92ZM20.44 20h-3.37v-5.6c0-1.34-.03-3.06-1.87-3.06-1.87 0-2.16 1.46-2.16 2.96V20H9.68V8.5h3.24v1.57h.05c.45-.85 1.56-1.75 3.2-1.75 3.42 0 4.05 2.25 4.05 5.18V20Z" />
+                </svg>
+              </a>
+              <a
+                href={`mailto:${SITE_CONFIG.email}`}
+                tabIndex={isOpen ? undefined : -1}
+                className="flex h-11 w-11 items-center justify-center rounded-lg border border-white/10 text-muted transition-colors hover:border-accent/50 hover:text-accent"
+                aria-label={SITE_CONFIG.email}
+              >
+                <Icon name="mail" className="h-5 w-5" />
+              </a>
+            </div>
+
+            <p className="pt-4 text-[10px] uppercase tracking-[0.16em] text-muted/70">
+              &copy; {new Date().getFullYear()} {SITE_CONFIG.legalName}
+              <span className="block pt-1">{dict.madeIn}</span>
+            </p>
           </div>
         </nav>
       </div>

@@ -10,6 +10,7 @@ export interface Dictionary {
     process: string;
     contact: string;
     startProject: string;
+    madeIn: string;
     orCall: string;
   };
   footer: {
@@ -125,6 +126,10 @@ export interface Dictionary {
   };
   globalFocus: {
     cta: string;
+    studioLabel: string;
+    remoteLabel: string;
+    remoteValue: string;
+    spokenLabel: string;
     eyebrow: string;
     title: string;
     body: string;

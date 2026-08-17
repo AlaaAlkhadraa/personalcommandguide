@@ -9,6 +9,8 @@ export interface NavLink {
    * parallel array, so reordering the menu cannot silently mislabel it.
    */
   key?: "home" | "services" | "projects" | "about" | "process" | "contact";
+  /** Shown beside the label in the mobile menu. */
+  icon?: ServiceIcon;
 }
 
 export interface Service {
@@ -37,7 +39,14 @@ export type ServiceIcon =
   | "compass"
   | "layers"
   | "search"
-  | "globe";
+  | "globe"
+  | "home"
+  | "grid"
+  | "info"
+  | "mail"
+  | "user"
+  | "building"
+  | "route";
 
 export interface WorkItem {
   slug: WorkSlug;

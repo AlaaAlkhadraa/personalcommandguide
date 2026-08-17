@@ -113,6 +113,19 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             {project.name}
           </h1>
           <p className="max-w-2xl text-lg leading-relaxed text-muted">{copy.description}</p>
+
+          {/* The features as chips, so the header says what the concept covers
+              before the demo below is scrolled into view. */}
+          <ul className="flex flex-wrap gap-2 pt-2">
+            {copy.keyFeatures.map((feature) => (
+              <li
+                key={feature}
+                className="rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2 text-xs text-white/80"
+              >
+                {feature}
+              </li>
+            ))}
+          </ul>
         </Container>
       </section>
 

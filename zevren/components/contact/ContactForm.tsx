@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import { Icon } from "@/components/ui/Icon";
 import { SubmitButton } from "@/components/ui/Button";
 import type { ContactFormValues } from "@/types";
 import type { Dictionary } from "@/lib/i18n/dictionary-type";
@@ -166,7 +167,11 @@ export function ContactForm({ dict }: { dict: Dictionary["contact"]["form"] }) {
           <label htmlFor="name" className="text-sm font-medium text-white">
             {dict.nameLabel} <span aria-hidden="true">*</span>
           </label>
-          <input
+          <span className="relative block">
+            <span className="pointer-events-none absolute inset-y-0 start-0 flex w-11 items-center justify-center text-muted/70">
+              <Icon name="user" className="h-4 w-4" />
+            </span>
+            <input
             id="name"
             name="name"
             type="text"
@@ -174,9 +179,10 @@ export function ContactForm({ dict }: { dict: Dictionary["contact"]["form"] }) {
             autoComplete="name"
             aria-invalid={Boolean(errors.name)}
             aria-describedby={errors.name ? "name-error" : undefined}
-            className="rounded-lg border border-white/15 bg-surface px-4 py-3 text-sm text-white placeholder:text-muted/60 focus:border-accent"
+            className="w-full rounded-lg border border-white/15 bg-surface px-4 ps-11 py-3 text-sm text-white placeholder:text-muted/60 focus:border-accent"
             placeholder={dict.namePlaceholder}
           />
+          </span>
           {errors.name && (
             <p id="name-error" className="text-sm text-red-400">
               {errors.name}
@@ -188,7 +194,11 @@ export function ContactForm({ dict }: { dict: Dictionary["contact"]["form"] }) {
           <label htmlFor="email" className="text-sm font-medium text-white">
             {dict.emailLabel} <span aria-hidden="true">*</span>
           </label>
-          <input
+          <span className="relative block">
+            <span className="pointer-events-none absolute inset-y-0 start-0 flex w-11 items-center justify-center text-muted/70">
+              <Icon name="mail" className="h-4 w-4" />
+            </span>
+            <input
             id="email"
             name="email"
             type="email"
@@ -196,9 +206,10 @@ export function ContactForm({ dict }: { dict: Dictionary["contact"]["form"] }) {
             autoComplete="email"
             aria-invalid={Boolean(errors.email)}
             aria-describedby={errors.email ? "email-error" : undefined}
-            className="rounded-lg border border-white/15 bg-surface px-4 py-3 text-sm text-white placeholder:text-muted/60 focus:border-accent"
+            className="w-full rounded-lg border border-white/15 bg-surface px-4 ps-11 py-3 text-sm text-white placeholder:text-muted/60 focus:border-accent"
             placeholder={dict.emailPlaceholder}
           />
+          </span>
           {errors.email && (
             <p id="email-error" className="text-sm text-red-400">
               {errors.email}
@@ -210,14 +221,19 @@ export function ContactForm({ dict }: { dict: Dictionary["contact"]["form"] }) {
           <label htmlFor="company" className="text-sm font-medium text-white">
             {dict.companyLabel}
           </label>
-          <input
+          <span className="relative block">
+            <span className="pointer-events-none absolute inset-y-0 start-0 flex w-11 items-center justify-center text-muted/70">
+              <Icon name="building" className="h-4 w-4" />
+            </span>
+            <input
             id="company"
             name="company"
             type="text"
             autoComplete="organization"
-            className="rounded-lg border border-white/15 bg-surface px-4 py-3 text-sm text-white placeholder:text-muted/60 focus:border-accent"
+            className="w-full rounded-lg border border-white/15 bg-surface px-4 ps-11 py-3 text-sm text-white placeholder:text-muted/60 focus:border-accent"
             placeholder={dict.companyPlaceholder}
           />
+          </span>
         </div>
 
         <div className="flex flex-col gap-2">

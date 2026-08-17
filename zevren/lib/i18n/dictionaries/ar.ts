@@ -10,6 +10,7 @@ const ar: Dictionary = {
     process: "طريقة العمل",
     contact: "تواصل معنا",
     startProject: "ابدأ مشروعك",
+    madeIn: "صُنع في ماستريخت",
     orCall: "أو اتصل على",
   },
   footer: {
@@ -244,6 +245,10 @@ const ar: Dictionary = {
     responseValue: "٢٤ ساعة",
   },
   globalFocus: {
+    studioLabel: "استوديو",
+    remoteLabel: "عن بُعد",
+    remoteValue: "١٠٠٪",
+    spokenLabel: "نتحدث",
     cta: "ابدأ مشروعك",
     eyebrow: "حضور دولي",
     title: "استوديو واحد في ماستريخت، وعملاء في أكثر من بلد.",

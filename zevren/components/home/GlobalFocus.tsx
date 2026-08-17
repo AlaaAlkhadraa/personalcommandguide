@@ -44,26 +44,44 @@ export function GlobalFocus({ dict }: { dict: Dictionary["globalFocus"] }) {
         </h2>
         <p className="max-w-xl text-sm leading-relaxed text-muted">{dict.body}</p>
 
-        <dl className="grid grid-cols-2 gap-6 pt-2 sm:max-w-md">
-          <div className="flex flex-col gap-1 border-s border-primary/40 ps-4">
-            <dt className="text-[10px] uppercase tracking-[0.16em] text-muted">
-              {dict.basedLabel}
-            </dt>
-            <dd className="text-sm font-medium text-white">{dict.basedValue}</dd>
-          </div>
-          <div className="flex flex-col gap-1 border-s border-primary/40 ps-4">
-            <dt className="text-[10px] uppercase tracking-[0.16em] text-muted">
-              {dict.languagesLabel}
-            </dt>
-            <dd className="text-sm font-medium text-white">
-              {LOCALES.map((locale) => LOCALE_NAMES[locale]).join(", ")}
-            </dd>
-          </div>
-        </dl>
-
         <div className="pt-3">
           <ArrowButton href="/contact">{dict.cta}</ArrowButton>
         </div>
+
+        {/* One studio, the languages the site really ships, and remote work.
+            No country count and no "24/7", because neither would be true. */}
+        <dl className="grid grid-cols-2 gap-x-6 gap-y-6 pt-8 sm:grid-cols-4">
+          <div className="flex flex-col gap-1">
+            <dd className="font-heading text-2xl font-bold text-accent">1</dd>
+            <dt className="text-[10px] uppercase tracking-[0.14em] text-muted">
+              {dict.studioLabel}
+            </dt>
+          </div>
+          <div className="flex flex-col gap-1">
+            <dd className="font-heading text-2xl font-bold text-accent">
+              {LOCALES.length}
+            </dd>
+            <dt className="text-[10px] uppercase tracking-[0.14em] text-muted">
+              {dict.languagesLabel}
+            </dt>
+          </div>
+          <div className="flex flex-col gap-1">
+            <dd className="font-heading text-2xl font-bold text-accent">
+              {dict.remoteValue}
+            </dd>
+            <dt className="text-[10px] uppercase tracking-[0.14em] text-muted">
+              {dict.remoteLabel}
+            </dt>
+          </div>
+          <div className="flex flex-col gap-1">
+            <dd className="font-heading text-sm font-semibold leading-tight text-white">
+              {LOCALE_NAMES.en}, {LOCALE_NAMES.nl}
+            </dd>
+            <dt className="text-[10px] uppercase tracking-[0.14em] text-muted">
+              {dict.spokenLabel}
+            </dt>
+          </div>
+        </dl>
       </Container>
     </section>
   );
