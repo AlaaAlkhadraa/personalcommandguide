@@ -2,6 +2,22 @@
 -- Applied with `npm run db:migrate`, which runs each statement in one
 -- transaction so a partial migration cannot be left behind.
 
+-- Remove only a known incompatible bootstrap schema from an earlier deploy.
+-- The old shape had password_salt; the current schema never has that column.
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_schema = 'public' AND table_name = 'admin_users'
+      AND column_name = 'password_salt'
+  ) THEN
+    DROP TABLE IF EXISTS "admin_sessions";
+    DROP TABLE IF EXISTS "contact_submissions";
+    DROP TABLE IF EXISTS "admin_users" CASCADE;
+    DROP TABLE IF EXISTS "schema_migrations";
+  END IF;
+END $$;
+
 CREATE TABLE IF NOT EXISTS "admin_users" (
   "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   "email" text NOT NULL,
