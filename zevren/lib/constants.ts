@@ -6,7 +6,9 @@ export const SITE_CONFIG = {
   tagline: "Websites that make your business easier to choose.",
   description:
     "We design and build modern websites for businesses that want a clear, professional presence online.",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.zevren.nl",
+  // The apex is the primary domain on Vercel; canonicals, the sitemap and
+  // every JSON-LD url derive from this, so it must match what actually serves.
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://zevren.nl",
   email: "info@zevren.nl",
   phone: "+31 6 30958710",
   phoneDisplay: "06 30 95 87 10",

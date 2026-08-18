@@ -1,5 +1,8 @@
 import Image from "next/image";
+import { headers } from "next/headers";
 
+import { JsonLd } from "@/components/seo/JsonLd";
+import { SITE_CONFIG } from "@/lib/constants";
 import { PageHero } from "@/components/ui/PageHero";
 import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
@@ -23,9 +26,33 @@ export default async function ServicesPage() {
   const locale = await getLocale();
   const dict = getDictionary(locale);
   const s = dict.services;
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
+
+  // The four published prices as machine-readable offers. Figures come from
+  // the same dictionary the pricing section renders, so what a crawler reads
+  // is exactly what a visitor sees.
+  const pricingJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "OfferCatalog",
+    name: "Website packages",
+    url: `${SITE_CONFIG.url}/services`,
+    itemListElement: (["starter", "business", "store", "custom"] as const).map((key) => {
+      const plan = dict.pricing.plans[key];
+      return {
+        "@type": "Offer",
+        name: plan.name,
+        description: plan.description,
+        price: plan.price.replace(/[^\d]/g, ""),
+        priceCurrency: "EUR",
+        url: `${SITE_CONFIG.url}/services`,
+        seller: { "@type": "Organization", name: SITE_CONFIG.name, url: SITE_CONFIG.url },
+      };
+    }),
+  };
 
   return (
     <>
+      <JsonLd data={pricingJsonLd} nonce={nonce} />
       <PageHero eyebrow={s.eyebrow} title={s.title} description={s.subtitle} />
       <RevealGroup>
       <section className="py-20">

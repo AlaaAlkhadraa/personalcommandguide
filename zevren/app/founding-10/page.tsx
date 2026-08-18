@@ -1,12 +1,15 @@
 import Link from "next/link";
+import { headers } from "next/headers";
 
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { RevealGroup } from "@/components/ui/RevealGroup";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { FoundingCounter } from "@/components/campaign/FoundingCounter";
 import { FoundingPricing } from "@/components/campaign/FoundingPricing";
-import { claimHref } from "@/lib/campaign";
+import { SITE_CONFIG } from "@/lib/constants";
+import { FOUNDING_PLANS, claimHref } from "@/lib/campaign";
 import { getFoundingStatus } from "@/lib/server/campaign";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { getLocale } from "@/lib/i18n/get-locale";
@@ -28,9 +31,37 @@ export default async function FoundingPage() {
   const dict = getDictionary(await getLocale());
   const c = dict.campaign;
   const status = await getFoundingStatus();
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
+
+  // The founding prices as machine-readable offers, only while spots remain
+  // open: a crawler should never be told about an offer a visitor can no
+  // longer take. Figures come from the same data the cards render.
+  const offersJsonLd = status.soldOut
+    ? null
+    : {
+        "@context": "https://schema.org",
+        "@type": "OfferCatalog",
+        name: c.title,
+        description: c.metaDescription,
+        url: `${SITE_CONFIG.url}/founding-10`,
+        itemListElement: FOUNDING_PLANS.map((plan) => {
+          const copy = dict.pricing.plans[plan.key];
+          return {
+            "@type": "Offer",
+            name: copy.name,
+            description: copy.description,
+            price: plan.foundingPrice,
+            priceCurrency: "EUR",
+            availability: "https://schema.org/LimitedAvailability",
+            url: `${SITE_CONFIG.url}/founding-10`,
+            seller: { "@type": "Organization", name: SITE_CONFIG.name, url: SITE_CONFIG.url },
+          };
+        }),
+      };
 
   return (
     <RevealGroup>
+      {offersJsonLd && <JsonLd data={offersJsonLd} nonce={nonce} />}
       <section className="relative overflow-hidden border-b border-white/5 bg-grid-glow py-20 sm:py-28">
         <div
           aria-hidden="true"

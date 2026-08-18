@@ -9,10 +9,13 @@ import { FAQ } from "@/components/home/FAQ";
 import { AboutBand } from "@/components/home/AboutBand";
 import { Mission } from "@/components/home/Mission";
 import { FinalCTA } from "@/components/home/FinalCTA";
+import { headers } from "next/headers";
+
 import { buildMetadata } from "@/lib/seo";
 import { SITE_CONFIG } from "@/lib/constants";
 import { getLocale } from "@/lib/i18n/get-locale";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { RevealGroup } from "@/components/ui/RevealGroup";
 
 export const metadata = buildMetadata({
@@ -24,9 +27,24 @@ export const metadata = buildMetadata({
 export default async function HomePage() {
   const locale = await getLocale();
   const dict = getDictionary(locale);
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
+
+  // The FAQ rendered further down, in the language actually served, so a
+  // search result can show the questions directly under the listing.
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    inLanguage: locale,
+    mainEntity: dict.faq.items.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
+  };
 
   return (
     <>
+      <JsonLd data={faqJsonLd} nonce={nonce} />
       {/* The hero is above the fold and animates itself, so it stays outside
           the reveal group: fading in what the visitor is already looking at
           only delays the page. */}
