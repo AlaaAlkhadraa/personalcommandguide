@@ -31,7 +31,8 @@ export function Process({ dict, homeDict, detailed = false }: ProcessProps) {
   const backdrop = IMAGES["atmos-path"];
 
   return (
-    <section className="relative overflow-hidden border-b border-white/5 bg-surface/20 py-16 lg:py-20">
+    <section data-reveal
+      className="relative overflow-hidden border-b border-white/5 bg-surface/20 py-16 lg:py-20">
       <Image
         src={backdrop.src}
         alt=""

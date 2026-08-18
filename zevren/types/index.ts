@@ -65,7 +65,6 @@ export type WorkSlug =
   | "barbershop-website"
   | "garage-website"
   | "online-store"
-  | "property-platform"
   | "ellezone"
   | "accounting-firm";
 

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { CtaMark } from "@/components/home/CtaMark";
 
 import { ArrowButton } from "@/components/ui/ArrowButton";
 import { Container } from "@/components/ui/Container";
@@ -24,10 +25,10 @@ export function FinalCTA({
   contactDict: Dictionary["contact"];
 }) {
   const glow = IMAGES["hero-horizon"];
-  const mark = IMAGES["z-still"];
 
   return (
-    <section id="start" className="relative overflow-hidden border-b border-white/5 py-16 lg:py-20">
+    <section data-reveal
+      id="start" className="relative overflow-hidden border-b border-white/5 py-16 lg:py-20">
       <Image
         src={glow.src}
         alt=""
@@ -57,22 +58,9 @@ export function FinalCTA({
             </ArrowButton>
           </div>
 
-          {/* The mark again, as a still. The interactive one is in the hero;
-              a second WebGL context this far down the page would cost more
-              than it adds. */}
-          <div className="relative mt-6 hidden aspect-square w-full max-w-xs lg:block">
-            <Image
-              src={mark.src}
-              alt=""
-              aria-hidden="true"
-              fill
-              loading="lazy"
-              sizes="20rem"
-              placeholder="blur"
-              blurDataURL={mark.blurDataURL}
-              className="object-contain opacity-90"
-            />
-          </div>
+          {/* The mark again, live. It reuses the hero scene and the cached
+              GLB, and only mounts when the section scrolls near. */}
+          <CtaMark className="pointer-events-auto relative mt-6 hidden aspect-square w-full max-w-xs lg:block" />
         </div>
 
         <div className="rounded-2xl border border-white/10 bg-navy/70 p-6 sm:p-8">

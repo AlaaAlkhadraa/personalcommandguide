@@ -203,23 +203,6 @@ export const WORK_ITEMS: WorkItem[] = [
     image: "store-hero",
   },
   {
-    slug: "property-platform",
-    name: "Property Management Platform",
-    category: "Custom Web Application",
-    description:
-      "A property management dashboard for landlords, built as a custom web application: properties, bookings, calendar and messages in one place.",
-    whatWeExplored:
-      "This concept explores what a real internal tool could look like, not just a marketing website. A landlord managing several properties needs bookings, availability and guest messages in one dashboard instead of spreadsheets and email.",
-    keyFeatures: [
-      "Bookings and revenue overview",
-      "Interactive availability calendar",
-      "Booking request approvals",
-      "Guest messaging",
-      "Property management",
-    ],
-    image: "project-property",
-  },
-  {
     slug: "ellezone",
     name: "ElleZone",
     category: "E-commerce",

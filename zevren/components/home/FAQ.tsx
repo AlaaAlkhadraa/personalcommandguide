@@ -9,7 +9,8 @@ interface FAQProps {
 
 export function FAQ({ dict, homeDict }: FAQProps) {
   return (
-    <section className="py-24">
+    <section data-reveal
+      className="py-24">
       <Container className="flex flex-col gap-12">
         <SectionHeading eyebrow={homeDict.eyebrow} title={homeDict.title} />
         <div className="mx-auto flex w-full max-w-3xl flex-col gap-3">

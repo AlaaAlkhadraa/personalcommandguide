@@ -4,13 +4,11 @@ import { TajexPreview } from "@/components/projects/previews/TajexPreview";
 import { BarbershopPreview } from "@/components/projects/previews/BarbershopPreview";
 import { GaragePreview } from "@/components/projects/previews/GaragePreview";
 import { StorePreview } from "@/components/projects/previews/StorePreview";
-import { PropertyPreview } from "@/components/projects/previews/PropertyPreview";
 import { EllezonePreview } from "@/components/projects/previews/EllezonePreview";
 import { AccountingPreview } from "@/components/projects/previews/AccountingPreview";
 import { BarbershopDemo } from "@/components/demos/barbershop/BarbershopDemo";
 import { GarageDemo } from "@/components/demos/garage/GarageDemo";
 import { StoreDemo } from "@/components/demos/store/StoreDemo";
-import { PropertyDemo } from "@/components/demos/property/PropertyDemo";
 import { EllezoneDemo } from "@/components/demos/ellezone/EllezoneDemo";
 import { AccountingDemo } from "@/components/demos/accounting/AccountingDemo";
 
@@ -19,7 +17,6 @@ export const WORK_PREVIEWS: Record<string, ComponentType<{ className?: string }>
   "barbershop-website": BarbershopPreview,
   "garage-website": GaragePreview,
   "online-store": StorePreview,
-  "property-platform": PropertyPreview,
   ellezone: EllezonePreview,
   "accounting-firm": AccountingPreview,
 };
@@ -39,7 +36,6 @@ export const WORK_DEMOS: Record<string, ComponentType<DemoComponentProps>> = {
   "barbershop-website": BarbershopDemo as ComponentType<DemoComponentProps>,
   "garage-website": GarageDemo as ComponentType<DemoComponentProps>,
   "online-store": StoreDemo as ComponentType<DemoComponentProps>,
-  "property-platform": PropertyDemo as ComponentType<DemoComponentProps>,
   ellezone: EllezoneDemo as ComponentType<DemoComponentProps>,
   "accounting-firm": AccountingDemo as ComponentType<DemoComponentProps>,
 };

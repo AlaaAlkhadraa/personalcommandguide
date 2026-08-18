@@ -97,10 +97,10 @@ export const IMAGES = {
   },
   "project-tajex": {
     src: "/v2/project-tajex.webp",
-    width: 1024,
-    height: 1024,
+    width: 1400,
+    height: 1120,
     blurDataURL:
-      "data:image/webp;base64,UklGRkoAAABXRUJQVlA4ID4AAABQAgCdASoQABAABABoJZgCdAEPD34995hWDAAA/vDkOXbo/o7a24ATZnwNC2NSTCrrkHbLByfDcNMvAgw8AA==",
+      "data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAADwAQCdASoQAA0AAwBSJQBOgCFlpGlDgAAA/vSyscofh4N9CxQlRS5LfsKkSrNKVp+MfLEWIxBa88GYxGY7UrvVSY+naVdRPybX3QAA",
   },
   "project-barbershop": {
     src: "/v2/project-barbershop.webp",
@@ -158,43 +158,43 @@ export const IMAGES = {
     blurDataURL:
       "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAAAwAgCdASoQABAABABoJYgCdAEN/wBXSJg+AAD+8rHOq0rcOdndDATgnkgymIhXkE84LMwY/cqnJTXajHCm1gN3MC5biaGYNTDbRSLgUVr8AA==",
   },
-  "product-headphones": {
-    src: "/v2/product-headphones.webp",
+  "nordwave-studio-over-ear": {
+    src: "/v2/nordwave-studio-over-ear.webp",
     width: 720,
     height: 720,
     blurDataURL:
       "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAAAwAgCdASoQABAABABoJZACdAEPSV9ICOBoAAD+7o7BHyrwuMWrrORhzcO/z0mh1HfTSQvrx7aAR4cNTtVAmRTIAL6Dwr1ngm6tBFsYAAA=",
   },
-  "product-earbuds": {
-    src: "/v2/product-earbuds.webp",
+  "nordwave-earbuds-pro": {
+    src: "/v2/nordwave-earbuds-pro.webp",
     width: 720,
     height: 720,
     blurDataURL:
       "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAAAQAgCdASoQABAABABoJQBOgB9SuEV78OWAAP7y/fRb0BnJbL4/GXjlMtxmS1+3K0eBPlzMgXkU5WaZDwU3VNyvkb0qKbrfgAA=",
   },
-  "product-speaker": {
-    src: "/v2/product-speaker.webp",
+  "nordwave-room-speaker": {
+    src: "/v2/nordwave-room-speaker.webp",
     width: 720,
     height: 720,
     blurDataURL:
       "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAAAwAgCdASoQABAABABoJZgCdAD2BKzZmMt0IAD+5vAimEJqGAMemLgcMEXeRYAkYAHB5YdPH8LUlAL5bF6E0AcD1RhwmLsAAAA=",
   },
-  "product-watch": {
-    src: "/v2/product-watch.webp",
+  "nordwave-series-watch": {
+    src: "/v2/nordwave-series-watch.webp",
     width: 720,
     height: 720,
     blurDataURL:
       "data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAABwAQCdASoQABAABABoJYwCdAFAAAD+8LewDjJ77u6/dXQ6SgvKG6Lyxw4+o4zAx9N0VlNW9qZfVG/V/TRtgAAA",
   },
-  "product-phone": {
-    src: "/v2/product-phone.webp",
+  "nordwave-handset-12": {
+    src: "/v2/nordwave-handset-12.webp",
     width: 720,
     height: 720,
     blurDataURL:
       "data:image/webp;base64,UklGRjgAAABXRUJQVlA4ICwAAADQAQCdASoQABAABABoJZQCdAD2OvLoAAD+8q8fCp70kELSJBE1oqIjQm2AAA==",
   },
-  "product-headset": {
-    src: "/v2/product-headset.webp",
+  "nordwave-travel-headset": {
+    src: "/v2/nordwave-travel-headset.webp",
     width: 720,
     height: 720,
     blurDataURL:

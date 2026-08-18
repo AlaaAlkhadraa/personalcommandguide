@@ -85,7 +85,7 @@ export function Hero({ dict }: { dict: Dictionary["home"]["hero"] }) {
           above the mark in paint order, so without this it swallowed every
           pointer move over the empty half and the model stopped responding. */}
       <div className="container-page pointer-events-none relative flex flex-1 flex-col gap-4 pb-7 pt-5 [@media(max-width:1023px)_and_(max-height:820px)]:gap-2.5 [@media(max-width:1023px)_and_(max-height:820px)]:pb-4 [@media(max-width:1023px)_and_(max-height:820px)]:pt-3 lg:min-h-[42rem] lg:flex-none lg:justify-center lg:gap-10 lg:pb-24 lg:pt-24">
-        <div className="pointer-events-auto flex max-w-xl flex-col gap-4 [@media(max-width:1023px)_and_(max-height:820px)]:gap-2.5 lg:max-w-[34rem] lg:gap-6">
+        <div className="hero-rise pointer-events-auto flex max-w-xl flex-col gap-4 [@media(max-width:1023px)_and_(max-height:820px)]:gap-2.5 lg:max-w-[34rem] lg:gap-6">
           <span className="flex items-center gap-4">
             <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-accent">
               {dict.badge}

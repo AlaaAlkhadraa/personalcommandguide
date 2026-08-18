@@ -57,3 +57,46 @@
     @apply bg-gradient-to-r from-white to-accent bg-clip-text text-transparent;
   }
 }
+
+/* GSAP scroll reveals.
+   Elements are only hidden once the root has been marked ready, which the
+   hook does after GSAP has loaded. Without that gate a visitor with JS off,
+   or one who scrolls before the chunk arrives, would be left with permanently
+   invisible content. */
+.reveal-ready [data-reveal] {
+  visibility: hidden;
+}
+
+.reveal-ready [data-reveal].is-revealed {
+  visibility: visible;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-ready [data-reveal] {
+    visibility: visible;
+  }
+}
+
+/* Hero entrance. CSS rather than GSAP on purpose: the copy is the LCP and
+   must not wait for a JS chunk before it starts appearing. The 3D mark and
+   the scroll reveals below the fold are where GSAP earns its keep. */
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.hero-rise {
+  animation: hero-rise 0.7s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-rise {
+    animation: none;
+  }
+}

@@ -19,7 +19,8 @@ export function GlobalFocus({ dict }: { dict: Dictionary["globalFocus"] }) {
   const map = IMAGES["env-map"];
 
   return (
-    <section className="relative overflow-hidden border-b border-white/5 py-16 lg:py-24">
+    <section data-reveal
+      className="relative overflow-hidden border-b border-white/5 py-16 lg:py-24">
       <Image
         src={map.src}
         alt={dict.imageAlt}

@@ -18,7 +18,8 @@ export function ProjectsPreview({ dict, homeDict }: ProjectsPreviewProps) {
   const featured = WORK_ITEMS.slice(0, 6);
 
   return (
-    <section className="border-t border-white/5 bg-surface/30 py-24">
+    <section data-reveal
+      className="border-t border-white/5 bg-surface/30 py-24">
       <Container className="flex flex-col gap-12">
         <SectionHeading
           eyebrow={homeDict.eyebrow}

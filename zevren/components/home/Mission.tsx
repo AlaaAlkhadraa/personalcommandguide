@@ -34,7 +34,8 @@ export async function Mission({ dict }: { dict: Dictionary["mission"] }) {
   ];
 
   return (
-    <section className="relative overflow-hidden border-b border-white/5 py-16 lg:py-20">
+    <section data-reveal
+      className="relative overflow-hidden border-b border-white/5 py-16 lg:py-20">
       <Image
         src={backdrop.src}
         alt=""

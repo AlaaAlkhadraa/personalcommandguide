@@ -212,7 +212,6 @@ export interface Dictionary {
       | "barbershop-website"
       | "garage-website"
       | "online-store"
-      | "property-platform"
       | "ellezone"
       | "accounting-firm",
       { category: string; description: string; whatWeExplored: string; keyFeatures: string[] }
@@ -384,48 +383,6 @@ export interface Dictionary {
       orderConfirmedTitle: string;
       orderConfirmedBody: string;
       orderNumber: string;
-    };
-    property: {
-      conceptBadge: string;
-      navOverview: string;
-      navProperties: string;
-      navCalendar: string;
-      navBookings: string;
-      navMessages: string;
-      navSettings: string;
-      overviewHeading: string;
-      statProperties: string;
-      statActiveBookings: string;
-      statRevenue: string;
-      statOccupancy: string;
-      recentActivityHeading: string;
-      propertiesHeading: string;
-      statusActive: string;
-      statusDraft: string;
-      markActive: string;
-      markDraft: string;
-      backToProperties: string;
-      pricePerNight: string;
-      calendarHeading: string;
-      selectProperty: string;
-      legendAvailable: string;
-      legendBooked: string;
-      legendBlocked: string;
-      blockDayHint: string;
-      bookingsHeading: string;
-      approve: string;
-      decline: string;
-      statusPending: string;
-      statusConfirmed: string;
-      statusDeclined: string;
-      messagesHeading: string;
-      noMessageSelected: string;
-      replyPlaceholder: string;
-      send: string;
-      settingsHeading: string;
-      businessNameLabel: string;
-      saveChanges: string;
-      savedConfirmation: string;
     };
     ellezone: {
       navShop: string;

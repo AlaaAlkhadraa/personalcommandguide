@@ -60,7 +60,6 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     "barbershop-website": "barbershop",
     "garage-website": "garage",
     "online-store": "store",
-    "property-platform": "property",
     ellezone: "ellezone",
     "accounting-firm": "accounting",
   };
