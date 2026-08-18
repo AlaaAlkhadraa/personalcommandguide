@@ -119,32 +119,32 @@ export function PropertyDemo({ dict, common }: PropertyDemoProps) {
   const calendarDays = generateMonthDays(calendarPropertyId, blockedDays[calendarPropertyId] ?? []);
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white text-slate-900">
-      {/* Navigation */}
-      <nav className="flex items-center justify-between border-b border-slate-200 bg-white/95 px-5 py-4 sm:px-8">
-        <button
-          type="button"
-          onClick={() => setTab("overview")}
-          className="font-heading text-lg font-semibold tracking-wide text-slate-900"
-        >
-          NESTLY
-        </button>
-        <span className="rounded-full border border-teal-600/30 bg-teal-50 px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-teal-700">
-          {dict.conceptBadge}
-        </span>
-      </nav>
-
-      <div className="flex flex-col sm:flex-row">
-        <aside className="flex gap-2 overflow-x-auto border-b border-slate-200 bg-slate-50 p-3 sm:w-48 sm:flex-col sm:overflow-visible sm:border-b-0 sm:border-r sm:p-4">
+    <div className="overflow-hidden rounded-2xl border border-[#E2E6EC] bg-[#F7F8FA] text-slate-900">
+      <div className="flex flex-col lg:flex-row">
+        <aside className="flex gap-2 overflow-x-auto border-b border-white/8 bg-[#0F1B21] p-3 lg:w-60 lg:flex-col lg:overflow-visible lg:border-b-0 lg:p-5">
+          <div className="hidden items-center gap-2.5 px-2 pb-6 lg:flex">
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#0F766E]">
+              <svg viewBox="0 0 24 24" className="h-4.5 w-4.5" fill="none" stroke="#fff" strokeWidth={1.9} strokeLinecap="round" strokeLinejoin="round">
+                <path d="M4 11 12 4l8 7" />
+                <path d="M6 10v9h12v-9" />
+              </svg>
+            </span>
+            <span className="leading-tight">
+              <span className="block font-heading text-[14px] font-semibold tracking-[0.16em] text-white">NESTLY</span>
+              <span className="mt-0.5 block font-mono text-[8px] uppercase tracking-[0.2em] text-[#5F7A80]">
+                {dict.conceptBadge}
+              </span>
+            </span>
+          </div>
           {TAB_ORDER.map((id) => (
             <button
               key={id}
               type="button"
               onClick={() => setTab(id)}
-              className={`shrink-0 rounded-md px-3 py-2 text-left text-sm font-medium transition-colors ${
+              className={`shrink-0 rounded-lg px-3.5 py-2.5 text-left text-[14px] font-medium transition-colors ${
                 tab === id || (id === "properties" && tab === "property-detail")
-                  ? "bg-teal-600 text-white"
-                  : "text-slate-600 hover:bg-slate-200/60"
+                  ? "bg-[#0F766E] text-white"
+                  : "text-[#93A6AC] hover:bg-white/5 hover:text-white"
               }`}
             >
               {tabLabel[id]}
@@ -152,24 +152,32 @@ export function PropertyDemo({ dict, common }: PropertyDemoProps) {
           ))}
         </aside>
 
-        <div className="flex-1 p-5 sm:p-8">
+        <div className="flex-1 p-6 sm:p-9">
+          <div className="mb-7 flex flex-wrap items-baseline justify-between gap-3 border-b border-[#E2E6EC] pb-5">
+            <h2 className="font-heading text-[22px] font-semibold text-slate-900">
+              {tab === "property-detail" ? dict.navProperties : tabLabel[tab as Exclude<Tab, "property-detail">]}
+            </h2>
+            <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-[#98A2B3]">
+              {dict.conceptBadge}
+            </span>
+          </div>
           {tab === "overview" && (
             <div className="flex flex-col gap-6">
               <h2 className="text-lg font-semibold text-slate-900">{dict.overviewHeading}</h2>
               <div className="grid gap-4 sm:grid-cols-4">
-                <div className="rounded-lg border border-slate-200 p-4">
+                <div className="rounded-xl border border-[#E2E6EC] p-4">
                   <p className="text-xs text-slate-500">{dict.statProperties}</p>
                   <p className="mt-1 text-2xl font-semibold text-slate-900">{PROPERTIES.length}</p>
                 </div>
-                <div className="rounded-lg border border-slate-200 p-4">
+                <div className="rounded-xl border border-[#E2E6EC] p-4">
                   <p className="text-xs text-slate-500">{dict.statActiveBookings}</p>
                   <p className="mt-1 text-2xl font-semibold text-slate-900">{activeBookingsCount}</p>
                 </div>
-                <div className="rounded-lg border border-slate-200 p-4">
+                <div className="rounded-xl border border-[#E2E6EC] p-4">
                   <p className="text-xs text-slate-500">{dict.statRevenue}</p>
                   <p className="mt-1 text-2xl font-semibold text-slate-900">&euro;{revenueThisMonth.toLocaleString()}</p>
                 </div>
-                <div className="rounded-lg border border-slate-200 p-4">
+                <div className="rounded-xl border border-[#E2E6EC] p-4">
                   <p className="text-xs text-slate-500">{dict.statOccupancy}</p>
                   <p className="mt-1 text-2xl font-semibold text-slate-900">{occupancy}%</p>
                 </div>
@@ -183,7 +191,7 @@ export function PropertyDemo({ dict, common }: PropertyDemoProps) {
                       <span className="w-10 text-xs text-slate-500">{m.month}</span>
                       <div className="h-3 flex-1 overflow-hidden rounded-full bg-slate-100">
                         <div
-                          className="h-full rounded-full bg-teal-600"
+                          className="h-full rounded-full bg-[#0F766E]"
                           style={{ width: `${(m.revenue / max) * 100}%` }}
                         />
                       </div>
@@ -199,7 +207,7 @@ export function PropertyDemo({ dict, common }: PropertyDemoProps) {
                 </p>
                 <div className="flex flex-col gap-2">
                   {recentActivity.map((a) => (
-                    <div key={a.id} className="rounded-lg border border-slate-200 px-4 py-2.5 text-sm text-slate-700">
+                    <div key={a.id} className="rounded-xl border border-[#E2E6EC] px-4 py-2.5 text-sm text-slate-700">
                       {a.text}
                     </div>
                   ))}
@@ -213,7 +221,7 @@ export function PropertyDemo({ dict, common }: PropertyDemoProps) {
               <h2 className="text-lg font-semibold text-slate-900">{dict.propertiesHeading}</h2>
               <div className="grid gap-4 sm:grid-cols-2">
                 {PROPERTIES.map((p) => (
-                  <div key={p.id} className="flex flex-col overflow-hidden rounded-xl border border-slate-200">
+                  <div key={p.id} className="flex flex-col overflow-hidden rounded-xl border border-[#E2E6EC]">
                     <button
                       type="button"
                       onClick={() => openProperty(p)}
@@ -237,14 +245,14 @@ export function PropertyDemo({ dict, common }: PropertyDemoProps) {
                         <button
                           type="button"
                           onClick={() => openProperty(p)}
-                          className="rounded-full border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:border-teal-600/60"
+                          className="rounded-full border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:border-[#0F766E]/60"
                         >
                           {common.continueLabel}
                         </button>
                         <button
                           type="button"
                           onClick={() => toggleStatus(p.id)}
-                          className="rounded-full border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:border-teal-600/60"
+                          className="rounded-full border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:border-[#0F766E]/60"
                         >
                           {statuses[p.id] === "active" ? dict.markDraft : dict.markActive}
                         </button>
@@ -261,7 +269,7 @@ export function PropertyDemo({ dict, common }: PropertyDemoProps) {
               <button
                 type="button"
                 onClick={() => setTab("properties")}
-                className="w-fit text-xs font-medium text-slate-500 hover:text-teal-700"
+                className="w-fit text-xs font-medium text-slate-500 hover:text-[#0F766E]"
               >
                 &larr; {dict.backToProperties}
               </button>
@@ -279,7 +287,7 @@ export function PropertyDemo({ dict, common }: PropertyDemoProps) {
               <p className="text-sm leading-relaxed text-slate-600">{activeProperty.description}</p>
               <div className="flex flex-wrap gap-2">
                 {activeProperty.amenities.map((a) => (
-                  <span key={a} className="rounded-full border border-slate-200 px-3 py-1 text-xs text-slate-600">
+                  <span key={a} className="rounded-full border border-[#E2E6EC] px-3 py-1 text-xs text-slate-600">
                     {a}
                   </span>
                 ))}
@@ -287,7 +295,7 @@ export function PropertyDemo({ dict, common }: PropertyDemoProps) {
               <button
                 type="button"
                 onClick={() => toggleStatus(activeProperty.id)}
-                className="mt-2 w-fit rounded-full border border-slate-300 px-4 py-2 text-xs font-semibold text-slate-700 hover:border-teal-600/60"
+                className="mt-2 w-fit rounded-full border border-slate-300 px-4 py-2 text-xs font-semibold text-slate-700 hover:border-[#0F766E]/60"
               >
                 {statuses[activeProperty.id] === "active" ? dict.markDraft : dict.markActive}
               </button>
@@ -302,7 +310,7 @@ export function PropertyDemo({ dict, common }: PropertyDemoProps) {
                 <select
                   value={calendarPropertyId}
                   onChange={(e) => setCalendarPropertyId(e.target.value)}
-                  className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-teal-600"
+                  className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-[#0F766E]"
                 >
                   {PROPERTIES.map((p) => (
                     <option key={p.id} value={p.id}>
@@ -324,7 +332,7 @@ export function PropertyDemo({ dict, common }: PropertyDemoProps) {
                         ? "cursor-not-allowed bg-slate-200 text-slate-400"
                         : status === "blocked"
                           ? "bg-amber-200 text-amber-900 hover:bg-amber-300"
-                          : "border border-slate-200 text-slate-700 hover:border-teal-600/60"
+                          : "border border-[#E2E6EC] text-slate-700 hover:border-[#0F766E]/60"
                     }`}
                   >
                     {day}
@@ -352,7 +360,7 @@ export function PropertyDemo({ dict, common }: PropertyDemoProps) {
                 {bookings.map((b) => (
                   <div
                     key={b.id}
-                    className="flex flex-col gap-2 rounded-lg border border-slate-200 px-4 py-3 text-sm sm:flex-row sm:items-center sm:justify-between"
+                    className="flex flex-col gap-2 rounded-xl border border-[#E2E6EC] px-4 py-3 text-sm sm:flex-row sm:items-center sm:justify-between"
                   >
                     <div>
                       <p className="font-medium text-slate-900">
@@ -367,7 +375,7 @@ export function PropertyDemo({ dict, common }: PropertyDemoProps) {
                         <button
                           type="button"
                           onClick={() => updateBookingStatus(b.id, "confirmed")}
-                          className="rounded-full bg-teal-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-teal-500"
+                          className="rounded-full bg-[#0F766E] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#ECF6F4]0"
                         >
                           {dict.approve}
                         </button>
@@ -405,12 +413,12 @@ export function PropertyDemo({ dict, common }: PropertyDemoProps) {
                     onClick={() => selectMessage(m.id)}
                     className={`flex flex-col gap-0.5 rounded-lg border px-3 py-2.5 text-left text-sm transition-colors ${
                       activeMessageId === m.id
-                        ? "border-teal-600 bg-teal-50"
-                        : "border-slate-200 hover:border-teal-600/40"
+                        ? "border-[#0F766E] bg-[#ECF6F4]"
+                        : "border-[#E2E6EC] hover:border-[#0F766E]/40"
                     }`}
                   >
                     <span className="flex items-center gap-1.5 font-medium text-slate-900">
-                      {m.unread && <span className="h-1.5 w-1.5 rounded-full bg-teal-600" />}
+                      {m.unread && <span className="h-1.5 w-1.5 rounded-full bg-[#0F766E]" />}
                       {m.guestName}
                     </span>
                     <span className="text-xs text-slate-500">
@@ -419,7 +427,7 @@ export function PropertyDemo({ dict, common }: PropertyDemoProps) {
                   </button>
                 ))}
               </div>
-              <div className="flex flex-1 flex-col gap-3 rounded-lg border border-slate-200 p-4">
+              <div className="flex flex-1 flex-col gap-3 rounded-xl border border-[#E2E6EC] p-4">
                 {activeMessage ? (
                   <>
                     <div className="flex flex-1 flex-col gap-2 overflow-y-auto">
@@ -428,7 +436,7 @@ export function PropertyDemo({ dict, common }: PropertyDemoProps) {
                           key={i}
                           className={`max-w-[80%] rounded-lg px-3 py-2 text-sm ${
                             entry.from === "host"
-                              ? "self-end bg-teal-600 text-white"
+                              ? "self-end bg-[#0F766E] text-white"
                               : "self-start bg-slate-100 text-slate-800"
                           }`}
                         >
@@ -441,12 +449,12 @@ export function PropertyDemo({ dict, common }: PropertyDemoProps) {
                         value={replyText}
                         onChange={(e) => setReplyText(e.target.value)}
                         placeholder={dict.replyPlaceholder}
-                        className="flex-1 rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-teal-600"
+                        className="flex-1 rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-[#0F766E]"
                       />
                       <button
                         type="button"
                         onClick={sendReply}
-                        className="rounded-md bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-500"
+                        className="rounded-md bg-[#0F766E] px-4 py-2 text-sm font-semibold text-white hover:bg-[#ECF6F4]0"
                       >
                         {dict.send}
                       </button>
@@ -470,13 +478,13 @@ export function PropertyDemo({ dict, common }: PropertyDemoProps) {
                     setBusinessName(e.target.value);
                     setSaved(false);
                   }}
-                  className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-teal-600"
+                  className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-[#0F766E]"
                 />
               </div>
               <button
                 type="button"
                 onClick={() => setSaved(true)}
-                className="w-fit rounded-full bg-teal-600 px-5 py-2 text-xs font-semibold text-white hover:bg-teal-500"
+                className="w-fit rounded-full bg-[#0F766E] px-5 py-2 text-xs font-semibold text-white hover:bg-[#ECF6F4]0"
               >
                 {dict.saveChanges}
               </button>
@@ -487,7 +495,7 @@ export function PropertyDemo({ dict, common }: PropertyDemoProps) {
       </div>
 
       {/* Footer */}
-      <footer className="border-t border-slate-200 px-5 py-6 text-center text-xs text-slate-400 sm:px-8">
+      <footer className="border-t border-[#E2E6EC] px-5 py-6 text-center text-xs text-slate-400 sm:px-8">
         Nestly &middot; {common.footerTagline}
       </footer>
     </div>
