@@ -6,9 +6,13 @@ import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import type { Group } from "three";
 
+import { Podium } from "@/components/three/Podium";
+
 interface ZMarkProps {
   reducedMotion: boolean;
   scrollProgressRef: React.RefObject<number>;
+  /** Phones get a larger mark: the canvas is the whole lower half there. */
+  lowPower?: boolean;
 }
 
 export const Z_MODEL_URL = "/models/zevren-z.glb";
@@ -20,7 +24,7 @@ export const Z_MODEL_URL = "/models/zevren-z.glb";
  * bright blue areas actually emit and the dark stone pick up the scene's
  * environment reflections, without altering the model itself.
  */
-function useTunedModel() {
+function useTunedModel(targetSize: number) {
   // Both decoders are disabled on purpose. The model uses neither, and each
   // would otherwise fight the site's CSP: Draco's default decoder path is a
   // CDN (blocked by script-src), and meshopt instantiates WebAssembly, which
@@ -46,7 +50,7 @@ function useTunedModel() {
         map,
         emissiveMap: map,
         emissive: new THREE.Color("#ffffff"),
-        emissiveIntensity: 0.32,
+        emissiveIntensity: 0.62,
         metalness: 0.3,
         roughness: 0.45,
         envMapIntensity: 0.9,
@@ -68,7 +72,6 @@ function useTunedModel() {
     // Sized off the longest axis, not the height: the mark is wider than it is
     // tall once it turns, and scaling by height alone let the corners swing
     // outside the canvas and clip.
-    const targetSize = 3.15;
     const longest = Math.max(size.x, size.y, size.z) || 1;
     const scale = targetSize / longest;
 
@@ -79,20 +82,27 @@ function useTunedModel() {
       -centre.z * scale
     );
 
-    return root;
-  }, [scene]);
+    // Where the underside of the mark ends up once it is centred, so the
+    // podium can sit flush against it at any target size.
+    const baseY = -(size.y * scale) / 2;
+
+    return { root, baseY };
+  }, [scene, targetSize]);
 }
 
-export function ZMark({ reducedMotion, scrollProgressRef }: ZMarkProps) {
+export function ZMark({ reducedMotion, scrollProgressRef, lowPower = false }: ZMarkProps) {
   const outerRef = useRef<Group>(null);
   const innerRef = useRef<Group>(null);
   const target = useRef({ x: 0, y: 0 });
-  const model = useTunedModel();
+  // On a phone the canvas is the entire lower half of the hero, so the mark is
+  // sized to fill it. On desktop it shares the frame with the headline.
+  const targetSize = lowPower ? 3.9 : 3.15;
+  const { root: model, baseY } = useTunedModel(targetSize);
 
   // Free the GPU-side texture/geometry copies when the hero unmounts.
   useEffect(() => {
     return () => {
-      model.traverse((child) => {
+      model.traverse((child: THREE.Object3D) => {
         if (child instanceof THREE.Mesh) {
           child.geometry?.dispose?.();
           const m = child.material as THREE.Material | THREE.Material[];
@@ -139,6 +149,7 @@ export function ZMark({ reducedMotion, scrollProgressRef }: ZMarkProps) {
 
   return (
     <group ref={outerRef} position={[0, -0.1, 0]}>
+      <Podium y={baseY - 0.19} scale={targetSize / 3.9} lowPower={lowPower} />
       <group ref={innerRef}>
         <primitive object={model} />
       </group>

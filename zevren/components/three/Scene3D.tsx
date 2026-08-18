@@ -14,7 +14,11 @@ interface Scene3DProps {
 export function Scene3D({ reducedMotion, scrollProgressRef, lowPower = false }: Scene3DProps) {
   return (
     <Canvas
-      camera={{ position: [0.4, 0.35, 5.6], fov: 42 }}
+      camera={
+        lowPower
+          ? { position: [0, 0.85, 7.4], fov: 42 }
+          : { position: [0.4, 0.35, 5.6], fov: 42 }
+      }
       dpr={lowPower ? [1, 1.25] : [1, 1.75]}
       gl={{ antialias: !lowPower, alpha: true }}
     >
@@ -25,7 +29,7 @@ export function Scene3D({ reducedMotion, scrollProgressRef, lowPower = false }: 
       {/* Rim light from behind-left to separate the Z from the dark background */}
       <pointLight position={[-4, 1.5, -3]} intensity={70} color="#2563eb" />
       {/* Blue spill low and in front, grazing the base */}
-      <pointLight position={[0, -2.1, 2.4]} intensity={26} color="#3b82f6" />
+      <pointLight position={[0, -2.1, 2.4]} intensity={38} color="#3b82f6" />
       <pointLight position={[0, 4, 1]} intensity={14} color="#ffffff" />
 
       {/* Procedural environment: no external HDR fetch, so it works under the
@@ -36,12 +40,15 @@ export function Scene3D({ reducedMotion, scrollProgressRef, lowPower = false }: 
         <Lightformer intensity={1.6} color="#1d4ed8" position={[0, 3.5, -2]} scale={[5, 1.2, 1]} />
       </Environment>
 
-      <ZMark reducedMotion={reducedMotion} scrollProgressRef={scrollProgressRef} />
+      <ZMark
+        reducedMotion={reducedMotion}
+        scrollProgressRef={scrollProgressRef}
+        lowPower={lowPower}
+      />
 
-      {/* No ground plane here on purpose: the model ships with its own rock
-          base, and any added floor renders darker than the page background,
-          showing as a visible slab behind the hero. Reflections come from the
-          environment map on the model's own material instead. */}
+      {/* Still no full ground plane: it renders darker than the page and
+          shows as a slab behind the hero. The podium is bounded, so it reads
+          as an object rather than as a floor. */}
 
       {!reducedMotion && (
         <Sparkles

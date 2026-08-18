@@ -40,7 +40,7 @@ export function HeroEnvironment() {
         sizes="(max-width: 1024px) 100vw, 70vw"
         placeholder="blur"
         blurDataURL={city.blurDataURL}
-        className="absolute inset-x-0 bottom-0 h-[62%] w-full object-cover opacity-65 [mask-image:linear-gradient(to_bottom,transparent,black_35%,black_82%,transparent)] lg:inset-x-auto lg:end-0 lg:w-[76%]"
+        className="absolute inset-x-0 bottom-0 h-[52%] w-full object-cover opacity-90 [mask-image:linear-gradient(to_bottom,transparent,black_28%,black_88%,transparent)] lg:h-[62%] lg:opacity-65 lg:inset-x-auto lg:end-0 lg:w-[76%]"
       />
 
       {/* World map with its connection arcs, centred on the mark. */}
@@ -65,7 +65,7 @@ export function HeroEnvironment() {
         sizes="100vw"
         placeholder="blur"
         blurDataURL={floor.blurDataURL}
-        className="absolute inset-x-0 bottom-0 h-[40%] w-full object-cover object-top opacity-70 [mask-image:linear-gradient(to_bottom,black,transparent_90%)]"
+        className="absolute inset-x-0 bottom-0 h-[34%] w-full object-cover object-top opacity-95 [mask-image:linear-gradient(to_bottom,black,transparent_92%)] lg:h-[40%] lg:opacity-70"
       />
 
       {/* Ground fog, softening the join between floor and city. */}
@@ -77,7 +77,7 @@ export function HeroEnvironment() {
         sizes="100vw"
         placeholder="blur"
         blurDataURL={fog.blurDataURL}
-        className="absolute inset-x-0 bottom-[4%] h-[36%] w-full object-cover opacity-45 mix-blend-screen [mask-image:linear-gradient(to_top,black,transparent)]"
+        className="absolute inset-x-0 bottom-[4%] h-[36%] w-full object-cover opacity-60 mix-blend-screen [mask-image:linear-gradient(to_top,black,transparent)] lg:opacity-45"
       />
 
       {/* Glow behind the mark, so it reads as lit rather than pasted on. */}
