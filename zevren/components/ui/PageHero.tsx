@@ -10,7 +10,7 @@ export function PageHero({
   description?: string;
 }) {
   return (
-    <section className="border-b border-white/5 bg-grid-glow py-20 sm:py-24">
+    <section className="border-b border-white/5 bg-grid-glow py-14 sm:py-24">
       <Container className="flex max-w-3xl flex-col gap-5">
         <span className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
           {eyebrow}

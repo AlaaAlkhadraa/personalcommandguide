@@ -12,7 +12,7 @@ const ICONS: ServiceIcon[] = ["layers", "compass", "code", "wrench", "search", "
 
 export function WhyZevren({ dict, homeDict }: WhyZevrenProps) {
   return (
-    <section className="border-b border-white/5 py-16 lg:py-20">
+    <section className="border-b border-white/5 py-12 sm:py-16 lg:py-20">
       <Container className="grid gap-10 lg:grid-cols-[15rem_1fr] lg:gap-12">
         <div data-reveal className="flex flex-col gap-3">
           <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-accent">

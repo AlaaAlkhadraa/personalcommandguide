@@ -38,7 +38,7 @@ export async function FoundingSection({
   const status = await getFoundingStatus();
 
   return (
-    <section className="relative overflow-hidden border-y border-white/5 bg-surface/30 py-20 sm:py-24">
+    <section className="relative overflow-hidden border-y border-white/5 bg-surface/30 py-14 sm:py-24">
       {/* Twin glows, one per corner, so the band reads as a lit stage rather
           than a flat panel. */}
       <div

@@ -27,7 +27,7 @@ export function FinalCTA({
   const glow = IMAGES["hero-horizon"];
 
   return (
-    <section id="start" className="relative overflow-hidden border-b border-white/5 py-16 lg:py-20">
+    <section id="start" className="relative overflow-hidden border-b border-white/5 py-12 sm:py-16 lg:py-20">
       <Image
         data-parallax="-10"
         src={glow.src}

@@ -19,7 +19,7 @@ export function AboutBand({ dict }: { dict: Dictionary["home"]["about"] }) {
   const art = IMAGES["service-web-apps"];
 
   return (
-    <section className="relative overflow-hidden border-b border-white/5 py-16 lg:py-20">
+    <section className="relative overflow-hidden border-b border-white/5 py-12 sm:py-16 lg:py-20">
       {/* Photograph anchored to the right, faded into the page rather than
           sitting in a hard-edged box. */}
       <Image

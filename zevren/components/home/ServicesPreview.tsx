@@ -18,7 +18,7 @@ interface ServicesPreviewProps {
  */
 export function ServicesPreview({ dict, homeDict }: ServicesPreviewProps) {
   return (
-    <section className="border-y border-white/5 bg-surface/20 py-16 lg:py-20">
+    <section className="border-y border-white/5 bg-surface/20 py-12 sm:py-16 lg:py-20">
       <Container className="grid gap-10 lg:grid-cols-[13rem_1fr] lg:gap-12">
         <div data-reveal className="flex flex-col gap-3">
           <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-accent">
