@@ -1,0 +1,3 @@
+{
+  "buildCommand": "node scripts/db-migrate.mjs && node scripts/admin-create.mjs && next build"
+}

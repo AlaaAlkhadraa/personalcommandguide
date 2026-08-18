@@ -116,7 +116,28 @@ The form (`components/contact/ContactForm.tsx`) posts to
 1. Validates input with Zod (`lib/validations/contact.ts`).
 2. Checks a hidden honeypot field against spam.
 3. Applies a simple in-memory rate limit per IP address.
-4. Accepts and logs the submission server-side.
+4. Saves the submission in Neon Postgres. The dashboard stores only a
+   one-way hash of the visitor IP address.
+
+## Database and admin dashboard
+
+The production deployment runs the idempotent SQL migrations in
+`db/migrations/` before building the application. This creates the tables for
+contact submissions, administrators, and secure sessions. New migrations can
+be added as numbered `.sql` files.
+
+The admin dashboard lives at `/admin/login`; it displays the 100 most recent
+contact enquiries. Sessions use an httpOnly, secure cookie and expire after
+seven days.
+
+Set these **Production-only** Vercel variables before the first deployment:
+
+- `DATABASE_URL` (or `POSTGRES_URL`) — Neon connection string.
+- `ADMIN_EMAIL`
+- `ADMIN_PASSWORD` — at least 12 characters.
+
+The build creates this administrator only when that email does not exist, so
+subsequent deployments are safe.
 
 **Email delivery isn't wired up yet.** There's a clear `TODO` in
 `app/api/contact/route.ts` with a ready-to-use example for connecting
@@ -164,10 +185,11 @@ per change and open a pull request instead of pushing straight to main.
 1. Go to [vercel.com](https://vercel.com) and sign in with your GitHub
    account.
 2. Click **Add New → Project** and select this repository.
-3. Vercel detects Next.js automatically. The default settings (build
-   command `next build`, output `.next`) are correct, nothing to change.
+3. Vercel detects Next.js automatically. This project configures a build
+   command that applies any outstanding database migrations before `next build`.
 4. Under **Environment Variables**, add what you're using:
    - `NEXT_PUBLIC_SITE_URL` → `https://www.zevren.nl`
+   - `DATABASE_URL` plus `ADMIN_EMAIL` and `ADMIN_PASSWORD`
    - `RESEND_API_KEY` and `CONTACT_INBOX_EMAIL` (once Resend is connected)
 5. Click **Deploy**. Within a couple of minutes the site is live on a
    `*.vercel.app` domain.

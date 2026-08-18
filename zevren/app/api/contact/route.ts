@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { createContactSubmission } from "@/lib/contact-submissions";
 import { contactFormSchema } from "@/lib/validations/contact";
 
 export const runtime = "nodejs";
@@ -83,15 +84,25 @@ export async function POST(request: NextRequest) {
   //     text: `Name: ${name}\nEmail: ${email}\nCompany: ${company || "-"}\nNeeds: ${needs || "-"}\nBudget: ${budget || "-"}\n\n${result.data.message}`,
   //   });
   //
-  // Until then, submissions are validated and accepted but not delivered.
-  // Log server-side only, never log to a location a client can read.
-  console.info("[contact] new submission received", {
-    name,
-    email,
-    company: company || undefined,
-    needs: needs || undefined,
-    budget: budget || undefined,
-  });
+  try {
+    const submissionId = await createContactSubmission({
+      name,
+      email,
+      company: company ?? "",
+      needs: needs ?? "",
+      budget: budget ?? "",
+      message: result.data.message,
+      ipAddress: ip,
+      userAgent: request.headers.get("user-agent"),
+    });
+    console.info("[contact] submission saved", { submissionId });
+  } catch (error) {
+    console.error("[contact] unable to save submission", error);
+    return NextResponse.json(
+      { message: "We could not send your message. Please try again shortly." },
+      { status: 503 }
+    );
+  }
 
   return NextResponse.json({ message: "Message sent." }, { status: 200 });
 }
