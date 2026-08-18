@@ -31,9 +31,9 @@ export function Process({ dict, homeDict, detailed = false }: ProcessProps) {
   const backdrop = IMAGES["atmos-path"];
 
   return (
-    <section data-reveal
-      className="relative overflow-hidden border-b border-white/5 bg-surface/20 py-16 lg:py-20">
+    <section className="relative overflow-hidden border-b border-white/5 bg-surface/20 py-16 lg:py-20">
       <Image
+        data-parallax="-10"
         src={backdrop.src}
         alt=""
         aria-hidden="true"
@@ -46,7 +46,7 @@ export function Process({ dict, homeDict, detailed = false }: ProcessProps) {
       />
 
       <Container className="relative grid gap-10 lg:grid-cols-[15rem_1fr] lg:gap-12">
-        <div className="flex flex-col gap-3">
+        <div data-reveal className="flex flex-col gap-3">
           <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-accent">
             {homeDict.eyebrow}
           </span>
@@ -65,9 +65,9 @@ export function Process({ dict, homeDict, detailed = false }: ProcessProps) {
             className="absolute start-[1.4rem] top-0 h-full w-px bg-gradient-to-b from-primary/50 via-primary/30 to-transparent sm:start-0 sm:top-[1.4rem] sm:h-px sm:w-full sm:bg-gradient-to-r sm:from-transparent sm:via-primary/40 sm:to-transparent"
           />
 
-          <ol className="relative grid gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+          <ol data-reveal-stagger className="relative grid gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
             {dict.steps.map((step, index) => (
-              <li key={step.title} className="flex gap-4 sm:flex-col sm:gap-4">
+              <li key={step.title} data-reveal-item className="flex gap-4 sm:flex-col sm:gap-4">
                 <span className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-primary/50 bg-navy text-accent">
                   <svg
                     viewBox="0 0 24 24"

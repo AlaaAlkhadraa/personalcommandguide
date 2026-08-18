@@ -9,14 +9,16 @@ interface FAQProps {
 
 export function FAQ({ dict, homeDict }: FAQProps) {
   return (
-    <section data-reveal
-      className="py-24">
+    <section className="py-24">
       <Container className="flex flex-col gap-12">
-        <SectionHeading eyebrow={homeDict.eyebrow} title={homeDict.title} />
-        <div className="mx-auto flex w-full max-w-3xl flex-col gap-3">
+        <div data-reveal>
+          <SectionHeading eyebrow={homeDict.eyebrow} title={homeDict.title} />
+        </div>
+        <div data-reveal-stagger className="mx-auto flex w-full max-w-3xl flex-col gap-3">
           {dict.items.map((item) => (
             <details
               key={item.question}
+              data-reveal-item
               className="group rounded-xl border border-white/10 bg-surface/50 px-6 py-4 open:border-primary/40"
             >
               <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-medium text-white marker:content-none">

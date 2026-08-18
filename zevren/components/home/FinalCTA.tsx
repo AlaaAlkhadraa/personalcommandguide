@@ -27,9 +27,9 @@ export function FinalCTA({
   const glow = IMAGES["hero-horizon"];
 
   return (
-    <section data-reveal
-      id="start" className="relative overflow-hidden border-b border-white/5 py-16 lg:py-20">
+    <section id="start" className="relative overflow-hidden border-b border-white/5 py-16 lg:py-20">
       <Image
+        data-parallax="-10"
         src={glow.src}
         alt=""
         aria-hidden="true"
@@ -42,7 +42,7 @@ export function FinalCTA({
       />
 
       <Container className="relative grid gap-12 lg:grid-cols-[1fr_1.2fr_auto] lg:gap-12">
-        <div className="flex flex-col gap-5">
+        <div data-reveal className="flex flex-col gap-5">
           <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-accent">
             {dict.eyebrow}
           </span>
@@ -63,14 +63,14 @@ export function FinalCTA({
           <CtaMark className="pointer-events-auto relative mt-6 hidden aspect-square w-full max-w-xs lg:block" />
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-navy/70 p-6 sm:p-8">
+        <div data-reveal data-reveal-delay="0.1" className="rounded-2xl border border-white/10 bg-navy/70 p-6 sm:p-8">
           <h3 className="mb-6 text-[11px] font-semibold uppercase tracking-[0.2em] text-accent">
             {dict.formHeading}
           </h3>
           <ContactForm dict={contactDict.form} />
         </div>
 
-        <div className="flex flex-col gap-5 lg:w-56">
+        <div data-reveal data-reveal-delay="0.2" className="flex flex-col gap-5 lg:w-56">
           <h3 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-accent">
             {contactDict.directContactTitle}
           </h3>

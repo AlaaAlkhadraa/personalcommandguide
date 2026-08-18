@@ -2,6 +2,7 @@ import { PageHero } from "@/components/ui/PageHero";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { ProjectCard } from "@/components/projects/ProjectCard";
+import { RevealGroup } from "@/components/ui/RevealGroup";
 import { WORK_ITEMS } from "@/lib/constants";
 import { buildMetadata } from "@/lib/seo";
 import { getLocale } from "@/lib/i18n/get-locale";
@@ -22,25 +23,28 @@ export default async function ProjectsPage() {
   return (
     <>
       <PageHero eyebrow={w.eyebrow} title={w.title} description={w.subtitle} />
+      <RevealGroup>
       <section className="py-20">
-        <Container className="grid gap-8 sm:grid-cols-2">
+        <Container data-reveal-stagger className="grid gap-8 sm:grid-cols-2">
           {WORK_ITEMS.map((item, index) => (
-            <ProjectCard
-              key={item.slug}
-              item={item}
-              dict={w}
-              priority={index < 2}
-              headingLevel="h2"
-            />
+            <div key={item.slug} data-reveal-item>
+              <ProjectCard
+                item={item}
+                dict={w}
+                priority={index < 2}
+                headingLevel="h2"
+              />
+            </div>
           ))}
         </Container>
       </section>
       <section className="border-t border-white/5 bg-surface/30 py-20">
-        <Container className="flex flex-col items-center gap-6 text-center">
+        <Container data-reveal className="flex flex-col items-center gap-6 text-center">
           <h2 className="max-w-xl text-3xl font-semibold text-white">{w.ctaTitle}</h2>
           <Button href="/contact">{w.startProject}</Button>
         </Container>
       </section>
+      </RevealGroup>
     </>
   );
 }

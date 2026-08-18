@@ -63,16 +63,19 @@
    hook does after GSAP has loaded. Without that gate a visitor with JS off,
    or one who scrolls before the chunk arrives, would be left with permanently
    invisible content. */
-.reveal-ready [data-reveal] {
+.reveal-ready [data-reveal],
+.reveal-ready [data-reveal-item] {
   visibility: hidden;
 }
 
-.reveal-ready [data-reveal].is-revealed {
+.reveal-ready [data-reveal].is-revealed,
+.reveal-ready [data-reveal-item].is-revealed {
   visibility: visible;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .reveal-ready [data-reveal] {
+  .reveal-ready [data-reveal],
+  .reveal-ready [data-reveal-item] {
     visibility: visible;
   }
 }

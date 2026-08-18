@@ -19,9 +19,9 @@ export function GlobalFocus({ dict }: { dict: Dictionary["globalFocus"] }) {
   const map = IMAGES["env-map"];
 
   return (
-    <section data-reveal
-      className="relative overflow-hidden border-b border-white/5 py-16 lg:py-24">
+    <section className="relative overflow-hidden border-b border-white/5 py-16 lg:py-24">
       <Image
+        data-parallax="-12"
         src={map.src}
         alt={dict.imageAlt}
         fill
@@ -36,7 +36,7 @@ export function GlobalFocus({ dict }: { dict: Dictionary["globalFocus"] }) {
         className="absolute inset-y-0 start-0 w-full bg-gradient-to-r from-navy via-navy/75 to-transparent lg:w-3/5"
       />
 
-      <Container className="relative flex max-w-2xl flex-col gap-5">
+      <Container data-reveal className="relative flex max-w-2xl flex-col gap-5">
         <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-accent">
           {dict.eyebrow}
         </span>
@@ -51,30 +51,30 @@ export function GlobalFocus({ dict }: { dict: Dictionary["globalFocus"] }) {
 
         {/* One studio, the languages the site really ships, and remote work.
             No country count and no "24/7", because neither would be true. */}
-        <dl className="grid grid-cols-2 gap-x-6 gap-y-6 pt-8 sm:grid-cols-4">
-          <div className="flex flex-col gap-1">
-            <dd className="font-heading text-2xl font-bold text-accent">1</dd>
+        <dl data-reveal-stagger className="grid grid-cols-2 gap-x-6 gap-y-6 pt-8 sm:grid-cols-4">
+          <div data-reveal-item className="flex flex-col gap-1">
+            <dd data-count-to className="font-heading text-2xl font-bold text-accent">1</dd>
             <dt className="text-[10px] uppercase tracking-[0.14em] text-muted">
               {dict.studioLabel}
             </dt>
           </div>
-          <div className="flex flex-col gap-1">
-            <dd className="font-heading text-2xl font-bold text-accent">
+          <div data-reveal-item className="flex flex-col gap-1">
+            <dd data-count-to className="font-heading text-2xl font-bold text-accent">
               {LOCALES.length}
             </dd>
             <dt className="text-[10px] uppercase tracking-[0.14em] text-muted">
               {dict.languagesLabel}
             </dt>
           </div>
-          <div className="flex flex-col gap-1">
-            <dd className="font-heading text-2xl font-bold text-accent">
+          <div data-reveal-item className="flex flex-col gap-1">
+            <dd data-count-to className="font-heading text-2xl font-bold text-accent">
               {dict.remoteValue}
             </dd>
             <dt className="text-[10px] uppercase tracking-[0.14em] text-muted">
               {dict.remoteLabel}
             </dt>
           </div>
-          <div className="flex flex-col gap-1">
+          <div data-reveal-item className="flex flex-col gap-1">
             <dd className="font-heading text-sm font-semibold leading-tight text-white">
               {LOCALE_NAMES.en}, {LOCALE_NAMES.nl}
             </dd>

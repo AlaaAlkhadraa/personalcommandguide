@@ -19,11 +19,11 @@ export function AboutBand({ dict }: { dict: Dictionary["home"]["about"] }) {
   const art = IMAGES["service-web-apps"];
 
   return (
-    <section data-reveal
-      className="relative overflow-hidden border-b border-white/5 py-16 lg:py-20">
+    <section className="relative overflow-hidden border-b border-white/5 py-16 lg:py-20">
       {/* Photograph anchored to the right, faded into the page rather than
           sitting in a hard-edged box. */}
       <Image
+        data-parallax="-10"
         src={art.src}
         alt=""
         aria-hidden="true"
@@ -36,7 +36,7 @@ export function AboutBand({ dict }: { dict: Dictionary["home"]["about"] }) {
       />
 
       <Container className="relative grid gap-10 lg:grid-cols-[1.05fr_1fr] lg:gap-16">
-        <div className="flex flex-col gap-4">
+        <div data-reveal className="flex flex-col gap-4">
           <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-accent">
             {dict.eyebrow}
           </span>
@@ -52,9 +52,9 @@ export function AboutBand({ dict }: { dict: Dictionary["home"]["about"] }) {
           </div>
         </div>
 
-        <ul className="grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:self-center">
+        <ul data-reveal-stagger className="grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:self-center">
           {dict.points.map((point, index) => (
-            <li key={point.title} className="flex gap-3">
+            <li key={point.title} data-reveal-item className="flex gap-3">
               <span className="mt-0.5 shrink-0 text-accent">
                 <Icon name={POINT_ICONS[index] ?? "layers"} className="h-6 w-6" />
               </span>

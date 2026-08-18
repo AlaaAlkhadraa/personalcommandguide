@@ -18,19 +18,22 @@ export function ProjectsPreview({ dict, homeDict }: ProjectsPreviewProps) {
   const featured = WORK_ITEMS.slice(0, 6);
 
   return (
-    <section data-reveal
-      className="border-t border-white/5 bg-surface/30 py-24">
+    <section className="border-t border-white/5 bg-surface/30 py-24">
       <Container className="flex flex-col gap-12">
-        <SectionHeading
-          eyebrow={homeDict.eyebrow}
-          title={homeDict.title}
-          description={homeDict.subtitle}
-        />
+        <div data-reveal>
+          <SectionHeading
+            eyebrow={homeDict.eyebrow}
+            title={homeDict.title}
+            description={homeDict.subtitle}
+          />
+        </div>
         {/* Six across on a wide screen, as in the design; the compact tile
             drops the interface mockup, which is unreadable at that width. */}
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+        <div data-reveal-stagger className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
           {featured.map((item) => (
-            <ProjectCard key={item.slug} item={item} dict={dict} compact />
+            <div key={item.slug} data-reveal-item>
+              <ProjectCard item={item} dict={dict} compact />
+            </div>
           ))}
         </div>
 

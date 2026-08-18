@@ -3,6 +3,7 @@ import { Container } from "@/components/ui/Container";
 import { PageHero } from "@/components/ui/PageHero";
 import { FAQ } from "@/components/home/FAQ";
 import { Process } from "@/components/home/Process";
+import { RevealGroup } from "@/components/ui/RevealGroup";
 import { buildMetadata } from "@/lib/seo";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { getLocale } from "@/lib/i18n/get-locale";
@@ -26,12 +27,13 @@ export default async function ProcessPage() {
         description={dict.home.process.subtitle}
       />
 
+      <RevealGroup>
       <Process dict={dict.process} homeDict={dict.home.process} detailed />
 
       <FAQ dict={dict.faq} homeDict={dict.home.faq} />
 
       <section className="border-t border-white/5 py-20">
-        <Container className="flex flex-col items-center gap-6 text-center">
+        <Container data-reveal className="flex flex-col items-center gap-6 text-center">
           <h2 className="max-w-xl font-heading text-3xl font-semibold text-white">
             {dict.home.finalCta.title}
           </h2>
@@ -44,6 +46,7 @@ export default async function ProcessPage() {
           </div>
         </Container>
       </section>
+      </RevealGroup>
     </>
   );
 }

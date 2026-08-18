@@ -18,10 +18,9 @@ interface ServicesPreviewProps {
  */
 export function ServicesPreview({ dict, homeDict }: ServicesPreviewProps) {
   return (
-    <section data-reveal
-      className="border-y border-white/5 bg-surface/20 py-16 lg:py-20">
+    <section className="border-y border-white/5 bg-surface/20 py-16 lg:py-20">
       <Container className="grid gap-10 lg:grid-cols-[13rem_1fr] lg:gap-12">
-        <div className="flex flex-col gap-3">
+        <div data-reveal className="flex flex-col gap-3">
           <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-accent">
             {homeDict.eyebrow}
           </span>
@@ -31,11 +30,14 @@ export function ServicesPreview({ dict, homeDict }: ServicesPreviewProps) {
           <span aria-hidden="true" className="h-0.5 w-12 bg-accent" />
         </div>
 
-        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+        {/* Each card fades and rises on its own beat instead of the row
+            arriving as one block, which is what makes six identical cards
+            read as designed rather than templated. */}
+        <ul data-reveal-stagger className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
           {SERVICES.map((service) => {
             const copy = dict.list[service.slug];
             return (
-              <li key={service.slug}>
+              <li key={service.slug} data-reveal-item>
                 <Link
                   href={`/services#${service.slug}`}
                   className="group relative flex h-full items-start gap-4 rounded-xl border border-white/10 bg-navy/60 p-4 transition-[border-color,background-color,transform] duration-300 hover:border-accent/50 hover:bg-navy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent sm:flex-col sm:gap-3 sm:p-5 sm:hover:-translate-y-1"

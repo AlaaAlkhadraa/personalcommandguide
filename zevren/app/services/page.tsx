@@ -5,6 +5,7 @@ import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
 import { Button } from "@/components/ui/Button";
 import { PricingSection } from "@/components/services/PricingSection";
+import { RevealGroup } from "@/components/ui/RevealGroup";
 import { SERVICES } from "@/lib/constants";
 import { IMAGES } from "@/lib/assets";
 import { buildMetadata } from "@/lib/seo";
@@ -26,6 +27,7 @@ export default async function ServicesPage() {
   return (
     <>
       <PageHero eyebrow={s.eyebrow} title={s.title} description={s.subtitle} />
+      <RevealGroup>
       <section className="py-20">
         <Container className="flex flex-col gap-20">
           {SERVICES.map((service, index) => {
@@ -35,6 +37,7 @@ export default async function ServicesPage() {
               <div
                 key={service.slug}
                 id={service.slug}
+                data-reveal
                 className="scroll-mt-28 grid gap-10 border-t border-white/10 pt-14 lg:grid-cols-[1fr_1.4fr] lg:gap-16"
               >
                 <div className="flex flex-col gap-4">
@@ -95,12 +98,13 @@ export default async function ServicesPage() {
       </section>
       <PricingSection dict={s} pricingDict={dict.pricing} />
       <section className="py-20">
-        <Container className="flex flex-col items-center gap-6 text-center">
+        <Container data-reveal className="flex flex-col items-center gap-6 text-center">
           <h2 className="max-w-xl text-3xl font-semibold text-white">{s.notSureTitle}</h2>
           <p className="max-w-lg text-muted">{s.notSureBody}</p>
           <Button href="/contact">{s.notSureCta}</Button>
         </Container>
       </section>
+      </RevealGroup>
     </>
   );
 }
