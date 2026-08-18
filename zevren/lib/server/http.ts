@@ -149,8 +149,15 @@ export function logEvent(event: string, detail: Record<string, unknown> = {}): v
 
 export function logError(event: string, error: unknown, detail: Record<string, unknown> = {}): void {
   const message = error instanceof Error ? error.message : "unknown error";
+  // Drizzle wraps the database driver's concise error as `cause`; log it
+  // separately so the long SQL query text cannot hide the actionable reason.
+  // Neither value includes request payloads or configured connection strings.
+  const cause =
+    error instanceof Error && error.cause instanceof Error
+      ? error.cause.message.slice(0, 200)
+      : undefined;
   console.error(
-    JSON.stringify({ at: new Date().toISOString(), event, error: message.slice(0, 300), ...detail })
+    JSON.stringify({ at: new Date().toISOString(), event, error: message.slice(0, 300), cause, ...detail })
   );
 }
 
