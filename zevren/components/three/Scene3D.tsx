@@ -16,7 +16,7 @@ export function Scene3D({ reducedMotion, scrollProgressRef, lowPower = false }: 
     <Canvas
       camera={
         lowPower
-          ? { position: [0, 0.85, 7.4], fov: 42 }
+          ? { position: [0, -0.05, 5.75], fov: 42 }
           : { position: [0.4, 0.35, 5.6], fov: 42 }
       }
       dpr={lowPower ? [1, 1.25] : [1, 1.75]}

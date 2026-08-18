@@ -67,7 +67,7 @@ export function Hero({ dict }: { dict: Dictionary["home"]["hero"] }) {
   );
 
   return (
-    <section className="relative isolate overflow-hidden bg-navy">
+    <section className="relative isolate flex min-h-[calc(100svh-5rem)] flex-col overflow-hidden bg-navy lg:block lg:min-h-0">
       <HeroEnvironment />
 
       {/* Two slots, one canvas. The slots are laid out with CSS so the space is
@@ -84,8 +84,8 @@ export function Hero({ dict }: { dict: Dictionary["home"]["hero"] }) {
           actually holds content: the container spans the full width and sits
           above the mark in paint order, so without this it swallowed every
           pointer move over the empty half and the model stopped responding. */}
-      <div className="container-page pointer-events-none relative flex flex-col gap-10 pb-14 pt-16 lg:min-h-[42rem] lg:justify-center lg:pb-24 lg:pt-24">
-        <div className="pointer-events-auto flex max-w-xl flex-col gap-6 lg:max-w-[34rem]">
+      <div className="container-page pointer-events-none relative flex flex-1 flex-col gap-4 pb-0 pt-5 [@media(max-width:1023px)_and_(max-height:820px)]:gap-2.5 [@media(max-width:1023px)_and_(max-height:820px)]:pt-3 lg:min-h-[42rem] lg:flex-none lg:justify-center lg:gap-10 lg:pb-24 lg:pt-24">
+        <div className="pointer-events-auto flex max-w-xl flex-col gap-4 [@media(max-width:1023px)_and_(max-height:820px)]:gap-2.5 lg:max-w-[34rem] lg:gap-6">
           <span className="flex items-center gap-4">
             <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-accent">
               {dict.badge}
@@ -93,16 +93,16 @@ export function Hero({ dict }: { dict: Dictionary["home"]["hero"] }) {
             <span aria-hidden="true" className="h-px w-16 bg-gradient-to-r from-accent to-transparent" />
           </span>
 
-          <h1 className="font-heading text-[2.6rem] font-bold uppercase leading-[0.95] tracking-[-0.02em] text-white sm:text-6xl lg:text-[4.25rem]">
+          <h1 className="font-heading text-[2.1rem] [@media(max-width:1023px)_and_(max-height:820px)]:text-[1.7rem] font-bold uppercase leading-[0.95] tracking-[-0.02em] text-white sm:text-6xl lg:text-[4.25rem]">
             {dict.titleBefore}{" "}
             <span className="text-accent">{dict.titleHighlight}</span>
           </h1>
 
-          <p className="max-w-lg text-base leading-relaxed text-muted sm:text-lg">
+          <p className="max-w-[36ch] text-[15px] [@media(max-width:1023px)_and_(max-height:820px)]:text-[13px] [@media(max-width:1023px)_and_(max-height:820px)]:max-w-[34ch] leading-snug text-muted sm:max-w-lg sm:text-lg sm:leading-relaxed">
             {dict.subtitle}
           </p>
 
-          <div className="flex flex-col gap-3 pt-2 sm:flex-row">
+          <div className="flex flex-col gap-2.5 pt-0.5 sm:flex-row sm:gap-3 sm:pt-2">
             <ArrowButton href="/contact">{dict.ctaPrimary}</ArrowButton>
             <ArrowButton href="/projects" variant="outline">
               {dict.ctaSecondary}
@@ -122,11 +122,14 @@ export function Hero({ dict }: { dict: Dictionary["home"]["hero"] }) {
 
         {/* On a phone the mark is the lower half of the hero: full bleed to the
             screen edges, with the copy above it and the location line below. */}
-        <div className="pointer-events-auto relative -mx-6 aspect-square w-[calc(100%+3rem)] lg:hidden">
-          {isWide === false && mark}
+        <div className="pointer-events-auto relative -mx-6 min-h-[180px] [@media(max-width:1023px)_and_(max-height:820px)]:min-h-[104px] w-[calc(100%+3rem)] flex-1 lg:hidden">
+          {/* The canvas asks for height:100%, and a flex-sized parent gives it
+              nothing to resolve against, so it fell back to a canvas element's
+              intrinsic 150px. Absolute inset-0 makes the box definite. */}
+          <div className="absolute inset-0">{isWide === false && mark}</div>
         </div>
 
-        <div className="flex items-center gap-4 lg:hidden">
+        <div className="flex shrink-0 items-center gap-4 lg:hidden">
           <LocationBadge dict={dict} />
         </div>
       </div>
@@ -142,7 +145,7 @@ export function Hero({ dict }: { dict: Dictionary["home"]["hero"] }) {
           the end of the hero instead of floating over the Z. `relative` is
           load-bearing: the environment layer is absolutely positioned, and a
           static sibling would paint underneath it however late it comes. */}
-      <div className="container-page relative flex flex-col items-center gap-3 pb-10 lg:hidden">
+      <div className="container-page relative flex shrink-0 flex-col items-center gap-2 pb-5 pt-3 [@media(max-width:1023px)_and_(max-height:820px)]:gap-1 [@media(max-width:1023px)_and_(max-height:820px)]:pb-2 [@media(max-width:1023px)_and_(max-height:820px)]:pt-1 lg:hidden">
         <span className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/80">
           {dict.scroll}
         </span>
@@ -160,7 +163,7 @@ export function Hero({ dict }: { dict: Dictionary["home"]["hero"] }) {
 function LocationBadge({ dict }: { dict: Dictionary["home"]["hero"] }) {
   return (
     <>
-      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-primary/40 bg-primary/10 text-accent">
+      <span className="flex h-11 w-11 [@media(max-width:1023px)_and_(max-height:820px)]:h-9 [@media(max-width:1023px)_and_(max-height:820px)]:w-9 shrink-0 items-center justify-center rounded-full border border-primary/40 bg-primary/10 text-accent">
         <Icon name="globe" className="h-5 w-5" />
       </span>
       <span className="flex flex-col">
@@ -185,7 +188,7 @@ function MouseGlyph({ reducedMotion }: { reducedMotion: boolean }) {
     <svg
       viewBox="0 0 24 38"
       aria-hidden="true"
-      className="h-9 w-6 text-white/60"
+      className="h-9 w-6 [@media(max-width:1023px)_and_(max-height:820px)]:h-7 [@media(max-width:1023px)_and_(max-height:820px)]:w-5 text-white/60"
       fill="none"
       stroke="currentColor"
       strokeWidth={1.4}
