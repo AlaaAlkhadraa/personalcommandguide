@@ -31,7 +31,7 @@ export function ProjectsPreview({ dict, homeDict }: ProjectsPreviewProps) {
             drops the interface mockup, which is unreadable at that width. */}
         <div data-reveal-stagger className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
           {featured.map((item) => (
-            <div key={item.slug} data-reveal-item>
+            <div key={item.slug} data-reveal-item data-tilt>
               <ProjectCard item={item} dict={dict} compact />
             </div>
           ))}

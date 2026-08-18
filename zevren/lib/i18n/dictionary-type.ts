@@ -99,6 +99,7 @@ export interface Dictionary {
     pricingTitle: string;
     regularLabel: string;
     foundingLabel: string;
+    saveLabel: string;
     pricingNote: string;
     cta: string;
     ctaSecondary: string;

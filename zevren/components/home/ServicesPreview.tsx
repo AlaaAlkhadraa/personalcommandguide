@@ -24,10 +24,10 @@ export function ServicesPreview({ dict, homeDict }: ServicesPreviewProps) {
           <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-accent">
             {homeDict.eyebrow}
           </span>
-          <h2 className="font-heading text-2xl font-bold uppercase leading-tight tracking-[-0.01em] text-white sm:text-3xl">
+          <h2 data-reveal-words className="font-heading text-2xl font-bold uppercase leading-tight tracking-[-0.01em] text-white sm:text-3xl">
             {homeDict.title}
           </h2>
-          <span aria-hidden="true" className="h-0.5 w-12 bg-accent" />
+          <span aria-hidden="true" data-draw-line className="h-0.5 w-12 bg-accent" />
         </div>
 
         {/* Each card fades and rises on its own beat instead of the row

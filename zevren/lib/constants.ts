@@ -190,9 +190,9 @@ export const WORK_ITEMS: WorkItem[] = [
     name: "Nordwave Audio",
     category: "E-commerce",
     description:
-      "A premium electronics store concept: headphones, speakers and wearables, from the product grid through to a confirmed order.",
+      "A premium audio store concept: headphones, speakers and hi-fi, from the product grid through to a confirmed order.",
     whatWeExplored:
-      "This concept explores how a consumer electronics brand could sell directly online, with product photography carrying the page and a checkout that stays out of the customer's way.",
+      "This concept explores how a premium audio brand could sell directly online, with one crafted product line carrying the page and a checkout that stays out of the customer's way.",
     keyFeatures: [
       "Product grid and detail pages",
       "Colour and variant selection",

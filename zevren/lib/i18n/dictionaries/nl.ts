@@ -220,6 +220,7 @@ const nl: Dictionary = {
     pricingTitle: "Wat de eerste 10 betalen",
     regularLabel: "Normaal",
     foundingLabel: "Founding",
+    saveLabel: "Je bespaart",
     pricingNote: "De foundingprijs geldt voor de eerste 10 projecten. Daarna gelden de normale prijzen.",
     cta: "Claim je plek",
     ctaSecondary: "Bekijk het werk",
@@ -451,9 +452,9 @@ const nl: Dictionary = {
       "online-store": {
         category: "E-commerce",
         description:
-          "Een premium elektronicawinkel als concept: koptelefoons, speakers en wearables, van het productoverzicht tot een bevestigde bestelling.",
+          "Een premium audio-webshopconcept: koptelefoons, speakers en hifi, van productoverzicht tot bevestigde bestelling.",
         whatWeExplored:
-          "Dit concept onderzoekt hoe een elektronicamerk rechtstreeks online kan verkopen, met productfotografie die de pagina draagt en een checkout die de klant niet in de weg zit.",
+          "Dit concept verkent hoe een premium audiomerk rechtstreeks online zou kunnen verkopen, met één zorgvuldig vormgegeven productlijn die de pagina draagt en een checkout die de klant niet in de weg zit.",
         keyFeatures: ["Productoverzicht en detailpagina's", "Kleur- en variantkeuze", "Winkelwagen", "Checkout", "Orderbevestiging"],
       },
       ellezone: {
@@ -617,9 +618,8 @@ const nl: Dictionary = {
       navShop: "Shop",
       cart: "Winkelwagen",
       newSeason: "Nieuw seizoen",
-      heroHeading: "Premium audio, wearables en mobiel.",
-      heroSubtitle:
-        "Doordachte elektronica, gemaakt om langer mee te gaan dan één productcyclus.",
+      heroHeading: "Geluid, gevormd door het Noorden.",
+      heroSubtitle: "Koptelefoons, speakers en hifi, gemaakt om trends te overleven.",
       shopByPack: "Alle categorieën",
       backToShop: "Terug naar de shop",
       addToCart: "In winkelwagen",

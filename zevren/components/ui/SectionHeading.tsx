@@ -20,7 +20,7 @@ export function SectionHeading({
           {eyebrow}
         </span>
       )}
-      <h2 className="text-3xl font-semibold leading-tight text-white sm:text-4xl">
+      <h2 data-reveal-words className="text-3xl font-semibold leading-tight text-white sm:text-4xl">
         {title}
       </h2>
       {description && (

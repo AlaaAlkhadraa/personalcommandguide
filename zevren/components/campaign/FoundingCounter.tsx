@@ -40,8 +40,10 @@ export function FoundingCounter({
         {Array.from({ length: total }).map((_, index) => (
           <span
             key={index}
-            className={`h-1.5 flex-1 rounded-full transition-colors ${
-              known && index < claimed ? "bg-primary" : "bg-white/10"
+            className={`h-2 flex-1 rounded-full transition-colors ${
+              known && index < claimed
+                ? "bg-gradient-to-r from-primary to-accent shadow-[0_0_10px_rgba(59,130,246,0.55)]"
+                : "border border-white/10 bg-white/5"
             }`}
           />
         ))}
@@ -58,14 +60,15 @@ export function FoundingCounter({
           <p className="text-sm text-muted">{dict.counterClosed}</p>
         ) : (
           <p className="text-sm text-muted">
-            <span className="font-medium text-accent">
+            <span className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-3 py-1 font-semibold text-accent">
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-60" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent" />
+              </span>
               {open} {dict.counterOpen}
             </span>
             {!compact && (
-              <>
-                {" "}
-                &middot; {dict.counterNote}
-              </>
+              <span className="mt-2 block text-xs leading-relaxed">{dict.counterNote}</span>
             )}
           </p>
         )

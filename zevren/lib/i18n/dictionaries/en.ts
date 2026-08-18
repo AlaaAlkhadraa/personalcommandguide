@@ -220,6 +220,7 @@ const en: Dictionary = {
     pricingTitle: "What the first 10 pay",
     regularLabel: "Regular",
     foundingLabel: "Founding",
+    saveLabel: "You save",
     pricingNote: "Founding pricing applies to the first 10 projects. After that, regular pricing applies.",
     cta: "Claim Your Spot",
     ctaSecondary: "See the work",
@@ -451,9 +452,9 @@ const en: Dictionary = {
       "online-store": {
         category: "E-commerce",
         description:
-          "A premium electronics store concept: headphones, speakers and wearables, from the product grid through to a confirmed order.",
+          "A premium audio store concept: headphones, speakers and hi-fi, from the product grid through to a confirmed order.",
         whatWeExplored:
-          "This concept explores how a consumer electronics brand could sell directly online, with product photography carrying the page and a checkout that stays out of the customer's way.",
+          "This concept explores how a premium audio brand could sell directly online, with one crafted product line carrying the page and a checkout that stays out of the customer's way.",
         keyFeatures: ["Product grid and detail pages", "Colour and variant selection", "Shopping cart", "Checkout flow", "Order confirmation"],
       },
       ellezone: {
@@ -617,9 +618,8 @@ const en: Dictionary = {
       navShop: "Shop",
       cart: "Cart",
       newSeason: "New season",
-      heroHeading: "Premium audio, wearables and mobile.",
-      heroSubtitle:
-        "Considered electronics, built to last longer than one product cycle.",
+      heroHeading: "Sound, shaped by the North.",
+      heroSubtitle: "Headphones, speakers and hi-fi, tuned to outlast trends.",
       shopByPack: "All categories",
       backToShop: "Back to shop",
       addToCart: "Add to cart",

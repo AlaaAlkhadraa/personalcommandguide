@@ -52,15 +52,17 @@ export async function FoundingSection({ dict }: { dict: Dictionary["campaign"] }
           <p className="pt-2 text-sm text-muted">{dict.location}</p>
         </div>
 
-        <div className="flex flex-col gap-6 rounded-2xl border border-white/10 bg-navy/60 p-7 sm:p-8">
-          <FoundingCounter status={status} dict={dict} />
-          <Link
-            href="/founding-10"
-            className="flex w-fit items-center gap-1.5 text-sm font-medium text-accent transition-transform hover:translate-x-0.5"
-          >
-            {dict.pricingEyebrow}
-            <span aria-hidden="true">&rarr;</span>
-          </Link>
+        <div data-reveal data-reveal-delay="0.12" className="rounded-2xl bg-gradient-to-b from-accent/40 via-white/10 to-transparent p-px">
+          <div className="flex flex-col gap-6 rounded-[calc(1rem-1px)] bg-navy/90 p-7 sm:p-8">
+            <FoundingCounter status={status} dict={dict} />
+            <Link
+              href="/founding-10"
+              className="flex w-fit items-center gap-1.5 text-sm font-medium text-accent transition-transform hover:translate-x-0.5"
+            >
+              {dict.pricingEyebrow}
+              <span aria-hidden="true">&rarr;</span>
+            </Link>
+          </div>
         </div>
       </Container>
     </section>

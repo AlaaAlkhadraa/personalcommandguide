@@ -85,24 +85,37 @@ export function Hero({ dict }: { dict: Dictionary["home"]["hero"] }) {
           above the mark in paint order, so without this it swallowed every
           pointer move over the empty half and the model stopped responding. */}
       <div className="container-page pointer-events-none relative flex flex-1 flex-col gap-4 pb-7 pt-5 [@media(max-width:1023px)_and_(max-height:820px)]:gap-2.5 [@media(max-width:1023px)_and_(max-height:820px)]:pb-4 [@media(max-width:1023px)_and_(max-height:820px)]:pt-3 lg:min-h-[42rem] lg:flex-none lg:justify-center lg:gap-10 lg:pb-24 lg:pt-24">
-        <div className="hero-rise pointer-events-auto flex max-w-xl flex-col gap-4 [@media(max-width:1023px)_and_(max-height:820px)]:gap-2.5 lg:max-w-[34rem] lg:gap-6">
-          <span className="flex items-center gap-4">
+        {/* Each child enters on its own beat rather than the column arriving
+            as one block. CSS keyframes, not GSAP: they run from the first
+            paint, before any chunk loads, so the intro is never blocked on
+            the network. */}
+        <div className="pointer-events-auto flex max-w-xl flex-col gap-4 [@media(max-width:1023px)_and_(max-height:820px)]:gap-2.5 lg:max-w-[34rem] lg:gap-6">
+          <span className="hero-rise flex items-center gap-4">
             <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-accent">
               {dict.badge}
             </span>
             <span aria-hidden="true" className="h-px w-16 bg-gradient-to-r from-accent to-transparent" />
           </span>
 
-          <h1 className="font-heading text-[2.1rem] [@media(max-width:1023px)_and_(max-height:820px)]:text-[1.7rem] font-bold uppercase leading-[0.95] tracking-[-0.02em] text-white sm:text-6xl lg:text-[4.25rem]">
+          <h1
+            style={{ animationDelay: "0.12s" }}
+            className="hero-rise font-heading text-[2.1rem] [@media(max-width:1023px)_and_(max-height:820px)]:text-[1.7rem] font-bold uppercase leading-[0.95] tracking-[-0.02em] text-white sm:text-6xl lg:text-[4.25rem]"
+          >
             {dict.titleBefore}{" "}
             <span className="text-accent">{dict.titleHighlight}</span>
           </h1>
 
-          <p className="max-w-[36ch] text-[15px] [@media(max-width:1023px)_and_(max-height:820px)]:text-[13px] [@media(max-width:1023px)_and_(max-height:820px)]:max-w-[34ch] leading-snug text-muted sm:max-w-lg sm:text-lg sm:leading-relaxed">
+          <p
+            style={{ animationDelay: "0.24s" }}
+            className="hero-rise max-w-[36ch] text-[15px] [@media(max-width:1023px)_and_(max-height:820px)]:text-[13px] [@media(max-width:1023px)_and_(max-height:820px)]:max-w-[34ch] leading-snug text-muted sm:max-w-lg sm:text-lg sm:leading-relaxed"
+          >
             {dict.subtitle}
           </p>
 
-          <div className="flex flex-col gap-2.5 pt-0.5 sm:flex-row sm:gap-3 sm:pt-2">
+          <div
+            style={{ animationDelay: "0.36s" }}
+            className="hero-rise flex flex-col gap-2.5 pt-0.5 sm:flex-row sm:gap-3 sm:pt-2"
+          >
             <ArrowButton href="/contact">{dict.ctaPrimary}</ArrowButton>
             <ArrowButton href="/projects" variant="outline">
               {dict.ctaSecondary}
@@ -111,7 +124,10 @@ export function Hero({ dict }: { dict: Dictionary["home"]["hero"] }) {
 
           {/* Desktop keeps the location line inside the copy column. On a
               phone it belongs under the Z, so it is rendered there instead. */}
-          <div className="hidden items-center gap-4 pt-6 lg:flex">
+          <div
+            style={{ animationDelay: "0.5s" }}
+            className="hero-rise hidden items-center gap-4 pt-6 lg:flex"
+          >
             <LocationBadge dict={dict} />
             <span
               aria-hidden="true"
@@ -129,7 +145,7 @@ export function Hero({ dict }: { dict: Dictionary["home"]["hero"] }) {
           <div className="absolute inset-0">{isWide === false && mark}</div>
         </div>
 
-        <div className="flex shrink-0 items-center gap-4 lg:hidden">
+        <div style={{ animationDelay: "0.5s" }} className="hero-rise flex shrink-0 items-center gap-4 lg:hidden">
           <LocationBadge dict={dict} />
         </div>
       </div>

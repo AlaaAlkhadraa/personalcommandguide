@@ -40,7 +40,7 @@ export function AboutBand({ dict }: { dict: Dictionary["home"]["about"] }) {
           <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-accent">
             {dict.eyebrow}
           </span>
-          <h2 className="max-w-lg font-heading text-2xl font-bold uppercase leading-[1.15] tracking-[-0.01em] text-white sm:text-3xl lg:text-[2.1rem]">
+          <h2 data-reveal-words className="max-w-lg font-heading text-2xl font-bold uppercase leading-[1.15] tracking-[-0.01em] text-white sm:text-3xl lg:text-[2.1rem]">
             {dict.titleBefore}{" "}
             <span className="text-accent">{dict.titleHighlight}</span>
           </h2>

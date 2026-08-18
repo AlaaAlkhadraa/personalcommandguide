@@ -12,110 +12,111 @@ export interface Product {
   category: string;
   price: number;
   description: string;
-  /** Real product photography, not a coloured placeholder. */
+  /** Crafted studio render, consistent across the whole line. */
   image: ImageKey;
   variantLabel: string;
   variants: ProductVariant[];
 }
 
-export const STORE_CATEGORIES = ["All", "Audio", "Wearables", "Mobile"];
+export const STORE_CATEGORIES = ["All", "Headphones", "Speakers", "Hi-Fi"];
 
 /**
- * Catalogue for the electronics store concept.
+ * Catalogue for the audio store concept.
  *
  * Prices and names are invented for the demo, which the concept badge on the
- * page says plainly. No real brand is named and no real shop is implied.
+ * page says plainly. No real brand is named and no real shop is implied. The
+ * product art is drawn in one studio style so the shelf reads as one line,
+ * the way a real premium audio brand's catalogue does.
  */
 export const PRODUCTS: Product[] = [
   {
     id: "p1",
-    slug: "studio-over-ear",
-    name: "Studio Over-Ear",
-    category: "Audio",
-    price: 299,
+    slug: "arc-one",
+    name: "Arc One",
+    category: "Headphones",
+    price: 329,
     description:
-      "Closed-back headphones with adaptive noise cancelling and a 40 hour battery.",
-    image: "nordwave-studio-over-ear",
+      "Flagship over-ear headphones with adaptive noise cancelling and a 40 hour battery.",
+    image: "nordwave-arc-one",
     variantLabel: "Colour",
     variants: [
-      { id: "midnight", label: "Midnight" },
-      { id: "graphite", label: "Graphite" },
+      { id: "basalt", label: "Basalt" },
+      { id: "fjord", label: "Fjord Blue" },
     ],
   },
   {
     id: "p2",
-    slug: "wireless-earbuds",
-    name: "Wireless Earbuds Pro",
-    category: "Audio",
-    price: 179,
+    slug: "arc-lite",
+    name: "Arc Lite",
+    category: "Headphones",
+    price: 199,
     description:
-      "In-ear buds with active noise cancelling and a pocket-sized charging case.",
-    image: "nordwave-earbuds-pro",
+      "The Arc, folded down: a lighter on-ear build for the commute, in a soft glacier finish.",
+    image: "nordwave-arc-lite",
     variantLabel: "Colour",
     variants: [
-      { id: "midnight", label: "Midnight" },
-      { id: "silver", label: "Silver" },
+      { id: "glacier", label: "Glacier" },
+      { id: "basalt", label: "Basalt" },
     ],
   },
   {
     id: "p3",
-    slug: "smart-speaker",
-    name: "Room Speaker",
-    category: "Audio",
-    price: 229,
+    slug: "pulse",
+    name: "Pulse",
+    category: "Headphones",
+    price: 169,
     description:
-      "A compact speaker that fills a room, with a woven acoustic shell.",
-    image: "nordwave-room-speaker",
-    variantLabel: "Finish",
+      "True wireless earbuds with active noise cancelling and a pocket-sized charging case.",
+    image: "nordwave-pulse",
+    variantLabel: "Colour",
     variants: [
-      { id: "navy", label: "Navy" },
-      { id: "slate", label: "Slate" },
+      { id: "glacier", label: "Glacier" },
+      { id: "basalt", label: "Basalt" },
     ],
   },
   {
     id: "p4",
-    slug: "smart-watch",
-    name: "Series Watch",
-    category: "Wearables",
-    price: 349,
+    slug: "orbit",
+    name: "Orbit",
+    category: "Speakers",
+    price: 279,
     description:
-      "An always-on display, week-long battery and training metrics that make sense.",
-    image: "nordwave-series-watch",
-    variantLabel: "Case size",
+      "A room-filling speaker wrapped in acoustic fabric, tuned for shelves rather than stages.",
+    image: "nordwave-orbit",
+    variantLabel: "Finish",
     variants: [
-      { id: "41", label: "41 mm" },
-      { id: "45", label: "45 mm" },
+      { id: "basalt", label: "Basalt" },
+      { id: "slate", label: "Slate" },
     ],
   },
   {
     id: "p5",
-    slug: "handset",
-    name: "Handset 12",
-    category: "Mobile",
-    price: 899,
+    slug: "drift",
+    name: "Drift",
+    category: "Speakers",
+    price: 139,
     description:
-      "A three-lens camera system in a matte ceramic body, built to last a few years.",
-    image: "nordwave-handset-12",
-    variantLabel: "Storage",
+      "A splash-proof portable speaker with twelve hours of playtime and a loop for the bike bag.",
+    image: "nordwave-drift",
+    variantLabel: "Colour",
     variants: [
-      { id: "128", label: "128 GB" },
-      { id: "256", label: "256 GB" },
-      { id: "512", label: "512 GB" },
+      { id: "fjord", label: "Fjord Blue" },
+      { id: "basalt", label: "Basalt" },
     ],
   },
   {
     id: "p6",
-    slug: "travel-headset",
-    name: "Travel Headset",
-    category: "Audio",
-    price: 199,
+    slug: "spin",
+    name: "Spin",
+    category: "Hi-Fi",
+    price: 449,
     description:
-      "Folding over-ear headphones with a hard case, made for long flights.",
-    image: "nordwave-travel-headset",
-    variantLabel: "Colour",
+      "A belt-driven turntable with a carbon tonearm, built-in phono stage and none of the fuss.",
+    image: "nordwave-spin",
+    variantLabel: "Finish",
     variants: [
-      { id: "midnight", label: "Midnight" },
-      { id: "sand", label: "Sand" },
+      { id: "basalt", label: "Basalt" },
+      { id: "walnut", label: "Walnut" },
     ],
   },
 ];

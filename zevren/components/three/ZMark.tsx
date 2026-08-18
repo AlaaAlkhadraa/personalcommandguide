@@ -94,6 +94,11 @@ export function ZMark({ reducedMotion, scrollProgressRef, lowPower = false }: ZM
   const outerRef = useRef<Group>(null);
   const innerRef = useRef<Group>(null);
   const target = useRef({ x: 0, y: 0 });
+  // Entrance progress, 0 → 1 over the first second or so: the mark rises,
+  // scales up and swings a quarter turn into its resting pose instead of
+  // popping in fully formed. Reduced motion starts at 1, so there is no
+  // entrance at all.
+  const intro = useRef(reducedMotion ? 1 : 0);
   // On a phone the canvas is the entire lower half of the hero, so the mark is
   // sized to fill it. On desktop it shares the frame with the headline.
   const targetSize = lowPower ? 3.9 : 3.15;
@@ -120,11 +125,19 @@ export function ZMark({ reducedMotion, scrollProgressRef, lowPower = false }: ZM
 
     const scrollProgress = scrollProgressRef.current ?? 0;
 
+    if (intro.current < 1) {
+      intro.current = Math.min(1, intro.current + delta / 1.15);
+    }
+    // Ease-out cubic: fast arrival, long settle.
+    const settled = 1 - Math.pow(1 - intro.current, 3);
+
     // Mouse and touch parallax, eased so it never snaps. This is a direct
     // response to the visitor's own input, so it stays on under reduced
     // motion: what that setting asks us to drop is unsolicited animation,
-    // and freezing the model entirely reads as a broken 3D scene.
-    target.current.y = state.pointer.x * 0.3 - 0.35;
+    // and freezing the model entirely reads as a broken 3D scene. The
+    // entrance borrows the same target so the swing-in and the pointer
+    // response blend through one lerp instead of fighting.
+    target.current.y = state.pointer.x * 0.3 - 0.35 - (1 - settled) * 0.85;
     target.current.x = -state.pointer.y * 0.16;
 
     outer.rotation.y += (target.current.y - outer.rotation.y) * Math.min(delta * 2.2, 1);
@@ -143,8 +156,8 @@ export function ZMark({ reducedMotion, scrollProgressRef, lowPower = false }: ZM
     outer.rotation.y += Math.sin(t * 0.18) * 0.0006;
     inner.position.y = Math.sin(t * 0.7) * 0.06;
 
-    outer.position.y = -scrollProgress * 0.6;
-    outer.scale.setScalar(1 - scrollProgress * 0.12);
+    outer.position.y = -scrollProgress * 0.6 - (1 - settled) * 0.4;
+    outer.scale.setScalar((1 - scrollProgress * 0.12) * (0.92 + settled * 0.08));
   });
 
   return (

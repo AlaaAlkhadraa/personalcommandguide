@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
+import { RevealGroup } from "@/components/ui/RevealGroup";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { FoundingCounter } from "@/components/campaign/FoundingCounter";
 import { FoundingPricing } from "@/components/campaign/FoundingPricing";
@@ -29,14 +30,15 @@ export default async function FoundingPage() {
   const status = await getFoundingStatus();
 
   return (
-    <>
+    <RevealGroup>
       <section className="relative overflow-hidden border-b border-white/5 bg-grid-glow py-20 sm:py-28">
         <div
           aria-hidden="true"
+          data-parallax="-14"
           className="pointer-events-none absolute -right-40 -top-40 h-[32rem] w-[32rem] rounded-full bg-primary/20 blur-[140px]"
         />
         <Container className="relative grid items-center gap-14 lg:grid-cols-[1.2fr_1fr]">
-          <div className="flex flex-col gap-6">
+          <div data-reveal className="flex flex-col gap-6">
             <span className="w-fit rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-xs font-medium uppercase tracking-[0.2em] text-accent">
               {c.eyebrow}
             </span>
@@ -55,8 +57,12 @@ export default async function FoundingPage() {
             <p className="pt-4 text-sm text-muted">{c.location}</p>
           </div>
 
-          <div className="rounded-2xl border border-white/10 bg-navy/60 p-7 sm:p-8">
-            <FoundingCounter status={status} dict={c} />
+          {/* Gradient ring, not a plain border: the counter is the reason
+              this page exists, so its card gets the strongest frame. */}
+          <div data-reveal data-reveal-delay="0.15" className="rounded-2xl bg-gradient-to-b from-accent/40 via-white/10 to-transparent p-px">
+            <div className="rounded-[calc(1rem-1px)] border border-transparent bg-navy/90 p-7 sm:p-8">
+              <FoundingCounter status={status} dict={c} />
+            </div>
           </div>
         </Container>
       </section>
@@ -75,12 +81,19 @@ export default async function FoundingPage() {
       <section className="border-b border-white/5 bg-surface/30 py-20">
         <Container className="flex flex-col gap-12">
           <SectionHeading eyebrow={c.eyebrow} title={c.whatYouGet} />
-          <div className="grid gap-6 sm:grid-cols-3">
+          <div data-reveal-stagger className="grid gap-6 sm:grid-cols-3">
             {c.points.map((point) => (
               <div
                 key={point.title}
-                className="flex flex-col gap-3 rounded-2xl border border-white/10 bg-navy/40 p-7"
+                data-reveal-item
+                data-tilt
+                className="flex flex-col gap-3 rounded-2xl border border-white/10 bg-navy/40 p-7 transition-colors duration-300 hover:border-accent/40"
               >
+                <span aria-hidden="true" className="flex h-9 w-9 items-center justify-center rounded-full border border-accent/30 bg-accent/10 text-accent">
+                  <svg viewBox="0 0 16 16" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                    <path d="m3 8.5 3.5 3.5L13 5" />
+                  </svg>
+                </span>
                 <h3 className="text-base font-semibold text-white">{point.title}</h3>
                 <p className="text-sm leading-relaxed text-muted">{point.description}</p>
               </div>
@@ -109,6 +122,6 @@ export default async function FoundingPage() {
           <p className="pt-4 text-sm text-muted">{c.location}</p>
         </Container>
       </section>
-    </>
+    </RevealGroup>
   );
 }

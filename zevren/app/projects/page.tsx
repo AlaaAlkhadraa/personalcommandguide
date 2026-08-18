@@ -27,7 +27,7 @@ export default async function ProjectsPage() {
       <section className="py-20">
         <Container data-reveal-stagger className="grid gap-8 sm:grid-cols-2">
           {WORK_ITEMS.map((item, index) => (
-            <div key={item.slug} data-reveal-item>
+            <div key={item.slug} data-reveal-item data-tilt>
               <ProjectCard
                 item={item}
                 dict={w}

@@ -16,6 +16,14 @@ import { useEffect, useRef } from "react";
  *                            exact original text restored at the end
  * - `data-parallax="-18"`    a slow scroll-scrubbed drift, in yPercent, for
  *                            decorative background layers
+ * - `data-reveal-words`      a heading whose words rise out of their own
+ *                            overflow masks in a cascade; nested elements
+ *                            (an accent span, say) travel as one word
+ * - `data-draw-line`         an accent rule that draws itself in from its
+ *                            reading-direction end
+ * - `data-tilt`              a card that tips a few degrees toward the
+ *                            pointer; mouse only, so touch scrolling is
+ *                            never hijacked
  *
  * GSAP and ScrollTrigger are imported dynamically inside the effect so they
  * never land in the initial bundle: they arrive only once a page that
@@ -40,12 +48,18 @@ export function useGsapReveal<T extends HTMLElement = HTMLDivElement>() {
     const staggerGroups = root.querySelectorAll<HTMLElement>("[data-reveal-stagger]");
     const counters = root.querySelectorAll<HTMLElement>("[data-count-to]");
     const parallaxLayers = root.querySelectorAll<HTMLElement>("[data-parallax]");
+    const wordHeadings = root.querySelectorAll<HTMLElement>("[data-reveal-words]");
+    const drawLines = root.querySelectorAll<HTMLElement>("[data-draw-line]");
+    const tiltCards = root.querySelectorAll<HTMLElement>("[data-tilt]");
 
     if (
       singles.length === 0 &&
       staggerGroups.length === 0 &&
       counters.length === 0 &&
-      parallaxLayers.length === 0
+      parallaxLayers.length === 0 &&
+      wordHeadings.length === 0 &&
+      drawLines.length === 0 &&
+      tiltCards.length === 0
     ) {
       return;
     }
@@ -65,6 +79,7 @@ export function useGsapReveal<T extends HTMLElement = HTMLDivElement>() {
 
     let ctx: { revert: () => void } | null = null;
     let cancelled = false;
+    const listenerCleanups: Array<() => void> = [];
 
     (async () => {
       const [{ gsap }, { ScrollTrigger }] = await Promise.all([
@@ -147,11 +162,120 @@ export function useGsapReveal<T extends HTMLElement = HTMLDivElement>() {
             },
           });
         });
+
+        wordHeadings.forEach((el) => {
+          // Guard against a second pass (dev strict mode remounts) re-wrapping
+          // the spans of the first.
+          if (el.dataset.wordsSplit === "true") return;
+          el.dataset.wordsSplit = "true";
+
+          // Split into word-sized mask/inner span pairs. Text nodes split on
+          // whitespace; an element child (the accent span) stays whole and
+          // rides in its own mask, so its markup and styling survive. The
+          // mask hides the word until its inner span rises into place; the
+          // small padding/negative-margin pair keeps descenders from being
+          // shaved while the word is still moving.
+          const inners: HTMLElement[] = [];
+          const fragment = document.createDocumentFragment();
+
+          const wrapUnit = (unit: Node): void => {
+            const mask = document.createElement("span");
+            mask.style.display = "inline-block";
+            mask.style.overflow = "hidden";
+            mask.style.verticalAlign = "top";
+            mask.style.paddingBottom = "0.12em";
+            mask.style.marginBottom = "-0.12em";
+            const inner = document.createElement("span");
+            inner.style.display = "inline-block";
+            inner.appendChild(unit);
+            mask.appendChild(inner);
+            fragment.appendChild(mask);
+            inners.push(inner);
+          };
+
+          Array.from(el.childNodes).forEach((node) => {
+            if (node.nodeType === Node.TEXT_NODE) {
+              const parts = (node.textContent ?? "").split(/(\s+)/);
+              parts.forEach((part) => {
+                if (part.length === 0) return;
+                if (/^\s+$/.test(part)) {
+                  fragment.appendChild(document.createTextNode(part));
+                } else {
+                  wrapUnit(document.createTextNode(part));
+                }
+              });
+            } else {
+              wrapUnit(node);
+            }
+          });
+
+          el.replaceChildren(fragment);
+          if (inners.length === 0) return;
+
+          gsap.fromTo(
+            inners,
+            { yPercent: 112 },
+            {
+              yPercent: 0,
+              duration: 0.85,
+              ease: "power3.out",
+              stagger: 0.05,
+              delay: 0.08,
+              scrollTrigger: { trigger: el, start: "top 88%", once: true },
+            }
+          );
+        });
+
+        const rtl = document.documentElement.dir === "rtl";
+        drawLines.forEach((el) => {
+          gsap.fromTo(
+            el,
+            { scaleX: 0, transformOrigin: rtl ? "right center" : "left center" },
+            {
+              scaleX: 1,
+              duration: 0.9,
+              delay: 0.25,
+              ease: "power2.inOut",
+              scrollTrigger: { trigger: el, start: "top 92%", once: true },
+            }
+          );
+        });
+
+        // Tilt is pointer-driven, not scroll-driven, and a direct response to
+        // the visitor's own input; it is still skipped under reduced motion
+        // because the whole hook already returned above in that case.
+        if (window.matchMedia("(pointer: fine)").matches) {
+          tiltCards.forEach((el) => {
+            gsap.set(el, { transformPerspective: 900 });
+            const toRotX = gsap.quickTo(el, "rotationX", { duration: 0.5, ease: "power3.out" });
+            const toRotY = gsap.quickTo(el, "rotationY", { duration: 0.5, ease: "power3.out" });
+
+            const move = (event: MouseEvent) => {
+              const rect = el.getBoundingClientRect();
+              const px = (event.clientX - rect.left) / rect.width - 0.5;
+              const py = (event.clientY - rect.top) / rect.height - 0.5;
+              toRotY(px * 6);
+              toRotX(-py * 5);
+            };
+            const leave = () => {
+              toRotX(0);
+              toRotY(0);
+            };
+
+            el.addEventListener("mousemove", move);
+            el.addEventListener("mouseleave", leave);
+            listenerCleanups.push(() => {
+              el.removeEventListener("mousemove", move);
+              el.removeEventListener("mouseleave", leave);
+            });
+          });
+        }
       }, root);
     })();
 
     return () => {
       cancelled = true;
+      listenerCleanups.forEach((fn) => fn());
       ctx?.revert();
     };
   }, []);

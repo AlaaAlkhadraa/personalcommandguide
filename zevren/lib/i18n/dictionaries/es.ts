@@ -220,6 +220,7 @@ const es: Dictionary = {
     pricingTitle: "Lo que pagan los 10 primeros",
     regularLabel: "Habitual",
     foundingLabel: "Fundador",
+    saveLabel: "Ahorras",
     pricingNote: "El precio fundador vale para los 10 primeros proyectos. Después se aplican los precios habituales.",
     cta: "Reserva tu plaza",
     ctaSecondary: "Ver los proyectos",
@@ -451,9 +452,9 @@ const es: Dictionary = {
       "online-store": {
         category: "E-commerce",
         description:
-          "Una tienda de electrónica premium como concepto: auriculares, altavoces y wearables, desde la parrilla de producto hasta el pedido confirmado.",
+          "Un concepto de tienda de audio premium: auriculares, altavoces y alta fidelidad, desde la cuadrícula de productos hasta el pedido confirmado.",
         whatWeExplored:
-          "Este concepto explora cómo una marca de electrónica podría vender directamente online, con la fotografía de producto sosteniendo la página y un checkout que no estorba.",
+          "Este concepto explora cómo una marca de audio premium podría vender directamente online, con una línea de productos cuidada que sostiene la página y un pago que no estorba al cliente.",
         keyFeatures: ["Parrilla y fichas de producto", "Selección de color y variante", "Carrito", "Proceso de pago", "Confirmación de pedido"],
       },
       ellezone: {
@@ -617,9 +618,8 @@ const es: Dictionary = {
       navShop: "Tienda",
       cart: "Carrito",
       newSeason: "Nueva temporada",
-      heroHeading: "Audio premium, wearables y móvil.",
-      heroSubtitle:
-        "Electrónica pensada para durar más de un ciclo de producto.",
+      heroHeading: "Sonido moldeado por el Norte.",
+      heroSubtitle: "Auriculares, altavoces y alta fidelidad, hechos para durar más que las tendencias.",
       shopByPack: "Todas las categorías",
       backToShop: "Volver a la tienda",
       addToCart: "Añadir al carrito",

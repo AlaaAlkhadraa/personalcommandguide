@@ -46,7 +46,7 @@ export function FinalCTA({
           <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-accent">
             {dict.eyebrow}
           </span>
-          <h2 className="max-w-md font-heading text-3xl font-bold uppercase leading-[1.1] tracking-[-0.01em] text-white sm:text-4xl">
+          <h2 data-reveal-words className="max-w-md font-heading text-3xl font-bold uppercase leading-[1.1] tracking-[-0.01em] text-white sm:text-4xl">
             {dict.title}
           </h2>
           <p className="max-w-md text-sm leading-relaxed text-muted">{dict.subtitle}</p>

@@ -220,6 +220,7 @@ const de: Dictionary = {
     pricingTitle: "Was die ersten 10 zahlen",
     regularLabel: "Regulär",
     foundingLabel: "Founding",
+    saveLabel: "Sie sparen",
     pricingNote: "Der Founding-Preis gilt für die ersten 10 Projekte. Danach gelten die regulären Preise.",
     cta: "Platz sichern",
     ctaSecondary: "Arbeiten ansehen",
@@ -451,9 +452,9 @@ const de: Dictionary = {
       "online-store": {
         category: "E-Commerce",
         description:
-          "Ein Premium-Elektronikshop als Konzept: Kopfhörer, Lautsprecher und Wearables, vom Produktraster bis zur bestätigten Bestellung.",
+          "Ein Premium-Audio-Store-Konzept: Kopfhörer, Lautsprecher und Hi-Fi, vom Produktraster bis zur bestätigten Bestellung.",
         whatWeExplored:
-          "Dieses Konzept untersucht, wie eine Elektronikmarke direkt online verkaufen könnte, mit Produktfotografie als Träger der Seite und einem Checkout, der nicht im Weg steht.",
+          "Dieses Konzept zeigt, wie eine Premium-Audiomarke direkt online verkaufen könnte, mit einer durchgestalteten Produktlinie, die die Seite trägt, und einem Checkout, der dem Kunden nicht im Weg steht.",
         keyFeatures: ["Produktraster und Detailseiten", "Farb- und Variantenauswahl", "Warenkorb", "Checkout", "Bestellbestätigung"],
       },
       ellezone: {
@@ -617,9 +618,8 @@ const de: Dictionary = {
       navShop: "Shop",
       cart: "Warenkorb",
       newSeason: "Neue Saison",
-      heroHeading: "Premium-Audio, Wearables und Mobilgeräte.",
-      heroSubtitle:
-        "Durchdachte Elektronik, gebaut für mehr als einen Produktzyklus.",
+      heroHeading: "Klang, geformt vom Norden.",
+      heroSubtitle: "Kopfhörer, Lautsprecher und Hi-Fi, gebaut, um Trends zu überdauern.",
       shopByPack: "Alle Kategorien",
       backToShop: "Zurück zum Shop",
       addToCart: "In den Warenkorb",

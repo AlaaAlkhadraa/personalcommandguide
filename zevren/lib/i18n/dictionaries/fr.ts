@@ -220,6 +220,7 @@ const fr: Dictionary = {
     pricingTitle: "Ce que paient les 10 premiers",
     regularLabel: "Habituel",
     foundingLabel: "Fondateur",
+    saveLabel: "Vous économisez",
     pricingNote: "Le tarif fondateur vaut pour les 10 premiers projets. Ensuite, les tarifs habituels s'appliquent.",
     cta: "Réserver ma place",
     ctaSecondary: "Voir les réalisations",
@@ -451,9 +452,9 @@ const fr: Dictionary = {
       "online-store": {
         category: "E-commerce",
         description:
-          "Une boutique d'électronique premium en concept : casques, enceintes et objets connectés, de la grille produit à la commande confirmée.",
+          "Un concept de boutique audio premium : casques, enceintes et hi-fi, de la grille produits à la commande confirmée.",
         whatWeExplored:
-          "Ce concept explore comment une marque d'électronique pourrait vendre en direct, avec la photographie produit qui porte la page et un tunnel d'achat qui ne gêne pas le client.",
+          "Ce concept explore comment une marque audio premium pourrait vendre directement en ligne, avec une ligne de produits soignée qui porte la page et un paiement qui ne gêne jamais le client.",
         keyFeatures: ["Grille produit et fiches détaillées", "Choix des couleurs et variantes", "Panier", "Tunnel de commande", "Confirmation de commande"],
       },
       ellezone: {
@@ -617,9 +618,8 @@ const fr: Dictionary = {
       navShop: "Boutique",
       cart: "Panier",
       newSeason: "Nouvelle saison",
-      heroHeading: "Audio premium, objets connectés et mobile.",
-      heroSubtitle:
-        "Une électronique pensée pour durer plus d'un cycle produit.",
+      heroHeading: "Le son, façonné par le Nord.",
+      heroSubtitle: "Casques, enceintes et hi-fi, pensés pour durer plus qu'une tendance.",
       shopByPack: "Toutes les catégories",
       backToShop: "Retour à la boutique",
       addToCart: "Ajouter au panier",
