@@ -36,9 +36,23 @@ function bucketKey(scope: string, identity: string): string {
   return `${scope}:${keyedHash(identity, `ratelimit:${scope}`)}`;
 }
 
+function intervalSeconds(seconds: number) {
+  // These options are server-side constants, nevertheless validate before
+  // inserting the integer literal so a future caller cannot alter SQL.
+  if (!Number.isSafeInteger(seconds) || seconds < 0) {
+    throw new Error("Rate-limit interval must be a non-negative safe integer.");
+  }
+  // `make_interval(secs => $n)` is not portable through all Postgres
+  // prepared-statement drivers. An explicitly validated interval expression
+  // works consistently with Neon and PGlite.
+  return sql.raw(`${seconds} * interval '1 second'`);
+}
+
 export async function rateLimit(options: RateLimitOptions): Promise<RateLimitResult> {
   const { scope, identity, limit, windowSeconds, blockSeconds = 0 } = options;
   const key = bucketKey(scope, identity);
+  const window = intervalSeconds(windowSeconds);
+  const block = intervalSeconds(blockSeconds);
 
   try {
     const db = await getDb();
@@ -52,20 +66,20 @@ export async function rateLimit(options: RateLimitOptions): Promise<RateLimitRes
         "count" = CASE
           WHEN rate_limits."blocked_until" IS NOT NULL AND rate_limits."blocked_until" > now()
             THEN rate_limits."count"
-          WHEN rate_limits."window_start" < now() - make_interval(secs => ${windowSeconds})
+          WHEN rate_limits."window_start" < now() - (${window})
             THEN 1
           ELSE rate_limits."count" + 1
         END,
         "window_start" = CASE
-          WHEN rate_limits."window_start" < now() - make_interval(secs => ${windowSeconds})
+          WHEN rate_limits."window_start" < now() - (${window})
             THEN now()
           ELSE rate_limits."window_start"
         END,
         "blocked_until" = CASE
           WHEN ${blockSeconds} > 0
-           AND rate_limits."window_start" >= now() - make_interval(secs => ${windowSeconds})
+           AND rate_limits."window_start" >= now() - (${window})
            AND rate_limits."count" + 1 > ${limit}
-            THEN now() + make_interval(secs => ${blockSeconds})
+            THEN now() + (${block})
           WHEN rate_limits."blocked_until" > now() THEN rate_limits."blocked_until"
           ELSE NULL
         END
