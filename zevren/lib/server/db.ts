@@ -59,9 +59,10 @@ async function create(): Promise<Db> {
     max: 3,
     idle_timeout: 20,
     connect_timeout: 10,
-    // Reject a server whose certificate does not validate. Providers that
-    // need the relaxed mode say so in the connection string itself.
-    ssl: e.DATABASE_URL.includes("sslmode=") ? undefined : "require",
+    // Neon requires TLS for runtime connections. Enforce it explicitly:
+    // relying on a URL query parameter leaves postgres.js in insecure mode
+    // in some serverless runtimes.
+    ssl: "require",
     onnotice: () => {},
   });
 
