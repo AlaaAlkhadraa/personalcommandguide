@@ -10,14 +10,15 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "db:migrate": "node scripts/migrate.mjs",
-    "admin:create": "node scripts/create-admin.mjs"
+    "admin:create": "node scripts/create-admin.mjs",
+    "vercel-build": "node scripts/vercel-build.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.8",
     "@react-three/fiber": "^9.7.0",
     "@types/three": "^0.185.4",
     "drizzle-orm": "^0.45.2",
-    "next": "15.5.23",
+    "next": "^16.3.1",
     "postgres": "^3.4.9",
     "react": "19.1.0",
     "react-dom": "19.1.0",
@@ -34,7 +35,7 @@
     "@types/react-dom": "19.0.3",
     "autoprefixer": "^10.4.20",
     "eslint": "9.39.5",
-    "eslint-config-next": "15.5.23",
+    "eslint-config-next": "^16.3.1",
     "postcss": "^8.5.23",
     "tailwindcss": "3.4.17",
     "typescript": "5.7.3"

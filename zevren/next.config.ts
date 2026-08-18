@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 
-// Content-Security-Policy is set per-request in middleware.ts, where it
+// Content-Security-Policy is set per-request in proxy.ts, where it
 // gets a per-request nonce that Next.js applies to its own hydration
 // scripts. Everything else that doesn't need a nonce lives here.
 const securityHeaders = [
