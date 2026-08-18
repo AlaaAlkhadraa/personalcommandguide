@@ -37,13 +37,15 @@ export default async function HomePage() {
           grid or flex parent and disturbs a layout. */}
       <RevealGroup>
         <ServicesPreview dict={dict.services} homeDict={dict.home.services} />
+        {/* The launch offer sits right behind the services it prices, high on
+            the page: an offer nobody scrolls to is an offer nobody takes. */}
+        <FoundingSection dict={dict.campaign} pricingDict={dict.pricing} />
         <Mission dict={dict.mission} />
         <ProjectsPreview dict={dict.work} homeDict={dict.home.work} />
         <AboutBand dict={dict.home.about} />
         <Process dict={dict.process} homeDict={dict.home.process} />
         <GlobalFocus dict={dict.globalFocus} />
         <WhyZevren dict={dict.whyZevren} homeDict={dict.home.why} />
-        <FoundingSection dict={dict.campaign} />
         <FAQ dict={dict.faq} homeDict={dict.home.faq} />
         <FinalCTA dict={dict.home.finalCta} contactDict={dict.contact} />
       </RevealGroup>
