@@ -84,7 +84,7 @@ export function Hero({ dict }: { dict: Dictionary["home"]["hero"] }) {
           actually holds content: the container spans the full width and sits
           above the mark in paint order, so without this it swallowed every
           pointer move over the empty half and the model stopped responding. */}
-      <div className="container-page pointer-events-none relative flex flex-1 flex-col gap-4 pb-0 pt-5 [@media(max-width:1023px)_and_(max-height:820px)]:gap-2.5 [@media(max-width:1023px)_and_(max-height:820px)]:pt-3 lg:min-h-[42rem] lg:flex-none lg:justify-center lg:gap-10 lg:pb-24 lg:pt-24">
+      <div className="container-page pointer-events-none relative flex flex-1 flex-col gap-4 pb-7 pt-5 [@media(max-width:1023px)_and_(max-height:820px)]:gap-2.5 [@media(max-width:1023px)_and_(max-height:820px)]:pb-4 [@media(max-width:1023px)_and_(max-height:820px)]:pt-3 lg:min-h-[42rem] lg:flex-none lg:justify-center lg:gap-10 lg:pb-24 lg:pt-24">
         <div className="pointer-events-auto flex max-w-xl flex-col gap-4 [@media(max-width:1023px)_and_(max-height:820px)]:gap-2.5 lg:max-w-[34rem] lg:gap-6">
           <span className="flex items-center gap-4">
             <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-accent">
@@ -134,27 +134,7 @@ export function Hero({ dict }: { dict: Dictionary["home"]["hero"] }) {
         </div>
       </div>
 
-      {webGLSupported === true && (
-        <p className="pointer-events-none absolute bottom-8 end-6 hidden flex-col items-end gap-2 text-[10px] uppercase tracking-[0.22em] text-muted/70 xl:flex">
-          <span>{dict.scroll}</span>
-          <span aria-hidden="true" className="h-12 w-px bg-gradient-to-b from-muted/50 to-transparent" />
-        </p>
-      )}
 
-      {/* Phone scroll cue. Sits in the flow rather than pinned, so it lands at
-          the end of the hero instead of floating over the Z. `relative` is
-          load-bearing: the environment layer is absolutely positioned, and a
-          static sibling would paint underneath it however late it comes. */}
-      <div className="container-page relative flex shrink-0 flex-col items-center gap-2 pb-5 pt-3 [@media(max-width:1023px)_and_(max-height:820px)]:gap-1 [@media(max-width:1023px)_and_(max-height:820px)]:pb-2 [@media(max-width:1023px)_and_(max-height:820px)]:pt-1 lg:hidden">
-        <span className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/80">
-          {dict.scroll}
-        </span>
-        <span className="flex w-full items-center gap-4">
-          <span aria-hidden="true" className="h-px flex-1 bg-gradient-to-r from-transparent to-white/15" />
-          <MouseGlyph reducedMotion={reducedMotion} />
-          <span aria-hidden="true" className="h-px flex-1 bg-gradient-to-l from-transparent to-white/15" />
-        </span>
-      </div>
     </section>
   );
 }
@@ -175,36 +155,6 @@ function LocationBadge({ dict }: { dict: Dictionary["home"]["hero"] }) {
         </span>
       </span>
     </>
-  );
-}
-
-/**
- * The scroll cue under the phone hero. The wheel only travels when the
- * visitor has not asked for reduced motion; the glyph still reads as a mouse
- * when it is still, so nothing is lost by holding it.
- */
-function MouseGlyph({ reducedMotion }: { reducedMotion: boolean }) {
-  return (
-    <svg
-      viewBox="0 0 24 38"
-      aria-hidden="true"
-      className="h-9 w-6 [@media(max-width:1023px)_and_(max-height:820px)]:h-7 [@media(max-width:1023px)_and_(max-height:820px)]:w-5 text-white/60"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.4}
-    >
-      <rect x="1" y="1" width="22" height="36" rx="11" />
-      <circle cx="12" cy="10" r="1.8" fill="currentColor" stroke="none">
-        {!reducedMotion && (
-          <animate
-            attributeName="cy"
-            values="10;16;10"
-            dur="2.2s"
-            repeatCount="indefinite"
-          />
-        )}
-      </circle>
-    </svg>
   );
 }
 
