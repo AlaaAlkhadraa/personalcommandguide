@@ -45,6 +45,9 @@ export function SubmissionsTable({
   const csrfToken = useCsrfToken(initialToken);
   const router = useRouter();
   const [busyId, setBusyId] = useState<string | null>(null);
+  // The row whose delete is waiting to be confirmed. Deleting is the only
+  // action here that cannot be undone, so it takes a second, deliberate click.
+  const [confirmingId, setConfirmingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [openId, setOpenId] = useState<string | null>(null);
 
@@ -66,6 +69,33 @@ export function SubmissionsTable({
         setError(payload?.message ?? "Could not update.");
         return;
       }
+      router.refresh();
+    } catch {
+      setError("Could not reach the server.");
+    } finally {
+      setBusyId(null);
+    }
+  }
+
+  async function remove(id: string) {
+    setBusyId(id);
+    setError(null);
+    try {
+      const response = await fetch("/api/admin/submissions", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          ...(csrfToken ? { "x-csrf-token": csrfToken } : {}),
+        },
+        credentials: "same-origin",
+        body: JSON.stringify({ id, csrfToken: csrfToken ?? undefined }),
+      });
+      if (!response.ok) {
+        const payload = (await response.json().catch(() => null)) as { message?: string } | null;
+        setError(payload?.message ?? "Could not delete.");
+        return;
+      }
+      setConfirmingId(null);
       router.refresh();
     } catch {
       setError("Could not reach the server.");
@@ -215,6 +245,37 @@ export function SubmissionsTable({
                     >
                       Reply
                     </a>
+
+                    {confirmingId === item.id ? (
+                      <span className="flex flex-wrap items-center gap-2 rounded-full border border-red-500/40 bg-red-500/10 px-3 py-1.5">
+                        <span className="text-xs text-red-200">
+                          Delete permanently? This cannot be undone.
+                        </span>
+                        <button
+                          type="button"
+                          disabled={busyId === item.id}
+                          onClick={() => remove(item.id)}
+                          className="rounded-full bg-red-500/80 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white transition-colors hover:bg-red-500 disabled:opacity-40"
+                        >
+                          {busyId === item.id ? "Deleting..." : "Yes, delete"}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setConfirmingId(null)}
+                          className="rounded-full border border-white/20 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white transition-colors hover:border-white/50"
+                        >
+                          Cancel
+                        </button>
+                      </span>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setConfirmingId(item.id)}
+                        className="rounded-full border border-red-500/40 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-red-300 transition-colors hover:border-red-400 hover:text-red-200"
+                      >
+                        Delete
+                      </button>
+                    )}
                   </div>
                 </div>
               )}
