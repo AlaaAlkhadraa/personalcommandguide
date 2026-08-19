@@ -8,7 +8,7 @@ export interface NavLink {
    * Key into the nav dictionary. Carried on the link itself rather than in a
    * parallel array, so reordering the menu cannot silently mislabel it.
    */
-  key?: "home" | "services" | "projects" | "about" | "process" | "contact";
+  key?: "home" | "services" | "projects" | "insights" | "about" | "process" | "contact";
   /** Shown beside the label in the mobile menu. */
   icon?: ServiceIcon;
 }

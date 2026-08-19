@@ -1,11 +1,13 @@
 import type { MetadataRoute } from "next";
 import { WORK_ITEMS, SITE_CONFIG } from "@/lib/constants";
+import { ARTICLES } from "@/lib/insights/articles";
 
 const routes = [
   { path: "/", priority: 1, changeFrequency: "weekly" as const },
   { path: "/founding-10", priority: 0.9, changeFrequency: "weekly" as const },
   { path: "/services", priority: 0.9, changeFrequency: "monthly" as const },
   { path: "/projects", priority: 0.9, changeFrequency: "weekly" as const },
+  { path: "/insights", priority: 0.8, changeFrequency: "weekly" as const },
   { path: "/about", priority: 0.7, changeFrequency: "monthly" as const },
   { path: "/process", priority: 0.7, changeFrequency: "monthly" as const },
   { path: "/contact", priority: 0.8, changeFrequency: "yearly" as const },
@@ -30,5 +32,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  return [...staticRoutes, ...workRoutes];
+  const articleRoutes = ARTICLES.map((article) => ({
+    url: `${SITE_CONFIG.url}/insights/${article.slug}`,
+    lastModified: new Date(article.date),
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }));
+
+  return [...staticRoutes, ...workRoutes, ...articleRoutes];
 }

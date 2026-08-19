@@ -9,9 +9,25 @@ export interface Dictionary {
     about: string;
     process: string;
     contact: string;
+    insights: string;
     startProject: string;
     madeIn: string;
     orCall: string;
+  };
+  insights: {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    readMore: string;
+    backToInsights: string;
+    minuteRead: string;
+    englishNote: string;
+    ctaEyebrow: string;
+    ctaTitle: string;
+    ctaBody: string;
+    ctaButton: string;
+    metaTitle: string;
+    metaDescription: string;
   };
   footer: {
     description: string;

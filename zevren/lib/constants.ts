@@ -27,6 +27,7 @@ export const NAV_LINKS: NavLink[] = [
   { key: "home", label: "Home", href: "/", icon: "home" },
   { key: "services", label: "Services", href: "/services", icon: "layers" },
   { key: "projects", label: "Projects", href: "/projects", icon: "grid" },
+  { key: "insights", label: "Insights", href: "/insights", icon: "compass" },
   { key: "about", label: "About Us", href: "/about", icon: "info" },
   { key: "process", label: "Process", href: "/process", icon: "route" },
   { key: "contact", label: "Contact", href: "/contact", icon: "mail" },
