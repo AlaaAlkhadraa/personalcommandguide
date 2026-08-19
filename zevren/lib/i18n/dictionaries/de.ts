@@ -132,9 +132,9 @@ const de: Dictionary = {
     subtitle:
       "Wir konzentrieren uns auf wenige Leistungen und richten jedes Projekt danach aus, was das Unternehmen wirklich braucht.",
     pricingEyebrow: "Preise",
-    pricingTitle: "Startpreise",
-    pricingSubtitle: "Jedes Projekt wird danach bepreist, was Sie wirklich brauchen.",
-    pricingNote: "Der endgültige Preis hängt vom Umfang und den Anforderungen des Projekts ab.",
+    pricingTitle: "Pakete und Preise",
+    pricingSubtitle: "Wählen Sie das passende Paket. Was es kostet, steht auf der Karte.",
+    pricingNote: "Preise zzgl. MwSt. Alles außerhalb eines Pakets wird vor Projektstart nach Umfang angeboten.",
     from: "Ab",
     notSureTitle: "Nicht sicher, welche Leistung passt?",
     notSureBody:
@@ -231,6 +231,14 @@ const de: Dictionary = {
     cta: "Projekt starten",
     ctaSecondary: "Arbeiten ansehen",
     note: "Preise zzgl. MwSt. Größere Projekte werden nach Umfang angeboten.",
+    subscription: {
+      eyebrow: "Wartung und Hosting",
+      title: "Wir halten Ihre Website am Laufen",
+      price: "49,99",
+      period: "pro Monat",
+      description: "Optional zu jedem Paket. Wir halten Ihre Website online, sicher und aktuell, und Ihre Text- und Bildänderungen gehören dazu.",
+      items: ["Hosting und Domainverwaltung", "Backups und Wiederherstellung", "Sicherheits- und Software-Updates", "Text- und Bildänderungen"],
+    },
   },
   pricing: {
     plans: {

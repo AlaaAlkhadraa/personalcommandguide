@@ -110,6 +110,14 @@ export interface Dictionary {
     cta: string;
     ctaSecondary: string;
     note: string;
+    subscription: {
+      eyebrow: string;
+      title: string;
+      price: string;
+      period: string;
+      description: string;
+      items: string[];
+    };
   };
   pricing: {
     plans: Record<

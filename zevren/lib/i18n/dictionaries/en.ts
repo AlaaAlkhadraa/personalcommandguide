@@ -132,9 +132,9 @@ const en: Dictionary = {
     subtitle:
       "We focus on a small number of services and build each project around what the business actually needs.",
     pricingEyebrow: "Pricing",
-    pricingTitle: "Starting prices",
-    pricingSubtitle: "Every project is priced based on what you actually need.",
-    pricingNote: "Final pricing depends on the scope and requirements of the project.",
+    pricingTitle: "Packages and prices",
+    pricingSubtitle: "Pick the package that fits. What it costs is on the card.",
+    pricingNote: "Prices exclude VAT. Anything beyond a package is quoted on scope before the work starts.",
     from: "From",
     notSureTitle: "Not sure which service fits?",
     notSureBody:
@@ -231,6 +231,14 @@ const en: Dictionary = {
     cta: "Start a project",
     ctaSecondary: "See the work",
     note: "Prices exclude VAT. Larger projects are quoted on scope.",
+    subscription: {
+      eyebrow: "Maintenance and hosting",
+      title: "We keep your site running",
+      price: "49.99",
+      period: "per month",
+      description: "Optional with every package. We keep your site online, secure and current, and your text and image changes are part of it.",
+      items: ["Hosting and domain management", "Backups and restore", "Security and software updates", "Text and image changes"],
+    },
   },
   pricing: {
     plans: {

@@ -132,9 +132,9 @@ const es: Dictionary = {
     subtitle:
       "Nos centramos en un número reducido de servicios y construimos cada proyecto según lo que la empresa realmente necesita.",
     pricingEyebrow: "Precios",
-    pricingTitle: "Precios de partida",
-    pricingSubtitle: "Cada proyecto se cotiza según lo que realmente necesitas.",
-    pricingNote: "El precio final depende del alcance y los requisitos del proyecto.",
+    pricingTitle: "Paquetes y precios",
+    pricingSubtitle: "Elige el paquete que encaje. Lo que cuesta está en la tarjeta.",
+    pricingNote: "Precios sin IVA. Todo lo que quede fuera de un paquete se presupuesta según su alcance antes de empezar.",
     from: "Desde",
     notSureTitle: "¿No sabes qué servicio te conviene?",
     notSureBody:
@@ -231,6 +231,14 @@ const es: Dictionary = {
     cta: "Empezar un proyecto",
     ctaSecondary: "Ver el trabajo",
     note: "Precios sin IVA. Los proyectos mayores se presupuestan según su alcance.",
+    subscription: {
+      eyebrow: "Mantenimiento y alojamiento",
+      title: "Mantenemos tu sitio en marcha",
+      price: "49,99",
+      period: "al mes",
+      description: "Opcional con cada paquete. Mantenemos tu sitio online, seguro y al día, y tus cambios de textos e imágenes van incluidos.",
+      items: ["Alojamiento y gestión del dominio", "Copias de seguridad y restauración", "Actualizaciones de seguridad y software", "Cambios de textos e imágenes"],
+    },
   },
   pricing: {
     plans: {

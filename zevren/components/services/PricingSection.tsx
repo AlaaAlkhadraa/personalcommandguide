@@ -1,6 +1,7 @@
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Container } from "@/components/ui/Container";
 import { PlanCards } from "@/components/pricing/PlanCards";
+import { SubscriptionCard } from "@/components/pricing/SubscriptionCard";
 import type { Dictionary } from "@/lib/i18n/dictionary-type";
 
 interface PricingSectionProps {
@@ -29,6 +30,8 @@ export function PricingSection({ dict, pricingDict, offerDict }: PricingSectionP
         </div>
 
         <PlanCards offerDict={offerDict} pricingDict={pricingDict} />
+
+        <SubscriptionCard dict={offerDict.subscription} />
 
         <p className="text-sm text-muted">{dict.pricingNote}</p>
       </Container>

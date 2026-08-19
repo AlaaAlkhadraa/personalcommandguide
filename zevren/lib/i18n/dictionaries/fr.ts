@@ -132,9 +132,9 @@ const fr: Dictionary = {
     subtitle:
       "Nous nous concentrons sur un nombre limité de services et construisons chaque projet autour des besoins réels de l'entreprise.",
     pricingEyebrow: "Tarifs",
-    pricingTitle: "Tarifs de départ",
-    pricingSubtitle: "Chaque projet est tarifé selon ce dont vous avez réellement besoin.",
-    pricingNote: "Le tarif final dépend de l'ampleur et des exigences du projet.",
+    pricingTitle: "Formules et tarifs",
+    pricingSubtitle: "Choisissez la formule qui convient. Le prix est sur la carte.",
+    pricingNote: "Prix hors TVA. Tout ce qui sort d'une formule est chiffré selon son périmètre avant le démarrage.",
     from: "À partir de",
     notSureTitle: "Vous ne savez pas quel service vous convient ?",
     notSureBody:
@@ -231,6 +231,14 @@ const fr: Dictionary = {
     cta: "Démarrer un projet",
     ctaSecondary: "Voir les réalisations",
     note: "Prix hors TVA. Les projets plus importants sont chiffrés selon leur périmètre.",
+    subscription: {
+      eyebrow: "Maintenance et hébergement",
+      title: "Nous gardons votre site en route",
+      price: "49,99",
+      period: "par mois",
+      description: "En option avec chaque formule. Nous gardons votre site en ligne, sécurisé et à jour, et vos modifications de textes et d'images en font partie.",
+      items: ["Hébergement et gestion du domaine", "Sauvegardes et restauration", "Mises à jour de sécurité et logicielles", "Modifications de textes et d'images"],
+    },
   },
   pricing: {
     plans: {

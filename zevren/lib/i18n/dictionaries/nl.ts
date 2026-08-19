@@ -132,9 +132,9 @@ const nl: Dictionary = {
     subtitle:
       "We richten ons op een klein aantal diensten en bouwen elk project rond wat het bedrijf daadwerkelijk nodig heeft.",
     pricingEyebrow: "Prijzen",
-    pricingTitle: "Startprijzen",
-    pricingSubtitle: "Elk project wordt geprijsd op basis van wat je daadwerkelijk nodig hebt.",
-    pricingNote: "De uiteindelijke prijs hangt af van de omvang en eisen van het project.",
+    pricingTitle: "Pakketten en prijzen",
+    pricingSubtitle: "Kies het pakket dat past. Wat het kost staat op de kaart.",
+    pricingNote: "Prijzen zijn exclusief btw. Alles buiten een pakket wordt vooraf op scope geoffreerd.",
     from: "Vanaf",
     notSureTitle: "Niet zeker welke dienst past?",
     notSureBody:
@@ -231,6 +231,14 @@ const nl: Dictionary = {
     cta: "Start een project",
     ctaSecondary: "Bekijk het werk",
     note: "Prijzen zijn exclusief btw. Grotere projecten worden op scope geoffreerd.",
+    subscription: {
+      eyebrow: "Onderhoud en hosting",
+      title: "Wij houden je site draaiend",
+      price: "49,99",
+      period: "per maand",
+      description: "Optioneel bij elk pakket. Wij houden je site online, veilig en actueel, en je tekst- en beeldwijzigingen horen erbij.",
+      items: ["Hosting en domeinbeheer", "Back-ups en herstel", "Beveiligings- en software-updates", "Tekst- en beeldwijzigingen"],
+    },
   },
   pricing: {
     plans: {

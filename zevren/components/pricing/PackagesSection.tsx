@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { PlanCards } from "@/components/pricing/PlanCards";
+import { SubscriptionCard } from "@/components/pricing/SubscriptionCard";
 import { planHref } from "@/lib/offer";
 import type { Dictionary } from "@/lib/i18n/dictionary-type";
 
@@ -50,6 +51,8 @@ export function PackagesSection({
         </div>
 
         <PlanCards offerDict={dict} pricingDict={pricingDict} />
+
+        <SubscriptionCard dict={dict.subscription} />
 
         <div data-reveal className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
           <Button href={planHref()}>{dict.cta}</Button>
