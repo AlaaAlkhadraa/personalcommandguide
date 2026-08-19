@@ -1,0 +1,16 @@
+# Owner inbox — orders for Victor
+
+Write notes to Victor here, in any language. He reads this every Sunday
+before setting the week's directives for John and Sam, then moves your
+note to Processed below.
+
+Examples: "focus outreach on restaurants in Eindhoven", "John: write the
+next article about webshops", "pause articles for two weeks".
+
+## New
+
+(nothing yet)
+
+## Processed
+
+(none yet)
