@@ -238,7 +238,7 @@ const nl: Dictionary = {
       period: "per maand",
       description: "Optioneel bij elk pakket. Wij houden je site online, veilig en actueel, en kleine tekst- en beeldwijzigingen zitten erbij.",
       items: ["Hosting en domeinbeheer", "Back-ups en herstel", "Beveiligings- en software-updates", "Tekst- en beeldwijzigingen, tot 1 uur per maand"],
-      terms: "Minimale looptijd 12 maanden, daarna maandelijks opzegbaar met 1 maand opzegtermijn. Maandelijks vooraf gefactureerd, exclusief btw. Je domein blijft op jouw naam en gaat met je mee.",
+      terms: "Eerste maand is een proefmaand: stop wanneer je wilt, zonder opgaaf van reden. Daarna 12 maanden, en daarna maandelijks opzegbaar met 1 maand opzegtermijn. Stop je, dan krijg je je domein en je websitebestanden kosteloos mee.",
       termsLink: "Lees de volledige voorwaarden",
     },
     addOns: {

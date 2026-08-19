@@ -238,7 +238,7 @@ const fr: Dictionary = {
       period: "par mois",
       description: "En option avec chaque formule. Nous gardons votre site en ligne, sécurisé et à jour, et les petites modifications de textes et d'images sont comprises.",
       items: ["Hébergement et gestion du domaine", "Sauvegardes et restauration", "Mises à jour de sécurité et logicielles", "Modifications de textes et d'images, jusqu'à 1 heure par mois"],
-      terms: "Durée minimale de 12 mois, puis résiliable chaque mois avec un préavis d'un mois. Facturé mensuellement d'avance, hors TVA. Votre domaine reste à votre nom et vous suit.",
+      terms: "Le premier mois est un mois d'essai : résiliable à tout moment, sans justification. Ensuite une durée de 12 mois, puis résiliable chaque mois avec un préavis d'un mois. Si vous partez, votre domaine et vos fichiers vous suivent sans frais.",
       termsLink: "Lire les conditions complètes",
     },
     addOns: {

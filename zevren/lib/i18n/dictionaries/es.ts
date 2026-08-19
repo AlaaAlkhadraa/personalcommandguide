@@ -238,7 +238,7 @@ const es: Dictionary = {
       period: "al mes",
       description: "Opcional con cada paquete. Mantenemos tu sitio online, seguro y al día, y los cambios pequeños de textos e imágenes van incluidos.",
       items: ["Alojamiento y gestión del dominio", "Copias de seguridad y restauración", "Actualizaciones de seguridad y software", "Cambios de textos e imágenes, hasta 1 hora al mes"],
-      terms: "Duración mínima de 12 meses, después cancelable cada mes con un mes de preaviso. Facturado mensualmente por adelantado, sin IVA. Tu dominio sigue a tu nombre y se va contigo.",
+      terms: "El primer mes es de prueba: cancela cuando quieras, sin dar motivos. Después una duración de 12 meses y luego cancelable cada mes con un mes de preaviso. Si te vas, tu dominio y los archivos de tu web se van contigo sin coste.",
       termsLink: "Leer las condiciones completas",
     },
     addOns: {

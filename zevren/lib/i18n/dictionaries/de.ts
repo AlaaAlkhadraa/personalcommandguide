@@ -238,7 +238,7 @@ const de: Dictionary = {
       period: "pro Monat",
       description: "Optional zu jedem Paket. Wir halten Ihre Website online, sicher und aktuell, kleine Text- und Bildänderungen inbegriffen.",
       items: ["Hosting und Domainverwaltung", "Backups und Wiederherstellung", "Sicherheits- und Software-Updates", "Text- und Bildänderungen, bis zu 1 Stunde pro Monat"],
-      terms: "Mindestlaufzeit 12 Monate, danach monatlich kündbar mit einem Monat Frist. Monatlich im Voraus berechnet, zzgl. MwSt. Ihre Domain bleibt auf Ihren Namen und geht mit Ihnen.",
+      terms: "Der erste Monat ist ein Probemonat: jederzeit kündbar, ohne Angabe von Gründen. Danach eine Laufzeit von 12 Monaten, anschließend monatlich kündbar mit einem Monat Frist. Bei Kündigung erhalten Sie Ihre Domain und Ihre Website-Dateien kostenfrei.",
       termsLink: "Vollständige Bedingungen lesen",
     },
     addOns: {

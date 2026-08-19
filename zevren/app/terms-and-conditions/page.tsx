@@ -90,10 +90,8 @@ export default function TermsPage() {
             <h2>8. Maintenance and hosting plan</h2>
             <p>
               The maintenance and hosting plan is a separate, optional
-              agreement alongside the build. It runs for a minimum term of
-              12 months. After that term it continues monthly and either
-              party may end it in writing, observing one month&apos;s notice.
-              The fee is invoiced monthly in advance and is exclusive of VAT.
+              agreement alongside the build. The fee is invoiced monthly in
+              advance and is exclusive of VAT.
             </p>
             <p>The plan covers:</p>
             <ul>
@@ -111,23 +109,46 @@ export default function TermsPage() {
               included fall outside the plan and are quoted separately before
               the work starts.
             </p>
+
+            <h3>8.1 Term and cancellation</h3>
             <p>
-              The domain name is registered in the client&apos;s name wherever
-              the registrar allows it. When the plan ends, the domain is
-              transferred to the client or a registrar of their choosing at no
-              charge, and the client receives the website files. Hosting
-              continues until the end of the period already paid for and stops
-              after that.
+              The first month is a trial month. The client may end the plan at
+              any point during that first month, in writing, without giving a
+              reason and without any cancellation charge. The month already
+              started is payable; nothing further is owed.
             </p>
+            <p>
+              If the plan isn&apos;t ended during the trial month, it runs for
+              a term of 12 months counted from the start date. After those 12
+              months the plan continues for an indefinite period and either
+              party may end it in writing at any time, observing one
+              month&apos;s notice.
+            </p>
+
+            <h3>8.2 What the client keeps</h3>
+            <p>
+              However and whenever the plan ends, the client keeps everything
+              the site is made of. The domain name is registered in the
+              client&apos;s name wherever the registrar allows it, and is
+              transferred to the client or a registrar of their choosing at no
+              charge. The client also receives the website files. Nothing is
+              held back as leverage, and no transfer, exit or administration
+              fee is charged. Hosting continues until the end of the period
+              already paid for and stops after that.
+            </p>
+
+            <h3>8.3 Price and payment</h3>
             <p>
               ZEVREN may adjust the fee once per calendar year, announced at
-              least one month in advance. If the client doesn&apos;t accept
-              the new fee, they may end the plan by the date it takes effect,
-              regardless of the minimum term. If an invoice remains unpaid
+              least one month in advance. If the client doesn&apos;t accept the
+              new fee, they may end the plan by the date it takes effect,
+              regardless of the 12 month term. If an invoice remains unpaid
               after a reminder and a further 14 days, ZEVREN may suspend the
               plan until payment is received; the site may go offline for that
-              period.
+              period. Suspension doesn&apos;t affect the client&apos;s right to
+              their domain name and files under 8.2.
             </p>
+
             <h2>9. Liability</h2>
             <p>
               ZEVREN&apos;s liability for damages arising from the

@@ -238,7 +238,7 @@ const en: Dictionary = {
       period: "per month",
       description: "Optional with every package. We keep your site online, secure and current, and small text and image changes are part of it.",
       items: ["Hosting and domain management", "Backups and restore", "Security and software updates", "Text and image changes, up to 1 hour a month"],
-      terms: "Minimum term 12 months, then monthly with one month's notice. Invoiced monthly in advance, excluding VAT. Your domain stays in your name and comes with you if you leave.",
+      terms: "First month is a trial: cancel any time, no reason needed. After that a 12 month term, then monthly with one month's notice. Cancel whenever, and your domain and website files come with you at no charge.",
       termsLink: "Read the full terms",
     },
     addOns: {
