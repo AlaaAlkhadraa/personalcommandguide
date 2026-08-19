@@ -9,11 +9,23 @@ interface Scene3DProps {
   scrollProgressRef: React.RefObject<number>;
   /** Mobile gets a lighter scene: fewer particles, no floor reflection, lower dpr. */
   lowPower?: boolean;
+  /** False once the hero has scrolled away. */
+  onScreen?: boolean;
 }
 
-export function Scene3D({ reducedMotion, scrollProgressRef, lowPower = false }: Scene3DProps) {
+export function Scene3D({
+  reducedMotion,
+  scrollProgressRef,
+  lowPower = false,
+  onScreen = true,
+}: Scene3DProps) {
   return (
     <Canvas
+      /* A WebGL canvas keeps redrawing at 60fps for as long as it is mounted,
+         even after the hero has scrolled out of sight, which costs GPU time
+         and battery for something nobody is looking at. Rendering stops when
+         the hero leaves the viewport and resumes when it comes back. */
+      frameloop={onScreen ? "always" : "never"}
       camera={
         lowPower
           ? { position: [0, -0.05, 5.75], fov: 42 }
@@ -34,7 +46,7 @@ export function Scene3D({ reducedMotion, scrollProgressRef, lowPower = false }: 
 
       {/* Procedural environment: no external HDR fetch, so it works under the
           site's strict connect-src CSP. */}
-      <Environment resolution={256}>
+      <Environment resolution={128}>
         <Lightformer intensity={3} color="#ffffff" position={[3.5, 2.5, 3]} scale={[1.6, 4, 1]} />
         <Lightformer intensity={2.2} color="#60a5fa" position={[-3.5, 1, 2.5]} scale={[1.2, 3.5, 1]} />
         <Lightformer intensity={1.6} color="#1d4ed8" position={[0, 3.5, -2]} scale={[5, 1.2, 1]} />

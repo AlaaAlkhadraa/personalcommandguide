@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { ArrowButton } from "@/components/ui/ArrowButton";
 import { Icon } from "@/components/ui/Icon";
 import { useWebGLSupport } from "@/lib/hooks/use-webgl-support";
+import { useIdleMount } from "@/lib/hooks/use-idle-mount";
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import { StaticZFallback } from "@/components/three/StaticZFallback";
 import { SceneErrorBoundary } from "@/components/three/SceneErrorBoundary";
@@ -20,6 +21,9 @@ const Scene3D = dynamic(
 
 export function Hero({ dict }: { dict: Dictionary["home"]["hero"] }) {
   const webGLSupported = useWebGLSupport();
+  const sceneReady = useIdleMount();
+  const heroRef = useRef<HTMLElement>(null);
+  const [onScreen, setOnScreen] = useState(true);
   const reducedMotion = useReducedMotion();
   const scrollProgressRef = useRef(0);
   const [lowPower, setLowPower] = useState(false);
@@ -41,6 +45,18 @@ export function Hero({ dict }: { dict: Dictionary["home"]["hero"] }) {
 
   // Narrow viewports get the lighter scene (fewer particles, lower dpr) so the
   // hero stays smooth on phones.
+  // The canvas only needs to draw while the hero is actually in view.
+  useEffect(() => {
+    const element = heroRef.current;
+    if (!element) return;
+    const observer = new IntersectionObserver(
+      (entries) => setOnScreen(entries.some((entry) => entry.isIntersecting)),
+      { rootMargin: "100px" }
+    );
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+
   useEffect(() => {
     const query = window.matchMedia("(max-width: 767px)");
     const update = () => setLowPower(query.matches);
@@ -63,11 +79,13 @@ export function Hero({ dict }: { dict: Dictionary["home"]["hero"] }) {
       reducedMotion={reducedMotion}
       scrollProgressRef={scrollProgressRef}
       lowPower={lowPower}
+      sceneReady={sceneReady}
+      onScreen={onScreen}
     />
   );
 
   return (
-    <section className="relative isolate flex min-h-[calc(100svh-5rem)] flex-col overflow-hidden bg-navy lg:block lg:min-h-0">
+    <section ref={heroRef} className="relative isolate flex min-h-[calc(100svh-5rem)] flex-col overflow-hidden bg-navy lg:block lg:min-h-0">
       <HeroEnvironment />
 
       {/* Two slots, one canvas. The slots are laid out with CSS so the space is
@@ -179,14 +197,23 @@ function Mark({
   reducedMotion,
   scrollProgressRef,
   lowPower,
+  sceneReady,
+  onScreen,
 }: {
   webGLSupported: boolean | null;
   reducedMotion: boolean;
   scrollProgressRef: React.RefObject<number>;
   lowPower: boolean;
+  sceneReady: boolean;
+  onScreen: boolean;
 }) {
   if (webGLSupported === false) return <StaticZFallback />;
   if (webGLSupported === null) return <div className="h-full w-full" />;
+  // Held back until the browser is idle. Parsing the model and building the
+  // environment map costs seconds of main-thread time, and doing that during
+  // hydration froze scrolling and tapping on a hero that already looked
+  // finished. The fallback below is what the visitor sees in the meantime.
+  if (!sceneReady) return <StaticZFallback />;
 
   return (
     <SceneErrorBoundary>
@@ -195,6 +222,7 @@ function Mark({
           reducedMotion={reducedMotion}
           scrollProgressRef={scrollProgressRef}
           lowPower={lowPower}
+          onScreen={onScreen}
         />
       </Suspense>
     </SceneErrorBoundary>

@@ -143,7 +143,10 @@ export function Navbar({ locale, dict }: NavbarProps) {
             ? "translate-y-0 opacity-100"
             : "pointer-events-none -translate-y-2 opacity-0"
         }`}
-        aria-hidden={!isOpen}
+        // Not just aria-hidden: that hides the menu from assistive tech while
+        // leaving its links focusable, so tabbing landed inside a menu nobody
+        // could see. inert takes them out of the tab order too.
+        inert={!isOpen}
       >
         <nav
           aria-label="Mobile navigation"
