@@ -236,8 +236,10 @@ const en: Dictionary = {
       title: "We keep your site running",
       price: "49.99",
       period: "per month",
-      description: "Optional with every package. We keep your site online, secure and current, and your text and image changes are part of it.",
-      items: ["Hosting and domain management", "Backups and restore", "Security and software updates", "Text and image changes"],
+      description: "Optional with every package. We keep your site online, secure and current, and small text and image changes are part of it.",
+      items: ["Hosting and domain management", "Backups and restore", "Security and software updates", "Text and image changes, up to 1 hour a month"],
+      terms: "Minimum term 12 months, then monthly with one month's notice. Invoiced monthly in advance, excluding VAT. Your domain stays in your name and comes with you if you leave.",
+      termsLink: "Read the full terms",
     },
     addOns: {
       eyebrow: "Options",

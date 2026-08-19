@@ -236,8 +236,10 @@ const es: Dictionary = {
       title: "Mantenemos tu sitio en marcha",
       price: "49,99",
       period: "al mes",
-      description: "Opcional con cada paquete. Mantenemos tu sitio online, seguro y al día, y tus cambios de textos e imágenes van incluidos.",
-      items: ["Alojamiento y gestión del dominio", "Copias de seguridad y restauración", "Actualizaciones de seguridad y software", "Cambios de textos e imágenes"],
+      description: "Opcional con cada paquete. Mantenemos tu sitio online, seguro y al día, y los cambios pequeños de textos e imágenes van incluidos.",
+      items: ["Alojamiento y gestión del dominio", "Copias de seguridad y restauración", "Actualizaciones de seguridad y software", "Cambios de textos e imágenes, hasta 1 hora al mes"],
+      terms: "Duración mínima de 12 meses, después cancelable cada mes con un mes de preaviso. Facturado mensualmente por adelantado, sin IVA. Tu dominio sigue a tu nombre y se va contigo.",
+      termsLink: "Leer las condiciones completas",
     },
     addOns: {
       eyebrow: "Opciones",

@@ -17,7 +17,7 @@ export default function TermsPage() {
       <section className="py-16">
         <Container>
           <div className="prose prose-invert max-w-3xl prose-headings:font-heading prose-a:text-accent">
-            <p>Last updated: 14 August 2026</p>
+            <p>Last updated: 19 August 2026</p>
             <p>
               These terms and conditions apply to all quotes, agreements and
               work carried out by {SITE_CONFIG.legalName}{" "}
@@ -86,7 +86,49 @@ export default function TermsPage() {
               only provided under a separate maintenance plan.
             </p>
 
-            <h2>8. Liability</h2>
+
+            <h2>8. Maintenance and hosting plan</h2>
+            <p>
+              The maintenance and hosting plan is a separate, optional
+              agreement alongside the build. It runs for a minimum term of
+              12 months. After that term it continues monthly and either
+              party may end it in writing, observing one month&apos;s notice.
+              The fee is invoiced monthly in advance and is exclusive of VAT.
+            </p>
+            <p>The plan covers:</p>
+            <ul>
+              <li>Hosting of the website and management of the domain name</li>
+              <li>Backups and restoring the site if something goes wrong</li>
+              <li>Security patches and software updates</li>
+              <li>
+                Text and image changes requested by the client, up to one hour
+                per month. Unused time doesn&apos;t carry over to the next
+                month.
+              </li>
+            </ul>
+            <p>
+              New pages, new features, redesigns and any work beyond the hour
+              included fall outside the plan and are quoted separately before
+              the work starts.
+            </p>
+            <p>
+              The domain name is registered in the client&apos;s name wherever
+              the registrar allows it. When the plan ends, the domain is
+              transferred to the client or a registrar of their choosing at no
+              charge, and the client receives the website files. Hosting
+              continues until the end of the period already paid for and stops
+              after that.
+            </p>
+            <p>
+              ZEVREN may adjust the fee once per calendar year, announced at
+              least one month in advance. If the client doesn&apos;t accept
+              the new fee, they may end the plan by the date it takes effect,
+              regardless of the minimum term. If an invoice remains unpaid
+              after a reminder and a further 14 days, ZEVREN may suspend the
+              plan until payment is received; the site may go offline for that
+              period.
+            </p>
+            <h2>9. Liability</h2>
             <p>
               ZEVREN&apos;s liability for damages arising from the
               performance of the agreement is limited to the amount invoiced
@@ -97,7 +139,7 @@ export default function TermsPage() {
               part.
             </p>
 
-            <h2>9. Termination and dissolution</h2>
+            <h2>10. Termination and dissolution</h2>
             <p>
               Either party may terminate the agreement in writing, observing
               a reasonable notice period. In the event of early termination,
@@ -105,7 +147,7 @@ export default function TermsPage() {
               the agreed rate.
             </p>
 
-            <h2>10. Governing law and disputes</h2>
+            <h2>11. Governing law and disputes</h2>
             <p>
               Dutch law applies to all agreements with ZEVREN. Disputes are
               submitted in the first instance to the competent court in the

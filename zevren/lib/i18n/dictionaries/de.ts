@@ -236,8 +236,10 @@ const de: Dictionary = {
       title: "Wir halten Ihre Website am Laufen",
       price: "49,99",
       period: "pro Monat",
-      description: "Optional zu jedem Paket. Wir halten Ihre Website online, sicher und aktuell, und Ihre Text- und Bildänderungen gehören dazu.",
-      items: ["Hosting und Domainverwaltung", "Backups und Wiederherstellung", "Sicherheits- und Software-Updates", "Text- und Bildänderungen"],
+      description: "Optional zu jedem Paket. Wir halten Ihre Website online, sicher und aktuell, kleine Text- und Bildänderungen inbegriffen.",
+      items: ["Hosting und Domainverwaltung", "Backups und Wiederherstellung", "Sicherheits- und Software-Updates", "Text- und Bildänderungen, bis zu 1 Stunde pro Monat"],
+      terms: "Mindestlaufzeit 12 Monate, danach monatlich kündbar mit einem Monat Frist. Monatlich im Voraus berechnet, zzgl. MwSt. Ihre Domain bleibt auf Ihren Namen und geht mit Ihnen.",
+      termsLink: "Vollständige Bedingungen lesen",
     },
     addOns: {
       eyebrow: "Optionen",

@@ -236,8 +236,10 @@ const nl: Dictionary = {
       title: "Wij houden je site draaiend",
       price: "49,99",
       period: "per maand",
-      description: "Optioneel bij elk pakket. Wij houden je site online, veilig en actueel, en je tekst- en beeldwijzigingen horen erbij.",
-      items: ["Hosting en domeinbeheer", "Back-ups en herstel", "Beveiligings- en software-updates", "Tekst- en beeldwijzigingen"],
+      description: "Optioneel bij elk pakket. Wij houden je site online, veilig en actueel, en kleine tekst- en beeldwijzigingen zitten erbij.",
+      items: ["Hosting en domeinbeheer", "Back-ups en herstel", "Beveiligings- en software-updates", "Tekst- en beeldwijzigingen, tot 1 uur per maand"],
+      terms: "Minimale looptijd 12 maanden, daarna maandelijks opzegbaar met 1 maand opzegtermijn. Maandelijks vooraf gefactureerd, exclusief btw. Je domein blijft op jouw naam en gaat met je mee.",
+      termsLink: "Lees de volledige voorwaarden",
     },
     addOns: {
       eyebrow: "Opties",

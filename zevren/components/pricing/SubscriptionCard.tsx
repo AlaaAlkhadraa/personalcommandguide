@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import type { Dictionary } from "@/lib/i18n/dictionary-type";
 
 /**
@@ -51,6 +53,15 @@ export function SubscriptionCard({ dict }: { dict: Dictionary["offer"]["subscrip
             </li>
           ))}
         </ul>
+
+        {/* The plan is a contract, so its terms sit on the card rather than
+            only in the conditions page a buyer has to go looking for. */}
+        <p className="text-xs leading-relaxed text-muted/80 lg:col-span-2">
+          {dict.terms}{" "}
+          <Link href="/terms-and-conditions" className="text-accent underline-offset-2 hover:underline">
+            {dict.termsLink}
+          </Link>
+        </p>
       </div>
     </div>
   );

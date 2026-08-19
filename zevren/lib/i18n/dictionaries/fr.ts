@@ -236,8 +236,10 @@ const fr: Dictionary = {
       title: "Nous gardons votre site en route",
       price: "49,99",
       period: "par mois",
-      description: "En option avec chaque formule. Nous gardons votre site en ligne, sécurisé et à jour, et vos modifications de textes et d'images en font partie.",
-      items: ["Hébergement et gestion du domaine", "Sauvegardes et restauration", "Mises à jour de sécurité et logicielles", "Modifications de textes et d'images"],
+      description: "En option avec chaque formule. Nous gardons votre site en ligne, sécurisé et à jour, et les petites modifications de textes et d'images sont comprises.",
+      items: ["Hébergement et gestion du domaine", "Sauvegardes et restauration", "Mises à jour de sécurité et logicielles", "Modifications de textes et d'images, jusqu'à 1 heure par mois"],
+      terms: "Durée minimale de 12 mois, puis résiliable chaque mois avec un préavis d'un mois. Facturé mensuellement d'avance, hors TVA. Votre domaine reste à votre nom et vous suit.",
+      termsLink: "Lire les conditions complètes",
     },
     addOns: {
       eyebrow: "Options",

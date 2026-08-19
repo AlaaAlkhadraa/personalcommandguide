@@ -117,6 +117,8 @@ export interface Dictionary {
       period: string;
       description: string;
       items: string[];
+      terms: string;
+      termsLink: string;
     };
     addOns: {
       eyebrow: string;
