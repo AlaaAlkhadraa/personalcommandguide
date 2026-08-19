@@ -1,3 +1,4 @@
+import { TestEmailButton } from "@/components/admin/TestEmailButton";
 import type { Diagnostics } from "@/lib/server/diagnostics";
 
 /**
@@ -31,7 +32,13 @@ function Row({
   );
 }
 
-export function SystemStatus({ data }: { data: Diagnostics }) {
+export function SystemStatus({
+  data,
+  csrfToken,
+}: {
+  data: Diagnostics;
+  csrfToken: string | null;
+}) {
   const mailOk = data.mail.configured;
   const dbOk = data.database.configured && data.database.reachable;
   const allGood = mailOk && dbOk && data.submissions.notEmailed === 0;
@@ -93,6 +100,8 @@ export function SystemStatus({ data }: { data: Diagnostics }) {
           }
         />
       </div>
+
+      <TestEmailButton csrfToken={csrfToken} />
 
       {!mailOk && (
         <p className="mt-4 rounded-lg bg-red-500/15 p-3 text-sm leading-relaxed text-red-200">

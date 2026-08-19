@@ -89,8 +89,26 @@ export async function sendNotification(options: {
     });
 
     if (!response.ok) {
-      logError("mail.rejected", new Error(`status ${response.status}`));
-      return { sent: false, error: `provider_status_${response.status}` };
+      // Resend explains itself in the body: an unverified sending domain, a
+      // revoked key, a rejected recipient. Throwing that away and keeping only
+      // the status code is what made this impossible to diagnose, so the
+      // message is carried through. It contains no credential.
+      let detail = "";
+      try {
+        const body = (await response.text()).slice(0, 300);
+        const parsed: unknown = JSON.parse(body);
+        detail =
+          typeof parsed === "object" && parsed !== null && "message" in parsed
+            ? String((parsed as { message: unknown }).message)
+            : body;
+      } catch {
+        // Body was not JSON or could not be read; the status still says something.
+      }
+      logError("mail.rejected", new Error(`status ${response.status}: ${detail}`));
+      return {
+        sent: false,
+        error: detail ? `${response.status}: ${detail}` : `provider_status_${response.status}`,
+      };
     }
 
     logEvent("mail.sent");

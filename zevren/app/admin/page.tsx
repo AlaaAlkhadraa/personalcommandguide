@@ -37,7 +37,7 @@ export default async function AdminPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <SystemStatus data={diagnostics} />
+      <SystemStatus data={diagnostics} csrfToken={csrfToken} />
       <SubmissionsTable
       csrfToken={csrfToken}
       email={user.email}
