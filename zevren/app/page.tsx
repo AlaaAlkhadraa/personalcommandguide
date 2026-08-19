@@ -1,5 +1,5 @@
 import { Hero } from "@/components/home/Hero";
-import { FoundingSection } from "@/components/campaign/FoundingSection";
+import { PackagesSection } from "@/components/pricing/PackagesSection";
 import { ServicesPreview } from "@/components/home/ServicesPreview";
 import { ProjectsPreview } from "@/components/home/ProjectsPreview";
 import { GlobalFocus } from "@/components/home/GlobalFocus";
@@ -55,9 +55,9 @@ export default async function HomePage() {
           grid or flex parent and disturbs a layout. */}
       <RevealGroup>
         <ServicesPreview dict={dict.services} homeDict={dict.home.services} />
-        {/* The launch offer sits right behind the services it prices, high on
-            the page: an offer nobody scrolls to is an offer nobody takes. */}
-        <FoundingSection dict={dict.campaign} pricingDict={dict.pricing} />
+        {/* Prices sit right behind the services they price, high on the page:
+            a price nobody scrolls to is a price nobody compares. */}
+        <PackagesSection dict={dict.offer} pricingDict={dict.pricing} />
         <Mission dict={dict.mission} />
         <ProjectsPreview dict={dict.work} homeDict={dict.home.work} />
         <AboutBand dict={dict.home.about} />

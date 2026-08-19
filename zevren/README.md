@@ -53,7 +53,7 @@ editing content in `lib/constants.ts`:
 ```
 app/                  Routes (App Router), each folder = a page
   api/                 Route handlers: contact, project-request, csrf, admin
-  services/ projects/ about/ process/ contact/ founding-10/
+  services/ projects/ about/ process/ contact/
   projects/[slug]/     Individual concept project pages
   admin/               Private submissions area
   privacy-policy/ terms-and-conditions/
@@ -66,7 +66,7 @@ components/
   home/                 Homepage sections (Hero, FAQ, Process, ...)
   projects/             registry.tsx (slug -> preview/demo), previews/,
                         ProjectCard
-  campaign/             Founding 10 counter, pricing and sections
+  pricing/              Package cards and the home pricing band
   demos/                The 7 interactive concept demos (tajex, barbershop,
                         garage, store, property, ellezone, accounting), each a
                         self-contained client component with its own identity
@@ -80,7 +80,7 @@ lib/
   assets.ts             The curated V2 image library: path, size and blur
                         placeholder for every image, so components cannot
                         guess an aspect ratio and cause layout shift
-  campaign.ts           Founding 10 plan and link helpers
+  offer.ts              Package prices and link helpers
   server/               Everything server-only: db, session, csrf, rate limit
   demos/                Local mock data for the 4 interactive concept demos
   seo.ts                Per-page metadata helper
@@ -354,12 +354,6 @@ cannot silently fall back to a non-durable database.
 - The 3D model is a static asset loaded by the client with both the Draco and
   meshopt decoders disabled, so no WebAssembly is instantiated and the CSP
   needs neither `wasm-unsafe-eval` nor a CDN in `script-src`.
-- Founding 10 claims: `POST`/`DELETE /api/admin/founding` sits behind the
-  admin session, the Origin check, a CSRF token and a strict schema. The
-  ten-spot cap is enforced inside the INSERT rather than by read-then-write.
-  Two transactions committing at the same instant under READ COMMITTED could
-  still both pass that check; the counter clamps at ten, and with a
-  two-person admin that race was not judged worth a table lock.
 
 ### What this does not claim
 

@@ -2,6 +2,7 @@ import Image from "next/image";
 import { headers } from "next/headers";
 
 import { JsonLd } from "@/components/seo/JsonLd";
+import { PLANS } from "@/lib/offer";
 import { SITE_CONFIG } from "@/lib/constants";
 import { PageHero } from "@/components/ui/PageHero";
 import { Container } from "@/components/ui/Container";
@@ -36,13 +37,16 @@ export default async function ServicesPage() {
     "@type": "OfferCatalog",
     name: "Website packages",
     url: `${SITE_CONFIG.url}/services`,
-    itemListElement: (["starter", "business", "store", "custom"] as const).map((key) => {
-      const plan = dict.pricing.plans[key];
+    // The price quoted here is the one the cards actually charge, not the
+    // struck-through regular figure: a rich result must never show a number
+    // the page does not.
+    itemListElement: PLANS.map((plan) => {
+      const copy = dict.pricing.plans[plan.key];
       return {
         "@type": "Offer",
-        name: plan.name,
-        description: plan.description,
-        price: plan.price.replace(/[^\d]/g, ""),
+        name: copy.name,
+        description: copy.description,
+        price: String(plan.price),
         priceCurrency: "EUR",
         url: `${SITE_CONFIG.url}/services`,
         seller: { "@type": "Organization", name: SITE_CONFIG.name, url: SITE_CONFIG.url },
@@ -123,7 +127,7 @@ export default async function ServicesPage() {
           })}
         </Container>
       </section>
-      <PricingSection dict={s} pricingDict={dict.pricing} campaignDict={dict.campaign} />
+      <PricingSection dict={s} pricingDict={dict.pricing} offerDict={dict.offer} />
       <section className="py-20">
         <Container data-reveal className="flex flex-col items-center gap-6 text-center">
           <h2 className="max-w-xl text-3xl font-semibold text-white">{s.notSureTitle}</h2>

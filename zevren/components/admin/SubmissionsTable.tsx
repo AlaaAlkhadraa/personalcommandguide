@@ -20,8 +20,6 @@ export interface AdminSubmission {
   campaign: string | null;
   emailedAt: string | null;
   createdAt: string;
-  /** True when this submission holds one of the ten founding spots. */
-  founding: boolean;
 }
 
 const STATUSES = ["new", "read", "archived"] as const;
@@ -36,14 +34,11 @@ export function SubmissionsTable({
   email,
   items,
   total,
-  founding,
 }: {
   csrfToken: string | null;
   email: string;
   items: AdminSubmission[];
   total: number;
-  /** Live spot count, so staff can see the public counter from here. */
-  founding: { claimed: number; total: number; open: number };
 }) {
   const csrfToken = useCsrfToken(initialToken);
   const router = useRouter();
@@ -77,44 +72,6 @@ export function SubmissionsTable({
     }
   }
 
-  /**
-   * Takes or gives back a founding spot. This is the only way the public
-   * counter moves, and it is behind the admin session plus a CSRF token.
-   */
-  async function setFounding(item: AdminSubmission, claim: boolean) {
-    setBusyId(item.id);
-    setError(null);
-    try {
-      const response = await fetch("/api/admin/founding", {
-        method: claim ? "POST" : "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          ...(csrfToken ? { "x-csrf-token": csrfToken } : {}),
-        },
-        credentials: "same-origin",
-        body: JSON.stringify(
-          claim
-            ? {
-                submissionId: item.id,
-                businessName: item.company || item.name,
-                csrfToken: csrfToken ?? undefined,
-              }
-            : { submissionId: item.id, csrfToken: csrfToken ?? undefined }
-        ),
-      });
-      if (!response.ok) {
-        const payload = (await response.json().catch(() => null)) as { message?: string } | null;
-        setError(payload?.message ?? "Could not update the founding spots.");
-        return;
-      }
-      router.refresh();
-    } catch {
-      setError("Could not reach the server.");
-    } finally {
-      setBusyId(null);
-    }
-  }
-
   async function signOut() {
     await fetch("/api/admin/logout", {
       method: "POST",
@@ -136,13 +93,6 @@ export function SubmissionsTable({
           <h1 className="text-2xl font-semibold text-white">Submissions</h1>
           <p className="mt-1 text-sm text-muted">
             {total} total. Signed in as {email}.
-          </p>
-          <p className="mt-1 text-sm text-muted">
-            Founding 10:{" "}
-            <span className="font-medium tabular-nums text-accent">
-              {founding.claimed} / {founding.total}
-            </span>{" "}
-            claimed, {founding.open} open. This is the number the public counter shows.
           </p>
         </div>
         <button
@@ -184,11 +134,6 @@ export function SubmissionsTable({
                   </span>
                 </span>
                 <span className="flex items-center gap-2">
-                  {item.founding && (
-                    <span className="rounded-full bg-primary/20 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-accent">
-                      Founding
-                    </span>
-                  )}
                   <span
                     className={`rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider ${
                       item.status === "new"
@@ -261,20 +206,6 @@ export function SubmissionsTable({
                     >
                       Reply
                     </a>
-                    <button
-                      type="button"
-                      disabled={
-                        busyId === item.id || (!item.founding && founding.open === 0)
-                      }
-                      onClick={() => setFounding(item, !item.founding)}
-                      className={`rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-wider transition-colors disabled:opacity-40 ${
-                        item.founding
-                          ? "border border-primary/50 bg-primary/15 text-accent hover:border-accent"
-                          : "border border-white/15 text-white hover:border-accent"
-                      }`}
-                    >
-                      {item.founding ? "Release founding spot" : "Give founding spot"}
-                    </button>
                   </div>
                 </div>
               )}

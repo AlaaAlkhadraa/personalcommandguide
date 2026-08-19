@@ -144,7 +144,6 @@ export async function handlePublicSubmission(
         `Budget: ${data.budget || "-"}`,
         `Project information: ${data.projectInfo || "-"}`,
         `Locale: ${data.locale ?? "-"}`,
-        `Campaign: ${data.campaign ?? "-"}`,
         "",
         data.message,
         "",

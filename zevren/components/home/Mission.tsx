@@ -4,32 +4,26 @@ import { Container } from "@/components/ui/Container";
 import { IMAGES } from "@/lib/assets";
 import { WORK_ITEMS } from "@/lib/constants";
 import { LOCALES } from "@/lib/i18n/config";
-import { getFoundingStatus } from "@/lib/server/campaign";
 import type { Dictionary } from "@/lib/i18n/dictionary-type";
 
 /**
  * The mission band: a statement on the left, figures on the right.
  *
- * The figures are the studio's own, derived from the codebase and the
- * database, not client outcomes. ZEVREN has no delivered client work yet, so
- * "projects completed", "happy clients" and "average rating" would all be
- * invented, and inventing them is the one thing this site must not do. The
- * shape of the band is ready for real numbers the day there are some.
+ * The figures are the studio's own, derived from the codebase, not client
+ * outcomes. ZEVREN has no delivered client work yet, so "projects completed",
+ * "happy clients" and "average rating" would all be invented, and inventing
+ * them is the one thing this site must not do. The shape of the band is ready
+ * for real numbers the day there are some.
  */
-export async function Mission({ dict }: { dict: Dictionary["mission"] }) {
-  const status = await getFoundingStatus();
+export function Mission({ dict }: { dict: Dictionary["mission"] }) {
   const backdrop = IMAGES["atmos-network"];
 
   const figures = [
     { value: String(WORK_ITEMS.length), label: dict.conceptsLabel },
     { value: String(LOCALES.length), label: dict.languagesLabel },
-    {
-      // A plain count, not "x/10". The founding block further down the page
-      // shows a "claimed out of ten" counter, and two x/10 figures meaning
-      // opposite things on one page is just confusing.
-      value: status.known ? String(status.open) : "?",
-      label: dict.spotsLabel,
-    },
+    // Not a statistic about clients: every project really is built from
+    // scratch, so this one is a claim the codebase itself backs up.
+    { value: dict.customValue, label: dict.customLabel },
     { value: dict.responseValue, label: dict.responseLabel },
   ];
 

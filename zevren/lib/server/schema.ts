@@ -36,7 +36,10 @@ export const submissions = pgTable(
     ipHash: text("ip_hash"),
     userAgent: text("user_agent"),
     locale: text("locale"),
-    /** Set when the submission arrived through a campaign, e.g. "founding-10". */
+    /**
+     * Retired with the launch campaign. Kept so no migration has to drop a
+     * column from a live database; nothing writes to it any more.
+     */
     campaign: text("campaign"),
     status: text("status").notNull().default("new"),
     emailedAt: timestamp("emailed_at", { withTimezone: true }),
@@ -51,8 +54,9 @@ export const submissions = pgTable(
 );
 
 /**
- * Founding 10 spots that have actually been taken. Only staff write here, so
- * the public counter cannot be moved by anyone filling in a form.
+ * Retired with the launch campaign, which no longer exists on the site.
+ * The table is left defined so a migration never drops it from a live
+ * database; nothing reads or writes it any more.
  */
 export const foundingClaims = pgTable(
   "founding_claims",

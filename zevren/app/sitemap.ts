@@ -4,7 +4,6 @@ import { ARTICLES } from "@/lib/insights/articles";
 
 const routes = [
   { path: "/", priority: 1, changeFrequency: "weekly" as const },
-  { path: "/founding-10", priority: 0.9, changeFrequency: "weekly" as const },
   { path: "/services", priority: 0.9, changeFrequency: "monthly" as const },
   { path: "/projects", priority: 0.9, changeFrequency: "weekly" as const },
   { path: "/insights", priority: 0.8, changeFrequency: "weekly" as const },

@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 
 import { SubmissionsTable } from "@/components/admin/SubmissionsTable";
-import { claimedSubmissionIds, getFoundingStatus } from "@/lib/server/campaign";
 import { readCsrfToken } from "@/lib/server/csrf";
 import { databaseConfigured } from "@/lib/server/db";
 import { getSessionUserFromHeaders } from "@/lib/server/session";
@@ -29,24 +28,17 @@ export default async function AdminPage() {
     );
   }
 
-  const [{ items, total }, status, claimedIds] = await Promise.all([
-    listSubmissions({ limit: 50 }),
-    getFoundingStatus(),
-    claimedSubmissionIds(),
-  ]);
-  const claimed = new Set(claimedIds);
+  const { items, total } = await listSubmissions({ limit: 50 });
 
   return (
     <SubmissionsTable
       csrfToken={csrfToken}
       email={user.email}
       total={total}
-      founding={{ claimed: status.claimed, total: status.total, open: status.open }}
       items={items.map((item) => ({
         ...item,
         createdAt: item.createdAt.toISOString(),
         emailedAt: item.emailedAt ? item.emailedAt.toISOString() : null,
-        founding: claimed.has(item.id),
       }))}
     />
   );

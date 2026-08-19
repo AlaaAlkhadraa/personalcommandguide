@@ -53,6 +53,9 @@ const nextConfig: NextConfig = {
       { source: "/work", destination: "/projects", permanent: true },
       { source: "/work/:slug", destination: "/projects/:slug", permanent: true },
       { source: "/reviews", destination: "/", permanent: true },
+      // The launch campaign had its own page. It is indexed, so it points at
+      // the prices that replaced it rather than turning into a 404.
+      { source: "/founding-10", destination: "/services", permanent: true },
     ];
   },
 };

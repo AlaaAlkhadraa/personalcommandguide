@@ -70,7 +70,7 @@ export const ARTICLES: Article[] = [
           { type: "h2", text: "Our own numbers" },
           {
             type: "p",
-            text: "We publish our prices, because asking for a quote just to learn a starting price wastes everyone's time. A starter website is 499 euros, a full business website 799, an online store 1,199 and custom web applications start at 1,799. For our first ten projects those prices drop to 150, 299, 499 and 799 euros under the ZEVREN Founding 10 launch, and each project keeps its agreed price forever.",
+            text: "We publish our prices, because asking for a quote just to learn a starting price wastes everyone's time. A starter website is 299 euros, a full business website 549, an online store 899 and custom web applications start at 1,349. The price we agree before the work starts is the price on the invoice.",
           },
           {
             type: "p",
@@ -108,7 +108,7 @@ export const ARTICLES: Article[] = [
           { type: "h2", text: "Onze eigen cijfers" },
           {
             type: "p",
-            text: "Wij publiceren onze prijzen, want een offerte moeten aanvragen om een startprijs te horen is zonde van ieders tijd. Een starterswebsite is 499 euro, een volledige bedrijfswebsite 799, een webshop 1.199 en maatwerk webapplicaties beginnen bij 1.799 euro. Voor onze eerste tien projecten dalen die prijzen naar 150, 299, 499 en 799 euro onder de ZEVREN Founding 10-lancering, en elk project houdt zijn afgesproken prijs voor altijd.",
+            text: "Wij publiceren onze prijzen, want een offerte moeten aanvragen om een startprijs te horen is zonde van ieders tijd. Een starterswebsite is 299 euro, een volledige bedrijfswebsite 549, een webshop 899 en maatwerk webapplicaties beginnen bij 1.349 euro. De prijs die we vooraf afspreken is de prijs op de factuur.",
           },
           {
             type: "p",
@@ -162,7 +162,7 @@ export const ARTICLES: Article[] = [
           },
           {
             type: "p",
-            text: "A custom site from us starts at 499 euros, 150 within the Founding 10 launch, which is less than two years of a builder subscription, and it is yours.",
+            text: "A custom site from us starts at 299 euros, which is less than two years of a builder subscription, and it is yours.",
           },
         ],
       },
@@ -204,7 +204,7 @@ export const ARTICLES: Article[] = [
           },
           {
             type: "p",
-            text: "Een maatwerksite van ons begint bij 499 euro, 150 binnen de Founding 10-lancering. Dat is minder dan twee jaar bouwersabonnement, en hij is van jou.",
+            text: "Een maatwerksite van ons begint bij 299 euro. Dat is minder dan twee jaar bouwersabonnement, en hij is van jou.",
           },
         ],
       },
@@ -412,7 +412,7 @@ export const ARTICLES: Article[] = [
           { type: "h2", text: "Platform or custom build?" },
           {
             type: "p",
-            text: "Shopify and WooCommerce are fine starting points, and for many first shops the right call. A custom store earns its price when the defaults stop fitting: your checkout needs to work differently, the design needs to carry a brand, or platform fees on every sale start to sting. We build custom stores from 1,199 euros, 499 within the Founding 10 launch, and our Nordwave concept in the projects section shows the standard: catalogue, cart and checkout, working end to end.",
+            text: "Shopify and WooCommerce are fine starting points, and for many first shops the right call. A custom store earns its price when the defaults stop fitting: your checkout needs to work differently, the design needs to carry a brand, or platform fees on every sale start to sting. We build custom stores from 899 euros, and our Nordwave concept in the projects section shows the standard: catalogue, cart and checkout, working end to end.",
           },
         ],
       },
@@ -448,7 +448,7 @@ export const ARTICLES: Article[] = [
           { type: "h2", text: "Platform of maatwerk?" },
           {
             type: "p",
-            text: "Shopify en WooCommerce zijn prima startpunten, en voor veel eerste shops de juiste keuze. Een maatwerkshop verdient zijn prijs zodra de standaard knelt: je checkout moet anders werken, het ontwerp moet een merk dragen, of platformkosten op elke verkoop gaan opvallen. Wij bouwen maatwerkshops vanaf 1.199 euro, 499 binnen de Founding 10-lancering, en ons Nordwave-concept bij de projecten laat de standaard zien: catalogus, winkelwagen en checkout, werkend van begin tot eind.",
+            text: "Shopify en WooCommerce zijn prima startpunten, en voor veel eerste shops de juiste keuze. Een maatwerkshop verdient zijn prijs zodra de standaard knelt: je checkout moet anders werken, het ontwerp moet een merk dragen, of platformkosten op elke verkoop gaan opvallen. Wij bouwen maatwerkshops vanaf 899 euro, en ons Nordwave-concept bij de projecten laat de standaard zien: catalogus, winkelwagen en checkout, werkend van begin tot eind.",
           },
         ],
       },
