@@ -81,6 +81,20 @@ export function useGsapReveal<T extends HTMLElement = HTMLDivElement>() {
     let cancelled = false;
     const listenerCleanups: Array<() => void> = [];
 
+    // ------------------------------------------------------------------
+    // Fail-open watchdog.
+    //
+    // Every behaviour below hides content until its ScrollTrigger fires,
+    // and a trigger can silently never fire: the 3D hero mounts late and
+    // shifts every position, iOS collapses its toolbar mid-scroll, the
+    // menu locks the body during a refresh. When that happens the reader
+    // must still get the content. Each hidden element registers a rescue
+    // action; once it has been on screen for a moment without its tween
+    // starting, the rescue runs and simply shows it.
+    // ------------------------------------------------------------------
+    const rescues = new Map<Element, () => void>();
+    const rescueTimers = new Map<Element, ReturnType<typeof setTimeout>>();
+
     (async () => {
       const [{ gsap }, { ScrollTrigger }] = await Promise.all([
         import("gsap"),
@@ -94,6 +108,10 @@ export function useGsapReveal<T extends HTMLElement = HTMLDivElement>() {
       ctx = gsap.context(() => {
         singles.forEach((el) => {
           const delay = Number(el.dataset.revealDelay ?? 0);
+          rescues.set(el, () => {
+            gsap.set(el, { clearProps: "opacity,visibility,transform" });
+            el.classList.add("is-revealed");
+          });
           gsap.fromTo(
             el,
             { autoAlpha: 0, y: 26 },
@@ -103,6 +121,9 @@ export function useGsapReveal<T extends HTMLElement = HTMLDivElement>() {
               duration: 0.7,
               delay,
               ease: "power2.out",
+              onStart: () => {
+                rescues.delete(el);
+              },
               scrollTrigger: { trigger: el, start: "top 88%", once: true },
             }
           );
@@ -111,6 +132,12 @@ export function useGsapReveal<T extends HTMLElement = HTMLDivElement>() {
         staggerGroups.forEach((group) => {
           const items = group.querySelectorAll<HTMLElement>("[data-reveal-item]");
           if (items.length === 0) return;
+          items.forEach((item) => {
+            rescues.set(item, () => {
+              gsap.set(item, { clearProps: "opacity,visibility,transform" });
+              item.classList.add("is-revealed");
+            });
+          });
           gsap.fromTo(
             items,
             { autoAlpha: 0, y: 22 },
@@ -120,6 +147,9 @@ export function useGsapReveal<T extends HTMLElement = HTMLDivElement>() {
               duration: 0.6,
               ease: "power2.out",
               stagger: 0.08,
+              onStart: () => {
+                items.forEach((item) => rescues.delete(item));
+              },
               scrollTrigger: { trigger: group, start: "top 88%", once: true },
             }
           );
@@ -212,6 +242,7 @@ export function useGsapReveal<T extends HTMLElement = HTMLDivElement>() {
           el.replaceChildren(fragment);
           if (inners.length === 0) return;
 
+          rescues.set(el, () => gsap.set(inners, { yPercent: 0 }));
           gsap.fromTo(
             inners,
             { yPercent: 112 },
@@ -221,6 +252,9 @@ export function useGsapReveal<T extends HTMLElement = HTMLDivElement>() {
               ease: "power3.out",
               stagger: 0.05,
               delay: 0.08,
+              onStart: () => {
+                rescues.delete(el);
+              },
               scrollTrigger: { trigger: el, start: "top 88%", once: true },
             }
           );
@@ -228,6 +262,7 @@ export function useGsapReveal<T extends HTMLElement = HTMLDivElement>() {
 
         const rtl = document.documentElement.dir === "rtl";
         drawLines.forEach((el) => {
+          rescues.set(el, () => gsap.set(el, { scaleX: 1 }));
           gsap.fromTo(
             el,
             { scaleX: 0, transformOrigin: rtl ? "right center" : "left center" },
@@ -236,6 +271,9 @@ export function useGsapReveal<T extends HTMLElement = HTMLDivElement>() {
               duration: 0.9,
               delay: 0.25,
               ease: "power2.inOut",
+              onStart: () => {
+                rescues.delete(el);
+              },
               scrollTrigger: { trigger: el, start: "top 92%", once: true },
             }
           );
@@ -271,6 +309,59 @@ export function useGsapReveal<T extends HTMLElement = HTMLDivElement>() {
           });
         }
       }, root);
+
+      // Stale-position insurance: the 3D hero mounts late and changes the
+      // page's height, which moves every trigger. Recompute once the page
+      // has fully loaded and once more after the hero has had time to
+      // settle.
+      const refresh = () => ScrollTrigger.refresh();
+      if (document.readyState === "complete") {
+        setTimeout(refresh, 150);
+      } else {
+        window.addEventListener("load", refresh, { once: true });
+        listenerCleanups.push(() => window.removeEventListener("load", refresh));
+      }
+      const lateRefresh = setTimeout(refresh, 2500);
+      listenerCleanups.push(() => clearTimeout(lateRefresh));
+
+      // The watchdog itself: an element on screen for 900ms whose tween has
+      // not started gets rescued. A tween that starts removes its rescue, so
+      // the normal animated path is untouched.
+      const watchdog = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            const el = entry.target;
+            if (entry.isIntersecting) {
+              if (rescueTimers.has(el)) return;
+              rescueTimers.set(
+                el,
+                setTimeout(() => {
+                  rescueTimers.delete(el);
+                  const rescue = rescues.get(el);
+                  if (rescue) {
+                    rescues.delete(el);
+                    rescue();
+                  }
+                  watchdog.unobserve(el);
+                }, 900)
+              );
+            } else {
+              const timer = rescueTimers.get(el);
+              if (timer) {
+                clearTimeout(timer);
+                rescueTimers.delete(el);
+              }
+            }
+          });
+        },
+        { threshold: 0.05 }
+      );
+      rescues.forEach((_fn, el) => watchdog.observe(el));
+      listenerCleanups.push(() => {
+        watchdog.disconnect();
+        rescueTimers.forEach((timer) => clearTimeout(timer));
+        rescueTimers.clear();
+      });
     })();
 
     return () => {
