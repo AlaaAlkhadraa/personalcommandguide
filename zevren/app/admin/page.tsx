@@ -5,6 +5,8 @@ import { readCsrfToken } from "@/lib/server/csrf";
 import { databaseConfigured } from "@/lib/server/db";
 import { getSessionUserFromHeaders } from "@/lib/server/session";
 import { listSubmissions } from "@/lib/server/submissions";
+import { getDiagnostics } from "@/lib/server/diagnostics";
+import { SystemStatus } from "@/components/admin/SystemStatus";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -28,10 +30,15 @@ export default async function AdminPage() {
     );
   }
 
-  const { items, total } = await listSubmissions({ limit: 50 });
+  const [{ items, total }, diagnostics] = await Promise.all([
+    listSubmissions({ limit: 50 }),
+    getDiagnostics(),
+  ]);
 
   return (
-    <SubmissionsTable
+    <div className="flex flex-col gap-6">
+      <SystemStatus data={diagnostics} />
+      <SubmissionsTable
       csrfToken={csrfToken}
       email={user.email}
       total={total}
@@ -41,6 +48,7 @@ export default async function AdminPage() {
         emailedAt: item.emailedAt ? item.emailedAt.toISOString() : null,
         emailError: item.emailError,
       }))}
-    />
+      />
+    </div>
   );
 }
