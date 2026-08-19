@@ -39,6 +39,7 @@ export default async function AdminPage() {
         ...item,
         createdAt: item.createdAt.toISOString(),
         emailedAt: item.emailedAt ? item.emailedAt.toISOString() : null,
+        emailError: item.emailError,
       }))}
     />
   );

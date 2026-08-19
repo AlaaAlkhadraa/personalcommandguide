@@ -19,6 +19,8 @@ export interface AdminSubmission {
   locale: string | null;
   campaign: string | null;
   emailedAt: string | null;
+  /** Set when the notification could not be sent, with the reason. */
+  emailError: string | null;
   createdAt: string;
 }
 
@@ -130,8 +132,15 @@ export function SubmissionsTable({
                   </span>
                   <span className="mt-0.5 text-xs text-muted">
                     {item.kind} &middot; {new Date(item.createdAt).toLocaleString("en-GB")}
-                    {item.emailedAt ? " · emailed" : ""}
+                    {item.emailedAt && !item.emailError ? " · emailed" : ""}
                   </span>
+                  {/* A submission nobody was notified about is the one thing
+                      worth shouting about on this screen. */}
+                  {item.emailError && (
+                    <span className="mt-1 block rounded-md bg-red-500/15 px-2 py-1 text-[11px] font-medium text-red-300">
+                      Not emailed: {item.emailError}
+                    </span>
+                  )}
                 </span>
                 <span className="flex items-center gap-2">
                   <span

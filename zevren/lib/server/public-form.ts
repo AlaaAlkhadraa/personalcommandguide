@@ -131,7 +131,14 @@ export async function handlePublicSubmission(
 
   // 8. Notify. A mail failure does not fail the request, because the
   //    submission is already safe; it is recorded on the row instead.
-  if (mailConfigured()) {
+  if (!mailConfigured()) {
+    // Previously this branch did nothing at all: the row was stored, the
+    // visitor saw a confirmation, and the owner was never told that no
+    // notification had gone out. A lead the owner never hears about is a lead
+    // lost, so the reason is written to the row and logged loudly.
+    logEvent("form.mail_unconfigured", { kind, id });
+    await markEmailed(id, "Mail is not configured: set RESEND_API_KEY and CONTACT_INBOX_EMAIL.");
+  } else {
     const result = await sendNotification({
       subject: `${kind === "project" ? "Project request" : "New enquiry"} from ${data.name}`,
       replyTo: data.email,
@@ -151,6 +158,7 @@ export async function handlePublicSubmission(
       ].join("\n"),
     });
     await markEmailed(id, result.sent ? undefined : result.error);
+    if (!result.sent) logEvent("form.mail_failed", { kind, id, error: result.error });
   }
 
   return ok({ message: "Message sent.", reference: id });
