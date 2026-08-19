@@ -148,10 +148,13 @@ export function ContactForm({ dict }: { dict: Dictionary["contact"]["form"] }) {
   // back to a native submit; method="post" keeps the message out of the URL.
   return (
     <form onSubmit={handleSubmit} method="post" noValidate className="flex flex-col gap-6">
-      {/* Honeypot field, hidden from real visitors via off-screen
-          positioning (not display:none, which some bots skip), and never
-          reachable by keyboard. Any value here marks the submission spam. */}
-      <div className="absolute left-[-9999px] top-auto" aria-hidden="true">
+      {/* Honeypot field, hidden from real visitors via the clip pattern
+          (not display:none, which some bots skip), and never reachable by
+          keyboard. Any value here marks the submission spam. Clip rather
+          than off-screen positioning: left:-9999px extends the scrollable
+          area in RTL documents and gave the Arabic page a 9999px
+          horizontal scroll. */}
+      <div className="sr-only" aria-hidden="true">
         <label htmlFor="website">Website</label>
         <input
           type="text"
