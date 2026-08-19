@@ -123,7 +123,7 @@ export default async function ServicesPage() {
           })}
         </Container>
       </section>
-      <PricingSection dict={s} pricingDict={dict.pricing} />
+      <PricingSection dict={s} pricingDict={dict.pricing} campaignDict={dict.campaign} />
       <section className="py-20">
         <Container data-reveal className="flex flex-col items-center gap-6 text-center">
           <h2 className="max-w-xl text-3xl font-semibold text-white">{s.notSureTitle}</h2>
