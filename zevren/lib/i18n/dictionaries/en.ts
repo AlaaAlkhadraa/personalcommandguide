@@ -251,9 +251,9 @@ const en: Dictionary = {
           description: "More pages than the package covers. Designed and built to match the rest of the site.",
         },
         language: {
-          name: "Extra language",
-          unit: "per language",
-          description: "Your site in another language, with a working language switch. Translated properly, not run through a machine.",
+          name: "Multilingual",
+          unit: "3 languages",
+          description: "Your site in three extra languages, with a working language switch. Translated properly, not run through a machine.",
         },
       },
     },

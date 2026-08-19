@@ -251,9 +251,9 @@ const nl: Dictionary = {
           description: "Meer pagina's dan het pakket bevat. Ontworpen en gebouwd in dezelfde stijl als de rest.",
         },
         language: {
-          name: "Extra taal",
-          unit: "per taal",
-          description: "Je site in nog een taal, met een werkende taalwissel. Netjes vertaald, niet door een machine gehaald.",
+          name: "Meertalig",
+          unit: "3 talen",
+          description: "Je site in drie extra talen, met een werkende taalwissel. Netjes vertaald, niet door een machine gehaald.",
         },
       },
     },

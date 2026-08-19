@@ -251,9 +251,9 @@ const fr: Dictionary = {
           description: "Plus de pages que la formule n'en couvre. Conçue et développée dans le même style que le reste.",
         },
         language: {
-          name: "Langue supplémentaire",
-          unit: "par langue",
-          description: "Votre site dans une autre langue, avec un sélecteur qui fonctionne. Traduit correctement, pas passé à la machine.",
+          name: "Multilingue",
+          unit: "3 langues",
+          description: "Votre site en trois langues supplémentaires, avec un sélecteur qui fonctionne. Traduit correctement, pas passé à la machine.",
         },
       },
     },

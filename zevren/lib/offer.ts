@@ -56,5 +56,5 @@ export interface AddOn {
 /** Extras a package can grow by, priced per unit rather than per project. */
 export const ADD_ONS: AddOn[] = [
   { key: "extraPage", price: 79 },
-  { key: "language", price: 149 },
+  { key: "language", price: 150 },
 ];

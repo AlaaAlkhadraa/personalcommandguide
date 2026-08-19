@@ -251,9 +251,9 @@ const es: Dictionary = {
           description: "Más páginas de las que cubre el paquete. Diseñada y construida en el mismo estilo que el resto.",
         },
         language: {
-          name: "Idioma adicional",
-          unit: "por idioma",
-          description: "Tu sitio en otro idioma, con un selector que funciona. Traducido como es debido, no pasado por una máquina.",
+          name: "Multiidioma",
+          unit: "3 idiomas",
+          description: "Tu sitio en tres idiomas adicionales, con un selector que funciona. Traducido como es debido, no pasado por una máquina.",
         },
       },
     },

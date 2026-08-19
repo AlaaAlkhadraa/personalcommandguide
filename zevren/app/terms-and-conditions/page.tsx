@@ -118,8 +118,8 @@ export default function TermsPage() {
               started is payable; nothing further is owed.
             </p>
             <p>
-              If the plan isn&apos;t ended during the trial month, it runs for
-              a term of 12 months counted from the start date. After those 12
+              If the plan isn&apos;t ended during the trial month, a term of
+              12 months begins when the trial month finishes. After those 12
               months the plan continues for an indefinite period and either
               party may end it in writing at any time, observing one
               month&apos;s notice.

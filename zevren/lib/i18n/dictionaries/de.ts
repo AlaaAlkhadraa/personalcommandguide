@@ -251,9 +251,9 @@ const de: Dictionary = {
           description: "Mehr Seiten, als das Paket enthält. Im selben Stil gestaltet und gebaut wie der Rest.",
         },
         language: {
-          name: "Zusätzliche Sprache",
-          unit: "pro Sprache",
-          description: "Ihre Website in einer weiteren Sprache, mit funktionierender Sprachumschaltung. Sauber übersetzt, nicht maschinell.",
+          name: "Mehrsprachig",
+          unit: "3 Sprachen",
+          description: "Ihre Website in drei weiteren Sprachen, mit funktionierender Sprachumschaltung. Sauber übersetzt, nicht maschinell.",
         },
       },
     },
