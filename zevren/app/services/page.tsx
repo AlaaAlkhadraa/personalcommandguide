@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import { headers } from "next/headers";
 
@@ -16,12 +17,16 @@ import { buildMetadata } from "@/lib/seo";
 import { getLocale } from "@/lib/i18n/get-locale";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 
-export const metadata = buildMetadata({
-  title: "Services",
-  description:
-    "Web design, e-commerce, web applications, UI/UX design and maintenance. See what ZEVREN can build for your business.",
-  path: "/services",
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  const meta = getDictionary(locale).meta.services;
+  return buildMetadata({
+    title: meta.title,
+    description: meta.description,
+    path: "/services",
+    locale,
+  });
+}
 
 export default async function ServicesPage() {
   const locale = await getLocale();

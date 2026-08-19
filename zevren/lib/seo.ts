@@ -1,11 +1,24 @@
 import type { Metadata } from "next";
 import { SITE_CONFIG } from "@/lib/constants";
+import type { Locale } from "@/lib/i18n/config";
+
+/** Open Graph wants a full locale, not the bare language code. */
+export const OG_LOCALE: Record<Locale, string> = {
+  en: "en_GB",
+  nl: "nl_NL",
+  de: "de_DE",
+  fr: "fr_FR",
+  es: "es_ES",
+  ar: "ar_AR",
+};
 
 interface BuildMetadataOptions {
   title: string;
   description: string;
   path: string;
   noIndex?: boolean;
+  /** The language actually being served, reported to Open Graph. */
+  locale?: Locale;
 }
 
 export function buildMetadata({
@@ -13,6 +26,7 @@ export function buildMetadata({
   description,
   path,
   noIndex = false,
+  locale,
 }: BuildMetadataOptions): Metadata {
   const url = `${SITE_CONFIG.url}${path}`;
   const isHome = path === "/";
@@ -39,7 +53,7 @@ export function buildMetadata({
       description,
       url,
       siteName: SITE_CONFIG.name,
-      locale: "en_GB",
+      locale: locale ? OG_LOCALE[locale] : undefined,
       type: "website",
     },
     twitter: {

@@ -221,6 +221,32 @@ const de: Dictionary = {
       },
     },
   },
+  meta: {
+    home: {
+      title: "Webdesign aus Maastricht | ZEVREN",
+      description: "Websites, Onlineshops und Webanwendungen nach Maß. Preise stehen offen auf der Seite, ab 299 Euro. Klicken Sie sich durch echte Demos auf zevren.nl.",
+    },
+    services: {
+      title: "Leistungen und Preise",
+      description: "Webdesign, Onlineshops, Webanwendungen, mehrsprachige Websites und Wartung. Vier Pakete mit offenen Preisen, ab 299 Euro.",
+    },
+    projects: {
+      title: "Projekte",
+      description: "Interaktive Konzepte, die Sie selbst bedienen können: ein Buchungssystem, ein Werkstattplaner, ein kompletter Onlineshop mit Checkout und ein Kundenportal.",
+    },
+    about: {
+      title: "Über uns",
+      description: "ZEVREN ist ein unabhängiges Webstudio in Maastricht. Sie arbeiten direkt mit der Person, die Ihre Website baut. Lesen Sie, wie wir arbeiten.",
+    },
+    process: {
+      title: "Arbeitsweise",
+      description: "Vom ersten Gespräch über Design und Entwicklung bis zum Launch: was in jedem Schritt eines ZEVREN-Projekts passiert und was wir von Ihnen brauchen.",
+    },
+    contact: {
+      title: "Kontakt",
+      description: "Erzählen Sie uns von Ihrer Website, Ihrem Onlineshop oder Ihrer Webanwendung. Sie erhalten eine ehrliche Antwort, was Ihr Projekt wirklich braucht.",
+    },
+  },
   offer: {
     eyebrow: "Pakete",
     title: "Klare Pakete, klare Preise",

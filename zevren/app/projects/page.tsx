@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { PageHero } from "@/components/ui/PageHero";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
@@ -8,12 +9,16 @@ import { buildMetadata } from "@/lib/seo";
 import { getLocale } from "@/lib/i18n/get-locale";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 
-export const metadata = buildMetadata({
-  title: "Projects",
-  description:
-    "Concept projects by ZEVREN across logistics, retail, automotive, hospitality and professional services.",
-  path: "/projects",
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  const meta = getDictionary(locale).meta.projects;
+  return buildMetadata({
+    title: meta.title,
+    description: meta.description,
+    path: "/projects",
+    locale,
+  });
+}
 
 export default async function ProjectsPage() {
   const locale = await getLocale();

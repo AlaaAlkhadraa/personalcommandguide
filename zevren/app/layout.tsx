@@ -11,6 +11,7 @@ import {
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { OG_LOCALE } from "@/lib/seo";
 import { SERVICES, SITE_CONFIG } from "@/lib/constants";
 import { getLocale } from "@/lib/i18n/get-locale";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
@@ -54,32 +55,37 @@ const plexMono = IBM_Plex_Mono({
   weight: ["400", "500", "600"],
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL(SITE_CONFIG.url),
-  title: {
-    default: `${SITE_CONFIG.name} | ${SITE_CONFIG.tagline}`,
-    template: `%s | ${SITE_CONFIG.name}`,
-  },
-  description: SITE_CONFIG.description,
-  applicationName: SITE_CONFIG.name,
-  keywords: [
-    "web studio Maastricht",
-    "website development Netherlands",
-    "custom website design",
-    "Next.js developer Netherlands",
-    "online store development",
-  ],
-  authors: [{ name: SITE_CONFIG.name, url: SITE_CONFIG.url }],
-  openGraph: {
-    type: "website",
-    locale: "en_GB",
-    siteName: SITE_CONFIG.name,
-    url: SITE_CONFIG.url,
-  },
-  twitter: {
-    card: "summary_large_image",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  const meta = getDictionary(locale).meta.home;
+
+  return {
+    metadataBase: new URL(SITE_CONFIG.url),
+    title: {
+      default: meta.title,
+      template: `%s | ${SITE_CONFIG.name}`,
+    },
+    description: meta.description,
+    applicationName: SITE_CONFIG.name,
+    keywords: [
+      "website laten maken",
+      "webdesign Maastricht",
+      "webshop laten maken",
+      "webdesigner Limburg",
+      "maatwerk webapplicatie",
+    ],
+    authors: [{ name: SITE_CONFIG.name, url: SITE_CONFIG.url }],
+    openGraph: {
+      type: "website",
+      locale: OG_LOCALE[locale],
+      siteName: SITE_CONFIG.name,
+      url: SITE_CONFIG.url,
+    },
+    twitter: {
+      card: "summary_large_image",
+    },
+  };
+}
 
 const organizationJsonLd = {
   "@context": "https://schema.org",

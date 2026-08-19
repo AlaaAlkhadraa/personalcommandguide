@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { PageHero } from "@/components/ui/PageHero";
 import { Container } from "@/components/ui/Container";
 import { ContactForm } from "@/components/contact/ContactForm";
@@ -6,12 +7,16 @@ import { buildMetadata } from "@/lib/seo";
 import { getLocale } from "@/lib/i18n/get-locale";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 
-export const metadata = buildMetadata({
-  title: "Contact",
-  description:
-    "Tell ZEVREN about your website, online store or web application project. Send a message through the form and we will get back to you.",
-  path: "/contact",
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  const meta = getDictionary(locale).meta.contact;
+  return buildMetadata({
+    title: meta.title,
+    description: meta.description,
+    path: "/contact",
+    locale,
+  });
+}
 
 export default async function ContactPage() {
   const locale = await getLocale();

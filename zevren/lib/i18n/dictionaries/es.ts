@@ -221,6 +221,32 @@ const es: Dictionary = {
       },
     },
   },
+  meta: {
+    home: {
+      title: "Diseño web desde Maastricht | ZEVREN",
+      description: "Sitios web, tiendas online y aplicaciones web a medida. Los precios están publicados, desde 299 euros. Prueba tú mismo las demos en zevren.nl.",
+    },
+    services: {
+      title: "Servicios y precios",
+      description: "Diseño web, tiendas online, aplicaciones web, sitios multiidioma y mantenimiento. Cuatro paquetes con precios publicados, desde 299 euros.",
+    },
+    projects: {
+      title: "Proyectos",
+      description: "Conceptos interactivos que puedes usar tú mismo: un sistema de reservas, un planificador de taller, una tienda completa con pago y un portal de clientes.",
+    },
+    about: {
+      title: "Sobre nosotros",
+      description: "ZEVREN es un estudio web independiente en Maastricht. Trabajas directamente con la persona que construye tu web. Lee cómo trabajamos.",
+    },
+    process: {
+      title: "Cómo trabajamos",
+      description: "Desde la primera conversación hasta el lanzamiento, pasando por diseño y desarrollo: qué ocurre en cada paso y qué necesitamos de ti.",
+    },
+    contact: {
+      title: "Contacto",
+      description: "Cuéntanos sobre tu web, tienda online o aplicación web. Envía el formulario y recibirás una respuesta honesta sobre lo que necesita tu proyecto.",
+    },
+  },
   offer: {
     eyebrow: "Paquetes",
     title: "Paquetes claros, precios claros",

@@ -221,6 +221,32 @@ const fr: Dictionary = {
       },
     },
   },
+  meta: {
+    home: {
+      title: "Création de sites web à Maastricht | ZEVREN",
+      description: "Sites, boutiques en ligne et applications web sur mesure. Les tarifs sont publiés, à partir de 299 euros. Parcourez des démos qui fonctionnent sur zevren.nl.",
+    },
+    services: {
+      title: "Services et tarifs",
+      description: "Création de sites, boutiques en ligne, applications web, sites multilingues et maintenance. Quatre formules à tarifs publiés, dès 299 euros.",
+    },
+    projects: {
+      title: "Réalisations",
+      description: "Des concepts interactifs que vous pouvez utiliser vous-même : un système de réservation, un planning de garage, une boutique complète avec paiement et un portail client.",
+    },
+    about: {
+      title: "À propos",
+      description: "ZEVREN est un studio web indépendant à Maastricht. Vous travaillez directement avec la personne qui construit votre site. Découvrez notre façon de travailler.",
+    },
+    process: {
+      title: "Méthode",
+      description: "Du premier échange à la mise en ligne, en passant par le design et le développement : ce qui se passe à chaque étape et ce que nous attendons de vous.",
+    },
+    contact: {
+      title: "Contact",
+      description: "Parlez-nous de votre site, de votre boutique en ligne ou de votre application web. Vous recevrez une réponse honnête sur ce dont votre projet a besoin.",
+    },
+  },
   offer: {
     eyebrow: "Formules",
     title: "Des formules claires, des prix clairs",

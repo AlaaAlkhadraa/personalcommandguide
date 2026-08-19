@@ -221,6 +221,32 @@ const nl: Dictionary = {
       },
     },
   },
+  meta: {
+    home: {
+      title: "Website laten maken in Maastricht | ZEVREN",
+      description: "Websites, webshops en webapplicaties op maat. Prijzen staan gewoon online, vanaf 299 euro. Klik zelf door werkende demo's op zevren.nl.",
+    },
+    services: {
+      title: "Diensten en prijzen",
+      description: "Webdesign, webshops, webapplicaties, meertalige sites en onderhoud. Vier pakketten met openbare prijzen, vanaf 299 euro.",
+    },
+    projects: {
+      title: "Projecten",
+      description: "Interactieve concepten die je zelf kunt gebruiken: een boekingssysteem, een garageplanner, een complete webshop met checkout en een klantportaal.",
+    },
+    about: {
+      title: "Over ons",
+      description: "ZEVREN is een onafhankelijke webstudio in Maastricht. Je werkt rechtstreeks met de persoon die je website bouwt. Lees hoe wij werken.",
+    },
+    process: {
+      title: "Werkwijze",
+      description: "Van het eerste gesprek via ontwerp en ontwikkeling tot de lancering: wat er in elke stap van een ZEVREN-project gebeurt, en wat wij van jou nodig hebben.",
+    },
+    contact: {
+      title: "Contact",
+      description: "Vertel ons over je website, webshop of webapplicatie. Stuur het formulier en je krijgt een eerlijk antwoord over wat je project nodig heeft.",
+    },
+  },
   offer: {
     eyebrow: "Pakketten",
     title: "Duidelijke pakketten, duidelijke prijzen",

@@ -221,6 +221,32 @@ const en: Dictionary = {
       },
     },
   },
+  meta: {
+    home: {
+      title: "ZEVREN | Custom websites from Maastricht, prices published",
+      description: "Websites, online stores and web applications built from scratch. Prices are published up front, from 299 euro. Click through working demos at zevren.nl.",
+    },
+    services: {
+      title: "Services and prices",
+      description: "Web design, online stores, web applications, multilingual sites and maintenance. Four packages with published prices, from 299 euro.",
+    },
+    projects: {
+      title: "Projects",
+      description: "Interactive concepts you can use yourself: a booking flow, a garage planner, a full online store with working checkout, and a client portal.",
+    },
+    about: {
+      title: "About us",
+      description: "ZEVREN is an independent web studio in Maastricht. You work directly with the person building your website. Read how we work.",
+    },
+    process: {
+      title: "How we work",
+      description: "From the first conversation through design and development to launch: what happens at each step of a ZEVREN project, and what we need from you.",
+    },
+    contact: {
+      title: "Contact",
+      description: "Tell us about your website, online store or web application. Send the form and you get an honest answer about what your project needs.",
+    },
+  },
   offer: {
     eyebrow: "Packages",
     title: "Clear packages, clear prices",

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Hero } from "@/components/home/Hero";
 import { PackagesSection } from "@/components/pricing/PackagesSection";
 import { ServicesPreview } from "@/components/home/ServicesPreview";
@@ -18,11 +19,16 @@ import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RevealGroup } from "@/components/ui/RevealGroup";
 
-export const metadata = buildMetadata({
-  title: `${SITE_CONFIG.name} | ${SITE_CONFIG.tagline}`,
-  description: SITE_CONFIG.description,
-  path: "/",
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  const meta = getDictionary(locale).meta.home;
+  return buildMetadata({
+    title: meta.title,
+    description: meta.description,
+    path: "/",
+    locale,
+  });
+}
 
 export default async function HomePage() {
   const locale = await getLocale();

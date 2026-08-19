@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 
 import { PageHero } from "@/components/ui/PageHero";
@@ -10,12 +11,16 @@ import { buildMetadata } from "@/lib/seo";
 import { getLocale } from "@/lib/i18n/get-locale";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 
-export const metadata = buildMetadata({
-  title: "About Us",
-  description:
-    "ZEVREN is an independent web studio based in Maastricht, Netherlands. Read how we work and what we focus on.",
-  path: "/about",
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  const meta = getDictionary(locale).meta.about;
+  return buildMetadata({
+    title: meta.title,
+    description: meta.description,
+    path: "/about",
+    locale,
+  });
+}
 
 export default async function AboutPage() {
   const locale = await getLocale();

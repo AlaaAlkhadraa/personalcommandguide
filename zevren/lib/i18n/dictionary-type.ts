@@ -100,6 +100,10 @@ export interface Dictionary {
       }
     >;
   };
+  meta: Record<
+    "home" | "services" | "projects" | "about" | "process" | "contact",
+    { title: string; description: string }
+  >;
   offer: {
     eyebrow: string;
     title: string;
