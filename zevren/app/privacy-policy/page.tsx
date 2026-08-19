@@ -67,12 +67,20 @@ export default function PrivacyPolicyPage() {
               parties wherever the GDPR requires one.
             </p>
 
-            <h2>Cookies</h2>
+            <h2>Cookies and visitor statistics</h2>
             <p>
-              This website doesn&apos;t use tracking cookies. No analytics or
-              marketing cookies are placed without your prior consent. If
-              that changes in the future, we&apos;ll update this privacy
-              policy and ask for explicit consent wherever legally required.
+              This website doesn&apos;t use tracking cookies. No advertising
+              or profiling cookies are placed. The only cookie we set stores
+              the language you picked, so the site opens in that language on
+              your next visit.
+            </p>
+            <p>
+              To see how many people visit the site and which pages they
+              read, we use Vercel Web Analytics. It works without cookies and
+              without a device fingerprint: no visitor is identified or
+              followed across websites, and the data cannot be traced back to
+              you. If we ever switch to a method that does require consent,
+              we&apos;ll update this policy and ask for it first.
             </p>
 
             <h2>Security</h2>

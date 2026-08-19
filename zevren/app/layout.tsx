@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
+import { Analytics } from "@vercel/analytics/next";
 import {
   IBM_Plex_Mono,
   Inter,
@@ -170,6 +171,10 @@ export default async function RootLayout({
           servicesDict={dict.services}
           workDict={dict.work}
         />
+        {/* Cookieless page-view counting. The script is injected by a Next
+            bundle that already carries the CSP nonce, so strict-dynamic
+            covers it and the beacon stays same-origin. */}
+        <Analytics />
       </body>
     </html>
   );
