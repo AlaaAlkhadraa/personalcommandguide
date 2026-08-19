@@ -44,3 +44,17 @@ export function formatLike(reference: string, value: number): string {
 export function planHref(needs?: string): string {
   return needs ? `/contact?type=${encodeURIComponent(needs)}` : "/contact";
 }
+
+export type AddOnKey = "extraPage" | "language";
+
+export interface AddOn {
+  key: AddOnKey;
+  /** Price in euros, charged per unit named in the dictionary. */
+  price: number;
+}
+
+/** Extras a package can grow by, priced per unit rather than per project. */
+export const ADD_ONS: AddOn[] = [
+  { key: "extraPage", price: 79 },
+  { key: "language", price: 149 },
+];

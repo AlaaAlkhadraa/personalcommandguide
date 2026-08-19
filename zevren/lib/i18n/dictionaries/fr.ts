@@ -239,6 +239,22 @@ const fr: Dictionary = {
       description: "En option avec chaque formule. Nous gardons votre site en ligne, sécurisé et à jour, et vos modifications de textes et d'images en font partie.",
       items: ["Hébergement et gestion du domaine", "Sauvegardes et restauration", "Mises à jour de sécurité et logicielles", "Modifications de textes et d'images"],
     },
+    addOns: {
+      eyebrow: "Options",
+      title: "À étendre quand vous le souhaitez",
+      items: {
+        extraPage: {
+          name: "Page supplémentaire",
+          unit: "par page",
+          description: "Plus de pages que la formule n'en couvre. Conçue et développée dans le même style que le reste.",
+        },
+        language: {
+          name: "Langue supplémentaire",
+          unit: "par langue",
+          description: "Votre site dans une autre langue, avec un sélecteur qui fonctionne. Traduit correctement, pas passé à la machine.",
+        },
+      },
+    },
   },
   pricing: {
     plans: {

@@ -239,6 +239,22 @@ const de: Dictionary = {
       description: "Optional zu jedem Paket. Wir halten Ihre Website online, sicher und aktuell, und Ihre Text- und Bildänderungen gehören dazu.",
       items: ["Hosting und Domainverwaltung", "Backups und Wiederherstellung", "Sicherheits- und Software-Updates", "Text- und Bildänderungen"],
     },
+    addOns: {
+      eyebrow: "Optionen",
+      title: "Jederzeit erweiterbar",
+      items: {
+        extraPage: {
+          name: "Zusätzliche Seite",
+          unit: "pro Seite",
+          description: "Mehr Seiten, als das Paket enthält. Im selben Stil gestaltet und gebaut wie der Rest.",
+        },
+        language: {
+          name: "Zusätzliche Sprache",
+          unit: "pro Sprache",
+          description: "Ihre Website in einer weiteren Sprache, mit funktionierender Sprachumschaltung. Sauber übersetzt, nicht maschinell.",
+        },
+      },
+    },
   },
   pricing: {
     plans: {

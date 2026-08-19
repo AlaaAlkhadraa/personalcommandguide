@@ -1,6 +1,7 @@
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Container } from "@/components/ui/Container";
 import { PlanCards } from "@/components/pricing/PlanCards";
+import { AddOnsRow } from "@/components/pricing/AddOnsRow";
 import { SubscriptionCard } from "@/components/pricing/SubscriptionCard";
 import type { Dictionary } from "@/lib/i18n/dictionary-type";
 
@@ -30,6 +31,8 @@ export function PricingSection({ dict, pricingDict, offerDict }: PricingSectionP
         </div>
 
         <PlanCards offerDict={offerDict} pricingDict={pricingDict} />
+
+        <AddOnsRow dict={offerDict.addOns} />
 
         <SubscriptionCard dict={offerDict.subscription} />
 

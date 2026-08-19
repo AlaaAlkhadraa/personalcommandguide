@@ -239,6 +239,22 @@ const en: Dictionary = {
       description: "Optional with every package. We keep your site online, secure and current, and your text and image changes are part of it.",
       items: ["Hosting and domain management", "Backups and restore", "Security and software updates", "Text and image changes"],
     },
+    addOns: {
+      eyebrow: "Options",
+      title: "Grow it whenever you need to",
+      items: {
+        extraPage: {
+          name: "Extra page",
+          unit: "per page",
+          description: "More pages than the package covers. Designed and built to match the rest of the site.",
+        },
+        language: {
+          name: "Extra language",
+          unit: "per language",
+          description: "Your site in another language, with a working language switch. Translated properly, not run through a machine.",
+        },
+      },
+    },
   },
   pricing: {
     plans: {

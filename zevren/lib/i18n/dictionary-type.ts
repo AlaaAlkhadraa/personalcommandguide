@@ -118,6 +118,14 @@ export interface Dictionary {
       description: string;
       items: string[];
     };
+    addOns: {
+      eyebrow: string;
+      title: string;
+      items: Record<
+        "extraPage" | "language",
+        { name: string; unit: string; description: string }
+      >;
+    };
   };
   pricing: {
     plans: Record<

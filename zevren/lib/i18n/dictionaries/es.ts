@@ -239,6 +239,22 @@ const es: Dictionary = {
       description: "Opcional con cada paquete. Mantenemos tu sitio online, seguro y al día, y tus cambios de textos e imágenes van incluidos.",
       items: ["Alojamiento y gestión del dominio", "Copias de seguridad y restauración", "Actualizaciones de seguridad y software", "Cambios de textos e imágenes"],
     },
+    addOns: {
+      eyebrow: "Opciones",
+      title: "Amplíalo cuando quieras",
+      items: {
+        extraPage: {
+          name: "Página adicional",
+          unit: "por página",
+          description: "Más páginas de las que cubre el paquete. Diseñada y construida en el mismo estilo que el resto.",
+        },
+        language: {
+          name: "Idioma adicional",
+          unit: "por idioma",
+          description: "Tu sitio en otro idioma, con un selector que funciona. Traducido como es debido, no pasado por una máquina.",
+        },
+      },
+    },
   },
   pricing: {
     plans: {

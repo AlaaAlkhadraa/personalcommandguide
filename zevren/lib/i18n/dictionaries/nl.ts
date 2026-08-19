@@ -239,6 +239,22 @@ const nl: Dictionary = {
       description: "Optioneel bij elk pakket. Wij houden je site online, veilig en actueel, en je tekst- en beeldwijzigingen horen erbij.",
       items: ["Hosting en domeinbeheer", "Back-ups en herstel", "Beveiligings- en software-updates", "Tekst- en beeldwijzigingen"],
     },
+    addOns: {
+      eyebrow: "Opties",
+      title: "Uitbreiden kan wanneer je wilt",
+      items: {
+        extraPage: {
+          name: "Extra pagina",
+          unit: "per pagina",
+          description: "Meer pagina's dan het pakket bevat. Ontworpen en gebouwd in dezelfde stijl als de rest.",
+        },
+        language: {
+          name: "Extra taal",
+          unit: "per taal",
+          description: "Je site in nog een taal, met een werkende taalwissel. Netjes vertaald, niet door een machine gehaald.",
+        },
+      },
+    },
   },
   pricing: {
     plans: {
