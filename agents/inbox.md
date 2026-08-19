@@ -1,6 +1,6 @@
-# Owner inbox — orders for Victor
+# Owner inbox — orders for Azzouz
 
-Write notes to Victor here, in any language. He reads this every Sunday
+Write notes to Azzouz here, in any language. He reads this every Sunday
 before setting the week's directives for John and Sam, then moves your
 note to Processed below.
 
