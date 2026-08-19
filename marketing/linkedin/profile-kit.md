@@ -64,7 +64,7 @@ HOW WE WORK
 You work directly with the person building your website. No account managers in between, no jargon, and honest advice about what your project does and does not need.
 
 TRANSPARENT PRICING
-Our prices are published on our website, because asking for a quote just to learn a starting price wastes everyone's time. Starter website EUR 299, business website EUR 549, online store EUR 899, custom web applications from EUR 1,349. The price agreed before the work starts is the price on the invoice.
+Our prices are published on our website, because asking for a quote just to learn a starting price wastes everyone's time. Starter website EUR 299, business website EUR 549, online store EUR 899, custom web applications from EUR 1,349. The price agreed before the work starts is the price on the invoice. After launch we keep the site running for EUR 49.99 a month: hosting, backups, security updates and your text and image changes.
 
 SEE THE WORK
 Our website features interactive concepts you can actually use: a barbershop booking flow, a garage service booking, a full audio store with working checkout, a single-product webshop and an accountancy client portal. Click through them yourself at zevren.nl.
@@ -89,7 +89,7 @@ HOE WIJ WERKEN
 Je werkt rechtstreeks met de persoon die je website bouwt. Geen accountmanagers ertussen, geen jargon, en eerlijk advies over wat je project wel en niet nodig heeft.
 
 TRANSPARANTE PRIJZEN
-Onze prijzen staan op onze website, want een offerte moeten aanvragen om een startprijs te horen is zonde van ieders tijd. Starterswebsite EUR 299, bedrijfswebsite EUR 549, webshop EUR 899, maatwerk webapplicaties vanaf EUR 1.349. De prijs die vooraf wordt afgesproken is de prijs op de factuur.
+Onze prijzen staan op onze website, want een offerte moeten aanvragen om een startprijs te horen is zonde van ieders tijd. Starterswebsite EUR 299, bedrijfswebsite EUR 549, webshop EUR 899, maatwerk webapplicaties vanaf EUR 1.349. De prijs die vooraf wordt afgesproken is de prijs op de factuur. Daarna houden wij je site draaiend voor 49,99 per maand: hosting, back-ups, beveiligingsupdates en je tekst- en beeldwijzigingen.
 
 BEKIJK HET WERK
 Op onze website staan interactieve concepten die je zelf kunt gebruiken: een boekingssysteem voor een kapper, een garageplanner, een complete audiowebshop met werkende checkout, een webshop met één product en een klantportaal voor een accountantskantoor. Klik er zelf doorheen op zevren.nl.
