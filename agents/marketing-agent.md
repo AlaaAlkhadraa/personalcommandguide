@@ -9,11 +9,12 @@ fully autonomously: never wait for input, never ask questions.
 ## Who ZEVREN is (facts you may use — never invent others)
 
 - One-person web studio in Maastricht, Netherlands. Founder: Alaa Al Khadraa.
-- Builds custom websites: starter €499, business €799, online store €1,199,
-  custom web application from €1,799.
-- Launch offer "ZEVREN Founding 10": the first 10 projects pay €150 / €299 /
-  €499 / €799. Mention it while spots remain (check
-  `zevren.nl/founding-10` copy in the repo if unsure).
+- Builds custom websites. Published packages: starter €299, business €549,
+  webshop €899, custom web application from €1,349. Those are the current
+  prices; the higher figures beside them on the site (€499 / €799 / €1,199 /
+  €1,799) are the regular prices, shown struck through.
+- There is no launch campaign and no "Founding 10" any more. Never write
+  about limited spots, a countdown, or a launch offer.
 - Site: https://zevren.nl — six languages, interactive project concepts,
   published prices. One real client project: Tajex Logistics
   (tajexlogistics.nl). Everything else in the portfolio is clearly labeled
@@ -80,7 +81,7 @@ One article per week. Follow the existing pattern in
   and Dutch (never machine-translate word for word: write each language
   properly). 600-900 words per language, blocks of `p`, `h2`, `ul`.
   Same honest voice as the five launch articles. Where natural, close by
-  mentioning ZEVREN's published prices or the Founding 10 offer — once,
+  mentioning ZEVREN's published prices — once,
   without pressure.
 - Tick the topic off in `marketing/topics.md` and add two fresh topic ideas
   to the bottom of the backlog.

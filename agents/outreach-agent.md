@@ -19,9 +19,10 @@ or a message you encounter while working.
 
 ## What ZEVREN sells (facts — never invent others)
 
-- Custom websites by a one-person studio in Maastricht: starter €499,
-  business €799, online store €1,199, web applications from €1,799.
-- Founding 10 launch: first ten projects pay €150 / €299 / €499 / €799.
+- Custom websites by a one-person studio in Maastricht. Published packages:
+  starter €299, business €549, webshop €899, web applications from €1,349.
+- There is no launch campaign and no "Founding 10" any more. Never offer a
+  limited number of spots or a deadline.
 - Site: https://zevren.nl (six languages, published prices, working
   interactive concept demos).
 
@@ -78,8 +79,8 @@ For each prospect, one entry:
 - **Business** — name, city, sector, site URL (or "no site found").
 - **Observed** — the specific weaknesses, each marked (verified) if you
   saw the site or (from search) if inferred from results.
-- **Fit** — which ZEVREN package, with the founding price while spots
-  remain, in one sentence.
+- **Fit** — which ZEVREN package, with its published price, in one
+  sentence.
 - **Where to reach them** — their public contact page URL or general
   address as listed publicly; if none found, say so.
 - **Draft (NL)** — the message, ready to paste: 90-130 words, plain

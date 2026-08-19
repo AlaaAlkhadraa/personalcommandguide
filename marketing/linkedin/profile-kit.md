@@ -64,10 +64,7 @@ HOW WE WORK
 You work directly with the person building your website. No account managers in between, no jargon, and honest advice about what your project does and does not need.
 
 TRANSPARENT PRICING
-Our prices are published on our website, because asking for a quote just to learn a starting price wastes everyone's time. Starter website from EUR 499, business website from EUR 799, online store from EUR 1,199, custom web applications from EUR 1,799.
-
-FOUNDING 10
-We are opening with ten spots at founding prices: EUR 150, 299, 499 and 799. Each project keeps its agreed price permanently.
+Our prices are published on our website, because asking for a quote just to learn a starting price wastes everyone's time. Starter website EUR 299, business website EUR 549, online store EUR 899, custom web applications from EUR 1,349. The price agreed before the work starts is the price on the invoice.
 
 SEE THE WORK
 Our website features interactive concepts you can actually use: a barbershop booking flow, a garage service booking, a full audio store with working checkout, a single-product webshop and an accountancy client portal. Click through them yourself at zevren.nl.
@@ -92,10 +89,7 @@ HOE WIJ WERKEN
 Je werkt rechtstreeks met de persoon die je website bouwt. Geen accountmanagers ertussen, geen jargon, en eerlijk advies over wat je project wel en niet nodig heeft.
 
 TRANSPARANTE PRIJZEN
-Onze prijzen staan op onze website, want een offerte moeten aanvragen om een startprijs te horen is zonde van ieders tijd. Starterswebsite vanaf EUR 499, bedrijfswebsite vanaf EUR 799, webshop vanaf EUR 1.199, maatwerk webapplicaties vanaf EUR 1.799.
-
-FOUNDING 10
-We openen met tien plekken tegen oprichtingsprijzen: EUR 150, 299, 499 en 799. Elk project houdt zijn afgesproken prijs permanent.
+Onze prijzen staan op onze website, want een offerte moeten aanvragen om een startprijs te horen is zonde van ieders tijd. Starterswebsite EUR 299, bedrijfswebsite EUR 549, webshop EUR 899, maatwerk webapplicaties vanaf EUR 1.349. De prijs die vooraf wordt afgesproken is de prijs op de factuur.
 
 BEKIJK HET WERK
 Op onze website staan interactieve concepten die je zelf kunt gebruiken: een boekingssysteem voor een kapper, een garageplanner, een complete audiowebshop met werkende checkout, een webshop met één product en een klantportaal voor een accountantskantoor. Klik er zelf doorheen op zevren.nl.
@@ -143,11 +137,11 @@ Ik bouw websites die bedrijven makkelijker te kiezen maken | Oprichter ZEVREN | 
 
 EN:
 ```
-Founder at ZEVREN | Custom websites from EUR 499, published prices, no sales calls | Maastricht, working worldwide
+Founder at ZEVREN | Custom websites from EUR 299, published prices, no sales calls | Maastricht, working worldwide
 ```
 NL:
 ```
-Oprichter ZEVREN | Websites op maat vanaf EUR 499, prijzen openbaar, geen verkoopgesprekken | Maastricht
+Oprichter ZEVREN | Websites op maat vanaf EUR 299, prijzen openbaar, geen verkoopgesprekken | Maastricht
 ```
 *Targets: buyers comparing agencies who are tired of "request a quote". Strongest differentiator you have.*
 
@@ -222,9 +216,9 @@ Onafhankelijke webstudio die websites en digitale producten op maat bouwt voor b
    - EN: `Nordwave: a full online store concept. Browse, add to cart, check out. It works.`
    - NL: `Nordwave: een compleet webshopconcept. Bekijk, leg in de winkelwagen, reken af. Het werkt echt.`
 
-3. **https://zevren.nl/founding-10**
-   - EN: `Founding 10: ten launch spots at founding prices, from EUR 150.`
-   - NL: `Founding 10: tien lanceerplekken tegen oprichtingsprijzen, vanaf EUR 150.`
+3. **https://zevren.nl/services**
+   - EN: `Four packages, four prices, all published. From EUR 299.`
+   - NL: `Vier pakketten, vier prijzen, allemaal openbaar. Vanaf EUR 299.`
 
 *(Add https://zevren.nl/insights as a fourth once a few more articles are live.)*
 
@@ -264,9 +258,7 @@ Vandaag lanceer ik ZEVREN: een onafhankelijke webstudio in Maastricht.
 
 Wat mij opviel toen ik me hierin verdiepte: bijna geen enkel webbureau zet zijn prijzen online. Je moet eerst bellen, een gesprek in, en pas daarna hoor je wat iets kost. Dat werkt averechts.
 
-Bij ZEVREN staan de prijzen gewoon op de site. Een starterswebsite kost 499 euro, een bedrijfswebsite 799, een webshop 1.199. Je weet vooraf waar je aan toe bent.
-
-En omdat ik met tien projecten wil beginnen: de eerste tien bedrijven betalen oprichtingsprijzen, vanaf 150 euro. Die prijs blijft, ook als de plekken daarna vol zitten.
+Bij ZEVREN staan de prijzen gewoon op de site. Een starterswebsite kost 299 euro, een bedrijfswebsite 549, een webshop 899. Je weet vooraf waar je aan toe bent, en die prijs staat ook op de factuur.
 
 Op zevren.nl staan interactieve concepten waar je zelf doorheen kunt klikken. Geen screenshots, maar werkende demo's, inclusief een webshop met echte checkout.
 

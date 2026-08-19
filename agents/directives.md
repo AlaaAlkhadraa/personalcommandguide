@@ -9,7 +9,8 @@
   of your choice from the rotation.
 
 ## Standing context
-- The Founding 10 launch is live with spots open: mention it where the
-  playbooks say it fits.
+- The launch campaign is gone. The site now publishes four plain packages:
+  starter €299, business €549, webshop €899, web application from €1,349.
+  Never mention "Founding 10", limited spots or a deadline again.
 - The Insights section just launched with five articles: John's posts may
   point to them.

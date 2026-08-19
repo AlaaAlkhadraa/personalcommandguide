@@ -69,7 +69,7 @@ Overwrite the file with exactly this shape:
   ledger)
 
 ## Standing context
-- (anything both should know this week: founding spots remaining, a new
+- (anything both should know this week: a new
   article to reference, seasonality)
 ```
 
