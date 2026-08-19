@@ -49,6 +49,7 @@ export function Navbar({ locale, dict }: NavbarProps) {
   }, [isOpen]);
 
   return (
+    <>
     <header
       className={`sticky top-0 z-50 w-full border-b transition-colors duration-300 ${
         isScrolled
@@ -125,10 +126,16 @@ export function Navbar({ locale, dict }: NavbarProps) {
           </span>
         </button>
       </div>
+    </header>
 
       {/* Full-height overlay rather than a collapsing strip: with six items,
           a CTA, the language switcher and the social row, an accordion left
-          half the menu below the fold on a short phone. */}
+          half the menu below the fold on a short phone.
+
+          A sibling of the header, not a child: once the header picks up
+          backdrop-blur on scroll it becomes the containing block for fixed
+          descendants on iOS Safari, and the "viewport" overlay was suddenly
+          positioned against an 80px-tall bar instead of the screen. */}
       <div
         id="mobile-menu"
         className={`fixed inset-x-0 bottom-0 top-20 z-40 flex flex-col overflow-y-auto bg-navy transition-[opacity,transform] duration-300 ease-out lg:hidden ${
@@ -228,7 +235,6 @@ export function Navbar({ locale, dict }: NavbarProps) {
           </div>
         </nav>
       </div>
-
-    </header>
+    </>
   );
 }
