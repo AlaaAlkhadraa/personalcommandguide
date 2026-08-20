@@ -287,7 +287,7 @@ const es: Dictionary = {
   pricing: {
     plans: {
       starter: { name: "Sitio Starter", price: "499", description: "Un sitio pequeño y enfocado para llevar tu negocio a internet." },
-      business: { name: "Sitio Business", price: "799", description: "Un sitio completo construido en torno a tu negocio y tu contenido." },
+      business: { name: "Sitio Business", price: "799", description: "Un sitio completo en torno a tu negocio, con un sistema de reservas que tus clientes usan por su cuenta." },
       store: { name: "Tienda online", price: "1.199", description: "Para empresas que quieren vender productos online." },
       custom: { name: "Aplicación web a medida", price: "1.799", description: "Para aplicaciones web, portales y todo lo que va más allá de un sitio estándar." },
     },

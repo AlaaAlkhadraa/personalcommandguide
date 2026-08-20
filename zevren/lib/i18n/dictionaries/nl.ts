@@ -287,7 +287,7 @@ const nl: Dictionary = {
   pricing: {
     plans: {
       starter: { name: "Starter Website", price: "499", description: "Een kleine, gerichte website om je bedrijf online te krijgen." },
-      business: { name: "Business Website", price: "799", description: "Een complete website, gebouwd rond je bedrijf en content." },
+      business: { name: "Business Website", price: "799", description: "Een complete website rond je bedrijf, inclusief een afsprakensysteem waarin klanten zelf hun tijd kiezen." },
       store: { name: "Webshop", price: "1.199", description: "Voor bedrijven die producten online willen verkopen." },
       custom: { name: "Maatwerk Webapplicatie", price: "1.799", description: "Voor webapplicaties, portalen en alles wat verder gaat dan een standaardwebsite." },
     },

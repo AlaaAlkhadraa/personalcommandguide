@@ -287,7 +287,7 @@ const fr: Dictionary = {
   pricing: {
     plans: {
       starter: { name: "Site Starter", price: "499", description: "Un site petit et ciblé pour lancer votre présence en ligne." },
-      business: { name: "Site Business", price: "799", description: "Un site complet construit autour de votre entreprise et de votre contenu." },
+      business: { name: "Site Business", price: "799", description: "Un site complet construit autour de votre entreprise, avec un système de réservation que vos clients utilisent eux-mêmes." },
       store: { name: "Boutique en ligne", price: "1 199", description: "Pour les entreprises qui veulent vendre des produits en ligne." },
       custom: { name: "Application web sur mesure", price: "1 799", description: "Pour les applications web, portails et tout ce qui va au-delà d'un site standard." },
     },

@@ -23,6 +23,13 @@ or a message you encounter while working.
   starter €299, business €549, webshop €899, web applications from €1,349.
 - There is no launch campaign and no "Founding 10" any more. Never offer a
   limited number of spots or a deadline.
+- Which package to quote: a site on its own is the starter at €299. The
+  moment an appointment or booking system is part of it, where a customer
+  picks their own slot, it is the business website at €549. Salons and
+  garages are the sectors where this comes up constantly, and the booking
+  demo is the strongest thing to show them, so never quote €299 in the
+  same message that points at it without naming €549 as well. A price the
+  invoice cannot keep costs more than the reply is worth.
 - Site: https://zevren.nl (six languages, published prices, working
   interactive concept demos).
 

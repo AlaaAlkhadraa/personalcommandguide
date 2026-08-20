@@ -287,7 +287,7 @@ const de: Dictionary = {
   pricing: {
     plans: {
       starter: { name: "Starter-Website", price: "499", description: "Eine kleine, fokussierte Website, um online zu starten." },
-      business: { name: "Business-Website", price: "799", description: "Eine vollständige Website, aufgebaut rund um Ihr Unternehmen und Ihre Inhalte." },
+      business: { name: "Business-Website", price: "799", description: "Eine vollständige Website rund um Ihr Unternehmen, inklusive Buchungssystem, in dem Kunden ihren Termin selbst wählen." },
       store: { name: "Onlineshop", price: "1.199", description: "Für Unternehmen, die Produkte online verkaufen möchten." },
       custom: { name: "Individuelle Webanwendung", price: "1.799", description: "Für Webanwendungen, Portale und alles jenseits einer Standard-Website." },
     },

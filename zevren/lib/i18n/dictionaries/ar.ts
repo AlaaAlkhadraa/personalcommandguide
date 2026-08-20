@@ -284,7 +284,7 @@ const ar: Dictionary = {
   pricing: {
     plans: {
       starter: { name: "موقع أساسي", price: "499", description: "موقع صغير ومركّز حتى تبلش وجودك أونلاين." },
-      business: { name: "موقع أعمال", price: "799", description: "موقع كامل مبني حول شركتك ومحتواك." },
+      business: { name: "موقع أعمال", price: "799", description: "موقع كامل مبني حول شركتك، مع نظام حجز مواعيد بيستخدمه زباينك بنفسهم." },
       store: { name: "متجر إلكتروني", price: "1,199", description: "للشركات اللي بدها تبيع منتجاتها أونلاين." },
       custom: { name: "تطبيق ويب مخصص", price: "1,799", description: "لتطبيقات الويب والبوابات وكل شي أبعد من موقع عادي." },
     },

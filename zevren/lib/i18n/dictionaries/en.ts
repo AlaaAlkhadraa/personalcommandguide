@@ -287,7 +287,7 @@ const en: Dictionary = {
   pricing: {
     plans: {
       starter: { name: "Starter Website", price: "499", description: "A small, focused website to get your business online." },
-      business: { name: "Business Website", price: "799", description: "A complete website built around your business and content." },
+      business: { name: "Business Website", price: "799", description: "A complete website built around your business, including a booking system your customers use themselves." },
       store: { name: "Online Store", price: "1,199", description: "For businesses that want to sell products online." },
       custom: { name: "Custom Web Application", price: "1,799", description: "For web applications, portals and anything beyond a standard website." },
     },
