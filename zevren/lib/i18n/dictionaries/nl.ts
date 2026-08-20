@@ -44,6 +44,13 @@ const nl: Dictionary = {
     termsAndConditions: "Algemene Voorwaarden",
     languagesHeading: "Beschikbaar in het Engels, Nederlands, Duits, Frans, Spaans en Arabisch.",
   },
+  consent: {
+    title: "Cookies voor advertenties",
+    body: "We meten welke advertenties tot een aanvraag leiden, met cookies van Google Ads. Er wordt niets geplaatst voordat u akkoord gaat, en de site werkt hoe dan ook hetzelfde.",
+    accept: "Accepteren",
+    decline: "Weigeren",
+    readMore: "Lees ons privacybeleid",
+  },
   home: {
     hero: {
       badge: "Digitale oplossingen",

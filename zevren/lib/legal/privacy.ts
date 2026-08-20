@@ -4,7 +4,7 @@ export const PRIVACY: LegalContent = {
   en: {
     eyebrow: "Legal",
     title: "Privacy Policy",
-    updated: "Last updated: 19 August 2026",
+    updated: "Last updated: 20 August 2026",
     metaTitle: "Privacy Policy",
     metaDescription:
       "How ZEVREN handles personal data, in line with the GDPR.",
@@ -36,11 +36,15 @@ export const PRIVACY: LegalContent = {
       { type: "h2", text: "Cookies and visitor statistics" },
       {
         type: "p",
-        text: "This website doesn't use tracking cookies. No advertising or profiling cookies are placed. The only cookie we set stores the language you picked, so the site opens in that language on your next visit.",
+        text: "Two cookies are set without asking, because the site cannot work without them: one stores the language you picked, and one stores your answer to the cookie question below. Neither identifies you and neither follows you to another website.",
       },
       {
         type: "p",
-        text: "To see how many people visit the site and which pages they read, we use Vercel Web Analytics. It works without cookies and without a device fingerprint: no visitor is identified or followed across websites, and the data cannot be traced back to you. If we ever switch to a method that does require consent, we'll update this policy and ask for it first.",
+        text: "To see how many people visit the site and which pages they read, we use Vercel Web Analytics. It works without cookies and without a device fingerprint: no visitor is identified or followed across websites, and the data cannot be traced back to you. It requires no consent and is switched on for everyone.",
+      },
+      {
+        type: "p",
+        text: "We advertise on Google. To see which ads lead to an actual enquiry, we use Google Ads conversion tracking, which does place a cookie. That happens only after you press Accept in the bar at the bottom of the page. Until then, and permanently if you press Decline, the tag runs with every advertising signal switched off: nothing is stored on your device and no identifier is read. Your choice is kept for six months, and the site works exactly the same either way. To change your mind, delete the zevren_consent cookie in your browser and the question will be asked again.",
       },
       { type: "h2", text: "Security" },
       {
@@ -68,7 +72,7 @@ export const PRIVACY: LegalContent = {
   nl: {
     eyebrow: "Juridisch",
     title: "Privacyverklaring",
-    updated: "Laatst bijgewerkt: 19 augustus 2026",
+    updated: "Laatst bijgewerkt: 20 augustus 2026",
     metaTitle: "Privacyverklaring",
     metaDescription:
       "Hoe ZEVREN omgaat met persoonsgegevens, in lijn met de AVG.",
@@ -100,11 +104,15 @@ export const PRIVACY: LegalContent = {
       { type: "h2", text: "Cookies en bezoekersstatistieken" },
       {
         type: "p",
-        text: "Deze website gebruikt geen trackingcookies. Er worden geen advertentie- of profileringscookies geplaatst. De enige cookie die wij plaatsen onthoudt de taal die je hebt gekozen, zodat de site de volgende keer in die taal opent.",
+        text: "Twee cookies plaatsen wij zonder te vragen, omdat de site zonder deze niet werkt: één onthoudt de taal die je hebt gekozen, en één onthoudt je antwoord op de cookievraag hieronder. Geen van beide identificeert je en geen van beide volgt je naar een andere website.",
       },
       {
         type: "p",
-        text: "Om te zien hoeveel mensen de site bezoeken en welke pagina's zij lezen, gebruiken wij Vercel Web Analytics. Dat werkt zonder cookies en zonder apparaatvingerafdruk: geen enkele bezoeker wordt geïdentificeerd of over websites heen gevolgd, en de gegevens zijn niet naar jou te herleiden. Mochten wij ooit overstappen op een methode die wél toestemming vereist, dan passen wij deze verklaring aan en vragen wij die toestemming eerst.",
+        text: "Om te zien hoeveel mensen de site bezoeken en welke pagina's zij lezen, gebruiken wij Vercel Web Analytics. Dat werkt zonder cookies en zonder apparaatvingerafdruk: geen enkele bezoeker wordt geïdentificeerd of over websites heen gevolgd, en de gegevens zijn niet naar jou te herleiden. Daarvoor is geen toestemming nodig en het staat voor iedereen aan.",
+      },
+      {
+        type: "p",
+        text: "Wij adverteren via Google. Om te zien welke advertenties tot een echte aanvraag leiden, gebruiken wij conversiemeting van Google Ads, en die plaatst wél een cookie. Dat gebeurt pas nadat u onderaan de pagina op Accepteren klikt. Tot dat moment, en blijvend als u op Weigeren klikt, draait de tag met alle advertentiesignalen uitgeschakeld: er wordt niets op uw apparaat opgeslagen en geen identificatie uitgelezen. Uw keuze bewaren wij zes maanden, en de site werkt in beide gevallen precies hetzelfde. Wilt u terugkomen op uw keuze, verwijder dan de cookie zevren_consent in uw browser; dan wordt de vraag opnieuw gesteld.",
       },
       { type: "h2", text: "Beveiliging" },
       {
@@ -132,7 +140,7 @@ export const PRIVACY: LegalContent = {
   de: {
     eyebrow: "Rechtliches",
     title: "Datenschutzerklärung",
-    updated: "Zuletzt aktualisiert: 19. August 2026",
+    updated: "Zuletzt aktualisiert: 20. August 2026",
     metaTitle: "Datenschutzerklärung",
     metaDescription:
       "Wie ZEVREN mit personenbezogenen Daten umgeht, im Einklang mit der DSGVO.",
@@ -164,11 +172,15 @@ export const PRIVACY: LegalContent = {
       { type: "h2", text: "Cookies und Besucherstatistiken" },
       {
         type: "p",
-        text: "Diese Website verwendet keine Tracking-Cookies. Es werden keine Werbe- oder Profiling-Cookies gesetzt. Das einzige Cookie, das wir setzen, speichert die von Ihnen gewählte Sprache, damit die Website beim nächsten Besuch in dieser Sprache öffnet.",
+        text: "Zwei Cookies setzen wir ohne zu fragen, weil die Website ohne sie nicht funktioniert: eines speichert die von Ihnen gewählte Sprache, das andere Ihre Antwort auf die Cookie-Frage weiter unten. Keines von beiden identifiziert Sie und keines folgt Ihnen auf eine andere Website.",
       },
       {
         type: "p",
-        text: "Um zu sehen, wie viele Menschen die Website besuchen und welche Seiten sie lesen, verwenden wir Vercel Web Analytics. Das funktioniert ohne Cookies und ohne Geräte-Fingerabdruck: Kein Besucher wird identifiziert oder websiteübergreifend verfolgt, und die Daten lassen sich nicht auf Sie zurückführen. Sollten wir jemals auf ein Verfahren umstellen, das eine Einwilligung erfordert, aktualisieren wir diese Erklärung und holen die Einwilligung vorher ein.",
+        text: "Um zu sehen, wie viele Menschen die Website besuchen und welche Seiten sie lesen, verwenden wir Vercel Web Analytics. Das funktioniert ohne Cookies und ohne Geräte-Fingerabdruck: Kein Besucher wird identifiziert oder websiteübergreifend verfolgt, und die Daten lassen sich nicht auf Sie zurückführen. Dafür ist keine Einwilligung erforderlich, und es ist für alle aktiv.",
+      },
+      {
+        type: "p",
+        text: "Wir schalten Anzeigen bei Google. Um zu sehen, welche Anzeigen zu einer echten Anfrage führen, nutzen wir die Conversion-Messung von Google Ads, und diese setzt sehr wohl ein Cookie. Das geschieht erst, nachdem Sie unten auf der Seite auf Akzeptieren geklickt haben. Bis dahin, und dauerhaft, wenn Sie auf Ablehnen klicken, läuft das Tag mit sämtlichen Werbesignalen abgeschaltet: Es wird nichts auf Ihrem Gerät gespeichert und keine Kennung ausgelesen. Ihre Wahl speichern wir sechs Monate, und die Website funktioniert in beiden Fällen genau gleich. Möchten Sie Ihre Wahl ändern, löschen Sie in Ihrem Browser das Cookie zevren_consent; dann wird erneut gefragt.",
       },
       { type: "h2", text: "Sicherheit" },
       {
@@ -196,7 +208,7 @@ export const PRIVACY: LegalContent = {
   fr: {
     eyebrow: "Mentions légales",
     title: "Politique de confidentialité",
-    updated: "Dernière mise à jour : 19 août 2026",
+    updated: "Dernière mise à jour : 20 août 2026",
     metaTitle: "Politique de confidentialité",
     metaDescription:
       "Comment ZEVREN traite les données personnelles, conformément au RGPD.",
@@ -228,11 +240,15 @@ export const PRIVACY: LegalContent = {
       { type: "h2", text: "Cookies et statistiques de visite" },
       {
         type: "p",
-        text: "Ce site n'utilise pas de cookies de suivi. Aucun cookie publicitaire ou de profilage n'est déposé. Le seul cookie que nous déposons mémorise la langue que vous avez choisie, afin que le site s'ouvre dans cette langue lors de votre prochaine visite.",
+        text: "Deux cookies sont déposés sans vous le demander, car le site ne fonctionne pas sans eux : l'un mémorise la langue que vous avez choisie, l'autre votre réponse à la question sur les cookies ci-dessous. Aucun des deux ne vous identifie ni ne vous suit vers un autre site.",
       },
       {
         type: "p",
-        text: "Pour savoir combien de personnes visitent le site et quelles pages elles consultent, nous utilisons Vercel Web Analytics. Cet outil fonctionne sans cookies et sans empreinte d'appareil : aucun visiteur n'est identifié ni suivi d'un site à l'autre, et les données ne peuvent pas remonter jusqu'à vous. Si nous passions un jour à une méthode nécessitant un consentement, nous mettrions cette politique à jour et le demanderions au préalable.",
+        text: "Pour savoir combien de personnes visitent le site et quelles pages elles consultent, nous utilisons Vercel Web Analytics. Cet outil fonctionne sans cookies et sans empreinte d'appareil : aucun visiteur n'est identifié ni suivi d'un site à l'autre, et les données ne peuvent pas remonter jusqu'à vous. Cet outil ne nécessite aucun consentement et est activé pour tout le monde.",
+      },
+      {
+        type: "p",
+        text: "Nous diffusons des annonces sur Google. Pour savoir quelles annonces mènent à une véritable demande, nous utilisons le suivi des conversions de Google Ads, qui dépose bel et bien un cookie. Cela n'a lieu qu'après votre clic sur Accepter, en bas de la page. Jusque-là, et définitivement si vous cliquez sur Refuser, la balise fonctionne avec tous les signaux publicitaires désactivés : rien n'est stocké sur votre appareil et aucun identifiant n'est lu. Votre choix est conservé six mois, et le site fonctionne exactement de la même manière dans les deux cas. Pour revenir sur votre choix, supprimez le cookie zevren_consent dans votre navigateur et la question vous sera reposée.",
       },
       { type: "h2", text: "Sécurité" },
       {
@@ -260,7 +276,7 @@ export const PRIVACY: LegalContent = {
   es: {
     eyebrow: "Legal",
     title: "Política de privacidad",
-    updated: "Última actualización: 19 de agosto de 2026",
+    updated: "Última actualización: 20 de agosto de 2026",
     metaTitle: "Política de privacidad",
     metaDescription:
       "Cómo trata ZEVREN los datos personales, conforme al RGPD.",
@@ -292,11 +308,15 @@ export const PRIVACY: LegalContent = {
       { type: "h2", text: "Cookies y estadísticas de visitas" },
       {
         type: "p",
-        text: "Esta web no utiliza cookies de seguimiento. No se instalan cookies publicitarias ni de elaboración de perfiles. La única cookie que usamos guarda el idioma que has elegido, para que la web se abra en ese idioma en tu próxima visita.",
+        text: "Instalamos dos cookies sin preguntar, porque la web no funciona sin ellas: una guarda el idioma que has elegido y otra tu respuesta a la pregunta sobre cookies de más abajo. Ninguna de las dos te identifica ni te sigue a otra web.",
       },
       {
         type: "p",
-        text: "Para saber cuántas personas visitan la web y qué páginas leen, usamos Vercel Web Analytics. Funciona sin cookies y sin huella del dispositivo: no se identifica a ningún visitante ni se le sigue entre webs, y los datos no pueden asociarse contigo. Si algún día cambiamos a un método que sí requiera consentimiento, actualizaremos esta política y lo pediremos antes.",
+        text: "Para saber cuántas personas visitan la web y qué páginas leen, usamos Vercel Web Analytics. Funciona sin cookies y sin huella del dispositivo: no se identifica a ningún visitante ni se le sigue entre webs, y los datos no pueden asociarse contigo. No requiere consentimiento y está activo para todo el mundo.",
+      },
+      {
+        type: "p",
+        text: "Anunciamos en Google. Para ver qué anuncios llevan a una solicitud real usamos el seguimiento de conversiones de Google Ads, que sí instala una cookie. Eso ocurre solo después de que pulses Aceptar en la barra inferior de la página. Hasta entonces, y de forma permanente si pulsas Rechazar, la etiqueta funciona con todas las señales publicitarias desactivadas: no se guarda nada en tu dispositivo ni se lee ningún identificador. Tu elección se conserva seis meses, y la web funciona igual en ambos casos. Si quieres cambiar de idea, borra la cookie zevren_consent en tu navegador y volveremos a preguntar.",
       },
       { type: "h2", text: "Seguridad" },
       {
@@ -324,7 +344,7 @@ export const PRIVACY: LegalContent = {
   ar: {
     eyebrow: "قانوني",
     title: "سياسة الخصوصية",
-    updated: "آخر تحديث: 19 آب 2026",
+    updated: "آخر تحديث: 20 آب 2026",
     metaTitle: "سياسة الخصوصية",
     metaDescription: "كيف بتتعامل ZEVREN مع البيانات الشخصية، بما يتوافق مع الـGDPR.",
     blocks: [
@@ -355,11 +375,15 @@ export const PRIVACY: LegalContent = {
       { type: "h2", text: "الكوكيز وإحصاءات الزوار" },
       {
         type: "p",
-        text: "هاد الموقع ما بيستخدم كوكيز تتبّع. ما منحط كوكيز إعلانية ولا كوكيز تحليل شخصية. الكوكي الوحيد اللي منحطه بيحفظ اللغة اللي اخترتها، لحتى يفتح الموقع بنفس اللغة بزيارتك الجاية.",
+        text: "في كوكيين منحطهم بلا ما نسأل، لأن الموقع ما بيشتغل بدونهم: واحد بيحفظ اللغة اللي اخترتها، وواحد بيحفظ جوابك على سؤال الكوكيز تحت. ولا واحد فيهم بيعرّف عليك ولا بيتبعك لموقع تاني.",
       },
       {
         type: "p",
-        text: "لنعرف كم واحد بيزور الموقع وأي صفحات بيقرأوا، منستخدم Vercel Web Analytics. بيشتغل بلا كوكيز وبلا بصمة جهاز: ما في زائر بينعرف ولا بينتتبّع بين المواقع، والبيانات ما بترجع إلك. وإذا يوماً حوّلنا لطريقة بتحتاج موافقة، منحدّث هي السياسة ومنطلب الموافقة قبل.",
+        text: "لنعرف كم واحد بيزور الموقع وأي صفحات بيقرأوا، منستخدم Vercel Web Analytics. بيشتغل بلا كوكيز وبلا بصمة جهاز: ما في زائر بينعرف ولا بينتتبّع بين المواقع، والبيانات ما بترجع إلك. ما بيحتاج موافقة وشغّال للكل.",
+      },
+      {
+        type: "p",
+        text: "منعلن على جوجل. ولنعرف أي إعلان أدى لطلب حقيقي، منستخدم قياس التحويلات من Google Ads، وهاد فعلاً بيحط كوكي. بس ما بيصير إلا بعد ما تضغط أوافق بالشريط أسفل الصفحة. لهلق، وبشكل دائم إذا ضغطت أرفض، التاغ بيشتغل وكل الإشارات الإعلانية مطفية: ما بينحفظ شي على جهازك وما بينقرأ أي معرّف. اختيارك منحفظه ست شهور، والموقع بيشتغل بنفس الطريقة بالحالتين. إذا بدك تغيّر رأيك، احذف الكوكي zevren_consent من متصفحك ومنسألك من جديد.",
       },
       { type: "h2", text: "الأمان" },
       {

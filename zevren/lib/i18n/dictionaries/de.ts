@@ -44,6 +44,13 @@ const de: Dictionary = {
     termsAndConditions: "AGB",
     languagesHeading: "Verfügbar auf Englisch, Niederländisch, Deutsch, Französisch, Spanisch und Arabisch.",
   },
+  consent: {
+    title: "Cookies für Werbung",
+    body: "Wir messen mit Cookies von Google Ads, welche Anzeigen zu einer Anfrage führen. Vor Ihrer Zustimmung wird nichts gesetzt, und die Website funktioniert in beiden Fällen gleich.",
+    accept: "Akzeptieren",
+    decline: "Ablehnen",
+    readMore: "Datenschutzerklärung lesen",
+  },
   home: {
     hero: {
       badge: "Digitale Lösungen",

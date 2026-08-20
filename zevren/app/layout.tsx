@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { Analytics } from "@vercel/analytics/next";
+import { ConsentBanner } from "@/components/consent/ConsentBanner";
+import { GoogleTag } from "@/components/analytics/GoogleTag";
 import {
   IBM_Plex_Mono,
   Inter,
@@ -181,6 +183,11 @@ export default async function RootLayout({
             bundle that already carries the CSP nonce, so strict-dynamic
             covers it and the beacon stays same-origin. */}
         <Analytics />
+        {/* Advertising measurement, which is a different matter: it needs a
+            cookie, so it starts fully denied and only changes once the bar
+            below has been answered. */}
+        <GoogleTag nonce={nonce} />
+        <ConsentBanner dict={dict.consent} />
       </body>
     </html>
   );

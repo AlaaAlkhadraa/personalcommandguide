@@ -43,6 +43,13 @@ export interface Dictionary {
     termsAndConditions: string;
     languagesHeading: string;
   };
+  consent: {
+    title: string;
+    body: string;
+    accept: string;
+    decline: string;
+    readMore: string;
+  };
   home: {
     hero: {
       badge: string;

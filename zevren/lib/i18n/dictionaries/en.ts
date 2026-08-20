@@ -44,6 +44,13 @@ const en: Dictionary = {
     termsAndConditions: "Terms & Conditions",
     languagesHeading: "Available in English, Dutch, German, French, Spanish and Arabic.",
   },
+  consent: {
+    title: "Cookies for advertising",
+    body: "We measure which ads lead to a request, using Google Ads cookies. Nothing is placed until you agree, and the site works exactly the same either way.",
+    accept: "Accept",
+    decline: "Decline",
+    readMore: "Read our privacy policy",
+  },
   home: {
     hero: {
       badge: "Digital solutions",

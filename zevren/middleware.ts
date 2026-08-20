@@ -39,18 +39,31 @@ export function middleware(request: NextRequest) {
     }
   }
 
+  // Google's advertising measurement, named host by host rather than with a
+  // wildcard. The tag itself is loaded by a nonced Next bundle, so
+  // strict-dynamic already trusts it; these entries are what the tag then
+  // needs to reach, and what browsers without strict-dynamic fall back to.
+  const googleAds = [
+    "https://www.googletagmanager.com",
+    "https://www.googleadservices.com",
+    "https://googleads.g.doubleclick.net",
+    "https://www.google.com",
+    "https://www.google.nl",
+  ].join(" ");
+
   const csp = [
     "default-src 'self'",
     `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${isDev ? " 'unsafe-eval'" : ""}`,
     "style-src 'self' 'unsafe-inline'",
-    "img-src 'self' data: blob:",
+    `img-src 'self' data: blob: ${googleAds}`,
     "font-src 'self' data:",
     // blob: is for three's GLTFLoader, which unpacks textures embedded in the
     // .glb into same-origin blob URLs and fetches them back. Created by our
     // own page, so this does not widen the set of reachable hosts.
-    "connect-src 'self' blob:",
-    // Only Google Maps may be framed, for the Tajex concept's location embed.
-    "frame-src https://www.google.com https://maps.google.com",
+    `connect-src 'self' blob: ${googleAds}`,
+    // Google Maps for the Tajex concept's location embed, and doubleclick for
+    // the conversion tag's iframe ping.
+    "frame-src https://www.google.com https://maps.google.com https://td.doubleclick.net https://www.googletagmanager.com",
     // Nothing may frame us: clickjacking defence, alongside X-Frame-Options.
     "frame-ancestors 'none'",
     "base-uri 'self'",

@@ -44,6 +44,13 @@ const es: Dictionary = {
     termsAndConditions: "Términos y condiciones",
     languagesHeading: "Disponible en inglés, neerlandés, alemán, francés, español y árabe.",
   },
+  consent: {
+    title: "Cookies de publicidad",
+    body: "Medimos qué anuncios llevan a una solicitud, con cookies de Google Ads. No se instala nada antes de que aceptes, y el sitio funciona igual en cualquier caso.",
+    accept: "Aceptar",
+    decline: "Rechazar",
+    readMore: "Leer nuestra política de privacidad",
+  },
   home: {
     hero: {
       badge: "Soluciones digitales",

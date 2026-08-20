@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Icon } from "@/components/ui/Icon";
+import { reportLeadConversion } from "@/components/analytics/ConsentSync";
+import { leadSendTo } from "@/lib/analytics/google-ads";
 import { SubmitButton } from "@/components/ui/Button";
 import type { ContactFormValues } from "@/types";
 import type { Dictionary } from "@/lib/i18n/dictionary-type";
@@ -121,6 +123,10 @@ export function ContactForm({ dict }: { dict: Dictionary["contact"]["form"] }) {
       }
 
       setStatus("success");
+      // Reported here rather than on the thank-you render: this is the one
+      // point where the server has confirmed the submission was accepted, so
+      // a rejected or duplicate message never counts as a lead.
+      reportLeadConversion(leadSendTo());
       form.reset();
     } catch {
       setServerError(dict.connectError);
