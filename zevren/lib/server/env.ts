@@ -60,6 +60,24 @@ const schema = z.object({
 
   /** Set to true only behind a trusted proxy that rewrites x-forwarded-for. */
   TRUST_PROXY: bool.default("true"),
+
+  /**
+   * Anthropic API key for the site assistant. Without it the assistant is
+   * not rendered at all, so the site behaves exactly as it did before it
+   * existed. Never reaches the browser: every message is proxied through
+   * /api/chat.
+   */
+  ANTHROPIC_API_KEY: z.string().min(1).optional(),
+
+  /** Model serving the assistant. Small and fast is right for this job. */
+  CHAT_MODEL: z.string().min(1).default("claude-haiku-4-5-20251001"),
+
+  /**
+   * Hard ceilings, because this endpoint spends money on every call and it
+   * is reachable by anyone who can open the site.
+   */
+  CHAT_MAX_TOKENS: z.coerce.number().int().positive().max(4096).default(700),
+  CHAT_DAILY_BUDGET: z.coerce.number().int().positive().default(400),
 });
 
 export type ServerEnv = z.infer<typeof schema>;
@@ -82,6 +100,11 @@ let cached: ServerEnv | null = null;
 export function env(): ServerEnv {
   if (!cached) cached = read();
   return cached;
+}
+
+/** True when the site assistant can run. */
+export function chatConfigured(): boolean {
+  return Boolean(env().ANTHROPIC_API_KEY);
 }
 
 /** True when the app has everything it needs to persist submissions. */
