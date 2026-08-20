@@ -19,3 +19,13 @@ date). When someone replies, set `replied`. The agent only writes
 | Beautysalon Man-Vrouw | Delft | drafted | 2026-08-20, free builder subdomain |
 | Masté schoonheidssalon | - | drafted | 2026-08-20, free builder subdomain |
 | Jmhoveniers | - | drafted | 2026-08-20, free builder subdomain |
+| Nagelstudio ArtiNail | Munstergeleen | drafted | 2026-08-20 batch 2, booking-shaped, free builder subdomain |
+| Nagelstudio Classy Nails | - | drafted | 2026-08-20 batch 2, booking-shaped, free builder subdomain |
+| Nagelstudio Utrecht | Utrecht | drafted | 2026-08-20 batch 2, booking-shaped, free builder subdomain |
+| Nagelstudio Mandy | Den Haag | drafted | 2026-08-20 batch 2, booking-shaped, free builder subdomain |
+| Hondentrimsalon Max | Winschoten | drafted | 2026-08-20 batch 2, booking-shaped, free builder subdomain |
+| Hondentrimsalon De Malushoeve | Langbroek | drafted | 2026-08-20 batch 2, booking-shaped, free builder subdomain |
+| Casper's Trimsalon | Putten | drafted | 2026-08-20 batch 2, booking-shaped, free builder subdomain |
+| Massage Salon Wang | Harderwijk | drafted | 2026-08-20 batch 2, booking-shaped, free builder subdomain |
+| Thai Nakara Wellness | Haarlem | drafted | 2026-08-20 batch 2, booking-shaped, free builder subdomain |
+| Lobke Salon | Valkenswaard | drafted | 2026-08-20 batch 2, booking-shaped, free builder subdomain |
