@@ -115,12 +115,8 @@ For each prospect, one entry:
   sentence.
 - **Where to reach them** — their public contact page URL or general
   address as listed publicly; if none found, say so.
-- **Draft (NL)** — the message, ready to paste: 90-130 words, plain
-  Dutch, opens with the one specific observation (never flattery), one
-  concrete improvement it causes them to miss, ZEVREN in one line with the
-  price that fits, a no-pressure close ("geen verplichtingen, ik laat
-  gewoon een voorbeeld zien"), signed Alaa, zevren.nl. No emoji, no
-  clickbait, no fake deadlines.
+- **Draft (NL)** — see "How to write the message" below. 160-220 words,
+  signed Alaa, zevren.nl. No emoji, no clickbait, no fake deadlines.
 - **Draft (EN)** — only when the business is clearly international.
 
 Head the file with a 3-line summary: sectors covered, cities, count.
@@ -144,3 +140,84 @@ Clean commit messages; no model names or tool names in them.
 
 End with the prospect list in one line each (name, city, weakness) so the
 completion notification tells the owner exactly what is waiting for review.
+
+## How to write the message
+
+Read this before every draft. The first ten drafts failed here and the
+owner rejected them, so it is worth the space.
+
+### The mistake to never repeat
+
+The rejected drafts opened like this:
+
+> Ik zag dat jullie website op jen741.wixsite.com staat. Dat betekent dat
+> jullie geen eigen adres hebben zoals scizzors.nl.
+
+Every word of that is true and none of it sells anything. A salon owner
+reads it and thinks "so what". It is a technical observation about a
+thing they do not care about, delivered by a stranger who wants money.
+
+The owner's correction, in his words: *you are not selling a website. You
+are selling customers, a professional face for the business, sales.*
+
+### What the message has to do
+
+You are not describing a product. You are describing a loss they are
+already suffering, and then removing it.
+
+Four moves, in this order:
+
+**1. Open on a moment they recognise, not a fact about their website.**
+Not "your address is a subdomain" but the thing that happens in their
+day. For a hairdresser: the phone rings while their hands are in a
+customer's hair. For a beauty salon: a treatment runs an hour and picking
+up is not an option. For a gardener: someone browses gardens on the sofa
+at nine in the evening.
+
+This must be something they have lived, not a statistic. Never write a
+percentage, a study or a number you cannot source. "De telefoon gaat
+terwijl je aan het knippen bent" needs no source: they know.
+
+**2. Name the loss, and why it is invisible.** The caller hears
+voicemail, hangs up, and calls the next salon. They never spoke to that
+person. They do not even know they lost them. That last part is what
+makes it land: it explains why they have never noticed a problem that
+happens every day.
+
+**3. Sell the outcome, in the customer's actions, not in features.**
+Never "een afsprakensysteem met online agenda". Instead: the customer
+sees which slots are free, clicks one, types their name, and it is in
+your calendar. At three in the afternoon while you are cutting. At eleven
+at night while you are asleep. Confirmation and reminder go out by
+themselves, so fewer people fail to show up.
+
+Concrete verbs and real times beat any feature list.
+
+**4. Then, and only then, price and proof.** The working demo on
+zevren.nl, the one-off price, the fact that it is published so they do
+not have to call to hear it. A no-pressure close.
+
+### Where the old evidence goes
+
+The subdomain, the missing https, the Facebook-only page: these stay in
+the **Observed** field of the prospect entry, because that is how you
+picked the business. In the message they are at most one closing line
+("eigen domein zit erbij, dus geen jouwweb-adres meer"). They are never
+the opening and never the argument.
+
+### Price follows the pitch
+
+If the message sells booking, the price in that message is **€549**, not
+€299 with 549 mentioned later. The pitch and the number must be the same
+thing. A message that sells a booking system and quotes €299 is a promise
+the invoice cannot keep.
+
+If the sector has nothing to book — a gardener, a builder, a shop — sell
+what it does have (finished work, photos, being findable) and quote €299.
+
+### The test before you write it down
+
+Read the draft as the owner of that salon, on a phone, between two
+customers. If the first sentence could have been sent to any of the other
+nine businesses, rewrite it. If nowhere in the message they can picture
+themselves not picking up the phone, rewrite it.
