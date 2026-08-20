@@ -63,11 +63,31 @@ Use web search with patterns like:
 - "[sector] [city] site:facebook.com" to find businesses running on a
   Facebook page instead of a site
 
-Try fetching a candidate's site for concrete observations; if fetching is
-blocked, work from search-result evidence only and say so in the entry.
-Only include a business when you can name at least one SPECIFIC,
-verifiable weakness. No padding: 6 well-researched prospects beat 10
-guessed ones.
+You almost certainly cannot open a prospect's website: the network in
+your environment blocks outbound requests to arbitrary domains. Assume
+that is the case and do not treat it as a reason to stop. Two runs
+produced nothing at all because the job as previously written demanded a
+verified weakness, verifying meant loading the site, and loading the site
+was impossible; refusing to invent was correct, and going silent was not.
+
+So the split is this. You gather what search can genuinely establish, and
+mark every observation `(from search)` unless you actually loaded the
+page. The owner opens each site in a second and confirms before sending,
+which is the step that was always going to happen anyway.
+
+The strongest signals search alone can establish, in order:
+
+1. No website in the listing at all, only an address or a phone number
+2. A Facebook or Instagram page where the website should be
+3. A listing that says the site is under construction
+4. A site indexed only over http, with no https result anywhere
+5. A cached description that names a year several years past
+
+Any one of these is enough to include a business. Never write a claim
+about typography, layout, speed or mobile behaviour: you did not see the
+page, and inventing that would be exactly the fabrication your hard rules
+forbid. Six honestly sourced prospects beat ten with invented findings,
+and both beat an empty file.
 
 Privacy line: business names, business sites and public business contact
 pages only. Never collect or record personal data of private individuals.
@@ -77,8 +97,13 @@ pages only. Never collect or record personal data of private individuals.
 For each prospect, one entry:
 
 - **Business** — name, city, sector, site URL (or "no site found").
-- **Observed** — the specific weaknesses, each marked (verified) if you
-  saw the site or (from search) if inferred from results.
+- **Observed** — the specific signal, marked `(from search)`, or
+  `(verified)` only if you genuinely loaded the page. State the search
+  evidence itself, e.g. "no website field in the Google Maps listing",
+  not a guess about what the site looks like.
+- **Owner check** — the single thing for the owner to confirm before
+  sending, in one line, e.g. "open the site on a phone and check whether
+  the number is visible without scrolling".
 - **Fit** — which ZEVREN package, with its published price, in one
   sentence.
 - **Where to reach them** — their public contact page URL or general
@@ -98,6 +123,13 @@ Add every drafted business to `contacted.md` with status `drafted`.
 
 Commit the new file and the ledger update, push `main`, then mirror:
 `git push origin main:claude/zevren-agency-website-bz0bzz`.
+
+Never end a shift with nothing pushed. If the day's research genuinely
+found too little, write the file anyway with what you did find and a
+short note explaining what blocked the rest. A file saying "search was
+thin today, here are three, here is why" is useful. Silence is not: it
+looks identical to being broken, and it wasted two shifts before anyone
+noticed.
 Touch nothing inside `zevren/` — this agent never edits the website.
 Clean commit messages; no model names or tool names in them.
 
