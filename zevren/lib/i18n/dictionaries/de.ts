@@ -401,7 +401,7 @@ const de: Dictionary = {
   },
   faq: {
     items: [
-      { question: "Was kostet eine Website?", answer: "Die meisten ZEVREN-Projekte starten ab 499 €. Der endgültige Preis hängt vom Umfang und den Anforderungen des Projekts ab." },
+      { question: "Was kostet eine Website?", answer: "Die Pakete beginnen ab 299 €, und jeder Preis steht offen auf der Leistungsseite, ein Angebotsprozess entfällt. Größere Projekte werden vor Beginn nach Umfang kalkuliert." },
       { question: "Wie lange dauert eine Website?", answer: "Die Dauer hängt vom Projekt ab. Wir geben Ihnen eine klare Einschätzung, bevor die Entwicklung beginnt." },
       { question: "Können Sie eine bestehende Website neu gestalten?", answer: "Ja. Wir können eine bestehende Website verbessern oder bei Bedarf neu aufbauen." },
       { question: "Arbeiten Sie auch mit Unternehmen außerhalb der Niederlande?", answer: "Ja. Maastricht ist der Sitz des Studios, keine Grenze dafür, mit wem wir arbeiten. Wir arbeiten remote mit Unternehmen überall." },

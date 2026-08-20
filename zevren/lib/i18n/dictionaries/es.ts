@@ -55,8 +55,8 @@ const es: Dictionary = {
     label: "Chatear con ZEVREN",
     title: "Asistente de ZEVREN",
     subtitle: "Respuestas basadas en lo que está publicado en esta web.",
-    greeting: "Hola. Pregúntame lo que quieras sobre los precios, los paquetes o cómo es trabajar con ZEVREN.",
-    placeholder: "Escribe tu pregunta",
+    greeting: "Bienvenido. Pregúnteme lo que desee sobre los precios, los paquetes o cómo es trabajar con ZEVREN.",
+    placeholder: "Escriba su pregunta",
     send: "Enviar",
     close: "Cerrar el chat",
     thinking: "Pensando",
@@ -401,7 +401,7 @@ const es: Dictionary = {
   },
   faq: {
     items: [
-      { question: "¿Cuánto cuesta un sitio web?", answer: "La mayoría de los proyectos de ZEVREN parten desde 499 €. El precio final depende del alcance y los requisitos del proyecto." },
+      { question: "¿Cuánto cuesta un sitio web?", answer: "Los paquetes parten desde 299 €, y todos los precios están publicados en la página de servicios, sin proceso de presupuesto. Los proyectos mayores se presupuestan según su alcance antes de empezar." },
       { question: "¿Cuánto tarda un sitio web?", answer: "El plazo depende del proyecto. Te daremos una estimación clara antes de comenzar el desarrollo." },
       { question: "¿Pueden rediseñar un sitio web existente?", answer: "Sí. Podemos mejorar un sitio existente o reconstruirlo si es necesario." },
       { question: "¿Trabajan con empresas fuera de los Países Bajos?", answer: "Sí. Maastricht es donde tiene su sede el estudio, no un límite de con quién trabajamos. Trabajamos de forma remota con empresas en cualquier lugar." },

@@ -55,8 +55,8 @@ const nl: Dictionary = {
     label: "Chat met ZEVREN",
     title: "ZEVREN Assistent",
     subtitle: "Antwoorden op basis van wat op deze site staat.",
-    greeting: "Hoi. Vraag me gerust iets over de prijzen, de pakketten of hoe samenwerken met ZEVREN werkt.",
-    placeholder: "Typ je vraag",
+    greeting: "Welkom. Stel gerust uw vraag over de prijzen, de pakketten of hoe samenwerken met ZEVREN werkt.",
+    placeholder: "Typ uw vraag",
     send: "Versturen",
     close: "Chat sluiten",
     thinking: "Aan het nadenken",
@@ -401,7 +401,7 @@ const nl: Dictionary = {
   },
   faq: {
     items: [
-      { question: "Wat kost een website?", answer: "De meeste ZEVREN-projecten beginnen vanaf €499. De uiteindelijke prijs hangt af van de omvang en eisen van het project." },
+      { question: "Wat kost een website?", answer: "Pakketten beginnen vanaf €299 en elke prijs staat gewoon op de dienstenpagina, dus een offertetraject is er niet. Grotere projecten worden vooraf op omvang geprijsd." },
       { question: "Hoe lang duurt een website?", answer: "De doorlooptijd hangt af van het project. We geven je een duidelijke inschatting voordat de ontwikkeling begint." },
       { question: "Kunnen jullie een bestaande website vernieuwen?", answer: "Ja. We kunnen een bestaande website verbeteren of, indien nodig, opnieuw opbouwen." },
       { question: "Werken jullie ook met bedrijven buiten Nederland?", answer: "Ja. Maastricht is waar de studio is gevestigd, geen grens voor wie we helpen. We werken op afstand met bedrijven overal." },

@@ -401,7 +401,7 @@ const fr: Dictionary = {
   },
   faq: {
     items: [
-      { question: "Combien coûte un site web ?", answer: "La plupart des projets ZEVREN démarrent à partir de 499 €. Le tarif final dépend de l'ampleur et des exigences du projet." },
+      { question: "Combien coûte un site web ?", answer: "Les formules commencent à 299 €, et chaque prix est publié sur la page des services : aucun devis n'est nécessaire. Les projets plus importants sont chiffrés selon leur ampleur avant le début du travail." },
       { question: "Combien de temps prend un site web ?", answer: "Le délai dépend du projet. Nous vous donnerons une estimation claire avant le début du développement." },
       { question: "Pouvez-vous refaire un site existant ?", answer: "Oui. Nous pouvons améliorer un site existant ou le reconstruire si nécessaire." },
       { question: "Travaillez-vous avec des entreprises en dehors des Pays-Bas ?", answer: "Oui. Maastricht est le siège du studio, pas une limite à qui nous aidons. Nous travaillons à distance avec des entreprises partout." },

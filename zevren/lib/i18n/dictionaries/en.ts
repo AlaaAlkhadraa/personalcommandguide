@@ -401,7 +401,7 @@ const en: Dictionary = {
   },
   faq: {
     items: [
-      { question: "How much does a website cost?", answer: "Most ZEVREN projects start from €499. The final price depends on the size and requirements of the project." },
+      { question: "How much does a website cost?", answer: "Packages start from €299 and every price is published on the services page, so there is no quote process. Larger projects are priced by scope before work starts." },
       { question: "How long does a website take?", answer: "The timeline depends on the project. We will give you a clear estimate before development starts." },
       { question: "Can you redesign an existing website?", answer: "Yes. We can improve an existing website or rebuild it when necessary." },
       { question: "Do you work with businesses outside the Netherlands?", answer: "Yes. Maastricht is where the studio is based, not a limit on who we work with. We work remotely with businesses anywhere." },
