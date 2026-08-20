@@ -50,6 +50,18 @@ const ar: Dictionary = {
     decline: "أرفض",
     readMore: "اقرأ سياسة الخصوصية",
   },
+  assistant: {
+    label: "دردش مع ZEVREN",
+    title: "مساعد ZEVREN",
+    subtitle: "أجوبة مبنية على المنشور بهذا الموقع.",
+    greeting: "أهلاً. اسألني ما بدك عن الأسعار أو الباقات أو كيف بيمشي الشغل مع ZEVREN.",
+    placeholder: "اكتب سؤالك",
+    send: "إرسال",
+    close: "إغلاق المحادثة",
+    thinking: "عم فكّر",
+    error: "صار خطأ. جرّب بعد لحظة.",
+    rateLimited: "أسئلة كتيرة دفعة وحدة. انطر دقيقة.",
+  },
   home: {
     hero: {
       badge: "حلول رقمية",

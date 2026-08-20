@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { Analytics } from "@vercel/analytics/next";
+import { AssistantWidget } from "@/components/assistant/AssistantWidget";
 import { ConsentBanner } from "@/components/consent/ConsentBanner";
 import { GoogleTag } from "@/components/analytics/GoogleTag";
 import {
@@ -16,6 +17,7 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { OG_LOCALE } from "@/lib/seo";
 import { SERVICES, SITE_CONFIG } from "@/lib/constants";
 import { getLocale } from "@/lib/i18n/get-locale";
+import { chatConfigured } from "@/lib/server/env";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { isRtl, type Locale } from "@/lib/i18n/config";
 import "./globals.css";
@@ -188,6 +190,9 @@ export default async function RootLayout({
             below has been answered. */}
         <GoogleTag nonce={nonce} />
         <ConsentBanner dict={dict.consent} />
+        {/* Rendered only when the server holds an API key, so a deployment
+            without one shows no button that leads nowhere. */}
+        {chatConfigured() && <AssistantWidget locale={locale} dict={dict.assistant} />}
       </body>
     </html>
   );

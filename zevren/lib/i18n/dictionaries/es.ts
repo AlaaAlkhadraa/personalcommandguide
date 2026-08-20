@@ -51,6 +51,18 @@ const es: Dictionary = {
     decline: "Rechazar",
     readMore: "Leer nuestra política de privacidad",
   },
+  assistant: {
+    label: "Chatear con ZEVREN",
+    title: "Asistente de ZEVREN",
+    subtitle: "Respuestas basadas en lo que está publicado en esta web.",
+    greeting: "Hola. Pregúntame lo que quieras sobre los precios, los paquetes o cómo es trabajar con ZEVREN.",
+    placeholder: "Escribe tu pregunta",
+    send: "Enviar",
+    close: "Cerrar el chat",
+    thinking: "Pensando",
+    error: "Algo salió mal. Inténtalo de nuevo en un momento.",
+    rateLimited: "Son muchas preguntas a la vez. Espera un minuto.",
+  },
   home: {
     hero: {
       badge: "Soluciones digitales",

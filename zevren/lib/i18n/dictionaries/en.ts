@@ -51,6 +51,18 @@ const en: Dictionary = {
     decline: "Decline",
     readMore: "Read our privacy policy",
   },
+  assistant: {
+    label: "Chat with ZEVREN",
+    title: "ZEVREN Assistant",
+    subtitle: "Answers from what is published on this site.",
+    greeting: "Hi. Ask me anything about prices, the packages or how working with ZEVREN goes.",
+    placeholder: "Type your question",
+    send: "Send",
+    close: "Close chat",
+    thinking: "Thinking",
+    error: "Something went wrong. Try again in a moment.",
+    rateLimited: "That is a lot of questions at once. Give it a minute.",
+  },
   home: {
     hero: {
       badge: "Digital solutions",

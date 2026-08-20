@@ -46,6 +46,11 @@ export const PRIVACY: LegalContent = {
         type: "p",
         text: "We advertise on Google. To see which ads lead to an actual enquiry, we use Google Ads conversion tracking, which does place a cookie. That happens only after you press Accept in the bar at the bottom of the page. Until then, and permanently if you press Decline, the tag runs with every advertising signal switched off: nothing is stored on your device and no identifier is read. Your choice is kept for six months, and the site works exactly the same either way. To change your mind, delete the zevren_consent cookie in your browser and the question will be asked again.",
       },
+      { type: "h2", text: "The chat assistant" },
+      {
+        type: "p",
+        text: "The site has a chat assistant that answers questions about our services and prices. Messages you type there are sent to Anthropic, the AI provider that generates the answers, and processed under a data processing agreement. We don't use them for anything beyond answering you, the conversation is not saved on your device, and you never need an account. Please don't type personal details such as your address or payment information into the chat; for anything personal, use the contact form or email us at {email}.",
+      },
       { type: "h2", text: "Security" },
       {
         type: "p",
@@ -113,6 +118,11 @@ export const PRIVACY: LegalContent = {
       {
         type: "p",
         text: "Wij adverteren via Google. Om te zien welke advertenties tot een echte aanvraag leiden, gebruiken wij conversiemeting van Google Ads, en die plaatst wél een cookie. Dat gebeurt pas nadat u onderaan de pagina op Accepteren klikt. Tot dat moment, en blijvend als u op Weigeren klikt, draait de tag met alle advertentiesignalen uitgeschakeld: er wordt niets op uw apparaat opgeslagen en geen identificatie uitgelezen. Uw keuze bewaren wij zes maanden, en de site werkt in beide gevallen precies hetzelfde. Wilt u terugkomen op uw keuze, verwijder dan de cookie zevren_consent in uw browser; dan wordt de vraag opnieuw gesteld.",
+      },
+      { type: "h2", text: "De chatassistent" },
+      {
+        type: "p",
+        text: "Op de site staat een chatassistent die vragen over onze diensten en prijzen beantwoordt. Berichten die je daar typt worden verstuurd naar Anthropic, de AI-leverancier die de antwoorden genereert, en verwerkt onder een verwerkersovereenkomst. We gebruiken ze nergens anders voor dan om je te antwoorden, het gesprek wordt niet op je apparaat bewaard, en je hebt er geen account voor nodig. Typ geen persoonlijke gegevens zoals je adres of betaalgegevens in de chat; gebruik daarvoor het contactformulier of mail ons op {email}.",
       },
       { type: "h2", text: "Beveiliging" },
       {
@@ -182,6 +192,11 @@ export const PRIVACY: LegalContent = {
         type: "p",
         text: "Wir schalten Anzeigen bei Google. Um zu sehen, welche Anzeigen zu einer echten Anfrage führen, nutzen wir die Conversion-Messung von Google Ads, und diese setzt sehr wohl ein Cookie. Das geschieht erst, nachdem Sie unten auf der Seite auf Akzeptieren geklickt haben. Bis dahin, und dauerhaft, wenn Sie auf Ablehnen klicken, läuft das Tag mit sämtlichen Werbesignalen abgeschaltet: Es wird nichts auf Ihrem Gerät gespeichert und keine Kennung ausgelesen. Ihre Wahl speichern wir sechs Monate, und die Website funktioniert in beiden Fällen genau gleich. Möchten Sie Ihre Wahl ändern, löschen Sie in Ihrem Browser das Cookie zevren_consent; dann wird erneut gefragt.",
       },
+      { type: "h2", text: "Der Chat-Assistent" },
+      {
+        type: "p",
+        text: "Auf der Website gibt es einen Chat-Assistenten, der Fragen zu unseren Leistungen und Preisen beantwortet. Nachrichten, die Sie dort eingeben, werden an Anthropic gesendet, den KI-Anbieter, der die Antworten erzeugt, und im Rahmen eines Auftragsverarbeitungsvertrags verarbeitet. Wir verwenden sie ausschließlich, um Ihnen zu antworten; das Gespräch wird nicht auf Ihrem Gerät gespeichert, und ein Konto ist nicht erforderlich. Geben Sie bitte keine persönlichen Daten wie Adresse oder Zahlungsdaten in den Chat ein; nutzen Sie dafür das Kontaktformular oder schreiben Sie an {email}.",
+      },
       { type: "h2", text: "Sicherheit" },
       {
         type: "p",
@@ -249,6 +264,11 @@ export const PRIVACY: LegalContent = {
       {
         type: "p",
         text: "Nous diffusons des annonces sur Google. Pour savoir quelles annonces mènent à une véritable demande, nous utilisons le suivi des conversions de Google Ads, qui dépose bel et bien un cookie. Cela n'a lieu qu'après votre clic sur Accepter, en bas de la page. Jusque-là, et définitivement si vous cliquez sur Refuser, la balise fonctionne avec tous les signaux publicitaires désactivés : rien n'est stocké sur votre appareil et aucun identifiant n'est lu. Votre choix est conservé six mois, et le site fonctionne exactement de la même manière dans les deux cas. Pour revenir sur votre choix, supprimez le cookie zevren_consent dans votre navigateur et la question vous sera reposée.",
+      },
+      { type: "h2", text: "L'assistant de chat" },
+      {
+        type: "p",
+        text: "Le site propose un assistant de chat qui répond aux questions sur nos services et nos prix. Les messages que vous y saisissez sont transmis à Anthropic, le fournisseur d'IA qui génère les réponses, et traités dans le cadre d'un accord de sous-traitance. Nous ne les utilisons que pour vous répondre, la conversation n'est pas conservée sur votre appareil et aucun compte n'est nécessaire. N'y saisissez pas de données personnelles comme votre adresse ou vos informations de paiement ; utilisez pour cela le formulaire de contact ou écrivez-nous à {email}.",
       },
       { type: "h2", text: "Sécurité" },
       {
@@ -318,6 +338,11 @@ export const PRIVACY: LegalContent = {
         type: "p",
         text: "Anunciamos en Google. Para ver qué anuncios llevan a una solicitud real usamos el seguimiento de conversiones de Google Ads, que sí instala una cookie. Eso ocurre solo después de que pulses Aceptar en la barra inferior de la página. Hasta entonces, y de forma permanente si pulsas Rechazar, la etiqueta funciona con todas las señales publicitarias desactivadas: no se guarda nada en tu dispositivo ni se lee ningún identificador. Tu elección se conserva seis meses, y la web funciona igual en ambos casos. Si quieres cambiar de idea, borra la cookie zevren_consent en tu navegador y volveremos a preguntar.",
       },
+      { type: "h2", text: "El asistente de chat" },
+      {
+        type: "p",
+        text: "La web tiene un asistente de chat que responde preguntas sobre nuestros servicios y precios. Los mensajes que escribes ahí se envían a Anthropic, el proveedor de IA que genera las respuestas, y se tratan bajo un contrato de encargado de tratamiento. No los usamos para nada más que responderte, la conversación no se guarda en tu dispositivo y no necesitas cuenta. No escribas datos personales como tu dirección o datos de pago en el chat; para eso usa el formulario de contacto o escríbenos a {email}.",
+      },
       { type: "h2", text: "Seguridad" },
       {
         type: "p",
@@ -384,6 +409,11 @@ export const PRIVACY: LegalContent = {
       {
         type: "p",
         text: "منعلن على جوجل. ولنعرف أي إعلان أدى لطلب حقيقي، منستخدم قياس التحويلات من Google Ads، وهاد فعلاً بيحط كوكي. بس ما بيصير إلا بعد ما تضغط أوافق بالشريط أسفل الصفحة. لهلق، وبشكل دائم إذا ضغطت أرفض، التاغ بيشتغل وكل الإشارات الإعلانية مطفية: ما بينحفظ شي على جهازك وما بينقرأ أي معرّف. اختيارك منحفظه ست شهور، والموقع بيشتغل بنفس الطريقة بالحالتين. إذا بدك تغيّر رأيك، احذف الكوكي zevren_consent من متصفحك ومنسألك من جديد.",
+      },
+      { type: "h2", text: "مساعد الدردشة" },
+      {
+        type: "p",
+        text: "بالموقع مساعد دردشة بيجاوب على أسئلة عن خدماتنا وأسعارنا. الرسائل اللي بتكتبها هناك بتنبعت لـAnthropic، مزوّد الذكاء الاصطناعي اللي بيولّد الأجوبة، وبتنعالج ضمن اتفاقية معالجة بيانات. ما منستخدمها لغير الرد عليك، والمحادثة ما بتنحفظ على جهازك، وما بتحتاج حساب. لا تكتب بالدردشة بيانات شخصية متل عنوانك أو معلومات الدفع؛ لهيك أمور استخدم نموذج التواصل أو راسلنا على {email}.",
       },
       { type: "h2", text: "الأمان" },
       {

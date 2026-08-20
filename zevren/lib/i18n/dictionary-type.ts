@@ -50,6 +50,18 @@ export interface Dictionary {
     decline: string;
     readMore: string;
   };
+  assistant: {
+    label: string;
+    title: string;
+    subtitle: string;
+    greeting: string;
+    placeholder: string;
+    send: string;
+    close: string;
+    thinking: string;
+    error: string;
+    rateLimited: string;
+  };
   home: {
     hero: {
       badge: string;

@@ -51,6 +51,18 @@ const nl: Dictionary = {
     decline: "Weigeren",
     readMore: "Lees ons privacybeleid",
   },
+  assistant: {
+    label: "Chat met ZEVREN",
+    title: "ZEVREN Assistent",
+    subtitle: "Antwoorden op basis van wat op deze site staat.",
+    greeting: "Hoi. Vraag me gerust iets over de prijzen, de pakketten of hoe samenwerken met ZEVREN werkt.",
+    placeholder: "Typ je vraag",
+    send: "Versturen",
+    close: "Chat sluiten",
+    thinking: "Aan het nadenken",
+    error: "Er ging iets mis. Probeer het zo opnieuw.",
+    rateLimited: "Dat zijn veel vragen tegelijk. Wacht even een minuut.",
+  },
   home: {
     hero: {
       badge: "Digitale oplossingen",

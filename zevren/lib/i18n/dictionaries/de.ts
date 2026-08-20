@@ -51,6 +51,18 @@ const de: Dictionary = {
     decline: "Ablehnen",
     readMore: "Datenschutzerklärung lesen",
   },
+  assistant: {
+    label: "Mit ZEVREN chatten",
+    title: "ZEVREN Assistent",
+    subtitle: "Antworten auf Basis dessen, was auf dieser Website steht.",
+    greeting: "Hallo. Fragen Sie mich gern etwas zu den Preisen, den Paketen oder zur Zusammenarbeit mit ZEVREN.",
+    placeholder: "Ihre Frage eingeben",
+    send: "Senden",
+    close: "Chat schließen",
+    thinking: "Denkt nach",
+    error: "Etwas ist schiefgegangen. Versuchen Sie es gleich noch einmal.",
+    rateLimited: "Das sind viele Fragen auf einmal. Warten Sie kurz eine Minute.",
+  },
   home: {
     hero: {
       badge: "Digitale Lösungen",
