@@ -9,3 +9,13 @@ date). When someone replies, set `replied`. The agent only writes
 
 | Business | City | Status | Notes |
 |---|---|---|---|
+| Scizzors | Heesch | drafted | 2026-08-20, free builder subdomain |
+| Kapsalon Asya | Nijkerk | drafted | 2026-08-20, free builder subdomain |
+| Kapsalon Evi | Nuenen | drafted | 2026-08-20, free builder subdomain |
+| Kapsalon Hair&style | Helmond | drafted | 2026-08-20, free builder subdomain |
+| A-style Kapsalon | Delft | drafted | 2026-08-20, free builder subdomain |
+| Thuiskapster Sabrina | Sittard | drafted | 2026-08-20, free builder subdomain |
+| Schoonheidssalon Mi Vida | - | drafted | 2026-08-20, free builder subdomain |
+| Beautysalon Man-Vrouw | Delft | drafted | 2026-08-20, free builder subdomain |
+| Masté schoonheidssalon | - | drafted | 2026-08-20, free builder subdomain |
+| Jmhoveniers | - | drafted | 2026-08-20, free builder subdomain |
