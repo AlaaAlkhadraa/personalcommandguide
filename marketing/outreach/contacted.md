@@ -29,3 +29,11 @@ date). When someone replies, set `replied`. The agent only writes
 | Massage Salon Wang | Harderwijk | drafted | 2026-08-20 batch 2, booking-shaped, free builder subdomain |
 | Thai Nakara Wellness | Haarlem | drafted | 2026-08-20 batch 2, booking-shaped, free builder subdomain |
 | Lobke Salon | Valkenswaard | drafted | 2026-08-20 batch 2, booking-shaped, free builder subdomain |
+| Autobedrijf Kleijne | Veldhoven | drafted | 2026-08-21, booking-shaped, free builder subdomain |
+| Autobedrijf van Bulken | Zeist | drafted | 2026-08-21, booking-shaped, closed Thu + weekend |
+| Autoservice West | Wolvega | drafted | 2026-08-21, booking-shaped, free builder subdomain |
+| Autobedrijf 't Hart | Wemeldinge | drafted | 2026-08-21, booking-shaped, free builder subdomain |
+| Rijschool Poldervaart | Capelle aan den IJssel | drafted | 2026-08-21, booking-shaped, free builder subdomain |
+| Ida's autorijschool | Ureterp | drafted | 2026-08-21, booking-shaped, free builder subdomain |
+| Autorijschool Jan Boezen | Dordrecht | drafted | 2026-08-21, booking-shaped, free builder subdomain |
+| Klusbedrijf de Jong | Best | drafted | 2026-08-21, portfolio-shaped, 299 |
