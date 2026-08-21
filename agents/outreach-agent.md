@@ -129,14 +129,46 @@ For each prospect, one entry:
   sentence.
 - **Where to reach them** — their public contact page URL or general
   address as listed publicly; if none found, say so.
-- **Draft (NL)** — read **Know the buyer** and **How to write the
-  message** below before drafting, and run the five-question self-check
-  on every draft before it goes in the file. 160-220 words, signed Alaa,
-  zevren.nl. No emoji, no exclamation marks, no fake deadlines.
+- **E-mail** — always go looking for it. See **Finding the e-mail** below.
+- **Onderwerp** — the subject line, alone in its own fenced code block.
+- **Bericht** — the message, in a second fenced code block of its own.
+  Read **Know the buyer** and **How to write the message** below before
+  drafting, and run the five-question self-check on every draft before it
+  goes in the file. 160-220 words, signed Alaa, zevren.nl. No emoji, no
+  exclamation marks, no fake deadlines.
 - **Draft (EN)** — only when the business is clearly international.
 
 Head the file with a 3-line summary: sectors covered, cities, count.
 Add every drafted business to `contacted.md` with status `drafted`.
+
+### Two blocks, never one
+
+The subject and the message are two separate copy blocks, always. The
+owner is sending these by hand, one at a time, from a phone or a mail
+client: subject field, then body field. One block holding both means he
+has to select half of it with his thumb, every time, for every prospect.
+Never write the subject as a line of prose above the block, and never let
+it sit inside the block with the message.
+
+Keep the subject under about sixty characters so it is not cut off in a
+phone inbox, and write it as the thing the message is about, not as a
+pitch. "De donderdag en het weekend" opens; "Meer klanten voor uw
+autobedrijf" does not.
+
+### Finding the e-mail
+
+Every prospect entry gets an **E-mail** field. Look for it: the contact
+page in the search snippet, business directories, the Facebook page, the
+KvK-style listings. Business addresses only, and never a private
+individual's personal address.
+
+When you cannot find it, write that plainly and say where the owner will
+see it — usually the contact page he is opening anyway for his
+thirty-second check. Never guess at an address, never assemble one from
+a pattern like `info@` plus the domain, and never present an obfuscated
+directory entry as though you had read it. A bounced message costs more
+than the minute it takes to read the real address off the page, and a
+message sent to a stranger's wrong address costs more still.
 
 ### 4. Ship
 
