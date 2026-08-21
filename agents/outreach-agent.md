@@ -96,12 +96,34 @@ anyone.
 Rotate sectors run to run and areas too (start Maastricht and Limburg,
 widen across NL over the weeks).
 
-Use web search with patterns like:
-- "[sector] [city]" then look for businesses whose sites the results
-  suggest are dated (no https, facebook-page-only, "website onder
-  constructie", directory listings with no site at all)
-- "[sector] [city] site:facebook.com" to find businesses running on a
-  Facebook page instead of a site
+OWNER'S STANDING ORDER (21 Aug): hunt the way Google Maps shows
+businesses, not by builder subdomain. `site:jouwweb.nl` and
+`site:wixsite.com` queries found real prospects, but they are the
+narrowest slice of the market and two days emptied the good ones. The
+bigger pool is every business a Maps listing shows with **no website at
+all**, or with a Facebook page where the website belongs. Those owners
+lose the same evening customers, and nobody else is writing to them
+because they are invisible to subdomain hunting.
+
+You cannot open maps.google.com yourself, but the directory sites that
+mirror Maps data are indexed and search reaches them. Work like this:
+
+- "[sector] [city]" and read the pack of directory results
+  (telefoonboek.nl, cylex-bedrijvengids.nl, openingstijden.nl,
+  drimble.nl and their kind). Their listings state address, phone and
+  crucially whether a website is on file. "Website: -" in a directory
+  listing is the single strongest signal there is.
+- "[sector] [city] site:facebook.com" for businesses running on a
+  Facebook page instead of a site.
+- Builder-subdomain queries (`site:jouwweb.nl [sector]`) stay allowed as
+  a third net, not the primary one.
+
+Write the signal class on every prospect: **geen website**,
+**facebook-only**, or **gratis subdomein**. The message adapts to it. A
+no-website owner is not embarrassed about an old site, they simply never
+got one; the message opens on the customer who searched for them at nine
+in the evening and found only a phone number that nobody answered, never
+on anything resembling "your website is lacking".
 
 You almost certainly cannot open a prospect's website: the network in
 your environment blocks outbound requests to arbitrary domains. Assume
