@@ -1,19 +1,12 @@
 import type { Metadata } from "next";
 import { Hero } from "@/components/home/Hero";
 import { PackagesSection } from "@/components/pricing/PackagesSection";
-import { ServicesPreview } from "@/components/home/ServicesPreview";
 import { ProjectsPreview } from "@/components/home/ProjectsPreview";
-import { GlobalFocus } from "@/components/home/GlobalFocus";
-import { WhyZevren } from "@/components/home/WhyZevren";
-import { Process } from "@/components/home/Process";
 import { FAQ } from "@/components/home/FAQ";
-import { AboutBand } from "@/components/home/AboutBand";
-import { Mission } from "@/components/home/Mission";
 import { FinalCTA } from "@/components/home/FinalCTA";
 import { headers } from "next/headers";
 
 import { buildMetadata } from "@/lib/seo";
-import { SITE_CONFIG } from "@/lib/constants";
 import { getLocale } from "@/lib/i18n/get-locale";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -59,17 +52,14 @@ export default async function HomePage() {
       {/* One reveal scope for the whole page. Each section opts in through
           `data-reveal` on its own root, so no extra wrapper lands inside a
           grid or flex parent and disturbs a layout. */}
+      {/* Five sections, one job: a visitor from an ad decides in half a
+          minute. Prices first because published prices are the pitch, the
+          demos as proof, the FAQ for objections, and one ask at the end.
+          Services, about, process and the trust bands live on their own
+          pages behind the nav; repeating them here only buried the ask. */}
       <RevealGroup>
-        <ServicesPreview dict={dict.services} homeDict={dict.home.services} />
-        {/* Prices sit right behind the services they price, high on the page:
-            a price nobody scrolls to is a price nobody compares. */}
         <PackagesSection dict={dict.offer} pricingDict={dict.pricing} />
-        <Mission dict={dict.mission} />
         <ProjectsPreview dict={dict.work} homeDict={dict.home.work} />
-        <AboutBand dict={dict.home.about} />
-        <Process dict={dict.process} homeDict={dict.home.process} />
-        <GlobalFocus dict={dict.globalFocus} />
-        <WhyZevren dict={dict.whyZevren} homeDict={dict.home.why} />
         <FAQ dict={dict.faq} homeDict={dict.home.faq} />
         <FinalCTA dict={dict.home.finalCta} contactDict={dict.contact} />
       </RevealGroup>
