@@ -2,6 +2,7 @@
 
 import { Canvas } from "@react-three/fiber";
 import { Environment, Lightformer, Sparkles } from "@react-three/drei";
+import { FrameGovernor } from "@/components/three/FrameGovernor";
 import { ZMark } from "@/components/three/ZMark";
 
 interface Scene3DProps {
@@ -24,16 +25,23 @@ export function Scene3D({
       /* A WebGL canvas keeps redrawing at 60fps for as long as it is mounted,
          even after the hero has scrolled out of sight, which costs GPU time
          and battery for something nobody is looking at. Rendering stops when
-         the hero leaves the viewport and resumes when it comes back. */
-      frameloop={onScreen ? "always" : "never"}
+         the hero leaves the viewport and resumes when it comes back.
+
+         Phones additionally run in demand mode: the FrameGovernor below asks
+         for 30 frames a second and skips the frames that would land in the
+         middle of a scroll flick, which is exactly when the stutter was
+         felt. Desktop keeps the free-running 60. */
+      frameloop={onScreen ? (lowPower ? "demand" : "always") : "never"}
       camera={
         lowPower
           ? { position: [0, -0.05, 5.75], fov: 42 }
           : { position: [0.4, 0.35, 5.6], fov: 42 }
       }
-      dpr={lowPower ? [1, 1.25] : [1, 1.75]}
+      dpr={lowPower ? 1 : [1, 1.75]}
       gl={{ antialias: !lowPower, alpha: true }}
     >
+      {lowPower && <FrameGovernor fps={30} active={onScreen} />}
+
       <ambientLight intensity={0.5} />
 
       {/* Key light, cool and front-right */}
@@ -46,7 +54,7 @@ export function Scene3D({
 
       {/* Procedural environment: no external HDR fetch, so it works under the
           site's strict connect-src CSP. */}
-      <Environment resolution={128}>
+      <Environment resolution={lowPower ? 64 : 128}>
         <Lightformer intensity={3} color="#ffffff" position={[3.5, 2.5, 3]} scale={[1.6, 4, 1]} />
         <Lightformer intensity={2.2} color="#60a5fa" position={[-3.5, 1, 2.5]} scale={[1.2, 3.5, 1]} />
         <Lightformer intensity={1.6} color="#1d4ed8" position={[0, 3.5, -2]} scale={[5, 1.2, 1]} />
@@ -64,7 +72,7 @@ export function Scene3D({
 
       {!reducedMotion && (
         <Sparkles
-          count={lowPower ? 35 : 80}
+          count={lowPower ? 20 : 80}
           scale={9}
           size={1.6}
           speed={0.22}
