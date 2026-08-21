@@ -118,6 +118,29 @@ mirror Maps data are indexed and search reaches them. Work like this:
 - Builder-subdomain queries (`site:jouwweb.nl [sector]`) stay allowed as
   a third net, not the primary one.
 
+**PROOF OF LIFE FIRST — OWNER'S ORDER, 21 Aug.** The owner has been
+handed prospects whose business turned out closed or whose site was
+dead. Every one of those costs him a wasted check and burns his trust in
+the whole file. So before any business enters a daily file, search must
+establish that it is trading TODAY, and the card must show the proof:
+
+- A dated sign of life from the last 12 months: a review with a date, a
+  Facebook or Instagram post, a directory entry showing current opening
+  hours, a vacancy, anything with a timestamp. Name it on the card as
+  **Actief:** with the date.
+- Search the business name alone and read what comes back. "Definitief
+  gesloten", "permanent gesloten", "opgeheven", "failliet", a KVK
+  deregistration, a "te huur" listing at their address, or reviews that
+  stop years ago with nothing after: any of these and the business is
+  dead. Skip it, and add it to `contacted.md` as `not fit - closed` so
+  no future run wastes time on it again.
+- No dated sign of life findable at all is itself a verdict: skip. A
+  prospect that cannot be shown alive is not a prospect.
+
+This check is not optional and not satisfied by the owner's thirty-second
+check: his check is the last gate, not the first. Six alive prospects
+beat eight where two embarrass the file.
+
 Write the signal class on every prospect: **geen website**,
 **facebook-only**, or **gratis subdomein**. The message adapts to it. A
 no-website owner is not embarrassed about an old site, they simply never
