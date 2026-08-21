@@ -5,7 +5,7 @@ import { LOCALES } from "@/lib/i18n/config";
 import { askAssistant, type ChatTurn } from "@/lib/server/ai/chat";
 import { buildSystemPrompt } from "@/lib/server/ai/knowledge";
 import { verifyCsrf } from "@/lib/server/csrf";
-import { chatConfigured } from "@/lib/server/env";
+import { chatConfigured, env } from "@/lib/server/env";
 import {
   fail,
   ipIdentity,
@@ -39,9 +39,14 @@ export const dynamic = "force-dynamic";
 const MAX_MESSAGE_CHARS = 1500;
 const MAX_TURNS = 12;
 
+// History turns get a looser ceiling than the visitor's own message: the
+// assistant's previous replies travel back through this schema, and a reply
+// can legitimately be longer than what a visitor may type. Anything over the
+// wire limit is truncated below rather than rejected, because rejecting the
+// server's own earlier output would wedge the conversation for good.
 const turnSchema = z.object({
   role: z.enum(["user", "assistant"]),
-  content: z.string().min(1).max(MAX_MESSAGE_CHARS),
+  content: z.string().min(1).max(8000),
 });
 
 const bodySchema = z.object({
@@ -86,7 +91,10 @@ export const POST = withErrorHandling("api.chat", async (request: NextRequest) =
     });
   }
 
-  const body = await readJson(request, 32 * 1024);
+  // 12 turns plus a message at full length is ~20k characters, and Arabic
+  // encodes at two bytes per character, so 32KB would reject an honest long
+  // conversation in one of the site's own languages.
+  const body = await readJson(request, 96 * 1024);
   if (body === null) return fail(400, "invalid_body", "Invalid request.");
 
   if (!(await verifyCsrf(request, body))) {
@@ -98,12 +106,47 @@ export const POST = withErrorHandling("api.chat", async (request: NextRequest) =
 
   const { message, history = [], locale = "nl" } = parsed.data;
 
+  // Everything the provider spends here is real money, and per-visitor
+  // buckets do not stop a caller who rotates addresses. One shared bucket
+  // over the whole site is the actual ceiling on a day's bill.
+  const daily = await rateLimit({
+    scope: "chat:daily",
+    identity: "site",
+    limit: env().CHAT_DAILY_BUDGET,
+    windowSeconds: 86400,
+  });
+  if (!daily.allowed) {
+    return fail(503, "unavailable", "The assistant is not available right now.", {
+      retryAfter: daily.retryAfterSeconds,
+    });
+  }
+
   // The client sends the history back, so it is visitor-controlled and cannot
   // be trusted as a record of what was said. That is acceptable: the system
   // prompt is authoritative, the model is told that message text is not
-  // instruction, and nothing here reads or writes anyone's data. Trimming to
-  // the last few turns keeps the cost bounded either way.
-  const turns: ChatTurn[] = [...history.slice(-MAX_TURNS), { role: "user", content: message }];
+  // instruction, and nothing here reads or writes anyone's data.
+  //
+  // It also cannot be trusted to be well-formed. The provider rejects a
+  // conversation whose roles do not alternate or that opens with an
+  // assistant turn, and a failed send or a truncation produces exactly
+  // those shapes. Repairing here means one bad round can never wedge the
+  // conversation: keep the last turn of any same-role run, cap each turn's
+  // length, and drop a leading assistant turn.
+  const trimmed = history
+    .slice(-MAX_TURNS)
+    .map((turn) => ({ ...turn, content: turn.content.slice(0, MAX_MESSAGE_CHARS) }));
+  const alternating: ChatTurn[] = [];
+  for (const turn of trimmed) {
+    if (alternating.length > 0 && alternating[alternating.length - 1]?.role === turn.role) {
+      alternating[alternating.length - 1] = turn;
+    } else {
+      alternating.push(turn);
+    }
+  }
+  while (alternating[0]?.role === "assistant") alternating.shift();
+  if (alternating[alternating.length - 1]?.role === "user") alternating.pop();
+
+  const turns: ChatTurn[] = [...alternating, { role: "user", content: message }];
 
   const result = await askAssistant(buildSystemPrompt(locale), turns);
 

@@ -60,8 +60,8 @@ const es: Dictionary = {
     send: "Enviar",
     close: "Cerrar el chat",
     thinking: "Pensando",
-    error: "Algo salió mal. Inténtalo de nuevo en un momento.",
-    rateLimited: "Son muchas preguntas a la vez. Espera un minuto.",
+    error: "Algo salió mal. Inténtelo de nuevo en un momento.",
+    rateLimited: "Son muchas preguntas a la vez. Espere un minuto.",
   },
   home: {
     hero: {

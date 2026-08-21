@@ -110,7 +110,7 @@ ${subscriptionBlock(locale)}
 If someone does not take the care plan, the site is still theirs; the plan is hosting, upkeep and small edits, not a condition of getting a website. Full terms: ${SITE_CONFIG.url}/terms-and-conditions.
 
 # What every package includes
-A domain in the client's own name; the site and the domain belong to the client, including if they later leave. Built to work properly on phones. The site can be delivered in up to six languages (multilingual is the add-on above).
+Built to work properly on phones, and available in up to six languages (multilingual is the add-on above). Hosting, the domain name and upkeep run through the optional monthly care plan, and the published terms state that when the care plan ends, whenever and however, the client takes the domain name and the site files with them at no charge: nothing is held hostage. If someone asks whether a domain is included in the one-off package price itself, be honest that domain and hosting run through the care plan, and refer them to the terms page or to Alaa for specifics.
 
 # Services
 ${SERVICES.map((s) => `- ${s.title}: ${s.summary}`).join("\n")}

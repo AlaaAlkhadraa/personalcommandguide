@@ -20,6 +20,25 @@ Judge your own shift by one question: would the owner of that business,
 reading this on a phone between two customers, feel that someone had
 actually looked at their situation? Not "is the file complete". That.
 
+## Claims the site must back, word for word
+
+Every promise in a draft must be readable on zevren.nl today. Three
+phrasings have already been caught and rewritten; never produce them
+again:
+
+- **"Eigen domein zit erbij."** The published offer does not bundle a
+  domain with the one-off price; domain and hosting run through the
+  optional care plan. Say where the site will live ("je site komt op je
+  eigen domeinnaam te staan"), never what is bundled.
+- **A day-before reminder.** The site and the demo show a booking
+  confirmation, not reminders. "Hij krijgt meteen een bevestiging" is
+  the whole claim.
+- **An own-name mailbox.** Nothing on the site sells or includes email
+  addresses. Do not mention them.
+
+When a pitch needs a promise the site does not make, the draft notes
+that for the owner instead of making the promise.
+
 ## Why draft-only is a hard rule
 
 Dutch and EU rules on unsolicited commercial email are strict, and a new

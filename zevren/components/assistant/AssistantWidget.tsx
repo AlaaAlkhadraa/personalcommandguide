@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { adsConfigured } from "@/lib/analytics/google-ads";
+import { CONSENT_EVENT, readConsent } from "@/lib/consent";
 import { useCsrfToken } from "@/lib/use-csrf-token";
 import type { Locale } from "@/lib/i18n/config";
 import type { Dictionary } from "@/lib/i18n/dictionary-type";
@@ -19,8 +21,10 @@ interface Message {
  * language as the cards. Conversation state lives in memory only; nothing
  * about the visitor is stored on their machine.
  *
- * The server decides whether this renders at all (layout checks for an API
- * key), so this component can assume the endpoint exists.
+ * The outer component owns only the open flag and the transcript, so a
+ * closed and reopened panel keeps its conversation. Everything that costs
+ * anything, including the CSRF token fetch, lives in the panel and therefore
+ * does not run for the large majority of visitors who never open the chat.
  */
 export function AssistantWidget({
   locale,
@@ -31,6 +35,65 @@ export function AssistantWidget({
 }) {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
+  // On a phone the cookie bar and this launcher share the same bottom edge,
+  // and the bar sits on top: a first-time visitor could see a chat button
+  // they cannot press. So the corner holds one thing at a time; the launcher
+  // waits until the cookie question is answered. Starts false and is decided
+  // in an effect, because the server cannot read the consent cookie state.
+  const [cornerFree, setCornerFree] = useState(false);
+
+  useEffect(() => {
+    if (!adsConfigured() || readConsent() !== "unknown") {
+      setCornerFree(true);
+      return;
+    }
+    const onChoice = () => setCornerFree(true);
+    window.addEventListener(CONSENT_EVENT, onChoice);
+    return () => window.removeEventListener(CONSENT_EVENT, onChoice);
+  }, []);
+
+  if (!cornerFree) return null;
+
+  return (
+    <>
+      {/* Launcher. Hidden while the panel is open: one affordance at a time. */}
+      {!open && (
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          aria-label={dict.label}
+          className="fixed bottom-5 end-5 z-[80] flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-glow transition-all duration-200 hover:bg-primary-light active:scale-95"
+        >
+          <ChatIcon className="h-6 w-6" />
+        </button>
+      )}
+
+      {open && (
+        <AssistantPanel
+          locale={locale}
+          dict={dict}
+          messages={messages}
+          setMessages={setMessages}
+          onClose={() => setOpen(false)}
+        />
+      )}
+    </>
+  );
+}
+
+function AssistantPanel({
+  locale,
+  dict,
+  messages,
+  setMessages,
+  onClose,
+}: {
+  locale: Locale;
+  dict: Dictionary["assistant"];
+  messages: Message[];
+  setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
+  onClose: () => void;
+}) {
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
@@ -42,11 +105,11 @@ export function AssistantWidget({
   useEffect(() => {
     const list = listRef.current;
     if (list) list.scrollTop = list.scrollHeight;
-  }, [messages, busy, open]);
+  }, [messages, busy]);
 
   useEffect(() => {
-    if (open) inputRef.current?.focus();
-  }, [open]);
+    inputRef.current?.focus();
+  }, []);
 
   const send = useCallback(async () => {
     const text = input.trim();
@@ -81,134 +144,130 @@ export function AssistantWidget({
       if (response.ok && data?.reply) {
         setMessages((current) => [...current, { role: "assistant", content: data.reply as string }]);
       } else {
+        // The question comes back out of the transcript and into the box. An
+        // unanswered user turn left in the history would make every following
+        // request carry two user turns in a row, and this way the visitor can
+        // also retry without retyping.
+        setMessages((current) =>
+          current[current.length - 1]?.role === "user" ? current.slice(0, -1) : current
+        );
+        setInput(text);
         setNotice(response.status === 429 ? dict.rateLimited : dict.error);
       }
     } catch {
+      setMessages((current) =>
+        current[current.length - 1]?.role === "user" ? current.slice(0, -1) : current
+      );
+      setInput(text);
       setNotice(dict.error);
     } finally {
       setBusy(false);
       inputRef.current?.focus();
     }
-  }, [input, busy, messages, csrfToken, locale, dict]);
+  }, [input, busy, messages, setMessages, csrfToken, locale, dict]);
 
   return (
-    <>
-      {/* Launcher. Hidden while the panel is open: one affordance at a time. */}
-      {!open && (
+    <div
+      role="dialog"
+      aria-label={dict.title}
+      className="fixed bottom-5 end-5 z-[80] flex max-h-[min(34rem,calc(100dvh-2.5rem))] w-[calc(100vw-2.5rem)] max-w-sm flex-col overflow-hidden rounded-2xl border border-white/10 bg-navy/95 shadow-2xl backdrop-blur"
+    >
+      {/* Header, in the site's card language. */}
+      <div className="flex items-start justify-between gap-3 border-b border-white/10 bg-surface/60 px-5 py-4">
+        <div className="flex flex-col gap-0.5">
+          <span className="font-heading text-sm font-semibold text-white">{dict.title}</span>
+          <span className="text-xs text-muted">{dict.subtitle}</span>
+        </div>
         <button
           type="button"
-          onClick={() => setOpen(true)}
-          aria-label={dict.label}
-          className="fixed bottom-5 end-5 z-[80] flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-glow transition-all duration-200 hover:bg-primary-light active:scale-95"
+          onClick={onClose}
+          aria-label={dict.close}
+          className="rounded-full p-1.5 text-muted transition-colors hover:bg-white/5 hover:text-white"
         >
-          <ChatIcon className="h-6 w-6" />
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={1.6}
+            strokeLinecap="round"
+            className="h-5 w-5"
+            aria-hidden="true"
+          >
+            <path d="M6 6l12 12M18 6 6 18" />
+          </svg>
         </button>
-      )}
+      </div>
 
-      {open && (
-        <div
-          role="dialog"
-          aria-label={dict.title}
-          className="fixed bottom-5 end-5 z-[80] flex max-h-[min(34rem,calc(100dvh-2.5rem))] w-[calc(100vw-2.5rem)] max-w-sm flex-col overflow-hidden rounded-2xl border border-white/10 bg-navy/95 shadow-2xl backdrop-blur"
-        >
-          {/* Header, in the site's card language. */}
-          <div className="flex items-start justify-between gap-3 border-b border-white/10 bg-surface/60 px-5 py-4">
-            <div className="flex flex-col gap-0.5">
-              <span className="font-heading text-sm font-semibold text-white">{dict.title}</span>
-              <span className="text-xs text-muted">{dict.subtitle}</span>
-            </div>
-            <button
-              type="button"
-              onClick={() => setOpen(false)}
-              aria-label={dict.close}
-              className="rounded-full p-1.5 text-muted transition-colors hover:bg-white/5 hover:text-white"
-            >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={1.6}
-                strokeLinecap="round"
-                className="h-5 w-5"
-                aria-hidden="true"
-              >
-                <path d="M6 6l12 12M18 6 6 18" />
-              </svg>
-            </button>
+      {/* Conversation. */}
+      <div ref={listRef} className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
+        <Bubble role="assistant">{dict.greeting}</Bubble>
+        {messages.map((message, index) => (
+          <Bubble key={index} role={message.role}>
+            {message.content}
+          </Bubble>
+        ))}
+        {busy && (
+          <div className="flex items-center gap-2 px-1 text-xs text-muted">
+            <span className="inline-flex gap-1" aria-hidden="true">
+              <Dot delay="0ms" />
+              <Dot delay="150ms" />
+              <Dot delay="300ms" />
+            </span>
+            {dict.thinking}
           </div>
+        )}
+        {notice && (
+          <p className="rounded-xl bg-red-500/10 px-3 py-2 text-xs leading-relaxed text-red-300">
+            {notice}
+          </p>
+        )}
+      </div>
 
-          {/* Conversation. */}
-          <div ref={listRef} className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
-            <Bubble role="assistant">{dict.greeting}</Bubble>
-            {messages.map((message, index) => (
-              <Bubble key={index} role={message.role}>
-                {message.content}
-              </Bubble>
-            ))}
-            {busy && (
-              <div className="flex items-center gap-2 px-1 text-xs text-muted">
-                <span className="inline-flex gap-1" aria-hidden="true">
-                  <Dot delay="0ms" />
-                  <Dot delay="150ms" />
-                  <Dot delay="300ms" />
-                </span>
-                {dict.thinking}
-              </div>
-            )}
-            {notice && (
-              <p className="rounded-xl bg-red-500/10 px-3 py-2 text-xs leading-relaxed text-red-300">
-                {notice}
-              </p>
-            )}
-          </div>
-
-          {/* Composer. */}
-          <form
-            onSubmit={(event) => {
+      {/* Composer. */}
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          void send();
+        }}
+        className="flex items-end gap-2 border-t border-white/10 bg-surface/60 p-3"
+      >
+        <textarea
+          ref={inputRef}
+          value={input}
+          onChange={(event) => setInput(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" && !event.shiftKey) {
               event.preventDefault();
               void send();
-            }}
-            className="flex items-end gap-2 border-t border-white/10 bg-surface/60 p-3"
+            }
+          }}
+          rows={1}
+          maxLength={1500}
+          placeholder={dict.placeholder}
+          aria-label={dict.placeholder}
+          className="max-h-28 min-h-[2.6rem] flex-1 resize-none rounded-xl border border-white/10 bg-navy/80 px-3.5 py-2.5 text-sm text-white placeholder:text-muted/70 focus:border-accent/60 focus:outline-none"
+        />
+        <button
+          type="submit"
+          disabled={busy || !input.trim()}
+          aria-label={dict.send}
+          className="flex h-[2.6rem] w-[2.6rem] shrink-0 items-center justify-center rounded-xl bg-primary text-white transition-colors hover:bg-primary-light disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={1.6}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="h-5 w-5 rtl:-scale-x-100"
+            aria-hidden="true"
           >
-            <textarea
-              ref={inputRef}
-              value={input}
-              onChange={(event) => setInput(event.target.value)}
-              onKeyDown={(event) => {
-                if (event.key === "Enter" && !event.shiftKey) {
-                  event.preventDefault();
-                  void send();
-                }
-              }}
-              rows={1}
-              maxLength={1500}
-              placeholder={dict.placeholder}
-              aria-label={dict.placeholder}
-              className="max-h-28 min-h-[2.6rem] flex-1 resize-none rounded-xl border border-white/10 bg-navy/80 px-3.5 py-2.5 text-sm text-white placeholder:text-muted/70 focus:border-accent/60 focus:outline-none"
-            />
-            <button
-              type="submit"
-              disabled={busy || !input.trim()}
-              aria-label={dict.send}
-              className="flex h-[2.6rem] w-[2.6rem] shrink-0 items-center justify-center rounded-xl bg-primary text-white transition-colors hover:bg-primary-light disabled:cursor-not-allowed disabled:opacity-40"
-            >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={1.6}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="h-5 w-5 rtl:-scale-x-100"
-                aria-hidden="true"
-              >
-                <path d="M4 12h16M13 5l7 7-7 7" />
-              </svg>
-            </button>
-          </form>
-        </div>
-      )}
-    </>
+            <path d="M4 12h16M13 5l7 7-7 7" />
+          </svg>
+        </button>
+      </form>
+    </div>
   );
 }
 
