@@ -48,3 +48,5 @@ search could not prove them alive, not that closure was confirmed.
 | Atelier Sona (Textiel Atelier Vollenhove) | Vollenhove | drafted | 2026-08-21 avond, booking-shaped, facebook-only, e-mail bekend; actief: posts van na mrt 2026 |
 | JM Dierfysiotherapie | Sint Anthonis | drafted | 2026-08-21 avond, booking-shaped, gratis subdomein, e-mail bekend; actief: NVFD-register 21-08-2026 |
 | Petra Vierhouten Medisch Pedicure | Hierden | drafted | 2026-08-21 avond, booking-shaped, facebook-only; actief: ProVoet-register 21-08-2026 |
+| Bisschops 2wielers | Kerkrade | drafted | 2026-08-22, booking-shaped, verouderde eigen site (coronatijd-tekst), e-mail bekend; actief: Yelp-pagina "Updated April 2026" |
+| Xclusive Ink Heerlen | Heerlen | not fit - closed | 2026-08-22: Instagram-account heet nu "Opgeheven", pand wordt gedreven door Ink Paradise. Nooit benaderd; genoteerd zodat geen volgende run er tijd aan verliest |
