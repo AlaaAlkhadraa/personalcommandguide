@@ -50,3 +50,28 @@ search could not prove them alive, not that closure was confirmed.
 | Petra Vierhouten Medisch Pedicure | Hierden | drafted | 2026-08-21 avond, booking-shaped, facebook-only; actief: ProVoet-register 21-08-2026 |
 | Bisschops 2wielers | Kerkrade | drafted | 2026-08-22, booking-shaped, verouderde eigen site (coronatijd-tekst), e-mail bekend; actief: Yelp-pagina "Updated April 2026" |
 | Xclusive Ink Heerlen | Heerlen | not fit - closed | 2026-08-22: Instagram-account heet nu "Opgeheven", pand wordt gedreven door Ink Paradise. Nooit benaderd; genoteerd zodat geen volgende run er tijd aan verliest |
+| Myrthes Trimsalon | Rijen | drafted | 2026-08-22 ronde B; actief: eigen Facebookbericht over verhuizing naar Rijen + KvK-vestiging De Vucht 56 |
+| Trimsalon De Vrolijke Snuit | Bathmen | drafted | 2026-08-22 ronde B; te checken: Facebookbericht van na aug 2025 |
+| Hondenschool Okidoggy | Dirksland | drafted | 2026-08-22 ronde B; te checken: startdatum cursus na juni 2026 |
+| Hofman Pedicure praktijk & Beauty | Vorstenbosch / Valthe | drafted | 2026-08-22 ronde B; te checken: Facebookbericht van na aug 2025 |
+| Voetverzorging Anne-Marie | Niezijl | drafted | 2026-08-22 ronde B; actief: ProVoet-registratie opgevraagd 22-08-2026 |
+| Pedicure Marcella | onbekend | drafted | 2026-08-22 ronde B; te checken: actuele vermelding pedicure.nl/provoet.nl + plaatsnaam |
+| Gerrie's Pedicure | onbekend | drafted | 2026-08-22 ronde B; te checken: actuele ProVoet-registratie |
+| Haarstudio Janita | regio Oost-Groningen | drafted | 2026-08-22 ronde B; te checken: plaatsnaam en openingstijden |
+| Hairdesign Marjorie | onbekend | drafted | 2026-08-22 ronde B; te checken: plaats en openingstijden |
+| Kapsalon Figaro | Hillegom | drafted | 2026-08-22 ronde B; actief: actuele openingstijden + 4,6 uit 150+ stemmen (22-08-2026). LET OP: heeft al eigen domein |
+| Sterre's Nagelstudio | Prinsenbeek | drafted | 2026-08-22 ronde B; te checken: social post na juni 2026 |
+| Nagelstudio Monique | Meppel | drafted | 2026-08-22 ronde B; te checken: pagina Actualiteiten na aug 2025 |
+| Schoonheidssalon In2Beauty | onbekend | drafted | 2026-08-22 ronde B; te checken: plaats en openingstijden |
+| Suus & So Schoonheidssalon | Breezand | drafted | 2026-08-22 ronde B; actief: prijslijst 2026 op eigen site (22-08-2026) |
+| Autorijschool Marc Hage | Veenendaal | drafted | 2026-08-22 ronde B; actief: CBR-register 1265F1, meetperiode 1-4-2025 t/m 31-3-2026, 39 kandidaten |
+| Rijschool Anwar | onbekend | drafted | 2026-08-22 ronde B; te checken: CBR-rijschoolzoeker, actuele meetperiode |
+| Verkeersschool Liemers | Liemers/Achterhoek | drafted | 2026-08-22 ronde B; te checken: CBR-pagina stond nog op meetperiode 2020-2021 |
+| Linden Tweewielers | Barendrecht | drafted | 2026-08-22 ronde B; actief: actuele openingstijden incl. vrijdagavond tot 21:00 (22-08-2026) |
+| FietsEnMakery.nl | Oeffelt | drafted | 2026-08-22 ronde B; te checken: openingstijden ma-do 10:00-18:00 |
+| Marcel Boks Autobedrijf | Schoonebeek | drafted | 2026-08-22 ronde B; te checken: vestiging Nieuw-Amsterdamseweg 74 nog open |
+| Garage de Maree | Oss | drafted | 2026-08-22 ronde B; te checken: vestiging Friezenweg 25 actueel |
+| D-kaya Hair & Tattoo Studio | Dordrecht | drafted | 2026-08-22 ronde B; te checken: social post na juni 2026 |
+| Massagepraktijk Ceylon | onbekend | drafted | 2026-08-22 ronde B; te checken: plaats en actuele prijslijst |
+| Massagepraktijk Julsing | Kantens | drafted | 2026-08-22 ronde B; te checken: vermelding kantens.nl / massage.nl actueel |
+| Bootcamp Body Power | onbekend | drafted | 2026-08-22 ronde B; te checken: lesrooster met week na aug 2026 |
