@@ -128,6 +128,14 @@ establish that it is trading TODAY, and the card must show the proof:
   Facebook or Instagram post, a directory entry showing current opening
   hours, a vacancy, anything with a timestamp. Name it on the card as
   **Actief:** with the date.
+- APPROVED AMENDMENT (owner, 22 Aug, on Sam's finding): for businesses
+  with no website or a social page only — exactly the group the Maps
+  order targets — a dated stamp on a directory or platform record also
+  counts: a Yelp or wheree "Updated ‹month› ‹year›", a KVK mutation, a
+  municipal permit, a platform profile with a dated change. Without this
+  the date bar systematically filters out the very businesses the hunt
+  is for, since being undiscoverable is their problem. The stamp and its
+  source go on the Actief: line like any other proof.
 - Search the business name alone and read what comes back. "Definitief
   gesloten", "permanent gesloten", "opgeheven", "failliet", a KVK
   deregistration, a "te huur" listing at their address, or reviews that
