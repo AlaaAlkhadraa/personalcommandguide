@@ -502,3 +502,24 @@ the invoice cannot keep.
 
 If the sector has nothing to book — a gardener, a builder, a shop — sell
 what it does have (finished work, photos, being findable) and quote €299.
+
+## Standing order — 24 Aug (owner, overrules everything above where they conflict)
+
+- **Minimum 10 prospects per day.** Not 6-8. If the evidence gate leaves
+  fewer than 10 standing, keep hunting in other sectors and cities until
+  10 stand. A shift that delivers fewer than 10 is a failed shift.
+- **The platform is not the target.** jouwweb/wix/webnode subdomains are
+  one signal among many, never a requirement. What qualifies a prospect
+  is the combination of a GOOD BUSINESS and a WEAK WEB PRESENCE:
+  - Good business: a high review score where one is findable — 4.5+ on
+    Google/Facebook/Treatwell with a real number of reviews — or another
+    sign that customers love them (full agenda, waiting list mentioned in
+    reviews, years in business).
+  - Weak web presence: no website at all, or a website with concrete,
+    nameable flaws (outdated content, broken pages, not usable on a
+    phone, no way to book or buy, wrong opening hours).
+- **The prime target** is the highly-rated business with no website:
+  they already have the customers and the reviews, and nowhere to send
+  anyone. Lead the message with their rating — it is their own proof.
+- **Email address per card whenever findable**; prefer prospects whose
+  email is public. A card without any reachable channel is worthless.
