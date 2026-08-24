@@ -10,12 +10,17 @@ in Claude Code Remote voeren het uit.
 |---|---|---|---|
 | Sam (outreach) | dagelijks 07:03 | ≥10 prospects met e-mail in `marketing/outreach/` | `agents/outreach-agent.md` |
 | Azzouz (verificatie) | dagelijks 08:30 | `YYYY-MM-DD-verified.md`: verdict per kaart + definitieve mails | triggerprompt |
-| John (marketing) | maandag 09:00 | weekpack in `marketing/social/` + 1 artikel | `agents/marketing-agent.md` |
+| John (marketing) | dagelijks 06:45 | 1 LinkedIn-post + 1 actie in `marketing/social/`; ma: artikel-VOORSTEL in `marketing/drafts/` | `agents/marketing-agent.md` |
 | Azzouz (CEO) | zondag 17:00 | weekrapport in `marketing/reports/` + directieven | `agents/ceo-agent.md` |
 | Opzichter | dagelijks 09:15 | dashboard verversen + dekking + één notificatie | dit bestand |
 
 ## De keten van elke ochtend
 
+0. **06:45 — John levert marketing.** Eén verzendklare LinkedIn-post
+   en één dagactie; op maandag het weekartikel als VOORSTEL in
+   `marketing/drafts/` — het gaat pas live na akkoord van de eigenaar.
+   Niets dat een agent voorstelt, wordt geactiveerd zonder dat de
+   eigenaar het eerst gehoord heeft.
 1. **07:03 — Sam jaagt.** Minimaal 10 kaarten, pusht in batches.
 2. **08:30 — Azzouz verifieert.** Loopt elke kaart na (levensteken,
    e-mailadres, reviewscore, claims gedekt door zevren.nl, niet al in
