@@ -305,6 +305,6 @@ For implementation, see the [tools registry](../../tools/REGISTRY.md). Key analy
 
 - **ab-testing**: For experiment tracking
 - **attribution**: For attribution models, multi-touch/MMM/incrementality, and reconciling conflicting numbers across tools (once tracking is live)
-- **seo-audit**: For organic traffic analysis
+- **seo-audit-marketing**: For organic traffic analysis
 - **cro**: For conversion optimization (uses this data)
 - **revops**: For pipeline metrics, CRM tracking, and revenue attribution

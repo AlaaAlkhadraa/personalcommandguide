@@ -20,7 +20,7 @@ The plan's Section 11 makes this thesis explicit by:
 
 | Skill | What it does | Primary use in Acquisition |
 |---|---|---|
-| `seo-audit` | Audit site for technical and on-page SEO | Quarterly site health checks |
+| `seo-audit-marketing` | Audit site for technical and on-page SEO | Quarterly site health checks |
 | `ai-seo` | Optimize content for AI search engines / LLM citation | Future-proof content strategy |
 | `programmatic-seo` | Build template-driven SEO pages at scale | Location, comparison, integration page systems |
 | `schema` | Add structured data markup | Rich snippets, eligibility for AI citation |

@@ -253,6 +253,6 @@ Recommended pages to create with priority order based on search volume.
 
 - **programmatic-seo**: For building competitor pages at scale
 - **copywriting**: For writing compelling comparison copy
-- **seo-audit**: For optimizing competitor pages
+- **seo-audit-marketing**: For optimizing competitor pages
 - **schema**: For FAQ and comparison schema
 - **sales-enablement**: For internal sales collateral, decks, and objection docs

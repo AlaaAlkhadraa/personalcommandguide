@@ -18,7 +18,7 @@ Loops are grouped by function. Naming follows the "The X loop" convention.
 - **Check cadence**: Weekly
 - **Acts when**: A striking-distance keyword (positions 5–20) or a rising query has no adequate page.
 - **Purpose**: Surface new ranking opportunities before competitors take them.
-- **Skills used**: `seo-audit`, `programmatic-seo`, `content-strategy`
+- **Skills used**: `seo-audit-marketing`, `programmatic-seo`, `content-strategy`
 - **Loop body**:
   1. Pull ranking + impression data (Search Console / rank tracker).
   2. Diff vs. last run: new striking-distance keywords, rising queries with no matching page.
@@ -33,7 +33,7 @@ Loops are grouped by function. Naming follows the "The X loop" convention.
 - **Check cadence**: Weekly
 - **Acts when**: A priority keyword or page drops more than N positions vs. baseline.
 - **Purpose**: Catch and diagnose SEO regressions before they compound.
-- **Skills used**: `seo-audit`, `analytics`
+- **Skills used**: `seo-audit-marketing`, `analytics`
 - **Loop body**:
   1. Track positions for priority keywords/pages.
   2. Flag material drops; diff what changed (content, links, SERP layout, algo-update timing).
@@ -47,7 +47,7 @@ Loops are grouped by function. Naming follows the "The X loop" convention.
 - **Check cadence**: Monthly
 - **Acts when**: A page's traffic/rankings declined materially over the trailing 90 days.
 - **Purpose**: Refresh decaying content before it slides out of rankings.
-- **Skills used**: `copy-editing`, `seo-audit`, `content-strategy`
+- **Skills used**: `copy-editing`, `seo-audit-marketing`, `content-strategy`
 - **Loop body**:
   1. Find pages with declining trailing-90-day traffic/rankings.
   2. Pick the highest-value decayers.
@@ -61,7 +61,7 @@ Loops are grouped by function. Naming follows the "The X loop" convention.
 - **Check cadence**: On new/updated content, or weekly
 - **Acts when**: A published page has fewer relevant internal links (in or out) than it should.
 - **Purpose**: Distribute link equity and help new content get discovered and rank.
-- **Skills used**: `seo-audit`, `site-architecture`, `content-strategy`
+- **Skills used**: `seo-audit-marketing`, `site-architecture`, `content-strategy`
 - **Loop body**:
   1. Identify recently published/updated pages.
   2. Find relevant existing pages that should link to them (and vice versa).
@@ -75,7 +75,7 @@ Loops are grouped by function. Naming follows the "The X loop" convention.
 - **Check cadence**: Monthly
 - **Acts when**: Template pages show indexation gaps, thin content, duplication, or cannibalization.
 - **Purpose**: Keep large templated page sets healthy so they don't drag the whole domain.
-- **Skills used**: `programmatic-seo`, `seo-audit`
+- **Skills used**: `programmatic-seo`, `seo-audit-marketing`
 - **Loop body**:
   1. Sample the template page set; check indexation, word/data uniqueness, and query overlap.
   2. Flag thin, duplicate, cannibalizing, or deindexed pages.
@@ -104,7 +104,7 @@ Loops are grouped by function. Naming follows the "The X loop" convention.
 - **Check cadence**: Weekly
 - **Acts when**: The editorial pipeline has fewer than N weeks of planned content queued.
 - **Purpose**: Keep the content pipeline from running dry.
-- **Skills used**: `content-strategy`, `marketing-ideas`, `seo-audit`
+- **Skills used**: `content-strategy`, `marketing-ideas`, `seo-audit-marketing`
 - **Loop body**:
   1. Count planned/drafted pieces remaining in the calendar.
   2. If below the buffer, generate new topic ideas from the keyword-gap output, customer questions, and pillar plan.
@@ -271,7 +271,7 @@ Loops are grouped by function. Naming follows the "The X loop" convention.
 - **Check cadence**: Weekly
 - **Acts when**: New relevant link/guest-post/mention targets appear (or the pipeline is thin).
 - **Purpose**: Keep a steady flow of link-building and earned-mention opportunities.
-- **Skills used**: `public-relations`, `seo-audit`
+- **Skills used**: `public-relations`, `seo-audit-marketing`
 - **Loop body**:
   1. Find new prospects: sites linking to competitors, relevant roundups, unlinked brand mentions, resource pages.
   2. Qualify by relevance + authority.

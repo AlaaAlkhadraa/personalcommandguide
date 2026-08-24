@@ -185,6 +185,6 @@ Rate each factor 1-5:
 
 - **lead-magnets**: For downloadable content lead magnets (ebooks, checklists, templates)
 - **cro**: For optimizing the tool's landing page
-- **seo-audit**: For SEO-optimizing the tool
+- **seo-audit-marketing**: For SEO-optimizing the tool
 - **analytics**: For measuring tool usage
 - **emails**: For nurturing leads from the tool

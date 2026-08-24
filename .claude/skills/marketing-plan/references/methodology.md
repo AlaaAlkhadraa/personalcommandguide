@@ -89,7 +89,7 @@ Read everything. Capture key facts to `research.md` as you go.
 
 If MCPs/APIs are wired for this client, pull:
 
-- **Ahrefs** → domain rating, organic keywords, backlinks, top pages, ref domains (per `/seo-audit` skill)
+- **Ahrefs** → domain rating, organic keywords, backlinks, top pages, ref domains (per `/seo-audit-marketing` skill)
 - **GA4 MCP** → traffic by channel, conversion events, retention curves
 - **Stripe MCP** → MRR, ARR, churn, plan mix, blended LTV by cohort
 - **App Store Connect** (manual or `dev-browser`) → install → trial → paid funnel; cohort retention

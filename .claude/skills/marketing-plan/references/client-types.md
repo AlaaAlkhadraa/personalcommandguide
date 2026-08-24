@@ -40,7 +40,7 @@ The 13-section plan structure stays consistent across client types. What changes
 - Tier upgrades, seat expansion, usage-based add-ons
 
 ### Skills emphasis
-- `cold-email`, `programmatic-seo`, `competitors`, `seo-audit`, `ai-seo`
+- `cold-email`, `programmatic-seo`, `competitors`, `seo-audit-marketing`, `ai-seo`
 - `ads` weighted toward LinkedIn + Google
 - `emails` for trial nurture + lifecycle
 - `pricing` for tier optimization
@@ -143,7 +143,7 @@ The 13-section plan structure stays consistent across client types. What changes
 - Annual plan default for software
 
 ### Skills emphasis
-- `seo-audit` for Shopify product pages
+- `seo-audit-marketing` for Shopify product pages
 - `emails` for both hardware post-purchase and software lifecycle
 - `referrals` with gifting layer
 - `pricing` for blended-bundle math

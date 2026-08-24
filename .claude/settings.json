@@ -11,6 +11,18 @@
           }
         ]
       }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/skills/seo/hooks/run-python-hook.js\" \"$CLAUDE_PROJECT_DIR/.claude/skills/seo/hooks/validate-schema.py\"",
+            "timeout": 30
+          }
+        ]
+      }
     ]
   }
 }
