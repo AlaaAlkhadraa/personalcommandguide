@@ -51,12 +51,15 @@ export function middleware(request: NextRequest) {
     "https://www.google.nl",
   ].join(" ");
 
+  // The concept demos under /demo/ are self-contained pages that load their
+  // typefaces from Google Fonts; only there are those two hosts admitted.
+  const isDemo = request.nextUrl.pathname.startsWith("/demo/");
   const csp = [
     "default-src 'self'",
     `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${isDev ? " 'unsafe-eval'" : ""}`,
-    "style-src 'self' 'unsafe-inline'",
+    `style-src 'self' 'unsafe-inline'${isDemo ? " https://fonts.googleapis.com" : ""}`,
     `img-src 'self' data: blob: ${googleAds}`,
-    "font-src 'self' data:",
+    `font-src 'self' data:${isDemo ? " https://fonts.gstatic.com" : ""}`,
     // blob: is for three's GLTFLoader, which unpacks textures embedded in the
     // .glb into same-origin blob URLs and fetches them back. Created by our
     // own page, so this does not widen the set of reachable hosts.
