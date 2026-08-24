@@ -523,3 +523,52 @@ what it does have (finished work, photos, being findable) and quote €299.
   anyone. Lead the message with their rating — it is their own proof.
 - **Email address per card whenever findable**; prefer prospects whose
   email is public. A card without any reachable channel is worthless.
+
+## Standing order — 24 Aug avond (owner): het profiel en de eerste regel
+
+**WIE we jagen — de sweet spot, geen van beide uitersten.**
+Niet de zaak die al twintig jaar draait op vaste klanten en niets meer
+wil; niet de starter van drie maanden zonder reviews en zonder omzet.
+Het doelwit is het bedrijf in de groeifase, grofweg 1 tot 6 jaar bezig,
+dat aantoonbaar loopt maar online achterblijft. Groeisignalen die een
+kaart sterker maken (noteer ze in het kaartje):
+- reviews die recent binnenstromen, of een score die met weinig reviews
+  al hoog is (de zaak loopt, het publiek is er);
+- "wegens drukte", een verhuizing naar een groter pand, een tweede
+  stoel/behandelkamer, een vacature, uitgebreide openingstijden;
+- KvK-registratie of "sinds 20xx" tussen 2019 en 2025;
+- een Instagram of Facebook die lééft terwijl de website ontbreekt of
+  stilstaat.
+Een zaak die al vol zit en het weet ("klantenstop", "wachtlijst") is
+GEEN prospect — die heeft ons niet nodig. Schrijf per kaart één regel
+WAAROM dit een kans van formaat is: wat groeit er, en wat lekt er.
+
+**DE ONDERWERPREGEL — alsof we er al werken.**
+De subject beslist alles: hij wordt gelezen tussen twintig grijze
+mails. De regel moet één concreet, gecheckt detail uit het onderzoek
+dragen — hun score, hun straat, hun drukste dag, hun openingstijden,
+een woord uit hun eigen reviews — zodat de eigenaar denkt: die kent
+mijn zaak. Nooit een regel die op elk bedrijf zou passen.
+
+Goed (het patroon, niet om letterlijk te kopiëren):
+- "Uw 47 vijfsterrenreviews verdienen meer dan een Facebookpagina"
+- "Donderdag tot 21:00 open — maar wie 's avonds zoekt, vindt u niet"
+- "Wat uw klanten op Google over u schrijven, staat nergens op uw site"
+- "De Bongerd wordt drukker; uw agenda kan het bijhouden"
+Fout: "Een nieuwe website voor uw bedrijf", "Meer klanten via internet",
+alles met "gratis", "aanbieding" of een uitroepteken — dat is de mail
+die zonder lezen wordt weggeveegd.
+
+Regels: geen valse vertrouwelijkheid (niets suggereren dat we niet
+weten), geen clickbait die het bericht niet waarmaakt, elk feit in de
+subject is gecheckt en staat ook in het kaartje. De eerste zin van het
+bericht pakt de draad van de subject direct op.
+
+**DENK OP VOLLE KRACHT.** Elke kaart doorloopt vóór het schrijven:
+wie is deze eigenaar, wat is zijn drukste moment, wat verliest hij
+deze week nog, en waarom zou HIJ deze mail doorsturen naar zijn
+compagnon met "moet je lezen"? Gebruik alles wat je aan marketing- en
+copywritingkennis hebt (AIDA, pain-first, sociale bewijskracht uit hun
+eigen reviews) — maar de harde regels blijven: geen claim die
+zevren.nl niet waarmaakt, geen verzonnen cijfers, de owner verstuurt
+alles persoonlijk.
