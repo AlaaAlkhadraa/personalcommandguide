@@ -572,3 +572,19 @@ copywritingkennis hebt (AIDA, pain-first, sociale bewijskracht uit hun
 eigen reviews) — maar de harde regels blijven: geen claim die
 zevren.nl niet waarmaakt, geen verzonnen cijfers, de owner verstuurt
 alles persoonlijk.
+
+**AANVULLING onderwerpregel (owner, 24 aug laat) — de swipe-test.**
+De subject is het belangrijkste onderdeel van de hele kaart: hij wordt
+op een telefoon gelezen, tussen duim en wegvegen. Daarom verplicht:
+1. Schrijf per prospect DRIE kandidaat-subjects, toets ze met de
+   cold-email-skill, en zet alleen de sterkste op de kaart. De twee
+   afvallers komen niet in het bestand; de keuze wel: één regel
+   "Subject gekozen omdat ...".
+2. Maximaal ±45 tekens zichtbaar op een telefoon: het gecheckte detail
+   moet in die eerste 45 tekens staan, niet erna.
+3. De swipe-test: lees de regel alsof je de eigenaar bent, om 21:40,
+   moe, twintig ongelezen mails. Veegt hij hem weg, dan is de regel
+   dood, hoe mooi hij ook is. Nieuwsgierigheid + hún eigen detail
+   overleeft; alles wat naar verkoop ruikt, sterft.
+4. Nooit "ZEVREN" of "website" in de subject: het woord website zegt
+   "verkoper", het detail zegt "iemand die mijn zaak kent".
