@@ -3,8 +3,9 @@
  *
  * A pitch demo for a specific prospect: a full marketing site plus a
  * simulated student/instructor portal, all client-side with fictional
- * data. It lives as a string so the route handler can stamp the CSP
- * nonce into its one inline script at request time.
+ * data. The artwork it references lives in /public/demo-al-andalos.
+ * It lives as a string so the route handler can stamp the CSP nonce
+ * into its one inline script at request time.
  */
 export const AL_ANDALOS_HTML = `<!doctype html>
 <html lang="nl">
@@ -57,6 +58,11 @@ nav.hoofdnav .binnen{max-width:1080px;margin:0 auto;padding:12px 20px;display:fl
 .knop-omlijnd{border:1px solid #8FC0F588;color:var(--goud-licht);border-radius:999px;padding:10px 20px;font:600 14px "Source Sans 3";cursor:pointer;background:transparent;text-decoration:none;display:inline-block}
 .knop-omlijnd:hover{background:#8FC0F51A}
 /* hero */
+.kunst-held{background:
+  linear-gradient(180deg,#081F42B8 0%,#081F42D8 55%,#081F42F2 100%),
+  url("/demo-al-andalos/held.png") center/cover no-repeat #081F42}
+.kunstband{display:block;width:100%;border:1px solid var(--lijn);border-radius:20px;margin:0 0 28px}
+
 .held{color:#fff;position:relative;overflow:hidden}
 .held .binnen{max-width:1080px;margin:0 auto;padding:84px 20px 72px;position:relative;text-align:center}
 .held .boog-lijn{width:120px;height:60px;margin:0 auto 26px;border:1.5px solid var(--goud);border-bottom:0;border-radius:120px 120px 0 0;position:relative}
@@ -223,7 +229,7 @@ footer.noot{margin-top:48px;padding-top:16px;border-top:1px solid var(--lijn);co
   </div>
 </nav>
 
-<header class="held patroon" id="top">
+<header class="held kunst-held" id="top">
   <div class="binnen">
     <div class="boog-lijn" aria-hidden="true"></div>
     <p class="onder">Schakel &amp; Automaat</p>
@@ -308,6 +314,7 @@ footer.noot{margin-top:48px;padding-top:16px;border-top:1px solid var(--lijn);co
 <section class="blok" id="werkwijze">
   <p class="eyebrow">Werkwijze</p>
   <h2 class="groot">Van proefles tot roze pasje</h2>
+  <img class="kunstband" src="/demo-al-andalos/route.png" alt="De achtoefening, getekend als routekaart — conceptillustratie" loading="lazy">
   <div class="stappen">
     <div class="stap"><h3>Proefles plannen</h3><p>Kies online een vrij moment. Tijdens de proefles schatten we samen in hoeveel lessen je ongeveer nodig hebt.</p></div>
     <div class="stap"><h3>Pakket en lesplan</h3><p>Je kiest een pakket; het staat direct in je portaal. Elke les zie je wat we oefenen en wat er nog komt.</p></div>
