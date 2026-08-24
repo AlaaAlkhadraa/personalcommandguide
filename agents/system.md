@@ -35,11 +35,22 @@ in Claude Code Remote voeren het uit.
 
 ## Het dashboard
 
-Vaste URL: https://claude.ai/code/artifact/a98619a3-647e-4a4f-9326-b6d97aad1278
-Generator: `tools/dashboard.py` + `tools/dashboard.template.html`.
-Toont: kaarten van de nieuwste dag met verdicts, pipeline-tellers uit
-het ledger, agentgezondheid uit de git-log, verzonden-vinkjes
-(localStorage, geheugensteun — het ledger blijft de administratie).
+Vaste plek: **https://zevren.nl/admin/outreach**, achter de bestaande
+adminlogin van de site. De pagina leest `marketing/outreach/` uit de
+repository bij elke aanvraag; omdat elke push naar `main` de site
+opnieuw deployt, is het bord automatisch actueel zodra een agent pusht.
+Code: `zevren/lib/server/outreach.ts` (parser) en
+`zevren/components/admin/OutreachBoard.tsx` (weergave).
+Toont: kaarten van de nieuwste dag met Azzouz' verdicts,
+pipeline-tellers uit het ledger, leveringsdata per agent, per prospect
+Open-in-Mail en kopieerknoppen, en verzonden-vinkjes (localStorage,
+geheugensteun — het ledger blijft de administratie).
+
+Het admin-account wordt tijdens de Vercel-build aangemaakt of ververst
+wanneer ADMIN_EMAIL en ADMIN_PASSWORD als environment variables in
+Vercel staan; wachtwoorden horen in Vercel, nooit in een chat.
+De oude artifact-versie (`tools/dashboard.py`) blijft als offline
+reserve maar wordt niet meer dagelijks gepubliceerd.
 
 ## De wet van 24 augustus (eigenaar)
 
@@ -61,7 +72,7 @@ aantoonbaar betrouwbaar wakker wordt) en:
 1. controleert Sams bestand (≥10 kaarten) en Azzouz' verificatie;
 2. dekt elk gat zelf, dezelfde ochtend, en meldt eerlijk dat er
    gedekt is;
-3. ververst het dashboard op de vaste URL;
+3. dekt met zijn pushes automatisch het bord op zevren.nl/admin/outreach af;
 4. controleert op maandag John en Azzouz' weekrapport, vuurt hun
    trigger één keer opnieuw af bij uitblijven, en neemt het op
    dinsdag zelf over als ook die herkansing niets opleverde.
