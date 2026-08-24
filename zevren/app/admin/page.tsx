@@ -37,6 +37,12 @@ export default async function AdminPage() {
 
   return (
     <div className="flex flex-col gap-6">
+      <a
+        href="/admin/outreach"
+        className="self-start rounded-lg border border-white/15 px-4 py-2 text-sm font-semibold text-white/90 transition-colors hover:bg-white/5"
+      >
+        Outreach-bord →
+      </a>
       <SystemStatus data={diagnostics} csrfToken={csrfToken} />
       <SubmissionsTable
       csrfToken={csrfToken}

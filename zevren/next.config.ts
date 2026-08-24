@@ -1,3 +1,5 @@
+import path from "node:path";
+
 import type { NextConfig } from "next";
 
 // Content-Security-Policy is set per-request in middleware.ts, where it
@@ -23,6 +25,13 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  // The admin outreach board reads the agents' markdown one directory above
+  // the app; the tracing root is the repository so those files may be shipped
+  // with the serverless function.
+  outputFileTracingRoot: path.join(process.cwd(), ".."),
+  outputFileTracingIncludes: {
+    "/admin/outreach": ["../marketing/outreach/**/*.md", "../marketing/reports/**/*.md"],
+  },
   // Do not advertise the framework version to anyone fingerprinting the site.
   poweredByHeader: false,
   // Database drivers must not be bundled: they load native/wasm pieces at
