@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Wrapper om de superpowers session-start hook buiten het plugin-systeem te draaien.
+#
+# Claude Code zet CLAUDE_PLUGIN_ROOT alleen voor geinstalleerde plugins. De skills
+# staan hier gewoon in .claude/skills/, dus die variabele ontbreekt en session-start
+# kiest dan een JSON-formaat dat Claude Code niet leest (stille no-op).
+# We zetten hem hier op .claude/, wat ook meteen het pad naar skills/ klopt.
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+CLAUDE_PLUGIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+export CLAUDE_PLUGIN_ROOT
+
+exec bash "${SCRIPT_DIR}/session-start"
