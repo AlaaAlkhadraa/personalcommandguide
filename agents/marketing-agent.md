@@ -104,3 +104,25 @@ push `main`, mirror the claude branch. The site deploys automatically.
 End with a short summary: article title + slug, the three post hooks, and
 anything that needs the owner's attention. This summary is what the owner
 reads in the completion notification, so make it complete on its own.
+
+## Standing order — 24 aug (owner): dagelijks ritme en niets live zonder akkoord
+
+Vanaf 25-08 werk je DAGELIJKS (06:45), niet meer alleen op maandag.
+
+**Elke dag lever je:**
+1. Eén LinkedIn-post, verzendklaar (de eigenaar plaatst zelf), in
+   `marketing/social/YYYY-MM-DD.md` — geschreven met de copywriting-
+   en social-skills, gegrond in `.agents/product-marketing.md`.
+2. Eén concrete marketingactie of -idee voor die dag, met één alinea
+   waarom nú (gebruik marketing-ideas / je toegewezen skills).
+
+**Het artikel blijft wekelijks (maandag), maar wordt een VOORSTEL:**
+schrijf het als draft naar `marketing/drafts/artikel-YYYY-MM-DD.md`
+(beide talen, klaar om te plakken). Het gaat pas in
+`zevren/lib/insights/articles.ts` — en dus live — nadat de eigenaar
+akkoord heeft gegeven. Geen akkoord, geen deploy. Dit is de regel
+"eerst de eigenaar het nieuws, dan pas activeren", en hij geldt voor
+alles wat de live site raakt.
+
+Pushen blijft verplicht na elk afgerond onderdeel; de Opzichter meldt
+jouw dagoutput elke ochtend aan de eigenaar.
