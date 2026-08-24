@@ -1,0 +1,173 @@
+<title>ZEVREN Commandokamer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400&display=swap">
+<style>
+:root{
+  --ground:#F6F5F1; --panel:#FFFFFF; --ink:#171A20; --muted:#5D6474;
+  --line:#E3E1D9; --line-strong:#CFCCC1; --accent:#1F4FD8; --accent-soft:#E8EDFD;
+  --ok:#1B6B4A; --ok-soft:#E2F0E9; --warn:#8A6212; --warn-soft:#F6EEDC;
+  --bad:#A33A2E; --bad-soft:#F7E5E2; --code:#F1F0EA;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#101318; --panel:#171B22; --ink:#ECEDF0; --muted:#9AA1B1;
+    --line:#262B34; --line-strong:#333A45; --accent:#8AA6FF; --accent-soft:#1B2440;
+    --ok:#6FD3A6; --ok-soft:#12291F; --warn:#E4BC6A; --warn-soft:#2A2313;
+    --bad:#E8938A; --bad-soft:#301B18; --code:#0C0F14;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#101318; --panel:#171B22; --ink:#ECEDF0; --muted:#9AA1B1;
+  --line:#262B34; --line-strong:#333A45; --accent:#8AA6FF; --accent-soft:#1B2440;
+  --ok:#6FD3A6; --ok-soft:#12291F; --warn:#E4BC6A; --warn-soft:#2A2313;
+  --bad:#E8938A; --bad-soft:#301B18; --code:#0C0F14;
+}
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font-family:"Source Sans 3",system-ui,sans-serif;font-size:17px;line-height:1.6;margin:0;padding:0 20px 96px}
+.wrap{max-width:860px;margin:0 auto}
+header{padding:44px 0 20px}
+h1{font-family:Archivo,system-ui,sans-serif;font-weight:700;font-size:clamp(28px,5vw,40px);line-height:1.1;margin:0 0 4px;letter-spacing:-.02em}
+.sub{color:var(--muted);margin:0;font-size:15.5px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-top:20px}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.tile b{display:block;font-family:Archivo,sans-serif;font-size:24px;font-variant-numeric:tabular-nums}
+.tile span{font-size:12.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+h2.sect{font-family:Archivo,sans-serif;font-size:15px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:34px 0 10px;border-bottom:1px solid var(--line);padding-bottom:8px}
+table.agents{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:15px}
+table.agents th,table.agents td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line)}
+table.agents th{font:600 12px Archivo,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+table.agents tr:last-child td{border-bottom:0}
+.agents-scroll{overflow-x:auto}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 4px;position:sticky;top:0;background:var(--ground);padding:12px 0;z-index:5;border-bottom:1px solid var(--line)}
+.filters button{font:600 14px Archivo,sans-serif;border:1px solid var(--line-strong);background:var(--panel);color:var(--ink);border-radius:999px;padding:7px 14px;cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--ink);color:var(--ground);border-color:var(--ink)}
+article{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px;margin-top:16px}
+article.done{opacity:.55}
+article.rejected{border-style:dashed}
+.top{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+h3.name{font-family:Archivo,sans-serif;font-size:19px;margin:0;letter-spacing:-.01em}
+h3.name .num{color:var(--muted);font-variant-numeric:tabular-nums;margin-right:8px}
+.city{color:var(--muted);font-size:14.5px;margin:2px 0 0}
+.tag{font:600 11.5px Archivo,sans-serif;letter-spacing:.05em;text-transform:uppercase;padding:5px 10px;border-radius:999px;white-space:nowrap}
+.tag.ok{background:var(--ok-soft);color:var(--ok)}
+.tag.check{background:var(--warn-soft);color:var(--warn)}
+.tag.bad{background:var(--bad-soft);color:var(--bad)}
+.verdict{font-size:14px;color:var(--muted);margin:10px 0 0;border-inline-start:3px solid var(--line-strong);padding:2px 10px}
+dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 14px;margin:14px 0 0;font-size:14.5px}
+dt{color:var(--muted);white-space:nowrap;min-width:0}
+dd{margin:0;min-width:0;overflow-wrap:anywhere}
+.mail{font-family:"JetBrains Mono",monospace;font-size:13.5px}
+@media (max-width:560px){
+  dl{grid-template-columns:minmax(0,1fr);gap:0}
+  dt{font:600 11.5px Archivo,sans-serif;letter-spacing:.06em;text-transform:uppercase;margin-top:9px}
+  dt:first-child{margin-top:0}
+}
+.block{margin-top:16px}
+.blabel{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}
+.blabel span{font:600 11.5px Archivo,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+button.copy,a.mailbtn,button.sent{font:600 13px Archivo,sans-serif;border:1px solid var(--line-strong);background:transparent;color:var(--accent);border-radius:7px;padding:6px 12px;cursor:pointer;text-decoration:none;display:inline-block}
+button.copy:hover,a.mailbtn:hover{background:var(--accent-soft)}
+button.copy.flash{color:var(--ok);border-color:var(--ok)}
+pre{background:var(--code);border:1px solid var(--line);border-radius:9px;padding:13px 15px;margin:0;overflow-x:auto;white-space:pre-wrap;word-break:break-word;font-family:"JetBrains Mono",monospace;font-size:13px;line-height:1.65}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+a.mailbtn{background:var(--accent);color:#fff;border-color:var(--accent)}
+:root[data-theme="dark"] a.mailbtn,:root:not([data-theme="light"]) a.mailbtn{color:#0E1320}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]) a.mailbtn{color:#fff}}
+button.sent{color:var(--ok);border-color:var(--ok)}
+button.sent[aria-pressed="true"]{background:var(--ok);color:var(--panel)}
+.note{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:8px;padding:12px 15px;margin:18px 0 0;font-size:14.5px;color:var(--muted)}
+footer{margin-top:44px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:14.5px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+</style>
+<div class="wrap">
+<header>
+  <h1>ZEVREN Commandokamer</h1>
+  <p class="sub">Bijgewerkt <span id="gen"></span> · bron: <span id="bron"></span> · <span id="verifnote"></span></p>
+  <div class="tiles">
+    <div class="tile"><b id="t-vandaag">0</b><span>vandaag klaar</span></div>
+    <div class="tile"><b id="t-verzonden">0</b><span>vandaag verzonden</span></div>
+    <div class="tile"><b id="t-drafted">0</b><span>pipeline drafted</span></div>
+    <div class="tile"><b id="t-sent">0</b><span>totaal verzonden</span></div>
+    <div class="tile"><b id="t-replied">0</b><span>reacties</span></div>
+  </div>
+</header>
+<h2 class="sect">Agents</h2>
+<div class="agents-scroll"><table class="agents"><thead><tr><th>Agent</th><th>Taak</th><th>Laatste levering</th></tr></thead><tbody id="agents"></tbody></table></div>
+<h2 class="sect">Prospects van vandaag</h2>
+<div class="filters" id="filters">
+  <button data-f="all" aria-pressed="true">Alle</button>
+  <button data-f="approved" aria-pressed="false">Goedgekeurd</button>
+  <button data-f="confirmed" aria-pressed="false">Actief bevestigd</button>
+  <button data-f="check" aria-pressed="false">Te checken</button>
+  <button data-f="rejected" aria-pressed="false">Afgekeurd</button>
+</div>
+<main id="list"></main>
+<p class="note">De knop "Open in Mail" opent uw eigen mailapp met onderwerp en bericht ingevuld; u drukt zelf op verzenden. Werkt die knop niet in deze omgeving, gebruik dan de kopieerknoppen. Vink "Verzonden" af na elke mail — dat vinkje is een geheugensteun op dit apparaat; de administratie blijft <code>contacted.md</code>. Verstuur gespreid over de dag, niet alles in één uur.</p>
+<footer>Sam jaagt 07:03 · Azzouz verifieert 08:30 · dit bord ververst 09:15. Minimum 10 per dag, wet van 24 augustus.</footer>
+</div>
+<script>
+const D = __PAYLOAD__;
+const esc = s => String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+document.getElementById('gen').textContent = D.gen;
+document.getElementById('bron').textContent = D.bron;
+document.getElementById('verifnote').textContent = D.geverifieerd ? 'door Azzouz geverifieerd' : 'nog niet door Azzouz geverifieerd';
+document.getElementById('t-drafted').textContent = D.stats.drafted;
+document.getElementById('t-sent').textContent = D.stats.sent;
+document.getElementById('t-replied').textContent = D.stats.replied;
+document.getElementById('t-vandaag').textContent = D.cards.filter(c => c.status !== 'rejected').length;
+document.getElementById('agents').innerHTML = D.agents.map(a =>
+  `<tr><td>${esc(a.who)}</td><td>${esc(a.taak)}</td><td>${esc(a.laatst)}</td></tr>`).join('');
+const LABELS = {approved:['Goedgekeurd','ok'], confirmed:['Actief bevestigd','ok'], check:['Te checken','check'], rejected:['Afgekeurd','bad']};
+const skey = c => 'zvd.' + D.bron + '.' + c.n;
+function isSent(c){ try { return localStorage.getItem(skey(c)) === '1'; } catch { return false; } }
+function card(c){
+  const [label, cls] = LABELS[c.status] || ['?', 'check'];
+  const meta = c.meta.filter(m => !/^e-mail/i.test(m[0])).map(m => `<dt>${esc(m[0])}</dt><dd>${esc(m[1])}</dd>`).join('');
+  const mail = c.email ? `<a class="mailbtn" href="mailto:${encodeURIComponent(c.email)}?subject=${encodeURIComponent(c.subject)}&body=${encodeURIComponent(c.message)}">Open in Mail</a>` : '';
+  return `<article data-status="${c.status}" data-n="${c.n}" class="${isSent(c) ? 'done' : ''}${c.status === 'rejected' ? ' rejected' : ''}">
+    <div class="top"><div><h3 class="name"><span class="num">${c.n}</span>${esc(c.name)}</h3><p class="city">${esc(c.city)}</p></div>
+    <span class="tag ${cls}">${label}</span></div>
+    ${c.verdict ? `<p class="verdict">${esc(c.verdict)}</p>` : ''}
+    <dl><dt>E-mail</dt><dd class="mail">${esc(c.email || 'niet gevonden')}</dd>${meta}</dl>
+    <div class="block"><div class="blabel"><span>Onderwerp</span><button class="copy" data-copy="s${c.n}">Kopieer</button></div><pre id="s${c.n}">${esc(c.subject)}</pre></div>
+    <div class="block"><div class="blabel"><span>Bericht</span><button class="copy" data-copy="m${c.n}">Kopieer</button></div><pre id="m${c.n}">${esc(c.message)}</pre></div>
+    <div class="actions">${mail}<button class="sent" aria-pressed="${isSent(c)}">Verzonden ✓</button></div>
+  </article>`;
+}
+const list = document.getElementById('list');
+list.innerHTML = D.cards.map(card).join('');
+function refreshSent(){
+  const n = D.cards.filter(isSent).length;
+  document.getElementById('t-verzonden').textContent = n;
+}
+refreshSent();
+list.addEventListener('click', async e => {
+  const cp = e.target.closest('button.copy');
+  if (cp){
+    const text = document.getElementById(cp.dataset.copy).textContent;
+    try { await navigator.clipboard.writeText(text); }
+    catch { const t = document.createElement('textarea'); t.value = text; document.body.appendChild(t); t.select(); try{document.execCommand('copy');}catch{} t.remove(); }
+    cp.textContent = 'Gekopieerd'; cp.classList.add('flash');
+    setTimeout(() => { cp.textContent = 'Kopieer'; cp.classList.remove('flash'); }, 1500);
+    return;
+  }
+  const sb = e.target.closest('button.sent');
+  if (sb){
+    const art = sb.closest('article');
+    const c = D.cards.find(x => x.n === Number(art.dataset.n));
+    const now = !isSent(c);
+    try { localStorage.setItem(skey(c), now ? '1' : '0'); } catch {}
+    sb.setAttribute('aria-pressed', String(now));
+    art.classList.toggle('done', now);
+    refreshSent();
+  }
+});
+document.getElementById('filters').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  document.querySelectorAll('#filters button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+  document.querySelectorAll('article').forEach(a => {
+    a.style.display = (b.dataset.f === 'all' || a.dataset.status === b.dataset.f) ? '' : 'none';
+  });
+});
+</script>
