@@ -80,6 +80,17 @@ aantoonbaar betrouwbaar wakker wordt) en:
 Eén notificatie per dag, in het Arabisch, met aantallen en de
 artifact-link. Geen stille dagen.
 
+## De skillsbibliotheek
+
+Sinds 24-08 draagt de repo de volledige marketingskills-bibliotheek
+(50 skills, MIT) in `.claude/skills/`, aanroepbaar in elke sessie.
+`.agents/product-marketing.md` is het fundament dat elke skill eerst
+leest; alleen Azzouz werkt het bij. Wie welke skills gebruikt staat in
+`agents/skills-toewijzing.md`: Sam de cold-email/prospecting-set,
+John de content/SEO/ads-set, Azzouz de strategie/pricing-set met
+marketing-council voor het weekrapport. Skills zijn frameworks; de
+harde regels hieronder verslaan elk skill-advies.
+
 ## Afspraken die nooit wijken
 
 - Geen agent verstuurt ooit zelf berichten aan wie dan ook; de
