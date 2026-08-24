@@ -75,3 +75,15 @@ search could not prove them alive, not that closure was confirmed.
 | Massagepraktijk Ceylon | onbekend | drafted | 2026-08-22 ronde B; te checken: plaats en actuele prijslijst |
 | Massagepraktijk Julsing | Kantens | drafted | 2026-08-22 ronde B; te checken: vermelding kantens.nl / massage.nl actueel |
 | Bootcamp Body Power | onbekend | drafted | 2026-08-22 ronde B; te checken: lesrooster met week na aug 2026 |
+| Juffertjes in 't Groen | Schiedam | drafted | 2026-08-24 (Opzichter-dekking); webshop-pitch 899, Euroflorist-commissie als haakje; check: Google-score + winkel open |
+| De Bolle Bakker | Goes | drafted | 2026-08-24; taartbestellingen 549; check: Google-score + openingstijden |
+| Kuijt Reiniging | Zaanstreek | drafted | 2026-08-24; eigen domein in mailadres, site op webnode; 299; check: plaats + vermelding |
+| Schoonmaakbedrijf Gnodde | Appingedam | drafted | 2026-08-24; 299; check: actief aan Scharreweersterweg |
+| ASG Glazenwasser | Zaandam | drafted | 2026-08-24; 299; check: Google-vermelding actief |
+| De Glazenwasser Limburg | Maasbracht | drafted | 2026-08-24; 299, streekgenoot; check: actief aan Tergouwen |
+| Sido Sportmassage | Texel | drafted | 2026-08-24; actief: WhatsApp-only boeken per eigen contactpagina; 549 |
+| Wencke Geerdink Pedicure | onbekend | drafted | 2026-08-24; 549; check: plaats + ProVoet/gids |
+| Caninity Trimsalon | Rotterdam | drafted | 2026-08-24; 549; check: Google-score + actief |
+| Trimsalon De Hondenkapper | Asten-Heusden | drafted | 2026-08-24; 549; check: levensteken na aug 2025 |
+| Happy Hound 2.0 | onbekend | drafted | 2026-08-24; 549; check: plaats + levensteken na aug 2025 |
+| WV Fotografie | onbekend | drafted | 2026-08-24; 549; check: bedrijf vs. hobby, plaats, recent werk — bij twijfel niet versturen |
