@@ -25,6 +25,8 @@ export interface ProspectCard {
   email: string;
   /** Best link to reach the business when no email is published. */
   contactUrl: string;
+  /** What that link opens: a site, an Instagram page, or a search. */
+  contactLabel: string;
   status: "approved" | "confirmed" | "check" | "rejected";
   verdict?: string;
 }
@@ -43,12 +45,55 @@ const REPORTS_DIR = path.join(process.cwd(), "..", "marketing", "reports");
 const CARD_RE = /\n## (\d+)\. (.+?)\n([\s\S]*?)(?=\n## \d+\. |$)/g;
 // A domain-looking token in the card's metadata: `x.wixsite.com/y`,
 // trimsalonwof.nl, https://... — the first hit becomes the contact link.
-const URL_RE = /(?:https?:\/\/)?((?:[a-z0-9-]+\.)+[a-z]{2,}(?:\/[\w\-./]*)?)/i;
-const META_RE = /^- \*\*(.+?):\*\*\s*([\s\S]+?)(?=\n- \*\*|\n\n|$)/gm;
+const URL_RE = /(?:https?:\/\/)?((?:[a-z0-9-]+\.)+[a-z]{2,}(?:\/[\w\-./]*)?)/gi;
+const IG_RE = /instagram[^@\n]{0,60}@([a-z0-9._]{2,30})/i;
+// Guide entries a card happens to mention are no way to reach the owner;
+// booking pages (Salonized, Treatwell, Fresha) very much are, so those stay.
+const DIRECTORY_RE =
+  /^(?:www\.)?(?:bottin|nicelocal|wheree|opendi|cylex|yelp|trustoo|telefoonboek|detelefoongids|goudengids|zoekbedrijf|kvk|maps\.google|google)\./i;
+// A meta value may wrap over several indented lines, so the value runs until
+// the next `- **key:**` or a blank line. `$` stays out of the lookahead: with
+// the /m flag it would match at the first line break and cut every wrapped
+// value off after one line.
+const META_RE = /^- \*\*(.+?):\*\*\s*([\s\S]+?)(?=\n- \*\*|\n\n|(?![\s\S]))/gm;
 const CODE_RE = /```\n([\s\S]*?)\n```/g;
 
 function squash(text: string): string {
   return text.split(/\s+/).join(" ").trim();
+}
+
+/**
+ * Every card needs one reachable link, also when the business publishes no
+ * address at all: the owner still has to be able to open something. Own site
+ * first, then the Instagram page the card names, and otherwise a search on
+ * name plus city so the button is never missing.
+ */
+function contactLink(
+  name: string,
+  city: string,
+  meta: [string, string][]
+): { url: string; label: string } {
+  const linkKeys = ["site nu", "current site", "signaalklasse", "check", "owner check", "reach"];
+  const weight = (key: string) =>
+    linkKeys.some((k) => key.toLowerCase().startsWith(k)) ? 0 : 1;
+  const ordered = [...meta].sort((a, b) => weight(a[0]) - weight(b[0]));
+
+  for (const [, value] of ordered) {
+    // mailto-able addresses would otherwise be read as a domain.
+    for (const hit of value.replace(/[\w.+-]+@[\w.-]+/g, "").matchAll(URL_RE)) {
+      const domain = (hit[1] ?? "").replace(/[).,;`]+$/, "");
+      if (!domain.includes(".") || DIRECTORY_RE.test(domain)) continue;
+      return { url: `https://${domain}`, label: "Contactpagina" };
+    }
+  }
+  for (const [, value] of ordered) {
+    const handle = IG_RE.exec(value)?.[1];
+    if (handle) {
+      return { url: `https://www.instagram.com/${handle}/`, label: "Instagram" };
+    }
+  }
+  const query = encodeURIComponent(`${name} ${city} contact`.trim());
+  return { url: `https://www.google.com/search?q=${query}`, label: "Zoek contact" };
 }
 
 function parseCards(text: string): ProspectCard[] {
@@ -64,22 +109,7 @@ function parseCards(text: string): ProspectCard[] {
     const codes = [...body.matchAll(CODE_RE)].map((c) => (c[1] ?? "").trim());
     if (codes.length < 2) continue;
     const emailRaw = meta.find(([k]) => k.toLowerCase().startsWith("e-mail"))?.[1] ?? "";
-    // Prefer the site/check lines for the contact link; fall back to any
-    // meta value carrying a domain. mailto-able addresses are excluded.
-    let contactUrl = "";
-    const linkKeys = ["site nu", "current site", "check", "owner check", "reach"];
-    const ordered = [...meta].sort(
-      (a, b) =>
-        (linkKeys.some((k) => a[0].toLowerCase().startsWith(k)) ? 0 : 1) -
-        (linkKeys.some((k) => b[0].toLowerCase().startsWith(k)) ? 0 : 1)
-    );
-    for (const [, value] of ordered) {
-      const hit = URL_RE.exec(value.replace(/[\w.+-]+@[\w.-]+/g, ""));
-      if (hit?.[1] && hit[1].includes(".")) {
-        contactUrl = `https://${hit[1].replace(/[).,;`]+$/, "")}`;
-        break;
-      }
-    }
+    const contact = contactLink((name ?? "").trim(), city.trim(), meta);
     const confirmed = meta.some(
       ([k]) => k.toLowerCase() === "actief" || k.toLowerCase().startsWith("actief bevestigd")
     );
@@ -91,7 +121,8 @@ function parseCards(text: string): ProspectCard[] {
       subject: codes[0] ?? "",
       message: codes[1] ?? "",
       email: emailRaw.includes("@") ? emailRaw : "",
-      contactUrl,
+      contactUrl: contact.url,
+      contactLabel: contact.label,
       status: confirmed ? "confirmed" : "check",
     });
   }
