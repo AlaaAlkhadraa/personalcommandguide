@@ -23,6 +23,8 @@ export interface ProspectCard {
   subject: string;
   message: string;
   email: string;
+  /** Best link to reach the business when no email is published. */
+  contactUrl: string;
   status: "approved" | "confirmed" | "check" | "rejected";
   verdict?: string;
 }
@@ -39,6 +41,9 @@ const OUTREACH_DIR = path.join(process.cwd(), "..", "marketing", "outreach");
 const REPORTS_DIR = path.join(process.cwd(), "..", "marketing", "reports");
 
 const CARD_RE = /\n## (\d+)\. (.+?)\n([\s\S]*?)(?=\n## \d+\. |$)/g;
+// A domain-looking token in the card's metadata: `x.wixsite.com/y`,
+// trimsalonwof.nl, https://... — the first hit becomes the contact link.
+const URL_RE = /(?:https?:\/\/)?((?:[a-z0-9-]+\.)+[a-z]{2,}(?:\/[\w\-./]*)?)/i;
 const META_RE = /^- \*\*(.+?):\*\*\s*([\s\S]+?)(?=\n- \*\*|\n\n|$)/gm;
 const CODE_RE = /```\n([\s\S]*?)\n```/g;
 
@@ -59,6 +64,22 @@ function parseCards(text: string): ProspectCard[] {
     const codes = [...body.matchAll(CODE_RE)].map((c) => (c[1] ?? "").trim());
     if (codes.length < 2) continue;
     const emailRaw = meta.find(([k]) => k.toLowerCase().startsWith("e-mail"))?.[1] ?? "";
+    // Prefer the site/check lines for the contact link; fall back to any
+    // meta value carrying a domain. mailto-able addresses are excluded.
+    let contactUrl = "";
+    const linkKeys = ["site nu", "current site", "check", "owner check", "reach"];
+    const ordered = [...meta].sort(
+      (a, b) =>
+        (linkKeys.some((k) => a[0].toLowerCase().startsWith(k)) ? 0 : 1) -
+        (linkKeys.some((k) => b[0].toLowerCase().startsWith(k)) ? 0 : 1)
+    );
+    for (const [, value] of ordered) {
+      const hit = URL_RE.exec(value.replace(/[\w.+-]+@[\w.-]+/g, ""));
+      if (hit?.[1] && hit[1].includes(".")) {
+        contactUrl = `https://${hit[1].replace(/[).,;`]+$/, "")}`;
+        break;
+      }
+    }
     const confirmed = meta.some(
       ([k]) => k.toLowerCase() === "actief" || k.toLowerCase().startsWith("actief bevestigd")
     );
@@ -70,6 +91,7 @@ function parseCards(text: string): ProspectCard[] {
       subject: codes[0] ?? "",
       message: codes[1] ?? "",
       email: emailRaw.includes("@") ? emailRaw : "",
+      contactUrl,
       status: confirmed ? "confirmed" : "check",
     });
   }

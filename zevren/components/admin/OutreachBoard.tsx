@@ -218,6 +218,16 @@ function Card({
             Open in Mail
           </a>
         )}
+        {!mailHref && card.contactUrl && (
+          <a
+            href={card.contactUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-primary-light"
+          >
+            Contactpagina ↗
+          </a>
+        )}
         <button
           type="button"
           onClick={onToggleSent}
