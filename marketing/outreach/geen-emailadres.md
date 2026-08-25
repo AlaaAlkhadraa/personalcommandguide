@@ -36,6 +36,12 @@ Zoekopdrachten uitgevoerd per bedrijf: naam + plaats + "e-mail", naam +
 | Munster Detailing | Graft-de-Rijp | eigen site + Instagram, FB-pagina uit 2024-reeks | 2026-08-25 |
 | stuc-direct | Best | 06-43564646, KvK 81294182 (2021) | 2026-08-25 |
 | MM Klussenbedrijf | Dordrecht | gidsvermelding, KvK 85175986 (2022) | 2026-08-25 |
+| Salon Equally | Zevenaar | eigen domein salon-equally.nl, Treatwell, IG @salonequallyzevenaar; KvK 93664508 (2024), verhuist — boekingsagenda t/m eind oktober | 2026-08-25 |
+| Le-Spa | Arnhem | eigen domein, verhuist per feb 2026 naar la Reijstraat 2; 06-33086845 | 2026-08-25 |
+| Passage de la Beauté | Arnhem | Treatwell-profiel; geopend 4 november 2024 in Passage Hemelrijk | 2026-08-25 |
+| Pedicure Noordenveld | Roden | pedicure.nl + ProVoet; Petra van der Veen, gediplomeerd sinds 2023, werkt bij L&M Haarmode (Kanaalstraat 6) en ambulant | 2026-08-25 |
+| Salon Your Beautiful Skin | Groningen | eigen domein salonyourbeautifulskin.nl; Joyce, diploma 2019, salon sinds april 2021 in Reitdiephaven; 06-21323624 | 2026-08-25 |
+| Pure Nipali | Westerlee | eigen domein purenipali.com; Nienke Wiersema, salon sinds 2021; telefoonnummer in de gids afgeschermd | 2026-08-25 |
 
 ## Apart geval: Barbershop De Baard (Heerlen)
 
@@ -65,3 +71,16 @@ geldt: hoe jonger de zaak, hoe kleiner de kans op een openbaar adres,
 want het adres komt pas met de eigen site. Wie deze groep wil bereiken,
 moet dat via een ander kanaal doen dan e-mail. Dat is een beslissing voor
 de eigenaar, niet voor mij.
+## Ronde C (25-08, praktijken op afspraak)
+
+Deze zes kwamen alle door de kwaliteitspoort — groeifase, aantoonbaar
+draaiend, boekingsvormig — maar publiceren nergens een adres. Per bedrijf
+zijn drie zoekrondes gedaan: naam + plaats + "e-mail", naam +
+"gmail/hotmail/outlook", naam + eigenaarsnaam.
+
+Twee zijn de moeite van een handmatige blik waard, want hun groeisignaal is
+het sterkste van de hele dienst: **Salon Equally** verhuist en zegt zelf op
+haar boekingspagina dat de agenda maar tot eind oktober loopt, en
+**Passage de la Beauté** is op 4 november 2024 opengegaan. Staat er een
+adres op hun contactpagina, dan kunnen beide kaarten alsnog geschreven
+worden.

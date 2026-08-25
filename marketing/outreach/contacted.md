@@ -138,3 +138,20 @@ search could not prove them alive, not that closure was confirmed.
 | Schoonheidssalon Midden Drenthe | Beilen | drafted | 2026-08-25 ronde C; Marieke Klat, eigen salon boven Mondzorg (krantenartikel), Yelp "Updated August 2026"; boekt via salonized-subdomein; E-MAIL: info@schoonheidssalonmiddendrenthe.nl |
 | DO Huidtherapie | Emmen | drafted | 2026-08-25 ronde C; 5,0 uit 19 Google, zorgkaart-beoordeling 10 juli 2025, enige avondblok wo 19-21; E-MAIL: info@dohuidtherapie.nl |
 | Voetzorg Pedicure Marta | Brummen | drafted | 2026-08-25 ronde C; opleiding medisch pedicure sinds mrt 2024, ProVoet, FB-pagina 2024; E-MAIL: info@voetzorgpedicuremarta.nl |
+| Op goede voet by M | Neede | drafted | 2026-08-25 ronde C; Mireille ter Haar, examens jan 2024, krantenartikel Nieuws uit Berkelland; check of ze al via een salonplatform boekt; E-MAIL: opgoedevoetbym@ziggo.nl |
+| Beauty House Moon | Meppel | drafted | 2026-08-25 ronde C; Malice Visser, tweede pand Woldstraat 43 + eigen academie, 4,8 Treatwell; LET OP: geen gedateerd levensteken na aug 2025 gevonden — bevestigen voor verzenden; E-MAIL: Info@beautyhousemoon.nl |
+| Flexor Massage | Kampen | drafted | 2026-08-25 ronde C; Chris Hellendoorn, stoelmassage op locatie sinds 2022, praktijkruimte + atlasmassage, werkgebied Kampen/Zwolle/Deventer; E-MAIL: info@flexormassage.nl |
+| Pedicurepraktijk Zuid-Oost Drenthe | Erica | drafted | 2026-08-25 ronde C; KvK 82080968 (2021), medisch pedicure op zorgkaart, dinsdag tot 20:30 open; E-MAIL: Info@pedicurepraktijkzuid-oostdrenthe.nl |
+| Lisanne's Pedicure | Heerenveen | not fit - klantenstop | 2026-08-25 ronde C: KvK 89514556 (2023) en profiel perfect, maar de eigen site meldt dat er geen ruimte is voor nieuwe klanten. Nooit benaderd |
+| Pedicure Paula van der Berg | Groningen | not fit - te lang gevestigd | 2026-08-25 ronde C: zelfstandig pedicure in Groningen-Zuid sinds 1995. Nooit benaderd |
+| Sportmassagepraktijk Twente | Almelo | not fit - te lang gevestigd | 2026-08-25 ronde C: praktijk geopend maart 2006, masseur sinds 2000. Nooit benaderd |
+| Praktijk Voeten en Welzijn | Ommen | not fit - te groot/te oud | 2026-08-25 ronde C: geopend 13-11-2010, drie medisch pedicures plus podotherapeut en podoloog. Nooit benaderd |
+| Schoonheidssalon All Beauty | Leeuwarden | not fit - te lang gevestigd | 2026-08-25 ronde C: Ingrid, salon sinds 1995, boekt al online, 160 beoordelingen. Nooit benaderd |
+| Healthy Beauty Me | Assen | not fit - te lang gevestigd | 2026-08-25 ronde C: KvK 58161627 (±2013). Nooit benaderd |
+| Salon Judith | Enter | not fit - te lang gevestigd | 2026-08-25 ronde C: KvK 54232376, opgericht 1 januari 2012. Nooit benaderd |
+| Revive Beauty | Hardenberg / Coevorden | not fit - te lang gevestigd | 2026-08-25 ronde C: KvK 53778324 (±2011), twee vestigingen plus zonnestudio. Nooit benaderd |
+| Sportmassage HRO | Apeldoorn | not fit - te lang gevestigd | 2026-08-25 ronde C: geopend 27 november 2013 en boekt al online. Nooit benaderd |
+| Praktijk voor Huidtherapie Gelderland Zuid | Ochten | not fit - te lang gevestigd | 2026-08-25 ronde C: gevestigd sinds 1 oktober 2015. Nooit benaderd |
+| Sportmasseur Carla | Dronten | not fit - buiten profiel | 2026-08-25 ronde C: opgericht 13-12-2017, buiten het venster van 1-6 jaar. Nooit benaderd |
+| PraktijkKARIN | Lelystad | not fit - te lang gevestigd | 2026-08-25 ronde C: verzorgt klanten die er al 28 jaar komen. Nooit benaderd |
+| Medisch Pedicure Praktijk Drenthe | Emmen | not fit - klantenstop | 2026-08-25 ronde C: eigen site meldt een klantenstop. Nooit benaderd |
