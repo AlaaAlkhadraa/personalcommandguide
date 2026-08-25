@@ -110,6 +110,26 @@ search could not prove them alive, not that closure was confirmed.
 | Coiffure Fauquemont | Valkenburg | not fit - klantenstop | 2026-08-25 ronde B: sinds 2015 én tijdelijke klantenstop voor nieuwe klanten. Nooit benaderd; genoteerd zodat geen run er tijd aan verliest |
 | Cosijnse Automobielen | Nijkerkerveen | not fit - closed | 2026-08-25 ronde B: bedrijvenarchief vermeldt het bedrijf als niet langer actief. Nooit benaderd |
 | Auto Cleaning 013 | Rijen | not fit - closed | 2026-08-25 ronde B: gidsvermeldingen in de verleden tijd, geen actueel levensteken. Nooit benaderd |
+| Hovenier Marijke | Maastricht | drafted | 2026-08-25 ronde D; KvK 87412438, opgericht 01-08-2022, ecologische tuinen; E-MAIL: info@hoveniermarijke.nl; eigen domein, dus GEEN "geen website"-opening gebruikt |
+| Klusbedrijf Stoffels | Sittard/Guttecoven | drafted | 2026-08-25 ronde D; KvK 95608605 (nieuwe reeks 2024/25), eigenaar Remy Stoffels; E-MAIL: info@klusbedrijfstoffels.nl; CHECK: bedrijf is nieuw, bevestig tractie voor verzenden |
+| Car Care Limburg | Hoensbroek | drafted | 2026-08-25 ronde D; 4,0 uit 3 beoordelingen 123Auto, Kastanjelaan 148; E-MAIL: info@carcarelimburg.nl; 549, LET OP: check of er al online geboekt kan worden |
+| Wingens Interieur & Timmerwerken | Schaijk | drafted | 2026-08-25 ronde D; KvK 87405989, opgericht 01-09-2022, eigenaar Chiel Wingens; E-MAIL: info@wingens-timmerwerken.nl; heeft al een projectenpagina, check hoeveel werk daarop staat |
+| Zeeland Hoveniers | Middelburg | drafted | 2026-08-25 ronde D; KvK 81042817, eigen zaak begin 2021 (Jaap); E-MAIL: jaap@zeelandhoveniers.nl |
+| MBouw Stucadoorsbedrijf | Goes | drafted | 2026-08-25 ronde D; KvK 85600806 (2022), vof met 2 personen, "jong en dynamisch" uit eigen site; E-MAIL: info@mstucadoorsbedrijf.nl |
+| TP Detailing | Goes | drafted | 2026-08-25 ronde D; Stationsplein 11A, FB-pagina uit 2024-reeks; E-MAIL: info@tpdetailing.nl; LET OP: boekt AL online, daarom bewust 299 en niet 549 |
+| Prestige Auto Care | Dordrecht | drafted | 2026-08-25 ronde D; eigenaar Armando Nagtegaal, mobiel door heel Zuid-Holland, belooft reactie binnen 24 uur; E-MAIL: info@prestigeautocare.nl; 549 |
+| Allman Verbouw | Sassenheim | drafted | 2026-08-25 ronde D; "jong maar ervaren", GEEN eigen site gevonden - enige kaart met die invalshoek; E-MAIL: boudewijn.klust@gmail.com; CHECK: vermelding is niet gedateerd, bevestig dat het bedrijf nog draait |
+| APN-Detailing | Nieuwegein | drafted | 2026-08-25 ronde D; 4,9 gemiddeld, sinds 2021 onder T. Tuzunalp, KVK-record bijgewerkt 16-04-2025; E-MAIL: info@autopoetsbedrijfnieuwegein.nl (oud domein, wel het adres dat zij publiceren); 549 |
+| Klusbedrijf van Zijl | Nieuwegein | drafted | 2026-08-25 ronde D; Stefan en Sanne, van staalbouw naar vloerverwarming, recent fulltime; E-MAIL: info@klusbedrijfvanzijl.nl |
+| JW Detailing | Hoorn | drafted | 2026-08-25 ronde D; KvK 88519791 (eind 2022), Protonweg 14A, 11 plaatsen werkgebied; E-MAIL: info@jwdetailing.nl; 549 |
+| Multishine Car Cleaning | Vlaardingen | not fit - te oud | 2026-08-25 ronde D: e-mailadres gevonden (info@multishinecarcleaning.nl) maar opgericht 2009 - buiten het groeifaseprofiel. Nooit benaderd |
+| Huynen Tuinonderhoud | Schinveld | not fit - te oud | 2026-08-25 ronde D: info@huynentuinonderhoud.nl bekend, maar KvK 56843070 opgericht 03-01-2013. Nooit benaderd |
+| Uw hovenier: Karl Brands | Huizen | not fit - te oud | 2026-08-25 ronde D: uwhovenier@hotmail.com bekend, opgericht 22-03-2005. Nooit benaderd |
+| Hoveniersbedrijf Hart | Alkmaar | not fit - te oud | 2026-08-25 ronde D: info@hoveniersbedrijfhart.nl bekend, Erwin Hart begon in januari 2000. Nooit benaderd |
+| Avion Timmerwerken | Deurne | not fit - te oud | 2026-08-25 ronde D: opgericht 16-07-2007. Nooit benaderd |
+| M.H en T Klussenbedrijf | Sittard | not fit - te oud | 2026-08-25 ronde D: mht@ziggo.nl bekend, maar KvK 14089005 is een oude registratie. Nooit benaderd |
+| Detail Car Care | Tilburg | not fit - sterke webaanwezigheid | 2026-08-25 ronde D: uitgebreide eigen site met dienst- en plaatspagina's en reviewintegratie. Nooit benaderd |
+| Auto Gepolijst | Eindhoven | not fit - buiten profiel | 2026-08-25 ronde D: contact@autogepolijst.nl bekend en zaak loopt (1.669 FB-volgers), maar KvK 72934190 wijst op registratie rond 2018. Nooit benaderd |
 | Voetverzorging Hoekstra | Witharen (Ommen) | drafted | 2026-08-25 ronde C; diploma mrt 2022 + ProVoet; eigen domein, geen agenda; E-MAIL: lisette@voetverzorginghoekstra.nl |
 | Pedicurepraktijk Lorena | Emmen | drafted | 2026-08-25 ronde C; medisch pedicure, KRP/ProVoet 56392, FB-pagina 2023, 0 reviews op zorgkaart; E-MAIL: ppraktijklorena@gmail.com |
 | Massagepraktijk Inanna | Nijkerk | drafted | 2026-08-25 ronde C; Helen van de Waerdt, 8 jr spa-ervaring, eigen praktijk; LET OP: staat al op Treatwell; E-MAIL: info@massagepraktijkinanna.nl |
