@@ -14,76 +14,46 @@ in Claude Code Remote voeren het uit.
 | Azzouz (CEO) | zondag 17:00 | weekrapport in `marketing/reports/` + directieven | `agents/ceo-agent.md` |
 | Opzichter | dagelijks 09:15 | dashboard verversen + dekking + één notificatie | dit bestand |
 
-## De keten van elke ochtend
+## De orchestrator-architectuur (sinds 25-08)
 
-0. **06:45 — John levert marketing.** Eén verzendklare LinkedIn-post
-   en één dagactie; op maandag het weekartikel als VOORSTEL in
-   `marketing/drafts/` — het gaat pas live na akkoord van de eigenaar.
-   Niets dat een agent voorstelt, wordt geactiveerd zonder dat de
-   eigenaar het eerst gehoord heeft.
-1. **07:03 — Sam jaagt.** Minimaal 10 kaarten, pusht in batches.
-2. **08:30 — Azzouz verifieert.** Loopt elke kaart na (levensteken,
-   e-mailadres, reviewscore, claims gedekt door zevren.nl, niet al in
-   het ledger) en schrijft `-verified.md`: GOEDGEKEURD met bewijs of
-   AFGEKEURD met reden, plus per goedgekeurde kaart de definitieve
-   onderwerp- en berichttekst. Kopjes: `## N. Naam — Plaats`, twee
-   codeblokken per goedgekeurde kaart (het dashboard parseert dit).
-3. **09:15 — Opzichter.** Dekt gaten (jaagt zelf bij <10, verifieert
-   zelf bij ontbrekende verificatie), bouwt het dashboard opnieuw met
-   `python3 tools/dashboard.py` en publiceert het naar de vaste
-   artifact-URL, en stuurt Alaa één notificatie in het Arabisch.
-4. **Alaa verstuurt.** Het dashboard toont per goedgekeurde prospect
-   een Open-in-Mail-knop (onderwerp en bericht ingevuld) en
-   kopieerknoppen. Verzenden doet uitsluitend Alaa, gespreid over de
-   dag. Geen agent verstuurt ooit zelf — dat is een harde grens
-   (spam, domeinreputatie, wetgeving), geen instelling.
+**Waarom.** Acht diensten op rij stierven stil. Autopsie op de
+sessies wees twee oorzaken aan: (1) trigger-geminte verse sessies
+kregen de repository NIET mee — agents werden wakker in een lege
+container en gingen in /mnt zoeken; (2) elk commando buiten de
+werkdirectory opent een permissievraag die niemand ooit beantwoordt,
+waarna de sessie eeuwig blokkeert (status REQUIRES_ACTION).
+Kindsessies die de hoofdsessie met `create_session` + repository
+aanmaakt, hebben geen van beide problemen en leverden aantoonbaar
+(21-08 en 25-08).
 
-## Het dashboard
+**Hoe.** Drie orchestrator-beats vuren dagelijks in de hoofdsessie,
+die uitsluitend SUPERVISEERT — de eigenaar heeft vastgelegd dat de
+hoofdsessie nooit zelf agent-werk doet:
 
-Vaste plek: **https://zevren.nl/admin/outreach**, achter de bestaande
-adminlogin van de site. De pagina leest `marketing/outreach/` uit de
-repository bij elke aanvraag; omdat elke push naar `main` de site
-opnieuw deployt, is het bord automatisch actueel zodra een agent pusht.
-Code: `zevren/lib/server/outreach.ts` (parser) en
-`zevren/components/admin/OutreachBoard.tsx` (weergave).
-Toont: kaarten van de nieuwste dag met Azzouz' verdicts,
-pipeline-tellers uit het ledger, leveringsdata per agent, per prospect
-Open-in-Mail en kopieerknoppen, en verzonden-vinkjes (localStorage,
-geheugensteun — het ledger blijft de administratie).
+1. **06:40 — beat 1:** spawnt John- en Sam-kinderen met de repo,
+   prompts uit `agents/prompts/john.md` en `sam.md`.
+2. **08:30 — beat 2:** controleert of Sam pushte; zo ja: spawnt
+   Azzouz-verificatiekind (`azzouz-dag.md`); zo nee: éénmalige
+   herstart van Sam en uitstel van Azzouz.
+3. **09:15 — beat 3:** eindcontrole van alle drie, éénmalige herstart
+   van wat dood of geblokkeerd is, en ÉÉN Arabische notificatie aan de
+   eigenaar met eerlijke status per agent. Op zondag spawnt deze beat
+   ook het weekrapport-kind (`azzouz-week.md`).
 
-Het admin-account wordt tijdens de Vercel-build aangemaakt of ververst
-wanneer ADMIN_EMAIL en ADMIN_PASSWORD als environment variables in
-Vercel staan; wachtwoorden horen in Vercel, nooit in een chat.
-De oude artifact-versie (`tools/dashboard.py`) blijft als offline
-reserve maar wordt niet meer dagelijks gepubliceerd.
+De agentprompts leven als bestanden in `agents/prompts/` — één bron
+van waarheid, versiebeheerd. Elke prompt opent met de overlevingsregel:
+werk alleen binnen de repository, nooit commando's daarbuiten.
 
-## De wet van 24 augustus (eigenaar)
+## Triggerregister
 
-Sam levert minimaal 10 prospects per dag. Het platform van de prospect
-is irrelevant; wat telt is een goed bedrijf (hoge reviewscore) met een
-zwakke webaanwezigheid (geen site, of een site met concrete fouten).
-Elke kaart een gedateerde Actief-regel en waar vindbaar een openbaar
-e-mailadres. Details: laatste sectie van `agents/outreach-agent.md`.
+| Trigger | ID | Vuurt in |
+|---|---|---|
+| Beat 1 spawn 06:40 | `trig_01PmZPYdKEmuEYqqKBcZRjqM` | hoofdsessie |
+| Beat 2 check+Azzouz 08:30 | `trig_01KGgCs6sqkx853PZEqR9xdX` | hoofdsessie |
+| Beat 3 eindcontrole 09:15 | `trig_019kMKNFKwKRaWPr5LbWiVBa` | hoofdsessie |
 
-## Waarom er een Opzichter is
-
-De platform-infrastructuur laat vers gestarte agentsessies soms sterven
-voordat ze iets pushen: tussen 22 en 24 augustus verdwenen zo drie
-diensten zonder één commit. Dat mag nooit meer stil gebeuren.
-
-De Opzichter draait dagelijks om 09:50 in de hoofdsessie (die
-aantoonbaar betrouwbaar wakker wordt) en:
-
-1. controleert Sams bestand (≥10 kaarten) en Azzouz' verificatie;
-2. dekt elk gat zelf, dezelfde ochtend, en meldt eerlijk dat er
-   gedekt is;
-3. dekt met zijn pushes automatisch het bord op zevren.nl/admin/outreach af;
-4. controleert op maandag John en Azzouz' weekrapport, vuurt hun
-   trigger één keer opnieuw af bij uitblijven, en neemt het op
-   dinsdag zelf over als ook die herkansing niets opleverde.
-
-Eén notificatie per dag, in het Arabisch, met aantallen en de
-artifact-link. Geen stille dagen.
+De vier oude fresh-session-triggers (Sam, John, Azzouz dag + week)
+zijn 25-08 verwijderd: ze mintten sessies zonder repository.
 
 ## De skillsbibliotheek
 
