@@ -87,13 +87,13 @@ search could not prove them alive, not that closure was confirmed.
 | Trimsalon De Hondenkapper | Asten-Heusden | drafted | 2026-08-24; 549; check: levensteken na aug 2025 |
 | Happy Hound 2.0 | onbekend | drafted | 2026-08-24; 549; check: plaats + levensteken na aug 2025 |
 | WV Fotografie | onbekend | drafted | 2026-08-24; 549; check: bedrijf vs. hobby, plaats, recent werk — bij twijfel niet versturen |
-| Nailbar Aukje | onbekend | drafted | 2026-08-25 (Opzichter-dekking); groeifase: 2023 gestart naast studie; check: plaats + e-mail van contactpagina |
-| Beautybar Westerbork | Westerbork | drafted | 2026-08-25; groeifase: 2022 thuissalon → pand Oosteinde; check: e-mail + Google-score |
-| Hondentrimsalon Perro | Elst | drafted | 2026-08-25; groeifase: nieuwe salon na 15 jaar Arnhem; check: e-mail van contactpagina |
-| Trimsalon Wof | Sneek | drafted | 2026-08-25; groeifase: gestart 1-9-2021; check: e-mail + levensteken na juni 2026 |
-| Sabsalon Hondensalon | Oldenzaal | drafted | 2026-08-25; groeifase: eigen merknaam, werkgebied Twente; check: e-mail + score |
-| Trimsalon Aan De Kust | Egmond aan Zee | drafted | 2026-08-25; groeifase: kustplaats met seizoenspubliek; check: e-mail + levensteken |
-| Schoonheidsstudio 43 | onbekend | drafted | 2026-08-25; groeifase: aanbod uitgebreid naar 5 categorieën; check: plaats + e-mail |
-| Beauty Salon Ibiza | Apeldoorn | drafted | 2026-08-25; groeifase: wimpers/brows met hoge herhaalfrequentie; check: e-mail + score |
-| BeautyyCloud | Hansweert | drafted | 2026-08-25; groeifase: 4 disciplines, streekbereik; check: e-mail + levensteken |
-| YDC Nails | onbekend | drafted | 2026-08-25; groeifase: 2020 opgericht, gediplomeerd, thuissalon; check: plaats + e-mail |
+| Nailbar Aukje | onbekend | drafted | 2026-08-25; AANGEHOUDEN: plaats onbekend, niet te personaliseren. Sluit met contactpagina |
+| Beautybar Westerbork | Westerbork | drafted | 2026-08-25; GOEDGEKEURD na aanpassing: heeft eigen domein beautybarwesterbork.nl, opening herschreven. Oosteinde 25 · 06-37293234. Check: e-mail van contactpagina |
+| Hondentrimsalon Perro | Elst | drafted | 2026-08-25; GOEDGEKEURD ongewijzigd. Check: e-mail van contactpagina |
+| Trimsalon Wof | Sneek | drafted | 2026-08-25; GOEDGEKEURD na aanpassing: heeft eigen domein trimsalonwof.nl, nieuw onderwerp op openingsdagen. Westereems 5, di-do op afspraak. Check: e-mail |
+| Sabsalon Hondensalon | Oldenzaal | drafted | 2026-08-25; GOEDGEKEURD ongewijzigd (Sabine Gosenshuis, Twente). Check: e-mail |
+| Trimsalon Aan De Kust | Egmond aan Zee | drafted | 2026-08-25; GOEDGEKEURD na aanpassing: heeft eigen domein trimsalonaandekust.nl. Duindoornlaan 18. Check: e-mail |
+| Schoonheidsstudio 43 | onbekend | drafted | 2026-08-25; AANGEHOUDEN: plaats en startjaar onbekend, profiel niet hard te maken |
+| Beauty Salon Ibiza | Apeldoorn | drafted | 2026-08-25; GOEDGEKEURD ongewijzigd. Check: e-mail van contactpagina |
+| BeautyyCloud | Hansweert | drafted | 2026-08-25; GOEDGEKEURD ongewijzigd. Check: e-mail van contactpagina |
+| YDC Nails | onbekend | drafted | 2026-08-25; AANGEHOUDEN: 2020 opgericht (bovengrens) zonder groeisignaal; plaats onbekend |
