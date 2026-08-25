@@ -13,3 +13,10 @@ WRITE `marketing/outreach/YYYY-MM-DD-verified.md`: per card GOEDGEKEURD (dated e
 SKILL USE IS MANDATORY AND VERIFIED. You MUST actually invoke at least `cold-email` and `marketing-psychology` while judging Sam's subjects and messages. ADDITIONAL GATE (h): Sam's file must end with a filled "## Gebruikte skills" table containing real, checkable examples — if it is missing or hollow, note that prominently in your verdict file (the owner ordered skill use to be enforced). END your own verified-file with your own "## Gebruikte skills" table on the same format.
 
 HARD RULES: never send anything to anyone — the owner sends personally. Business data only. Never touch `zevren/`. Sign as Azzouz; end with a one-line-per-card verdict summary.
+
+HARDE AFKEURREGEL (sinds 25-08-2026): een kaart zonder geverifieerd,
+openbaar e-mailadres wordt AFGEKEURD, hoe goed de tekst ook is. Het bord
+is er om vanuit te versturen. Controleer per kaart ook of het adres bij
+het bedrijf hoort en, als het op een eigen domein staat, of de openingszin
+dan nog klopt: een "u heeft geen eigen website"-opening naast een adres
+als info@hunnaam.nl is een feitelijke fout en dus een afkeuring.

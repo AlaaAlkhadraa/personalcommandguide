@@ -46,6 +46,7 @@ const CARD_RE = /\n## (\d+)\. (.+?)\n([\s\S]*?)(?=\n## \d+\. |$)/g;
 // A domain-looking token in the card's metadata: `x.wixsite.com/y`,
 // trimsalonwof.nl, https://... — the first hit becomes the contact link.
 const URL_RE = /(?:https?:\/\/)?((?:[a-z0-9-]+\.)+[a-z]{2,}(?:\/[\w\-./]*)?)/gi;
+const ADDRESS_RE = /[\w.+-]+@[\w-]+\.[\w.-]*[\w]/;
 const IG_RE = /instagram[^@\n]{0,60}@([a-z0-9._]{2,30})/i;
 // Guide entries a card happens to mention are no way to reach the owner;
 // booking pages (Salonized, Treatwell, Fresha) very much are, so those stay.
@@ -109,6 +110,14 @@ function parseCards(text: string): ProspectCard[] {
     const codes = [...body.matchAll(CODE_RE)].map((c) => (c[1] ?? "").trim());
     if (codes.length < 2) continue;
     const emailRaw = meta.find(([k]) => k.toLowerCase().startsWith("e-mail"))?.[1] ?? "";
+    // The line reads `info@salon.nl (uit de bedrijfsvermelding)`; only the
+    // address itself may reach the mailto, or the mail app opens a recipient
+    // with the source note glued to it.
+    const email = (ADDRESS_RE.exec(emailRaw)?.[0] ?? "").replace(/[).,;]+$/, "");
+    // The board exists to send from. A card without a published address
+    // costs the owner a search instead of saving him one, so it does not
+    // belong here: the agents park those in `geen-emailadres.md`.
+    if (!email) continue;
     const contact = contactLink((name ?? "").trim(), city.trim(), meta);
     const confirmed = meta.some(
       ([k]) => k.toLowerCase() === "actief" || k.toLowerCase().startsWith("actief bevestigd")
@@ -120,7 +129,7 @@ function parseCards(text: string): ProspectCard[] {
       meta,
       subject: codes[0] ?? "",
       message: codes[1] ?? "",
-      email: emailRaw.includes("@") ? emailRaw : "",
+      email,
       contactUrl: contact.url,
       contactLabel: contact.label,
       status: confirmed ? "confirmed" : "check",

@@ -87,26 +87,26 @@ search could not prove them alive, not that closure was confirmed.
 | Trimsalon De Hondenkapper | Asten-Heusden | drafted | 2026-08-24; 549; check: levensteken na aug 2025 |
 | Happy Hound 2.0 | onbekend | drafted | 2026-08-24; 549; check: plaats + levensteken na aug 2025 |
 | WV Fotografie | onbekend | drafted | 2026-08-24; 549; check: bedrijf vs. hobby, plaats, recent werk — bij twijfel niet versturen |
-| Nailbar Aukje | onbekend | drafted | 2026-08-25; AANGEHOUDEN: plaats onbekend, niet te personaliseren. Sluit met contactpagina |
-| Beautybar Westerbork | Westerbork | drafted | 2026-08-25; GOEDGEKEURD na aanpassing: heeft eigen domein beautybarwesterbork.nl, opening herschreven. Oosteinde 25 · 06-37293234. Check: e-mail van contactpagina |
-| Hondentrimsalon Perro | Elst | drafted | 2026-08-25; GOEDGEKEURD ongewijzigd. Check: e-mail van contactpagina |
+| Nailbar Aukje | onbekend | geparkeerd | 2026-08-25; AANGEHOUDEN: plaats onbekend, niet te personaliseren. Sluit met contactpagina. GEPARKEERD 25-08: geen openbaar e-mailadres na drie zoekrondes; alleen WhatsApp 06-83563890 |
+| Beautybar Westerbork | Westerbork | geparkeerd | 2026-08-25; GOEDGEKEURD na aanpassing: heeft eigen domein beautybarwesterbork.nl, opening herschreven. Oosteinde 25 · 06-37293234. Check: e-mail van contactpagina. GEPARKEERD 25-08: geen openbaar e-mailadres na drie zoekrondes; wel eigen domein beautybarwesterbork.nl |
+| Hondentrimsalon Perro | Elst | drafted | 2026-08-25; GOEDGEKEURD ongewijzigd. Check: e-mail van contactpagina. E-mail geverifieerd: mariskadevriesstoffels@gmail.com |
 | Trimsalon Wof | Sneek | drafted | 2026-08-25; GOEDGEKEURD, herschreven; E-MAIL GEVONDEN: info@trimsalonwof.nl · 06-22978224 — direct verzendbaar |
 | Sabsalon Hondensalon | Oldenzaal | drafted | 2026-08-25; GOEDGEKEURD; opgericht 2023 (profiel hard); geen openbare e-mail — formulier/Instagram |
-| Trimsalon Aan De Kust | Egmond aan Zee | drafted | 2026-08-25; AANGEHOUDEN voor e-mail: contact afgeschermd, alleen telefonisch; domein .nl serveert vreemde nieuwsartikelen (mogelijk gekaapt) — niet noemen |
-| Schoonheidsstudio 43 | onbekend | drafted | 2026-08-25; AANGEHOUDEN: plaats en startjaar onbekend, profiel niet hard te maken |
-| Beauty Salon Ibiza | Apeldoorn | drafted | 2026-08-25; GOEDGEKEURD ongewijzigd. Check: e-mail van contactpagina |
-| BeautyyCloud | Hansweert | drafted | 2026-08-25; GOEDGEKEURD ongewijzigd. Check: e-mail van contactpagina |
-| YDC Nails | onbekend | drafted | 2026-08-25; AANGEHOUDEN: 2020 opgericht (bovengrens) zonder groeisignaal; plaats onbekend |
+| Trimsalon Aan De Kust | Egmond aan Zee | drafted | 2026-08-25; AANGEHOUDEN voor e-mail: contact afgeschermd, alleen telefonisch; domein .nl serveert vreemde nieuwsartikelen (mogelijk gekaapt) — niet noemen. E-mail geverifieerd: trimsalonaandekust@outlook.com |
+| Schoonheidsstudio 43 | onbekend | drafted | 2026-08-25; AANGEHOUDEN: plaats en startjaar onbekend, profiel niet hard te maken. E-mail geverifieerd: schoonheidsstudio43@gmail.com |
+| Beauty Salon Ibiza | Apeldoorn | drafted | 2026-08-25; GOEDGEKEURD ongewijzigd. Check: e-mail van contactpagina. E-mail geverifieerd: beautysalonibiza@gmail.com |
+| BeautyyCloud | Hansweert | geparkeerd | 2026-08-25; GOEDGEKEURD ongewijzigd. Check: e-mail van contactpagina. GEPARKEERD 25-08: geen openbaar e-mailadres na drie zoekrondes |
+| YDC Nails | onbekend | geparkeerd | 2026-08-25; AANGEHOUDEN: 2020 opgericht (bovengrens) zonder groeisignaal; plaats onbekend. GEPARKEERD 25-08: geen openbaar e-mailadres na drie zoekrondes; plaats onbekend |
 | Ya'Coupe Barbershop | Roermond | drafted | 2026-08-25 ronde B; 4,9/13 Nicelocal, 2-4 medewerkers; E-MAIL: yacoupebarber@gmail.com; LET OP: boekt al online via Salonized — invalshoek is eigen adres |
-| Kapsalon Ammar | Roermond (Maasniel) | drafted | 2026-08-25 ronde B; KvK 2023, facebook-only; actief: wheree feb 2026; geen openbare e-mail — via FB-knop |
-| Barbershop Confiance | Maastricht | drafted | 2026-08-25 ronde B; KvK 2021, team van 8; LET OP: boekt al via Treatwell; geen openbare e-mail |
-| Barbershop De Baard | Heerlen | drafted | 2026-08-25 ronde B; 4,9 uit 40+ Google; LET OP: boekt al via Fresha; geen openbare e-mail |
-| Kapsalon Hairwijnen | Herwijnen | drafted | 2026-08-25 ronde B; eigen salon sinds apr 2022 (KvK 85611875); e-mail van contactpagina aflezen |
-| 't Kapperschuurtje | Oud-Beijerland | drafted | 2026-08-25 ronde B; avondblok di tot 21:30; LET OP: boekt al via Fresha; e-mail van contactpagina aflezen |
-| Kapsalon Fresh | Venlo | drafted | 2026-08-25 ronde B; 4,4/109, site is gratis Google-pagina; geen openbare e-mail |
+| Kapsalon Ammar | Roermond (Maasniel) | drafted | 2026-08-25 ronde B; KvK 2023, facebook-only; actief: wheree feb 2026; geen openbare e-mail — via FB-knop. E-mail geverifieerd: abo.haedaar123@gmail.com |
+| Barbershop Confiance | Maastricht | drafted | 2026-08-25 ronde B; KvK 2021, team van 8; LET OP: boekt al via Treatwell; geen openbare e-mail. E-mail geverifieerd: hairbyburr@gmail.com |
+| Barbershop De Baard | Heerlen | geparkeerd | 2026-08-25 ronde B; 4,9 uit 40+ Google; LET OP: boekt al via Fresha; geen openbare e-mail. GEPARKEERD 25-08: info@de-baard.nl gevonden, maar eigen domein botst met de "geen website"-opening; eerst de-baard.nl in een browser controleren |
+| Kapsalon Hairwijnen | Herwijnen | geparkeerd | 2026-08-25 ronde B; eigen salon sinds apr 2022 (KvK 85611875); e-mail van contactpagina aflezen. GEPARKEERD 25-08: geen openbaar e-mailadres na drie zoekrondes; alleen 0418-581794 |
+| 't Kapperschuurtje | Oud-Beijerland | drafted | 2026-08-25 ronde B; avondblok di tot 21:30; LET OP: boekt al via Fresha; e-mail van contactpagina aflezen. E-mail geverifieerd: kapperschuurtje@outlook.com |
+| Kapsalon Fresh | Venlo | geparkeerd | 2026-08-25 ronde B; 4,4/109, site is gratis Google-pagina; geen openbare e-mail. GEPARKEERD 25-08: geen openbaar e-mailadres na drie zoekrondes |
 | Treat U Massage & Spa | Vleuten | drafted | 2026-08-25 ronde B; 4,9, wheree jan 2026; E-MAIL: Info@treatumassage-spa.nl; LET OP: boekt al via Treatwell/Salonkee/ClassPass |
-| Rijschool Roman | Rijswijk | drafted | 2026-08-25 ronde B; gestart 2020, 100% slaging (gids), les in 5 talen; e-mail van contactpagina aflezen |
-| Autorijschool Metalsa | Rotterdam | drafted | 2026-08-25 ronde B; KvK 2022, webnode-adres met "-3"; e-mail via itheorie/contactpagina; slagingspercentage NIET noemen in het bericht |
+| Rijschool Roman | Rijswijk | geparkeerd | 2026-08-25 ronde B; gestart 2020, 100% slaging (gids), les in 5 talen; e-mail van contactpagina aflezen. GEPARKEERD 25-08: geen openbaar e-mailadres na drie zoekrondes |
+| Autorijschool Metalsa | Rotterdam | geparkeerd | 2026-08-25 ronde B; KvK 2022, webnode-adres met "-3"; e-mail via itheorie/contactpagina; slagingspercentage NIET noemen in het bericht. GEPARKEERD 25-08: geen openbaar e-mailadres na drie zoekrondes; alleen contactformulier |
 | Coiffure Fauquemont | Valkenburg | not fit - klantenstop | 2026-08-25 ronde B: sinds 2015 én tijdelijke klantenstop voor nieuwe klanten. Nooit benaderd; genoteerd zodat geen run er tijd aan verliest |
 | Cosijnse Automobielen | Nijkerkerveen | not fit - closed | 2026-08-25 ronde B: bedrijvenarchief vermeldt het bedrijf als niet langer actief. Nooit benaderd |
 | Auto Cleaning 013 | Rijen | not fit - closed | 2026-08-25 ronde B: gidsvermeldingen in de verleden tijd, geen actueel levensteken. Nooit benaderd |

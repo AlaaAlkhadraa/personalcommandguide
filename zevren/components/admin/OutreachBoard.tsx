@@ -140,9 +140,10 @@ export function OutreachBoard({ data }: { data: OutreachBoardData }) {
       </div>
 
       <p className="text-xs leading-relaxed text-muted">
-        “Open in Mail” vult uw eigen mailapp met onderwerp en bericht; verzenden doet u zelf,
-        gespreid over de dag. Het vinkje is een geheugensteun op dit apparaat — de administratie
-        blijft contacted.md in de repository.
+        Elke kaart hier heeft een geverifieerd e-mailadres; prospects zonder openbaar adres
+        komen niet op het bord. “Open in Mail” vult uw mailapp met onderwerp en bericht en
+        zet de kaart meteen op verzonden; versturen doet u zelf, gespreid over de dag. Het
+        vinkje is een geheugensteun op dit apparaat — de administratie blijft contacted.md.
       </p>
     </div>
   );
@@ -213,6 +214,11 @@ function Card({
         {mailHref && (
           <a
             href={mailHref}
+            // One press does both: the mail app opens filled in, and the card
+            // ticks itself off. The tick stays a toggle for the rare misfire.
+            onClick={() => {
+              if (!isSent) onToggleSent();
+            }}
             className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-primary-light"
           >
             Open in Mail
