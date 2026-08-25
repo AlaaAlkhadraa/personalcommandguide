@@ -27,7 +27,7 @@ export interface ProspectCard {
   contactUrl: string;
   /** What that link opens: a site, an Instagram page, or a search. */
   contactLabel: string;
-  status: "approved" | "confirmed" | "check" | "rejected";
+  status: "approved" | "confirmed" | "check" | "held" | "rejected";
   verdict?: string;
 }
 
@@ -138,7 +138,18 @@ function parseCards(text: string): ProspectCard[] {
   return cards;
 }
 
-/** Overlays Azzouz's verdicts onto Sam's cards, matched by business name. */
+// Azzouz opens a verdict with one of these words. "AANGEPAST — daarna
+// goedgekeurd" counts as approved: the rewritten copy below it is the point.
+const VERDICT_RE = /\b(afgekeurd|goedgekeurd|aangehouden)\b/i;
+
+/**
+ * Overlays Azzouz's verdicts onto Sam's cards, matched by business name.
+ *
+ * Only the head of a section decides: his file ends with a summary table that
+ * repeats every AFGEKEURD row, and that table falls inside the last card's
+ * section. Reading the whole section would stamp the final approved card as
+ * rejected.
+ */
 function mergeVerified(cards: ProspectCard[], text: string): void {
   const sections = ("\n" + text).split("\n## ");
   for (const card of cards) {
@@ -146,12 +157,19 @@ function mergeVerified(cards: ProspectCard[], text: string): void {
       (s.split("\n")[0] ?? "").toLowerCase().includes(card.name.toLowerCase())
     );
     if (!section) continue;
-    if (section.includes("AFGEKEURD")) {
+    const head = section.slice(0, 700);
+    const verdict = VERDICT_RE.exec(head)?.[1]?.toLowerCase();
+    if (!verdict) continue;
+    const after = head.slice((VERDICT_RE.exec(head)?.index ?? 0) + verdict.length);
+    // Trims the leftovers of "**GOEDGEKEURD, zonder wijziging.**" down to the
+    // sentence the owner actually needs to read.
+    card.verdict = squash(after.replace(/\*\*/g, "").replace(/^[.,:;\s—-]+/, "")).slice(0, 300);
+    if (verdict === "afgekeurd") {
       card.status = "rejected";
-      card.verdict = squash(/AFGEKEURD[:\s—-]*(.+)/.exec(section)?.[1] ?? "").slice(0, 300);
-    } else if (section.includes("GOEDGEKEURD")) {
+    } else if (verdict === "aangehouden") {
+      card.status = "held";
+    } else {
       card.status = "approved";
-      card.verdict = squash(/GOEDGEKEURD[:\s—-]*(.+)/.exec(section)?.[1] ?? "").slice(0, 300);
       const codes = [...section.matchAll(CODE_RE)].map((c) => (c[1] ?? "").trim());
       if (codes.length >= 2) {
         card.subject = codes[0] ?? card.subject;

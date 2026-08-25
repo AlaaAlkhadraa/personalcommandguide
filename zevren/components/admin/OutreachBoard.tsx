@@ -15,6 +15,7 @@ const STATUS: Record<ProspectCard["status"], { label: string; cls: string }> = {
   approved: { label: "Goedgekeurd", cls: "bg-emerald-500/15 text-emerald-300" },
   confirmed: { label: "Actief bevestigd", cls: "bg-emerald-500/15 text-emerald-300" },
   check: { label: "Te checken", cls: "bg-amber-500/15 text-amber-300" },
+  held: { label: "Aangehouden", cls: "bg-sky-500/15 text-sky-300" },
   rejected: { label: "Afgekeurd", cls: "bg-red-500/15 text-red-300" },
 };
 
@@ -23,6 +24,7 @@ const FILTERS = [
   { key: "approved", label: "Goedgekeurd" },
   { key: "confirmed", label: "Bevestigd" },
   { key: "check", label: "Te checken" },
+  { key: "held", label: "Aangehouden" },
   { key: "rejected", label: "Afgekeurd" },
 ] as const;
 
