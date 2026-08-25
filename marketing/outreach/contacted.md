@@ -110,3 +110,7 @@ search could not prove them alive, not that closure was confirmed.
 | Coiffure Fauquemont | Valkenburg | not fit - klantenstop | 2026-08-25 ronde B: sinds 2015 én tijdelijke klantenstop voor nieuwe klanten. Nooit benaderd; genoteerd zodat geen run er tijd aan verliest |
 | Cosijnse Automobielen | Nijkerkerveen | not fit - closed | 2026-08-25 ronde B: bedrijvenarchief vermeldt het bedrijf als niet langer actief. Nooit benaderd |
 | Auto Cleaning 013 | Rijen | not fit - closed | 2026-08-25 ronde B: gidsvermeldingen in de verleden tijd, geen actueel levensteken. Nooit benaderd |
+| Voetverzorging Hoekstra | Witharen (Ommen) | drafted | 2026-08-25 ronde C; diploma mrt 2022 + ProVoet; eigen domein, geen agenda; E-MAIL: lisette@voetverzorginghoekstra.nl |
+| Pedicurepraktijk Lorena | Emmen | drafted | 2026-08-25 ronde C; medisch pedicure, KRP/ProVoet 56392, FB-pagina 2023, 0 reviews op zorgkaart; E-MAIL: ppraktijklorena@gmail.com |
+| Massagepraktijk Inanna | Nijkerk | drafted | 2026-08-25 ronde C; Helen van de Waerdt, 8 jr spa-ervaring, eigen praktijk; LET OP: staat al op Treatwell; E-MAIL: info@massagepraktijkinanna.nl |
+| On the Road Again Massages | Leeuwarden | drafted | 2026-08-25 ronde C; thuispraktijk sinds juni 2024, geen eigen domein (salonized-subdomein); E-MAIL: ontheroadagainmassages@gmail.com |
