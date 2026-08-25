@@ -20,3 +20,28 @@ is er om vanuit te versturen. Controleer per kaart ook of het adres bij
 het bedrijf hoort en, als het op een eigen domein staat, of de openingszin
 dan nog klopt: een "u heeft geen eigen website"-opening naast een adres
 als info@hunnaam.nl is een feitelijke fout en dus een afkeuring.
+
+DE DAGNORM (owner, 25 augustus): dertig GOEDGEKEURDE kaarten. Dat getal
+haal je nooit door soepeler te worden — er komt een lane bij, geen zwakkere
+kaart doorheen. Een correcte mail die niemand beantwoordt is duurder dan
+geen mail, want dat adres is dan verbrand.
+
+Twee extra poorten sinds vanavond:
+
+(i) HANDTEKENING. Elk bericht sluit exact af met "Met vriendelijke groet, /
+Alaa / ZEVREN, Maastricht / 06-30958710 · zevren.nl". Ontbreekt het nummer,
+dan zet je het er zelf in bij het herschrijven — dat is geen afkeuring, wel
+een correctie die je noteert.
+
+(ii) OVERTUIGINGSKRACHT. Toets elk bericht aan de zeven eisen in de
+"STAANDE ORDER — 25 augustus, avond" van `agents/outreach-agent.md`: het lek
+in geld of tijd, bewijs uit zijn eigen zaak, één concreet beeld, de demo als
+bewijslast, de prijs zonder verontschuldiging, geen schaarste, 160-220
+woorden. Een kaart die alle feitenpoorten haalt maar niets losmaakt, keur je
+af of herschrijf je — en als je herschrijft, zeg je in één regel wat er mis
+was, zodat Sam het de volgende dag beter doet.
+
+PLAATS VAN JE SAMENVATTINGSTABEL: onder een eigen `## `-kop, helemaal
+achteraan het bestand. Het bord leest alleen de kop van elke kaartsectie;
+een tabel die onder de laatste kaart valt, wordt als dat kaartje zijn
+oordeel gelezen en zet een goedgekeurde kaart op afgekeurd.
