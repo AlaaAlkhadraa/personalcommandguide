@@ -76,7 +76,7 @@ Als het je interesseert hoor ik het graag. Zo niet, dan ook prima.
 Met vriendelijke groet,
 Alaa
 ZEVREN, Maastricht
-zevren.nl
+06-30958710 · zevren.nl
 ```
 
 ## Template 2: they have a site, but it fails on a phone
@@ -95,7 +95,7 @@ Wil je weten wat er bij jullie precies misgaat? Stuur een berichtje terug, dan z
 Met vriendelijke groet,
 Alaa
 ZEVREN, Maastricht
-zevren.nl
+06-30958710 · zevren.nl
 ```
 
 Fill `{het concrete probleem}` with what you actually saw:
@@ -120,7 +120,7 @@ Op zevren.nl staat een complete webshop waar je zelf doorheen kunt klikken, van 
 Met vriendelijke groet,
 Alaa
 ZEVREN, Maastricht
-zevren.nl
+06-30958710 · zevren.nl
 ```
 
 ---

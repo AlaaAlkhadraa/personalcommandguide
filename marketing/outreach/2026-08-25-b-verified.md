@@ -167,7 +167,7 @@ Op zevren.nl staat een demo die echt werkt. Klik een tijd aan, dan zie je precie
 Met vriendelijke groet,
 Alaa
 ZEVREN, Maastricht
-zevren.nl
+06-30958710 · zevren.nl
 ```
 
 ---
@@ -247,7 +247,7 @@ Ik zit zelf in Maastricht. Op zevren.nl staat een demo die echt werkt — klik h
 Met vriendelijke groet,
 Alaa
 ZEVREN, Maastricht
-zevren.nl
+06-30958710 · zevren.nl
 ```
 
 ---
@@ -329,7 +329,7 @@ Op zevren.nl staat een demo die echt werkt. Klik een tijd aan, dan zie je wat je
 Met vriendelijke groet,
 Alaa
 ZEVREN, Maastricht
-zevren.nl
+06-30958710 · zevren.nl
 ```
 
 ---

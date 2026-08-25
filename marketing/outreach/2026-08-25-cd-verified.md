@@ -85,7 +85,7 @@ Op zevren.nl staat een demo die echt werkt. Klik een tijd aan, dan zie je wat je
 Met vriendelijke groet,
 Alaa
 ZEVREN, Maastricht
-zevren.nl
+06-30958710 · zevren.nl
 ```
 
 ## 2. Pedicurepraktijk Lorena — Emmen (Drenthe)
@@ -129,7 +129,7 @@ Op zevren.nl staat een demo die werkt. Klik een tijd aan en u ziet wat uw patië
 Met vriendelijke groet,
 Alaa
 ZEVREN, Maastricht
-zevren.nl
+06-30958710 · zevren.nl
 ```
 
 ## 3. Massagepraktijk Inanna — Nijkerk (Gelderland)
@@ -176,7 +176,7 @@ Op zevren.nl staat een demo die echt werkt. Klik een tijd aan en je ziet wat je 
 Met vriendelijke groet,
 Alaa
 ZEVREN, Maastricht
-zevren.nl
+06-30958710 · zevren.nl
 ```
 
 ## 4. On the Road Again Massages — Leeuwarden (Friesland)
@@ -225,7 +225,7 @@ Op zevren.nl staat een demo die echt werkt. Klik een tijd aan en je ziet wat je 
 Met vriendelijke groet,
 Alaa
 ZEVREN, Maastricht
-zevren.nl
+06-30958710 · zevren.nl
 ```
 
 ## 5. Pedicurepraktijk Kantu — Groningen
@@ -274,7 +274,7 @@ Op zevren.nl staat een demo die werkt. Klik een tijd aan en u ziet wat uw patië
 Met vriendelijke groet,
 Alaa
 ZEVREN, Maastricht
-zevren.nl
+06-30958710 · zevren.nl
 ```
 
 ## 6. Schoonheidssalon Midden Drenthe — Beilen (Drenthe)
@@ -327,7 +327,7 @@ Op zevren.nl staat een demo die echt werkt. Klik een tijd aan en je ziet wat je 
 Met vriendelijke groet,
 Alaa
 ZEVREN, Maastricht
-zevren.nl
+06-30958710 · zevren.nl
 ```
 
 ## 7. DO Huidtherapie — Emmen (Drenthe)
@@ -377,7 +377,7 @@ Op zevren.nl staat een demo die werkt. Klik een tijd aan en u ziet wat uw patië
 Met vriendelijke groet,
 Alaa
 ZEVREN, Maastricht
-zevren.nl
+06-30958710 · zevren.nl
 ```
 
 ## 8. Voetzorg Pedicure Marta — Brummen (Gelderland)
@@ -428,7 +428,7 @@ Op zevren.nl staat een demo die werkt. Klik een tijd aan en u ziet wat uw klant 
 Met vriendelijke groet,
 Alaa
 ZEVREN, Maastricht
-zevren.nl
+06-30958710 · zevren.nl
 ```
 
 ## 9. Op goede voet by M — Neede (gemeente Berkelland, Gelderland)
@@ -506,7 +506,7 @@ Op zevren.nl staat een demo die echt werkt. Klik een tijd aan en je ziet wat je 
 Met vriendelijke groet,
 Alaa
 ZEVREN, Maastricht
-zevren.nl
+06-30958710 · zevren.nl
 ```
 
 ## 11. Flexor Massage — Kampen (Overijssel)
@@ -554,7 +554,7 @@ Op zevren.nl staat een demo die echt werkt. Klik een tijd aan en je ziet wat je 
 Met vriendelijke groet,
 Alaa
 ZEVREN, Maastricht
-zevren.nl
+06-30958710 · zevren.nl
 ```
 
 ## 12. Pedicurepraktijk Zuid-Oost Drenthe — Erica (gemeente Emmen, Drenthe)
@@ -598,7 +598,7 @@ Op zevren.nl staat een demo die werkt. Klik een tijd aan en u ziet wat uw patië
 Met vriendelijke groet,
 Alaa
 ZEVREN, Maastricht
-zevren.nl
+06-30958710 · zevren.nl
 ```
 
 ---
@@ -688,6 +688,7 @@ Wat ik bouw is één plek waar uw afgewerkte muren, plafonds en daken staan, per
 Met vriendelijke groet,
 Alaa
 ZEVREN, Maastricht
+06-30958710 · zevren.nl
 ```
 
 ## 3. Car Care Limburg — Hoensbroek (Limburg)
@@ -736,6 +737,7 @@ Wat ik bouw is een pagina met uw eigen voor-en-na werk erop, uw prijzen, en een 
 Met vriendelijke groet,
 Alaa
 ZEVREN, Maastricht
+06-30958710 · zevren.nl
 ```
 
 ## 4. Wingens Interieur & Timmerwerken — Schaijk (Noord-Brabant)
@@ -789,6 +791,7 @@ Wat ik bouw is een aanvraagformulier dat compleet binnenkomt: welk werk, welke p
 Met vriendelijke groet,
 Alaa
 ZEVREN, Maastricht
+06-30958710 · zevren.nl
 ```
 
 ## 5. Zeeland Hoveniers — Middelburg (Zeeland)
@@ -868,6 +871,7 @@ Wat ik bouw is één vindbare plek met uw afgewerkte wanden, plafonds en gevels 
 Met vriendelijke groet,
 Alaa
 ZEVREN, Maastricht
+06-30958710 · zevren.nl
 ```
 
 ## 7. TP Detailing — Goes (Zeeland)
@@ -916,6 +920,7 @@ Wat ik bouw is een vindbare plek waar dat verschil staat: je eigen werk, per beh
 Met vriendelijke groet,
 Alaa
 ZEVREN, Maastricht
+06-30958710 · zevren.nl
 ```
 
 ## 8. Prestige Auto Care — Dordrecht (Zuid-Holland)
@@ -963,6 +968,7 @@ Wat ik bouw is een plek waar uw eigen voor-en-na werk staat en waar de klant zel
 Met vriendelijke groet,
 Alaa
 ZEVREN, Maastricht
+06-30958710 · zevren.nl
 ```
 
 ## 9. Allman Verbouw — Sassenheim (Zuid-Holland)
@@ -1096,6 +1102,7 @@ Wat ik bouw is een plek waar je eigen werk staat, je prijzen, en een agenda waar
 Met vriendelijke groet,
 Alaa
 ZEVREN, Maastricht
+06-30958710 · zevren.nl
 ```
 
 ---

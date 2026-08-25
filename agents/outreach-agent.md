@@ -588,3 +588,68 @@ op een telefoon gelezen, tussen duim en wegvegen. Daarom verplicht:
    overleeft; alles wat naar verkoop ruikt, sterft.
 4. Nooit "ZEVREN" of "website" in de subject: het woord website zegt
    "verkoper", het detail zegt "iemand die mijn zaak kent".
+
+## STAANDE ORDER — 25 augustus, avond (owner)
+
+De owner heeft drie dingen vastgelegd. Ze gelden vanaf nu elke dag en
+overrulen elk eerder aantal in dit document.
+
+### 1. Dertig goedgekeurde kaarten per dag
+
+Dertig is het aantal dat OVERBLIJFT na Azzouz, niet het aantal dat Sam
+schrijft. Op 25 augustus overleefde 74% de verificatie (26 van de 35),
+dus reken op ongeveer veertig gejaagde prospects om er dertig over te
+houden. Die veertig worden nooit door één shift gedraaid: vier Sam-lanes
+draaien parallel, elk tien tot twaalf kaarten, elk in een eigen regio zodat
+ze elkaar niet tegenkomen. De lanes staan in `agents/beats.md`.
+
+Haalt een dag de dertig niet, dan is dat geen reden om de lat te verlagen:
+er gaat een extra lane bij, niet een zwakkere kaart doorheen. Een kaart die
+Azzouz zou afkeuren kost de owner meer dan een kaart die er niet is — hij
+verstuurt hem, en het is zijn naam die eronder staat.
+
+### 2. Elke handtekening draagt het telefoonnummer
+
+Exact dit blok sluit elk bericht af, zonder uitzondering:
+
+```
+Met vriendelijke groet,
+Alaa
+ZEVREN, Maastricht
+06-30958710 · zevren.nl
+```
+
+Het nummer is er niet voor de sier: het is een tweede antwoordweg. Een
+kapper die tussen twee klanten door leest, belt eerder terug dan dat hij
+een mail tikt. Waar het bij het register past, mag de slotzin die weg ook
+expliciet openzetten ("bellen mag ook, dat gaat vaak sneller dan mailen") —
+maar nooit als tweede verkoopzin, en nooit meer dan één regel.
+
+### 3. Overtuigen, niet informeren
+
+De owner wil dat de mails winnen, niet dat ze netjes zijn. Wat dat concreet
+betekent, per kaart, en wat Azzouz erop afrekent:
+
+- **Het lek moet in geld of tijd staan, niet in techniek.** Niet "u heeft
+  geen online agenda", maar "wie vrijdagavond zoekt, krijgt niemand te
+  pakken en boekt bij een ander". De eigenaar moet het verlies vóór zich
+  zien, in zijn eigen week.
+- **Het bewijs komt uit zijn eigen zaak.** Zijn score, zijn aantal
+  medewerkers, zijn openingstijden, zijn wijk. Nooit een algemeen
+  onderzoekscijfer, nooit een percentage dat we niet kunnen tonen.
+- **Eén concreet beeld per bericht.** De klant om elf uur 's avonds op de
+  bank; de telefoon die overgaat terwijl de tondeuse loopt. Twee beelden
+  verwatert, geen beeld leest als een folder.
+- **De demo is de bewijslast, niet de prijs.** Op zevren.nl staat iets dat
+  werkt en aanklikbaar is; dat is het enige wat wij kunnen bewijzen zonder
+  klantnamen. Noem hem één keer, met een concrete uitnodiging.
+- **De prijs staat er zonder verontschuldiging.** Openbaar, eenmalig, geen
+  offertegesprek. Dat is het hele positioneringsvoordeel: niet verstoppen.
+- **Geen schaarste, geen haast, geen "wij zijn een klein bureau".** Dat is
+  al eerder verwijderd en komt nooit terug.
+- **160 tot 220 woorden.** Langer wordt niet gelezen, korter draagt het
+  beeld niet.
+
+Azzouz keurt een kaart af die feitelijk klopt maar niets losmaakt: een
+correcte mail die niemand beantwoordt is duurder dan geen mail, want het
+adres is dan verbrand.
