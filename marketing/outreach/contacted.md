@@ -90,9 +90,9 @@ search could not prove them alive, not that closure was confirmed.
 | Nailbar Aukje | onbekend | drafted | 2026-08-25; AANGEHOUDEN: plaats onbekend, niet te personaliseren. Sluit met contactpagina |
 | Beautybar Westerbork | Westerbork | drafted | 2026-08-25; GOEDGEKEURD na aanpassing: heeft eigen domein beautybarwesterbork.nl, opening herschreven. Oosteinde 25 · 06-37293234. Check: e-mail van contactpagina |
 | Hondentrimsalon Perro | Elst | drafted | 2026-08-25; GOEDGEKEURD ongewijzigd. Check: e-mail van contactpagina |
-| Trimsalon Wof | Sneek | drafted | 2026-08-25; GOEDGEKEURD na aanpassing: heeft eigen domein trimsalonwof.nl, nieuw onderwerp op openingsdagen. Westereems 5, di-do op afspraak. Check: e-mail |
-| Sabsalon Hondensalon | Oldenzaal | drafted | 2026-08-25; GOEDGEKEURD ongewijzigd (Sabine Gosenshuis, Twente). Check: e-mail |
-| Trimsalon Aan De Kust | Egmond aan Zee | drafted | 2026-08-25; GOEDGEKEURD na aanpassing: heeft eigen domein trimsalonaandekust.nl. Duindoornlaan 18. Check: e-mail |
+| Trimsalon Wof | Sneek | drafted | 2026-08-25; GOEDGEKEURD, herschreven; E-MAIL GEVONDEN: info@trimsalonwof.nl · 06-22978224 — direct verzendbaar |
+| Sabsalon Hondensalon | Oldenzaal | drafted | 2026-08-25; GOEDGEKEURD; opgericht 2023 (profiel hard); geen openbare e-mail — formulier/Instagram |
+| Trimsalon Aan De Kust | Egmond aan Zee | drafted | 2026-08-25; AANGEHOUDEN voor e-mail: contact afgeschermd, alleen telefonisch; domein .nl serveert vreemde nieuwsartikelen (mogelijk gekaapt) — niet noemen |
 | Schoonheidsstudio 43 | onbekend | drafted | 2026-08-25; AANGEHOUDEN: plaats en startjaar onbekend, profiel niet hard te maken |
 | Beauty Salon Ibiza | Apeldoorn | drafted | 2026-08-25; GOEDGEKEURD ongewijzigd. Check: e-mail van contactpagina |
 | BeautyyCloud | Hansweert | drafted | 2026-08-25; GOEDGEKEURD ongewijzigd. Check: e-mail van contactpagina |
