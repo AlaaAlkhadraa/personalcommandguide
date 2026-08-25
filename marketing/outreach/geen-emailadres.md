@@ -52,8 +52,9 @@ Overige gegevens: Heerlerbaan 108a, 6418 CJ Heerlen · 06-22529555 ·
 
 ## Ronde D, 25 aug: het patroon in dit vak
 
-De veertien bedrijven hierboven komen allemaal uit de craft-ronde en zijn
-allemaal om dezelfde reden geparkeerd. Ze passen vaak uitstekend in het
+De veertien regels in de tabel die op 25-08 zijn toegevoegd vanaf Radek
+Klusbedrijf, komen uit de craft-ronde (ronde D) en zijn allemaal om
+dezelfde reden geparkeerd. Ze passen vaak uitstekend in het
 profiel — KvK-registratie 2021-2022, eenmanszaak, aantoonbaar actief —
 maar publiceren nergens een adres. De gidsen melden bij vrijwel allemaal
 letterlijk "geen e-mailadres bekend"; ze werken via WhatsApp, Werkspot en
