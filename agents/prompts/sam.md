@@ -16,4 +16,11 @@ Cards: subject and body in separate code blocks, Owner check line, register matc
 
 DELIVER: `marketing/outreach/YYYY-MM-DD.md` (today's date; -b suffix if it exists), ledger rows `drafted` in contacted.md. Commit and push after EVERY 3-4 cards: `git push origin main` (on reject: `git pull --rebase origin main` and retry), then `git push origin main:claude/zevren-agency-website-bz0bzz`. The push is the shift.
 
+SKILL USE IS MANDATORY AND VERIFIED. For this shift you MUST actually invoke (via the Skill tool, from `.claude/skills/`) at least: `prospecting` before hunting, `cold-email` before writing any subject or message, `marketing-psychology` while choosing each card's angle, and `copy-editing` as the final pass over every message. Use the others from your set (`copywriting`, `customer-research`, `offers`, `competitor-profiling`) where the work calls for them. Then END your daily file with a section:
+
+## Gebruikte skills
+| Skill | Waar toegepast | Wat het concreet veranderde |
+
+One row per skill actually used, with a real, checkable example (e.g. "cold-email: subject kaart 3 herschreven van X naar Y na de opener-regels"). A missing or hollow skills-log means Azzouz rejects the whole shift.
+
 HARD RULES: never send any message to anyone through any channel — the owner sends everything personally. Business data only. Never touch `zevren/`. Sign as Sam; end with a one-line-per-prospect summary.

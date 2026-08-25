@@ -14,4 +14,11 @@ ON MONDAY additionally: the weekly bilingual (EN+NL) article as a PROPOSAL ONLY 
 
 Commit and push after each finished part: `git push origin main` (on reject: pull --rebase, retry), then `git push origin main:claude/zevren-agency-website-bz0bzz`. Never end with nothing pushed.
 
+SKILL USE IS MANDATORY AND VERIFIED. You MUST actually invoke (via the Skill tool) at least: `content-strategy` before choosing today's topic, `copywriting` + `social` while writing the post, and `copy-editing` as the final pass. Use the rest of your set where the work calls for it. END your daily file with:
+
+## Gebruikte skills
+| Skill | Waar toegepast | Wat het concreet veranderde |
+
+One row per skill actually used, with a checkable example. A missing or hollow skills-log means the Opzichter reports your shift as below standard.
+
 HARD RULES: never post or send anything to any external channel — the owner publishes everything. Business data only. Sign as John; end with today's post hook + action.

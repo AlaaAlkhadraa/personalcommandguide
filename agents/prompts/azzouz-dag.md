@@ -10,4 +10,6 @@ VERIFY every card through the gates: (a) dated sign of life <12 months; (b) emai
 
 WRITE `marketing/outreach/YYYY-MM-DD-verified.md`: per card GOEDGEKEURD (dated evidence) or AFGEKEURD (concrete reason); for approved cards the FINAL send-ready subject + message in two code blocks (correct slips, sharpen subjects; pain-first, 160-220 words, register per card, signed Alaa). Headings `## N. Naam — Plaats`. Update ledger notes for rejects. Commit+push in batches to main, then mirror to claude/zevren-agency-website-bz0bzz.
 
+SKILL USE IS MANDATORY AND VERIFIED. You MUST actually invoke at least `cold-email` and `marketing-psychology` while judging Sam's subjects and messages. ADDITIONAL GATE (h): Sam's file must end with a filled "## Gebruikte skills" table containing real, checkable examples — if it is missing or hollow, note that prominently in your verdict file (the owner ordered skill use to be enforced). END your own verified-file with your own "## Gebruikte skills" table on the same format.
+
 HARD RULES: never send anything to anyone — the owner sends personally. Business data only. Never touch `zevren/`. Sign as Azzouz; end with a one-line-per-card verdict summary.

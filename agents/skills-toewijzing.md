@@ -44,3 +44,11 @@ aankijken), `pricing`, `competitors`, `competitor-profiling`,
 
 Niet toegewezen (n.v.t. voor ZEVREN nu): `aso`, `paywalls`, `events`.
 De Opzichter gebruikt bij dekking de set van de agent die hij dekt.
+
+## Handhaving (owner, 25 aug)
+
+Skillgebruik is verplicht én controleerbaar. Elke dienst eindigt met
+een tabel `## Gebruikte skills` (skill · waar toegepast · wat het
+concreet veranderde) met echte, natrekbare voorbeelden. Azzouz
+controleert Sams tabel dagelijks (poort h); het weekrapport beoordeelt
+alle logs. Een lege of holle tabel telt als een gefaalde dienst.
