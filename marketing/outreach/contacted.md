@@ -114,3 +114,7 @@ search could not prove them alive, not that closure was confirmed.
 | Pedicurepraktijk Lorena | Emmen | drafted | 2026-08-25 ronde C; medisch pedicure, KRP/ProVoet 56392, FB-pagina 2023, 0 reviews op zorgkaart; E-MAIL: ppraktijklorena@gmail.com |
 | Massagepraktijk Inanna | Nijkerk | drafted | 2026-08-25 ronde C; Helen van de Waerdt, 8 jr spa-ervaring, eigen praktijk; LET OP: staat al op Treatwell; E-MAIL: info@massagepraktijkinanna.nl |
 | On the Road Again Massages | Leeuwarden | drafted | 2026-08-25 ronde C; thuispraktijk sinds juni 2024, geen eigen domein (salonized-subdomein); E-MAIL: ontheroadagainmassages@gmail.com |
+| Pedicurepraktijk Kantu | Groningen | drafted | 2026-08-25 ronde C; 5,0 Google, ProVoet 55406-11823, KvK 84178434; twee adressen in de gidsen — check welk klopt; E-MAIL: karianthuane@gmail.com |
+| Schoonheidssalon Midden Drenthe | Beilen | drafted | 2026-08-25 ronde C; Marieke Klat, eigen salon boven Mondzorg (krantenartikel), Yelp "Updated August 2026"; boekt via salonized-subdomein; E-MAIL: info@schoonheidssalonmiddendrenthe.nl |
+| DO Huidtherapie | Emmen | drafted | 2026-08-25 ronde C; 5,0 uit 19 Google, zorgkaart-beoordeling 10 juli 2025, enige avondblok wo 19-21; E-MAIL: info@dohuidtherapie.nl |
+| Voetzorg Pedicure Marta | Brummen | drafted | 2026-08-25 ronde C; opleiding medisch pedicure sinds mrt 2024, ProVoet, FB-pagina 2024; E-MAIL: info@voetzorgpedicuremarta.nl |
