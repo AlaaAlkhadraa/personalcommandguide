@@ -97,3 +97,16 @@ search could not prove them alive, not that closure was confirmed.
 | Beauty Salon Ibiza | Apeldoorn | drafted | 2026-08-25; GOEDGEKEURD ongewijzigd. Check: e-mail van contactpagina |
 | BeautyyCloud | Hansweert | drafted | 2026-08-25; GOEDGEKEURD ongewijzigd. Check: e-mail van contactpagina |
 | YDC Nails | onbekend | drafted | 2026-08-25; AANGEHOUDEN: 2020 opgericht (bovengrens) zonder groeisignaal; plaats onbekend |
+| Ya'Coupe Barbershop | Roermond | drafted | 2026-08-25 ronde B; 4,9/13 Nicelocal, 2-4 medewerkers; E-MAIL: yacoupebarber@gmail.com; LET OP: boekt al online via Salonized — invalshoek is eigen adres |
+| Kapsalon Ammar | Roermond (Maasniel) | drafted | 2026-08-25 ronde B; KvK 2023, facebook-only; actief: wheree feb 2026; geen openbare e-mail — via FB-knop |
+| Barbershop Confiance | Maastricht | drafted | 2026-08-25 ronde B; KvK 2021, team van 8; LET OP: boekt al via Treatwell; geen openbare e-mail |
+| Barbershop De Baard | Heerlen | drafted | 2026-08-25 ronde B; 4,9 uit 40+ Google; LET OP: boekt al via Fresha; geen openbare e-mail |
+| Kapsalon Hairwijnen | Herwijnen | drafted | 2026-08-25 ronde B; eigen salon sinds apr 2022 (KvK 85611875); e-mail van contactpagina aflezen |
+| 't Kapperschuurtje | Oud-Beijerland | drafted | 2026-08-25 ronde B; avondblok di tot 21:30; LET OP: boekt al via Fresha; e-mail van contactpagina aflezen |
+| Kapsalon Fresh | Venlo | drafted | 2026-08-25 ronde B; 4,4/109, site is gratis Google-pagina; geen openbare e-mail |
+| Treat U Massage & Spa | Vleuten | drafted | 2026-08-25 ronde B; 4,9, wheree jan 2026; E-MAIL: Info@treatumassage-spa.nl; LET OP: boekt al via Treatwell/Salonkee/ClassPass |
+| Rijschool Roman | Rijswijk | drafted | 2026-08-25 ronde B; gestart 2020, 100% slaging (gids), les in 5 talen; e-mail van contactpagina aflezen |
+| Autorijschool Metalsa | Rotterdam | drafted | 2026-08-25 ronde B; KvK 2022, webnode-adres met "-3"; e-mail via itheorie/contactpagina; slagingspercentage NIET noemen in het bericht |
+| Coiffure Fauquemont | Valkenburg | not fit - klantenstop | 2026-08-25 ronde B: sinds 2015 én tijdelijke klantenstop voor nieuwe klanten. Nooit benaderd; genoteerd zodat geen run er tijd aan verliest |
+| Cosijnse Automobielen | Nijkerkerveen | not fit - closed | 2026-08-25 ronde B: bedrijvenarchief vermeldt het bedrijf als niet langer actief. Nooit benaderd |
+| Auto Cleaning 013 | Rijen | not fit - closed | 2026-08-25 ronde B: gidsvermeldingen in de verleden tijd, geen actueel levensteken. Nooit benaderd |
