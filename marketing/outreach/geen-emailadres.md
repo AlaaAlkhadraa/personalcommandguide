@@ -55,6 +55,16 @@ Zoekopdrachten uitgevoerd per bedrijf: naam + plaats + "e-mail", naam +
 | Fit Dog Limburg | Limburg | eigen domein fitdoglimburg.nl, gecertificeerd dierosteopaat, "wie ben ik"-pagina | 2026-08-26 |
 | Hondencoach Hélène (Hélène Heijs-van der Vlist) | Overloon | hondengedragscoach.com, Holthesedijk 8, werkgebied Land van Cuijk / Deurne / Noord-Limburg | 2026-08-26 |
 | Dierfysiotherapie praktijk Limburg (Mariola Wams) | Geleen / Brunssum | alleen een Facebookpagina, behandeladres Heugerstraat 4a Brunssum | 2026-08-26 |
+| Parisa Naaiatelier | Den Hoorn / Delft | eigen domein parisanaaiatelier.nl met contactformulier, 06-14805833; KvK 85794384 (2022) — sterkste profiel van lane D | 2026-08-26 |
+| De Gouden Kroon Kledingreparatie | Utrecht | Nachtegaalstraat 76, 030-2691962, erkend leerbedrijf; KvK 87811278 (2022) | 2026-08-26 |
+| Pat's Pets | Alkmaar | eigen site patspets.nl, 06-12139797, eigenaar Patrick; Facebookpagina-ID 61561151813181 (2024-reeks) | 2026-08-26 |
+| Naaiatelier Narcis | Delft | eigen domein, 06-30676320, Hof van Delftlaan 76; Ahmad Hesari, meerdere artikelen in Delft op Zondag | 2026-08-26 |
+| Deko Handmade naaiatelier | Dordrecht | deko-handmade.nl, 06-37352604, Zwaluwenburg 93; bruidsjurken op maat plus naailes | 2026-08-26 |
+| Hands&Paws hondenuitlaatservice | Purmerend | eigen domein handsenpaws.nl met reserveer- en shoppagina, Mississippistraat 118 | 2026-08-26 |
+| Kattenoppas Keistad | Amersfoort | kattenoppaskeistad.nl met alleen een aanvraagformulier, 06-30259501, eigenaar Raïssa | 2026-08-26 |
+| Joella's hondenuitlaatservice | Nieuwegein | joellashus.nl draait op een Wix-sjabloon (paginatitel is nog "My Site"), Facebookpagina | 2026-08-26 |
+| Kattenpension Wel voor de Poes | Warmenhuizen | welvoordepoes.info, max 20 katten; meldt zelf volgeboekte weken — eerst capaciteit checken | 2026-08-26 |
+| Dierfysiotherapie Utrecht (Loes Vermeulen) | Utrecht | praktijk sinds 2022, KvK 97062278, Pretoriadreef 51; het enige gevonden adres (info@hydrohouse.nl) is van de gedeelde locatie HYDRO HOUSE, niet van haar praktijk | 2026-08-26 |
 
 ## Apart geval: Barbershop De Baard (Heerlen)
 
@@ -145,3 +155,18 @@ terug. Hondenscholen, dierenfysiotherapeuten en dierosteopaten publiceren
 hun adres juist wél — alle tien kaarten van vandaag kwamen uit een
 beroepsregister of van een eigen contactpagina. Het vak leeft van
 verwijzingen door dierenartsen, en dan moet je bereikbaar zijn.
+## Lane D, 26 aug: waar het adres deze keer op stukliep
+
+De tien lane D-regels in de tabel hierboven (Parisa tot en met Dierfysiotherapie
+Utrecht) komen uit de dienst van 26 augustus. Het patroon
+verschilt van dat van de craft-ronde: deze zaken hébben vaak een eigen domein
+en een nette site, maar zetten daar een contactformulier neer in plaats van een
+adres. Dat is een bewuste keuze tegen spam, en die gaat niet over met beter
+zoeken.
+
+Drie zijn een handmatige blik waard, want hun profiel is het sterkste van de
+hele dienst: **Parisa Naaiatelier** (KvK 85794384, dus 2022) en **De Gouden
+Kroon Kledingreparatie** (KvK 87811278, dus 2022) zitten allebei precies in de
+groeifase, en **Pat's Pets** in Alkmaar heeft een Facebookpagina uit de
+2024-reeks en een eigenaar van 31. Staat er een adres op hun contactpagina, dan
+kunnen alle drie meteen geschreven worden.
