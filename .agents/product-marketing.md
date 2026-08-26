@@ -1,6 +1,6 @@
 # Product Marketing Context — ZEVREN
 
-**Document version:** 1.0 · 2026-08-24
+**Document version:** 1.1 · 2026-08-26
 Elke marketingskill in `.claude/skills/` leest dit document eerst.
 Feiten hier zijn bindend; een skill-advies dat ermee botst, verliest.
 
@@ -37,10 +37,35 @@ voordeel voor ondernemers met een meertalig publiek.
 
 ## Toon en taal
 
-Nederlands formeel ("u") in outreach; site in zes talen; Arabisch
-altijd MSA/فصحى. Nooit schaarste ("nog 3 plekken"), nooit "wij zijn
+Nederlands in outreach, met het register per kaart gekozen en op de
+kaart verantwoord: "u" bij praktijken, C.V.'s, winkels en zaken met
+personeel; "je" bij de jonge eenmanszaak waar de eigenaar zelf voor de
+klas of op het veld staat. De keuze staat per kaart in één regel, zodat
+Azzouz hem kan toetsen. Site in zes talen; Arabisch altijd MSA/فصحى. Nooit schaarste ("nog 3 plekken"), nooit "wij zijn
 klein", geen uitroeptekens, geen "gratis" in onderwerpen. Elke claim
 moet letterlijk door zevren.nl gedekt zijn.
+
+## Wat een bericht nooit mag beweren
+
+Drie formuleringen zijn in verificatie gesneuveld en komen niet terug:
+
+- **"Werk dat u zelf kunt aanklikken."** Op de projectenpagina van
+  zevren.nl staat letterlijk "geen van alle is klantwerk". Wie dit leest
+  verwacht een portfolio van echte klanten. Schrijf "conceptsites die wij
+  gebouwd hebben" of "een demo die echt werkt".
+- **Een formulier waarin de klant foto's of bestanden uploadt.** Staat
+  nergens op de site. Het formulier mag erin, de upload niet.
+- **"Een adres op uw eigen naam."** Leest als een mailbox, en wij
+  verkopen geen mailadressen. Schrijf "een eigen pagina".
+
+## De poort die het vaakst kaarten kost
+
+Vóór er een letter copy wordt geschreven: **kan deze klant al online
+boeken of plannen?** Vijf kaarten zijn hier in twee dagen op gesneuveld.
+Zoek naast de eigen site altijd op de platforms die dit segment gebruikt
+— Fresha, Treatwell, Salonized, Bjootify, DoggyDoggy, aniday — en op een
+eigen afsprakenplanner of klantenportaal. Een mail die een ondernemer
+vertelt dat zij mist wat zij al betaalt, verbrandt het adres.
 
 ## Kanalen en bewijs
 
@@ -53,5 +78,12 @@ demo's zijn concepten en worden nooit als echte klanten gepresenteerd.
 
 ## Changelog
 
+- 1.1 (2026-08-26, Azzouz): register per kaart vastgelegd in plaats van
+  altijd "u"; sectie "Wat een bericht nooit mag beweren" toegevoegd met de
+  drie formuleringen die in de verificatie van 25 en 26 augustus
+  sneuvelden; sectie "De poort die het vaakst kaarten kost" toegevoegd,
+  omdat de al-boekt-online-check in twee dagen vijf kaarten kostte
+  (Dierenpension Zeeland, Dogdiscipline, Op goede voet by M,
+  Hondencentrum Brabant, DogFit).
 - 1.0 (2026-08-24): eerste versie, opgesteld uit zevren.nl-data en de
   werkafspraken in CLAUDE.md en agents/.
