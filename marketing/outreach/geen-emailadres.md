@@ -114,3 +114,9 @@ de uitlaatservices en foodtrucks bijna allemaal niet. Die laatste groep
 werkt via WhatsApp, Instagram-DM en boekingsplatforms. Wie hen wil bereiken,
 moet dat via een ander kanaal doen dan e-mail. Dat is een beslissing voor de
 eigenaar, niet voor mij.
+| Honden Training Center Twente | Hengelo | Facebookpagina, Yelp-vermelding, Havenstraat 19 | 2026-08-26 |
+| De Roedel Hus | Lelystad | de-roedel-hus.nl, KvK 83315608 (2021), Verlaatweg 3 | 2026-08-26 |
+| Mobiele Fietsenmaker Barry | Deventer / Salland | eigen site, bus sinds zomer 2020, alleen 06-57522961 en WhatsApp | 2026-08-26 |
+| Veldhome Hondenschool Barneveld | Kootwijkerbroek | eigen site met agenda en webshop, WhatsApp; mail loopt via het inspectiebedrijf | 2026-08-26 |
+| Hondenschool Fenna | Almere-Haven | hondenschoolfenna.nl, De Paal 7-16 | 2026-08-26 |
+| Pad Thai Thailand Foodtruck & Catering | Apeldoorn | Facebook, Trustoo 9,1, alleen 06-43025899 | 2026-08-26 |
