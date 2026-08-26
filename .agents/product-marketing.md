@@ -1,6 +1,6 @@
 # Product Marketing Context — ZEVREN
 
-**Document version:** 1.1 · 2026-08-26
+**Document version:** 1.2 · 2026-08-26
 Elke marketingskill in `.claude/skills/` leest dit document eerst.
 Feiten hier zijn bindend; een skill-advies dat ermee botst, verliest.
 
@@ -67,6 +67,28 @@ Zoek naast de eigen site altijd op de platforms die dit segment gebruikt
 eigen afsprakenplanner of klantenportaal. Een mail die een ondernemer
 vertelt dat zij mist wat zij al betaalt, verbrandt het adres.
 
+## Welke bron een e-mailadres draagt
+
+Niet elk openbaar adres is even hard, en het verschil zit in de vorm van de
+bron, niet in de zoekmachine. Op 26-08 leverde dat in twee lanes het
+tegenovergestelde resultaat op:
+
+- **Bruikbaar: een eenbedrijfs-registerpagina.** Het SBB-register van erkende
+  leerbedrijven (Stagemarkt.nl) draagt één bedrijf per pagina, met naam,
+  adres, telefoon, contactpersoon, e-mail én erkenningsdatum in één blok. Die
+  erkenningsdatum is meteen een gedateerd levensteken. Lane E haalde er vijf
+  van vijf adressen uit, alle vijf bij hercontrole correct. Het register kent
+  ook rijscholen, garages en praktijken.
+- **Niet bruikbaar: een samengevatte gidsen- of zoekpagina.** Waar meerdere
+  bedrijven op één pagina staan, plakt de samenvatter er één verhaal van en
+  raakt het adres los van het bedrijf. Lane F toonde het aan: Motorrijschool
+  MOVICA kreeg het adres van een ándere rijschool, Erik Eisma dat van een
+  coachingsbedrijf.
+
+Een adres dat alleen een persoonsnaam draagt (`kocak_k@hotmail.com`) haalt de
+poort wél, mits het op de registerpagina van precies dát bedrijf staat. Een
+adres dat de naam van een ánder bedrijf draagt, haalt hem nooit.
+
 ## Kanalen en bewijs
 
 Outreach per e-mail, persoonlijk verzonden door de eigenaar (agents
@@ -78,6 +100,13 @@ demo's zijn concepten en worden nooit als echte klanten gepresenteerd.
 
 ## Changelog
 
+- 1.2 (2026-08-26, Azzouz): sectie "Welke bron een e-mailadres draagt"
+  toegevoegd. Lane E en lane F kwamen op dezelfde dag tot tegengestelde
+  conclusies over adressen uit zoekresultaten; het verschil bleek de vorm van
+  de bron te zijn (één bedrijf per pagina versus een samengevatte gidsenpagina)
+  en niet de zoekmachine. Daarnaast bij "Wat een bericht nooit mag beweren"
+  bevestigd dat "een adres op uw eigen naam" vier van de vijf lane-E-berichten
+  raakte en overal is vervangen door "een eigen pagina".
 - 1.1 (2026-08-26, Azzouz): register per kaart vastgelegd in plaats van
   altijd "u"; sectie "Wat een bericht nooit mag beweren" toegevoegd met de
   drie formuleringen die in de verificatie van 25 en 26 augustus
