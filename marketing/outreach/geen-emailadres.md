@@ -49,6 +49,12 @@ Zoekopdrachten uitgevoerd per bedrijf: naam + plaats + "e-mail", naam +
 | Jouster Uitlaatservice | Joure | eigen site jousteruitlaatservice.nl; KvK 93375425 (2024), Tamara van der Zalm | 2026-08-26 |
 | Foodtruck Smokey Bandits | Opende / Beetsterzwaag | eigen site foodtrucksmokeybandits.nl, 5,0 op restaurantreviews.nl; KvK 95367527 (2025) | 2026-08-26 |
 | Hondenservice-Gaasterland | Hemelum | KvK 96258543 (2025), opvang aan huis, uitlaatservice, advies en training | 2026-08-26 |
+| Hondenservice Zeeland / Hondencentrum Zeeland | Vlissingen | eigen domein hondenservicezeeland.nl, winkel Walstraat 87, opgericht begin 2023 door Martijn en Ferdi; alleen een contactformulier | 2026-08-26 |
+| Hondenschool Arly | Vlissingen | hs-arly.nl (alleen via http geïndexeerd), trainingslocatie Galgeweg 5, Facebookpagina | 2026-08-26 |
+| Honden Vrienden Zeeland | Zeeland | eigen domein hondenvriendenzeeland.nl met cursusaanbod, geen adres op de site | 2026-08-26 |
+| Fit Dog Limburg | Limburg | eigen domein fitdoglimburg.nl, gecertificeerd dierosteopaat, "wie ben ik"-pagina | 2026-08-26 |
+| Hondencoach Hélène (Hélène Heijs-van der Vlist) | Overloon | hondengedragscoach.com, Holthesedijk 8, werkgebied Land van Cuijk / Deurne / Noord-Limburg | 2026-08-26 |
+| Dierfysiotherapie praktijk Limburg (Mariola Wams) | Geleen / Brunssum | alleen een Facebookpagina, behandeladres Heugerstraat 4a Brunssum | 2026-08-26 |
 
 ## Apart geval: Barbershop De Baard (Heerlen)
 
@@ -120,3 +126,22 @@ eigenaar, niet voor mij.
 | Veldhome Hondenschool Barneveld | Kootwijkerbroek | eigen site met agenda en webshop, WhatsApp; mail loopt via het inspectiebedrijf | 2026-08-26 |
 | Hondenschool Fenna | Almere-Haven | hondenschoolfenna.nl, De Paal 7-16 | 2026-08-26 |
 | Pad Thai Thailand Foodtruck & Catering | Apeldoorn | Facebook, Trustoo 9,1, alleen 06-43025899 | 2026-08-26 |
+## Ronde C (26-08, dieren op afspraak)
+
+Deze zes kwamen door de kwaliteitspoort — groeifase, aantoonbaar draaiend,
+boekingsvormig — maar publiceren nergens een adres. Per bedrijf drie
+zoekrondes: naam + plaats + "e-mail", naam + "gmail/hotmail/outlook", naam +
+eigenaarsnaam.
+
+Eén is een handmatige blik waard, want het profiel is het sterkste van de
+hele dienst: **Hondenservice Zeeland** in Vlissingen, begin 2023 opgericht
+door Martijn en Ferdi, met een eigen winkel aan de Walstraat 87, dagopvang
+met haal- en brengservice en een omheind speelveld. Alles loopt via een
+contactformulier. Staat er een adres op hun contactpagina, dan kan die kaart
+alsnog geschreven worden.
+
+Opvallend bij deze sector: het patroon uit ronde D van 25-08 keert niet
+terug. Hondenscholen, dierenfysiotherapeuten en dierosteopaten publiceren
+hun adres juist wél — alle tien kaarten van vandaag kwamen uit een
+beroepsregister of van een eigen contactpagina. Het vak leeft van
+verwijzingen door dierenartsen, en dan moet je bereikbaar zijn.
