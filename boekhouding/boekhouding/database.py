@@ -47,6 +47,19 @@ def _als_tekst(waarde: Any) -> Optional[str]:
     return json.dumps(waarde, ensure_ascii=False, default=str)
 
 
+def maak_verbinding(pad: str) -> sqlite3.Connection:
+    """Open de databaseverbinding en zet foreign keys aan.
+
+    SQLite dwingt foreign keys standaard NIET af; zonder deze pragma
+    zou een factuur met een niet-bestaand administratie_id gewoon
+    worden opgeslagen. Gebruik daarom altijd deze functie in plaats
+    van sqlite3.connect rechtstreeks.
+    """
+    conn = sqlite3.connect(pad)
+    conn.execute("PRAGMA foreign_keys = ON")
+    return conn
+
+
 def maak_tabellen(conn: sqlite3.Connection) -> None:
     """Maak de tabellen aan als ze nog niet bestaan."""
     conn.executescript(
@@ -54,6 +67,12 @@ def maak_tabellen(conn: sqlite3.Connection) -> None:
         CREATE TABLE IF NOT EXISTS administraties (
             id             INTEGER PRIMARY KEY,
             naam           TEXT NOT NULL,
+            -- Let op: een nieuw administratietype (bv. 'bv') toevoegen
+            -- vereist een migratie van deze CHECK-constraint; SQLite
+            -- kan een CHECK niet wijzigen met ALTER TABLE, dus dat
+            -- betekent: nieuwe tabel aanmaken, data overzetten,
+            -- hernoemen. CREATE TABLE IF NOT EXISTS past een bestaande
+            -- database niet aan.
             type           TEXT NOT NULL DEFAULT 'eenmanszaak'
                            CHECK (type IN ('eenmanszaak')),
             aangemaakt_op  TEXT NOT NULL

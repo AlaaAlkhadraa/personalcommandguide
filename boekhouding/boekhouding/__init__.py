@@ -7,6 +7,7 @@ AI stelt voor, code valideert, mens beslist (Gouden regel 1).
 from .models import Factuur, ValidatieResultaat
 from .validatie import valideer_factuur
 from .database import (
+    maak_verbinding,
     maak_tabellen,
     maak_administratie,
     sla_factuur_op,
@@ -19,6 +20,7 @@ __all__ = [
     "Factuur",
     "ValidatieResultaat",
     "valideer_factuur",
+    "maak_verbinding",
     "maak_tabellen",
     "maak_administratie",
     "sla_factuur_op",

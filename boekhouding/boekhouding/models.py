@@ -48,11 +48,19 @@ class Factuur(BaseModel):
                 "lever het bedrag aan als tekst of Decimal (Gouden regel 5)"
             )
         if isinstance(waarde, str):
-            waarde = waarde.strip().replace(",", ".")
+            origineel = waarde.strip()
+            waarde = origineel
+            # Nederlandse notatie: punt én komma → punt is
+            # duizendtalscheiding ("1.250,00"); alleen komma →
+            # decimaalteken ("100,00"); alleen punt → decimaalteken.
+            if "." in waarde and "," in waarde:
+                waarde = waarde.replace(".", "").replace(",", ".")
+            else:
+                waarde = waarde.replace(",", ".")
             try:
                 return Decimal(waarde)
             except InvalidOperation:
-                raise ValueError(f"'{waarde}' is geen geldig bedrag")
+                raise ValueError(f"'{origineel}' is geen geldig bedrag")
         return waarde
 
     @model_validator(mode="after")

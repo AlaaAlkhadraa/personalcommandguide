@@ -33,8 +33,10 @@ drie dingen:
 1. **Bedragen zijn altijd Decimal, nooit float.** Computers rekenen met
    floats net niet exact (0.1 + 0.2 is dan niet precies 0.3); met Decimal
    klopt elke cent. Komt er tóch een float binnen, dan wordt dat een
-   review-reden. Tekst als `"100,00"` (met komma, zoals op Nederlandse
-   facturen) wordt wel netjes begrepen.
+   review-reden. Nederlandse notatie wordt netjes begrepen: staat er
+   punt én komma (`"1.250,00"`), dan is de punt duizendtalscheiding en
+   de komma het decimaalteken; alleen een komma (`"100,00"`) of alleen
+   een punt (`"100.00"`) is het decimaalteken.
 2. **Het btw-percentage moet bestaan** in het config-bestand van het jaar
    van de factuurdatum (nu: 21, 9 of 0).
 3. **Leverancier en factuurnummer mogen niet leeg zijn.**
@@ -79,8 +81,15 @@ Drie SQLite-tabellen:
 
 De functies:
 
+- `maak_verbinding` — opent de databaseverbinding én zet
+  `PRAGMA foreign_keys = ON`. SQLite controleert foreign keys standaard
+  niet; zonder deze pragma zou een factuur met een niet-bestaand
+  `administratie_id` gewoon worden opgeslagen. Gebruik daarom altijd
+  deze functie in plaats van `sqlite3.connect` rechtstreeks.
 - `maak_tabellen` — maakt de drie tabellen aan (doet niets als ze al
-  bestaan).
+  bestaan). Let op: het administratietype uitbreiden (bv. `bv`) vereist
+  later een migratie, want SQLite kan een CHECK-constraint niet
+  aanpassen met `ALTER TABLE`.
 - `maak_administratie` — maakt een administratie aan; een ander type dan
   `eenmanszaak` wordt geweigerd.
 - `sla_factuur_op` — valideert en bewaart een factuur. Ook een afgekeurde

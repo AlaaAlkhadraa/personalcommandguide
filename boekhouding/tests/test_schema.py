@@ -36,6 +36,39 @@ def test_komma_als_decimaalteken_wordt_begrepen():
     assert resultaat.factuur.bedrag_excl == Decimal("100.00")
 
 
+def test_punt_als_decimaalteken_wordt_begrepen():
+    data = geldige_factuur()
+    data["bedrag_excl"] = "100.00"
+    resultaat = valideer_factuur(data, vandaag=VANDAAG)
+    assert resultaat.status == "gevalideerd"
+    assert resultaat.factuur.bedrag_excl == Decimal("100.00")
+
+
+def test_nederlands_duizendtal_wordt_begrepen():
+    # Punt én komma aanwezig → punt is duizendtalscheiding.
+    data = geldige_factuur() | {
+        "bedrag_excl": "1.250,00",
+        "btw_bedrag": "262,50",
+        "bedrag_incl": "1.512,50",
+    }
+    resultaat = valideer_factuur(data, vandaag=VANDAAG)
+    assert resultaat.status == "gevalideerd"
+    assert resultaat.factuur.bedrag_excl == Decimal("1250.00")
+    assert resultaat.factuur.bedrag_incl == Decimal("1512.50")
+
+
+def test_groter_nederlands_duizendtal_wordt_begrepen():
+    data = geldige_factuur() | {
+        "bedrag_excl": "12.500,50",
+        "btw_percentage": "0",
+        "btw_bedrag": "0,00",
+        "bedrag_incl": "12.500,50",
+    }
+    resultaat = valideer_factuur(data, vandaag=VANDAAG)
+    assert resultaat.status == "gevalideerd"
+    assert resultaat.factuur.bedrag_excl == Decimal("12500.50")
+
+
 def test_btw_9_en_0_zijn_toegestaan():
     negen = geldige_factuur() | {
         "btw_percentage": "9", "btw_bedrag": "9.00", "bedrag_incl": "109.00",

@@ -1,9 +1,8 @@
-import sqlite3
 from datetime import date
 
 import pytest
 
-from boekhouding import maak_tabellen, maak_administratie
+from boekhouding import maak_verbinding, maak_tabellen, maak_administratie
 
 # Vaste peildatum zodat de tests niet afhangen van de echte klok.
 VANDAAG = date(2026, 8, 26)
@@ -24,7 +23,7 @@ def geldige_factuur() -> dict:
 
 @pytest.fixture
 def conn():
-    verbinding = sqlite3.connect(":memory:")
+    verbinding = maak_verbinding(":memory:")
     maak_tabellen(verbinding)
     yield verbinding
     verbinding.close()

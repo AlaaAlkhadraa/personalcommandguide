@@ -1,5 +1,7 @@
 """Tests voor opslag, multi-administratie, duplicaatcheck en audit trail."""
 
+import sqlite3
+
 import pytest
 
 from boekhouding import (
@@ -23,6 +25,13 @@ def test_administratie_heeft_type_eenmanszaak(conn):
 def test_onbekend_administratietype_wordt_geweigerd(conn):
     with pytest.raises(ValueError, match="bv"):
         maak_administratie(conn, "Testzaak", "bv")
+
+
+def test_onbestaand_administratie_id_wordt_geweigerd(conn):
+    # Bewijst dat maak_verbinding foreign keys echt aanzet: zonder
+    # "PRAGMA foreign_keys = ON" zou deze insert gewoon slagen.
+    with pytest.raises(sqlite3.IntegrityError, match="FOREIGN KEY"):
+        sla_factuur_op(conn, 999, geldige_factuur(), vandaag=VANDAAG)
 
 
 def test_geldige_factuur_wordt_opgeslagen(conn, administratie_id):
