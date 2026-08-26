@@ -87,6 +87,7 @@ export interface Dictionary {
     why: { eyebrow: string; title: string };
     process: { eyebrow: string; title: string; subtitle: string };
     faq: { eyebrow: string; title: string };
+    conceptCta: { title: string; subtitle: string; button: string };
     finalCta: {
       eyebrow: string;
       title: string;

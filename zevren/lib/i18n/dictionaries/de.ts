@@ -134,6 +134,11 @@ const de: Dictionary = {
       eyebrow: "Häufig gestellte Fragen",
       title: "Noch Fragen? Das kommt am häufigsten vor",
     },
+    conceptCta: {
+      title: "Noch keine Vorstellung, wie Ihre Website aussehen soll?",
+      subtitle: "Wählen Sie Stil, Farben und Seiten und sehen Sie sofort eine Vorschau Ihrer Homepage.",
+      button: "Eigenes Konzept bauen",
+    },
     finalCta: {
       eyebrow: "Arbeiten wir zusammen",
       title: "Bereit, etwas zu bauen, das auffällt?",

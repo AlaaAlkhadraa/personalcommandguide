@@ -134,6 +134,11 @@ const nl: Dictionary = {
       eyebrow: "Veelgestelde vragen",
       title: "Nog vragen? Dit komt het vaakst voorbij",
     },
+    conceptCta: {
+      title: "Nog geen idee hoe je site eruit moet zien?",
+      subtitle: "Kies je stijl, kleuren en pagina's en zie direct een voorbeeld van jouw homepage.",
+      button: "Bouw je eigen concept",
+    },
     finalCta: {
       eyebrow: "Laten we samenwerken",
       title: "Klaar om iets te bouwen dat opvalt?",

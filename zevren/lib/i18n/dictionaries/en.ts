@@ -134,6 +134,11 @@ const en: Dictionary = {
       eyebrow: "Frequently asked questions",
       title: "Still have questions? These come up most",
     },
+    conceptCta: {
+      title: "No idea yet what your site should look like?",
+      subtitle: "Pick your style, colours and pages and instantly see a preview of your homepage.",
+      button: "Build your own concept",
+    },
     finalCta: {
       eyebrow: "Let's work together",
       title: "Ready to build something that stands out?",

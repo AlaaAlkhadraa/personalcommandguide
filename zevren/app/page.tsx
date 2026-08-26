@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Hero } from "@/components/home/Hero";
 import { PackagesSection } from "@/components/pricing/PackagesSection";
+import { ConceptCtaBand } from "@/components/home/ConceptCtaBand";
 import { ProjectsPreview } from "@/components/home/ProjectsPreview";
 import { FAQ } from "@/components/home/FAQ";
 import { FinalCTA } from "@/components/home/FinalCTA";
@@ -59,6 +60,7 @@ export default async function HomePage() {
           pages behind the nav; repeating them here only buried the ask. */}
       <RevealGroup>
         <PackagesSection dict={dict.offer} pricingDict={dict.pricing} />
+        <ConceptCtaBand dict={dict.home.conceptCta} />
         <ProjectsPreview dict={dict.work} homeDict={dict.home.work} />
         <FAQ dict={dict.faq} homeDict={dict.home.faq} />
         <FinalCTA dict={dict.home.finalCta} contactDict={dict.contact} />
