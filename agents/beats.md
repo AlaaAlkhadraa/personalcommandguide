@@ -78,3 +78,28 @@ Dat lane F na vijf kaarten stopte en dít meldde in plaats van acht zwakke
 kaarten te schrijven, is het systeem dat werkt. Een lane die eerlijk minder
 levert, is meer waard dan een lane die de telling haalt met kaarten die de
 eigenaar zijn naam kosten.
+
+## Sectorbevindingen 26 augustus
+
+**Rijscholen: van de lijst.** Lane F kwam met nul kaarten terug en met een
+telling die de aanname omkeert: van de acht rijscholen die de ledger al
+bevatte, strandden er twee eerder op een ontbrekend adres — op een dag dat
+het netwerk wél meewerkte. De branche adverteert met telefoonnummers en
+contactformulieren, niet met adressen. Niet meer inzetten tenzij iemand een
+bron vindt die de adressen in de zoekresultaten zelf zet.
+
+**De verse sectoren van vandaag, per opbrengst.** Kappers en barbershops
+(lane E) leverden gewoon; die branche blijft de betrouwbare bodem. De
+dierensectoren waren wisselvallig en om een reden die het opschrijven waard
+is: hondenpensions, hondenscholen en uitlaatservices plannen vaak al online
+(DoggyDoggy, eigen boekingspagina's), en drie kaarten sneuvelden precies
+daarop. Wie die sectoren opnieuw inzet, checkt eerst de boekingssituatie en
+kiest dan pas de invalshoek. Kledingherstel en naaiateliers leverden vooral
+zaken die te oud zijn voor het groeifaseprofiel — twaalf jaar, twintig jaar;
+het is een ambacht waar men lang blijft zitten.
+
+**Wat morgen als eerste aan de beurt is:** kappers/barbershops landelijk als
+vaste bodem, plus gastouders, kleine installateurs en zonnepaneelmonteurs,
+schoonmaak- en glazenwassersbedrijven en mobiele fietsenmakers — alle vier
+nog onaangeraakt, alle vier sectoren waar het adres doorgaans in de
+gidsvermelding staat.
