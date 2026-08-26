@@ -19,19 +19,20 @@ const STATUS: Record<ProspectCard["status"], { label: string; cls: string }> = {
   rejected: { label: "Afgekeurd", cls: "bg-red-500/15 text-red-300" },
 };
 
+// Afgekeurde kaarten bestaan hier niet: de parser laat ze niet door. Wat
+// overblijft is gesorteerd naar wat de eigenaar ermee moet doen, en het bord
+// opent op de enige stapel die hij vanochtend nodig heeft.
 const FILTERS = [
-  { key: "all", label: "Alle" },
-  { key: "approved", label: "Goedgekeurd" },
-  { key: "confirmed", label: "Bevestigd" },
-  { key: "check", label: "Te checken" },
+  { key: "approved", label: "Klaar om te versturen" },
   { key: "held", label: "Aangehouden" },
-  { key: "rejected", label: "Afgekeurd" },
+  { key: "check", label: "Nog niet gecheckt" },
+  { key: "all", label: "Alle" },
 ] as const;
 
 type FilterKey = (typeof FILTERS)[number]["key"];
 
 export function OutreachBoard({ data }: { data: OutreachBoardData }) {
-  const [filter, setFilter] = useState<FilterKey>("all");
+  const [filter, setFilter] = useState<FilterKey>("approved");
   const [sent, setSent] = useState<Record<number, boolean>>({});
 
   const storageKey = useCallback((n: number) => `zvo.${data.day}.${n}`, [data.day]);
@@ -61,10 +62,17 @@ export function OutreachBoard({ data }: { data: OutreachBoardData }) {
   };
 
   const visible = useMemo(
-    () => data.cards.filter((c) => filter === "all" || c.status === filter),
+    () =>
+      data.cards.filter(
+        (c) =>
+          filter === "all" ||
+          c.status === filter ||
+          // Sam's own "actief bevestigd" is not a verdict; it waits with the rest.
+          (filter === "check" && c.status === "confirmed")
+      ),
     [data.cards, filter]
   );
-  const ready = data.cards.filter((c) => c.status !== "rejected").length;
+  const ready = data.cards.filter((c) => c.status === "approved").length;
   const sentToday = data.cards.filter((c) => sent[c.n]).length;
 
   return (
@@ -78,7 +86,7 @@ export function OutreachBoard({ data }: { data: OutreachBoardData }) {
       </div>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
-        <Tile value={ready} label="vandaag klaar" />
+        <Tile value={ready} label="klaar om te versturen" />
         <Tile value={sentToday} label="vandaag verzonden" />
         <Tile value={data.stats.drafted} label="pipeline drafted" />
         <Tile value={data.stats.sent} label="totaal verzonden" />
@@ -124,9 +132,13 @@ export function OutreachBoard({ data }: { data: OutreachBoardData }) {
         ))}
       </div>
 
-      {data.cards.length === 0 && (
+      {visible.length === 0 && (
         <p className="rounded-2xl border border-white/10 bg-surface/50 p-8 text-sm text-muted">
-          Geen prospectbestanden gevonden in deze deployment.
+          {data.cards.length === 0
+            ? "Geen prospectbestanden gevonden in deze deployment."
+            : filter === "approved"
+              ? "Nog niets goedgekeurd vandaag. Azzouz is meestal rond 09:15 klaar."
+              : "Geen kaarten in deze stapel."}
         </p>
       )}
 
@@ -142,10 +154,11 @@ export function OutreachBoard({ data }: { data: OutreachBoardData }) {
       </div>
 
       <p className="text-xs leading-relaxed text-muted">
-        Elke kaart hier heeft een geverifieerd e-mailadres; prospects zonder openbaar adres
-        komen niet op het bord. “Open in Mail” vult uw mailapp met onderwerp en bericht en
-        zet de kaart meteen op verzonden; versturen doet u zelf, gespreid over de dag. Het
-        vinkje is een geheugensteun op dit apparaat — de administratie blijft contacted.md.
+        Elke kaart hier heeft een geverifieerd e-mailadres, en afgekeurde kaarten komen het
+        bord niet op{data.rejected > 0 ? ` (vandaag ${data.rejected} tegengehouden)` : ""}. “Open
+        in Mail” vult uw mailapp met onderwerp en bericht en zet de kaart meteen op verzonden;
+        versturen doet u zelf, gespreid over de dag. Het vinkje is een geheugensteun op dit
+        apparaat — de administratie blijft contacted.md.
       </p>
     </div>
   );
@@ -176,9 +189,7 @@ function Card({
 
   return (
     <article
-      className={`rounded-2xl border bg-surface/50 p-5 ${
-        card.status === "rejected" ? "border-dashed border-white/15" : "border-white/10"
-      } ${isSent ? "opacity-55" : ""}`}
+      className={`rounded-2xl border border-white/10 bg-surface/50 p-5 ${isSent ? "opacity-55" : ""}`}
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>

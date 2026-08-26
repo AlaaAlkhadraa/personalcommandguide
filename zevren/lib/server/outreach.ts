@@ -34,6 +34,8 @@ export interface ProspectCard {
 export interface OutreachBoardData {
   day: string;
   verifiedByAzzouz: boolean;
+  /** Rejected cards never reach the board; only their count is reported. */
+  rejected: number;
   stats: { drafted: number; sent: number; replied: number; afgevoerd: number };
   agents: { who: string; task: string; last: string }[];
   cards: ProspectCard[];
@@ -240,6 +242,16 @@ export async function readOutreachBoard(): Promise<OutreachBoardData> {
     }
   }
 
+  // A rejected card is work the owner must not do: Azzouz found a false claim,
+  // a business that already solved the problem, or one outside the profile.
+  // Showing it costs him the reading time the board exists to save, so it is
+  // dropped here and only counted. The reason stays in the verdict file.
+  const rejected = cards.filter((c) => c.status === "rejected").length;
+  cards = cards.filter((c) => c.status !== "rejected").map((card, index) => ({
+    ...card,
+    n: index + 1,
+  }));
+
   const newestArticle = [...ARTICLES].sort((a, b) => a.date.localeCompare(b.date)).at(-1);
   const agents = [
     { who: "Sam", task: "dagelijks 10+ prospects (07:03)", last: day || "nooit" },
@@ -256,5 +268,5 @@ export async function readOutreachBoard(): Promise<OutreachBoardData> {
     },
   ];
 
-  return { day: day || "geen", verifiedByAzzouz, stats: await ledgerStats(), agents, cards };
+  return { day: day || "geen", verifiedByAzzouz, rejected, stats: await ledgerStats(), agents, cards };
 }
