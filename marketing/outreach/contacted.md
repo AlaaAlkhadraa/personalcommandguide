@@ -155,3 +155,38 @@ search could not prove them alive, not that closure was confirmed.
 | Sportmasseur Carla | Dronten | not fit - buiten profiel | 2026-08-25 ronde C: opgericht 13-12-2017, buiten het venster van 1-6 jaar. Nooit benaderd |
 | PraktijkKARIN | Lelystad | not fit - te lang gevestigd | 2026-08-25 ronde C: verzorgt klanten die er al 28 jaar komen. Nooit benaderd |
 | Medisch Pedicure Praktijk Drenthe | Emmen | not fit - klantenstop | 2026-08-25 ronde C: eigen site meldt een klantenstop. Nooit benaderd |
+| Kim Knapper Hondentraining | Groningen | drafted | 2026-08-26 lane A; KvK 78738512, 1 werkzaam persoon; eigen domein, aanmelden via inschrijfformulier; E-MAIL: info@kimknapper.nl; 549 |
+| Hondengevoel | Harlingen | drafted | 2026-08-26 lane A; KvK 84097531 (2021-reeks), Simon Kempes; training + uitlaatservice Harlingen-Franeker-Bolsward; E-MAIL: simon.kempes@hondengevoel.nl; 549. CHECK: nieuwste gedateerde spoor is juni 2025 |
+| Kynoloki | Zuidveld (gem. Midden-Drenthe) | drafted | 2026-08-26 lane A; twee instructeurs Martin Gaus Academie; eigen contactpagina belooft antwoord binnen 3 werkdagen (= de opening van het bericht); E-MAIL: info@kynoloki.nl; 549. OPEN: oprichtingsjaar onbekend |
+| Kattenpension van Blyendael | Witteveen (gem. Midden-Drenthe) | drafted | 2026-08-26 lane A; geopend april 2024, Agnes en Alina; reserveringsformulier zonder directe bevestiging; E-MAIL: info@vanblyendael.nl; 549 |
+| Naaiatelier Zoeff | Groningen | drafted | 2026-08-26 lane A; eigen site zegt "alleen op afspraak, bel vooraf"; oudste vindbare vermelding sept 2022; E-MAIL: info@naaiatelierzoeff.nl; 549. OPEN: startjaar niet hard te maken |
+| DWAI (Dijkstra Warmtepompen, Airco's & Installatietechniek) | Burgwerd | drafted | 2026-08-26 lane A; KvK 88781739 (2023-reeks); klant komt binnen via pagina "offerte aanvragen"; E-MAIL: info@dwai.nl; 549 voor afspraakmodule naast het formulier. CHECK: staat er al ergens een afspraakknop |
+| Akili Hondenschool | Aduard | drafted | 2026-08-26 lane A; team van 5, uitgebouwd terrein; inschrijven voor volgende cursus gaat per mail; E-MAIL: info@akili.nl; 549. OPEN POORT: oprichtingsjaar nergens vindbaar, groeifaseprofiel niet hard te maken - als laatste versturen |
+| Dogsday | Fort/Zuidwolde | not fit - te oud | 2026-08-26 lane A: KvK 76771970, gestart 2012 door Dagmar Kuiper. Nooit benaderd |
+| De Roedel Thuis | Wezuperbrug | not fit - te oud | 2026-08-26 lane A: eigen site meldt "vanaf 2014". info@deroedelthuis.com wel bevestigd. Nooit benaderd |
+| Dierenpension Faunatuurlijk | Westerwolde | not fit - te oud | 2026-08-26 lane A: eigen site meldt "vanaf 2011 verlenen wij onze diensten". Nooit benaderd |
+| Hondenopvang Ald Skou | Jirnsum | not fit - te oud | 2026-08-26 lane A: opgezet in 2008, bovendien geen structurele dagopvang. Nooit benaderd |
+| Dierenpension De Fonzyhoeve | Ten Post | not fit - te oud | 2026-08-26 lane A: KvK 02058179 (oude Groninger dossierreeks), gegroeid vanaf de jaren negentig. Nooit benaderd |
+| Hondenresort Da-r-ling / Darling's Dog Store | Zwiggelte | not fit - te oud | 2026-08-26 lane A: KvK 66675626 (2016). Nooit benaderd |
+| Dierenpension Ellerhuizen | Bedum | not fit - boekt al online | 2026-08-26 lane A: KvK 81588704 (2021) en verhuisd jan 2021, dus profiel klopt, maar reserveren loopt al via een eigen klantenportaal met beschikbaarheidskalender. Premisse van het bericht zou onjuist zijn |
+| Dierenpension Prins | Lellens | not fit - boekt al online | 2026-08-26 lane A: reserveren via aniday.io-klantenportaal; 4 werkzame personen. info@dierenpensionprins.nl wel bevestigd |
+| Hondenpension Friesland | Tijnje | not fit - klantenstop | 2026-08-26 lane A: eigen site meldt dat het pension vol zit en geen honden meer kan aannemen. Nooit benaderd |
+| Hondenschool Samen Welzijn | Nieuwe Pekela | not fit - boekt al online | 2026-08-26 lane A: drie vestigingen (Nieuwe Pekela, Veendam, Wognum) en dus een sterk groeisignaal, maar cursusplekken worden al via een eigen webshop verkocht. info@hondenschoolsamenwelzijn.nl wel bevestigd; herzien kan met een andere invalshoek |
+| Dierfysiotherapie Drenthe | Zeegse | not fit - klantenstop | 2026-08-26 lane A: neemt wegens drukte geen nieuwe klanten aan. info@dierfysiotherapiedrenthe.nl wel bevestigd |
+| Dierfysiotherapie Monique Hoiting | Niekerk | not fit - klantenstop | 2026-08-26 lane A: neemt op dit moment geen nieuwe hondenklanten aan. info@dierfysio-hoiting.nl wel bevestigd |
+| Dierfysiotherapie Marlot Oostland | Coevorden | not fit - tijdelijk gesloten | 2026-08-26 lane A: wegens zwangerschapsverlof geen nieuwe afspraken tot november. Nooit benaderd |
+| Dierfysiotherapie Groningen | Groningen/Hoogkerk | not fit - buiten profiel | 2026-08-26 lane A: gecertificeerd dierfysiotherapeut sinds 2018, dus buiten het venster van 1-6 jaar. info@dierfysiotherapiegroningen.nl wel bevestigd; de specialisatie op honden sinds 2023 is een echt signaal, dus herzien kan als de poort ooit verruimt |
+| Anneloes Fransen Dierfysiotherapie | Zevenhuizen | not fit - te oud | 2026-08-26 lane A: KvK 64881946 (2016). info@dierfysioanneloes.nl wel bevestigd |
+| Karin Tuinhout Hondentraining | Noordbroek/Veendam/Sappemeer | not fit - te oud | 2026-08-26 lane A: KvK 57119880 (±2013). info@karintuinhout.nl wel bevestigd |
+| Hondenuitlaatservice Happy Dog | Groningen | not fit - te oud | 2026-08-26 lane A: KvK 65821963 (2016). info@hondenuitlaatservice-happydog.nl wel bevestigd |
+| Hondenuitlaatservice de Natte Snuit | Groningen | not fit - te oud | 2026-08-26 lane A: KvK 54496527 (±2012). info@denattesnuit.nl wel bevestigd |
+| Anita's Atelier / Kleermakerij A. Slagter | Groningen | not fit - te oud | 2026-08-26 lane A: KvK 02061718, oude Groninger dossierreeks. Wel bevestigd: erkend leerbedrijf sinds 31-08-2021 en e-mail anitaslagter14@gmail.com (SBB-register) |
+| Atelier Nienke | Drachten | not fit - te oud | 2026-08-26 lane A: KvK 30332990 (oude reeks). Wel bevestigd: jouwweb-subdomein, naailes met strippenkaart, atelier-nienke@outlook.com |
+| Naaiatelier Taha / Kledingreparatie Taha & Stomerij | Drachten | not fit - buiten profiel | 2026-08-26 lane A: krantenbericht "Nieuw in Drachten" uit 2019 en geen openbaar e-mailadres. Nooit benaderd |
+| Tailors Naaiatelier | Franeker | not fit - te oud | 2026-08-26 lane A: KvK 34129987 (oude reeks), leerbedrijfprofiel uit 2018. Tailorsnaaiatelier@gmail.com wel bevestigd |
+| Hondenschool Ureterp jacqCAR-OLINE | Ureterp | not fit - buiten profiel | 2026-08-26 lane A: gestart mei 2018. Nooit benaderd |
+| Catering van 't Hooge | Hoogeveen | not fit - te oud/te groot | 2026-08-26 lane A: ruim 45 jaar actief, begeleidt bedrijfsrestaurants; de overname door Inge van 't Hooge per 01-01-2024 maakt het bedrijf niet jong. info@vthooge.nl wel bevestigd |
+| Pizza met Pazzi | Workum | not fit - buiten profiel | 2026-08-26 lane A: Wesly Schippers bakt sinds 2013 als hobby en sinds 2017 professioneel. AVPN-keurmerk sinds 2023 is wel een echt signaal |
+| Vannisa | Kolham | not fit - te oud + sterke webaanwezigheid | 2026-08-26 lane A: KvK 72059923 (2018) en een site met gefotografeerde opleverprojecten. info@vannisa.nl wel bevestigd |
+| Solargroep Drenthe B.V. | Ter Apel | not fit - adres afgeschermd | 2026-08-26 lane A: actief sinds 2022 en 9,0 op Slimster, maar het e-mailadres staat overal afgeschermd en de site verwijst door naar totaalenergienederland.nl - lijkt onderdeel van een groter geheel |
+| Klusservice Kampherbeek | Annen | not fit - geen e-mailadres | 2026-08-26 lane A: opgericht 21-04-2022, eenmanszaak Vincent Kampherbeek; gidsen melden letterlijk dat er geen e-mailadres bekend is |

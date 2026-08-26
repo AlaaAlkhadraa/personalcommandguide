@@ -42,6 +42,13 @@ Zoekopdrachten uitgevoerd per bedrijf: naam + plaats + "e-mail", naam +
 | Pedicure Noordenveld | Roden | pedicure.nl + ProVoet; Petra van der Veen, gediplomeerd sinds 2023, werkt bij L&M Haarmode (Kanaalstraat 6) en ambulant | 2026-08-25 |
 | Salon Your Beautiful Skin | Groningen | eigen domein salonyourbeautifulskin.nl; Joyce, diploma 2019, salon sinds april 2021 in Reitdiephaven; 06-21323624 | 2026-08-25 |
 | Pure Nipali | Westerlee | eigen domein purenipali.com; Nienke Wiersema, salon sinds 2021; telefoonnummer in de gids afgeschermd | 2026-08-25 |
+| Hondencoach Drenthe | Stieltjeskanaal | eigen site + doggo-vermelding; Kim Mulder, verhuisd naar Stieltjeskanaal in 2021, 1-op-1 lessen aan huis | 2026-08-26 |
+| Hondenschool Midden Drenthe | Beilen | eigen site + Facebook (750 volgers) + Instagram; Saskia van Nimwegen eigenaar sinds april 2021, Dierenwelzijnskeurmerk sinds 01-01-2023, lest op het terrein van het Drents Dierentehuis | 2026-08-26 |
+| Hondenschool Zuidlaren | Zuidlaren | eigen site met cursuspagina's, SPPD-erkend, 06-13600142; Hazelaarpad 1 | 2026-08-26 |
+| Bar Biga | Heerenveen | eigen site barbiga.nl + Instagram @bar.biga; KvK 88394530 (2023), pizzafoodtruck van Nick en Saar, boekbaar via FoodtruckBooking | 2026-08-26 |
+| Jouster Uitlaatservice | Joure | eigen site jousteruitlaatservice.nl; KvK 93375425 (2024), Tamara van der Zalm | 2026-08-26 |
+| Foodtruck Smokey Bandits | Opende / Beetsterzwaag | eigen site foodtrucksmokeybandits.nl, 5,0 op restaurantreviews.nl; KvK 95367527 (2025) | 2026-08-26 |
+| Hondenservice-Gaasterland | Hemelum | KvK 96258543 (2025), opvang aan huis, uitlaatservice, advies en training | 2026-08-26 |
 
 ## Apart geval: Barbershop De Baard (Heerlen)
 
@@ -84,3 +91,26 @@ haar boekingspagina dat de agenda maar tot eind oktober loopt, en
 **Passage de la Beauté** is op 4 november 2024 opengegaan. Staat er een
 adres op hun contactpagina, dan kunnen beide kaarten alsnog geschreven
 worden.
+
+## Lane A (26-08, dierensector en foodtrucks in het noorden)
+
+Deze zeven kwamen alle door de kwaliteitspoort — groeifase, aantoonbaar
+draaiend, boekingsvormig — maar publiceren nergens een adres. Per bedrijf
+zijn drie zoekrondes gedaan: naam + plaats + "e-mail", naam +
+"gmail/hotmail/outlook", naam + eigenaarsnaam, plus een ronde langs de
+gidsen (telefoonboek, cylex, infobel, bottin, oozo, drimble, transfirm).
+
+Drie zijn een handmatige blik meer dan waard, want hun profiel is het
+sterkste van de hele dienst: **Hondenschool Midden Drenthe** (eigenaar sinds
+april 2021, eigen jubileumbericht "4 jaar eigenaar" op Facebook),
+**Jouster Uitlaatservice** (KvK-registratie uit 2024) en **Bar Biga** (KvK
+uit 2023, pizzafoodtruck met eigen domein en actieve Instagram). Staat er
+een adres op hun contactpagina, dan kunnen die kaarten alsnog geschreven
+worden — het lek en de invalshoek staan al vast.
+
+Opvallend patroon in dit vak, net als bij de klussers in ronde D: de
+hondenscholen met een eigen domein publiceren bijna allemaal wél een adres,
+de uitlaatservices en foodtrucks bijna allemaal niet. Die laatste groep
+werkt via WhatsApp, Instagram-DM en boekingsplatforms. Wie hen wil bereiken,
+moet dat via een ander kanaal doen dan e-mail. Dat is een beslissing voor de
+eigenaar, niet voor mij.
