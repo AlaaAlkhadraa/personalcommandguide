@@ -170,3 +170,17 @@ Kroon Kledingreparatie** (KvK 87811278, dus 2022) zitten allebei precies in de
 groeifase, en **Pat's Pets** in Alkmaar heeft een Facebookpagina uit de
 2024-reeks en een eigenaar van 31. Staat er een adres op hun contactpagina, dan
 kunnen alle drie meteen geschreven worden.
+
+## 26 augustus 2026 — lane E (kapsalons, barbershops, schoonheidssalons)
+
+| Zaak | Plaats | Wat er wél is | Datum |
+|---|---|---|---|
+| Kapsalon Style 033 | Amersfoort | Erkend leerbedrijf op Stagemarkt.nl; geen e-mailadres in drie zoekrondes | 2026-08-26 |
+| Kapsalon Ftrawi | Amersfoort | Erkend leerbedrijf op Stagemarkt.nl; geen e-mailadres in drie zoekrondes | 2026-08-26 |
+| Kapsalon Suzan | Amersfoort | Erkend leerbedrijf op Stagemarkt.nl; geen e-mailadres in drie zoekrondes | 2026-08-26 |
+| Soulking Kapsalon | Amersfoort | Erkend leerbedrijf op Stagemarkt.nl; geen e-mailadres in drie zoekrondes | 2026-08-26 |
+| Kapsalon Atlas | Amersfoort | Erkend leerbedrijf op Stagemarkt.nl; geen e-mailadres in drie zoekrondes | 2026-08-26 |
+| Heaven Kapsalon Habesha | Amersfoort | Erkend leerbedrijf op Stagemarkt.nl; geen e-mailadres in drie zoekrondes | 2026-08-26 |
+| Barbershop van Dolouvan Haidar | Hengelo (Gld) | Nieuwsbericht Achterhoeknieuws 01-03-2024 over de opening door Dolouvan Haidar (20), zes dagen open, eerste barbershop in het dorp — perfect profiel, maar geen e-mailadres en geen zekere zaaknaam. Het gevonden barbershophengelo.nl + Setmore-agenda staat op Mr. P.J. Troelstrastraat 109, 7556 EJ, en dat is Hengelo Overijssel — mogelijk een andere zaak. Eerst de naam vaststellen | 2026-08-26 |
+| The Hair Hub Arnhem | Arnhem | Erkend leerbedrijf op Stagemarkt.nl; geen e-mailadres gevonden | 2026-08-26 |
+| FH Beauty | Arnhem | Erkend leerbedrijf op Stagemarkt.nl; geen e-mailadres gevonden | 2026-08-26 |
