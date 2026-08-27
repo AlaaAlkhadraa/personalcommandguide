@@ -22,7 +22,14 @@ from boekhouding import (
     lees_extractie,
     sla_extractie_op,
 )
-from boekhouding.ai_extractie import MODEL, SYSTEEM_PROMPT, maak_client
+from boekhouding.ai_extractie import (
+    PROMPT_VERSIE,
+    STANDAARD_MODEL,
+    SYSTEEM_PROMPT,
+    foutreden,
+    maak_client,
+    standaard_model,
+)
 from conftest import VANDAAG, maak_pdf
 
 
@@ -263,7 +270,7 @@ def test_er_wordt_om_structured_output_gevraagd(factuur_pdf):
 
     aanroep = client.aanroepen[0]
     assert aanroep["output_format"] is FactuurExtractie  # geen vrije tekst
-    assert aanroep["model"] == MODEL
+    assert aanroep["model"] == STANDAARD_MODEL
 
 
 def test_de_systeemprompt_verbiedt_gokken_en_rekenen(factuur_pdf):
@@ -356,7 +363,7 @@ def test_extractie_wordt_opgeslagen_met_model_en_ruwe_respons(
     )
     bewaard = lees_extractie(conn, extractie_id)
 
-    assert bewaard["model"] == MODEL
+    assert bewaard["model"] == STANDAARD_MODEL
     assert bewaard["invoerpad"] == "tekst"
     assert bewaard["document_id"] == document.document_id
     assert bewaard["status"] == "gevalideerd"
@@ -372,7 +379,7 @@ def test_audit_trail_bij_extractie(conn, administratie_id, factuur_pdf):
 
     trail = lees_audit_trail(conn, extractie_id, tabel="extracties")
     per_veld = {regel["veld"]: regel["nieuwe_waarde"] for regel in trail}
-    assert per_veld["model"] == MODEL
+    assert per_veld["model"] == STANDAARD_MODEL
     assert per_veld["invoerpad"] == "tekst"
     assert per_veld["status"] == "gevalideerd"
     assert all(regel["tijdstip"] for regel in trail)
@@ -389,3 +396,159 @@ def test_afgekeurde_extractie_wordt_ook_bewaard(conn, administratie_id, factuur_
     bewaard = lees_extractie(conn, extractie_id)
     assert bewaard["status"] == "review_nodig"
     assert len(bewaard["redenen"]) >= 1
+
+
+# --- foutafhandeling: nooit een exception naar buiten -------------------
+
+class ApiFout(Exception):
+    """Doet zich voor als een fout van de SDK (die draagt status_code)."""
+
+    def __init__(self, status_code=None, bericht="fout"):
+        super().__init__(bericht)
+        if status_code is not None:
+            self.status_code = status_code
+
+
+@pytest.mark.parametrize(
+    "fout, kern",
+    [
+        (ApiFout(429), "rate limit"),
+        (ApiFout(500), "serverfout"),
+        (ApiFout(503), "serverfout"),
+        (ApiFout(401), "API-sleutel"),
+        (ApiFout(403), "API-sleutel"),
+        (ApiFout(404), "model bestaat niet"),
+        (ApiFout(400), "ongeldig"),
+        (ApiFout(418), "foutcode 418"),
+        (ConnectionError("verbinding verbroken"), "geen verbinding"),
+        (TimeoutError("te lang"), "geen verbinding"),
+        (RuntimeError("iets onverwachts"), "geen verbinding"),
+    ],
+)
+def test_api_fout_wordt_review_en_nooit_een_exception(factuur_pdf, fout, kern):
+    client = NageaapteClient(fout)
+    resultaat = extraheer_factuur(factuur_pdf, client=client, vandaag=VANDAAG)
+
+    assert resultaat.status == "review_nodig"
+    assert any(kern in reden for reden in resultaat.redenen)
+    assert resultaat.factuur is None
+
+
+def test_stapel_facturen_loopt_door_na_een_fout(factuur_pdf, tmp_path):
+    # Eén kapotte aanroep mag de rest van de stapel niet meeslepen.
+    tweede = tmp_path / "tweede.pdf"
+    tweede.write_bytes(maak_pdf("Factuur 2026-0413"))
+
+    uitkomsten = []
+    for pad, client in (
+        (factuur_pdf, NageaapteClient(ApiFout(429))),
+        (tweede, client_met(goede_extractie())),
+    ):
+        uitkomsten.append(extraheer_factuur(pad, client=client, vandaag=VANDAAG))
+
+    assert uitkomsten[0].status == "review_nodig"
+    assert uitkomsten[1].status == "gevalideerd"
+
+
+def test_foutreden_noemt_nooit_de_sleutel():
+    reden = foutreden(ApiFout(401))
+    assert "sleutel" in reden           # zegt wél wát er mis is
+    assert "nep-sleutel" not in reden   # maar nooit de waarde
+
+
+# --- promptversie in de audit trail ------------------------------------
+
+def test_promptversie_staat_in_het_resultaat(factuur_pdf):
+    client = client_met(goede_extractie())
+    resultaat = extraheer_factuur(factuur_pdf, client=client, vandaag=VANDAAG)
+    assert resultaat.prompt_versie == PROMPT_VERSIE
+
+
+def test_promptversie_wordt_opgeslagen(conn, administratie_id, factuur_pdf):
+    client = client_met(goede_extractie())
+    resultaat = extraheer_factuur(factuur_pdf, client=client, vandaag=VANDAAG)
+    extractie_id = sla_extractie_op(conn, administratie_id, resultaat)
+
+    assert lees_extractie(conn, extractie_id)["prompt_versie"] == PROMPT_VERSIE
+    trail = lees_audit_trail(conn, extractie_id, tabel="extracties")
+    per_veld = {regel["veld"]: regel["nieuwe_waarde"] for regel in trail}
+    assert per_veld["prompt_versie"] == PROMPT_VERSIE
+
+
+def test_oude_extractie_krijgt_geen_verzonnen_promptversie():
+    # Een database van vóór deze kolom weet niet met welke prompt er is
+    # uitgelezen; dan hoort er 'onbekend' te staan, niet de huidige versie.
+    from boekhouding import maak_tabellen, maak_verbinding
+
+    oud = maak_verbinding(":memory:")
+    oud.executescript(
+        """
+        CREATE TABLE administraties (
+            id INTEGER PRIMARY KEY, naam TEXT NOT NULL,
+            type TEXT NOT NULL DEFAULT 'eenmanszaak', aangemaakt_op TEXT NOT NULL
+        );
+        CREATE TABLE extracties (
+            id INTEGER PRIMARY KEY,
+            administratie_id INTEGER NOT NULL REFERENCES administraties(id),
+            document_id INTEGER, model TEXT NOT NULL, invoerpad TEXT,
+            ruwe_respons TEXT NOT NULL, status TEXT NOT NULL,
+            redenen TEXT NOT NULL DEFAULT '[]', aangemaakt_op TEXT NOT NULL
+        );
+        INSERT INTO administraties VALUES (1, 'Oud', 'eenmanszaak', '2026-01-01');
+        INSERT INTO extracties VALUES
+            (1, 1, NULL, 'oud-model', 'tekst', '{}', 'gevalideerd', '[]', '2026-01-01');
+        """
+    )
+    maak_tabellen(oud)
+
+    rij = oud.execute("SELECT prompt_versie FROM extracties WHERE id = 1").fetchone()
+    assert rij[0] == "onbekend"
+    oud.close()
+
+
+# --- model instelbaar ---------------------------------------------------
+
+def test_model_kan_worden_meegegeven(factuur_pdf):
+    client = client_met(goede_extractie())
+    resultaat = extraheer_factuur(
+        factuur_pdf, client=client, model="claude-haiku-4-5", vandaag=VANDAAG
+    )
+    assert client.aanroepen[0]["model"] == "claude-haiku-4-5"
+    assert resultaat.model == "claude-haiku-4-5"
+
+
+def test_model_uit_env_wordt_gebruikt(factuur_pdf, tmp_path, monkeypatch):
+    monkeypatch.delenv("ANTHROPIC_MODEL", raising=False)
+    env = tmp_path / ".env"
+    env.write_text("ANTHROPIC_MODEL=claude-sonnet-5\n", encoding="utf-8")
+
+    client = client_met(goede_extractie())
+    extraheer_factuur(factuur_pdf, client=client, env_pad=env, vandaag=VANDAAG)
+    assert client.aanroepen[0]["model"] == "claude-sonnet-5"
+
+
+def test_zonder_instelling_geldt_het_standaardmodel(tmp_path, monkeypatch):
+    monkeypatch.delenv("ANTHROPIC_MODEL", raising=False)
+    assert standaard_model(tmp_path / "bestaat-niet.env") == STANDAARD_MODEL
+
+
+def test_meegegeven_model_gaat_voor_op_env(factuur_pdf, tmp_path, monkeypatch):
+    monkeypatch.delenv("ANTHROPIC_MODEL", raising=False)
+    env = tmp_path / ".env"
+    env.write_text("ANTHROPIC_MODEL=claude-sonnet-5\n", encoding="utf-8")
+
+    client = client_met(goede_extractie())
+    extraheer_factuur(
+        factuur_pdf, client=client, model="claude-opus-5", env_pad=env,
+        vandaag=VANDAAG,
+    )
+    assert client.aanroepen[0]["model"] == "claude-opus-5"
+
+
+def test_gebruikt_model_wordt_opgeslagen(conn, administratie_id, factuur_pdf):
+    client = client_met(goede_extractie())
+    resultaat = extraheer_factuur(
+        factuur_pdf, client=client, model="claude-haiku-4-5", vandaag=VANDAAG
+    )
+    extractie_id = sla_extractie_op(conn, administratie_id, resultaat)
+    assert lees_extractie(conn, extractie_id)["model"] == "claude-haiku-4-5"

@@ -68,6 +68,23 @@ def maak_verbinding(pad: str) -> sqlite3.Connection:
     return conn
 
 
+def _voeg_kolom_toe(
+    conn: sqlite3.Connection, tabel: str, kolom: str, definitie: str
+) -> bool:
+    """Voeg een kolom toe als die nog ontbreekt; geef terug of dat gebeurde.
+
+    Bestaande rijen krijgen de default. Bij prompt_versie is dat bewust
+    'onbekend' en niet de huidige versie: van een extractie van vóór deze
+    kolom weten we níét met welke prompt hij is gemaakt, en dat invullen
+    zou de audit trail een onwaarheid laten vertellen.
+    """
+    kolommen = {rij[1] for rij in conn.execute(f"PRAGMA table_info({tabel})")}
+    if kolom in kolommen:
+        return False
+    conn.execute(f"ALTER TABLE {tabel} ADD COLUMN {kolom} {definitie}")
+    return True
+
+
 def maak_tabellen(conn: sqlite3.Connection) -> None:
     """Maak de tabellen aan als ze nog niet bestaan."""
     conn.executescript(
@@ -123,6 +140,7 @@ def maak_tabellen(conn: sqlite3.Connection) -> None:
             administratie_id INTEGER NOT NULL REFERENCES administraties(id),
             document_id      INTEGER REFERENCES documenten(id),
             model            TEXT NOT NULL,
+            prompt_versie    TEXT NOT NULL DEFAULT 'onbekend',
             invoerpad        TEXT
                              CHECK (invoerpad IS NULL
                                     OR invoerpad IN ('tekst', 'beeld')),
@@ -148,16 +166,19 @@ def maak_tabellen(conn: sqlite3.Connection) -> None:
         """
     )
 
-    # Migratie voor databases die vóór module 2 zijn aangemaakt:
-    # CREATE TABLE IF NOT EXISTS raakt een bestaande facturen-tabel
-    # niet aan, dus de kolom document_id moet er los bij. SQLite staat
-    # ADD COLUMN met een foreign key toe zolang de default NULL is.
-    kolommen = {rij[1] for rij in conn.execute("PRAGMA table_info(facturen)")}
-    if "document_id" not in kolommen:
-        conn.execute(
-            "ALTER TABLE facturen ADD COLUMN document_id INTEGER "
-            "REFERENCES documenten(id)"
-        )
+    # Migraties voor databases die eerder zijn aangemaakt.
+    # CREATE TABLE IF NOT EXISTS raakt een bestaande tabel niet aan, dus
+    # een nieuwe kolom moet er los bij met ALTER TABLE ADD COLUMN.
+    # SQLite staat dat toe zolang de default NULL is, of bij NOT NULL een
+    # vaste waarde heeft.
+    _voeg_kolom_toe(
+        conn, "facturen", "document_id",
+        "INTEGER REFERENCES documenten(id)",
+    )
+    _voeg_kolom_toe(
+        conn, "extracties", "prompt_versie",
+        "TEXT NOT NULL DEFAULT 'onbekend'",
+    )
 
     conn.commit()
 
@@ -545,23 +566,24 @@ def sla_extractie_op(
 ) -> int:
     """Bewaar een AI-extractie met model, ruwe respons en document_id.
 
-    De volledige audit trail: welk model het was, wat het letterlijk
-    terugstuurde, welk invoerpad is gebruikt en bij welk bewaarde
-    document het hoort. Zo is later na te gaan waar een boeking vandaan
+    De volledige audit trail: welk model het was, met welke versie van
+    de systeemprompt, wat het letterlijk terugstuurde, welk invoerpad is
+    gebruikt en bij welk bewaarde document het hoort. Zo is later na te gaan waar een boeking vandaan
     komt — ook als het model intussen is vervangen.
     """
     tijd = _nu()
     cursor = conn.execute(
         """
         INSERT INTO extracties (
-            administratie_id, document_id, model, invoerpad,
+            administratie_id, document_id, model, prompt_versie, invoerpad,
             ruwe_respons, status, redenen, aangemaakt_op
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
             administratie_id,
             document_id,
             resultaat.model,
+            resultaat.prompt_versie,
             resultaat.invoerpad,
             resultaat.ruwe_respons,
             resultaat.status,
@@ -573,6 +595,7 @@ def sla_extractie_op(
 
     for veld, waarde in (
         ("model", resultaat.model),
+        ("prompt_versie", resultaat.prompt_versie),
         ("invoerpad", resultaat.invoerpad),
         ("status", resultaat.status),
         ("document_id", None if document_id is None else str(document_id)),

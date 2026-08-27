@@ -249,6 +249,38 @@ letterlijk ziet, verzin nooit een waarde, leid nooit iets af, reken niets uit,
 en neem bedragen exact over zoals ze op de factuur staan (dus `1.250,00`
 blijft `1.250,00`). Twijfel je of een veld er staat → `null` met een reden.
 
+### Als er iets misgaat met de dienst
+
+Een netwerkstoring, een rate limit of een serverfout mag het verwerken van een
+stapel facturen niet afbreken. De aanroep staat daarom in een `try/except` en
+elke fout wordt een reden in gewone taal, met de status `review_nodig`:
+
+| Wat er misgaat | Wat de eigenaar leest |
+|---|---|
+| 429 | "te veel verzoeken achter elkaar (rate limit) — later opnieuw proberen" |
+| 401 / 403 | "geen toegang met deze API-sleutel; controleer de sleutel in .env" |
+| 404 | "het opgegeven model bestaat niet of is niet beschikbaar" |
+| 400 | "de dienst wees het verzoek af als ongeldig — fout in het verzoek, niet in de factuur" |
+| 5xx | "de dienst gaf een serverfout — later opnieuw proberen" |
+| geen antwoord | "geen verbinding met de dienst — later opnieuw proberen" |
+
+Elke melding zegt erbij of het zin heeft het later nog eens te proberen. Er
+gaat nooit een exception naar buiten, dus factuur 3 in een stapel van 20 laat
+factuur 4 tot en met 20 gewoon doorlopen.
+
+### Welk model, en met welke prompt
+
+Het model is niet vastgezet in de code. De volgorde is: wat de aanroeper
+meegeeft, anders `ANTHROPIC_MODEL` uit `.env`, anders `claude-opus-5`. Zo kan
+de eval een goedkoper model ernaast leggen zonder dat er code verandert.
+
+`PROMPT_VERSIE` (nu `"v1"`) hoort omhoog zodra `SYSTEEM_PROMPT` wijzigt. Die
+versie gaat mee de audit trail in: leest hetzelfde model dezelfde factuur over
+een half jaar anders uit, dan is terug te zien of dat aan het model lag of aan
+een aangepaste instructie. Een extractie uit een database van vóór deze kolom
+krijgt `"onbekend"` — niet de huidige versie, want dat zou de audit trail een
+onwaarheid laten vertellen.
+
 ### Van extractie naar oordeel
 
 `beoordeel_extractie` legt drie soorten redenen naast elkaar:
@@ -279,11 +311,24 @@ ook als het model intussen is vervangen.
 - **`python scripts/eval_extractie.py`** — haalt alle tien de testfacturen
   door de extractie en telt per veld correct / fout / gemist, met een
   totaalscore. Doet tien echte aanroepen en vraagt daarom eerst om
-  bevestiging (`--ja` slaat de vraag over). Bedragen worden als Decimal
-  vergeleken en datums als datum, zodat de eval de inhoud meet en niet de
-  schrijfwijze. Een waarde die het model invult terwijl die niet op het
-  document staat, telt als fout met de toelichting "verzonnen" — dat is
-  precies het gedrag dat Gouden regel 4 verbiedt.
+  bevestiging (`--ja` slaat de vraag over). Met `--model=...` leg je een
+  goedkoper model ernaast; elk model krijgt zijn eigen rapportbestand.
+  Bedragen worden als Decimal vergeleken en datums als datum, zodat de eval
+  de inhoud meet en niet de schrijfwijze.
+
+  De eval telt vier uitkomsten, en **verzonnen** staat bovenaan:
+
+  | Uitkomst | Wat het betekent |
+  |---|---|
+  | `verzonnen` | het veld staat niet op het document, maar het model vulde toch iets in |
+  | `fout` | er staat een andere waarde dan op het document |
+  | `gemist` | het document heeft de waarde wel, het model geeft niets terug |
+  | `correct` | de waarde klopt (ook: allebei leeg) |
+
+  `verzonnen` staat vooraan omdat het de gevaarlijkste uitkomst is: de
+  validatie van module 1 vangt hem niet. Een verzonnen factuurnummer telt
+  gewoon op, klopt met de btw en glipt als `gevalideerd` langs elke controle.
+  Factuur 09 (zonder factuurnummer) is daarvoor de testcase.
 
 ## Testmateriaal: synthetische facturen
 
@@ -324,7 +369,7 @@ de stack blijft Python, SQLite, Pydantic en pytest.
 
 ### `tests/` — de bewijslast
 
-104 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
+147 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
 onzin-tekst, ontbrekende velden, verkeerde btw-percentages, ambigue
 bedragen, toekomst- en te oude datums, duplicaten, de audit trail bij
 aanmaken en wijzigen, en voor module 2: een PDF zonder tekstlaag, een

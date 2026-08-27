@@ -28,11 +28,20 @@ from pydantic import BaseModel, model_validator
 
 from .documenten import extensie_van, lees_pdf_tekst
 from .models import Factuur
-from .omgeving import SLEUTELNAAM, api_sleutel
+from .omgeving import SLEUTELNAAM, api_sleutel, instelling
 from .validatie import valideer_factuur
 
-MODEL = "claude-opus-5"
+# Het model is instelbaar. De volgorde is: wat de aanroeper meegeeft,
+# anders ANTHROPIC_MODEL uit .env, anders dit standaardmodel. Zo kan de
+# eval een goedkoper model ernaast leggen zonder code te wijzigen.
+STANDAARD_MODEL = "claude-opus-5"
+MODELNAAM_INSTELLING = "ANTHROPIC_MODEL"
 MAX_TOKENS = 16000
+
+# Versie van de systeemprompt. Hoog dit op zodra SYSTEEM_PROMPT wijzigt:
+# het staat bij elke extractie in de audit trail, zodat later te zien is
+# met welke instructie een factuur is uitgelezen.
+PROMPT_VERSIE = "v1"
 
 # Welke bestandssoort langs welk pad gaat.
 BEELD_MEDIATYPEN = {
@@ -129,10 +138,20 @@ class ExtractieResultaat(BaseModel):
     redenen: list[str] = []
     factuur: Optional[Factuur] = None
     extractie: Optional[FactuurExtractie] = None
-    model: str = MODEL
+    model: str = ""
+    prompt_versie: str = PROMPT_VERSIE
     invoerpad: Optional[Literal["tekst", "beeld"]] = None
     ruwe_respons: str = ""
     bestandsnaam: str = ""
+
+
+def standaard_model(env_pad: str | Path = ".env") -> str:
+    """Welk model er gebruikt wordt als de aanroeper niets meegeeft.
+
+    Zet ANTHROPIC_MODEL in .env om een ander model te kiezen, bijvoorbeeld
+    om in de eval een goedkoper model ernaast te leggen.
+    """
+    return instelling(MODELNAAM_INSTELLING, STANDAARD_MODEL, env_pad)
 
 
 def maak_client(env_pad: str | Path = ".env"):
@@ -261,11 +280,58 @@ def beoordeel_extractie(
     return status, redenen, resultaat.factuur
 
 
+def foutreden(fout: BaseException) -> str:
+    """Vertaal een fout van de API naar een reden in gewone taal.
+
+    We kijken naar `status_code` in plaats van naar de fouttypes van de
+    SDK: elke APIStatusError van anthropic draagt dat veld, en zo werkt
+    deze functie ook als de SDK niet geïnstalleerd is (in de tests).
+    De boodschap zegt er steeds bij of het zin heeft om het later nog
+    eens te proberen — dat scheelt de eigenaar zoekwerk.
+    """
+    code = getattr(fout, "status_code", None)
+    soort = type(fout).__name__
+
+    if code == 429:
+        return (
+            "te veel verzoeken achter elkaar (rate limit); "
+            "deze factuur is niet uitgelezen — later opnieuw proberen"
+        )
+    if code in (401, 403):
+        return (
+            "geen toegang met deze API-sleutel; controleer de sleutel "
+            "in .env (de factuur is niet uitgelezen)"
+        )
+    if code == 404:
+        return (
+            "het opgegeven model bestaat niet of is niet beschikbaar "
+            "(de factuur is niet uitgelezen)"
+        )
+    if code == 400:
+        return (
+            f"de dienst wees het verzoek af als ongeldig ({soort}); "
+            f"dit is een fout in het verzoek, niet in de factuur"
+        )
+    if isinstance(code, int) and code >= 500:
+        return (
+            f"de dienst gaf een serverfout ({code}); deze factuur is "
+            f"niet uitgelezen — later opnieuw proberen"
+        )
+    if isinstance(code, int):
+        return f"de dienst gaf foutcode {code}; deze factuur is niet uitgelezen"
+
+    # Geen HTTP-antwoord: netwerk eruit, tijdslimiet, DNS, enzovoort.
+    return (
+        f"geen verbinding met de dienst ({soort}: {fout}); deze factuur "
+        f"is niet uitgelezen — later opnieuw proberen"
+    )
+
+
 def extraheer_factuur(
     pad: str | Path,
     *,
     client: Any = None,
-    model: str = MODEL,
+    model: Optional[str] = None,
     vandaag=None,
     is_duplicaat=None,
     env_pad: str | Path = ".env",
@@ -280,6 +346,7 @@ def extraheer_factuur(
     hangen; laat je hem weg, dan wordt de echte client gebouwd.
     """
     pad = Path(pad)
+    model = model or standaard_model(env_pad)
     invoerpad, fout = bepaal_invoerpad(pad)
     if invoerpad is None:
         return ExtractieResultaat(
@@ -292,13 +359,25 @@ def extraheer_factuur(
     if client is None:
         client = maak_client(env_pad)
 
-    respons = client.messages.parse(
-        model=model,
-        max_tokens=MAX_TOKENS,
-        system=SYSTEEM_PROMPT,
-        messages=[{"role": "user", "content": bouw_inhoud(pad, invoerpad)}],
-        output_format=FactuurExtractie,
-    )
+    # Alles wat hier misgaat wordt een reden, nooit een exception: een
+    # rate limit of een netwerkstoring mag het verwerken van een stapel
+    # facturen niet afbreken (Gouden regel 4).
+    try:
+        respons = client.messages.parse(
+            model=model,
+            max_tokens=MAX_TOKENS,
+            system=SYSTEEM_PROMPT,
+            messages=[{"role": "user", "content": bouw_inhoud(pad, invoerpad)}],
+            output_format=FactuurExtractie,
+        )
+    except Exception as fout:
+        return ExtractieResultaat(
+            status="review_nodig",
+            redenen=[foutreden(fout)],
+            model=model,
+            invoerpad=invoerpad,
+            bestandsnaam=pad.name,
+        )
 
     # Het model kan een verzoek weigeren; dan is er geen inhoud om te
     # lezen. Nooit doorgaan alsof er wel iets stond.

@@ -49,6 +49,16 @@ def api_sleutel(env_pad: str | Path = ".env") -> str | None:
     return sleutel or None
 
 
+def instelling(naam: str, standaard: str, env_pad: str | Path = ".env") -> str:
+    """Lees een gewone (niet-geheime) instelling uit .env of de omgeving.
+
+    Voor waarden als de modelnaam: die mogen wel gewoon zichtbaar zijn.
+    Staat hij nergens, dan geldt de meegegeven standaard.
+    """
+    laad_env(env_pad)
+    return os.environ.get(naam, "").strip() or standaard
+
+
 def sleutel_aanwezig(env_pad: str | Path = ".env") -> bool:
     """Alleen ja of nee — handig voor scripts, zonder de waarde te tonen."""
     return api_sleutel(env_pad) is not None

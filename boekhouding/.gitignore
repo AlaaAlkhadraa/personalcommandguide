@@ -8,3 +8,6 @@ __pycache__/
 .env
 .env.*
 !.env.voorbeeld
+
+# Meetresultaat van de eval; wordt opnieuw gemaakt bij elke run.
+tests/testfacturen/eval-rapport-*.json

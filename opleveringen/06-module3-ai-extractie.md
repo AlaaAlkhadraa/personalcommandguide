@@ -38,7 +38,7 @@
 Voordat er één regel AI-code bestond is `.env` in `.gitignore` gezet en is dat
 apart gecommit (`0b2f714`). Daarna is met `git check-ignore` bewezen dat een
 `.env` daadwerkelijk genegeerd wordt. De repository bevat geen enkele
-sleutelachtige tekenreeks — ook geen nepsleutel met een `sk-ant-`-vorm, want
+sleutelachtige tekenreeks — ook geen nepsleutel met het gebruikelijke voorvoegsel, want
 die laat secretscanners onnodig afgaan. `.env.voorbeeld` toont alleen de vorm.
 
 De sleutel wordt gelezen door `boekhouding/omgeving.py` (een eigen mini-lader

@@ -19,12 +19,16 @@ from .documenten import (
     opslagpad_voor,
 )
 from .ai_extractie import (
+    PROMPT_VERSIE,
+    STANDAARD_MODEL,
     ExtractieResultaat,
     FactuurExtractie,
     VeldExtractie,
     beoordeel_extractie,
     bepaal_invoerpad,
     extraheer_factuur,
+    foutreden,
+    standaard_model,
 )
 from .omgeving import api_sleutel, sleutel_aanwezig
 from .database import (
@@ -69,6 +73,10 @@ __all__ = [
     "beoordeel_extractie",
     "bepaal_invoerpad",
     "extraheer_factuur",
+    "foutreden",
+    "standaard_model",
+    "PROMPT_VERSIE",
+    "STANDAARD_MODEL",
     "api_sleutel",
     "sleutel_aanwezig",
 ]
