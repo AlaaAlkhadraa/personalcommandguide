@@ -18,13 +18,14 @@ Branch: `claude/nl-accounting-invoice-module-f2vzr3`
 | `06-module3-ai-extractie.md` | Module 3: AI-extractie met zekerheid per veld |
 | `07-fix-module3-review.md` | Fixes: foutafhandeling, promptversie, verzonnen, model instelbaar |
 | `08-eval-tegen-de-api.md` | SDK-aanroep geverifieerd, datumfout gevonden, runs geblokkeerd op de sleutel |
+| `09-module4-ubl-efacturen.md` | Module 4: UBL / e-facturen, routering op inhoud, XXE-bescherming |
 | `CODE-COMPLEET.md` | de volledige actuele code, uitleg en tests |
 | `testfacturen-overzicht.json` | grondwaarheid bij de 10 testfacturen |
 | `boekhouding-compleet.zip` | alles in één archief: code, tests, facturen, rapporten |
 
 ## Waar het nu staat
 
-- **157 pytest-tests, allemaal groen.** De testsuite doet nooit een echte
+- **192 pytest-tests, allemaal groen.** De testsuite doet nooit een echte
   API-aanroep.
 - **Module 1** — schema met Decimal-bedragen, alle rekencontroles, datum- en
   duplicaatcheck. Elke fout wordt `review_nodig` met reden, nooit een
@@ -36,6 +37,10 @@ Branch: `claude/nl-accounting-invoice-module-f2vzr3`
   de mens beslist. Twee invoerpaden (tekst en beeld), verplichte zekerheid per
   veld, nooit gokken. Een storing bij de dienst breekt een stapel facturen niet
   af: elke fout wordt een reden. Model en promptversie staan in de audit trail.
+- **Module 4** — e-facturen (UBL) worden rechtstreeks uitgelezen: de velden
+  staan als XML in het bestand, dus niets te raden en gratis. Routering kijkt
+  naar de werkelijke inhoud, een PDF met ingebedde e-factuur gaat langs het
+  XML-pad, en XML wordt veilig gelezen (geen DTD, dus geen XXE).
 - **Testmateriaal** — 10 facturen die deterministisch worden gegenereerd,
   inclusief de lastige gevallen (korting, creditnota, scan zonder tekstlaag,
   ontbrekend factuurnummer, bedragen die niet kloppen).

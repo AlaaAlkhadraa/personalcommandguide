@@ -1,8 +1,8 @@
-# Volledige code — boekhoudsysteem, modules 1 t/m 3
+# Volledige code — boekhoudsysteem, modules 1 t/m 4
 
 Branch `claude/nl-accounting-invoice-module-f2vzr3`. Wordt bij elke oplevering ververst.
 
-# Boekhouding — modules 1, 2 en 3
+# Boekhouding — modules 1 t/m 4
 
 Boekhoudsysteem voor Nederlandse zzp'ers.
 AI stelt voor, code valideert, mens beslist: niets wordt hier automatisch
@@ -12,6 +12,7 @@ geboekt — elke fout leidt tot status `review_nodig` met een leesbare reden.
 - **Module 2** — PDF-tekstextractie en veilige bewaring van originelen
 - **Module 3** — AI-extractie van factuurgegevens (het model stelt voor,
   de code controleert, de mens beslist)
+- **Module 4** — UBL / e-facturen rechtstreeks uitlezen, zonder AI
 
 ## Installeren en testen
 
@@ -341,6 +342,94 @@ ook als het model intussen is vervangen.
   gewoon op, klopt met de btw en glipt als `gevalideerd` langs elke controle.
   Factuur 09 (zonder factuurnummer) is daarvoor de testcase.
 
+## Module 4 — UBL / e-facturen
+
+Een e-factuur is XML. De velden staan er letterlijk in mét hun naam:
+`<cbc:IssueDate>2026-07-14</cbc:IssueDate>` is de factuurdatum, punt. Er valt
+dus niets te herkennen, te lezen of te raden. Dit pad is daarmee nauwkeuriger
+dan zowel de tekstlaag als het model, en het kost niets. Er komt geen AI aan
+te pas.
+
+### Routeren op inhoud, niet op naam
+
+`routeer_document(pad)` kijkt naar de eerste bytes van het bestand en, bij
+XML, naar het hoofdelement — niet naar de extensie. Een bestand dat
+`factuur.pdf` heet maar UBL bevat gaat gewoon langs het UBL-pad.
+
+| Wat er in het bestand staat | Route |
+|---|---|
+| XML met `Invoice` of `CreditNote` als hoofdelement | `ubl` |
+| PDF mét ingebedde e-factuur (Factur-X / ZUGFeRD) | `ubl` |
+| PDF met tekstlaag, zonder bijlage | `tekst` |
+| PDF zonder tekstlaag, of een foto | `beeld` |
+| iets anders | geen — `review_nodig` met reden |
+
+De volgorde is bewust: zit er een e-factuur in de PDF, dan wint die van de
+tekstlaag. Zo'n PDF is namelijk twee dingen tegelijk — leesbaar voor de mens,
+en dezelfde factuur als XML voor de computer — en die XML is de betrouwbaarste
+bron.
+
+### Welke velden, en waar ze staan
+
+Ondersteund is UBL 2.1 zoals gebruikt in NLCIUS en EN 16931:
+
+| Veld | Waar het in het XML-bestand staat |
+|---|---|
+| factuurnummer | `cbc:ID` |
+| factuurdatum | `cbc:IssueDate` |
+| leverancier | `cac:AccountingSupplierParty/cac:Party/cac:PartyName/cbc:Name`, anders `cac:PartyLegalEntity/cbc:RegistrationName` |
+| bedrag_excl | `cac:LegalMonetaryTotal/cbc:TaxExclusiveAmount` |
+| bedrag_incl | `cac:LegalMonetaryTotal/cbc:TaxInclusiveAmount` |
+| btw_bedrag | `cac:TaxTotal/cac:TaxSubtotal/cbc:TaxAmount` |
+| btw_percentage | `cac:TaxSubtotal/cac:TaxCategory/cbc:Percent` |
+
+Ontbreekt een element, of staat er iets onleesbaars in (een bedrag dat geen
+getal is), dan volgt `review_nodig` met een reden die het element bij naam
+noemt — er wordt nooit een standaardwaarde ingevuld.
+
+**Meerdere btw-tarieven** op één factuur (meerdere `TaxSubtotal`-blokken)
+worden **niet** opgeteld tot één percentage. Het schema kent er één, dus dan
+gaat de factuur naar review met de gevonden tarieven erbij. Optellen zou een
+getal opleveren dat op geen enkele regel van de factuur staat.
+
+**Een creditnota** wordt herkend aan het hoofdelement `CreditNote`. UBL
+schrijft daar positieve bedragen voor; het documentsoort draagt het minteken.
+Ons schema kent geen documentsoort, dus die omkering doet de code niet zelf:
+dat zou een teruggave als kosten kunnen boeken. De velden worden gelezen zoals
+ze er staan en de factuur gaat naar review met de vraag of de tekens moeten
+worden omgedraaid.
+
+Daarna gaan alle bedragen door **dezelfde `valideer_factuur` van module 1**.
+Ook een e-factuur wordt nagerekend: optelling, btw-berekening, datum en
+duplicaatcheck.
+
+### Veilig XML lezen (XXE)
+
+XML kent "entiteiten": afkortingen die je bovenaan een bestand definieert.
+Twee aanvallen misbruiken dat.
+
+1. **XXE** — een entiteit die naar een bestand of netwerkadres wijst
+   (`file:///etc/passwd`). De parser haalt die inhoud op en zet hem in het
+   document. Zo laat een factuur die iemand je toestuurt je schijf leeglopen.
+2. **Uitdijende entiteiten** ("billion laughs") — een entiteit die zichzelf
+   steeds herhaalt. Een bestand van een paar regels vreet dan al het geheugen.
+
+De standaardparser van Python haalt externe bestanden niet op, maar breidt
+interne entiteiten wél uit — de tweede aanval werkt daar dus gewoon. Ik heb
+dat nagemeten voordat ik iets bouwde. In plaats van per aanval een
+verdediging weigert `lees_xml_veilig` daarom het hele stuk waarin entiteiten
+worden gedeclareerd: de DTD. Een UBL-factuur heeft er nooit een nodig, dus
+dat kost niets. Er zijn tests met een echte XXE-poging (die een testbestand
+met geheime inhoud probeert te lezen), een billion-laughs-poging en een
+externe DTD.
+
+### Testbestanden
+
+`python tests/genereer_ubl_testbestanden.py` maakt zes bestanden in
+`tests/testfacturen/ubl/`: 21%, 9%, een creditnota, één met twee btw-tarieven,
+één zonder `IssueDate`, en een Factur-X-PDF met de e-factuur als bijlage —
+die laatste heeft óók een tekstlaag, zodat te testen is dat de XML voorgaat.
+
 ## Testmateriaal: synthetische facturen
 
 Voor module 3 (AI-extractie) is materiaal nodig om op te oefenen. Het script
@@ -380,7 +469,7 @@ de stack blijft Python, SQLite, Pydantic en pytest.
 
 ### `tests/` — de bewijslast
 
-157 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
+192 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
 onzin-tekst, ontbrekende velden, verkeerde btw-percentages, ambigue
 bedragen, toekomst- en te oude datums, duplicaten, de audit trail bij
 aanmaken en wijzigen, en voor module 2: een PDF zonder tekstlaag, een
@@ -403,6 +492,7 @@ gedownload. `python -m pytest` in deze map draait alles.
 Module 1: factuur-schema, validatie en audit trail.
 Module 2: PDF-tekstextractie en veilige bewaring van originelen.
 Module 3: AI-extractie van factuurgegevens (voorstel, geen boeking).
+Module 4: UBL / e-facturen rechtstreeks uitlezen (zonder AI).
 
 AI stelt voor, code valideert, mens beslist (Gouden regel 1).
 """
@@ -430,6 +520,18 @@ from .ai_extractie import (
     foutreden,
     standaard_model,
 )
+from .ubl import (
+    EfactuurResultaat,
+    UblResultaat,
+    XmlOnveilig,
+    beoordeel_ubl,
+    is_ubl,
+    lees_ubl,
+    lees_ubl_bytes,
+    lees_xml_veilig,
+    verwerk_efactuur,
+)
+from .routering import bestandssoort, routeer_document, zoek_ingebedde_efactuur
 from .omgeving import api_sleutel, sleutel_aanwezig
 from .database import (
     maak_verbinding,
@@ -477,6 +579,18 @@ __all__ = [
     "standaard_model",
     "PROMPT_VERSIE",
     "STANDAARD_MODEL",
+    "EfactuurResultaat",
+    "UblResultaat",
+    "XmlOnveilig",
+    "beoordeel_ubl",
+    "is_ubl",
+    "lees_ubl",
+    "lees_ubl_bytes",
+    "lees_xml_veilig",
+    "verwerk_efactuur",
+    "bestandssoort",
+    "routeer_document",
+    "zoek_ingebedde_efactuur",
     "api_sleutel",
     "sleutel_aanwezig",
 ]
@@ -791,9 +905,10 @@ from pydantic import BaseModel
 # geheugen zonder problemen.
 BLOK = 1024 * 1024
 
-# Bestandssoorten die we bewaren. Een factuur komt binnen als PDF of
-# als foto/scan; iets anders wordt niet gegokt maar ter review gelegd.
-TOEGESTANE_EXTENSIES = (".pdf", ".jpg", ".jpeg", ".png")
+# Bestandssoorten die we bewaren. Een factuur komt binnen als PDF, als
+# foto/scan, of als e-factuur in XML; iets anders wordt niet gegokt
+# maar ter review gelegd.
+TOEGESTANE_EXTENSIES = (".pdf", ".jpg", ".jpeg", ".png", ".xml")
 
 
 class TekstResultaat(BaseModel):
@@ -1017,6 +1132,534 @@ def instelling(naam: str, standaard: str, env_pad: str | Path = ".env") -> str:
 def sleutel_aanwezig(env_pad: str | Path = ".env") -> bool:
     """Alleen ja of nee — handig voor scripts, zonder de waarde te tonen."""
     return api_sleutel(env_pad) is not None
+```
+
+## `boekhouding/boekhouding/ubl.py`
+
+```python
+"""UBL / e-facturen lezen (module 4) — zonder AI.
+
+Een e-factuur is XML: de velden staan er letterlijk in, met een naam
+erbij. Er valt dus niets te herkennen, te raden of te extraheren. Dit
+pad is daarmee nauwkeuriger dan zowel de tekstlaag als het model, en
+het kost niets.
+
+Wat hier geldt:
+- Alleen lezen wat er staat. Ontbreekt een element, of staat er iets
+  onverwachts, dan volgt "review_nodig" met reden — nooit een default
+  (Gouden regel 4).
+- De bedragen gaan daarna door dezelfde valideer_factuur als elke
+  andere factuur. Ook een e-factuur wordt nagerekend (Gouden regel 2).
+- XML wordt veilig gelezen: geen DTD, geen entiteiten, geen externe
+  verwijzingen. Zie lees_xml_veilig.
+
+Ondersteund: UBL 2.1 zoals gebruikt in NLCIUS en EN 16931, met
+Invoice en CreditNote als hoofdelement.
+"""
+
+import xml.etree.ElementTree as ET
+import xml.parsers.expat as expat
+from decimal import Decimal, InvalidOperation
+from pathlib import Path
+from typing import Any, Literal, Optional
+
+from pydantic import BaseModel
+
+from .models import Factuur
+from .validatie import valideer_factuur
+
+# De naamruimten van UBL 2.1. Het hoofdelement bepaalt het soort
+# document; cbc en cac zijn de bouwstenen waarin de velden staan.
+NS_INVOICE = "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+NS_CREDITNOTE = "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2"
+CBC = "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+CAC = "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+
+UBL_WORTELS = {
+    f"{{{NS_INVOICE}}}Invoice": "factuur",
+    f"{{{NS_CREDITNOTE}}}CreditNote": "creditnota",
+}
+
+
+class XmlOnveilig(Exception):
+    """Het XML-bestand probeert iets wat we nooit toestaan."""
+
+
+def _veilige_parser(bouwer: ET.TreeBuilder) -> "expat.XMLParserType":
+    """Maak een expat-parser die elke DTD en elke entiteit weigert.
+
+    Waarom dit nodig is, in gewone taal: XML kent "entiteiten", een soort
+    afkortingen die je bovenaan het bestand kunt definiëren. Twee
+    aanvallen maken daar misbruik van.
+
+    1. XXE: een entiteit die naar een bestand of een netwerkadres wijst
+       (`file:///etc/passwd`). De parser haalt die inhoud op en zet hem
+       in het document. Zo laat een factuur die iemand je toestuurt de
+       inhoud van je schijf weglekken.
+    2. Een entiteit die zichzelf steeds herhaalt en exponentieel uitdijt
+       ("billion laughs"). Een bestand van een paar regels vreet dan al
+       het geheugen op.
+
+    De standaardparser van Python haalt externe bestanden niet op, maar
+    breidt interne entiteiten wél uit — de tweede aanval werkt daar dus
+    gewoon. In plaats van per aanval een verdediging te bouwen weigeren
+    we het hele stuk waarin entiteiten worden gedeclareerd: de DTD. Een
+    UBL-factuur heeft nooit een DTD nodig, dus dat kost niets.
+
+    Er wordt met expat gewerkt in plaats van met ET.XMLParser, omdat die
+    laatste in CPython in C is geschreven en de handlers niet doorgeeft.
+    """
+    def weiger_dtd(naam, systeem_id, publiek_id, heeft_interne_subset):
+        raise XmlOnveilig(
+            "het bestand bevat een DTD (<!DOCTYPE ...>); dat staan we niet "
+            "toe, omdat daar entiteiten in kunnen staan die bestanden of "
+            "netwerkadressen opvragen"
+        )
+
+    def weiger_entiteit(*argumenten):
+        raise XmlOnveilig("het bestand declareert een entiteit; niet toegestaan")
+
+    def weiger_extern(*argumenten):
+        raise XmlOnveilig(
+            "het bestand verwijst naar een externe bron; niet toegestaan"
+        )
+
+    # De scheider '}' maakt van expat's "uri}naam" met een voorloopaccolade
+    # precies de "{uri}naam" die ElementTree gebruikt.
+    parser = expat.ParserCreate(None, "}")
+
+    def haakjes(naam: str) -> str:
+        return "{" + naam if "}" in naam else naam
+
+    def begin(naam, kenmerken):
+        bouwer.start(
+            haakjes(naam), {haakjes(k): v for k, v in kenmerken.items()}
+        )
+
+    parser.StartElementHandler = begin
+    parser.EndElementHandler = lambda naam: bouwer.end(haakjes(naam))
+    parser.CharacterDataHandler = bouwer.data
+    parser.StartDoctypeDeclHandler = weiger_dtd
+    parser.EntityDeclHandler = weiger_entiteit
+    parser.UnparsedEntityDeclHandler = weiger_entiteit
+    parser.ExternalEntityRefHandler = weiger_extern
+    return parser
+
+
+def lees_xml_veilig(inhoud: bytes) -> ET.Element:
+    """Lees XML zonder DTD en zonder entiteiten; geef het hoofdelement.
+
+    Gooit XmlOnveilig bij een aanvalspoging en ET.ParseError bij kapotte
+    XML. De aanroeper vertaalt dat naar review_nodig.
+    """
+    bouwer = ET.TreeBuilder()
+    parser = _veilige_parser(bouwer)
+    try:
+        parser.Parse(inhoud, True)
+    except expat.ExpatError as fout:
+        # Als één fouttype naar buiten, zodat de aanroeper er maar één
+        # hoeft te kennen.
+        raise ET.ParseError(str(fout)) from fout
+    return bouwer.close()
+
+
+class UblResultaat(BaseModel):
+    """Uitkomst van het lezen van een e-factuur."""
+
+    status: Literal["gelezen", "review_nodig"]
+    redenen: list[str] = []
+    velden: dict[str, str] = {}
+    documentsoort: Optional[str] = None
+    bestandsnaam: str = ""
+
+
+def _tekst(element: Optional[ET.Element]) -> Optional[str]:
+    if element is None or element.text is None:
+        return None
+    waarde = element.text.strip()
+    return waarde or None
+
+
+def _bedrag(waarde: Optional[str]) -> Optional[str]:
+    """Controleer dat een bedrag een getal is; geef het onveranderd terug.
+
+    UBL schrijft de punt als decimaalteken voor. We rekenen hier niets
+    om en niets uit: we controleren alleen dat het een getal is, zodat
+    een onzinwaarde niet stilletjes doorgaat.
+    """
+    if waarde is None:
+        return None
+    try:
+        Decimal(waarde)
+    except InvalidOperation:
+        return None
+    return waarde
+
+
+def is_ubl(wortel: ET.Element) -> Optional[str]:
+    """Geef 'factuur' of 'creditnota' als dit een UBL-document is."""
+    return UBL_WORTELS.get(wortel.tag)
+
+
+def lees_ubl_element(wortel: ET.Element, bestandsnaam: str = "") -> UblResultaat:
+    """Haal de factuurvelden uit een ingelezen UBL-document."""
+    soort = is_ubl(wortel)
+    if soort is None:
+        return UblResultaat(
+            status="review_nodig",
+            redenen=[
+                f"het hoofdelement '{wortel.tag}' is geen UBL Invoice of "
+                f"CreditNote; dit bestand wordt niet als e-factuur gelezen"
+            ],
+            bestandsnaam=bestandsnaam,
+        )
+
+    redenen: list[str] = []
+    velden: dict[str, str] = {}
+
+    def leg_vast(naam: str, waarde: Optional[str], waar: str) -> None:
+        if waarde is None:
+            redenen.append(f"{naam} ontbreekt in het bestand (verwacht bij {waar})")
+        else:
+            velden[naam] = waarde
+
+    leg_vast("factuurnummer", _tekst(wortel.find(f"{{{CBC}}}ID")), "cbc:ID")
+    leg_vast(
+        "factuurdatum", _tekst(wortel.find(f"{{{CBC}}}IssueDate")), "cbc:IssueDate"
+    )
+
+    # Leverancier: eerst de handelsnaam, anders de statutaire naam.
+    partij = wortel.find(
+        f"{{{CAC}}}AccountingSupplierParty/{{{CAC}}}Party"
+    )
+    naam = None
+    if partij is not None:
+        naam = _tekst(partij.find(f"{{{CAC}}}PartyName/{{{CBC}}}Name")) or _tekst(
+            partij.find(f"{{{CAC}}}PartyLegalEntity/{{{CBC}}}RegistrationName")
+        )
+    leg_vast(
+        "leverancier", naam,
+        "cac:AccountingSupplierParty/cac:Party/cac:PartyName/cbc:Name",
+    )
+
+    totalen = wortel.find(f"{{{CAC}}}LegalMonetaryTotal")
+    excl = incl = None
+    if totalen is not None:
+        excl = _bedrag(_tekst(totalen.find(f"{{{CBC}}}TaxExclusiveAmount")))
+        incl = _bedrag(_tekst(totalen.find(f"{{{CBC}}}TaxInclusiveAmount")))
+    leg_vast("bedrag_excl", excl, "cac:LegalMonetaryTotal/cbc:TaxExclusiveAmount")
+    leg_vast("bedrag_incl", incl, "cac:LegalMonetaryTotal/cbc:TaxInclusiveAmount")
+
+    # Btw: meerdere TaxSubtotal betekent meerdere tarieven op één factuur.
+    subtotalen = wortel.findall(f"{{{CAC}}}TaxTotal/{{{CAC}}}TaxSubtotal")
+    if len(subtotalen) > 1:
+        tarieven = [
+            _tekst(s.find(f"{{{CAC}}}TaxCategory/{{{CBC}}}Percent")) or "?"
+            for s in subtotalen
+        ]
+        redenen.append(
+            f"de factuur heeft {len(subtotalen)} btw-tarieven ({', '.join(tarieven)}%); "
+            f"het schema kent er één, dus de verdeling moet met de hand worden "
+            f"beoordeeld — er wordt niets bij elkaar opgeteld"
+        )
+    elif len(subtotalen) == 0:
+        redenen.append(
+            "geen btw-gegevens gevonden (verwacht bij cac:TaxTotal/cac:TaxSubtotal)"
+        )
+    else:
+        subtotaal = subtotalen[0]
+        leg_vast(
+            "btw_bedrag",
+            _bedrag(_tekst(subtotaal.find(f"{{{CBC}}}TaxAmount"))),
+            "cac:TaxSubtotal/cbc:TaxAmount",
+        )
+        leg_vast(
+            "btw_percentage",
+            _tekst(subtotaal.find(f"{{{CAC}}}TaxCategory/{{{CBC}}}Percent")),
+            "cac:TaxCategory/cbc:Percent",
+        )
+
+    # Een creditnota heeft in UBL positieve bedragen; het documentsoort
+    # draagt het minteken. Ons schema kent geen documentsoort, dus dat
+    # zetten we niet zelf om: dan zou een teruggave als kosten worden
+    # geboekt. De mens beslist (Gouden regel 1).
+    if soort == "creditnota":
+        redenen.append(
+            "dit is een creditnota; UBL noteert de bedragen positief terwijl "
+            "ze als negatief geboekt horen te worden — controleer de tekens "
+            "voordat dit wordt vastgelegd"
+        )
+
+    return UblResultaat(
+        status="gelezen" if not redenen else "review_nodig",
+        redenen=redenen,
+        velden=velden,
+        documentsoort=soort,
+        bestandsnaam=bestandsnaam,
+    )
+
+
+def lees_ubl(pad: str | Path) -> UblResultaat:
+    """Lees een UBL-bestand van schijf; geeft nooit een exception."""
+    pad = Path(pad)
+    if not pad.is_file():
+        return UblResultaat(
+            status="review_nodig",
+            redenen=[f"bestand niet gevonden: {pad}"],
+            bestandsnaam=pad.name,
+        )
+    return lees_ubl_bytes(pad.read_bytes(), pad.name)
+
+
+def lees_ubl_bytes(inhoud: bytes, bestandsnaam: str = "") -> UblResultaat:
+    """Lees UBL uit bytes (ook gebruikt voor XML uit een PDF-bijlage)."""
+    try:
+        wortel = lees_xml_veilig(inhoud)
+    except XmlOnveilig as fout:
+        return UblResultaat(
+            status="review_nodig",
+            redenen=[f"onveilige XML geweigerd: {fout}"],
+            bestandsnaam=bestandsnaam,
+        )
+    except ET.ParseError as fout:
+        return UblResultaat(
+            status="review_nodig",
+            redenen=[f"het XML-bestand is niet leesbaar: {fout}"],
+            bestandsnaam=bestandsnaam,
+        )
+    except Exception as fout:  # nooit een exception naar buiten
+        return UblResultaat(
+            status="review_nodig",
+            redenen=[f"kon het XML-bestand niet lezen: {type(fout).__name__}: {fout}"],
+            bestandsnaam=bestandsnaam,
+        )
+    return lees_ubl_element(wortel, bestandsnaam)
+
+
+class EfactuurResultaat(BaseModel):
+    """Een gelezen e-factuur, nagerekend door de validatie van module 1."""
+
+    status: Literal["gevalideerd", "review_nodig"]
+    redenen: list[str] = []
+    factuur: Optional[Factuur] = None
+    velden: dict[str, str] = {}
+    documentsoort: Optional[str] = None
+    bron: Literal["xml", "pdf-bijlage"] = "xml"
+    bestandsnaam: str = ""
+
+
+def beoordeel_ubl(
+    gelezen: UblResultaat, *, vandaag=None, is_duplicaat=None
+) -> EfactuurResultaat:
+    """Reken een gelezen e-factuur na met valideer_factuur.
+
+    De redenen uit het lezen (ontbrekend element, meerdere btw-tarieven,
+    creditnota) en de redenen uit de validatie (optelling, btw, datum,
+    duplicaat) komen samen. Eén reden is genoeg voor review.
+    """
+    redenen = list(gelezen.redenen)
+    resultaat = valideer_factuur(
+        gelezen.velden, vandaag=vandaag, is_duplicaat=is_duplicaat
+    )
+    redenen.extend(resultaat.redenen)
+
+    return EfactuurResultaat(
+        status="gevalideerd" if not redenen else "review_nodig",
+        redenen=redenen,
+        factuur=resultaat.factuur,
+        velden=gelezen.velden,
+        documentsoort=gelezen.documentsoort,
+        bestandsnaam=gelezen.bestandsnaam,
+    )
+
+
+def verwerk_efactuur(
+    pad: str | Path, *, vandaag=None, is_duplicaat=None
+) -> EfactuurResultaat:
+    """Lees een e-factuur en reken hem na; geeft nooit een exception.
+
+    Werkt zowel voor een los XML-bestand als voor een PDF met een
+    ingebedde e-factuur (Factur-X / ZUGFeRD). In dat laatste geval
+    wordt de XML uit de bijlage gelezen, want die is betrouwbaarder dan
+    de tekstlaag.
+    """
+    from .routering import zoek_ingebedde_efactuur
+
+    pad = Path(pad)
+    if not pad.is_file():
+        return EfactuurResultaat(
+            status="review_nodig",
+            redenen=[f"bestand niet gevonden: {pad}"],
+            bestandsnaam=pad.name,
+        )
+
+    inhoud = pad.read_bytes()
+    bron = "xml"
+    if inhoud.startswith(b"%PDF-"):
+        ingebed = zoek_ingebedde_efactuur(pad)
+        if ingebed is None:
+            return EfactuurResultaat(
+                status="review_nodig",
+                redenen=["deze PDF bevat geen ingebedde e-factuur"],
+                bestandsnaam=pad.name,
+            )
+        inhoud, bron = ingebed, "pdf-bijlage"
+
+    resultaat = beoordeel_ubl(
+        lees_ubl_bytes(inhoud, pad.name),
+        vandaag=vandaag,
+        is_duplicaat=is_duplicaat,
+    )
+    return resultaat.model_copy(update={"bron": bron})
+```
+
+## `boekhouding/boekhouding/routering.py`
+
+```python
+"""Bepalen wat voor document er binnenkomt, op inhoud en niet op naam.
+
+Een bestand dat `factuur.pdf` heet hoeft geen PDF te zijn, en een PDF
+kan een complete e-factuur als bijlage bevatten. Daarom wordt hier naar
+de werkelijke inhoud gekeken: de eerste bytes van het bestand, en bij
+XML naar het hoofdelement.
+
+De vier uitkomsten:
+  "ubl"    een e-factuur; de velden staan er letterlijk in
+  "tekst"  een PDF met tekstlaag; die tekst kan naar het model
+  "beeld"  een foto of een gescande PDF; het beeld moet naar het model
+  None     onbekend — review_nodig met reden, nooit gokken
+
+De volgorde is bewust: staat er een e-factuur in, dan is dat altijd de
+beste bron. Een PDF met Factur-X- of ZUGFeRD-bijlage gaat dus langs het
+UBL-pad en niet langs de tekstlaag, ook al is die er wel.
+"""
+
+from pathlib import Path
+from typing import Literal, Optional
+
+from .ubl import is_ubl, lees_xml_veilig
+
+Route = Optional[Literal["ubl", "tekst", "beeld"]]
+
+# Eerste bytes waaraan een bestandssoort te herkennen is.
+MAGISCHE_BYTES = {
+    b"%PDF-": "pdf",
+    b"\xff\xd8\xff": "jpg",
+    b"\x89PNG\r\n\x1a\n": "png",
+}
+
+# Namen die Factur-X en ZUGFeRD aan hun ingebedde XML geven.
+EFACTUUR_BIJLAGEN = (
+    "factur-x.xml",
+    "zugferd-invoice.xml",
+    "xrechnung.xml",
+    "facturx.xml",
+    "ubl.xml",
+)
+
+
+def bestandssoort(begin: bytes) -> Optional[str]:
+    """Herken de bestandssoort aan de eerste bytes; None als onbekend."""
+    for handtekening, naam in MAGISCHE_BYTES.items():
+        if begin.startswith(handtekening):
+            return naam
+    # XML mag beginnen met een declaratie, een BOM of meteen met '<'.
+    kop = begin.lstrip(b"\xef\xbb\xbf").lstrip()
+    if kop.startswith(b"<?xml") or kop.startswith(b"<"):
+        return "xml"
+    return None
+
+
+def zoek_ingebedde_efactuur(pad: str | Path) -> Optional[bytes]:
+    """Geef de XML-bijlage uit een PDF (Factur-X / ZUGFeRD), of None.
+
+    Zulke PDF's zijn twee dingen tegelijk: een leesbare factuur voor de
+    mens, en dezelfde factuur als XML voor de computer. Die XML is de
+    betrouwbaarste bron, dus daar kijken we eerst naar.
+    """
+    try:
+        from pypdf import PdfReader
+
+        bijlagen = PdfReader(str(pad)).attachments or {}
+    except Exception:
+        # Geen bijlagen kunnen lezen is geen fout: dan is het gewoon
+        # een PDF zonder e-factuur en gaat hij langs het normale pad.
+        return None
+
+    # Eerst op de bekende namen, daarna op elk .xml-bestand.
+    for naam in list(bijlagen):
+        if naam.lower() in EFACTUUR_BIJLAGEN:
+            return _eerste(bijlagen[naam])
+    for naam in list(bijlagen):
+        if naam.lower().endswith(".xml"):
+            return _eerste(bijlagen[naam])
+    return None
+
+
+def _eerste(inhoud) -> Optional[bytes]:
+    """pypdf geeft per naam een lijst met versies; pak de eerste."""
+    if isinstance(inhoud, (bytes, bytearray)):
+        return bytes(inhoud)
+    if isinstance(inhoud, list) and inhoud:
+        return bytes(inhoud[0])
+    return None
+
+
+def routeer_document(pad: str | Path) -> tuple[Route, Optional[str]]:
+    """Bepaal het verwerkingspad; geef (route, reden-bij-onbekend).
+
+    Er wordt niet op de extensie afgegaan maar op wat er in het bestand
+    staat. Een onbekende soort levert None op met een reden, zodat de
+    aanroeper hem ter review kan leggen (Gouden regel 4).
+    """
+    pad = Path(pad)
+    if not pad.is_file():
+        return None, f"bestand niet gevonden: {pad}"
+
+    with open(pad, "rb") as bestand:
+        begin = bestand.read(1024)
+    if not begin:
+        return None, f"het bestand is leeg: {pad.name}"
+
+    soort = bestandssoort(begin)
+
+    if soort == "xml":
+        try:
+            wortel = lees_xml_veilig(pad.read_bytes())
+        except Exception as fout:
+            return None, (
+                f"het bestand begint als XML maar is niet veilig te lezen: "
+                f"{type(fout).__name__}: {fout}"
+            )
+        if is_ubl(wortel) is None:
+            return None, (
+                f"XML met hoofdelement '{wortel.tag}'; dat is geen UBL "
+                f"Invoice of CreditNote"
+            )
+        return "ubl", None
+
+    if soort == "pdf":
+        # Zit er een e-factuur in de PDF, dan is dat de beste bron —
+        # betrouwbaarder dan de tekstlaag, want daar staan de velden
+        # met naam en al in.
+        ingebed = zoek_ingebedde_efactuur(pad)
+        if ingebed is not None:
+            try:
+                if is_ubl(lees_xml_veilig(ingebed)) is not None:
+                    return "ubl", None
+            except Exception:
+                pass  # onbruikbare bijlage: gewoon verder als PDF
+        from .documenten import lees_pdf_tekst
+
+        return ("tekst" if lees_pdf_tekst(pad).status == "gelezen" else "beeld"), None
+
+    if soort in ("jpg", "png"):
+        return "beeld", None
+
+    return None, (
+        f"onbekende bestandssoort: de inhoud van {pad.name} is geen PDF, "
+        f"geen afbeelding en geen XML"
+    )
 ```
 
 ## `boekhouding/boekhouding/ai_extractie.py`
@@ -2999,6 +3642,327 @@ if __name__ == "__main__":
     main()
 ```
 
+## `boekhouding/tests/genereer_ubl_testbestanden.py`
+
+```python
+#!/usr/bin/env python3
+"""Genereer synthetische UBL-testbestanden (e-facturen).
+
+    python tests/genereer_ubl_testbestanden.py
+
+Er komen zes bestanden in tests/testfacturen/ubl/ te staan: vijf losse
+UBL-bestanden en één PDF met een ingebedde e-factuur (Factur-X), zodat
+ook dat pad echt getest kan worden.
+
+Alles is verzonnen maar volgt UBL 2.1 zoals in NLCIUS en EN 16931.
+Deterministisch: vaste datums en nummers, geen tijdstempel, geen
+internet.
+"""
+
+import json
+import sys
+from decimal import Decimal
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parent))
+
+from testmateriaal.pdf_schrijver import Pagina, schrijf_pdf_met_bijlage
+
+DOELMAP = Path(__file__).parent / "testfacturen" / "ubl"
+
+KOP = """<?xml version="1.0" encoding="UTF-8"?>
+<{wortel} xmlns="urn:oasis:names:specification:ubl:schema:xsd:{wortel}-2"
+  xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+  xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+  <cbc:CustomizationID>urn:cen.eu:en16931:2017#compliant#urn:fdc:nen.nl:nlcius:v1.0</cbc:CustomizationID>
+  <cbc:ProfileID>urn:fdc:peppol.eu:2017:poacc:billing:01:1.0</cbc:ProfileID>
+  <cbc:ID>{nummer}</cbc:ID>
+  <cbc:IssueDate>{datum}</cbc:IssueDate>
+  <cbc:DueDate>{vervaldatum}</cbc:DueDate>
+  <cbc:DocumentCurrencyCode>EUR</cbc:DocumentCurrencyCode>"""
+
+LEVERANCIER = """
+  <cac:AccountingSupplierParty>
+    <cac:Party>
+      <cbc:EndpointID schemeID="0106">{kvk}</cbc:EndpointID>
+      <cac:PartyName><cbc:Name>{naam}</cbc:Name></cac:PartyName>
+      <cac:PostalAddress>
+        <cbc:StreetName>{straat}</cbc:StreetName>
+        <cbc:CityName>{plaats}</cbc:CityName>
+        <cbc:PostalZone>{postcode}</cbc:PostalZone>
+        <cac:Country><cbc:IdentificationCode>NL</cbc:IdentificationCode></cac:Country>
+      </cac:PostalAddress>
+      <cac:PartyTaxScheme>
+        <cbc:CompanyID>{btw_id}</cbc:CompanyID>
+        <cac:TaxScheme><cbc:ID>VAT</cbc:ID></cac:TaxScheme>
+      </cac:PartyTaxScheme>
+      <cac:PartyLegalEntity>
+        <cbc:RegistrationName>{naam}</cbc:RegistrationName>
+        <cbc:CompanyID schemeID="0106">{kvk}</cbc:CompanyID>
+      </cac:PartyLegalEntity>
+    </cac:Party>
+  </cac:AccountingSupplierParty>"""
+
+KLANT = """
+  <cac:AccountingCustomerParty>
+    <cac:Party>
+      <cac:PartyName><cbc:Name>Alkhadraa Advies</cbc:Name></cac:PartyName>
+      <cac:PostalAddress>
+        <cbc:StreetName>Zonnebloemstraat 14</cbc:StreetName>
+        <cbc:CityName>Rotterdam</cbc:CityName>
+        <cbc:PostalZone>3011 AB</cbc:PostalZone>
+        <cac:Country><cbc:IdentificationCode>NL</cbc:IdentificationCode></cac:Country>
+      </cac:PostalAddress>
+    </cac:Party>
+  </cac:AccountingCustomerParty>"""
+
+SUBTOTAAL = """
+    <cac:TaxSubtotal>
+      <cbc:TaxableAmount currencyID="EUR">{excl}</cbc:TaxableAmount>
+      <cbc:TaxAmount currencyID="EUR">{btw}</cbc:TaxAmount>
+      <cac:TaxCategory>
+        <cbc:ID>{code}</cbc:ID>
+        <cbc:Percent>{percentage}</cbc:Percent>
+        <cac:TaxScheme><cbc:ID>VAT</cbc:ID></cac:TaxScheme>
+      </cac:TaxCategory>
+    </cac:TaxSubtotal>"""
+
+REGEL = """
+  <cac:{regelnaam}>
+    <cbc:ID>{nummer}</cbc:ID>
+    <cbc:{hoeveelheid} unitCode="C62">{aantal}</cbc:{hoeveelheid}>
+    <cbc:LineExtensionAmount currencyID="EUR">{bedrag}</cbc:LineExtensionAmount>
+    <cac:Item>
+      <cbc:Name>{omschrijving}</cbc:Name>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID>{code}</cbc:ID>
+        <cbc:Percent>{percentage}</cbc:Percent>
+        <cac:TaxScheme><cbc:ID>VAT</cbc:ID></cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price><cbc:PriceAmount currencyID="EUR">{stukprijs}</cbc:PriceAmount></cac:Price>
+  </cac:{regelnaam}>"""
+
+
+def bouw(
+    wortel, nummer, datum, vervaldatum, leverancier, regels, subtotalen,
+    excl, incl, weglaten=(),
+):
+    """Zet een UBL-document in elkaar; `weglaten` haalt elementen eruit."""
+    regelnaam = "CreditNoteLine" if wortel == "CreditNote" else "InvoiceLine"
+    hoeveelheid = "CreditedQuantity" if wortel == "CreditNote" else "InvoicedQuantity"
+
+    xml = KOP.format(wortel=wortel, nummer=nummer, datum=datum, vervaldatum=vervaldatum)
+    for element in weglaten:
+        # Het verplichte element eruit knippen, precies zoals een
+        # onvolledig bestand van een leverancier eruit zou zien.
+        begin = xml.find(f"  <cbc:{element}>")
+        if begin != -1:
+            einde = xml.find("\n", begin)
+            xml = xml[:begin] + xml[einde + 1:]
+
+    xml += LEVERANCIER.format(**leverancier)
+    xml += KLANT
+
+    xml += "\n  <cac:TaxTotal>"
+    xml += f'\n    <cbc:TaxAmount currencyID="EUR">' + \
+        str(sum(Decimal(s["btw"]) for s in subtotalen)) + "</cbc:TaxAmount>"
+    for s in subtotalen:
+        xml += SUBTOTAAL.format(**s)
+    xml += "\n  </cac:TaxTotal>"
+
+    xml += f"""
+  <cac:LegalMonetaryTotal>
+    <cbc:LineExtensionAmount currencyID="EUR">{excl}</cbc:LineExtensionAmount>
+    <cbc:TaxExclusiveAmount currencyID="EUR">{excl}</cbc:TaxExclusiveAmount>
+    <cbc:TaxInclusiveAmount currencyID="EUR">{incl}</cbc:TaxInclusiveAmount>
+    <cbc:PayableAmount currencyID="EUR">{incl}</cbc:PayableAmount>
+  </cac:LegalMonetaryTotal>"""
+
+    for volgnummer, regel in enumerate(regels, start=1):
+        xml += REGEL.format(
+            regelnaam=regelnaam, hoeveelheid=hoeveelheid, nummer=volgnummer, **regel
+        )
+    xml += f"\n</{wortel}>\n"
+    return xml
+
+
+def leverancier(naam, straat, postcode, plaats, kvk, btw_id):
+    return {
+        "naam": naam, "straat": straat, "postcode": postcode,
+        "plaats": plaats, "kvk": kvk, "btw_id": btw_id,
+    }
+
+
+VAN_DIJK = leverancier(
+    "Van Dijk ICT-diensten", "Keizersgracht 218", "1016 DZ", "Amsterdam",
+    "32205650", "NL110353601B43",
+)
+KORENAAR = leverancier(
+    "Bakkerij De Korenaar", "Nieuwe Binnenweg 87", "3014 GJ", "Rotterdam",
+    "24418896", "NL823456789B01",
+)
+GROOTHANDEL = leverancier(
+    "Techniek Groothandel Oost", "Industrieweg 45", "7554 NB", "Hengelo",
+    "06081234", "NL801234567B01",
+)
+
+
+def bestanden():
+    """De vijf UBL-bestanden plus de Factur-X-PDF."""
+    return [
+        {
+            "bestand": "01-standaard-21procent.xml",
+            "waarom": "gewone e-factuur met het hoge tarief",
+            "verwacht": "gevalideerd",
+            "xml": bouw(
+                "Invoice", "EF-2026-0101", "2026-07-14", "2026-08-13", VAN_DIJK,
+                [{"aantal": "1", "bedrag": "400.00", "stukprijs": "400.00",
+                  "omschrijving": "Onderhoud werkplekken juli 2026",
+                  "code": "S", "percentage": "21.00"}],
+                [{"excl": "400.00", "btw": "84.00", "code": "S", "percentage": "21.00"}],
+                "400.00", "484.00",
+            ),
+            "velden": {"leverancier": "Van Dijk ICT-diensten",
+                       "factuurnummer": "EF-2026-0101", "factuurdatum": "2026-07-14",
+                       "bedrag_excl": "400.00", "btw_percentage": "21.00",
+                       "btw_bedrag": "84.00", "bedrag_incl": "484.00"},
+        },
+        {
+            "bestand": "02-diensten-9procent.xml",
+            "waarom": "laag tarief van 9%",
+            "verwacht": "gevalideerd",
+            "xml": bouw(
+                "Invoice", "EF-2026-0102", "2026-07-21", "2026-08-20", KORENAAR,
+                [{"aantal": "50", "bedrag": "250.00", "stukprijs": "5.00",
+                  "omschrijving": "Lunchbezorging teamdag", "code": "AA",
+                  "percentage": "9.00"}],
+                [{"excl": "250.00", "btw": "22.50", "code": "AA", "percentage": "9.00"}],
+                "250.00", "272.50",
+            ),
+            "velden": {"leverancier": "Bakkerij De Korenaar",
+                       "factuurnummer": "EF-2026-0102", "factuurdatum": "2026-07-21",
+                       "bedrag_excl": "250.00", "btw_percentage": "9.00",
+                       "btw_bedrag": "22.50", "bedrag_incl": "272.50"},
+        },
+        {
+            "bestand": "03-creditnota.xml",
+            "waarom": "CreditNote als hoofdelement; UBL noteert de bedragen positief",
+            "verwacht": "review_nodig",
+            "xml": bouw(
+                "CreditNote", "EF-2026-0103C", "2026-08-04", "2026-09-03", VAN_DIJK,
+                [{"aantal": "1", "bedrag": "400.00", "stukprijs": "400.00",
+                  "omschrijving": "Creditering onderhoud juli 2026",
+                  "code": "S", "percentage": "21.00"}],
+                [{"excl": "400.00", "btw": "84.00", "code": "S", "percentage": "21.00"}],
+                "400.00", "484.00",
+            ),
+            "velden": {"leverancier": "Van Dijk ICT-diensten",
+                       "factuurnummer": "EF-2026-0103C", "factuurdatum": "2026-08-04",
+                       "bedrag_excl": "400.00", "btw_percentage": "21.00",
+                       "btw_bedrag": "84.00", "bedrag_incl": "484.00"},
+        },
+        {
+            "bestand": "04-twee-btw-tarieven.xml",
+            "waarom": "twee TaxSubtotal-blokken: 21% en 9% op één factuur",
+            "verwacht": "review_nodig",
+            "xml": bouw(
+                "Invoice", "EF-2026-0104", "2026-08-11", "2026-09-10", GROOTHANDEL,
+                [{"aantal": "1", "bedrag": "100.00", "stukprijs": "100.00",
+                  "omschrijving": "Kantoorartikelen", "code": "S", "percentage": "21.00"},
+                 {"aantal": "1", "bedrag": "200.00", "stukprijs": "200.00",
+                  "omschrijving": "Vakliteratuur", "code": "AA", "percentage": "9.00"}],
+                [{"excl": "100.00", "btw": "21.00", "code": "S", "percentage": "21.00"},
+                 {"excl": "200.00", "btw": "18.00", "code": "AA", "percentage": "9.00"}],
+                "300.00", "339.00",
+            ),
+            "velden": {},
+        },
+        {
+            "bestand": "05-zonder-factuurdatum.xml",
+            "waarom": "verplichte IssueDate ontbreekt",
+            "verwacht": "review_nodig",
+            "xml": bouw(
+                "Invoice", "EF-2026-0105", "2026-08-18", "2026-09-17", VAN_DIJK,
+                [{"aantal": "1", "bedrag": "400.00", "stukprijs": "400.00",
+                  "omschrijving": "Onderhoud werkplekken augustus 2026",
+                  "code": "S", "percentage": "21.00"}],
+                [{"excl": "400.00", "btw": "84.00", "code": "S", "percentage": "21.00"}],
+                "400.00", "484.00", weglaten=("IssueDate",),
+            ),
+            "velden": {},
+        },
+    ]
+
+
+FACTUUR_X_XML = bouw(
+    "Invoice", "EF-2026-0106", "2026-08-06", "2026-09-05", GROOTHANDEL,
+    [{"aantal": "1", "bedrag": "512.50", "stukprijs": "512.50",
+      "omschrijving": "Netwerkapparatuur", "code": "S", "percentage": "21.00"}],
+    [{"excl": "512.50", "btw": "107.63", "code": "S", "percentage": "21.00"}],
+    "512.50", "620.13",
+)
+
+
+def maak_factuur_x_pdf(doel: Path) -> Path:
+    """Een PDF die er voor de mens uitziet als factuur, met de XML erin."""
+    pagina = Pagina()
+    pagina.tekst(56, 70, "Techniek Groothandel Oost", 15, vet=True)
+    pagina.tekst_rechts(539, 72, "FACTUUR", 20, vet=True)
+    pagina.tekst(56, 100, "KvK-nummer: 06081234", 8.5)
+    pagina.tekst(56, 112, "Btw-id: NL801234567B01", 8.5)
+    pagina.tekst(56, 160, "Factuurnummer:", 9)
+    pagina.tekst_rechts(539, 160, "EF-2026-0106", 9)
+    pagina.tekst(56, 174, "Factuurdatum:", 9)
+    pagina.tekst_rechts(539, 174, "06-08-2026", 9)
+    pagina.tekst(56, 188, "Vervaldatum:", 9)
+    pagina.tekst_rechts(539, 188, "05-09-2026", 9)
+    pagina.lijn(56, 210, 539, 210, 0.8)
+    pagina.tekst(56, 228, "Netwerkapparatuur", 9)
+    pagina.tekst_rechts(539, 228, "512,50", 9)
+    pagina.tekst(340, 260, "Subtotaal excl. btw", 9)
+    pagina.tekst_rechts(539, 260, "512,50", 9)
+    pagina.tekst(340, 275, "Btw 21%", 9)
+    pagina.tekst_rechts(539, 275, "107,63", 9)
+    pagina.tekst(340, 296, "Totaal incl. btw", 10, vet=True)
+    pagina.tekst_rechts(539, 296, "620,13", 10, vet=True)
+    pagina.tekst(56, 340, "Deze factuur bevat een e-factuur als bijlage (Factur-X).", 8)
+    return schrijf_pdf_met_bijlage(pagina, doel, "factur-x.xml",
+                                   FACTUUR_X_XML.encode("utf-8"))
+
+
+def main() -> None:
+    DOELMAP.mkdir(parents=True, exist_ok=True)
+    overzicht = []
+
+    for item in bestanden():
+        doel = DOELMAP / item["bestand"]
+        doel.write_text(item["xml"], encoding="utf-8")
+        overzicht.append({k: item[k] for k in ("bestand", "waarom", "verwacht", "velden")})
+        print(f"  {item['bestand']:<32} {doel.stat().st_size:>6} bytes")
+
+    doel = maak_factuur_x_pdf(DOELMAP / "06-factuur-x.pdf")
+    overzicht.append({
+        "bestand": "06-factuur-x.pdf",
+        "waarom": "PDF met ingebedde e-factuur; de XML gaat voor op de tekstlaag",
+        "verwacht": "gevalideerd",
+        "velden": {"leverancier": "Techniek Groothandel Oost",
+                   "factuurnummer": "EF-2026-0106", "factuurdatum": "2026-08-06",
+                   "bedrag_excl": "512.50", "btw_percentage": "21.00",
+                   "btw_bedrag": "107.63", "bedrag_incl": "620.13"},
+    })
+    print(f"  06-factuur-x.pdf                 {doel.stat().st_size:>6} bytes")
+
+    (DOELMAP / "overzicht.json").write_text(
+        json.dumps(overzicht, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
+    print(f"\n{len(overzicht)} bestanden in {DOELMAP}")
+
+
+if __name__ == "__main__":
+    main()
+```
+
 ## `boekhouding/tests/testmateriaal/__init__.py`
 
 ```python
@@ -3109,11 +4073,24 @@ class Pagina:
         return b"\n".join(self._opdrachten)
 
 
-def schrijf_pdf(pagina: Pagina, pad: str | Path) -> Path:
-    """Schrijf één pagina weg als PDF-bestand."""
+def _bouw_pdf(pagina: "Pagina", bijlage: tuple[str, bytes] | None) -> bytes:
+    """Zet de PDF-objecten in elkaar, eventueel met een ingebed bestand.
+
+    Een bijlage maakt hier een Factur-X/ZUGFeRD-achtige PDF van: dezelfde
+    factuur is dan zowel leesbaar voor een mens als machineleesbaar als
+    XML. De XML is dan de betrouwbaarste bron.
+    """
     stroom = pagina.inhoudsstroom()
+    catalogus = b"<< /Type /Catalog /Pages 2 0 R"
+    if bijlage is not None:
+        catalogus += (
+            b" /Names << /EmbeddedFiles << /Names [(" + bijlage[0].encode()
+            + b") 7 0 R] >> >> /AF [7 0 R]"
+        )
+    catalogus += b" >>"
+
     objecten = [
-        b"<< /Type /Catalog /Pages 2 0 R >>",
+        catalogus,
         b"<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
         b"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 "
         + f"{pagina.breedte} {pagina.hoogte}".encode()
@@ -3125,6 +4102,19 @@ def schrijf_pdf(pagina: Pagina, pad: str | Path) -> Path:
         b"<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold "
         b"/Encoding /WinAnsiEncoding >>",
     ]
+
+    if bijlage is not None:
+        naam, gegevens = bijlage[0].encode(), bijlage[1]
+        objecten.append(
+            b"<< /Type /Filespec /F (" + naam + b") /UF (" + naam
+            + b") /AFRelationship /Data /Desc (Factuur als e-factuur)"
+            b" /EF << /F 8 0 R >> >>"
+        )
+        objecten.append(
+            b"<< /Type /EmbeddedFile /Subtype /text#2Fxml /Length "
+            + str(len(gegevens)).encode() + b" >>\nstream\n" + gegevens
+            + b"\nendstream"
+        )
 
     uit = bytearray(b"%PDF-1.4\n")
     posities = []
@@ -3141,10 +4131,24 @@ def schrijf_pdf(pagina: Pagina, pad: str | Path) -> Path:
         b"trailer\n<< /Size " + str(aantal).encode() + b" /Root 1 0 R >>\n"
         b"startxref\n" + str(start_xref).encode() + b"\n%%EOF\n"
     )
+    return bytes(uit)
 
+
+def schrijf_pdf(pagina: "Pagina", pad: str | Path) -> Path:
+    """Schrijf één pagina weg als PDF-bestand."""
     pad = Path(pad)
     pad.parent.mkdir(parents=True, exist_ok=True)
-    pad.write_bytes(bytes(uit))
+    pad.write_bytes(_bouw_pdf(pagina, None))
+    return pad
+
+
+def schrijf_pdf_met_bijlage(
+    pagina: "Pagina", pad: str | Path, bijlage_naam: str, bijlage: bytes
+) -> Path:
+    """Schrijf een PDF met een ingebed bestand (Factur-X / ZUGFeRD)."""
+    pad = Path(pad)
+    pad.parent.mkdir(parents=True, exist_ok=True)
+    pad.write_bytes(_bouw_pdf(pagina, (bijlage_naam, bijlage)))
     return pad
 ```
 
@@ -5312,6 +6316,396 @@ def test_onbekend_model_geeft_geen_verzonnen_prijs():
     assert kosten("een-model-dat-we-niet-kennen", 1_000_000, 1_000_000) is None
 ```
 
+## `boekhouding/tests/test_ubl.py`
+
+```python
+"""Tests voor UBL / e-facturen (module 4).
+
+Inclusief echte aanvalspogingen: een XML-bestand dat een bestand van de
+schijf probeert te lezen (XXE) en een dat het geheugen probeert vol te
+laten lopen. Beide horen geweigerd te worden.
+"""
+
+import xml.etree.ElementTree as ET
+from datetime import date
+from pathlib import Path
+
+import pytest
+
+from boekhouding import (
+    XmlOnveilig,
+    bestandssoort,
+    lees_ubl,
+    lees_ubl_bytes,
+    lees_xml_veilig,
+    routeer_document,
+    verwerk_efactuur,
+)
+from conftest import maak_pdf
+
+VANDAAG = date(2026, 8, 27)
+UBLMAP = Path(__file__).parent / "testfacturen" / "ubl"
+
+NS = (
+    'xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" '
+    'xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" '
+    'xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"'
+)
+
+
+def kleine_ubl(nummer="F-1", datum="2026-07-14", excl="400.00", btw="84.00",
+               percentage="21", incl="484.00", naam="Van Dijk ICT-diensten"):
+    """Een minimale maar geldige UBL-factuur, voor losse gevallen."""
+    return f"""<?xml version="1.0" encoding="UTF-8"?>
+<Invoice {NS}>
+  <cbc:ID>{nummer}</cbc:ID>
+  <cbc:IssueDate>{datum}</cbc:IssueDate>
+  <cac:AccountingSupplierParty><cac:Party>
+    <cac:PartyName><cbc:Name>{naam}</cbc:Name></cac:PartyName>
+  </cac:Party></cac:AccountingSupplierParty>
+  <cac:TaxTotal><cac:TaxSubtotal>
+    <cbc:TaxAmount currencyID="EUR">{btw}</cbc:TaxAmount>
+    <cac:TaxCategory><cbc:Percent>{percentage}</cbc:Percent></cac:TaxCategory>
+  </cac:TaxSubtotal></cac:TaxTotal>
+  <cac:LegalMonetaryTotal>
+    <cbc:TaxExclusiveAmount currencyID="EUR">{excl}</cbc:TaxExclusiveAmount>
+    <cbc:TaxInclusiveAmount currencyID="EUR">{incl}</cbc:TaxInclusiveAmount>
+  </cac:LegalMonetaryTotal>
+</Invoice>""".encode("utf-8")
+
+
+# --- XXE en andere XML-aanvallen ----------------------------------------
+
+def test_xxe_kan_geen_bestand_lezen(tmp_path):
+    """Een factuur die /etc/passwd probeert te lezen wordt geweigerd."""
+    geheim = tmp_path / "geheim.txt"
+    geheim.write_text("DIT-MAG-NOOIT-LEKKEN", encoding="utf-8")
+
+    aanval = f"""<?xml version="1.0"?>
+<!DOCTYPE Invoice [ <!ENTITY lek SYSTEM "file://{geheim}"> ]>
+<Invoice><ID>&lek;</ID></Invoice>""".encode("utf-8")
+
+    with pytest.raises(XmlOnveilig, match="DTD"):
+        lees_xml_veilig(aanval)
+
+    # En via de normale weg: review_nodig, geen exception, geen lek.
+    bestand = tmp_path / "aanval.xml"
+    bestand.write_bytes(aanval)
+    resultaat = lees_ubl(bestand)
+    assert resultaat.status == "review_nodig"
+    assert any("onveilige XML" in reden for reden in resultaat.redenen)
+    assert "DIT-MAG-NOOIT-LEKKEN" not in str(resultaat.model_dump())
+
+
+def test_xxe_kan_geen_netwerkadres_benaderen(tmp_path):
+    aanval = b"""<?xml version="1.0"?>
+<!DOCTYPE Invoice [ <!ENTITY lek SYSTEM "http://voorbeeld.test/geheim"> ]>
+<Invoice><ID>&lek;</ID></Invoice>"""
+    with pytest.raises(XmlOnveilig):
+        lees_xml_veilig(aanval)
+
+
+def test_uitdijende_entiteiten_worden_geweigerd():
+    """Billion laughs: een klein bestand dat het geheugen vol laat lopen."""
+    aanval = b"""<?xml version="1.0"?>
+<!DOCTYPE lolz [
+ <!ENTITY lol "lol">
+ <!ENTITY lol2 "&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;">
+ <!ENTITY lol3 "&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;">
+]>
+<Invoice><ID>&lol3;</ID></Invoice>"""
+    with pytest.raises(XmlOnveilig):
+        lees_xml_veilig(aanval)
+
+
+def test_externe_dtd_wordt_geweigerd():
+    aanval = b'<?xml version="1.0"?>\n' \
+             b'<!DOCTYPE Invoice SYSTEM "http://voorbeeld.test/kwaad.dtd">\n' \
+             b"<Invoice><ID>1</ID></Invoice>"
+    with pytest.raises(XmlOnveilig, match="DTD"):
+        lees_xml_veilig(aanval)
+
+
+def test_gewone_xml_zonder_dtd_wordt_gewoon_gelezen():
+    wortel = lees_xml_veilig(b"<Invoice><ID>F-1</ID></Invoice>")
+    assert wortel.tag == "Invoice"
+    assert wortel.find("ID").text == "F-1"
+
+
+def test_naamruimten_blijven_behouden():
+    wortel = lees_xml_veilig(kleine_ubl())
+    assert wortel.tag.startswith("{urn:oasis:")
+    assert wortel.tag.endswith("}Invoice")
+
+
+def test_kapotte_xml_geeft_leesbare_fout():
+    with pytest.raises(ET.ParseError):
+        lees_xml_veilig(b"<Invoice><ID>niet afgesloten")
+
+
+def test_kapotte_xml_via_de_normale_weg_geeft_review(tmp_path):
+    bestand = tmp_path / "kapot.xml"
+    bestand.write_bytes(b"<Invoice><ID>niet afgesloten")
+    resultaat = lees_ubl(bestand)
+    assert resultaat.status == "review_nodig"
+    assert any("niet leesbaar" in reden for reden in resultaat.redenen)
+
+
+# --- routering op inhoud, niet op naam ----------------------------------
+
+def test_bestandssoort_herkent_de_eerste_bytes():
+    assert bestandssoort(b"%PDF-1.4\n...") == "pdf"
+    assert bestandssoort(b"\xff\xd8\xff\xe0...") == "jpg"
+    assert bestandssoort(b"\x89PNG\r\n\x1a\n...") == "png"
+    assert bestandssoort(b'<?xml version="1.0"?>') == "xml"
+    assert bestandssoort(b"<Invoice>") == "xml"
+    assert bestandssoort(b"\xef\xbb\xbf<?xml ") == "xml"  # met BOM
+    assert bestandssoort(b"PK\x03\x04") is None
+
+
+def test_ubl_bestand_gaat_naar_het_ubl_pad():
+    route, reden = routeer_document(UBLMAP / "01-standaard-21procent.xml")
+    assert route == "ubl" and reden is None
+
+
+def test_pdf_met_ingebedde_efactuur_gaat_naar_het_ubl_pad():
+    # Deze PDF heeft óók een tekstlaag; de XML hoort voor te gaan.
+    route, _ = routeer_document(UBLMAP / "06-factuur-x.pdf")
+    assert route == "ubl"
+
+
+def test_gewone_pdf_gaat_naar_het_tekstpad(tmp_path):
+    bestand = tmp_path / "factuur.pdf"
+    bestand.write_bytes(maak_pdf("Factuur 2026-0412"))
+    assert routeer_document(bestand)[0] == "tekst"
+
+
+def test_gescande_pdf_gaat_naar_het_beeldpad(tmp_path):
+    bestand = tmp_path / "scan.pdf"
+    bestand.write_bytes(maak_pdf(None))
+    assert routeer_document(bestand)[0] == "beeld"
+
+
+def test_afbeelding_gaat_naar_het_beeldpad(tmp_path):
+    bestand = tmp_path / "foto.jpg"
+    bestand.write_bytes(b"\xff\xd8\xff\xe0 nep-jpeg")
+    assert routeer_document(bestand)[0] == "beeld"
+
+
+def test_de_naam_van_het_bestand_doet_er_niet_toe(tmp_path):
+    # UBL met de verkeerde extensie: moet tóch het UBL-pad worden.
+    verkeerd = tmp_path / "factuur.pdf"
+    verkeerd.write_bytes(kleine_ubl())
+    assert routeer_document(verkeerd)[0] == "ubl"
+
+    # En een echte PDF die .xml heet gaat niet als XML door.
+    andersom = tmp_path / "factuur.xml"
+    andersom.write_bytes(maak_pdf("Factuur 2026-0412"))
+    assert routeer_document(andersom)[0] == "tekst"
+
+
+def test_xml_dat_geen_ubl_is_geeft_reden(tmp_path):
+    bestand = tmp_path / "iets.xml"
+    bestand.write_bytes(b"<Bestellijst><Regel>1</Regel></Bestellijst>")
+    route, reden = routeer_document(bestand)
+    assert route is None
+    assert "Bestellijst" in reden and "geen UBL" in reden
+
+
+def test_onbekende_soort_geeft_reden(tmp_path):
+    bestand = tmp_path / "iets.docx"
+    bestand.write_bytes(b"PK\x03\x04 nep-docx")
+    route, reden = routeer_document(bestand)
+    assert route is None
+    assert "onbekende bestandssoort" in reden
+
+
+def test_leeg_bestand_geeft_reden(tmp_path):
+    bestand = tmp_path / "leeg.xml"
+    bestand.write_bytes(b"")
+    route, reden = routeer_document(bestand)
+    assert route is None and "leeg" in reden
+
+
+def test_onbestaand_bestand_geeft_reden(tmp_path):
+    route, reden = routeer_document(tmp_path / "weg.xml")
+    assert route is None and "niet gevonden" in reden
+
+
+# --- velden uitlezen ----------------------------------------------------
+
+def test_alle_velden_komen_uit_de_xml():
+    resultaat = verwerk_efactuur(
+        UBLMAP / "01-standaard-21procent.xml", vandaag=VANDAAG
+    )
+    assert resultaat.status == "gevalideerd"
+    assert resultaat.redenen == []
+    assert resultaat.documentsoort == "factuur"
+    assert resultaat.bron == "xml"
+    assert resultaat.velden["leverancier"] == "Van Dijk ICT-diensten"
+    assert resultaat.velden["factuurnummer"] == "EF-2026-0101"
+    assert resultaat.velden["factuurdatum"] == "2026-07-14"
+    assert str(resultaat.factuur.bedrag_incl) == "484.00"
+
+
+def test_laag_tarief_wordt_gelezen():
+    resultaat = verwerk_efactuur(
+        UBLMAP / "02-diensten-9procent.xml", vandaag=VANDAAG
+    )
+    assert resultaat.status == "gevalideerd"
+    assert str(resultaat.factuur.btw_percentage) == "9.00"
+
+
+def test_leverancier_valt_terug_op_de_statutaire_naam():
+    zonder_handelsnaam = kleine_ubl().replace(
+        b"<cac:PartyName><cbc:Name>Van Dijk ICT-diensten</cbc:Name></cac:PartyName>",
+        b"<cac:PartyLegalEntity><cbc:RegistrationName>Van Dijk ICT B.V."
+        b"</cbc:RegistrationName></cac:PartyLegalEntity>",
+    )
+    gelezen = lees_ubl_bytes(zonder_handelsnaam)
+    assert gelezen.velden["leverancier"] == "Van Dijk ICT B.V."
+
+
+# --- meerdere btw-tarieven ----------------------------------------------
+
+def test_twee_btw_tarieven_worden_niet_opgeteld():
+    resultaat = verwerk_efactuur(
+        UBLMAP / "04-twee-btw-tarieven.xml", vandaag=VANDAAG
+    )
+    assert resultaat.status == "review_nodig"
+    reden = next(r for r in resultaat.redenen if "btw-tarieven" in r)
+    assert "2 btw-tarieven" in reden
+    assert "21.00" in reden and "9.00" in reden
+    # Niets samengevoegd tot één percentage.
+    assert "btw_percentage" not in resultaat.velden
+    assert "btw_bedrag" not in resultaat.velden
+
+
+def test_zonder_btw_gegevens_volgt_review():
+    zonder = kleine_ubl()
+    begin = zonder.index(b"<cac:TaxTotal>")
+    einde = zonder.index(b"</cac:TaxTotal>") + len(b"</cac:TaxTotal>")
+    gelezen = lees_ubl_bytes(zonder[:begin] + zonder[einde:])
+    assert gelezen.status == "review_nodig"
+    assert any("geen btw-gegevens" in reden for reden in gelezen.redenen)
+
+
+# --- ontbrekende velden -------------------------------------------------
+
+def test_ontbrekende_factuurdatum_noemt_het_element():
+    resultaat = verwerk_efactuur(
+        UBLMAP / "05-zonder-factuurdatum.xml", vandaag=VANDAAG
+    )
+    assert resultaat.status == "review_nodig"
+    assert any(
+        "factuurdatum ontbreekt" in reden and "cbc:IssueDate" in reden
+        for reden in resultaat.redenen
+    )
+
+
+def test_er_wordt_nooit_een_default_ingevuld():
+    kaal = b'<?xml version="1.0"?><Invoice ' + NS.encode() + b"></Invoice>"
+    gelezen = lees_ubl_bytes(kaal)
+    assert gelezen.status == "review_nodig"
+    assert gelezen.velden == {}          # niets verzonnen
+    assert len(gelezen.redenen) >= 5     # per ontbrekend element een reden
+
+
+def test_onzinbedrag_wordt_niet_overgenomen():
+    slecht = kleine_ubl().replace(b">400.00<", b">vierhonderd<")
+    gelezen = lees_ubl_bytes(slecht)
+    assert "bedrag_excl" not in gelezen.velden
+    assert any("bedrag_excl ontbreekt" in reden for reden in gelezen.redenen)
+
+
+# --- creditnota ---------------------------------------------------------
+
+def test_creditnota_wordt_herkend_en_ter_review_gelegd():
+    resultaat = verwerk_efactuur(UBLMAP / "03-creditnota.xml", vandaag=VANDAAG)
+    assert resultaat.documentsoort == "creditnota"
+    assert resultaat.status == "review_nodig"
+    assert any("creditnota" in reden and "tekens" in reden for reden in resultaat.redenen)
+    # De bedragen zijn wél gelezen, precies zoals ze in het bestand staan.
+    assert resultaat.velden["bedrag_incl"] == "484.00"
+
+
+# --- de validatie van module 1 blijft gelden ----------------------------
+
+def test_bedragen_gaan_door_valideer_factuur():
+    # Een e-factuur waarvan het totaal niet klopt hoort ook af te vallen.
+    from boekhouding import beoordeel_ubl
+
+    fout = kleine_ubl(excl="400.00", btw="84.00", incl="999.00")
+
+    gelezen = lees_ubl_bytes(fout)
+    beoordeeld = beoordeel_ubl(gelezen, vandaag=VANDAAG)
+    assert beoordeeld.status == "review_nodig"
+    assert any("bedrag_incl" in reden and "verschil" in reden
+               for reden in beoordeeld.redenen)
+
+
+def test_datum_in_de_toekomst_valt_ook_hier_af():
+    from boekhouding import beoordeel_ubl
+
+    toekomst = kleine_ubl(datum="2026-12-31")
+    beoordeeld = beoordeel_ubl(lees_ubl_bytes(toekomst), vandaag=VANDAAG)
+    assert beoordeeld.status == "review_nodig"
+    assert any("toekomst" in reden for reden in beoordeeld.redenen)
+
+
+def test_ongeldig_btw_percentage_valt_ook_hier_af():
+    from boekhouding import beoordeel_ubl
+
+    vreemd = kleine_ubl(percentage="15", btw="60.00", incl="460.00")
+    beoordeeld = beoordeel_ubl(lees_ubl_bytes(vreemd), vandaag=VANDAAG)
+    assert beoordeeld.status == "review_nodig"
+    assert any("btw_percentage" in reden for reden in beoordeeld.redenen)
+
+
+# --- PDF met ingebedde e-factuur ---------------------------------------
+
+def test_factuur_x_leest_uit_de_bijlage_en_niet_uit_de_tekstlaag():
+    resultaat = verwerk_efactuur(UBLMAP / "06-factuur-x.pdf", vandaag=VANDAAG)
+    assert resultaat.status == "gevalideerd"
+    assert resultaat.bron == "pdf-bijlage"
+    assert resultaat.velden["factuurnummer"] == "EF-2026-0106"
+    assert str(resultaat.factuur.bedrag_incl) == "620.13"
+
+
+def test_pdf_zonder_bijlage_zegt_dat_eerlijk(tmp_path):
+    gewoon = tmp_path / "gewoon.pdf"
+    gewoon.write_bytes(maak_pdf("Factuur 2026-0412"))
+    resultaat = verwerk_efactuur(gewoon, vandaag=VANDAAG)
+    assert resultaat.status == "review_nodig"
+    assert any("geen ingebedde e-factuur" in reden for reden in resultaat.redenen)
+
+
+def test_onbestaand_bestand_geeft_review(tmp_path):
+    resultaat = verwerk_efactuur(tmp_path / "weg.xml", vandaag=VANDAAG)
+    assert resultaat.status == "review_nodig"
+    assert any("niet gevonden" in reden for reden in resultaat.redenen)
+
+
+# --- bewaarplicht geldt ook voor e-facturen -----------------------------
+
+def test_efactuur_kan_bewaard_worden(conn, administratie_id, tmp_path):
+    from boekhouding import bewaar_document, lees_document, opslagpad_voor
+
+    bestand = tmp_path / "efactuur.xml"
+    bestand.write_bytes(kleine_ubl())
+
+    resultaat = bewaar_document(
+        conn, administratie_id, str(bestand), str(tmp_path / "opslag")
+    )
+    assert resultaat.status == "opgeslagen"
+    bewaard = opslagpad_voor(resultaat.hash, tmp_path / "opslag", ".xml")
+    assert bewaard.is_file()
+    assert bewaard.read_bytes() == bestand.read_bytes()
+    assert lees_document(conn, resultaat.document_id)["originele_bestandsnaam"] == (
+        "efactuur.xml"
+    )
+```
+
 ## `boekhouding/pytest.ini`
 
 ```ini
@@ -5372,7 +6766,7 @@ ANTHROPIC_API_KEY=vul-hier-je-eigen-sleutel-in
 # Testresultaat
 
 ```
-........................................................................ [ 91%]
-.............                                                            [100%]
-157 passed in 0.35s
+........................................................................ [ 75%]
+................................................                         [100%]
+192 passed in 0.43s
 ```
