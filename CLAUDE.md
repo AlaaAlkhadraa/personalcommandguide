@@ -41,6 +41,13 @@ API-sleutels, wachtwoorden en tokens gaan rechtstreeks in de instellingen van
 de dienst zelf. Verschijnt er toch een in de chat, dan is het antwoord: die
 sleutel intrekken en een nieuwe maken.
 
+## Alles wat af is, gaat in `opleveringen/`
+
+Eén map, plat, geen submappen en geen map per keer. Elke afgeronde taak is
+één genummerd bestand erbij (`09-...`, `10-...`), en `00-OVERZICHT.md`,
+`CODE-COMPLEET.md` en `boekhouding-compleet.zip` worden ververst. Ook
+tussenresultaten, rapporten en archieven horen daar en nergens anders.
+
 ## Klaar werk gaat naar beide branches
 
 Committen op `main`, daarna spiegelen:

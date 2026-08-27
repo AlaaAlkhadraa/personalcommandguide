@@ -20,6 +20,7 @@ Branch: `claude/nl-accounting-invoice-module-f2vzr3`
 | `08-eval-tegen-de-api.md` | SDK-aanroep geverifieerd, datumfout gevonden, runs geblokkeerd op de sleutel |
 | `CODE-COMPLEET.md` | de volledige actuele code, uitleg en tests |
 | `testfacturen-overzicht.json` | grondwaarheid bij de 10 testfacturen |
+| `boekhouding-compleet.zip` | alles in één archief: code, tests, facturen, rapporten |
 
 ## Waar het nu staat
 
