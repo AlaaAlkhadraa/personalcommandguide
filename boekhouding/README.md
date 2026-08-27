@@ -430,12 +430,24 @@ die laatste heeft óók een tekstlaag, zodat te testen is dat de XML voorgaat.
 ## Module 5 — Webinterface (fase 1)
 
 ```
+python scripts/vul_testdata.py --met-pdf     # eenmalig: testfacturen erin
 python scripts/start_webinterface.py
 ```
 
-Daarna staat hij op `http://127.0.0.1:8000`. Op je telefoon werkt hij ook, als
-die op hetzelfde wifi zit — gebruik dan het IP-adres van deze computer. Fase 1
-heeft **geen login**, dus draai hem alleen op je eigen netwerk.
+Daarna staat hij op `http://127.0.0.1:8000`, alleen op deze computer. Wil je
+hem op je telefoon openen, start hem dan met `--netwerk`: dan luistert hij op
+alle netwerkkaarten en print hij het adres dat je op je telefoon intypt
+(`http://<ip-van-deze-computer>:8000`, zelfde wifi). Fase 1 heeft **geen
+login**, dus alleen op je eigen netwerk doen.
+
+`scripts/vul_testdata.py` maakt de administratie aan en laadt de vijf
+UBL-testbestanden in. Die werken zonder API-sleutel: bij een e-factuur staan
+de velden letterlijk in het bestand. Met `--met-pdf` komt de Factur-X-PDF er
+ook bij, en die is de moeite waard: een PDF wordt in het reviewscherm netjes
+naast de velden getoond, terwijl een los XML-bestand daar als onleesbare
+platte tekst verschijnt (de browser laat de tags weg). Voor XML is dat
+documentvenster dus nog niet bruikbaar — een leesbare weergave van de
+XML-velden is een openstaand punt.
 
 FastAPI met server-side HTML (Jinja2). Geen React, geen build-stap: je start
 hem en het werkt. De opmaak staat in één `<style>`-blok in `basis.html` en is
@@ -457,7 +469,7 @@ krijgt. Wat er daarna gebeurt is precies de keten uit de vorige modules:
 bewaren → routeren → uitlezen → valideren en opslaan. Een e-factuur gaat
 rechtstreeks, een PDF of foto langs het model.
 
-**Reviewscherm** (`/factuur/1`) — het belangrijkste scherm. Links het originele
+**Reviewscherm** (`/administratie/1/factuur/1`) — het belangrijkste scherm. Links het originele
 document, ingebed in de pagina. Rechts alle uitgelezen velden, stuk voor stuk
 bewerkbaar. Bij elk veld staat hoe zeker het model was; een veld met lage
 zekerheid krijgt een rode rand, een merkje en de reden eronder. Bovenaan staan
@@ -483,6 +495,15 @@ route niet gerekend en niets over btw bepaald.
   vanzelf uit review halen.
 - Goedkeuren roept `keur_factuur_goed` aan, die twee kolommen vult
   (`goedgekeurd_op`, `goedgekeurd_door`) en dat ook in de audit trail zet.
+
+Bij het inladen van de testfacturen bleek iets dat alleen op het scherm te
+zien was: elke reden stond er **twee keer**. De validatie draait namelijk twee
+keer — één keer bij het uitlezen (`verwerk_efactuur` of `extraheer_factuur`) en
+één keer bij het opslaan (`sla_factuur_op`) — en beide rondes leverden hun
+redenen aan. Het uitlezen geeft nu apart terug wat het zélf constateerde
+(`leesredenen` bij een e-factuur, `extractie_redenen` bij het model), en alleen
+dát gaat mee als extra reden. De rekencontroles komen van `sla_factuur_op`, en
+verder van niemand. Er zijn twee tests bij die de dubbeling zouden terugvinden.
 
 Goedkeuring is bewust een aparte kolom en geen derde status: `gevalideerd`
 zegt dat de sommen kloppen, `goedgekeurd_op` zegt dat een mens ja heeft
@@ -561,7 +582,7 @@ de stack blijft Python, SQLite, Pydantic en pytest.
 
 ### `tests/` — de bewijslast
 
-241 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
+243 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
 onzin-tekst, ontbrekende velden, verkeerde btw-percentages, ambigue
 bedragen, toekomst- en te oude datums, duplicaten, de audit trail bij
 aanmaken en wijzigen, en voor module 2: een PDF zonder tekstlaag, een
@@ -571,3 +592,14 @@ buiten de witte lijst (`.docx` en een bestand zonder extensie gaan ter
 review). De test-PDF's worden in
 de tests zelf gegenereerd (`maak_pdf` in `conftest.py`); er wordt niets
 gedownload. `python -m pytest` in deze map draait alles.
+
+## De oplevering verversen
+
+```
+python scripts/maak_oplevering.py
+```
+
+Maakt `opleveringen/CODE-COMPLEET.md` (deze uitleg plus alle broncode achter
+elkaar) en `opleveringen/boekhouding-compleet.zip` opnieuw. De map blijft plat:
+genummerde rapporten plus die twee bestanden en het overzicht. De lokale
+database, `__pycache__` en een `.env` gaan er nooit in.

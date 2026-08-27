@@ -22,13 +22,15 @@ Branch: `claude/nl-accounting-invoice-module-f2vzr3`
 | `10-fix-module4-review.md` | Fixes: groottelimiet vóór het parsen, UTF-16 herkennen |
 | `11-module5-webinterface.md` | CLAUDE.md aangevuld + Module 5: webinterface fase 1 |
 | `12-fix-module5-idor.md` | Fix: elk adres hoort bij één administratie (404, niet 403) |
+| `13-webinterface-draaien.md` | De webinterface starten met testdata: adres, telefoon, elk scherm |
 | `CODE-COMPLEET.md` | de volledige actuele code, uitleg en tests |
 | `testfacturen-overzicht.json` | grondwaarheid bij de 10 testfacturen |
+| `schermen/` | schermafbeeldingen van de draaiende webinterface |
 | `boekhouding-compleet.zip` | alles in één archief: code, tests, facturen, rapporten |
 
 ## Waar het nu staat
 
-- **241 pytest-tests, allemaal groen.** De testsuite doet nooit een echte
+- **243 pytest-tests, allemaal groen.** De testsuite doet nooit een echte
   API-aanroep.
 - **Module 1** — schema met Decimal-bedragen, alle rekencontroles, datum- en
   duplicaatcheck. Elke fout wordt `review_nodig` met reden, nooit een
@@ -49,7 +51,10 @@ Branch: `claude/nl-accounting-invoice-module-f2vzr3`
   reviewscherm met het origineel links en de bewerkbare velden rechts.
   Goedkeuren kan alleen zonder openstaande punten. Alle adressen hangen
   onder een administratie en worden op eigenaarschap gecontroleerd (404,
-  niet 403), zodat klantaccounts er later veilig op kunnen.
+  niet 403), zodat klantaccounts er later veilig op kunnen. Hij is echt
+  gestart en scherm voor scherm nagelopen: `scripts/vul_testdata.py` zet
+  de administratie en zes e-facturen klaar, `scripts/start_webinterface.py`
+  start hem (met `--netwerk` ook bereikbaar vanaf je telefoon).
 - **Testmateriaal** — 10 facturen die deterministisch worden gegenereerd,
   inclusief de lastige gevallen (korting, creditnota, scan zonder tekstlaag,
   ontbrekend factuurnummer, bedragen die niet kloppen).
@@ -72,5 +77,9 @@ Branch: `claude/nl-accounting-invoice-module-f2vzr3`
    gebouwd; het schema kent alleen 21, 9 en 0.
 5. **DOCX, XLSX en CSV** staan in de routeringssectie van CLAUDE.md maar
    worden nog als onbekende soort afgewezen.
-6. **Administratietype uitbreiden vereist een migratie** — SQLite kan een
+6. **Een XML-e-factuur is onleesbaar in het reviewscherm.** Het documentvenster
+   links toont het bestand zoals het is; bij XML laat de browser de tags weg en
+   houd je platte tekst over. Een PDF wordt wél netjes getoond. Een leesbare
+   weergave van de XML-velden is nog niet gebouwd.
+7. **Administratietype uitbreiden vereist een migratie** — SQLite kan een
    CHECK-constraint niet aanpassen met `ALTER TABLE`.

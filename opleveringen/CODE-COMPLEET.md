@@ -434,12 +434,24 @@ die laatste heeft óók een tekstlaag, zodat te testen is dat de XML voorgaat.
 ## Module 5 — Webinterface (fase 1)
 
 ```
+python scripts/vul_testdata.py --met-pdf     # eenmalig: testfacturen erin
 python scripts/start_webinterface.py
 ```
 
-Daarna staat hij op `http://127.0.0.1:8000`. Op je telefoon werkt hij ook, als
-die op hetzelfde wifi zit — gebruik dan het IP-adres van deze computer. Fase 1
-heeft **geen login**, dus draai hem alleen op je eigen netwerk.
+Daarna staat hij op `http://127.0.0.1:8000`, alleen op deze computer. Wil je
+hem op je telefoon openen, start hem dan met `--netwerk`: dan luistert hij op
+alle netwerkkaarten en print hij het adres dat je op je telefoon intypt
+(`http://<ip-van-deze-computer>:8000`, zelfde wifi). Fase 1 heeft **geen
+login**, dus alleen op je eigen netwerk doen.
+
+`scripts/vul_testdata.py` maakt de administratie aan en laadt de vijf
+UBL-testbestanden in. Die werken zonder API-sleutel: bij een e-factuur staan
+de velden letterlijk in het bestand. Met `--met-pdf` komt de Factur-X-PDF er
+ook bij, en die is de moeite waard: een PDF wordt in het reviewscherm netjes
+naast de velden getoond, terwijl een los XML-bestand daar als onleesbare
+platte tekst verschijnt (de browser laat de tags weg). Voor XML is dat
+documentvenster dus nog niet bruikbaar — een leesbare weergave van de
+XML-velden is een openstaand punt.
 
 FastAPI met server-side HTML (Jinja2). Geen React, geen build-stap: je start
 hem en het werkt. De opmaak staat in één `<style>`-blok in `basis.html` en is
@@ -461,7 +473,7 @@ krijgt. Wat er daarna gebeurt is precies de keten uit de vorige modules:
 bewaren → routeren → uitlezen → valideren en opslaan. Een e-factuur gaat
 rechtstreeks, een PDF of foto langs het model.
 
-**Reviewscherm** (`/factuur/1`) — het belangrijkste scherm. Links het originele
+**Reviewscherm** (`/administratie/1/factuur/1`) — het belangrijkste scherm. Links het originele
 document, ingebed in de pagina. Rechts alle uitgelezen velden, stuk voor stuk
 bewerkbaar. Bij elk veld staat hoe zeker het model was; een veld met lage
 zekerheid krijgt een rode rand, een merkje en de reden eronder. Bovenaan staan
@@ -487,6 +499,15 @@ route niet gerekend en niets over btw bepaald.
   vanzelf uit review halen.
 - Goedkeuren roept `keur_factuur_goed` aan, die twee kolommen vult
   (`goedgekeurd_op`, `goedgekeurd_door`) en dat ook in de audit trail zet.
+
+Bij het inladen van de testfacturen bleek iets dat alleen op het scherm te
+zien was: elke reden stond er **twee keer**. De validatie draait namelijk twee
+keer — één keer bij het uitlezen (`verwerk_efactuur` of `extraheer_factuur`) en
+één keer bij het opslaan (`sla_factuur_op`) — en beide rondes leverden hun
+redenen aan. Het uitlezen geeft nu apart terug wat het zélf constateerde
+(`leesredenen` bij een e-factuur, `extractie_redenen` bij het model), en alleen
+dát gaat mee als extra reden. De rekencontroles komen van `sla_factuur_op`, en
+verder van niemand. Er zijn twee tests bij die de dubbeling zouden terugvinden.
 
 Goedkeuring is bewust een aparte kolom en geen derde status: `gevalideerd`
 zegt dat de sommen kloppen, `goedgekeurd_op` zegt dat een mens ja heeft
@@ -565,7 +586,7 @@ de stack blijft Python, SQLite, Pydantic en pytest.
 
 ### `tests/` — de bewijslast
 
-241 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
+243 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
 onzin-tekst, ontbrekende velden, verkeerde btw-percentages, ambigue
 bedragen, toekomst- en te oude datums, duplicaten, de audit trail bij
 aanmaken en wijzigen, en voor module 2: een PDF zonder tekstlaag, een
@@ -575,6 +596,17 @@ buiten de witte lijst (`.docx` en een bestand zonder extensie gaan ter
 review). De test-PDF's worden in
 de tests zelf gegenereerd (`maak_pdf` in `conftest.py`); er wordt niets
 gedownload. `python -m pytest` in deze map draait alles.
+
+## De oplevering verversen
+
+```
+python scripts/maak_oplevering.py
+```
+
+Maakt `opleveringen/CODE-COMPLEET.md` (deze uitleg plus alle broncode achter
+elkaar) en `opleveringen/boekhouding-compleet.zip` opnieuw. De map blijft plat:
+genummerde rapporten plus die twee bestanden en het overzicht. De lokale
+database, `__pycache__` en een `.env` gaan er nooit in.
 
 ---
 
@@ -1583,6 +1615,10 @@ class EfactuurResultaat(BaseModel):
     redenen: list[str] = []
     factuur: Optional[Factuur] = None
     velden: dict[str, str] = {}
+    # Alleen wat het lezen van het XML-bestand opleverde (ontbrekend
+    # element, meerdere btw-tarieven, creditnota). De rekencontroles
+    # zitten in `redenen` en worden verderop opnieuw gedraaid.
+    leesredenen: list[str] = []
     documentsoort: Optional[str] = None
     bron: Literal["xml", "pdf-bijlage"] = "xml"
     bestandsnaam: str = ""
@@ -1606,6 +1642,7 @@ def beoordeel_ubl(
     return EfactuurResultaat(
         status="gevalideerd" if not redenen else "review_nodig",
         redenen=redenen,
+        leesredenen=list(gelezen.redenen),
         factuur=resultaat.factuur,
         velden=gelezen.velden,
         documentsoort=gelezen.documentsoort,
@@ -1960,6 +1997,11 @@ class ExtractieResultaat(BaseModel):
     extractie: Optional[FactuurExtractie] = None
     model: str = ""
     prompt_versie: str = PROMPT_VERSIE
+    # Alleen wat het model zelf aangeeft (ontbrekend veld, lage
+    # zekerheid). De rekencontroles zitten in `redenen`; die worden
+    # verderop nog een keer gedraaid met de duplicaatcheck erbij, en
+    # zouden anders dubbel op het scherm komen.
+    extractie_redenen: list[str] = []
     invoer_tokens: int = 0
     uitvoer_tokens: int = 0
     invoerpad: Optional[Literal["tekst", "beeld"]] = None
@@ -2076,14 +2118,12 @@ def _ruwe_tekst(respons: Any, extractie: Optional[FactuurExtractie]) -> str:
     return ""
 
 
-def beoordeel_extractie(
-    extractie: FactuurExtractie, *, vandaag=None, is_duplicaat=None
-) -> tuple[str, list[str], Optional[Factuur]]:
-    """Zet een extractie om in een status, redenen en een nette factuur.
+def extractie_redenen(extractie: FactuurExtractie) -> tuple[list[str], dict[str, Any]]:
+    """Geef wat het model zelf aangeeft, plus de bruikbare waarden.
 
-    Twee soorten redenen komen samen: wat het model zelf aangeeft
-    (ontbrekend veld of lage zekerheid, met prefix "extractie:") en wat
-    de rekencontroles van module 1 vinden. De AI rekent niet mee.
+    Alleen de redenen die uit de extractie komen: een veld dat niet op
+    het document stond, of een veld dat met lage zekerheid is gelezen.
+    De rekencontroles zitten hier niet bij — die zijn van module 1.
     """
     redenen: list[str] = []
     data: dict[str, Any] = {}
@@ -2104,6 +2144,20 @@ def beoordeel_extractie(
                 f"'{gegeven.waarde}' — {gegeven.reden}"
             )
         data[veld] = gegeven.waarde
+
+    return redenen, data
+
+
+def beoordeel_extractie(
+    extractie: FactuurExtractie, *, vandaag=None, is_duplicaat=None
+) -> tuple[str, list[str], Optional[Factuur]]:
+    """Zet een extractie om in een status, redenen en een nette factuur.
+
+    Twee soorten redenen komen samen: wat het model zelf aangeeft
+    (ontbrekend veld of lage zekerheid, met prefix "extractie:") en wat
+    de rekencontroles van module 1 vinden. De AI rekent niet mee.
+    """
+    redenen, data = extractie_redenen(extractie)
 
     # Alle rekenregels en datumcontroles blijven van module 1.
     resultaat = valideer_factuur(data, vandaag=vandaag, is_duplicaat=is_duplicaat)
@@ -2251,9 +2305,11 @@ def extraheer_factuur(
         extractie, vandaag=vandaag, is_duplicaat=is_duplicaat
     )
     invoer_tokens, uitvoer_tokens = _tokens(respons)
+    alleen_extractie, _ = extractie_redenen(extractie)
     return ExtractieResultaat(
         status=status,
         redenen=redenen,
+        extractie_redenen=alleen_extractie,
         factuur=factuur,
         extractie=extractie,
         model=model,
@@ -2387,12 +2443,18 @@ def _verwerk_bestand(
     extractie_id = None
     if route == "ubl":
         gelezen = verwerk_efactuur(pad, vandaag=vandaag)
-        velden, redenen = gelezen.velden, gelezen.redenen
+        # Alleen de leesredenen doorgeven: de rekencontroles draait
+        # sla_factuur_op zo meteen zelf, met de duplicaatcheck erbij.
+        # Ze allebei doorgeven zou ze dubbel op het scherm zetten.
+        velden, redenen = gelezen.velden, gelezen.leesredenen
     else:
         gelezen = extraheer_factuur(
             pad, client=ai_client, vandaag=vandaag
         )
-        redenen = gelezen.redenen
+        # Idem: alleen wat het model zelf aangaf. Ging de aanroep
+        # helemaal mis, dan staat dat niet in extractie_redenen maar
+        # wel in redenen — die moet dan wél mee.
+        redenen = gelezen.extractie_redenen or gelezen.redenen
         velden = {}
         if gelezen.extractie is not None:
             for veld in VELDEN:
@@ -3881,13 +3943,19 @@ def _zekerheden(extractie: Optional[dict]) -> dict[str, dict]:
 
     python scripts/start_webinterface.py
 
-Daarna staat hij op http://127.0.0.1:8000 — ook te openen op je telefoon
-als die op hetzelfde wifi-netwerk zit (gebruik dan het IP-adres van deze
-computer in plaats van 127.0.0.1).
+Daarna staat hij op http://127.0.0.1:8000 — alleen op deze computer.
 
-Fase 1 heeft geen login. Draai hem dus alleen op je eigen netwerk.
+Wil je hem ook op je telefoon openen (zelfde wifi), start hem dan zo:
+
+    python scripts/start_webinterface.py --netwerk
+
+Dan luistert hij op alle netwerkkaarten en print hij het adres dat je op
+je telefoon intypt. Fase 1 heeft geen login: iedereen op hetzelfde wifi
+kan er dan bij. Doe dit dus alleen op je eigen netwerk, nooit op wifi van
+een café of een hotel.
 """
 
+import socket
 import sys
 from pathlib import Path
 
@@ -3899,15 +3967,310 @@ import uvicorn  # noqa: E402
 from boekhouding.web import maak_app  # noqa: E402
 
 GEGEVENS = BASIS / "gegevens"
+POORT = 8000
+
+
+def eigen_ip() -> str | None:
+    """Zoek het IP-adres van deze computer op het lokale netwerk.
+
+    Er wordt niets verstuurd: een UDP-socket "verbinden" kiest alleen de
+    netwerkkaart waarlangs verkeer naar buiten zou gaan. Lukt dat niet
+    (geen netwerk), dan geven we None terug in plaats van te gokken.
+    """
+    peiler = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        peiler.connect(("192.0.2.1", 9))  # adres uit het testbereik, gaat nergens heen
+        return peiler.getsockname()[0]
+    except OSError:
+        return None
+    finally:
+        peiler.close()
 
 
 def main() -> int:
+    over_netwerk = "--netwerk" in sys.argv
+    adres = "0.0.0.0" if over_netwerk else "127.0.0.1"
+
     GEGEVENS.mkdir(exist_ok=True)
     app = maak_app(str(GEGEVENS / "boekhouding.sqlite"), str(GEGEVENS / "opslag"))
     print(f"Database  : {GEGEVENS / 'boekhouding.sqlite'}")
     print(f"Originelen: {GEGEVENS / 'opslag'}")
-    print("Open http://127.0.0.1:8000 in je browser. Stoppen met Ctrl-C.\n")
-    uvicorn.run(app, host="127.0.0.1", port=8000, log_level="warning")
+    print(f"\nOp deze computer : http://127.0.0.1:{POORT}")
+    if over_netwerk:
+        ip = eigen_ip()
+        if ip:
+            print(f"Op je telefoon   : http://{ip}:{POORT}   (zelfde wifi)")
+        else:
+            print("Op je telefoon   : geen netwerkadres gevonden, zit je op wifi?")
+        print("\nLet op: geen login. Alleen doen op je eigen netwerk.")
+    else:
+        print("Op je telefoon   : niet bereikbaar. Start met --netwerk als je dat wilt.")
+    print("\nStoppen met Ctrl-C.\n")
+    uvicorn.run(app, host=adres, port=POORT, log_level="warning")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+```
+
+## `boekhouding/scripts/vul_testdata.py`
+
+```python
+#!/usr/bin/env python3
+"""Zet testdata klaar in de webinterface.
+
+    python scripts/vul_testdata.py
+
+Maakt de administratie aan (als die er nog niet is) en laadt de vijf
+UBL-testbestanden in. Die werken zonder API-sleutel: bij een e-factuur
+staan de velden letterlijk in het bestand, dus er komt geen model aan te
+pas.
+
+Wil je ook zien hoe het reviewscherm eruitziet met een échte PDF ernaast:
+
+    python scripts/vul_testdata.py --met-pdf
+
+Dat laadt ook de Factur-X-PDF in (ook zonder sleutel — de e-factuur zit
+als bijlage in de PDF).
+"""
+
+import sys
+from pathlib import Path
+
+BASIS = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(BASIS))
+
+from boekhouding import (  # noqa: E402
+    lees_facturen,
+    maak_administratie,
+    maak_tabellen,
+    maak_verbinding,
+)
+from boekhouding.verwerking import verwerk_upload  # noqa: E402
+
+GEGEVENS = BASIS / "gegevens"
+UBLMAP = BASIS / "tests" / "testfacturen" / "ubl"
+BESTANDEN = [
+    "01-standaard-21procent.xml",
+    "02-diensten-9procent.xml",
+    "03-creditnota.xml",
+    "04-twee-btw-tarieven.xml",
+    "05-zonder-factuurdatum.xml",
+]
+
+
+def main() -> int:
+    met_pdf = "--met-pdf" in sys.argv
+    bestanden = BESTANDEN + (["06-factuur-x.pdf"] if met_pdf else [])
+
+    GEGEVENS.mkdir(exist_ok=True)
+    conn = maak_verbinding(str(GEGEVENS / "boekhouding.sqlite"))
+    maak_tabellen(conn)
+
+    rij = conn.execute("SELECT id, naam FROM administraties ORDER BY id").fetchone()
+    if rij is None:
+        administratie_id = maak_administratie(conn, "Mijn eenmanszaak")
+        print(f"Administratie aangemaakt: Mijn eenmanszaak (nummer {administratie_id})")
+    else:
+        administratie_id, naam = rij
+        print(f"Administratie bestaat al: {naam} (nummer {administratie_id})")
+
+    print()
+    for naam in bestanden:
+        pad = UBLMAP / naam
+        resultaat = verwerk_upload(
+            conn, administratie_id, naam, pad.read_bytes(),
+            str(GEGEVENS / "opslag"),
+        )
+        merk = "review nodig" if resultaat.status == "review_nodig" else "klopt"
+        print(f"  {naam:<28} -> factuur {resultaat.factuur_id}  [{merk}]")
+        for reden in resultaat.redenen:
+            print(f"       {reden[:88]}")
+
+    facturen = lees_facturen(conn, administratie_id)
+    conn.close()
+
+    review = sum(1 for f in facturen if f["status"] == "review_nodig")
+    print(f"\n{len(facturen)} facturen in de administratie, {review} wachten op je.")
+    print("Start nu de server:  python scripts/start_webinterface.py")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+```
+
+## `boekhouding/scripts/maak_oplevering.py`
+
+```python
+#!/usr/bin/env python3
+"""Ververs de oplevering: CODE-COMPLEET.md en boekhouding-compleet.zip.
+
+    python scripts/maak_oplevering.py
+
+De map `opleveringen/` blijft plat: alleen genummerde rapporten plus de
+drie vaste bestanden. Dit script maakt er twee van opnieuw, zodat ze na
+elke taak echt bij de code passen en niet stilletjes verouderen:
+
+- `CODE-COMPLEET.md` = de uitleg (README.md) plus alle broncode achter
+  elkaar, zodat alles in één bestand te lezen is.
+- `boekhouding-compleet.zip` = CLAUDE.md, de hele map `boekhouding/`
+  (zonder rommel als __pycache__ en de lokale database) en alle
+  rapporten uit `opleveringen/`.
+"""
+
+import sys
+import zipfile
+from pathlib import Path
+
+BASIS = Path(__file__).resolve().parent.parent
+WORTEL = BASIS.parent
+OPLEVERINGEN = WORTEL / "opleveringen"
+
+# De volgorde waarin de broncode in CODE-COMPLEET.md komt te staan:
+# eerst de kern, dan de webinterface, dan de scripts en de tests.
+BRONBESTANDEN = [
+    "boekhouding/__init__.py",
+    "boekhouding/btw_config.py",
+    "boekhouding/models.py",
+    "boekhouding/validatie.py",
+    "boekhouding/documenten.py",
+    "boekhouding/omgeving.py",
+    "boekhouding/ubl.py",
+    "boekhouding/routering.py",
+    "boekhouding/ai_extractie.py",
+    "boekhouding/verwerking.py",
+    "boekhouding/database.py",
+    "boekhouding/web/__init__.py",
+    "boekhouding/web/app.py",
+    "boekhouding/web/templates/basis.html",
+    "boekhouding/web/templates/overzicht.html",
+    "boekhouding/web/templates/upload.html",
+    "boekhouding/web/templates/review.html",
+    "boekhouding/web/templates/fout.html",
+    "boekhouding/config/btw_2024.json",
+    "boekhouding/config/btw_2025.json",
+    "boekhouding/config/btw_2026.json",
+    "scripts/start_webinterface.py",
+    "scripts/vul_testdata.py",
+    "scripts/maak_oplevering.py",
+    "scripts/handmatige_api_proef.py",
+    "scripts/eval_extractie.py",
+    "tests/genereer_testfacturen.py",
+    "tests/genereer_ubl_testbestanden.py",
+    "tests/testmateriaal/__init__.py",
+    "tests/testmateriaal/pdf_schrijver.py",
+    "tests/testmateriaal/bitmapfont.py",
+    "tests/testmateriaal/jpeg_schrijver.py",
+    "tests/conftest.py",
+    "tests/test_schema.py",
+    "tests/test_validatie.py",
+    "tests/test_database.py",
+    "tests/test_documenten.py",
+    "tests/test_ai_extractie.py",
+    "tests/test_eval_logica.py",
+    "tests/test_ubl.py",
+    "tests/test_web.py",
+    "pytest.ini",
+    "requirements.txt",
+    ".gitignore",
+    ".env.voorbeeld",
+]
+
+# Welk taalmerkje het codeblok krijgt, per extensie.
+TAAL = {".py": "python", ".html": "html", ".json": "json", ".ini": "ini"}
+
+# Wat nooit in het archief hoort: gecompileerde rommel, de lokale
+# database met eigen gegevens, en een .env met een sleutel erin.
+OVERSLAAN_MAPPEN = {"__pycache__", ".pytest_cache", "gegevens", ".git"}
+OVERSLAAN_NAMEN = {".env"}
+OVERSLAAN_EXTENSIES = {".pyc", ".sqlite", ".db"}
+
+
+def taal_van(pad: Path) -> str:
+    return TAAL.get(pad.suffix, "")
+
+
+def maak_code_compleet() -> Path:
+    """Zet README.md en alle broncode in één bestand."""
+    delen = [
+        "# Volledige code — boekhoudsysteem, modules 1 t/m 5",
+        "",
+        "Branch `claude/nl-accounting-invoice-module-f2vzr3`. "
+        "Wordt bij elke oplevering ververst.",
+        "",
+        (BASIS / "README.md").read_text(encoding="utf-8").rstrip(),
+        "",
+        "---",
+        "",
+        "# Broncode",
+        "",
+    ]
+
+    ontbreekt = []
+    for naam in BRONBESTANDEN:
+        pad = BASIS / naam
+        if not pad.is_file():
+            ontbreekt.append(naam)
+            continue
+        delen.append(f"## `boekhouding/{naam}`")
+        delen.append("")
+        delen.append(f"```{taal_van(pad)}")
+        delen.append(pad.read_text(encoding="utf-8").rstrip())
+        delen.append("```")
+        delen.append("")
+
+    if ontbreekt:
+        # Nooit stil een bestand overslaan: dan zou de bundel incompleet
+        # zijn zonder dat iemand het ziet.
+        print("LET OP, deze bestanden staan in de lijst maar bestaan niet:")
+        for naam in ontbreekt:
+            print(f"  {naam}")
+
+    doel = OPLEVERINGEN / "CODE-COMPLEET.md"
+    doel.write_text("\n".join(delen), encoding="utf-8")
+    return doel
+
+
+def hoort_erin(pad: Path) -> bool:
+    if any(deel in OVERSLAAN_MAPPEN for deel in pad.parts):
+        return False
+    if pad.name in OVERSLAAN_NAMEN or pad.suffix in OVERSLAAN_EXTENSIES:
+        return False
+    return True
+
+
+def maak_zip() -> Path:
+    """Stop CLAUDE.md, de code en alle rapporten in één archief."""
+    doel = OPLEVERINGEN / "boekhouding-compleet.zip"
+    # Eerst opbouwen naast het doel, dan pas hernoemen: zo blijft er nooit
+    # een half archief achter als er iets misgaat.
+    tijdelijk = doel.with_suffix(".zip.tijdelijk")
+    aantal = 0
+    with zipfile.ZipFile(tijdelijk, "w", zipfile.ZIP_DEFLATED) as archief:
+        archief.write(WORTEL / "CLAUDE.md", "CLAUDE.md")
+        aantal += 1
+        for pad in sorted(BASIS.rglob("*")):
+            if not pad.is_file() or not hoort_erin(pad.relative_to(BASIS)):
+                continue
+            archief.write(pad, str(pad.relative_to(WORTEL)))
+            aantal += 1
+        for pad in sorted(OPLEVERINGEN.rglob("*")):
+            if not pad.is_file() or pad.name == doel.name or pad == tijdelijk:
+                continue
+            archief.write(pad, str(pad.relative_to(WORTEL)))
+            aantal += 1
+    tijdelijk.replace(doel)
+    print(f"{aantal} bestanden in het archief")
+    return doel
+
+
+def main() -> int:
+    code = maak_code_compleet()
+    print(f"{code.relative_to(WORTEL)}  ({code.stat().st_size // 1024} kB)")
+    archief = maak_zip()
+    print(f"{archief.relative_to(WORTEL)}  ({archief.stat().st_size // 1024} kB)")
     return 0
 
 
@@ -8436,6 +8799,30 @@ def test_elke_route_met_een_id_loopt_langs_de_controle():
             assert "hoort_bij_administratie" in stuk, (
                 f"route {pad} gebruikt geen hoort_bij_administratie"
             )
+
+
+def test_redenen_staan_er_niet_dubbel_in(web):
+    """De validatie draait twee keer; de redenen horen er één keer te staan."""
+    upload(web, UBLMAP / "04-twee-btw-tarieven.xml", "twee-tarieven.xml")
+    pagina = web.get("/administratie/1/factuur/1").text
+    assert pagina.count("btw_percentage: Field required") == 1
+    assert pagina.count("btw-tarieven") == 1
+
+
+def test_ook_bij_de_ai_route_geen_dubbele_redenen(werkmap):
+    onzeker = goede_extractie(
+        factuurnummer=veld(None, "laag", "nummer niet leesbaar")
+    )
+    app = maak_app(
+        str(werkmap / "db.sqlite"), str(werkmap / "opslag"),
+        ai_client=client_met(onzeker), vandaag=VANDAAG,
+    )
+    web = TestClient(app)
+    upload(web, maak_pdf("Factuur 2026-0412"), "factuur.pdf")
+
+    pagina = web.get("/administratie/1/factuur/1").text
+    assert pagina.count("factuurnummer niet op het document gevonden") == 1
+    assert pagina.count("factuurnummer: Field required") == 1
 ```
 
 ## `boekhouding/pytest.ini`
@@ -8501,14 +8888,4 @@ ANTHROPIC_API_KEY=vul-hier-je-eigen-sleutel-in
 # claude-opus-5. Handig om in de eval een goedkoper model te vergelijken;
 # dat kan ook per run met --model=...
 # ANTHROPIC_MODEL=claude-opus-5
-```
-
----
-
-# Testresultaat
-
-```
-........................................................................ [ 89%]
-.........................                                                [100%]
-241 passed in 2.39s
 ```

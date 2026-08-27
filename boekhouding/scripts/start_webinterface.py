@@ -3,13 +3,19 @@
 
     python scripts/start_webinterface.py
 
-Daarna staat hij op http://127.0.0.1:8000 — ook te openen op je telefoon
-als die op hetzelfde wifi-netwerk zit (gebruik dan het IP-adres van deze
-computer in plaats van 127.0.0.1).
+Daarna staat hij op http://127.0.0.1:8000 — alleen op deze computer.
 
-Fase 1 heeft geen login. Draai hem dus alleen op je eigen netwerk.
+Wil je hem ook op je telefoon openen (zelfde wifi), start hem dan zo:
+
+    python scripts/start_webinterface.py --netwerk
+
+Dan luistert hij op alle netwerkkaarten en print hij het adres dat je op
+je telefoon intypt. Fase 1 heeft geen login: iedereen op hetzelfde wifi
+kan er dan bij. Doe dit dus alleen op je eigen netwerk, nooit op wifi van
+een café of een hotel.
 """
 
+import socket
 import sys
 from pathlib import Path
 
@@ -21,15 +27,46 @@ import uvicorn  # noqa: E402
 from boekhouding.web import maak_app  # noqa: E402
 
 GEGEVENS = BASIS / "gegevens"
+POORT = 8000
+
+
+def eigen_ip() -> str | None:
+    """Zoek het IP-adres van deze computer op het lokale netwerk.
+
+    Er wordt niets verstuurd: een UDP-socket "verbinden" kiest alleen de
+    netwerkkaart waarlangs verkeer naar buiten zou gaan. Lukt dat niet
+    (geen netwerk), dan geven we None terug in plaats van te gokken.
+    """
+    peiler = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        peiler.connect(("192.0.2.1", 9))  # adres uit het testbereik, gaat nergens heen
+        return peiler.getsockname()[0]
+    except OSError:
+        return None
+    finally:
+        peiler.close()
 
 
 def main() -> int:
+    over_netwerk = "--netwerk" in sys.argv
+    adres = "0.0.0.0" if over_netwerk else "127.0.0.1"
+
     GEGEVENS.mkdir(exist_ok=True)
     app = maak_app(str(GEGEVENS / "boekhouding.sqlite"), str(GEGEVENS / "opslag"))
     print(f"Database  : {GEGEVENS / 'boekhouding.sqlite'}")
     print(f"Originelen: {GEGEVENS / 'opslag'}")
-    print("Open http://127.0.0.1:8000 in je browser. Stoppen met Ctrl-C.\n")
-    uvicorn.run(app, host="127.0.0.1", port=8000, log_level="warning")
+    print(f"\nOp deze computer : http://127.0.0.1:{POORT}")
+    if over_netwerk:
+        ip = eigen_ip()
+        if ip:
+            print(f"Op je telefoon   : http://{ip}:{POORT}   (zelfde wifi)")
+        else:
+            print("Op je telefoon   : geen netwerkadres gevonden, zit je op wifi?")
+        print("\nLet op: geen login. Alleen doen op je eigen netwerk.")
+    else:
+        print("Op je telefoon   : niet bereikbaar. Start met --netwerk als je dat wilt.")
+    print("\nStoppen met Ctrl-C.\n")
+    uvicorn.run(app, host=adres, port=POORT, log_level="warning")
     return 0
 
 
