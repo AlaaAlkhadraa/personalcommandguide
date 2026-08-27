@@ -201,6 +201,43 @@ Databases die vóór module 2 zijn aangemaakt, missen de kolom `document_id`.
 `maak_tabellen` zet die kolom er los bij met `ALTER TABLE ADD COLUMN` als
 hij ontbreekt. Bestaande facturen houden gewoon `NULL` als document.
 
+## Testmateriaal: synthetische facturen
+
+Voor module 3 (AI-extractie) is materiaal nodig om op te oefenen. Het script
+`tests/genereer_testfacturen.py` maakt tien verzonnen maar realistisch
+opgemaakte Nederlandse facturen in `tests/testfacturen/`:
+
+```
+python tests/genereer_testfacturen.py
+```
+
+Elke factuur heeft de gegevens die op een Nederlandse factuur horen te staan:
+KvK-nummer, btw-identificatienummer, IBAN (met kloppende controlegetallen),
+"Factuurdatum", "Vervaldatum" en "Totaal incl. btw".
+
+| Bestand | Waarvoor |
+|---|---|
+| `01-standaard-21procent.pdf` | gewone inkoopfactuur, hoog tarief |
+| `02-catering-9procent.pdf` | laag tarief van 9% |
+| `03-verzekering-0procent.pdf` | nultarief, btw-bedrag 0,00 |
+| `04-meerdere-regels-21procent.pdf` | vier regels die samen het subtotaal vormen |
+| `05-met-korting-21procent.pdf` | kortingsregel onder de factuurregels |
+| `06-creditnota-21procent.pdf` | negatieve bedragen |
+| `07-duizendtal-21procent.pdf` | bedragen boven de duizend: `1.250,00` |
+| `08-scan-zonder-tekstlaag.jpg` | foto/scan, geen tekst uit te halen |
+| `09-zonder-factuurnummer.pdf` | factuurnummer ontbreekt (hoort afgekeurd) |
+| `10-bedragen-kloppen-niet.pdf` | totaal klopt niet (hoort afgekeurd) |
+
+Naast de bestanden schrijft het script `overzicht.json`: per bestand waar het
+voor bedoeld is, de verwachte status en de juiste waarden. Dat is de
+grondwaarheid waartegen module 3 straks kan worden afgerekend.
+
+Het script is **deterministisch**: vaste seed, vaste datums, geen tijdstempel
+in de bestanden en geen internet. Twee keer draaien geeft byte-voor-byte
+dezelfde bestanden. De PDF- en JPEG-schrijvers in `tests/testmateriaal/` zijn
+met de hand geschreven, zodat het project geen extra afhankelijkheid krijgt:
+de stack blijft Python, SQLite, Pydantic en pytest.
+
 ### `tests/` — de bewijslast
 
 75 pytest-tests, één of meer per controle, inclusief foute inputs: floats,

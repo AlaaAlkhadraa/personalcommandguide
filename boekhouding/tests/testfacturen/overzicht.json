@@ -1,0 +1,122 @@
+[
+  {
+    "bestand": "01-standaard-21procent.pdf",
+    "waarom": "gewone inkoopfactuur met het hoge tarief",
+    "verwachte_status": "gevalideerd",
+    "leverancier": "Van Dijk ICT-diensten",
+    "factuurnummer": "2026-0412",
+    "factuurdatum": "12-07-2026",
+    "btw_percentage": "21",
+    "bedrag_excl": "450.00",
+    "btw_bedrag": "94.50",
+    "bedrag_incl": "544.50"
+  },
+  {
+    "bestand": "02-catering-9procent.pdf",
+    "waarom": "laag tarief van 9% op voedingsmiddelen",
+    "verwachte_status": "gevalideerd",
+    "leverancier": "Bakkerij De Korenaar",
+    "factuurnummer": "B26-1187",
+    "factuurdatum": "28-07-2026",
+    "btw_percentage": "9",
+    "bedrag_excl": "180.00",
+    "btw_bedrag": "16.20",
+    "bedrag_incl": "196.20"
+  },
+  {
+    "bestand": "03-verzekering-0procent.pdf",
+    "waarom": "nultarief, btw-bedrag is 0,00",
+    "verwachte_status": "gevalideerd",
+    "leverancier": "Zeeland Assurantiën",
+    "factuurnummer": "ZA-2026-00891",
+    "factuurdatum": "15-06-2026",
+    "btw_percentage": "0",
+    "bedrag_excl": "325.00",
+    "btw_bedrag": "0.00",
+    "bedrag_incl": "325.00"
+  },
+  {
+    "bestand": "04-meerdere-regels-21procent.pdf",
+    "waarom": "vier regels die samen het subtotaal vormen",
+    "verwachte_status": "gevalideerd",
+    "leverancier": "Techniek Groothandel Oost",
+    "factuurnummer": "TGO-59042",
+    "factuurdatum": "03-08-2026",
+    "btw_percentage": "21",
+    "bedrag_excl": "663.90",
+    "btw_bedrag": "139.42",
+    "bedrag_incl": "803.32"
+  },
+  {
+    "bestand": "05-met-korting-21procent.pdf",
+    "waarom": "kortingsregel: het subtotaal is lager dan de regels samen",
+    "verwachte_status": "gevalideerd",
+    "leverancier": "Hosting Noordzee",
+    "factuurnummer": "HN2026-3308",
+    "factuurdatum": "10-08-2026",
+    "btw_percentage": "21",
+    "bedrag_excl": "557.10",
+    "btw_bedrag": "116.99",
+    "bedrag_incl": "674.09"
+  },
+  {
+    "bestand": "06-creditnota-21procent.pdf",
+    "waarom": "negatieve bedragen; de rekenregels moeten ook hier kloppen",
+    "verwachte_status": "gevalideerd",
+    "leverancier": "Van Dijk ICT-diensten",
+    "factuurnummer": "2026-0455C",
+    "factuurdatum": "14-08-2026",
+    "btw_percentage": "21",
+    "bedrag_excl": "-450.00",
+    "btw_bedrag": "-94.50",
+    "bedrag_incl": "-544.50"
+  },
+  {
+    "bestand": "07-duizendtal-21procent.pdf",
+    "waarom": "bedragen boven de duizend: 1.250,00 met punt als duizendtal",
+    "verwachte_status": "gevalideerd",
+    "leverancier": "Bouwadvies Rijnmond",
+    "factuurnummer": "BR-2026-114",
+    "factuurdatum": "01-07-2026",
+    "btw_percentage": "21",
+    "bedrag_excl": "1250.00",
+    "btw_bedrag": "262.50",
+    "bedrag_incl": "1512.50"
+  },
+  {
+    "bestand": "08-scan-zonder-tekstlaag.jpg",
+    "waarom": "foto/scan zonder tekstlaag: hier is geen tekst uit te halen",
+    "verwachte_status": "review_nodig",
+    "leverancier": "Drukkerij Het Anker",
+    "factuurnummer": "DA-26-0771",
+    "factuurdatum": "29-06-2026",
+    "btw_percentage": "21",
+    "bedrag_excl": "210.00",
+    "btw_bedrag": "44.10",
+    "bedrag_incl": "254.10"
+  },
+  {
+    "bestand": "09-zonder-factuurnummer.pdf",
+    "waarom": "factuurnummer ontbreekt volledig op het document",
+    "verwachte_status": "review_nodig",
+    "leverancier": "Schoonmaakbedrijf Helder",
+    "factuurnummer": null,
+    "factuurdatum": "18-08-2026",
+    "btw_percentage": "21",
+    "bedrag_excl": "95.00",
+    "btw_bedrag": "19.95",
+    "bedrag_incl": "114.95"
+  },
+  {
+    "bestand": "10-bedragen-kloppen-niet.pdf",
+    "waarom": "totaal klopt niet: 300,00 + 63,00 is 363,00, niet 383,00",
+    "verwachte_status": "review_nodig",
+    "leverancier": "Meubelzaak De Eik",
+    "factuurnummer": "ME-2026-0203",
+    "factuurdatum": "20-08-2026",
+    "btw_percentage": "21",
+    "bedrag_excl": "300.00",
+    "btw_bedrag": "63.00",
+    "bedrag_incl": "383.00"
+  }
+]
