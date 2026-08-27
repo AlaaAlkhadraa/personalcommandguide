@@ -1,0 +1,83 @@
+{% extends "basis.html" %}
+{% block titel %}Factuur {{ factuur.factuurnummer or factuur.id }}{% endblock %}
+{% block kruimel %}<a href="/administratie/{{ factuur.administratie_id }}">&larr; Terug naar de lijst</a>{% endblock %}
+{% block kop %}{{ factuur.leverancier or "Factuur nakijken" }}{% endblock %}
+{% block inhoud %}
+
+{% if melding %}<div class="melding">{{ melding }}</div>{% endif %}
+
+{% if factuur.review_redenen %}
+  <div class="waarschuwing">
+    <strong>Dit moet nog nagekeken worden:</strong>
+    <ul>{% for reden in factuur.review_redenen %}<li>{{ reden }}</li>{% endfor %}</ul>
+  </div>
+{% elif factuur.goedgekeurd_op %}
+  <div class="melding">Goedgekeurd op {{ factuur.goedgekeurd_op }}.</div>
+{% endif %}
+
+<div class="twee-kolommen">
+
+  <div>
+    {% if factuur.document_id %}
+      <object class="bron" data="/document/{{ factuur.document_id }}">
+        <p style="padding:14px">
+          Het document kan hier niet worden getoond.
+          <a href="/document/{{ factuur.document_id }}">Open het in een nieuw tabblad</a>.
+        </p>
+      </object>
+    {% else %}
+      <div class="kaart leeg">Geen origineel document bij deze factuur.</div>
+    {% endif %}
+  </div>
+
+  <div>
+    <form class="kaart" method="post" action="/factuur/{{ factuur.id }}/opslaan">
+      {% for veld in velden %}
+        <div class="veld {% if veld.zekerheid == 'laag' %}laag{% endif %}">
+          <label for="{{ veld.naam }}">
+            {{ veld.label }}
+            {% if veld.zekerheid == 'laag' %}
+              <span class="merk review">lage zekerheid</span>
+            {% elif veld.zekerheid == 'hoog' %}
+              <span class="merk klaar">zeker</span>
+            {% endif %}
+          </label>
+          <input type="text" id="{{ veld.naam }}" name="{{ veld.naam }}"
+                 value="{{ veld.waarde }}" inputmode="{% if 'bedrag' in veld.naam or 'percentage' in veld.naam %}decimal{% else %}text{% endif %}">
+          {% if veld.reden %}
+            <div class="onder" style="color:#b4381f">{{ veld.reden }}</div>
+          {% endif %}
+        </div>
+      {% endfor %}
+
+      <div class="knoppen">
+        <button type="submit" class="tweede">Opslaan en later beoordelen</button>
+      </div>
+    </form>
+
+    <form class="kaart" method="post" action="/factuur/{{ factuur.id }}/goedkeuren">
+      <div class="knoppen">
+        <button type="submit" {% if not mag_goedkeuren %}disabled{% endif %}>
+          {% if factuur.goedgekeurd_op %}Al goedgekeurd{% else %}Goedkeuren{% endif %}
+        </button>
+      </div>
+      {% if not mag_goedkeuren and not factuur.goedgekeurd_op %}
+        <p class="onder" style="color:#5c5c5c;font-size:14px;margin-bottom:0">
+          Goedkeuren kan pas als de punten hierboven zijn opgelost.
+          Pas een veld aan en sla op; de controle loopt dan opnieuw.
+        </p>
+      {% endif %}
+    </form>
+
+    {% if extractie %}
+      <div class="kaart">
+        <div class="onder" style="color:#5c5c5c;font-size:14px">
+          Uitgelezen door {{ extractie.model }}
+          (prompt {{ extractie.prompt_versie }}, via {{ extractie.invoerpad }}).
+        </div>
+      </div>
+    {% endif %}
+  </div>
+
+</div>
+{% endblock %}

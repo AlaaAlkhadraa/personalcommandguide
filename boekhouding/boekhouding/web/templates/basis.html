@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block titel %}Boekhouding{% endblock %}</title>
+<style>
+  /* Mobiel-eerst: alles staat onder elkaar, en pas op een breed scherm
+     naast elkaar. Geen build-stap, geen framework. */
+  :root {
+    --inkt: #1b1b1b; --zacht: #5c5c5c; --lijn: #dcdcdc; --vel: #ffffff;
+    --achter: #f4f4f2; --let-op: #b4381f; --let-op-vlak: #fdeeea;
+    --wacht: #8a6d1f; --wacht-vlak: #fdf6e3; --klaar: #1f6b3a;
+    --klaar-vlak: #eaf5ee; --knop: #1b1b1b;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--achter); color: var(--inkt);
+    font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    -webkit-text-size-adjust: 100%;
+  }
+  header {
+    background: var(--vel); border-bottom: 1px solid var(--lijn);
+    padding: 14px 16px; position: sticky; top: 0; z-index: 5;
+  }
+  header a { color: var(--zacht); text-decoration: none; font-size: 15px; }
+  header h1 { margin: 4px 0 0; font-size: 19px; }
+  main { padding: 16px; max-width: 1100px; margin: 0 auto; }
+  a.knop, button {
+    display: inline-block; padding: 13px 18px; border-radius: 8px;
+    border: 1px solid var(--knop); background: var(--knop); color: #fff;
+    font-size: 16px; font-weight: 600; text-decoration: none; cursor: pointer;
+    min-height: 46px;  /* groot genoeg voor een duim */
+  }
+  button.tweede, a.knop.tweede { background: var(--vel); color: var(--inkt); }
+  button[disabled] { opacity: .45; cursor: not-allowed; }
+  .kaart {
+    background: var(--vel); border: 1px solid var(--lijn); border-radius: 10px;
+    padding: 16px; margin-bottom: 14px;
+  }
+  .merk {
+    display: inline-block; padding: 3px 9px; border-radius: 999px;
+    font-size: 13px; font-weight: 600; white-space: nowrap;
+  }
+  .merk.review { background: var(--let-op-vlak); color: var(--let-op); }
+  .merk.wacht { background: var(--wacht-vlak); color: var(--wacht); }
+  .merk.klaar { background: var(--klaar-vlak); color: var(--klaar); }
+  .telling { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+  .telling div {
+    flex: 1 1 130px; background: var(--vel); border: 1px solid var(--lijn);
+    border-radius: 10px; padding: 12px 14px;
+  }
+  .telling strong { display: block; font-size: 26px; line-height: 1.2; }
+  .telling span { color: var(--zacht); font-size: 14px; }
+  .rij {
+    display: block; background: var(--vel); border: 1px solid var(--lijn);
+    border-radius: 10px; padding: 14px; margin-bottom: 10px;
+    text-decoration: none; color: inherit;
+  }
+  .rij .boven { display: flex; justify-content: space-between; gap: 10px; }
+  .rij .naam { font-weight: 600; }
+  .rij .onder { color: var(--zacht); font-size: 14px; margin-top: 4px; }
+  .rij .bedrag { font-variant-numeric: tabular-nums; font-weight: 600; }
+  label { display: block; font-size: 14px; color: var(--zacht); margin-bottom: 4px; }
+  input[type=text], input[type=file] {
+    width: 100%; padding: 12px; font-size: 16px; border-radius: 8px;
+    border: 1px solid var(--lijn); background: var(--vel);
+  }
+  .veld { margin-bottom: 14px; }
+  .veld.laag input { border-color: var(--let-op); background: var(--let-op-vlak); }
+  .waarschuwing {
+    background: var(--let-op-vlak); border: 1px solid var(--let-op);
+    color: var(--let-op); border-radius: 10px; padding: 14px; margin-bottom: 14px;
+  }
+  .waarschuwing ul { margin: 8px 0 0; padding-left: 20px; }
+  .melding {
+    background: var(--klaar-vlak); border: 1px solid var(--klaar);
+    color: var(--klaar); border-radius: 10px; padding: 12px; margin-bottom: 14px;
+  }
+  .bron { width: 100%; height: 60vh; border: 1px solid var(--lijn); border-radius: 10px; }
+  .bron img { width: 100%; height: auto; display: block; }
+  .knoppen { display: flex; gap: 10px; flex-wrap: wrap; }
+  .knoppen button, .knoppen a.knop { flex: 1 1 160px; text-align: center; }
+  .leeg { color: var(--zacht); text-align: center; padding: 40px 10px; }
+  @media (min-width: 860px) {
+    .twee-kolommen { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .bron { height: 78vh; position: sticky; top: 80px; }
+  }
+</style>
+</head>
+<body>
+<header>
+  {% block kruimel %}{% endblock %}
+  <h1>{% block kop %}Boekhouding{% endblock %}</h1>
+</header>
+<main>{% block inhoud %}{% endblock %}</main>
+</body>
+</html>

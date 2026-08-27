@@ -370,7 +370,19 @@ def extraheer_factuur(
         )
 
     if client is None:
-        client = maak_client(env_pad)
+        # Ook dit hoort geen exception te worden: draait de webinterface
+        # zonder sleutel, dan moet de factuur ter review komen en niet
+        # het hele scherm omvallen (Gouden regel 4).
+        try:
+            client = maak_client(env_pad)
+        except Exception as fout:
+            return ExtractieResultaat(
+                status="review_nodig",
+                redenen=[str(fout)],
+                model=model,
+                invoerpad=invoerpad,
+                bestandsnaam=pad.name,
+            )
 
     # Alles wat hier misgaat wordt een reden, nooit een exception: een
     # rate limit of een netwerkstoring mag het verwerken van een stapel

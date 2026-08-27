@@ -1,0 +1,49 @@
+{% extends "basis.html" %}
+{% block titel %}Facturen — {{ administratie_naam }}{% endblock %}
+{% block kop %}{{ administratie_naam }}{% endblock %}
+{% block inhoud %}
+
+<div class="telling">
+  <div>
+    <strong>{{ aantal_review }}</strong>
+    <span>{% if aantal_review == 1 %}factuur wacht op jou{% else %}facturen wachten op jou{% endif %}</span>
+  </div>
+  <div>
+    <strong>{{ aantal_wacht }}</strong>
+    <span>klaar om goed te keuren</span>
+  </div>
+  <div>
+    <strong>{{ facturen|length }}</strong>
+    <span>facturen totaal</span>
+  </div>
+</div>
+
+<p><a class="knop" href="/administratie/{{ administratie_id }}/upload">Factuur toevoegen</a></p>
+
+{% if not facturen %}
+  <p class="leeg">Nog geen facturen. Voeg er een toe met de knop hierboven.</p>
+{% endif %}
+
+{% for factuur in facturen %}
+  <a class="rij" href="/factuur/{{ factuur.id }}">
+    <div class="boven">
+      <span class="naam">{{ factuur.leverancier or "Leverancier onbekend" }}</span>
+      {% if factuur.status == "review_nodig" %}
+        <span class="merk review">Review nodig</span>
+      {% elif factuur.goedgekeurd_op %}
+        <span class="merk klaar">Goedgekeurd</span>
+      {% else %}
+        <span class="merk wacht">Klaar om goed te keuren</span>
+      {% endif %}
+    </div>
+    <div class="boven onder">
+      <span>{{ factuur.factuurdatum or "datum onbekend" }}</span>
+      <span class="bedrag">{{ factuur.bedrag_incl or "—" }}</span>
+    </div>
+    {% if factuur.status == "review_nodig" and factuur.review_redenen %}
+      <div class="onder">{{ factuur.review_redenen[0] }}</div>
+    {% endif %}
+  </a>
+{% endfor %}
+
+{% endblock %}

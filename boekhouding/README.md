@@ -1,4 +1,4 @@
-# Boekhouding — modules 1 t/m 4
+# Boekhouding — modules 1 t/m 5
 
 Boekhoudsysteem voor Nederlandse zzp'ers.
 AI stelt voor, code valideert, mens beslist: niets wordt hier automatisch
@@ -9,6 +9,7 @@ geboekt — elke fout leidt tot status `review_nodig` met een leesbare reden.
 - **Module 3** — AI-extractie van factuurgegevens (het model stelt voor,
   de code controleert, de mens beslist)
 - **Module 4** — UBL / e-facturen rechtstreeks uitlezen, zonder AI
+- **Module 5** — webinterface, fase 1: de reviewschermen van de eigenaar
 
 ## Installeren en testen
 
@@ -311,7 +312,7 @@ ook als het model intussen is vervangen.
 
 - **`python -m pytest`** — de testsuite doet **nooit** een echte API-aanroep.
   De client wordt nagemaakt en meegegeven; er is geen sleutel voor nodig.
-- **`python scripts/handmatige_api_test.py [bestand]`** — één echte aanroep,
+- **`python scripts/handmatige_api_proef.py [bestand]`** — één echte aanroep,
   om te controleren of de sleutel werkt en wat het model van een echt
   document maakt.
 - **`python scripts/eval_extractie.py`** — haalt alle tien de testfacturen
@@ -426,6 +427,72 @@ externe DTD.
 één zonder `IssueDate`, en een Factur-X-PDF met de e-factuur als bijlage —
 die laatste heeft óók een tekstlaag, zodat te testen is dat de XML voorgaat.
 
+## Module 5 — Webinterface (fase 1)
+
+```
+python scripts/start_webinterface.py
+```
+
+Daarna staat hij op `http://127.0.0.1:8000`. Op je telefoon werkt hij ook, als
+die op hetzelfde wifi zit — gebruik dan het IP-adres van deze computer. Fase 1
+heeft **geen login**, dus draai hem alleen op je eigen netwerk.
+
+FastAPI met server-side HTML (Jinja2). Geen React, geen build-stap: je start
+hem en het werkt. De opmaak staat in één `<style>`-blok in `basis.html` en is
+mobiel-eerst — één kolom op een telefoon, twee kolommen zodra het scherm breed
+genoeg is.
+
+### De drie schermen
+
+**Overzicht** (`/administratie/1`) — bovenaan drie tellers: hoeveel facturen op
+jou wachten, hoeveel er klaar zijn om goed te keuren, en hoeveel er in totaal
+zijn. Daaronder de lijst, in werkvolgorde: eerst wat je aandacht nodig heeft,
+dan wat al klopt maar nog niet is goedgekeurd, onderaan wat af is. Per rij de
+leverancier, de datum, het bedrag inclusief btw en de status; bij een factuur
+in review staat de eerste reden er meteen onder.
+
+**Uploaden** (`/administratie/1/upload`) — één veld met
+`accept="image/*,.pdf,.xml" capture`, zodat je op een telefoon direct de camera
+krijgt. Wat er daarna gebeurt is precies de keten uit de vorige modules:
+bewaren → routeren → uitlezen → valideren en opslaan. Een e-factuur gaat
+rechtstreeks, een PDF of foto langs het model.
+
+**Reviewscherm** (`/factuur/1`) — het belangrijkste scherm. Links het originele
+document, ingebed in de pagina. Rechts alle uitgelezen velden, stuk voor stuk
+bewerkbaar. Bij elk veld staat hoe zeker het model was; een veld met lage
+zekerheid krijgt een rode rand, een merkje en de reden eronder. Bovenaan staan
+alle openstaande punten in gewone taal.
+
+Twee knoppen: **Opslaan en later beoordelen** en **Goedkeuren**. Goedkeuren kan
+alleen als er geen openstaande punten meer zijn — de knop staat dan letterlijk
+uit, en ook als iemand het formulier tóch verstuurt weigert
+`keur_factuur_goed` het. De code bepaalt of het mág, de mens bepaalt of het
+gebeurt.
+
+### Waar de logica staat
+
+De routes doen drie dingen en niet meer: gegevens ophalen, een bestaande
+functie aanroepen, en het resultaat aan een sjabloon geven. Er wordt in een
+route niet gerekend en niets over btw bepaald.
+
+- Uploaden roept `verwerk_upload` aan (`boekhouding/verwerking.py`) — de lijm
+  tussen de modules, bewust buiten de webinterface zodat dezelfde keten
+  straks ook vanaf de opdrachtregel of een e-mailpostbus werkt.
+- Opslaan roept `wijzig_factuur` aan: de oude waarde gaat de audit trail in en
+  de factuur wordt opnieuw gevalideerd. Een correctie kan een factuur dus
+  vanzelf uit review halen.
+- Goedkeuren roept `keur_factuur_goed` aan, die twee kolommen vult
+  (`goedgekeurd_op`, `goedgekeurd_door`) en dat ook in de audit trail zet.
+
+Goedkeuring is bewust een aparte kolom en geen derde status: `gevalideerd`
+zegt dat de sommen kloppen, `goedgekeurd_op` zegt dat een mens ja heeft
+gezegd. Dat scheelt bovendien een tabelmigratie, want een CHECK-constraint is
+in SQLite niet te wijzigen.
+
+Het originele document wordt geserveerd op `/document/{id}`, met het pad uit
+de database — nooit uit het verzoek. Een bezoeker kan dus geen ander bestand
+van de schijf opvragen.
+
 ## Testmateriaal: synthetische facturen
 
 Voor module 3 (AI-extractie) is materiaal nodig om op te oefenen. Het script
@@ -465,7 +532,7 @@ de stack blijft Python, SQLite, Pydantic en pytest.
 
 ### `tests/` — de bewijslast
 
-205 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
+233 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
 onzin-tekst, ontbrekende velden, verkeerde btw-percentages, ambigue
 bedragen, toekomst- en te oude datums, duplicaten, de audit trail bij
 aanmaken en wijzigen, en voor module 2: een PDF zonder tekstlaag, een

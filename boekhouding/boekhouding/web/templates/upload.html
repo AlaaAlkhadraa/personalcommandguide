@@ -1,0 +1,22 @@
+{% extends "basis.html" %}
+{% block titel %}Factuur toevoegen{% endblock %}
+{% block kruimel %}<a href="/administratie/{{ administratie_id }}">&larr; Terug naar de lijst</a>{% endblock %}
+{% block kop %}Factuur toevoegen{% endblock %}
+{% block inhoud %}
+
+<form class="kaart" method="post" enctype="multipart/form-data"
+      action="/administratie/{{ administratie_id }}/upload">
+  <div class="veld">
+    <label for="bestand">Kies een bestand of maak een foto</label>
+    <input type="file" id="bestand" name="bestand" required
+           accept="image/*,.pdf,.xml" capture>
+  </div>
+  <p class="onder" style="color:#5c5c5c;font-size:14px">
+    Een PDF, een foto van een papieren factuur, of een e-factuur (XML).
+    Een e-factuur wordt rechtstreeks uitgelezen; bij een PDF of foto
+    leest het model hem voor je uit en kijk jij het daarna na.
+  </p>
+  <button type="submit">Toevoegen</button>
+</form>
+
+{% endblock %}

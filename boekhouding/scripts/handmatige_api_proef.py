@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Eén echte API-aanroep, met de hand te draaien.
 
-    python scripts/handmatige_api_test.py [pad-naar-factuur]
+    python scripts/handmatige_api_proef.py [pad-naar-factuur]
 
 Dit script staat bewust buiten pytest: de testsuite doet nooit een echte
 aanroep. Gebruik dit om te controleren of de sleutel werkt en of het

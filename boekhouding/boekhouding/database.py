@@ -179,6 +179,14 @@ def maak_tabellen(conn: sqlite3.Connection) -> None:
         conn, "extracties", "prompt_versie",
         "TEXT NOT NULL DEFAULT 'onbekend'",
     )
+    # Goedkeuring is een aparte handeling van de mens, los van de
+    # status die de code bepaalt. Daarom twee eigen kolommen in plaats
+    # van een derde status: "gevalideerd" zegt dat de sommen kloppen,
+    # "goedgekeurd_op" zegt dat een mens ernaar heeft gekeken en ja
+    # heeft gezegd. Dat scheelt bovendien een tabelmigratie, want een
+    # CHECK-constraint is in SQLite niet te wijzigen.
+    _voeg_kolom_toe(conn, "facturen", "goedgekeurd_op", "TEXT")
+    _voeg_kolom_toe(conn, "facturen", "goedgekeurd_door", "TEXT")
 
     conn.commit()
 
@@ -223,6 +231,7 @@ def sla_factuur_op(
     *,
     vandaag: Optional[date] = None,
     document_id: Optional[int] = None,
+    extra_redenen: tuple[str, ...] = (),
 ) -> tuple[int, ValidatieResultaat]:
     """Valideer en bewaar een factuur; geef (factuur_id, resultaat) terug.
 
@@ -233,6 +242,12 @@ def sla_factuur_op(
     document_id koppelt de factuur optioneel aan het bewaarde originele
     bestand (tabel documenten), zodat bij een controle altijd de bron
     terug te vinden is.
+
+    extra_redenen zijn redenen die niet uit de rekencontroles komen maar
+    van eerder in de keten — bijvoorbeeld een veld dat het model met
+    lage zekerheid heeft gelezen. Die horen bij de factuur bewaard te
+    worden, anders zou de eigenaar in het reviewscherm niet zien waarom
+    er twijfel was.
     """
     resultaat = valideer_factuur(
         data,
@@ -241,6 +256,13 @@ def sla_factuur_op(
             conn, administratie_id, f.leverancier, f.factuurnummer
         ),
     )
+    if extra_redenen:
+        resultaat = resultaat.model_copy(
+            update={
+                "redenen": list(extra_redenen) + resultaat.redenen,
+                "status": "review_nodig",
+            }
+        )
 
     if resultaat.factuur is not None:
         velden = {v: _als_tekst(getattr(resultaat.factuur, v)) for v in FACTUUR_VELDEN}
@@ -619,6 +641,105 @@ def lees_extractie(conn: sqlite3.Connection, extractie_id: int) -> dict[str, Any
     rij = cursor.fetchone()
     if rij is None:
         raise ValueError(f"extractie {extractie_id} bestaat niet")
+    kolommen = [k[0] for k in cursor.description]
+    extractie = dict(zip(kolommen, rij))
+    extractie["redenen"] = json.loads(extractie["redenen"])
+    return extractie
+
+
+def lees_facturen(
+    conn: sqlite3.Connection, administratie_id: int
+) -> list[dict[str, Any]]:
+    """Alle facturen van een administratie, review_nodig bovenaan.
+
+    De volgorde is de werkvolgorde van de eigenaar: eerst wat zijn
+    aandacht nodig heeft, daarna wat al klopt maar nog niet is
+    goedgekeurd, en onderaan wat af is. Binnen elke groep de nieuwste
+    factuur eerst.
+    """
+    cursor = conn.execute(
+        """
+        SELECT * FROM facturen
+        WHERE administratie_id = ?
+        ORDER BY
+            CASE
+                WHEN status = 'review_nodig' THEN 0
+                WHEN goedgekeurd_op IS NULL THEN 1
+                ELSE 2
+            END,
+            id DESC
+        """,
+        (administratie_id,),
+    )
+    kolommen = [k[0] for k in cursor.description]
+    facturen = []
+    for rij in cursor.fetchall():
+        factuur = dict(zip(kolommen, rij))
+        factuur["review_redenen"] = json.loads(factuur["review_redenen"])
+        factuur["originele_data"] = json.loads(factuur["originele_data"])
+        facturen.append(factuur)
+    return facturen
+
+
+def keur_factuur_goed(
+    conn: sqlite3.Connection, factuur_id: int, door: str = "eigenaar"
+) -> tuple[bool, list[str]]:
+    """Leg vast dat een mens deze factuur heeft goedgekeurd.
+
+    Geeft (gelukt, redenen). Goedkeuren kan alleen als er geen
+    openstaande validatiefouten meer zijn: de code bepaalt of het mág,
+    de mens bepaalt of het gebeurt (Gouden regel 1). Een factuur die
+    al is goedgekeurd wordt niet nog een keer goedgekeurd.
+    """
+    factuur = lees_factuur(conn, factuur_id)
+
+    if factuur["status"] != "gevalideerd":
+        return False, [
+            "deze factuur kan nog niet worden goedgekeurd; los eerst de "
+            "openstaande punten op"
+        ] + factuur["review_redenen"]
+
+    if factuur["goedgekeurd_op"] is not None:
+        return False, ["deze factuur is al goedgekeurd"]
+
+    tijd = _nu()
+    conn.execute(
+        "UPDATE facturen SET goedgekeurd_op = ?, goedgekeurd_door = ?, "
+        "gewijzigd_op = ? WHERE id = ?",
+        (tijd, door, tijd, factuur_id),
+    )
+    for veld, waarde in (("goedgekeurd_op", tijd), ("goedgekeurd_door", door)):
+        conn.execute(
+            """
+            INSERT INTO audit_log (
+                administratie_id, tabel, record_id, actie,
+                veld, oude_waarde, nieuwe_waarde, tijdstip
+            ) VALUES (?, 'facturen', ?, 'gewijzigd', ?, NULL, ?, ?)
+            """,
+            (factuur["administratie_id"], factuur_id, veld, waarde, tijd),
+        )
+    conn.commit()
+    return True, []
+
+
+def lees_extractie_bij_document(
+    conn: sqlite3.Connection, document_id: Optional[int]
+) -> Optional[dict[str, Any]]:
+    """Zoek de laatste AI-extractie bij een document, of None.
+
+    Het reviewscherm gebruikt dit om per veld de zekerheid te tonen.
+    Bij een e-factuur is er geen extractie; dan is er ook niets
+    onzekers, want de velden stonden letterlijk in het bestand.
+    """
+    if document_id is None:
+        return None
+    cursor = conn.execute(
+        "SELECT * FROM extracties WHERE document_id = ? ORDER BY id DESC LIMIT 1",
+        (document_id,),
+    )
+    rij = cursor.fetchone()
+    if rij is None:
+        return None
     kolommen = [k[0] for k in cursor.description]
     extractie = dict(zip(kolommen, rij))
     extractie["redenen"] = json.loads(extractie["redenen"])

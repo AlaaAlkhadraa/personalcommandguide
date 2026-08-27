@@ -1,0 +1,7 @@
+{% extends "basis.html" %}
+{% block titel %}{{ titel }}{% endblock %}
+{% block kop %}{{ titel }}{% endblock %}
+{% block inhoud %}
+<div class="waarschuwing">{{ bericht }}</div>
+<a class="knop tweede" href="{{ terug|default('/') }}">Terug</a>
+{% endblock %}

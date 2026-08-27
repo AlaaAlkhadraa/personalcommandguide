@@ -58,6 +58,9 @@ from .database import (
     lees_document,
     sla_extractie_op,
     lees_extractie,
+    lees_facturen,
+    keur_factuur_goed,
+    lees_extractie_bij_document,
 )
 
 __all__ = [
@@ -82,6 +85,9 @@ __all__ = [
     "lees_document",
     "sla_extractie_op",
     "lees_extractie",
+    "lees_facturen",
+    "keur_factuur_goed",
+    "lees_extractie_bij_document",
     "ExtractieResultaat",
     "FactuurExtractie",
     "VeldExtractie",
