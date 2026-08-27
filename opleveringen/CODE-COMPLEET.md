@@ -14,6 +14,7 @@ geboekt — elke fout leidt tot status `review_nodig` met een leesbare reden.
   de code controleert, de mens beslist)
 - **Module 4** — UBL / e-facturen rechtstreeks uitlezen, zonder AI
 - **Module 5** — webinterface, fase 1: de reviewschermen van de eigenaar
+- **Module 6** — grootboek (dubbel boekhouden) en de btw-aangifte per kwartaal
 
 ## Installeren en testen
 
@@ -588,6 +589,137 @@ Het originele document wordt geserveerd met het pad **uit de database** —
 nooit uit het verzoek. Een bezoeker kan dus ook geen ander bestand van de
 schijf opvragen.
 
+## Module 6 — Grootboek en btw-aangifte
+
+Hier wordt het boekhouden zelf gedaan: een goedgekeurde factuur wordt een
+boeking, en de boekingen van een kwartaal worden samen een voorstel voor de
+btw-aangifte.
+
+### Het rekeningschema staat in een bestand, niet in de code
+
+`config/rekeningen_2024.json`, `_2025.json`, `_2026.json` — per jaar een
+lijst van ongeveer 35 rekeningen die een zzp'er nodig heeft, elk met een
+code, een RGS-code, een omschrijving en een soort (kosten, opbrengsten,
+activa, passiva, btw). `rekeningschema.py` leest zo'n bestand. Is er geen
+bestand voor het boekjaar van een factuur, dan zegt de module dat eerlijk
+(None) in plaats van het schema van een ander jaar te pakken.
+
+**Let op bij de RGS-codes.** Die zijn met de hand samengesteld en niet
+gecontroleerd tegen de officiële RGS-lijst. De code waarop dit systeem boekt
+is het veld `code`; `rgs_code` is alleen een verwijzing. Controleer ze
+voordat je er een echte aangifte of een export naar een accountant op
+baseert. Die waarschuwing staat ook in de configbestanden zelf.
+
+Er kan alleen op een rekening uit de lijst worden geboekt. Een code die er
+niet in staat wordt geweigerd — er wordt nooit een rekening bijgemaakt.
+
+### De eigenaar kiest de rekening, en die keuze bepaalt de richting
+
+In het reviewscherm staat onder de bedragen een keuzelijst met alleen de
+kosten- en opbrengstenrekeningen. Bank, crediteuren en btw staan daar niet
+bij: die vult de boeking zelf in.
+
+Die ene keuze bepaalt wat voor factuur het is:
+
+| Gekozen rekening | Wat het wordt |
+|---|---|
+| een **kostenrekening** | inkoopfactuur: btw te vorderen, schuld aan de leverancier |
+| een **opbrengstenrekening** | verkoopfactuur: btw af te dragen, vordering op de klant |
+
+Dat is dus geen gok van het systeem maar het gevolg van een keuze van een
+mens. Zonder keuze ontstaat er geen boeking, en dan zegt het scherm dat ook.
+
+Een inkoopfactuur van 121 euro met 21 euro btw wordt:
+
+```
+4100  Kantoorkosten                    100,00 debet
+1520  Te vorderen btw                   21,00 debet
+1600  Crediteuren                                    121,00 credit
+```
+
+### Exact in balans, geen tolerantie
+
+De factuurcontrole van module 1 laat een cent afronding toe (±0,02), want dat
+komt op echte facturen voor. Een boeking niet: als debet en credit een cent
+verschillen klopt de administratie niet meer. Zo'n factuur wordt dus **niet
+geboekt**, met de reden erbij:
+
+> de bedragen tellen niet exact op: 100.00 + 21.00 = 121.00, maar er staat
+> 121.01. De factuurcontrole laat een cent afronding toe, een boeking niet —
+> corrigeer het bedrag eerst
+
+De balans wordt twee keer gecontroleerd: bij het samenstellen en nog een keer
+vlak vóór het opslaan. Dat is met opzet dubbelop — een boeking die niet klopt
+mag de database niet in, ook niet als een aanroeper de eerste controle zou
+overslaan.
+
+### Een boeking wordt nooit gewijzigd of verwijderd
+
+Een fout wordt rechtgezet met een **tegenboeking**: dezelfde bedragen aan de
+andere kant, met een verwijzing naar het origineel. Beide blijven staan, en
+samen zijn ze nul. Een boeking kan maar één keer worden gecorrigeerd, en
+dezelfde factuur kan maar één keer worden geboekt (de databasekolom
+`factuur_id` is UNIQUE).
+
+Om dezelfde reden ligt de gekozen rekening vast zodra er een boeking staat.
+Zou je hem daarna nog kunnen wijzigen, dan zou de factuur iets anders zeggen
+dan het grootboek. Het scherm toont de rekening dan als vaste tekst en
+verwijst naar de tegenboeking.
+
+De boekdatum van een tegenboeking is standaard die van de oorspronkelijke
+boeking, zodat de correctie in hetzelfde kwartaal valt. Is dat kwartaal al
+aangegeven, geef dan een datum in het lopende kwartaal mee.
+
+### De btw-aangifte per kwartaal
+
+`btw_aangifte.py` rekent uit wat er in de kwartaalaangifte hoort:
+
+```
+1a   omzet belast met het hoge tarief, en de btw daarover
+1b   omzet belast met het lage tarief, en de btw daarover
+5a   totaal verschuldigde omzetbelasting (de btw uit 1a en 1b)
+5b   voorbelasting
+saldo   5a min 5b: te betalen, terug te vragen, of precies nul
+```
+
+Alles met vaste formules in Python; er komt geen model aan te pas. Per
+boeking wordt gekeken welke btw-rekening erin voorkomt — dat bepaalt de
+rubriek — en de omzet van diezelfde boeking is dan de grondslag. Een
+tegenboeking heeft de bedragen aan de andere kant en telt daardoor vanzelf
+negatief mee; daarom `credit - debet` en niet alleen `credit`.
+
+Kwartaalgrenzen lopen op de factuurdatum: 31 maart valt in K1, 1 april in K2.
+
+### Bij twijfel geen getal
+
+Staat er in het kwartaal ook maar één factuur die nog niet rond is, dan wordt
+er **niets** uitgerekend. Je krijgt een lijst van wat er open staat, met een
+link naar elke factuur. Drie dingen houden een aangifte tegen:
+
+1. de factuur moet nog nagekeken worden (`review_nodig`);
+2. de factuur klopt, maar niemand heeft hem goedgekeurd;
+3. de factuur is goedgekeurd, maar er staat nog geen boeking — meestal omdat
+   er geen rekening is gekozen.
+
+Punt 2 en 3 staan niet in de opdracht maar horen er wel bij: in beide
+gevallen bestaat de factuur wél en telt het bedrag níét mee. Een aangifte die
+"bijna klopt" is gevaarlijker dan geen aangifte — hij ziet er af uit, en het
+verschil merk je pas bij een controle.
+
+Twee dingen worden gemeld zonder te blokkeren, omdat blokkeren daar niet
+helpt: facturen zonder factuurdatum (die vallen in geen enkel kwartaal), en
+omzet zonder btw (0%, vrijgesteld of verlegd). Dat laatste hoort in rubriek
+1e, 2a of 3a, en die zijn niet gebouwd; stilzwijgend weglaten mag niet, dus
+staat het als waarschuwing op het scherm.
+
+### Het scherm
+
+`/administratie/1/btw` gaat naar het kwartaal waar je nu in zit; met de
+knoppen erboven loop je terug en vooruit. Onderaan staat, altijd:
+
+> **Dit is een voorstel, geen aangifte.** Het indienen doet u zelf bij de
+> Belastingdienst; dit systeem verstuurt niets.
+
 ## Testmateriaal: synthetische facturen
 
 Voor module 3 (AI-extractie) is materiaal nodig om op te oefenen. Het script
@@ -627,7 +759,7 @@ de stack blijft Python, SQLite, Pydantic en pytest.
 
 ### `tests/` — de bewijslast
 
-270 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
+346 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
 onzin-tekst, ontbrekende velden, verkeerde btw-percentages, ambigue
 bedragen, toekomst- en te oude datums, duplicaten, de audit trail bij
 aanmaken en wijzigen, en voor module 2: een PDF zonder tekstlaag, een
@@ -662,6 +794,7 @@ Module 1: factuur-schema, validatie en audit trail.
 Module 2: PDF-tekstextractie en veilige bewaring van originelen.
 Module 3: AI-extractie van factuurgegevens (voorstel, geen boeking).
 Module 4: UBL / e-facturen rechtstreeks uitlezen (zonder AI).
+Module 6: grootboek (dubbel boekhouden) en btw-aangifte per kwartaal.
 
 AI stelt voor, code valideert, mens beslist (Gouden regel 1).
 """
@@ -702,6 +835,31 @@ from .ubl import (
     te_groot,
     verwerk_efactuur,
 )
+from .rekeningschema import (
+    KIESBARE_SOORTEN,
+    SOORTEN,
+    Rekening,
+    Rekeningschema,
+    rekeningschema_voor_jaar,
+)
+from .grootboek import (
+    Boekingsregel,
+    BoekingVoorstel,
+    controleer_balans,
+    som_credit,
+    som_debet,
+    stel_boeking_samen,
+    stel_tegenboeking_samen,
+)
+from .btw_aangifte import (
+    Aangifte,
+    Blokkade,
+    Rubriek,
+    bereken_aangifte,
+    kwartaal_grenzen,
+    kwartaal_van,
+    zoek_blokkades,
+)
 from .routering import bestandssoort, routeer_document, zoek_ingebedde_efactuur
 from .omgeving import api_sleutel, sleutel_aanwezig
 from .database import (
@@ -719,6 +877,13 @@ from .database import (
     lees_facturen,
     keur_factuur_goed,
     lees_extractie_bij_document,
+    kies_rekening,
+    sla_boeking_op,
+    lees_boeking,
+    lees_boekingen,
+    boeking_bij_factuur,
+    boek_factuur,
+    maak_tegenboeking,
 )
 
 __all__ = [
@@ -772,6 +937,32 @@ __all__ = [
     "zoek_ingebedde_efactuur",
     "api_sleutel",
     "sleutel_aanwezig",
+    "Rekening",
+    "Rekeningschema",
+    "rekeningschema_voor_jaar",
+    "SOORTEN",
+    "KIESBARE_SOORTEN",
+    "Boekingsregel",
+    "BoekingVoorstel",
+    "controleer_balans",
+    "som_debet",
+    "som_credit",
+    "stel_boeking_samen",
+    "stel_tegenboeking_samen",
+    "kies_rekening",
+    "sla_boeking_op",
+    "lees_boeking",
+    "lees_boekingen",
+    "boeking_bij_factuur",
+    "boek_factuur",
+    "maak_tegenboeking",
+    "Aangifte",
+    "Blokkade",
+    "Rubriek",
+    "bereken_aangifte",
+    "kwartaal_van",
+    "kwartaal_grenzen",
+    "zoek_blokkades",
 ]
 ```
 
@@ -1051,6 +1242,127 @@ def valideer_factuur(
     return ValidatieResultaat(
         status=status, redenen=redenen, factuur=factuur, originele_data=data
     )
+```
+
+## `boekhouding/boekhouding/rekeningschema.py`
+
+```python
+"""Het rekeningschema per boekjaar, geladen uit een config-bestand.
+
+Zoals de btw-tarieven staan ook de rekeningen niet in de code maar in
+`config/rekeningen_<jaar>.json`. Verandert er iets aan het schema, dan
+komt er een nieuw bestand voor dat jaar bij en blijft de code hetzelfde.
+
+Twee regels die hier gelden:
+- Er kan alleen op een rekening uit deze lijst worden geboekt. Een code
+  die er niet in staat wordt geweigerd met reden; er wordt nooit een
+  rekening bijgemaakt of geraden (Gouden regel 4, en de AI-regel dat het
+  model alleen uit de bestaande lijst mag kiezen).
+- Bestaat er geen bestand voor het boekjaar van een factuur, dan zegt
+  deze module dat eerlijk (None) in plaats van het schema van een ander
+  jaar te gebruiken.
+"""
+
+import json
+from functools import lru_cache
+from pathlib import Path
+from typing import Literal, Optional
+
+from pydantic import BaseModel
+
+CONFIG_MAP = Path(__file__).parent / "config"
+
+# De soorten die een rekening kan hebben. "btw" staat apart van activa en
+# passiva omdat de btw-aangifte die rekeningen los moet kunnen vinden.
+SOORTEN = ("kosten", "opbrengsten", "activa", "passiva", "btw")
+
+# Welke soorten een mens mag kiezen als tegenrekening bij een factuur.
+# De rest (bank, crediteuren, btw) vult de boeking zelf in.
+KIESBARE_SOORTEN = ("kosten", "opbrengsten")
+
+
+class Rekening(BaseModel):
+    """Eén grootboekrekening uit het schema."""
+
+    code: str
+    rgs_code: str
+    omschrijving: str
+    soort: Literal["kosten", "opbrengsten", "activa", "passiva", "btw"]
+
+
+class Rekeningschema(BaseModel):
+    """Het hele schema van één boekjaar."""
+
+    jaar: int
+    rekeningen: dict[str, Rekening]
+    # De rekeningen die de boeking zelf invult: crediteuren, debiteuren,
+    # de voorbelasting en de af te dragen btw per tarief.
+    standaardrekeningen: dict[str, object]
+
+    def zoek(self, code: str) -> Optional[Rekening]:
+        return self.rekeningen.get(code)
+
+    def kiesbaar(self) -> list[Rekening]:
+        """De rekeningen die een mens bij een factuur mag kiezen."""
+        return [
+            rekening for rekening in self.rekeningen.values()
+            if rekening.soort in KIESBARE_SOORTEN
+        ]
+
+    def standaard(self, naam: str) -> Optional[str]:
+        """Geef de code van een standaardrekening, of None."""
+        waarde = self.standaardrekeningen.get(naam)
+        return waarde if isinstance(waarde, str) else None
+
+    def btw_verschuldigd_voor(self, percentage: str) -> Optional[str]:
+        """Geef de rekening voor af te dragen btw bij dit tarief, of None.
+
+        Bij 0% hoort geen btw-rekening; dan is None het juiste antwoord
+        en maakt de boeking simpelweg geen btw-regel. Bij een tarief dat
+        niet in de config staat is None óók juist: dan wordt de boeking
+        geweigerd in plaats van op een willekeurige rekening geboekt.
+        """
+        tabel = self.standaardrekeningen.get("btw_verschuldigd")
+        if not isinstance(tabel, dict):
+            return None
+        waarde = tabel.get(percentage)
+        return waarde if isinstance(waarde, str) else None
+
+
+@lru_cache(maxsize=None)
+def rekeningschema_voor_jaar(jaar: int) -> Optional[Rekeningschema]:
+    """Laad het rekeningschema van een boekjaar, of None als het ontbreekt."""
+    pad = CONFIG_MAP / f"rekeningen_{jaar}.json"
+    if not pad.is_file():
+        return None
+    with open(pad, encoding="utf-8") as bestand:
+        data = json.load(bestand)
+
+    rekeningen = {}
+    for gegeven in data["rekeningen"]:
+        rekening = Rekening(**gegeven)
+        if rekening.code in rekeningen:
+            raise ValueError(
+                f"rekening {rekening.code} staat twee keer in "
+                f"rekeningen_{jaar}.json"
+            )
+        rekeningen[rekening.code] = rekening
+
+    schema = Rekeningschema(
+        jaar=data["jaar"],
+        rekeningen=rekeningen,
+        standaardrekeningen=data["standaardrekeningen"],
+    )
+    ontbreekt = [
+        naam for naam in ("crediteuren", "debiteuren", "btw_voorbelasting")
+        if schema.standaard(naam) is None or schema.zoek(schema.standaard(naam)) is None
+    ]
+    if ontbreekt:
+        raise ValueError(
+            f"rekeningen_{jaar}.json mist bruikbare standaardrekeningen: "
+            f"{', '.join(ontbreekt)}"
+        )
+    return schema
 ```
 
 ## `boekhouding/boekhouding/documenten.py`
@@ -2684,6 +2996,36 @@ def maak_tabellen(conn: sqlite3.Connection) -> None:
             aangemaakt_op    TEXT NOT NULL
         );
 
+        CREATE TABLE IF NOT EXISTS boekingen (
+            id                    INTEGER PRIMARY KEY,
+            administratie_id      INTEGER NOT NULL REFERENCES administraties(id),
+            -- Eén boeking per factuur: UNIQUE laat meerdere NULL toe, dus
+            -- tegenboekingen (zonder factuur) blijven mogelijk, maar
+            -- dezelfde factuur twee keer boeken kan niet.
+            factuur_id            INTEGER UNIQUE REFERENCES facturen(id),
+            corrigeert_boeking_id INTEGER REFERENCES boekingen(id),
+            boekdatum             TEXT NOT NULL,
+            omschrijving          TEXT NOT NULL,
+            aangemaakt_op         TEXT NOT NULL,
+            aangemaakt_door       TEXT NOT NULL
+        );
+
+        CREATE TABLE IF NOT EXISTS boekingsregels (
+            id               INTEGER PRIMARY KEY,
+            boeking_id       INTEGER NOT NULL REFERENCES boekingen(id),
+            administratie_id INTEGER NOT NULL REFERENCES administraties(id),
+            volgnummer       INTEGER NOT NULL,
+            rekening         TEXT NOT NULL,
+            omschrijving     TEXT NOT NULL,
+            -- Bedragen als tekst, net als bij facturen: zo komt er nooit
+            -- een float aan te pas en staat er precies wat er stond.
+            debet            TEXT NOT NULL DEFAULT '0.00',
+            credit           TEXT NOT NULL DEFAULT '0.00'
+        );
+
+        CREATE INDEX IF NOT EXISTS idx_boekingen_periode
+            ON boekingen (administratie_id, boekdatum);
+
         CREATE TABLE IF NOT EXISTS audit_log (
             id               INTEGER PRIMARY KEY,
             administratie_id INTEGER NOT NULL REFERENCES administraties(id),
@@ -2718,6 +3060,9 @@ def maak_tabellen(conn: sqlite3.Connection) -> None:
     # "goedgekeurd_op" zegt dat een mens ernaar heeft gekeken en ja
     # heeft gezegd. Dat scheelt bovendien een tabelmigratie, want een
     # CHECK-constraint is in SQLite niet te wijzigen.
+    # De grootboekrekening die de eigenaar bij deze factuur kiest. Geen
+    # default: zonder keuze ontstaat er geen boeking (Gouden regel 4).
+    _voeg_kolom_toe(conn, "facturen", "rekening", "TEXT")
     _voeg_kolom_toe(conn, "facturen", "goedgekeurd_op", "TEXT")
     _voeg_kolom_toe(conn, "facturen", "goedgekeurd_door", "TEXT")
 
@@ -3277,6 +3622,904 @@ def lees_extractie_bij_document(
     extractie = dict(zip(kolommen, rij))
     extractie["redenen"] = json.loads(extractie["redenen"])
     return extractie
+
+
+# --- grootboek (module 6) ----------------------------------------------
+
+def kies_rekening(
+    conn: sqlite3.Connection, factuur_id: int, code: Optional[str]
+) -> tuple[bool, list[str]]:
+    """Leg vast op welke grootboekrekening deze factuur hoort.
+
+    De keuze wordt getoetst aan het rekeningschema van het boekjaar van
+    de factuur: een code die daar niet in staat wordt geweigerd, want er
+    wordt nooit op een verzonnen rekening geboekt. De oude keuze gaat
+    net als elke andere wijziging de audit trail in.
+    """
+    from .rekeningschema import KIESBARE_SOORTEN, rekeningschema_voor_jaar
+
+    factuur = lees_factuur(conn, factuur_id)
+    code = (code or "").strip() or None
+
+    if code is not None:
+        if not factuur["factuurdatum"]:
+            return False, [
+                "zonder factuurdatum is niet te bepalen welk rekeningschema "
+                "geldt; vul eerst de datum in"
+            ]
+        jaar = date.fromisoformat(factuur["factuurdatum"]).year
+        schema = rekeningschema_voor_jaar(jaar)
+        if schema is None:
+            return False, [f"er is geen rekeningschema voor boekjaar {jaar}"]
+        rekening = schema.zoek(code)
+        if rekening is None:
+            return False, [f"rekening '{code}' staat niet in het schema van {jaar}"]
+        if rekening.soort not in KIESBARE_SOORTEN:
+            return False, [
+                f"rekening {code} is van soort '{rekening.soort}'; kies een "
+                f"kosten- of opbrengstenrekening"
+            ]
+
+    if factuur["rekening"] == code:
+        return True, []
+
+    # Staat de boeking er al, dan zou een andere rekening hier betekenen
+    # dat de factuur iets anders zegt dan het grootboek. Een boeking
+    # wordt nooit gewijzigd, dus de weg terug is een tegenboeking.
+    boeking = boeking_bij_factuur(conn, factuur_id)
+    if boeking is not None:
+        return False, [
+            f"deze factuur is al geboekt (boeking {boeking['id']}); een boeking "
+            f"wordt niet gewijzigd. Maak een tegenboeking als de rekening niet "
+            f"klopt"
+        ]
+
+    tijd = _nu()
+    conn.execute(
+        "UPDATE facturen SET rekening = ?, gewijzigd_op = ? WHERE id = ?",
+        (code, tijd, factuur_id),
+    )
+    conn.execute(
+        """
+        INSERT INTO audit_log (
+            administratie_id, tabel, record_id, actie,
+            veld, oude_waarde, nieuwe_waarde, tijdstip
+        ) VALUES (?, 'facturen', ?, 'gewijzigd', 'rekening', ?, ?, ?)
+        """,
+        (factuur["administratie_id"], factuur_id, factuur["rekening"], code, tijd),
+    )
+    conn.commit()
+    return True, []
+
+
+def sla_boeking_op(
+    conn: sqlite3.Connection,
+    administratie_id: int,
+    voorstel: Any,
+    door: str = "eigenaar",
+) -> tuple[Optional[int], list[str]]:
+    """Bewaar een samengestelde boeking; geef (boeking_id, redenen).
+
+    De balans wordt hier nog één keer gecontroleerd, vlak voor het
+    opslaan. Dat is met opzet dubbelop: een boeking die niet klopt mag
+    de database niet in, ook niet als een aanroeper de controle bij het
+    samenstellen zou overslaan.
+    """
+    from .grootboek import controleer_balans
+
+    if voorstel.status != "gemaakt":
+        return None, list(voorstel.redenen)
+
+    redenen = controleer_balans(voorstel.regels)
+    if redenen:
+        return None, redenen
+
+    if voorstel.factuur_id is not None:
+        bestaat = conn.execute(
+            "SELECT id FROM boekingen WHERE factuur_id = ?", (voorstel.factuur_id,)
+        ).fetchone()
+        if bestaat is not None:
+            return None, [
+                f"factuur {voorstel.factuur_id} is al geboekt (boeking "
+                f"{bestaat[0]}); een boeking wordt niet overschreven — maak "
+                f"zo nodig een tegenboeking"
+            ]
+
+    tijd = _nu()
+    cursor = conn.execute(
+        """
+        INSERT INTO boekingen (
+            administratie_id, factuur_id, corrigeert_boeking_id,
+            boekdatum, omschrijving, aangemaakt_op, aangemaakt_door
+        ) VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            administratie_id,
+            voorstel.factuur_id,
+            voorstel.corrigeert_boeking_id,
+            str(voorstel.boekdatum),
+            voorstel.omschrijving,
+            tijd,
+            door,
+        ),
+    )
+    boeking_id = cursor.lastrowid
+
+    for volgnummer, regel in enumerate(voorstel.regels, start=1):
+        conn.execute(
+            """
+            INSERT INTO boekingsregels (
+                boeking_id, administratie_id, volgnummer,
+                rekening, omschrijving, debet, credit
+            ) VALUES (?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                boeking_id, administratie_id, volgnummer,
+                regel.rekening, regel.omschrijving,
+                str(regel.debet), str(regel.credit),
+            ),
+        )
+
+    conn.execute(
+        """
+        INSERT INTO audit_log (
+            administratie_id, tabel, record_id, actie,
+            veld, oude_waarde, nieuwe_waarde, tijdstip
+        ) VALUES (?, 'boekingen', ?, 'aangemaakt', NULL, NULL, ?, ?)
+        """,
+        (
+            administratie_id, boeking_id,
+            json.dumps(
+                {
+                    "boekdatum": str(voorstel.boekdatum),
+                    "omschrijving": voorstel.omschrijving,
+                    "factuur_id": voorstel.factuur_id,
+                    "corrigeert_boeking_id": voorstel.corrigeert_boeking_id,
+                    "regels": [
+                        {
+                            "rekening": r.rekening,
+                            "debet": str(r.debet),
+                            "credit": str(r.credit),
+                        }
+                        for r in voorstel.regels
+                    ],
+                },
+                ensure_ascii=False,
+            ),
+            tijd,
+        ),
+    )
+    conn.commit()
+    return boeking_id, []
+
+
+def _boeking_met_regels(conn: sqlite3.Connection, rij: dict[str, Any]) -> dict[str, Any]:
+    cursor = conn.execute(
+        "SELECT * FROM boekingsregels WHERE boeking_id = ? ORDER BY volgnummer",
+        (rij["id"],),
+    )
+    kolommen = [k[0] for k in cursor.description]
+    rij["regels"] = [dict(zip(kolommen, r)) for r in cursor.fetchall()]
+    return rij
+
+
+def lees_boeking(conn: sqlite3.Connection, boeking_id: int) -> dict[str, Any]:
+    """Lees één boeking met haar regels."""
+    cursor = conn.execute("SELECT * FROM boekingen WHERE id = ?", (boeking_id,))
+    rij = cursor.fetchone()
+    if rij is None:
+        raise ValueError(f"boeking {boeking_id} bestaat niet")
+    kolommen = [k[0] for k in cursor.description]
+    return _boeking_met_regels(conn, dict(zip(kolommen, rij)))
+
+
+def lees_boekingen(
+    conn: sqlite3.Connection,
+    administratie_id: int,
+    van: Optional[date] = None,
+    tot: Optional[date] = None,
+) -> list[dict[str, Any]]:
+    """Lees de boekingen van een administratie, eventueel binnen een periode.
+
+    `van` en `tot` zijn allebei inclusief; de boekdatum is de datum van
+    de factuur, dus daarmee valt een factuur van 31 maart in het eerste
+    kwartaal en een van 1 april in het tweede.
+    """
+    vraag = "SELECT * FROM boekingen WHERE administratie_id = ?"
+    waarden: list[Any] = [administratie_id]
+    if van is not None:
+        vraag += " AND boekdatum >= ?"
+        waarden.append(str(van))
+    if tot is not None:
+        vraag += " AND boekdatum <= ?"
+        waarden.append(str(tot))
+    vraag += " ORDER BY boekdatum, id"
+
+    cursor = conn.execute(vraag, waarden)
+    kolommen = [k[0] for k in cursor.description]
+    return [
+        _boeking_met_regels(conn, dict(zip(kolommen, rij)))
+        for rij in cursor.fetchall()
+    ]
+
+
+def boeking_bij_factuur(
+    conn: sqlite3.Connection, factuur_id: int
+) -> Optional[dict[str, Any]]:
+    """Geef de boeking van deze factuur, of None als hij nog niet geboekt is."""
+    rij = conn.execute(
+        "SELECT id FROM boekingen WHERE factuur_id = ?", (factuur_id,)
+    ).fetchone()
+    return None if rij is None else lees_boeking(conn, rij[0])
+
+
+def boek_factuur(
+    conn: sqlite3.Connection, factuur_id: int, door: str = "eigenaar"
+) -> tuple[Optional[int], list[str]]:
+    """Maak de boeking bij een goedgekeurde factuur.
+
+    Alleen een goedgekeurde factuur wordt geboekt: de code controleert,
+    de mens beslist, en pas daarna gaat het het grootboek in.
+    """
+    from .grootboek import stel_boeking_samen
+
+    factuur = lees_factuur(conn, factuur_id)
+    if factuur["goedgekeurd_op"] is None:
+        return None, [
+            "deze factuur is nog niet goedgekeurd; alleen een goedgekeurde "
+            "factuur wordt geboekt"
+        ]
+
+    voorstel = stel_boeking_samen(factuur, factuur["rekening"])
+    return sla_boeking_op(conn, factuur["administratie_id"], voorstel, door=door)
+
+
+def maak_tegenboeking(
+    conn: sqlite3.Connection,
+    boeking_id: int,
+    reden: str,
+    door: str = "eigenaar",
+    boekdatum: Optional[date] = None,
+) -> tuple[Optional[int], list[str]]:
+    """Zet een boeking recht met een tegenboeking.
+
+    De oorspronkelijke boeking blijft ongewijzigd staan; dit is een
+    nieuwe boeking met dezelfde bedragen aan de andere kant en een
+    verwijzing naar het origineel.
+    """
+    from .grootboek import stel_tegenboeking_samen
+
+    boeking = lees_boeking(conn, boeking_id)
+    bestaat = conn.execute(
+        "SELECT id FROM boekingen WHERE corrigeert_boeking_id = ?", (boeking_id,)
+    ).fetchone()
+    if bestaat is not None:
+        return None, [
+            f"boeking {boeking_id} is al gecorrigeerd met boeking {bestaat[0]}"
+        ]
+
+    voorstel = stel_tegenboeking_samen(boeking, reden, boekdatum)
+    return sla_boeking_op(
+        conn, boeking["administratie_id"], voorstel, door=door
+    )
+```
+
+## `boekhouding/boekhouding/grootboek.py`
+
+```python
+"""Dubbel boekhouden: van goedgekeurde factuur naar boeking.
+
+Een boeking bestaat uit regels die samen in balans zijn: alles wat aan
+de ene kant staat (debet) staat ook aan de andere kant (credit). Een
+inkoopfactuur van 121 euro met 21 euro btw wordt:
+
+    kosten                100,00 debet
+    te vorderen btw        21,00 debet
+    crediteuren                        121,00 credit
+
+Regels die hier gelden:
+- **Exact in balans, geen tolerantie.** De factuurcontrole van module 1
+  laat een afronding van een cent toe (±0,02), want dat komt op echte
+  facturen voor. Een boeking niet: als debet en credit een cent
+  verschillen klopt de administratie niet meer. Zo'n factuur wordt dus
+  niet geboekt, met de reden erbij, en een mens zet het recht.
+- **Nooit wijzigen of verwijderen.** Een fout wordt rechtgezet met een
+  tegenboeking: dezelfde bedragen aan de andere kant, met een verwijzing
+  naar de oorspronkelijke boeking. Beide blijven staan, en samen zijn ze
+  nul.
+- **Alleen rekeningen uit het schema van dat boekjaar.** Een code die er
+  niet in staat wordt geweigerd; er wordt nooit een rekening geraden.
+- **Er wordt niets bedacht.** Ontbreekt een bedrag of een rekening, dan
+  ontstaat de boeking niet en staat er een reden bij (Gouden regel 4).
+"""
+
+from datetime import date
+from decimal import Decimal, InvalidOperation
+from typing import Any, Literal, Optional
+
+from pydantic import BaseModel
+
+from .rekeningschema import KIESBARE_SOORTEN, Rekeningschema, rekeningschema_voor_jaar
+
+NUL = Decimal("0.00")
+
+
+class Boekingsregel(BaseModel):
+    """Eén regel van een boeking: een bedrag debet óf credit."""
+
+    rekening: str
+    omschrijving: str
+    debet: Decimal = NUL
+    credit: Decimal = NUL
+
+
+class BoekingVoorstel(BaseModel):
+    """Een samengestelde boeking, nog niet opgeslagen.
+
+    status "gemaakt"    → de regels zijn in balans en kunnen worden bewaard
+    status "geweigerd"  → er is geen boeking; waarom staat in redenen
+    """
+
+    status: Literal["gemaakt", "geweigerd"]
+    redenen: list[str] = []
+    regels: list[Boekingsregel] = []
+    boekdatum: Optional[date] = None
+    omschrijving: str = ""
+    factuur_id: Optional[int] = None
+    corrigeert_boeking_id: Optional[int] = None
+
+
+def _bedrag(waarde: Any) -> Optional[Decimal]:
+    """Lees een opgeslagen bedrag als Decimal, of None als dat niet kan."""
+    if waarde is None or waarde == "":
+        return None
+    try:
+        return Decimal(str(waarde))
+    except InvalidOperation:
+        return None
+
+
+def som_debet(regels: list[Boekingsregel]) -> Decimal:
+    return sum((regel.debet for regel in regels), NUL)
+
+
+def som_credit(regels: list[Boekingsregel]) -> Decimal:
+    return sum((regel.credit for regel in regels), NUL)
+
+
+def controleer_balans(regels: list[Boekingsregel]) -> list[str]:
+    """Geef de redenen waarom deze regels géén geldige boeking zijn.
+
+    Een lege lijst betekent: in balans. Er wordt exact vergeleken, dus
+    zonder de cent speling die de factuurcontrole wél toestaat.
+    """
+    redenen = []
+    if not regels:
+        return ["een boeking zonder regels bestaat niet"]
+
+    for regel in regels:
+        if regel.debet != NUL and regel.credit != NUL:
+            redenen.append(
+                f"regel op rekening {regel.rekening} staat zowel debet als "
+                f"credit; een regel hoort aan één kant te staan"
+            )
+        if regel.debet == NUL and regel.credit == NUL:
+            redenen.append(
+                f"regel op rekening {regel.rekening} heeft geen bedrag"
+            )
+
+    debet, credit = som_debet(regels), som_credit(regels)
+    if debet != credit:
+        redenen.append(
+            f"de boeking is niet in balans: debet {debet} tegenover credit "
+            f"{credit}, een verschil van {debet - credit}. Een boeking moet "
+            f"exact kloppen, ook op de cent"
+        )
+    return redenen
+
+
+def _regel(rekening: str, omschrijving: str, bedrag: Decimal, kant: str) -> Boekingsregel:
+    if kant == "debet":
+        return Boekingsregel(rekening=rekening, omschrijving=omschrijving, debet=bedrag)
+    return Boekingsregel(rekening=rekening, omschrijving=omschrijving, credit=bedrag)
+
+
+def stel_boeking_samen(
+    factuur: dict[str, Any],
+    rekening_code: Optional[str],
+    schema: Optional[Rekeningschema] = None,
+) -> BoekingVoorstel:
+    """Maak de boekingsregels bij een factuur; geeft nooit een exception.
+
+    De gekozen rekening bepaalt wat voor boeking het wordt. Kiest de
+    eigenaar een kostenrekening, dan is het een inkoopfactuur (btw te
+    vorderen, schuld aan de leverancier). Kiest hij een
+    opbrengstenrekening, dan is het een verkoopfactuur (btw af te dragen,
+    vordering op de klant). Dat is dus geen gok van het systeem maar het
+    gevolg van een keuze van een mens.
+    """
+    def weiger(*redenen: str) -> BoekingVoorstel:
+        return BoekingVoorstel(
+            status="geweigerd", redenen=list(redenen), factuur_id=factuur.get("id")
+        )
+
+    if not rekening_code:
+        return weiger(
+            "er is nog geen grootboekrekening gekozen; zonder rekening is niet "
+            "te bepalen waar deze factuur thuishoort"
+        )
+
+    datum_tekst = factuur.get("factuurdatum")
+    if not datum_tekst:
+        return weiger("de factuur heeft geen factuurdatum, dus geen boekdatum")
+    try:
+        boekdatum = date.fromisoformat(str(datum_tekst))
+    except ValueError:
+        return weiger(f"de factuurdatum '{datum_tekst}' is geen geldige datum")
+
+    if schema is None:
+        schema = rekeningschema_voor_jaar(boekdatum.year)
+    if schema is None:
+        return weiger(
+            f"er is geen rekeningschema voor boekjaar {boekdatum.year}; "
+            f"voeg config/rekeningen_{boekdatum.year}.json toe"
+        )
+
+    rekening = schema.zoek(rekening_code)
+    if rekening is None:
+        return weiger(
+            f"rekening '{rekening_code}' staat niet in het rekeningschema van "
+            f"{schema.jaar}; er wordt niet op een onbekende rekening geboekt"
+        )
+    if rekening.soort not in KIESBARE_SOORTEN:
+        return weiger(
+            f"rekening {rekening.code} ({rekening.omschrijving}) is van soort "
+            f"'{rekening.soort}'; bij een factuur hoort een kosten- of "
+            f"opbrengstenrekening"
+        )
+
+    excl = _bedrag(factuur.get("bedrag_excl"))
+    btw = _bedrag(factuur.get("btw_bedrag"))
+    incl = _bedrag(factuur.get("bedrag_incl"))
+    ontbreekt = [
+        naam for naam, waarde in
+        (("bedrag_excl", excl), ("btw_bedrag", btw), ("bedrag_incl", incl))
+        if waarde is None
+    ]
+    if ontbreekt:
+        return weiger(
+            f"deze bedragen ontbreken of zijn onleesbaar: {', '.join(ontbreekt)}"
+        )
+
+    if excl + btw != incl:
+        return weiger(
+            f"de bedragen tellen niet exact op: {excl} + {btw} = {excl + btw}, "
+            f"maar er staat {incl}. De factuurcontrole laat een cent afronding "
+            f"toe, een boeking niet — corrigeer het bedrag eerst"
+        )
+
+    percentage = factuur.get("btw_percentage")
+    omschrijving = _omschrijving(factuur)
+
+    if rekening.soort == "kosten":
+        regels = [_regel(rekening.code, rekening.omschrijving, excl, "debet")]
+        if btw != NUL:
+            voorbelasting = schema.standaard("btw_voorbelasting")
+            regels.append(_regel(
+                voorbelasting,
+                schema.zoek(voorbelasting).omschrijving,
+                btw,
+                "debet",
+            ))
+        crediteuren = schema.standaard("crediteuren")
+        regels.append(_regel(
+            crediteuren, schema.zoek(crediteuren).omschrijving, incl, "credit"
+        ))
+    else:
+        debiteuren = schema.standaard("debiteuren")
+        regels = [_regel(
+            debiteuren, schema.zoek(debiteuren).omschrijving, incl, "debet"
+        )]
+        regels.append(_regel(rekening.code, rekening.omschrijving, excl, "credit"))
+        if btw != NUL:
+            af_te_dragen = schema.btw_verschuldigd_voor(_tarief(percentage))
+            if af_te_dragen is None or schema.zoek(af_te_dragen) is None:
+                return weiger(
+                    f"voor btw-tarief {percentage}% staat geen rekening voor af "
+                    f"te dragen btw in het schema van {schema.jaar}; deze omzet "
+                    f"wordt niet op een willekeurige rekening geboekt"
+                )
+            regels.append(_regel(
+                af_te_dragen, schema.zoek(af_te_dragen).omschrijving, btw, "credit"
+            ))
+
+    redenen = controleer_balans(regels)
+    if redenen:
+        return weiger(*redenen)
+
+    return BoekingVoorstel(
+        status="gemaakt",
+        regels=regels,
+        boekdatum=boekdatum,
+        omschrijving=omschrijving,
+        factuur_id=factuur.get("id"),
+    )
+
+
+def _tarief(percentage: Any) -> str:
+    """Maak van '21', '21.00' of Decimal('21') dezelfde sleutel '21'."""
+    getal = _bedrag(percentage)
+    if getal is None:
+        return ""
+    return str(getal.normalize())
+
+
+def _omschrijving(factuur: dict[str, Any]) -> str:
+    leverancier = factuur.get("leverancier") or "onbekende leverancier"
+    nummer = factuur.get("factuurnummer")
+    return f"{leverancier} {nummer}".strip() if nummer else leverancier
+
+
+def stel_tegenboeking_samen(
+    boeking: dict[str, Any], reden: str, boekdatum: Optional[date] = None
+) -> BoekingVoorstel:
+    """Maak de tegenboeking van een bestaande boeking.
+
+    Elke regel gaat naar de andere kant: wat debet stond, staat credit en
+    andersom. Samen zijn de twee boekingen nul, en beide blijven staan —
+    de oorspronkelijke boeking wordt niet aangeraakt, want een boeking
+    wordt nooit gewijzigd of verwijderd.
+
+    De boekdatum is standaard die van de oorspronkelijke boeking, zodat
+    de correctie in hetzelfde kwartaal valt. Is dat kwartaal al aangegeven
+    bij de Belastingdienst, geef dan expliciet een datum in het lopende
+    kwartaal mee.
+    """
+    if not reden.strip():
+        return BoekingVoorstel(
+            status="geweigerd",
+            redenen=["een tegenboeking hoort een reden te hebben"],
+        )
+
+    regels = [
+        Boekingsregel(
+            rekening=regel["rekening"],
+            omschrijving=regel["omschrijving"],
+            debet=_bedrag(regel["credit"]) or NUL,
+            credit=_bedrag(regel["debet"]) or NUL,
+        )
+        for regel in boeking["regels"]
+    ]
+
+    redenen = controleer_balans(regels)
+    if redenen:
+        return BoekingVoorstel(status="geweigerd", redenen=redenen)
+
+    if boekdatum is None:
+        boekdatum = date.fromisoformat(str(boeking["boekdatum"]))
+
+    return BoekingVoorstel(
+        status="gemaakt",
+        regels=regels,
+        boekdatum=boekdatum,
+        omschrijving=f"Correctie van boeking {boeking['id']}: {reden.strip()}",
+        corrigeert_boeking_id=boeking["id"],
+    )
+```
+
+## `boekhouding/boekhouding/btw_aangifte.py`
+
+```python
+"""Btw-aangifte per kwartaal: een voorstel, geen aangifte.
+
+Wat deze module doet: de rubrieken uitrekenen die een zzp'er in de
+kwartaalaangifte invult, op basis van de boekingen die er staan. Wat hij
+niet doet: iets indienen. Het resultaat is een voorstel dat de eigenaar
+zelf overneemt bij de Belastingdienst.
+
+De rubrieken:
+
+    1a   omzet belast met het hoge tarief, en de btw daarover
+    1b   omzet belast met het lage tarief, en de btw daarover
+    5a   totaal verschuldigde omzetbelasting (de btw uit 1a en 1b)
+    5b   voorbelasting (de btw op wat je zelf hebt ingekocht)
+    saldo   5a min 5b: te betalen, of terug te vragen
+
+Twee dingen zijn hier belangrijker dan het rekenwerk:
+
+**Alles rekent de code uit, met vaste formules.** Er komt geen model aan
+te pas — niet bij het optellen, niet bij het indelen in rubrieken
+(Gouden regel 2).
+
+**Bij twijfel geen getal.** Staat er in het kwartaal ook maar één
+factuur die nog niet helemaal rond is, dan wordt er niets uitgerekend.
+Je krijgt een lijst van wat er open staat. Een aangifte die "bijna
+klopt" is gevaarlijker dan geen aangifte: hij ziet er af uit, en het
+verschil merk je pas bij een controle.
+"""
+
+import sqlite3
+from datetime import date
+from decimal import Decimal
+from typing import Any, Literal, Optional
+
+from pydantic import BaseModel
+
+from .database import boeking_bij_factuur, lees_boekingen
+from .rekeningschema import Rekeningschema, rekeningschema_voor_jaar
+
+NUL = Decimal("0.00")
+
+# Welke maanden bij welk kwartaal horen. 31 maart valt dus in K1 en
+# 1 april in K2, en dat is precies waar het bij een kwartaalgrens om
+# gaat.
+KWARTAAL_MAANDEN = {1: (1, 3), 2: (4, 6), 3: (7, 9), 4: (10, 12)}
+
+LAATSTE_DAG = {1: 31, 2: 28, 3: 31, 4: 30, 5: 31, 6: 30,
+               7: 31, 8: 31, 9: 30, 10: 31, 11: 30, 12: 31}
+
+VOORBEHOUD = (
+    "Dit is een voorstel op basis van de boekingen in dit kwartaal. "
+    "Het indienen doet u zelf bij de Belastingdienst; dit systeem "
+    "verstuurt niets."
+)
+
+
+class Rubriek(BaseModel):
+    """Eén rubriek van de aangifte."""
+
+    code: str
+    omschrijving: str
+    grondslag: Decimal = NUL
+    btw: Decimal = NUL
+
+
+class Blokkade(BaseModel):
+    """Eén factuur die de aangifte tegenhoudt."""
+
+    factuur_id: int
+    leverancier: Optional[str] = None
+    factuurdatum: Optional[str] = None
+    bedrag_incl: Optional[str] = None
+    reden: str
+
+
+class Aangifte(BaseModel):
+    """Het voorstel voor één kwartaal.
+
+    status "voorstel"    → de bedragen zijn uitgerekend
+    status "geblokkeerd" → er is niets uitgerekend; zie blokkades/redenen
+    """
+
+    status: Literal["voorstel", "geblokkeerd"]
+    jaar: int
+    kwartaal: int
+    van: date
+    tot: date
+    rubrieken: list[Rubriek] = []
+    verschuldigd: Optional[Decimal] = None   # 5a
+    voorbelasting: Optional[Decimal] = None  # 5b
+    saldo: Optional[Decimal] = None          # 5a - 5b
+    # Drie uitkomsten, niet twee: een saldo van precies nul is geen
+    # teruggave. Dat verschil staat ook op het scherm.
+    saldo_richting: Optional[Literal["betalen", "terugvragen", "niets"]] = None
+    blokkades: list[Blokkade] = []
+    redenen: list[str] = []
+    waarschuwingen: list[str] = []
+    aantal_boekingen: int = 0
+    voorbehoud: str = VOORBEHOUD
+
+
+def kwartaal_van(datum: date) -> int:
+    """Geef het kwartaal (1 t/m 4) waarin deze datum valt."""
+    return (datum.month - 1) // 3 + 1
+
+
+def kwartaal_grenzen(jaar: int, kwartaal: int) -> tuple[date, date]:
+    """Geef de eerste en de laatste dag van een kwartaal, allebei inclusief."""
+    if kwartaal not in KWARTAAL_MAANDEN:
+        raise ValueError(f"kwartaal {kwartaal} bestaat niet; kies 1 t/m 4")
+    eerste_maand, laatste_maand = KWARTAAL_MAANDEN[kwartaal]
+    dag = LAATSTE_DAG[laatste_maand]
+    if laatste_maand == 2 and _schrikkeljaar(jaar):
+        dag = 29
+    return date(jaar, eerste_maand, 1), date(jaar, laatste_maand, dag)
+
+
+def _schrikkeljaar(jaar: int) -> bool:
+    return jaar % 4 == 0 and (jaar % 100 != 0 or jaar % 400 == 0)
+
+
+def _decimal(waarde: Any) -> Decimal:
+    if waarde is None or waarde == "":
+        return NUL
+    return Decimal(str(waarde))
+
+
+def zoek_blokkades(
+    conn: sqlite3.Connection, administratie_id: int, van: date, tot: date
+) -> list[Blokkade]:
+    """Zoek de facturen in dit kwartaal die nog niet rond zijn.
+
+    Drie dingen houden een aangifte tegen, en alle drie om dezelfde
+    reden: het bedrag telt nog niet mee terwijl de factuur er wel is.
+
+    1. De factuur moet nog nagekeken worden (status review_nodig).
+    2. De factuur klopt, maar niemand heeft hem goedgekeurd.
+    3. De factuur is goedgekeurd, maar er staat nog geen boeking —
+       meestal omdat er geen grootboekrekening is gekozen.
+    """
+    cursor = conn.execute(
+        """
+        SELECT id, leverancier, factuurdatum, bedrag_incl, status,
+               goedgekeurd_op, rekening, review_redenen
+        FROM facturen
+        WHERE administratie_id = ?
+          AND factuurdatum >= ? AND factuurdatum <= ?
+        ORDER BY factuurdatum, id
+        """,
+        (administratie_id, str(van), str(tot)),
+    )
+    blokkades = []
+    for (factuur_id, leverancier, factuurdatum, bedrag_incl, status,
+         goedgekeurd_op, rekening, _redenen) in cursor.fetchall():
+        if status == "review_nodig":
+            reden = "moet nog nagekeken worden"
+        elif goedgekeurd_op is None:
+            reden = "is nagekeken maar nog niet goedgekeurd"
+        elif boeking_bij_factuur(conn, factuur_id) is None:
+            reden = (
+                "is goedgekeurd maar nog niet geboekt; er is geen "
+                "grootboekrekening gekozen"
+                if not rekening else
+                "is goedgekeurd maar nog niet geboekt"
+            )
+        else:
+            continue
+        blokkades.append(Blokkade(
+            factuur_id=factuur_id,
+            leverancier=leverancier,
+            factuurdatum=factuurdatum,
+            bedrag_incl=bedrag_incl,
+            reden=reden,
+        ))
+    return blokkades
+
+
+def _facturen_zonder_datum(conn: sqlite3.Connection, administratie_id: int) -> int:
+    rij = conn.execute(
+        "SELECT count(*) FROM facturen "
+        "WHERE administratie_id = ? AND (factuurdatum IS NULL OR factuurdatum = '')",
+        (administratie_id,),
+    ).fetchone()
+    return rij[0]
+
+
+def _tel_op(
+    boekingen: list[dict[str, Any]], schema: Rekeningschema
+) -> tuple[dict[str, Decimal], Decimal]:
+    """Tel de boekingen op tot de rubrieken. Vaste formules, geen model.
+
+    Per boeking wordt gekeken welke btw-rekening erin voorkomt: dat
+    bepaalt de rubriek. De omzet van diezelfde boeking is dan de
+    grondslag. Een tegenboeking heeft de bedragen aan de andere kant en
+    telt daardoor vanzelf negatief mee — daarom `credit - debet` en niet
+    alleen `credit`.
+    """
+    hoog = schema.btw_verschuldigd_voor("21")
+    laag = schema.btw_verschuldigd_voor("9")
+    voorbelasting = schema.standaard("btw_voorbelasting")
+
+    bedragen = {
+        "1a_grondslag": NUL, "1a_btw": NUL,
+        "1b_grondslag": NUL, "1b_btw": NUL,
+        "buiten_1a_1b": NUL,
+    }
+    totaal_voorbelasting = NUL
+
+    for boeking in boekingen:
+        btw_hoog = NUL
+        btw_laag = NUL
+        omzet = NUL
+        for regel in boeking["regels"]:
+            debet, credit = _decimal(regel["debet"]), _decimal(regel["credit"])
+            rekening = schema.zoek(regel["rekening"])
+            if regel["rekening"] == hoog:
+                btw_hoog += credit - debet
+            elif regel["rekening"] == laag:
+                btw_laag += credit - debet
+            elif regel["rekening"] == voorbelasting:
+                totaal_voorbelasting += debet - credit
+            elif rekening is not None and rekening.soort == "opbrengsten":
+                omzet += credit - debet
+
+        if btw_hoog != NUL:
+            bedragen["1a_btw"] += btw_hoog
+            bedragen["1a_grondslag"] += omzet
+        elif btw_laag != NUL:
+            bedragen["1b_btw"] += btw_laag
+            bedragen["1b_grondslag"] += omzet
+        elif omzet != NUL:
+            # Omzet zonder btw-regel: nultarief, vrijgesteld of verlegd.
+            # Daar horen eigen rubrieken bij (1e, 2a, 3a) en die zijn nog
+            # niet gebouwd; stilzwijgend weglaten mag niet.
+            bedragen["buiten_1a_1b"] += omzet
+
+    return bedragen, totaal_voorbelasting
+
+
+def bereken_aangifte(
+    conn: sqlite3.Connection, administratie_id: int, jaar: int, kwartaal: int
+) -> Aangifte:
+    """Reken het btw-voorstel voor één kwartaal uit.
+
+    Staat er nog iets open in dat kwartaal, dan wordt er niets
+    uitgerekend en krijg je de lijst met wat er mist.
+    """
+    van, tot = kwartaal_grenzen(jaar, kwartaal)
+    aangifte = Aangifte(status="geblokkeerd", jaar=jaar, kwartaal=kwartaal,
+                        van=van, tot=tot)
+
+    zonder_datum = _facturen_zonder_datum(conn, administratie_id)
+    if zonder_datum:
+        aangifte.waarschuwingen.append(
+            f"er {'is' if zonder_datum == 1 else 'zijn'} {zonder_datum} "
+            f"factu{'ur' if zonder_datum == 1 else 'ren'} zonder factuurdatum; "
+            f"{'die valt' if zonder_datum == 1 else 'die vallen'} in geen enkel "
+            f"kwartaal en tel{'t' if zonder_datum == 1 else 'len'} dus nergens mee"
+        )
+
+    schema = rekeningschema_voor_jaar(jaar)
+    if schema is None:
+        aangifte.redenen.append(
+            f"er is geen rekeningschema voor boekjaar {jaar}; zonder schema is "
+            f"niet te bepalen welke rekening welke rubriek is"
+        )
+        return aangifte
+
+    aangifte.blokkades = zoek_blokkades(conn, administratie_id, van, tot)
+    if aangifte.blokkades:
+        aangifte.redenen.append(
+            f"{len(aangifte.blokkades)} factu"
+            f"{'ur' if len(aangifte.blokkades) == 1 else 'ren'} in dit kwartaal "
+            f"{'is' if len(aangifte.blokkades) == 1 else 'zijn'} nog niet rond; "
+            f"zolang dat zo is wordt er niets uitgerekend"
+        )
+        return aangifte
+
+    boekingen = lees_boekingen(conn, administratie_id, van, tot)
+    bedragen, voorbelasting = _tel_op(boekingen, schema)
+
+    verschuldigd = bedragen["1a_btw"] + bedragen["1b_btw"]
+    saldo = verschuldigd - voorbelasting
+
+    if bedragen["buiten_1a_1b"] != NUL:
+        aangifte.waarschuwingen.append(
+            f"er staat {bedragen['buiten_1a_1b']} omzet in dit kwartaal zonder "
+            f"btw (nultarief, vrijgesteld of verlegd). Die hoort in rubriek 1e, "
+            f"2a of 3a, en die rubrieken zijn nog niet gebouwd — vul ze met de "
+            f"hand aan"
+        )
+
+    aangifte.status = "voorstel"
+    aangifte.aantal_boekingen = len(boekingen)
+    aangifte.rubrieken = [
+        Rubriek(
+            code="1a", omschrijving="Leveringen/diensten belast met hoog tarief",
+            grondslag=bedragen["1a_grondslag"], btw=bedragen["1a_btw"],
+        ),
+        Rubriek(
+            code="1b", omschrijving="Leveringen/diensten belast met laag tarief",
+            grondslag=bedragen["1b_grondslag"], btw=bedragen["1b_btw"],
+        ),
+    ]
+    aangifte.verschuldigd = verschuldigd
+    aangifte.voorbelasting = voorbelasting
+    aangifte.saldo = saldo
+    aangifte.saldo_richting = (
+        "betalen" if saldo > NUL else "terugvragen" if saldo < NUL else "niets"
+    )
+    return aangifte
 ```
 
 ## `boekhouding/boekhouding/web/__init__.py`
@@ -3318,9 +4561,13 @@ from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
 from ..ai_extractie import VELDEN
+from ..btw_aangifte import bereken_aangifte, kwartaal_van
 from ..database import (
     FACTUUR_VELDEN,
+    boek_factuur,
+    boeking_bij_factuur,
     keur_factuur_goed,
+    kies_rekening,
     lees_document,
     lees_extractie_bij_document,
     lees_facturen,
@@ -3330,6 +4577,7 @@ from ..database import (
     maak_verbinding,
     wijzig_factuur,
 )
+from ..rekeningschema import rekeningschema_voor_jaar
 from ..ubl import te_groot
 from ..verwerking import verwerk_upload
 from .ubl_weergave import Weergave, leesbare_ubl
@@ -3550,6 +4798,7 @@ def maak_app(
                 )
                 if factuur["document_id"] else None
             )
+            boeking = boeking_bij_factuur(conn, factuur_id)
         finally:
             conn.close()
 
@@ -3560,6 +4809,8 @@ def maak_app(
             velden=_veldregels(factuur, extractie),
             extractie=extractie,
             ubl=_ubl_weergave(registratie),
+            rekeningen=_kiesbare_rekeningen(factuur),
+            boeking=boeking,
             melding=melding,
             mag_goedkeuren=(
                 factuur["status"] == "gevalideerd"
@@ -3583,11 +4834,21 @@ def maak_app(
             # Wijzigingen gaan altijd via wijzig_factuur: die bewaart de
             # oude waarde in de audit trail en hervalideert de factuur.
             wijzig_factuur(conn, factuur_id, wijzigingen, vandaag=app.state.vandaag)
+            # De grootboekrekening staat los van de factuurvelden: die
+            # wordt niet uit het document gelezen maar door de eigenaar
+            # gekozen, en gaat langs het rekeningschema van dat jaar.
+            melding = "Opgeslagen"
+            if "rekening" in formulier:
+                gelukt, redenen = kies_rekening(
+                    conn, factuur_id, str(formulier["rekening"])
+                )
+                if not gelukt:
+                    melding = redenen[0]
         finally:
             conn.close()
         return RedirectResponse(
             f"/administratie/{administratie_id}/factuur/{factuur_id}"
-            f"?melding=Opgeslagen",
+            f"?melding={melding}",
             status_code=303,
         )
 
@@ -3608,7 +4869,64 @@ def maak_app(
                 f"?melding={redenen[0]}",
                 status_code=303,
             )
+
+        # Goedgekeurd, dus mag hij het grootboek in. Lukt dat niet — meestal
+        # omdat er nog geen rekening is gekozen — dan blijft de factuur
+        # goedgekeurd maar ongeboekt, en zegt het scherm waarom. Stil laten
+        # verdwijnen mag niet: bij de btw-aangifte zou het bedrag dan
+        # ontbreken zonder dat iemand het ziet.
+        conn = verbinding()
+        try:
+            boeking_id, boekredenen = boek_factuur(conn, factuur_id)
+        finally:
+            conn.close()
+        if boeking_id is None:
+            return RedirectResponse(
+                f"/administratie/{administratie_id}/factuur/{factuur_id}"
+                f"?melding=Goedgekeurd, maar nog niet geboekt: {boekredenen[0]}",
+                status_code=303,
+            )
         return RedirectResponse(f"/administratie/{administratie_id}", status_code=303)
+
+    # --- btw-aangifte per kwartaal ---------------------------------------
+
+    @app.get("/administratie/{administratie_id}/btw", response_class=HTMLResponse)
+    def btw_nu(administratie_id: int):
+        """Ga naar het kwartaal waar we nu in zitten."""
+        vandaag = app.state.vandaag or date.today()
+        return RedirectResponse(
+            f"/administratie/{administratie_id}/btw/{vandaag.year}/"
+            f"{kwartaal_van(vandaag)}",
+            status_code=303,
+        )
+
+    @app.get(
+        "/administratie/{administratie_id}/btw/{jaar}/{kwartaal}",
+        response_class=HTMLResponse,
+    )
+    def btw_kwartaal(
+        request: Request, administratie_id: int, jaar: int, kwartaal: int
+    ):
+        if kwartaal not in (1, 2, 3, 4) or not (2000 <= jaar <= 2100):
+            raise NietGevonden("kwartaal")
+
+        conn = verbinding()
+        try:
+            administratie = administratie_van(conn, administratie_id)
+            aangifte = bereken_aangifte(conn, administratie_id, jaar, kwartaal)
+        finally:
+            conn.close()
+
+        vorig = (jaar - 1, 4) if kwartaal == 1 else (jaar, kwartaal - 1)
+        volgend = (jaar + 1, 1) if kwartaal == 4 else (jaar, kwartaal + 1)
+        return toon(
+            request, "btw.html",
+            administratie_id=administratie_id,
+            administratie_naam=administratie[1],
+            aangifte=aangifte,
+            vorig=vorig,
+            volgend=volgend,
+        )
 
     # --- het originele document laten zien -------------------------------
 
@@ -3635,6 +4953,33 @@ def maak_app(
         )
 
     return app
+
+
+def _kiesbare_rekeningen(factuur: dict) -> list[dict]:
+    """De rekeningen die bij deze factuur gekozen mogen worden.
+
+    Welk schema geldt, hangt af van het boekjaar van de factuur. Is er
+    geen datum of geen schema voor dat jaar, dan is de lijst leeg en
+    toont het scherm dat — er wordt geen schema van een ander jaar
+    gebruikt.
+    """
+    if not factuur.get("factuurdatum"):
+        return []
+    try:
+        jaar = date.fromisoformat(str(factuur["factuurdatum"])).year
+    except ValueError:
+        return []
+    schema = rekeningschema_voor_jaar(jaar)
+    if schema is None:
+        return []
+    return [
+        {
+            "code": rekening.code,
+            "omschrijving": rekening.omschrijving,
+            "soort": rekening.soort,
+        }
+        for rekening in sorted(schema.kiesbaar(), key=lambda r: (r.soort, r.code))
+    ]
 
 
 def _ubl_weergave(registratie: Optional[dict]) -> Optional[Weergave]:
@@ -4124,7 +5469,7 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
   .rij .onder { color: var(--zacht); font-size: 14px; margin-top: 4px; }
   .rij .bedrag { font-variant-numeric: tabular-nums; font-weight: 600; }
   label { display: block; font-size: 14px; color: var(--zacht); margin-bottom: 4px; }
-  input[type=text], input[type=file] {
+  input[type=text], input[type=file], select {
     width: 100%; padding: 12px; font-size: 16px; border-radius: 8px;
     border: 1px solid var(--lijn); background: var(--vel);
   }
@@ -4185,6 +5530,8 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
   .knoppen { display: flex; gap: 10px; flex-wrap: wrap; }
   .knoppen button, .knoppen a.knop { flex: 1 1 160px; text-align: center; }
   .leeg { color: var(--zacht); text-align: center; padding: 40px 10px; }
+  /* Navigatie tussen kwartalen: geen brede knoppen, het zijn stappen. */
+  .stappen a.knop { flex: 0 0 auto; padding: 10px 14px; min-height: 40px; }
   @media (min-width: 860px) {
     .twee-kolommen { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
     /* Zonder min-width:0 duwt brede inhoud (de ruwe XML) de kolom op en
@@ -4229,7 +5576,10 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
   </div>
 </div>
 
-<p><a class="knop" href="/administratie/{{ administratie_id }}/upload">Factuur toevoegen</a></p>
+<div class="knoppen" style="margin-bottom:16px">
+  <a class="knop" href="/administratie/{{ administratie_id }}/upload">Factuur toevoegen</a>
+  <a class="knop tweede" href="/administratie/{{ administratie_id }}/btw">Btw-aangifte</a>
+</div>
 
 {% if not facturen %}
   <p class="leeg">Nog geen facturen. Voeg er een toe met de knop hierboven.</p>
@@ -4414,10 +5764,67 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
         </div>
       {% endfor %}
 
+      <div class="veld">
+        <label for="rekening">Grootboekrekening</label>
+        {% if boeking %}
+          <input type="text" value="{{ factuur.rekening }}" disabled>
+          <div class="onder" style="color:var(--zacht);font-size:14px">
+            Deze factuur is geboekt, dus de rekening ligt vast. Klopt hij niet,
+            dan hoort daar een tegenboeking bij; een boeking wordt nooit
+            gewijzigd.
+          </div>
+        {% elif rekeningen %}
+          <select id="rekening" name="rekening">
+            <option value="">— nog niet gekozen —</option>
+            {% for rekening in rekeningen %}
+              <option value="{{ rekening.code }}"
+                      {% if rekening.code == factuur.rekening %}selected{% endif %}>
+                {{ rekening.code }} · {{ rekening.omschrijving }}
+                ({{ rekening.soort }})
+              </option>
+            {% endfor %}
+          </select>
+          <div class="onder" style="color:var(--zacht);font-size:14px">
+            Kies je een kostenrekening, dan wordt dit een inkoopfactuur; kies je
+            omzet, dan een verkoopfactuur. Zonder keuze komt de factuur niet in
+            het grootboek en houdt hij de btw-aangifte tegen.
+          </div>
+        {% else %}
+          <div class="onder" style="color:var(--let-op);font-size:14px">
+            Er is geen rekeningschema voor dit boekjaar, of de factuurdatum
+            ontbreekt nog. Vul eerst de datum in.
+          </div>
+        {% endif %}
+      </div>
+
       <div class="knoppen">
         <button type="submit" class="tweede">Opslaan en later beoordelen</button>
       </div>
     </form>
+
+    {% if boeking %}
+      <div class="kaart">
+        <h3 style="margin:0 0 8px;font-size:15px">
+          Boeking {{ boeking.id }} — {{ boeking.boekdatum }}
+        </h3>
+        {% for regel in boeking.regels %}
+          <div class="ubl-rij">
+            <div>
+              <div class="label">{{ regel.rekening }} · {{ regel.omschrijving }}</div>
+            </div>
+            <div class="waarde">
+              {% if regel.debet != '0.00' %}{{ regel.debet }} debet
+              {% else %}{{ regel.credit }} credit{% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% elif factuur.goedgekeurd_op %}
+      <div class="waarschuwing">
+        Deze factuur is goedgekeurd maar staat nog niet in het grootboek, en
+        telt dus niet mee in de btw-aangifte.
+      </div>
+    {% endif %}
 
     <form class="kaart" method="post" action="/administratie/{{ administratie_id }}/factuur/{{ factuur.id }}/goedkeuren">
       <div class="knoppen">
@@ -4444,6 +5851,104 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
   </div>
 
 </div>
+{% endblock %}
+```
+
+## `boekhouding/boekhouding/web/templates/btw.html`
+
+```html
+{% extends "basis.html" %}
+{% block titel %}Btw {{ aangifte.jaar }} K{{ aangifte.kwartaal }}{% endblock %}
+{% block kruimel %}<a href="/administratie/{{ administratie_id }}">&larr; Terug naar de lijst</a>{% endblock %}
+{% block kop %}Btw-aangifte {{ aangifte.jaar }} · kwartaal {{ aangifte.kwartaal }}{% endblock %}
+{% block inhoud %}
+
+<div class="knoppen stappen" style="margin-bottom:14px">
+  <a class="knop tweede" href="/administratie/{{ administratie_id }}/btw/{{ vorig[0] }}/{{ vorig[1] }}">
+    &larr; {{ vorig[0] }} K{{ vorig[1] }}
+  </a>
+  <a class="knop tweede" href="/administratie/{{ administratie_id }}/btw/{{ volgend[0] }}/{{ volgend[1] }}">
+    {{ volgend[0] }} K{{ volgend[1] }} &rarr;
+  </a>
+</div>
+
+<p class="onder" style="color:var(--zacht);font-size:14px;margin-top:0">
+  Periode {{ aangifte.van }} tot en met {{ aangifte.tot }}.
+</p>
+
+{% if aangifte.status == 'geblokkeerd' %}
+
+  <div class="waarschuwing">
+    <strong>Er is niets uitgerekend.</strong>
+    <ul>{% for reden in aangifte.redenen %}<li>{{ reden }}</li>{% endfor %}</ul>
+  </div>
+
+  {% if aangifte.blokkades %}
+    <h2 style="font-size:17px">Dit staat nog open</h2>
+    {% for blokkade in aangifte.blokkades %}
+      <a class="rij" href="/administratie/{{ administratie_id }}/factuur/{{ blokkade.factuur_id }}">
+        <div class="boven">
+          <span class="naam">{{ blokkade.leverancier or "onbekende leverancier" }}</span>
+          <span class="bedrag">{{ blokkade.bedrag_incl or "" }}</span>
+        </div>
+        <div class="onder">{{ blokkade.factuurdatum }} · {{ blokkade.reden }}</div>
+      </a>
+    {% endfor %}
+  {% endif %}
+
+{% else %}
+
+  <div class="kaart">
+    <div class="ubl-groep">
+      <h3>Rubrieken</h3>
+      {% for rubriek in aangifte.rubrieken %}
+        <div class="ubl-rij">
+          <div>
+            <div class="label">{{ rubriek.code }} · {{ rubriek.omschrijving }}</div>
+            <div class="herkomst">omzet {{ rubriek.grondslag }}</div>
+          </div>
+          <div class="waarde">{{ rubriek.btw }}</div>
+        </div>
+      {% endfor %}
+      <div class="ubl-rij">
+        <div><div class="label">5a · Verschuldigde omzetbelasting</div></div>
+        <div class="waarde">{{ aangifte.verschuldigd }}</div>
+      </div>
+      <div class="ubl-rij">
+        <div><div class="label">5b · Voorbelasting</div></div>
+        <div class="waarde">{{ aangifte.voorbelasting }}</div>
+      </div>
+    </div>
+
+    <div class="ubl-groep">
+      <h3>Saldo</h3>
+      <div class="ubl-rij">
+        <div>
+          <div class="label">
+            {% if aangifte.saldo_richting == 'betalen' %}Te betalen aan de Belastingdienst
+            {% elif aangifte.saldo_richting == 'terugvragen' %}Terug te vragen
+            {% else %}Niets te betalen en niets terug te vragen{% endif %}
+          </div>
+          <div class="herkomst">5a min 5b, over {{ aangifte.aantal_boekingen }} boekingen</div>
+        </div>
+        <div class="waarde">{{ aangifte.saldo }}</div>
+      </div>
+    </div>
+  </div>
+
+{% endif %}
+
+{% for waarschuwing in aangifte.waarschuwingen %}
+  <div class="waarschuwing">{{ waarschuwing }}</div>
+{% endfor %}
+
+<div class="kaart">
+  <strong>Dit is een voorstel, geen aangifte.</strong>
+  <p class="onder" style="color:var(--zacht);font-size:14px;margin-bottom:0">
+    {{ aangifte.voorbehoud }}
+  </p>
+</div>
+
 {% endblock %}
 ```
 
@@ -4483,6 +5988,714 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
 {
   "jaar": 2026,
   "btw_percentages": ["21", "9", "0"]
+}
+```
+
+## `boekhouding/boekhouding/config/rekeningen_2024.json`
+
+```json
+{
+  "jaar": 2024,
+  "let_op": "De RGS-codes in dit bestand zijn een met de hand gemaakte subset en zijn NIET geverifieerd tegen de officiele RGS-lijst van het RGS-beheerplatform. Controleer ze voordat je hier een echte aangifte of een export naar een accountant op baseert. De code waarop dit systeem boekt is het veld 'code'; 'rgs_code' is alleen een verwijzing.",
+  "standaardrekeningen": {
+    "crediteuren": "1600",
+    "debiteuren": "1300",
+    "btw_voorbelasting": "1520",
+    "btw_verschuldigd": {
+      "21": "1510",
+      "9": "1511"
+    }
+  },
+  "rekeningen": [
+    {
+      "code": "0100",
+      "rgs_code": "BIvaMvaIni",
+      "omschrijving": "Inventaris",
+      "soort": "activa"
+    },
+    {
+      "code": "0110",
+      "rgs_code": "BIvaMvaCom",
+      "omschrijving": "Computers en apparatuur",
+      "soort": "activa"
+    },
+    {
+      "code": "0120",
+      "rgs_code": "BIvaMvaVer",
+      "omschrijving": "Vervoermiddelen",
+      "soort": "activa"
+    },
+    {
+      "code": "0150",
+      "rgs_code": "BIvaMvaAfs",
+      "omschrijving": "Cumulatieve afschrijving",
+      "soort": "activa"
+    },
+    {
+      "code": "1000",
+      "rgs_code": "BLimKasKas",
+      "omschrijving": "Kas",
+      "soort": "activa"
+    },
+    {
+      "code": "1100",
+      "rgs_code": "BLimBanRba",
+      "omschrijving": "Bankrekening",
+      "soort": "activa"
+    },
+    {
+      "code": "1300",
+      "rgs_code": "BVorHanDeb",
+      "omschrijving": "Debiteuren",
+      "soort": "activa"
+    },
+    {
+      "code": "1400",
+      "rgs_code": "BVorOvrVoo",
+      "omschrijving": "Vooruitbetaalde kosten",
+      "soort": "activa"
+    },
+    {
+      "code": "1520",
+      "rgs_code": "BVorOvrTvb",
+      "omschrijving": "Te vorderen btw (voorbelasting)",
+      "soort": "btw"
+    },
+    {
+      "code": "0500",
+      "rgs_code": "BEivKapKap",
+      "omschrijving": "Eigen vermogen",
+      "soort": "passiva"
+    },
+    {
+      "code": "0550",
+      "rgs_code": "BEivKapPro",
+      "omschrijving": "Privé-opnamen",
+      "soort": "passiva"
+    },
+    {
+      "code": "0560",
+      "rgs_code": "BEivKapPrs",
+      "omschrijving": "Privé-stortingen",
+      "soort": "passiva"
+    },
+    {
+      "code": "1600",
+      "rgs_code": "BSchHanCre",
+      "omschrijving": "Crediteuren",
+      "soort": "passiva"
+    },
+    {
+      "code": "1610",
+      "rgs_code": "BSchOvsTbb",
+      "omschrijving": "Te betalen kosten",
+      "soort": "passiva"
+    },
+    {
+      "code": "1510",
+      "rgs_code": "BSchBtwBth",
+      "omschrijving": "Te betalen btw hoog tarief",
+      "soort": "btw"
+    },
+    {
+      "code": "1511",
+      "rgs_code": "BSchBtwBtl",
+      "omschrijving": "Te betalen btw laag tarief",
+      "soort": "btw"
+    },
+    {
+      "code": "8000",
+      "rgs_code": "WOmzNetOmh",
+      "omschrijving": "Omzet diensten hoog tarief",
+      "soort": "opbrengsten"
+    },
+    {
+      "code": "8010",
+      "rgs_code": "WOmzNetOml",
+      "omschrijving": "Omzet diensten laag tarief",
+      "soort": "opbrengsten"
+    },
+    {
+      "code": "8020",
+      "rgs_code": "WOmzNetOmn",
+      "omschrijving": "Omzet nultarief of vrijgesteld",
+      "soort": "opbrengsten"
+    },
+    {
+      "code": "8100",
+      "rgs_code": "WOmzOvoOvo",
+      "omschrijving": "Overige opbrengsten",
+      "soort": "opbrengsten"
+    },
+    {
+      "code": "7000",
+      "rgs_code": "WKprInkInk",
+      "omschrijving": "Inkoopwaarde materialen",
+      "soort": "kosten"
+    },
+    {
+      "code": "7100",
+      "rgs_code": "WKprUitUit",
+      "omschrijving": "Uitbesteed werk",
+      "soort": "kosten"
+    },
+    {
+      "code": "4000",
+      "rgs_code": "WBedHuiHui",
+      "omschrijving": "Huisvestingskosten",
+      "soort": "kosten"
+    },
+    {
+      "code": "4100",
+      "rgs_code": "WBedKanKan",
+      "omschrijving": "Kantoorkosten",
+      "soort": "kosten"
+    },
+    {
+      "code": "4110",
+      "rgs_code": "WBedKanTel",
+      "omschrijving": "Telefoon en internet",
+      "soort": "kosten"
+    },
+    {
+      "code": "4120",
+      "rgs_code": "WBedKanAut",
+      "omschrijving": "Software en abonnementen",
+      "soort": "kosten"
+    },
+    {
+      "code": "4130",
+      "rgs_code": "WBedKanKla",
+      "omschrijving": "Kleine aanschaffingen",
+      "soort": "kosten"
+    },
+    {
+      "code": "4140",
+      "rgs_code": "WBedKanVak",
+      "omschrijving": "Contributies en vakliteratuur",
+      "soort": "kosten"
+    },
+    {
+      "code": "4200",
+      "rgs_code": "WBedVkkAut",
+      "omschrijving": "Autokosten",
+      "soort": "kosten"
+    },
+    {
+      "code": "4210",
+      "rgs_code": "WBedVkkRei",
+      "omschrijving": "Reis- en verblijfkosten",
+      "soort": "kosten"
+    },
+    {
+      "code": "4220",
+      "rgs_code": "WBedVkkRep",
+      "omschrijving": "Representatiekosten",
+      "soort": "kosten"
+    },
+    {
+      "code": "4230",
+      "rgs_code": "WBedVkkRec",
+      "omschrijving": "Marketing en reclame",
+      "soort": "kosten"
+    },
+    {
+      "code": "4300",
+      "rgs_code": "WBedAlgVer",
+      "omschrijving": "Verzekeringen",
+      "soort": "kosten"
+    },
+    {
+      "code": "4310",
+      "rgs_code": "WBedAlgAdv",
+      "omschrijving": "Accountants- en advieskosten",
+      "soort": "kosten"
+    },
+    {
+      "code": "4320",
+      "rgs_code": "WBedAlgBan",
+      "omschrijving": "Bankkosten",
+      "soort": "kosten"
+    },
+    {
+      "code": "4400",
+      "rgs_code": "WBedAfsAfs",
+      "omschrijving": "Afschrijvingskosten",
+      "soort": "kosten"
+    }
+  ]
+}
+```
+
+## `boekhouding/boekhouding/config/rekeningen_2025.json`
+
+```json
+{
+  "jaar": 2025,
+  "let_op": "De RGS-codes in dit bestand zijn een met de hand gemaakte subset en zijn NIET geverifieerd tegen de officiele RGS-lijst van het RGS-beheerplatform. Controleer ze voordat je hier een echte aangifte of een export naar een accountant op baseert. De code waarop dit systeem boekt is het veld 'code'; 'rgs_code' is alleen een verwijzing.",
+  "standaardrekeningen": {
+    "crediteuren": "1600",
+    "debiteuren": "1300",
+    "btw_voorbelasting": "1520",
+    "btw_verschuldigd": {
+      "21": "1510",
+      "9": "1511"
+    }
+  },
+  "rekeningen": [
+    {
+      "code": "0100",
+      "rgs_code": "BIvaMvaIni",
+      "omschrijving": "Inventaris",
+      "soort": "activa"
+    },
+    {
+      "code": "0110",
+      "rgs_code": "BIvaMvaCom",
+      "omschrijving": "Computers en apparatuur",
+      "soort": "activa"
+    },
+    {
+      "code": "0120",
+      "rgs_code": "BIvaMvaVer",
+      "omschrijving": "Vervoermiddelen",
+      "soort": "activa"
+    },
+    {
+      "code": "0150",
+      "rgs_code": "BIvaMvaAfs",
+      "omschrijving": "Cumulatieve afschrijving",
+      "soort": "activa"
+    },
+    {
+      "code": "1000",
+      "rgs_code": "BLimKasKas",
+      "omschrijving": "Kas",
+      "soort": "activa"
+    },
+    {
+      "code": "1100",
+      "rgs_code": "BLimBanRba",
+      "omschrijving": "Bankrekening",
+      "soort": "activa"
+    },
+    {
+      "code": "1300",
+      "rgs_code": "BVorHanDeb",
+      "omschrijving": "Debiteuren",
+      "soort": "activa"
+    },
+    {
+      "code": "1400",
+      "rgs_code": "BVorOvrVoo",
+      "omschrijving": "Vooruitbetaalde kosten",
+      "soort": "activa"
+    },
+    {
+      "code": "1520",
+      "rgs_code": "BVorOvrTvb",
+      "omschrijving": "Te vorderen btw (voorbelasting)",
+      "soort": "btw"
+    },
+    {
+      "code": "0500",
+      "rgs_code": "BEivKapKap",
+      "omschrijving": "Eigen vermogen",
+      "soort": "passiva"
+    },
+    {
+      "code": "0550",
+      "rgs_code": "BEivKapPro",
+      "omschrijving": "Privé-opnamen",
+      "soort": "passiva"
+    },
+    {
+      "code": "0560",
+      "rgs_code": "BEivKapPrs",
+      "omschrijving": "Privé-stortingen",
+      "soort": "passiva"
+    },
+    {
+      "code": "1600",
+      "rgs_code": "BSchHanCre",
+      "omschrijving": "Crediteuren",
+      "soort": "passiva"
+    },
+    {
+      "code": "1610",
+      "rgs_code": "BSchOvsTbb",
+      "omschrijving": "Te betalen kosten",
+      "soort": "passiva"
+    },
+    {
+      "code": "1510",
+      "rgs_code": "BSchBtwBth",
+      "omschrijving": "Te betalen btw hoog tarief",
+      "soort": "btw"
+    },
+    {
+      "code": "1511",
+      "rgs_code": "BSchBtwBtl",
+      "omschrijving": "Te betalen btw laag tarief",
+      "soort": "btw"
+    },
+    {
+      "code": "8000",
+      "rgs_code": "WOmzNetOmh",
+      "omschrijving": "Omzet diensten hoog tarief",
+      "soort": "opbrengsten"
+    },
+    {
+      "code": "8010",
+      "rgs_code": "WOmzNetOml",
+      "omschrijving": "Omzet diensten laag tarief",
+      "soort": "opbrengsten"
+    },
+    {
+      "code": "8020",
+      "rgs_code": "WOmzNetOmn",
+      "omschrijving": "Omzet nultarief of vrijgesteld",
+      "soort": "opbrengsten"
+    },
+    {
+      "code": "8100",
+      "rgs_code": "WOmzOvoOvo",
+      "omschrijving": "Overige opbrengsten",
+      "soort": "opbrengsten"
+    },
+    {
+      "code": "7000",
+      "rgs_code": "WKprInkInk",
+      "omschrijving": "Inkoopwaarde materialen",
+      "soort": "kosten"
+    },
+    {
+      "code": "7100",
+      "rgs_code": "WKprUitUit",
+      "omschrijving": "Uitbesteed werk",
+      "soort": "kosten"
+    },
+    {
+      "code": "4000",
+      "rgs_code": "WBedHuiHui",
+      "omschrijving": "Huisvestingskosten",
+      "soort": "kosten"
+    },
+    {
+      "code": "4100",
+      "rgs_code": "WBedKanKan",
+      "omschrijving": "Kantoorkosten",
+      "soort": "kosten"
+    },
+    {
+      "code": "4110",
+      "rgs_code": "WBedKanTel",
+      "omschrijving": "Telefoon en internet",
+      "soort": "kosten"
+    },
+    {
+      "code": "4120",
+      "rgs_code": "WBedKanAut",
+      "omschrijving": "Software en abonnementen",
+      "soort": "kosten"
+    },
+    {
+      "code": "4130",
+      "rgs_code": "WBedKanKla",
+      "omschrijving": "Kleine aanschaffingen",
+      "soort": "kosten"
+    },
+    {
+      "code": "4140",
+      "rgs_code": "WBedKanVak",
+      "omschrijving": "Contributies en vakliteratuur",
+      "soort": "kosten"
+    },
+    {
+      "code": "4200",
+      "rgs_code": "WBedVkkAut",
+      "omschrijving": "Autokosten",
+      "soort": "kosten"
+    },
+    {
+      "code": "4210",
+      "rgs_code": "WBedVkkRei",
+      "omschrijving": "Reis- en verblijfkosten",
+      "soort": "kosten"
+    },
+    {
+      "code": "4220",
+      "rgs_code": "WBedVkkRep",
+      "omschrijving": "Representatiekosten",
+      "soort": "kosten"
+    },
+    {
+      "code": "4230",
+      "rgs_code": "WBedVkkRec",
+      "omschrijving": "Marketing en reclame",
+      "soort": "kosten"
+    },
+    {
+      "code": "4300",
+      "rgs_code": "WBedAlgVer",
+      "omschrijving": "Verzekeringen",
+      "soort": "kosten"
+    },
+    {
+      "code": "4310",
+      "rgs_code": "WBedAlgAdv",
+      "omschrijving": "Accountants- en advieskosten",
+      "soort": "kosten"
+    },
+    {
+      "code": "4320",
+      "rgs_code": "WBedAlgBan",
+      "omschrijving": "Bankkosten",
+      "soort": "kosten"
+    },
+    {
+      "code": "4400",
+      "rgs_code": "WBedAfsAfs",
+      "omschrijving": "Afschrijvingskosten",
+      "soort": "kosten"
+    }
+  ]
+}
+```
+
+## `boekhouding/boekhouding/config/rekeningen_2026.json`
+
+```json
+{
+  "jaar": 2026,
+  "let_op": "De RGS-codes in dit bestand zijn een met de hand gemaakte subset en zijn NIET geverifieerd tegen de officiele RGS-lijst van het RGS-beheerplatform. Controleer ze voordat je hier een echte aangifte of een export naar een accountant op baseert. De code waarop dit systeem boekt is het veld 'code'; 'rgs_code' is alleen een verwijzing.",
+  "standaardrekeningen": {
+    "crediteuren": "1600",
+    "debiteuren": "1300",
+    "btw_voorbelasting": "1520",
+    "btw_verschuldigd": {
+      "21": "1510",
+      "9": "1511"
+    }
+  },
+  "rekeningen": [
+    {
+      "code": "0100",
+      "rgs_code": "BIvaMvaIni",
+      "omschrijving": "Inventaris",
+      "soort": "activa"
+    },
+    {
+      "code": "0110",
+      "rgs_code": "BIvaMvaCom",
+      "omschrijving": "Computers en apparatuur",
+      "soort": "activa"
+    },
+    {
+      "code": "0120",
+      "rgs_code": "BIvaMvaVer",
+      "omschrijving": "Vervoermiddelen",
+      "soort": "activa"
+    },
+    {
+      "code": "0150",
+      "rgs_code": "BIvaMvaAfs",
+      "omschrijving": "Cumulatieve afschrijving",
+      "soort": "activa"
+    },
+    {
+      "code": "1000",
+      "rgs_code": "BLimKasKas",
+      "omschrijving": "Kas",
+      "soort": "activa"
+    },
+    {
+      "code": "1100",
+      "rgs_code": "BLimBanRba",
+      "omschrijving": "Bankrekening",
+      "soort": "activa"
+    },
+    {
+      "code": "1300",
+      "rgs_code": "BVorHanDeb",
+      "omschrijving": "Debiteuren",
+      "soort": "activa"
+    },
+    {
+      "code": "1400",
+      "rgs_code": "BVorOvrVoo",
+      "omschrijving": "Vooruitbetaalde kosten",
+      "soort": "activa"
+    },
+    {
+      "code": "1520",
+      "rgs_code": "BVorOvrTvb",
+      "omschrijving": "Te vorderen btw (voorbelasting)",
+      "soort": "btw"
+    },
+    {
+      "code": "0500",
+      "rgs_code": "BEivKapKap",
+      "omschrijving": "Eigen vermogen",
+      "soort": "passiva"
+    },
+    {
+      "code": "0550",
+      "rgs_code": "BEivKapPro",
+      "omschrijving": "Privé-opnamen",
+      "soort": "passiva"
+    },
+    {
+      "code": "0560",
+      "rgs_code": "BEivKapPrs",
+      "omschrijving": "Privé-stortingen",
+      "soort": "passiva"
+    },
+    {
+      "code": "1600",
+      "rgs_code": "BSchHanCre",
+      "omschrijving": "Crediteuren",
+      "soort": "passiva"
+    },
+    {
+      "code": "1610",
+      "rgs_code": "BSchOvsTbb",
+      "omschrijving": "Te betalen kosten",
+      "soort": "passiva"
+    },
+    {
+      "code": "1510",
+      "rgs_code": "BSchBtwBth",
+      "omschrijving": "Te betalen btw hoog tarief",
+      "soort": "btw"
+    },
+    {
+      "code": "1511",
+      "rgs_code": "BSchBtwBtl",
+      "omschrijving": "Te betalen btw laag tarief",
+      "soort": "btw"
+    },
+    {
+      "code": "8000",
+      "rgs_code": "WOmzNetOmh",
+      "omschrijving": "Omzet diensten hoog tarief",
+      "soort": "opbrengsten"
+    },
+    {
+      "code": "8010",
+      "rgs_code": "WOmzNetOml",
+      "omschrijving": "Omzet diensten laag tarief",
+      "soort": "opbrengsten"
+    },
+    {
+      "code": "8020",
+      "rgs_code": "WOmzNetOmn",
+      "omschrijving": "Omzet nultarief of vrijgesteld",
+      "soort": "opbrengsten"
+    },
+    {
+      "code": "8100",
+      "rgs_code": "WOmzOvoOvo",
+      "omschrijving": "Overige opbrengsten",
+      "soort": "opbrengsten"
+    },
+    {
+      "code": "7000",
+      "rgs_code": "WKprInkInk",
+      "omschrijving": "Inkoopwaarde materialen",
+      "soort": "kosten"
+    },
+    {
+      "code": "7100",
+      "rgs_code": "WKprUitUit",
+      "omschrijving": "Uitbesteed werk",
+      "soort": "kosten"
+    },
+    {
+      "code": "4000",
+      "rgs_code": "WBedHuiHui",
+      "omschrijving": "Huisvestingskosten",
+      "soort": "kosten"
+    },
+    {
+      "code": "4100",
+      "rgs_code": "WBedKanKan",
+      "omschrijving": "Kantoorkosten",
+      "soort": "kosten"
+    },
+    {
+      "code": "4110",
+      "rgs_code": "WBedKanTel",
+      "omschrijving": "Telefoon en internet",
+      "soort": "kosten"
+    },
+    {
+      "code": "4120",
+      "rgs_code": "WBedKanAut",
+      "omschrijving": "Software en abonnementen",
+      "soort": "kosten"
+    },
+    {
+      "code": "4130",
+      "rgs_code": "WBedKanKla",
+      "omschrijving": "Kleine aanschaffingen",
+      "soort": "kosten"
+    },
+    {
+      "code": "4140",
+      "rgs_code": "WBedKanVak",
+      "omschrijving": "Contributies en vakliteratuur",
+      "soort": "kosten"
+    },
+    {
+      "code": "4200",
+      "rgs_code": "WBedVkkAut",
+      "omschrijving": "Autokosten",
+      "soort": "kosten"
+    },
+    {
+      "code": "4210",
+      "rgs_code": "WBedVkkRei",
+      "omschrijving": "Reis- en verblijfkosten",
+      "soort": "kosten"
+    },
+    {
+      "code": "4220",
+      "rgs_code": "WBedVkkRep",
+      "omschrijving": "Representatiekosten",
+      "soort": "kosten"
+    },
+    {
+      "code": "4230",
+      "rgs_code": "WBedVkkRec",
+      "omschrijving": "Marketing en reclame",
+      "soort": "kosten"
+    },
+    {
+      "code": "4300",
+      "rgs_code": "WBedAlgVer",
+      "omschrijving": "Verzekeringen",
+      "soort": "kosten"
+    },
+    {
+      "code": "4310",
+      "rgs_code": "WBedAlgAdv",
+      "omschrijving": "Accountants- en advieskosten",
+      "soort": "kosten"
+    },
+    {
+      "code": "4320",
+      "rgs_code": "WBedAlgBan",
+      "omschrijving": "Bankkosten",
+      "soort": "kosten"
+    },
+    {
+      "code": "4400",
+      "rgs_code": "WBedAfsAfs",
+      "omschrijving": "Afschrijvingskosten",
+      "soort": "kosten"
+    }
+  ]
 }
 ```
 
@@ -4584,6 +6797,14 @@ Wil je ook zien hoe het reviewscherm eruitziet met een échte PDF ernaast:
 
 Dat laadt ook de Factur-X-PDF in (ook zonder sleutel — de e-factuur zit
 als bijlage in de PDF).
+
+Wil je ook het btw-scherm met cijfers zien in plaats van met blokkades:
+
+    python scripts/vul_testdata.py --met-pdf --boek
+
+Dan wordt bij elke factuur die klopt een grootboekrekening gekozen, wordt
+hij goedgekeurd en geboekt. Dat is normaal handwerk van de eigenaar; hier
+gebeurt het zodat er iets te zien is.
 """
 
 import sys
@@ -4593,6 +6814,9 @@ BASIS = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(BASIS))
 
 from boekhouding import (  # noqa: E402
+    boek_factuur,
+    keur_factuur_goed,
+    kies_rekening,
     lees_facturen,
     maak_administratie,
     maak_tabellen,
@@ -4611,8 +6835,18 @@ BESTANDEN = [
 ]
 
 
+# Welke rekening bij welk testbestand hoort. Normaal kiest de eigenaar
+# die zelf in het reviewscherm; voor de demo staat het hier.
+REKENINGEN = {
+    "01-standaard-21procent.xml": "4100",   # kantoorkosten
+    "02-diensten-9procent.xml": "4310",     # advieskosten
+    "06-factuur-x.pdf": "4120",             # software
+}
+
+
 def main() -> int:
     met_pdf = "--met-pdf" in sys.argv
+    boeken = "--boek" in sys.argv
     bestanden = BESTANDEN + (["06-factuur-x.pdf"] if met_pdf else [])
 
     GEGEVENS.mkdir(exist_ok=True)
@@ -4638,6 +6872,15 @@ def main() -> int:
         print(f"  {naam:<28} -> factuur {resultaat.factuur_id}  [{merk}]")
         for reden in resultaat.redenen:
             print(f"       {reden[:88]}")
+
+        if boeken and resultaat.status != "review_nodig" and naam in REKENINGEN:
+            kies_rekening(conn, resultaat.factuur_id, REKENINGEN[naam])
+            keur_factuur_goed(conn, resultaat.factuur_id)
+            boeking_id, redenen = boek_factuur(conn, resultaat.factuur_id)
+            if boeking_id is None:
+                print(f"       niet geboekt: {redenen[0][:78]}")
+            else:
+                print(f"       geboekt op {REKENINGEN[naam]} (boeking {boeking_id})")
 
     facturen = lees_facturen(conn, administratie_id)
     conn.close()
@@ -4686,6 +6929,7 @@ BRONBESTANDEN = [
     "boekhouding/btw_config.py",
     "boekhouding/models.py",
     "boekhouding/validatie.py",
+    "boekhouding/rekeningschema.py",
     "boekhouding/documenten.py",
     "boekhouding/omgeving.py",
     "boekhouding/ubl.py",
@@ -4693,6 +6937,8 @@ BRONBESTANDEN = [
     "boekhouding/ai_extractie.py",
     "boekhouding/verwerking.py",
     "boekhouding/database.py",
+    "boekhouding/grootboek.py",
+    "boekhouding/btw_aangifte.py",
     "boekhouding/web/__init__.py",
     "boekhouding/web/app.py",
     "boekhouding/web/ubl_weergave.py",
@@ -4700,10 +6946,14 @@ BRONBESTANDEN = [
     "boekhouding/web/templates/overzicht.html",
     "boekhouding/web/templates/upload.html",
     "boekhouding/web/templates/review.html",
+    "boekhouding/web/templates/btw.html",
     "boekhouding/web/templates/fout.html",
     "boekhouding/config/btw_2024.json",
     "boekhouding/config/btw_2025.json",
     "boekhouding/config/btw_2026.json",
+    "boekhouding/config/rekeningen_2024.json",
+    "boekhouding/config/rekeningen_2025.json",
+    "boekhouding/config/rekeningen_2026.json",
     "scripts/start_webinterface.py",
     "scripts/vul_testdata.py",
     "scripts/maak_oplevering.py",
@@ -4724,6 +6974,9 @@ BRONBESTANDEN = [
     "tests/test_eval_logica.py",
     "tests/test_ubl.py",
     "tests/test_ubl_weergave.py",
+    "tests/test_rekeningschema.py",
+    "tests/test_grootboek.py",
+    "tests/test_btw_aangifte.py",
     "tests/test_web.py",
     "pytest.ini",
     "requirements.txt",
@@ -9152,6 +11405,808 @@ def test_leeg_bestand_geeft_geen_exception():
     assert weergave.status == "onleesbaar"
 ```
 
+## `boekhouding/tests/test_rekeningschema.py`
+
+```python
+"""Tests voor het rekeningschema per boekjaar.
+
+Er kan alleen op een rekening uit het schema worden geboekt, en het
+schema komt uit een config-bestand per jaar — niet uit de code.
+"""
+
+import json
+
+import pytest
+
+from boekhouding.rekeningschema import (
+    CONFIG_MAP,
+    KIESBARE_SOORTEN,
+    SOORTEN,
+    rekeningschema_voor_jaar,
+)
+
+
+def test_er_is_een_schema_voor_elk_jaar_met_btw_tarieven():
+    """Zonder rekeningschema kan een factuur van dat jaar niet geboekt worden."""
+    jaren = {
+        int(pad.stem.split("_")[1])
+        for pad in CONFIG_MAP.glob("btw_*.json")
+    }
+    for jaar in jaren:
+        assert rekeningschema_voor_jaar(jaar) is not None, f"geen schema voor {jaar}"
+
+
+def test_een_jaar_zonder_bestand_geeft_none():
+    """Nooit het schema van een ander jaar gebruiken."""
+    assert rekeningschema_voor_jaar(1999) is None
+
+
+def test_elke_rekening_heeft_een_bekende_soort():
+    schema = rekeningschema_voor_jaar(2026)
+    for rekening in schema.rekeningen.values():
+        assert rekening.soort in SOORTEN
+        assert rekening.omschrijving.strip()
+        assert rekening.rgs_code.strip()
+
+
+def test_er_zijn_ongeveer_dertig_rekeningen():
+    """Genoeg voor een zzp'er, klein genoeg om uit een lijst te kiezen."""
+    schema = rekeningschema_voor_jaar(2026)
+    assert 25 <= len(schema.rekeningen) <= 45
+
+
+def test_alleen_kosten_en_opbrengsten_zijn_kiesbaar():
+    """Bank, crediteuren en btw vult de boeking zelf in; die kies je niet."""
+    schema = rekeningschema_voor_jaar(2026)
+    for rekening in schema.kiesbaar():
+        assert rekening.soort in KIESBARE_SOORTEN
+    assert schema.zoek("1600").soort == "passiva"
+    assert schema.zoek("1600") not in schema.kiesbaar()
+
+
+def test_de_standaardrekeningen_bestaan_ook_echt():
+    schema = rekeningschema_voor_jaar(2026)
+    for naam in ("crediteuren", "debiteuren", "btw_voorbelasting"):
+        code = schema.standaard(naam)
+        assert schema.zoek(code) is not None, naam
+
+
+def test_btw_rekening_per_tarief():
+    schema = rekeningschema_voor_jaar(2026)
+    assert schema.zoek(schema.btw_verschuldigd_voor("21")).soort == "btw"
+    assert schema.zoek(schema.btw_verschuldigd_voor("9")).soort == "btw"
+    # Bij 0% hoort geen btw-rekening, en bij een onbekend tarief ook niet:
+    # dan wordt er geweigerd in plaats van gegokt.
+    assert schema.btw_verschuldigd_voor("0") is None
+    assert schema.btw_verschuldigd_voor("13") is None
+
+
+def test_een_onbekende_code_bestaat_niet():
+    assert rekeningschema_voor_jaar(2026).zoek("9999") is None
+
+
+def test_dubbele_code_in_de_config_wordt_gemeld(tmp_path, monkeypatch):
+    """Twee rekeningen met dezelfde code zou stil de een overschrijven."""
+    import boekhouding.rekeningschema as mod
+
+    origineel = json.loads((CONFIG_MAP / "rekeningen_2026.json").read_text("utf-8"))
+    origineel["rekeningen"].append(dict(origineel["rekeningen"][0]))
+    origineel["jaar"] = 2099
+    (tmp_path / "rekeningen_2099.json").write_text(
+        json.dumps(origineel), encoding="utf-8"
+    )
+    monkeypatch.setattr(mod, "CONFIG_MAP", tmp_path)
+    mod.rekeningschema_voor_jaar.cache_clear()
+
+    with pytest.raises(ValueError, match="twee keer"):
+        mod.rekeningschema_voor_jaar(2099)
+    mod.rekeningschema_voor_jaar.cache_clear()
+
+
+def test_ontbrekende_standaardrekening_wordt_gemeld(tmp_path, monkeypatch):
+    import boekhouding.rekeningschema as mod
+
+    data = json.loads((CONFIG_MAP / "rekeningen_2026.json").read_text("utf-8"))
+    data["standaardrekeningen"]["crediteuren"] = "0000"
+    (tmp_path / "rekeningen_2098.json").write_text(json.dumps(data), encoding="utf-8")
+    monkeypatch.setattr(mod, "CONFIG_MAP", tmp_path)
+    mod.rekeningschema_voor_jaar.cache_clear()
+
+    with pytest.raises(ValueError, match="standaardrekeningen"):
+        mod.rekeningschema_voor_jaar(2098)
+    mod.rekeningschema_voor_jaar.cache_clear()
+```
+
+## `boekhouding/tests/test_grootboek.py`
+
+```python
+"""Tests voor het grootboek: boekingen, balans en tegenboekingen.
+
+De kern: een boeking bestaat alleen als debet en credit exact gelijk
+zijn, en een boeking wordt nooit gewijzigd of verwijderd.
+"""
+
+from datetime import date
+from decimal import Decimal
+
+import pytest
+
+from boekhouding import (
+    Boekingsregel,
+    boek_factuur,
+    boeking_bij_factuur,
+    controleer_balans,
+    keur_factuur_goed,
+    kies_rekening,
+    lees_audit_trail,
+    lees_boeking,
+    lees_boekingen,
+    maak_administratie,
+    maak_tabellen,
+    maak_tegenboeking,
+    maak_verbinding,
+    sla_boeking_op,
+    sla_factuur_op,
+    som_credit,
+    som_debet,
+    stel_boeking_samen,
+    stel_tegenboeking_samen,
+)
+
+VANDAAG = date(2026, 8, 27)
+
+
+@pytest.fixture
+def conn(tmp_path):
+    verbinding = maak_verbinding(str(tmp_path / "boekhouding.sqlite"))
+    maak_tabellen(verbinding)
+    maak_administratie(verbinding, "Zaak van Alaa")
+    yield verbinding
+    verbinding.close()
+
+
+def factuurgegevens(**afwijkingen):
+    gegeven = {
+        "leverancier": "Van Dijk ICT-diensten",
+        "factuurdatum": "2026-07-14",
+        "factuurnummer": "F-2026-001",
+        "bedrag_excl": "100.00",
+        "btw_percentage": "21",
+        "btw_bedrag": "21.00",
+        "bedrag_incl": "121.00",
+    }
+    gegeven.update(afwijkingen)
+    return gegeven
+
+
+def geboekte_factuur(conn, rekening="4100", **afwijkingen):
+    """Een factuur van upload tot boeking, zoals het scherm dat doet."""
+    factuur_id, _ = sla_factuur_op(
+        conn, 1, factuurgegevens(**afwijkingen), vandaag=VANDAAG
+    )
+    assert kies_rekening(conn, factuur_id, rekening) == (True, [])
+    assert keur_factuur_goed(conn, factuur_id)[0] is True
+    boeking_id, redenen = boek_factuur(conn, factuur_id)
+    assert redenen == []
+    return factuur_id, boeking_id
+
+
+# --- balans -------------------------------------------------------------
+
+def test_een_kloppende_boeking_is_in_balans():
+    regels = [
+        Boekingsregel(rekening="4100", omschrijving="kosten", debet=Decimal("100.00")),
+        Boekingsregel(rekening="1520", omschrijving="btw", debet=Decimal("21.00")),
+        Boekingsregel(rekening="1600", omschrijving="crediteuren", credit=Decimal("121.00")),
+    ]
+    assert controleer_balans(regels) == []
+    assert som_debet(regels) == som_credit(regels) == Decimal("121.00")
+
+
+def test_een_cent_verschil_is_al_niet_in_balans():
+    """De factuurcontrole laat ±0,02 toe; een boeking geen cent."""
+    regels = [
+        Boekingsregel(rekening="4100", omschrijving="kosten", debet=Decimal("100.00")),
+        Boekingsregel(rekening="1600", omschrijving="crediteuren", credit=Decimal("100.01")),
+    ]
+    redenen = controleer_balans(regels)
+    assert redenen
+    assert "niet in balans" in redenen[0]
+
+
+def test_een_regel_hoort_aan_een_kant_te_staan():
+    regels = [
+        Boekingsregel(rekening="4100", omschrijving="fout",
+                      debet=Decimal("10.00"), credit=Decimal("10.00")),
+    ]
+    assert any("één kant" in reden for reden in controleer_balans(regels))
+
+
+def test_een_boeking_zonder_regels_bestaat_niet():
+    assert controleer_balans([]) == ["een boeking zonder regels bestaat niet"]
+
+
+# --- samenstellen -------------------------------------------------------
+
+def test_inkoopfactuur_wordt_kosten_btw_en_crediteuren():
+    voorstel = stel_boeking_samen({**factuurgegevens(), "id": 1}, "4100")
+    assert voorstel.status == "gemaakt"
+    assert [(r.rekening, str(r.debet), str(r.credit)) for r in voorstel.regels] == [
+        ("4100", "100.00", "0.00"),
+        ("1520", "21.00", "0.00"),
+        ("1600", "0.00", "121.00"),
+    ]
+    assert voorstel.boekdatum == date(2026, 7, 14)
+
+
+def test_verkoopfactuur_wordt_debiteuren_omzet_en_af_te_dragen_btw():
+    """De gekozen rekening bepaalt de richting; dat is een keuze van een mens."""
+    voorstel = stel_boeking_samen({**factuurgegevens(), "id": 1}, "8000")
+    assert voorstel.status == "gemaakt"
+    assert [(r.rekening, str(r.debet), str(r.credit)) for r in voorstel.regels] == [
+        ("1300", "121.00", "0.00"),
+        ("8000", "0.00", "100.00"),
+        ("1510", "0.00", "21.00"),
+    ]
+
+
+def test_negen_procent_gaat_naar_de_andere_btw_rekening():
+    voorstel = stel_boeking_samen(
+        {**factuurgegevens(btw_percentage="9", btw_bedrag="9.00",
+                           bedrag_incl="109.00"), "id": 1},
+        "8010",
+    )
+    assert voorstel.regels[-1].rekening == "1511"
+
+
+def test_nultarief_krijgt_geen_btw_regel():
+    voorstel = stel_boeking_samen(
+        {**factuurgegevens(btw_percentage="0", btw_bedrag="0.00",
+                           bedrag_incl="100.00"), "id": 1},
+        "8020",
+    )
+    assert voorstel.status == "gemaakt"
+    assert len(voorstel.regels) == 2
+    assert controleer_balans(voorstel.regels) == []
+
+
+def test_creditnota_met_negatieve_bedragen_blijft_in_balans():
+    voorstel = stel_boeking_samen(
+        {**factuurgegevens(bedrag_excl="-100.00", btw_bedrag="-21.00",
+                           bedrag_incl="-121.00"), "id": 1},
+        "4100",
+    )
+    assert voorstel.status == "gemaakt"
+    assert controleer_balans(voorstel.regels) == []
+    assert som_debet(voorstel.regels) == Decimal("-121.00")
+
+
+def test_zonder_rekening_ontstaat_er_geen_boeking():
+    voorstel = stel_boeking_samen({**factuurgegevens(), "id": 1}, None)
+    assert voorstel.status == "geweigerd"
+    assert "geen grootboekrekening gekozen" in voorstel.redenen[0]
+
+
+def test_een_onbekende_rekening_wordt_geweigerd():
+    voorstel = stel_boeking_samen({**factuurgegevens(), "id": 1}, "9999")
+    assert voorstel.status == "geweigerd"
+    assert "staat niet in het rekeningschema" in voorstel.redenen[0]
+
+
+def test_een_balansrekening_hoort_niet_bij_een_factuur():
+    voorstel = stel_boeking_samen({**factuurgegevens(), "id": 1}, "1600")
+    assert voorstel.status == "geweigerd"
+    assert "kosten- of opbrengstenrekening" in voorstel.redenen[0]
+
+
+def test_bedragen_die_een_cent_afwijken_worden_niet_geboekt():
+    """Deze factuur komt door valideer_factuur (±0,02) maar niet door de boeking."""
+    voorstel = stel_boeking_samen(
+        {**factuurgegevens(bedrag_incl="121.01"), "id": 1}, "4100"
+    )
+    assert voorstel.status == "geweigerd"
+    assert "tellen niet exact op" in voorstel.redenen[0]
+
+
+def test_een_ontbrekend_bedrag_wordt_niet_aangevuld():
+    voorstel = stel_boeking_samen(
+        {**factuurgegevens(btw_bedrag=None), "id": 1}, "4100"
+    )
+    assert voorstel.status == "geweigerd"
+    assert "btw_bedrag" in voorstel.redenen[0]
+
+
+def test_zonder_factuurdatum_geen_boekdatum():
+    voorstel = stel_boeking_samen(
+        {**factuurgegevens(factuurdatum=None), "id": 1}, "4100"
+    )
+    assert voorstel.status == "geweigerd"
+    assert "geen factuurdatum" in voorstel.redenen[0]
+
+
+def test_een_jaar_zonder_rekeningschema_wordt_niet_geboekt():
+    voorstel = stel_boeking_samen(
+        {**factuurgegevens(factuurdatum="1999-07-14"), "id": 1}, "4100"
+    )
+    assert voorstel.status == "geweigerd"
+    assert "geen rekeningschema" in voorstel.redenen[0]
+
+
+# --- opslaan ------------------------------------------------------------
+
+def test_alleen_een_goedgekeurde_factuur_wordt_geboekt(conn):
+    factuur_id, _ = sla_factuur_op(conn, 1, factuurgegevens(), vandaag=VANDAAG)
+    kies_rekening(conn, factuur_id, "4100")
+
+    boeking_id, redenen = boek_factuur(conn, factuur_id)
+    assert boeking_id is None
+    assert "nog niet goedgekeurd" in redenen[0]
+
+
+def test_een_geboekte_factuur_staat_in_het_grootboek(conn):
+    factuur_id, boeking_id = geboekte_factuur(conn)
+    boeking = lees_boeking(conn, boeking_id)
+
+    assert boeking["factuur_id"] == factuur_id
+    assert boeking["boekdatum"] == "2026-07-14"
+    assert "Van Dijk" in boeking["omschrijving"]
+    assert [r["rekening"] for r in boeking["regels"]] == ["4100", "1520", "1600"]
+    assert boeking_bij_factuur(conn, factuur_id)["id"] == boeking_id
+
+
+def test_dezelfde_factuur_wordt_niet_twee_keer_geboekt(conn):
+    factuur_id, _ = geboekte_factuur(conn)
+
+    nogmaals, redenen = boek_factuur(conn, factuur_id)
+    assert nogmaals is None
+    assert "al geboekt" in redenen[0]
+    assert len(lees_boekingen(conn, 1)) == 1
+
+
+def test_een_boeking_komt_in_de_audit_trail(conn):
+    _, boeking_id = geboekte_factuur(conn)
+    trail = lees_audit_trail(conn, boeking_id, tabel="boekingen")
+
+    assert len(trail) == 1
+    assert trail[0]["actie"] == "aangemaakt"
+    assert "4100" in trail[0]["nieuwe_waarde"]
+
+
+def test_de_gekozen_rekening_komt_in_de_audit_trail(conn):
+    factuur_id, _ = sla_factuur_op(conn, 1, factuurgegevens(), vandaag=VANDAAG)
+    kies_rekening(conn, factuur_id, "4100")
+    kies_rekening(conn, factuur_id, "4110")
+
+    wijzigingen = [
+        r for r in lees_audit_trail(conn, factuur_id) if r["veld"] == "rekening"
+    ]
+    assert [(r["oude_waarde"], r["nieuwe_waarde"]) for r in wijzigingen] == [
+        (None, "4100"), ("4100", "4110"),
+    ]
+
+
+def test_een_onbekende_rekening_kiezen_kan_niet(conn):
+    factuur_id, _ = sla_factuur_op(conn, 1, factuurgegevens(), vandaag=VANDAAG)
+
+    gelukt, redenen = kies_rekening(conn, factuur_id, "9999")
+    assert gelukt is False
+    assert "staat niet in het schema" in redenen[0]
+
+
+def test_een_boeking_die_niet_klopt_komt_de_database_niet_in(conn):
+    """Dubbele controle: ook als de aanroeper de balans zou overslaan."""
+    from boekhouding import BoekingVoorstel
+
+    scheef = BoekingVoorstel(
+        status="gemaakt",
+        boekdatum=date(2026, 7, 14),
+        omschrijving="handmatig",
+        regels=[
+            Boekingsregel(rekening="4100", omschrijving="kosten", debet=Decimal("100.00")),
+            Boekingsregel(rekening="1600", omschrijving="cred", credit=Decimal("99.00")),
+        ],
+    )
+    boeking_id, redenen = sla_boeking_op(conn, 1, scheef)
+    assert boeking_id is None
+    assert "niet in balans" in redenen[0]
+    assert lees_boekingen(conn, 1) == []
+
+
+# --- tegenboeking -------------------------------------------------------
+
+def test_een_tegenboeking_zet_alles_aan_de_andere_kant(conn):
+    _, boeking_id = geboekte_factuur(conn)
+
+    tegen_id, redenen = maak_tegenboeking(conn, boeking_id, "verkeerde rekening")
+    assert redenen == []
+
+    origineel = lees_boeking(conn, boeking_id)
+    tegen = lees_boeking(conn, tegen_id)
+    assert tegen["corrigeert_boeking_id"] == boeking_id
+    assert "verkeerde rekening" in tegen["omschrijving"]
+    for oud, nieuw in zip(origineel["regels"], tegen["regels"]):
+        assert oud["debet"] == nieuw["credit"]
+        assert oud["credit"] == nieuw["debet"]
+
+
+def test_origineel_en_tegenboeking_zijn_samen_nul(conn):
+    _, boeking_id = geboekte_factuur(conn)
+    maak_tegenboeking(conn, boeking_id, "toch geen kosten")
+
+    alle_regels = [
+        regel for boeking in lees_boekingen(conn, 1) for regel in boeking["regels"]
+    ]
+    debet = sum(Decimal(r["debet"]) for r in alle_regels)
+    credit = sum(Decimal(r["credit"]) for r in alle_regels)
+    assert debet == credit
+    per_rekening = {}
+    for regel in alle_regels:
+        saldo = Decimal(regel["debet"]) - Decimal(regel["credit"])
+        per_rekening[regel["rekening"]] = per_rekening.get(regel["rekening"], 0) + saldo
+    assert set(per_rekening.values()) == {Decimal("0.00")}
+
+
+def test_de_oorspronkelijke_boeking_blijft_ongewijzigd_staan(conn):
+    _, boeking_id = geboekte_factuur(conn)
+    voor = lees_boeking(conn, boeking_id)
+
+    maak_tegenboeking(conn, boeking_id, "correctie")
+
+    assert lees_boeking(conn, boeking_id) == voor
+    assert len(lees_boekingen(conn, 1)) == 2
+
+
+def test_twee_keer_corrigeren_gebeurt_niet(conn):
+    _, boeking_id = geboekte_factuur(conn)
+    maak_tegenboeking(conn, boeking_id, "correctie")
+
+    tweede, redenen = maak_tegenboeking(conn, boeking_id, "nog eens")
+    assert tweede is None
+    assert "al gecorrigeerd" in redenen[0]
+
+
+def test_een_tegenboeking_zonder_reden_wordt_geweigerd(conn):
+    _, boeking_id = geboekte_factuur(conn)
+
+    tegen, redenen = maak_tegenboeking(conn, boeking_id, "   ")
+    assert tegen is None
+    assert "reden" in redenen[0]
+
+
+def test_een_tegenboeking_kan_in_een_ander_kwartaal(conn):
+    """Is het kwartaal al aangegeven, dan hoort de correctie in het lopende."""
+    _, boeking_id = geboekte_factuur(conn)
+
+    tegen_id, _ = maak_tegenboeking(
+        conn, boeking_id, "kwartaal al ingediend", boekdatum=date(2026, 10, 1)
+    )
+    assert lees_boeking(conn, tegen_id)["boekdatum"] == "2026-10-01"
+
+
+def test_de_tegenboeking_van_een_tegenboeking_klopt_ook():
+    """Puur rekenkundig: twee keer omdraaien geeft het origineel terug."""
+    boeking = {
+        "id": 7,
+        "boekdatum": "2026-07-14",
+        "regels": [
+            {"rekening": "4100", "omschrijving": "kosten", "debet": "100.00", "credit": "0.00"},
+            {"rekening": "1600", "omschrijving": "cred", "debet": "0.00", "credit": "100.00"},
+        ],
+    }
+    eerste = stel_tegenboeking_samen(boeking, "fout")
+    assert eerste.status == "gemaakt"
+    assert str(eerste.regels[0].credit) == "100.00"
+
+
+# --- periode ------------------------------------------------------------
+
+def test_boekingen_zijn_per_periode_op_te_vragen(conn):
+    geboekte_factuur(conn, factuurdatum="2026-03-31", factuurnummer="F-1")
+    geboekte_factuur(conn, factuurdatum="2026-04-01", factuurnummer="F-2")
+
+    eerste = lees_boekingen(conn, 1, date(2026, 1, 1), date(2026, 3, 31))
+    tweede = lees_boekingen(conn, 1, date(2026, 4, 1), date(2026, 6, 30))
+    assert [b["boekdatum"] for b in eerste] == ["2026-03-31"]
+    assert [b["boekdatum"] for b in tweede] == ["2026-04-01"]
+
+
+def test_de_rekening_wijzigen_na_het_boeken_kan_niet(conn):
+    """Anders zegt de factuur iets anders dan het grootboek."""
+    factuur_id, boeking_id = geboekte_factuur(conn, rekening="4100")
+
+    gelukt, redenen = kies_rekening(conn, factuur_id, "4110")
+    assert gelukt is False
+    assert "al geboekt" in redenen[0] and "tegenboeking" in redenen[0]
+
+    from boekhouding import lees_factuur
+    assert lees_factuur(conn, factuur_id)["rekening"] == "4100"
+    assert lees_boeking(conn, boeking_id)["regels"][0]["rekening"] == "4100"
+```
+
+## `boekhouding/tests/test_btw_aangifte.py`
+
+```python
+"""Tests voor de btw-aangifte per kwartaal.
+
+Twee dingen worden hier bewezen: dat de rubrieken kloppen, en dat er
+niets wordt uitgerekend zolang er in dat kwartaal nog een factuur open
+staat.
+"""
+
+from datetime import date
+from decimal import Decimal
+
+import pytest
+
+from boekhouding import (
+    bereken_aangifte,
+    boek_factuur,
+    keur_factuur_goed,
+    kies_rekening,
+    kwartaal_grenzen,
+    kwartaal_van,
+    maak_administratie,
+    maak_tabellen,
+    maak_tegenboeking,
+    maak_verbinding,
+    sla_factuur_op,
+    zoek_blokkades,
+)
+
+VANDAAG = date(2026, 12, 31)
+
+
+@pytest.fixture
+def conn(tmp_path):
+    verbinding = maak_verbinding(str(tmp_path / "boekhouding.sqlite"))
+    maak_tabellen(verbinding)
+    maak_administratie(verbinding, "Zaak van Alaa")
+    yield verbinding
+    verbinding.close()
+
+
+def zet_factuur(
+    conn, nummer, datum, excl, percentage, btw, incl, rekening,
+    goedkeuren=True, boeken=True, leverancier="Van Dijk ICT-diensten",
+):
+    """Zet een factuur neer en loop de keten af tot waar de test hem wil."""
+    factuur_id, resultaat = sla_factuur_op(
+        conn, 1,
+        {
+            "leverancier": leverancier, "factuurdatum": datum,
+            "factuurnummer": nummer, "bedrag_excl": excl,
+            "btw_percentage": percentage, "btw_bedrag": btw, "bedrag_incl": incl,
+        },
+        vandaag=VANDAAG,
+    )
+    if rekening:
+        kies_rekening(conn, factuur_id, rekening)
+    if goedkeuren and resultaat.status == "gevalideerd":
+        keur_factuur_goed(conn, factuur_id)
+        if boeken:
+            boek_factuur(conn, factuur_id)
+    return factuur_id
+
+
+def volledig_kwartaal(conn):
+    """Q3 2026: twee verkopen (21% en 9%) en een inkoop."""
+    zet_factuur(conn, "V-1", "2026-07-10", "1000.00", "21", "210.00", "1210.00", "8000")
+    zet_factuur(conn, "V-2", "2026-08-05", "500.00", "9", "45.00", "545.00", "8010")
+    zet_factuur(conn, "I-1", "2026-07-20", "200.00", "21", "42.00", "242.00", "4100")
+
+
+# --- kwartaalgrenzen ----------------------------------------------------
+
+def test_eenendertig_maart_is_q1_en_een_april_is_q2():
+    assert kwartaal_van(date(2026, 3, 31)) == 1
+    assert kwartaal_van(date(2026, 4, 1)) == 2
+
+
+def test_elke_maand_valt_in_het_juiste_kwartaal():
+    verwacht = [1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4]
+    for maand, kwartaal in enumerate(verwacht, start=1):
+        assert kwartaal_van(date(2026, maand, 1)) == kwartaal
+
+
+def test_de_grenzen_van_elk_kwartaal():
+    assert kwartaal_grenzen(2026, 1) == (date(2026, 1, 1), date(2026, 3, 31))
+    assert kwartaal_grenzen(2026, 2) == (date(2026, 4, 1), date(2026, 6, 30))
+    assert kwartaal_grenzen(2026, 3) == (date(2026, 7, 1), date(2026, 9, 30))
+    assert kwartaal_grenzen(2026, 4) == (date(2026, 10, 1), date(2026, 12, 31))
+
+
+def test_februari_in_een_schrikkeljaar():
+    assert kwartaal_grenzen(2024, 1)[1] == date(2024, 3, 31)
+    assert kwartaal_grenzen(2100, 1)[0] == date(2100, 1, 1)
+
+
+def test_een_kwartaal_dat_niet_bestaat():
+    with pytest.raises(ValueError, match="kwartaal 5"):
+        kwartaal_grenzen(2026, 5)
+
+
+def test_een_factuur_van_31_maart_telt_in_q1_en_niet_in_q2(conn):
+    zet_factuur(conn, "V-1", "2026-03-31", "100.00", "21", "21.00", "121.00", "8000")
+
+    q1 = bereken_aangifte(conn, 1, 2026, 1)
+    q2 = bereken_aangifte(conn, 1, 2026, 2)
+    assert q1.rubrieken[0].btw == Decimal("21.00")
+    assert q2.rubrieken[0].btw == Decimal("0.00")
+
+
+def test_een_factuur_van_1_april_telt_in_q2_en_niet_in_q1(conn):
+    zet_factuur(conn, "V-1", "2026-04-01", "100.00", "21", "21.00", "121.00", "8000")
+
+    assert bereken_aangifte(conn, 1, 2026, 1).rubrieken[0].btw == Decimal("0.00")
+    assert bereken_aangifte(conn, 1, 2026, 2).rubrieken[0].btw == Decimal("21.00")
+
+
+# --- de rubrieken -------------------------------------------------------
+
+def test_een_volledig_kwartaal_van_upload_tot_voorstel(conn):
+    volledig_kwartaal(conn)
+    aangifte = bereken_aangifte(conn, 1, 2026, 3)
+
+    assert aangifte.status == "voorstel"
+    assert aangifte.aantal_boekingen == 3
+
+    rubriek_1a, rubriek_1b = aangifte.rubrieken
+    assert (rubriek_1a.code, rubriek_1a.grondslag, rubriek_1a.btw) == (
+        "1a", Decimal("1000.00"), Decimal("210.00")
+    )
+    assert (rubriek_1b.code, rubriek_1b.grondslag, rubriek_1b.btw) == (
+        "1b", Decimal("500.00"), Decimal("45.00")
+    )
+    assert aangifte.verschuldigd == Decimal("255.00")   # 5a
+    assert aangifte.voorbelasting == Decimal("42.00")   # 5b
+    assert aangifte.saldo == Decimal("213.00")
+    assert aangifte.saldo_richting == "betalen"
+
+
+def test_meer_voorbelasting_dan_btw_geeft_terug_te_vragen(conn):
+    zet_factuur(conn, "I-1", "2026-07-20", "1000.00", "21", "210.00", "1210.00", "4100")
+    aangifte = bereken_aangifte(conn, 1, 2026, 3)
+
+    assert aangifte.saldo == Decimal("-210.00")
+    assert aangifte.saldo_richting == "terugvragen"
+
+
+def test_een_leeg_kwartaal_geeft_nullen_en_geen_fout(conn):
+    aangifte = bereken_aangifte(conn, 1, 2026, 2)
+
+    assert aangifte.status == "voorstel"
+    assert aangifte.saldo == Decimal("0.00")
+    assert aangifte.aantal_boekingen == 0
+    # Nul is geen teruggave; dat zou het scherm laten liegen.
+    assert aangifte.saldo_richting == "niets"
+
+
+def test_een_tegenboeking_haalt_het_bedrag_er_weer_af(conn):
+    zet_factuur(conn, "V-1", "2026-07-10", "1000.00", "21", "210.00", "1210.00", "8000")
+    boeking = bereken_aangifte(conn, 1, 2026, 3)
+    assert boeking.verschuldigd == Decimal("210.00")
+
+    from boekhouding import lees_boekingen
+    maak_tegenboeking(conn, lees_boekingen(conn, 1)[0]["id"], "factuur ingetrokken")
+
+    na = bereken_aangifte(conn, 1, 2026, 3)
+    assert na.verschuldigd == Decimal("0.00")
+    assert na.rubrieken[0].grondslag == Decimal("0.00")
+    assert na.aantal_boekingen == 2
+
+
+def test_omzet_zonder_btw_wordt_gemeld_en_niet_weggelaten(conn):
+    """0%, vrijgesteld of verlegd hoort in 1e/2a/3a; die zijn er nog niet."""
+    zet_factuur(conn, "V-1", "2026-07-10", "300.00", "0", "0.00", "300.00", "8020")
+    aangifte = bereken_aangifte(conn, 1, 2026, 3)
+
+    assert aangifte.status == "voorstel"
+    assert any("300.00" in w for w in aangifte.waarschuwingen)
+    assert any("1e" in w for w in aangifte.waarschuwingen)
+
+
+def test_een_jaar_zonder_rekeningschema_wordt_niet_berekend(conn):
+    aangifte = bereken_aangifte(conn, 1, 1999, 1)
+
+    assert aangifte.status == "geblokkeerd"
+    assert "geen rekeningschema" in aangifte.redenen[0]
+    assert aangifte.saldo is None
+
+
+# --- blokkades ----------------------------------------------------------
+
+def test_een_factuur_in_review_blokkeert_de_aangifte(conn):
+    volledig_kwartaal(conn)
+    # Bedragen die niet optellen: komt door geen enkele controle heen.
+    zet_factuur(conn, "V-9", "2026-09-15", "100.00", "21", "21.00", "999.00", "8000")
+
+    aangifte = bereken_aangifte(conn, 1, 2026, 3)
+    assert aangifte.status == "geblokkeerd"
+    assert aangifte.saldo is None and aangifte.rubrieken == []
+    assert [b.reden for b in aangifte.blokkades] == ["moet nog nagekeken worden"]
+
+
+def test_een_factuur_zonder_goedkeuring_blokkeert_ook(conn):
+    zet_factuur(conn, "V-1", "2026-07-10", "100.00", "21", "21.00", "121.00", "8000",
+                goedkeuren=False)
+
+    aangifte = bereken_aangifte(conn, 1, 2026, 3)
+    assert aangifte.status == "geblokkeerd"
+    assert "nog niet goedgekeurd" in aangifte.blokkades[0].reden
+
+
+def test_goedgekeurd_maar_niet_geboekt_blokkeert_ook(conn):
+    """Anders zou het bedrag stilletjes uit de aangifte verdwijnen."""
+    zet_factuur(conn, "V-1", "2026-07-10", "100.00", "21", "21.00", "121.00",
+                rekening=None)
+
+    aangifte = bereken_aangifte(conn, 1, 2026, 3)
+    assert aangifte.status == "geblokkeerd"
+    assert "geen grootboekrekening gekozen" in aangifte.blokkades[0].reden
+
+
+def test_de_blokkade_zegt_om_welke_factuur_het_gaat(conn):
+    factuur_id = zet_factuur(
+        conn, "V-1", "2026-07-10", "100.00", "21", "21.00", "121.00", "8000",
+        goedkeuren=False, leverancier="Groothandel Oost",
+    )
+    blokkade = bereken_aangifte(conn, 1, 2026, 3).blokkades[0]
+
+    assert blokkade.factuur_id == factuur_id
+    assert blokkade.leverancier == "Groothandel Oost"
+    assert blokkade.factuurdatum == "2026-07-10"
+    assert blokkade.bedrag_incl == "121.00"
+
+
+def test_een_blokkade_in_q3_blokkeert_q4_niet(conn):
+    zet_factuur(conn, "V-1", "2026-07-10", "100.00", "21", "21.00", "121.00", "8000",
+                goedkeuren=False)
+    zet_factuur(conn, "V-2", "2026-10-10", "100.00", "21", "21.00", "121.00", "8000")
+
+    assert bereken_aangifte(conn, 1, 2026, 3).status == "geblokkeerd"
+    assert bereken_aangifte(conn, 1, 2026, 4).status == "voorstel"
+
+
+def test_zoek_blokkades_kijkt_alleen_in_de_periode(conn):
+    zet_factuur(conn, "V-1", "2026-07-10", "100.00", "21", "21.00", "121.00", "8000",
+                goedkeuren=False)
+
+    assert zoek_blokkades(conn, 1, date(2026, 7, 1), date(2026, 9, 30))
+    assert zoek_blokkades(conn, 1, date(2026, 10, 1), date(2026, 12, 31)) == []
+
+
+def test_een_factuur_zonder_datum_wordt_gemeld_maar_blokkeert_niet(conn):
+    """Zonder datum valt hij in geen enkel kwartaal; stil weglaten mag niet."""
+    sla_factuur_op(
+        conn, 1,
+        {"leverancier": "Van Dijk", "factuurnummer": "X-1",
+         "bedrag_excl": "100.00", "btw_percentage": "21",
+         "btw_bedrag": "21.00", "bedrag_incl": "121.00"},
+        vandaag=VANDAAG,
+    )
+    aangifte = bereken_aangifte(conn, 1, 2026, 3)
+
+    assert aangifte.status == "voorstel"
+    assert any("zonder factuurdatum" in w for w in aangifte.waarschuwingen)
+
+
+def test_de_aangifte_zegt_dat_de_eigenaar_zelf_indient(conn):
+    aangifte = bereken_aangifte(conn, 1, 2026, 3)
+    assert "indienen doet u zelf" in aangifte.voorbehoud.lower()
+    assert "verstuurt niets" in aangifte.voorbehoud
+
+
+def test_een_kwartaal_met_alleen_inkoop_en_verkoop_die_elkaar_opheffen(conn):
+    """Precies nul is geen teruggave; dat moet het scherm ook niet zeggen."""
+    zet_factuur(conn, "V-1", "2026-07-10", "100.00", "21", "21.00", "121.00", "8000")
+    zet_factuur(conn, "I-1", "2026-07-11", "100.00", "21", "21.00", "121.00", "4100")
+
+    aangifte = bereken_aangifte(conn, 1, 2026, 3)
+    assert aangifte.verschuldigd == aangifte.voorbelasting == Decimal("21.00")
+    assert aangifte.saldo == Decimal("0.00")
+    assert aangifte.saldo_richting == "niets"
+```
+
 ## `boekhouding/tests/test_web.py`
 
 ```python
@@ -9167,7 +12222,12 @@ from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
 
-from boekhouding import lees_audit_trail, lees_facturen, maak_verbinding
+from boekhouding import (
+    boeking_bij_factuur,
+    lees_audit_trail,
+    lees_facturen,
+    maak_verbinding,
+)
 from boekhouding.web import maak_app
 from conftest import maak_pdf
 from test_ai_extractie import NageaapteClient, NageaapteRespons, goede_extractie, veld
@@ -9439,8 +12499,22 @@ def test_goedkeuren_kan_niet_bij_openstaande_punten(web, werkmap):
     conn.close()
 
 
+def kies_rekening_via_scherm(web, factuur_id=1, code="4100", administratie_id=1):
+    """Kies de grootboekrekening zoals het reviewscherm dat doet.
+
+    Het formulier stuurt alleen de velden die erin staan; hier is dat
+    alleen de rekening, zodat de factuurvelden onaangeroerd blijven.
+    """
+    return web.post(
+        f"/administratie/{administratie_id}/factuur/{factuur_id}/opslaan",
+        data={"rekening": code},
+        follow_redirects=False,
+    )
+
+
 def test_goedkeuren_lukt_als_alles_klopt(web, werkmap):
     upload(web, UBLMAP / "01-standaard-21procent.xml", "goed.xml")
+    kies_rekening_via_scherm(web)
 
     antwoord = web.post("/administratie/1/factuur/1/goedkeuren", follow_redirects=False)
     assert antwoord.status_code == 303
@@ -9461,6 +12535,7 @@ def test_twee_keer_goedkeuren_gebeurt_niet(web):
     from urllib.parse import unquote
 
     upload(web, UBLMAP / "01-standaard-21procent.xml", "goed.xml")
+    kies_rekening_via_scherm(web)
     web.post("/administratie/1/factuur/1/goedkeuren", follow_redirects=False)
     antwoord = web.post("/administratie/1/factuur/1/goedkeuren", follow_redirects=False)
     assert "al goedgekeurd" in unquote(antwoord.headers["location"])
@@ -9710,6 +12785,122 @@ def test_de_weergave_lekt_niets_van_een_andere_administratie(twee_administraties
     # er mag geen letter van dat bestand in dit antwoord staan.
     assert "Van Dijk" not in antwoord.text
     assert "cbc:" not in antwoord.text
+
+
+# --- grootboek en btw-aangifte (module 6) -------------------------------
+
+def test_het_reviewscherm_laat_de_rekeningen_kiezen(web):
+    upload(web, UBLMAP / "01-standaard-21procent.xml", "goed.xml")
+    pagina = web.get("/administratie/1/factuur/1").text
+
+    assert 'name="rekening"' in pagina
+    assert "— nog niet gekozen —" in pagina
+    assert "4100" in pagina and "Kantoorkosten" in pagina
+    # Crediteuren vult de boeking zelf in; die staat niet in de keuzelijst.
+    assert "Crediteuren" not in pagina
+
+
+def test_een_gekozen_rekening_blijft_staan(web):
+    upload(web, UBLMAP / "01-standaard-21procent.xml", "goed.xml")
+    kies_rekening_via_scherm(web, code="4110")
+
+    pagina = web.get("/administratie/1/factuur/1").text
+    assert 'value="4110"\n                      selected' in pagina.replace("\r", "") \
+        or 'selected' in pagina.split('value="4110"')[1][:60]
+
+
+def test_een_rekening_die_niet_bestaat_wordt_geweigerd(web):
+    from urllib.parse import unquote
+
+    upload(web, UBLMAP / "01-standaard-21procent.xml", "goed.xml")
+    antwoord = kies_rekening_via_scherm(web, code="9999")
+
+    assert "staat niet in het schema" in unquote(antwoord.headers["location"])
+
+
+def test_goedkeuren_maakt_meteen_de_boeking(web, werkmap):
+    upload(web, UBLMAP / "01-standaard-21procent.xml", "goed.xml")
+    kies_rekening_via_scherm(web, code="4100")
+    web.post("/administratie/1/factuur/1/goedkeuren", follow_redirects=False)
+
+    conn = maak_verbinding(str(werkmap / "boekhouding.sqlite"))
+    boeking = boeking_bij_factuur(conn, 1)
+    conn.close()
+
+    assert boeking is not None
+    assert [r["rekening"] for r in boeking["regels"]] == ["4100", "1520", "1600"]
+    assert "Boeking 1" in web.get("/administratie/1/factuur/1").text
+
+
+def test_goedkeuren_zonder_rekening_zegt_dat_er_niet_geboekt_is(web):
+    from urllib.parse import unquote
+
+    upload(web, UBLMAP / "01-standaard-21procent.xml", "goed.xml")
+    antwoord = web.post("/administratie/1/factuur/1/goedkeuren", follow_redirects=False)
+
+    melding = unquote(antwoord.headers["location"])
+    assert "nog niet geboekt" in melding
+    assert "geen grootboekrekening gekozen" in melding
+    assert "niet in het grootboek" in web.get("/administratie/1/factuur/1").text
+
+
+def test_het_btw_scherm_gaat_naar_het_huidige_kwartaal(web):
+    antwoord = web.get("/administratie/1/btw", follow_redirects=False)
+    assert antwoord.status_code == 303
+    # VANDAAG in deze tests is 27 augustus 2026, dus kwartaal 3.
+    assert antwoord.headers["location"] == "/administratie/1/btw/2026/3"
+
+
+def test_het_btw_scherm_toont_de_rubrieken_en_het_saldo(web):
+    upload(web, UBLMAP / "01-standaard-21procent.xml", "goed.xml")
+    kies_rekening_via_scherm(web, code="4100")
+    web.post("/administratie/1/factuur/1/goedkeuren", follow_redirects=False)
+
+    # De e-factuur van 14 juli 2026 valt in kwartaal 3.
+    pagina = web.get("/administratie/1/btw/2026/3").text
+    assert "1a" in pagina and "1b" in pagina
+    assert "5a" in pagina and "5b" in pagina
+    assert "84.00" in pagina          # de voorbelasting van deze factuur
+    assert "-84.00" in pagina         # het saldo: terug te vragen
+    assert "Terug te vragen" in pagina
+    assert "Niets te betalen" not in pagina
+
+
+def test_het_btw_scherm_zegt_dat_de_eigenaar_zelf_indient(web):
+    pagina = web.get("/administratie/1/btw/2026/3").text
+    assert "voorstel, geen aangifte" in pagina
+    assert "indienen doet u zelf bij de belastingdienst" in pagina.lower()
+
+
+def test_het_btw_scherm_toont_wat_de_aangifte_blokkeert(web):
+    upload(web, UBLMAP / "01-standaard-21procent.xml", "goed.xml")   # niet goedgekeurd
+    pagina = web.get("/administratie/1/btw/2026/3").text
+
+    assert "Er is niets uitgerekend" in pagina
+    assert "nog niet goedgekeurd" in pagina
+    assert "Van Dijk ICT-diensten" in pagina
+    assert "/administratie/1/factuur/1" in pagina   # klikbaar naar de factuur
+
+
+def test_een_kwartaal_dat_niet_bestaat_geeft_404(web):
+    assert web.get("/administratie/1/btw/2026/5").status_code == 404
+    assert web.get("/administratie/1/btw/1500/1").status_code == 404
+
+
+def test_het_btw_scherm_van_een_andere_administratie(twee_administraties):
+    """Ook hier: een administratie die niet bestaat is 404, geen lege pagina."""
+    assert twee_administraties.get("/administratie/9/btw/2026/3").status_code == 404
+
+
+def test_na_het_boeken_ligt_de_rekening_vast_op_het_scherm(web):
+    upload(web, UBLMAP / "01-standaard-21procent.xml", "goed.xml")
+    kies_rekening_via_scherm(web, code="4100")
+    web.post("/administratie/1/factuur/1/goedkeuren", follow_redirects=False)
+
+    pagina = web.get("/administratie/1/factuur/1").text
+    assert "<select" not in pagina
+    assert "de rekening ligt vast" in pagina
+    assert "tegenboeking" in pagina
 ```
 
 ## `boekhouding/pytest.ini`

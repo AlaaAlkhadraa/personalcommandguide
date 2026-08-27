@@ -151,6 +151,36 @@ def maak_tabellen(conn: sqlite3.Connection) -> None:
             aangemaakt_op    TEXT NOT NULL
         );
 
+        CREATE TABLE IF NOT EXISTS boekingen (
+            id                    INTEGER PRIMARY KEY,
+            administratie_id      INTEGER NOT NULL REFERENCES administraties(id),
+            -- Eén boeking per factuur: UNIQUE laat meerdere NULL toe, dus
+            -- tegenboekingen (zonder factuur) blijven mogelijk, maar
+            -- dezelfde factuur twee keer boeken kan niet.
+            factuur_id            INTEGER UNIQUE REFERENCES facturen(id),
+            corrigeert_boeking_id INTEGER REFERENCES boekingen(id),
+            boekdatum             TEXT NOT NULL,
+            omschrijving          TEXT NOT NULL,
+            aangemaakt_op         TEXT NOT NULL,
+            aangemaakt_door       TEXT NOT NULL
+        );
+
+        CREATE TABLE IF NOT EXISTS boekingsregels (
+            id               INTEGER PRIMARY KEY,
+            boeking_id       INTEGER NOT NULL REFERENCES boekingen(id),
+            administratie_id INTEGER NOT NULL REFERENCES administraties(id),
+            volgnummer       INTEGER NOT NULL,
+            rekening         TEXT NOT NULL,
+            omschrijving     TEXT NOT NULL,
+            -- Bedragen als tekst, net als bij facturen: zo komt er nooit
+            -- een float aan te pas en staat er precies wat er stond.
+            debet            TEXT NOT NULL DEFAULT '0.00',
+            credit           TEXT NOT NULL DEFAULT '0.00'
+        );
+
+        CREATE INDEX IF NOT EXISTS idx_boekingen_periode
+            ON boekingen (administratie_id, boekdatum);
+
         CREATE TABLE IF NOT EXISTS audit_log (
             id               INTEGER PRIMARY KEY,
             administratie_id INTEGER NOT NULL REFERENCES administraties(id),
@@ -185,6 +215,9 @@ def maak_tabellen(conn: sqlite3.Connection) -> None:
     # "goedgekeurd_op" zegt dat een mens ernaar heeft gekeken en ja
     # heeft gezegd. Dat scheelt bovendien een tabelmigratie, want een
     # CHECK-constraint is in SQLite niet te wijzigen.
+    # De grootboekrekening die de eigenaar bij deze factuur kiest. Geen
+    # default: zonder keuze ontstaat er geen boeking (Gouden regel 4).
+    _voeg_kolom_toe(conn, "facturen", "rekening", "TEXT")
     _voeg_kolom_toe(conn, "facturen", "goedgekeurd_op", "TEXT")
     _voeg_kolom_toe(conn, "facturen", "goedgekeurd_door", "TEXT")
 
@@ -744,3 +777,283 @@ def lees_extractie_bij_document(
     extractie = dict(zip(kolommen, rij))
     extractie["redenen"] = json.loads(extractie["redenen"])
     return extractie
+
+
+# --- grootboek (module 6) ----------------------------------------------
+
+def kies_rekening(
+    conn: sqlite3.Connection, factuur_id: int, code: Optional[str]
+) -> tuple[bool, list[str]]:
+    """Leg vast op welke grootboekrekening deze factuur hoort.
+
+    De keuze wordt getoetst aan het rekeningschema van het boekjaar van
+    de factuur: een code die daar niet in staat wordt geweigerd, want er
+    wordt nooit op een verzonnen rekening geboekt. De oude keuze gaat
+    net als elke andere wijziging de audit trail in.
+    """
+    from .rekeningschema import KIESBARE_SOORTEN, rekeningschema_voor_jaar
+
+    factuur = lees_factuur(conn, factuur_id)
+    code = (code or "").strip() or None
+
+    if code is not None:
+        if not factuur["factuurdatum"]:
+            return False, [
+                "zonder factuurdatum is niet te bepalen welk rekeningschema "
+                "geldt; vul eerst de datum in"
+            ]
+        jaar = date.fromisoformat(factuur["factuurdatum"]).year
+        schema = rekeningschema_voor_jaar(jaar)
+        if schema is None:
+            return False, [f"er is geen rekeningschema voor boekjaar {jaar}"]
+        rekening = schema.zoek(code)
+        if rekening is None:
+            return False, [f"rekening '{code}' staat niet in het schema van {jaar}"]
+        if rekening.soort not in KIESBARE_SOORTEN:
+            return False, [
+                f"rekening {code} is van soort '{rekening.soort}'; kies een "
+                f"kosten- of opbrengstenrekening"
+            ]
+
+    if factuur["rekening"] == code:
+        return True, []
+
+    # Staat de boeking er al, dan zou een andere rekening hier betekenen
+    # dat de factuur iets anders zegt dan het grootboek. Een boeking
+    # wordt nooit gewijzigd, dus de weg terug is een tegenboeking.
+    boeking = boeking_bij_factuur(conn, factuur_id)
+    if boeking is not None:
+        return False, [
+            f"deze factuur is al geboekt (boeking {boeking['id']}); een boeking "
+            f"wordt niet gewijzigd. Maak een tegenboeking als de rekening niet "
+            f"klopt"
+        ]
+
+    tijd = _nu()
+    conn.execute(
+        "UPDATE facturen SET rekening = ?, gewijzigd_op = ? WHERE id = ?",
+        (code, tijd, factuur_id),
+    )
+    conn.execute(
+        """
+        INSERT INTO audit_log (
+            administratie_id, tabel, record_id, actie,
+            veld, oude_waarde, nieuwe_waarde, tijdstip
+        ) VALUES (?, 'facturen', ?, 'gewijzigd', 'rekening', ?, ?, ?)
+        """,
+        (factuur["administratie_id"], factuur_id, factuur["rekening"], code, tijd),
+    )
+    conn.commit()
+    return True, []
+
+
+def sla_boeking_op(
+    conn: sqlite3.Connection,
+    administratie_id: int,
+    voorstel: Any,
+    door: str = "eigenaar",
+) -> tuple[Optional[int], list[str]]:
+    """Bewaar een samengestelde boeking; geef (boeking_id, redenen).
+
+    De balans wordt hier nog één keer gecontroleerd, vlak voor het
+    opslaan. Dat is met opzet dubbelop: een boeking die niet klopt mag
+    de database niet in, ook niet als een aanroeper de controle bij het
+    samenstellen zou overslaan.
+    """
+    from .grootboek import controleer_balans
+
+    if voorstel.status != "gemaakt":
+        return None, list(voorstel.redenen)
+
+    redenen = controleer_balans(voorstel.regels)
+    if redenen:
+        return None, redenen
+
+    if voorstel.factuur_id is not None:
+        bestaat = conn.execute(
+            "SELECT id FROM boekingen WHERE factuur_id = ?", (voorstel.factuur_id,)
+        ).fetchone()
+        if bestaat is not None:
+            return None, [
+                f"factuur {voorstel.factuur_id} is al geboekt (boeking "
+                f"{bestaat[0]}); een boeking wordt niet overschreven — maak "
+                f"zo nodig een tegenboeking"
+            ]
+
+    tijd = _nu()
+    cursor = conn.execute(
+        """
+        INSERT INTO boekingen (
+            administratie_id, factuur_id, corrigeert_boeking_id,
+            boekdatum, omschrijving, aangemaakt_op, aangemaakt_door
+        ) VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            administratie_id,
+            voorstel.factuur_id,
+            voorstel.corrigeert_boeking_id,
+            str(voorstel.boekdatum),
+            voorstel.omschrijving,
+            tijd,
+            door,
+        ),
+    )
+    boeking_id = cursor.lastrowid
+
+    for volgnummer, regel in enumerate(voorstel.regels, start=1):
+        conn.execute(
+            """
+            INSERT INTO boekingsregels (
+                boeking_id, administratie_id, volgnummer,
+                rekening, omschrijving, debet, credit
+            ) VALUES (?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                boeking_id, administratie_id, volgnummer,
+                regel.rekening, regel.omschrijving,
+                str(regel.debet), str(regel.credit),
+            ),
+        )
+
+    conn.execute(
+        """
+        INSERT INTO audit_log (
+            administratie_id, tabel, record_id, actie,
+            veld, oude_waarde, nieuwe_waarde, tijdstip
+        ) VALUES (?, 'boekingen', ?, 'aangemaakt', NULL, NULL, ?, ?)
+        """,
+        (
+            administratie_id, boeking_id,
+            json.dumps(
+                {
+                    "boekdatum": str(voorstel.boekdatum),
+                    "omschrijving": voorstel.omschrijving,
+                    "factuur_id": voorstel.factuur_id,
+                    "corrigeert_boeking_id": voorstel.corrigeert_boeking_id,
+                    "regels": [
+                        {
+                            "rekening": r.rekening,
+                            "debet": str(r.debet),
+                            "credit": str(r.credit),
+                        }
+                        for r in voorstel.regels
+                    ],
+                },
+                ensure_ascii=False,
+            ),
+            tijd,
+        ),
+    )
+    conn.commit()
+    return boeking_id, []
+
+
+def _boeking_met_regels(conn: sqlite3.Connection, rij: dict[str, Any]) -> dict[str, Any]:
+    cursor = conn.execute(
+        "SELECT * FROM boekingsregels WHERE boeking_id = ? ORDER BY volgnummer",
+        (rij["id"],),
+    )
+    kolommen = [k[0] for k in cursor.description]
+    rij["regels"] = [dict(zip(kolommen, r)) for r in cursor.fetchall()]
+    return rij
+
+
+def lees_boeking(conn: sqlite3.Connection, boeking_id: int) -> dict[str, Any]:
+    """Lees één boeking met haar regels."""
+    cursor = conn.execute("SELECT * FROM boekingen WHERE id = ?", (boeking_id,))
+    rij = cursor.fetchone()
+    if rij is None:
+        raise ValueError(f"boeking {boeking_id} bestaat niet")
+    kolommen = [k[0] for k in cursor.description]
+    return _boeking_met_regels(conn, dict(zip(kolommen, rij)))
+
+
+def lees_boekingen(
+    conn: sqlite3.Connection,
+    administratie_id: int,
+    van: Optional[date] = None,
+    tot: Optional[date] = None,
+) -> list[dict[str, Any]]:
+    """Lees de boekingen van een administratie, eventueel binnen een periode.
+
+    `van` en `tot` zijn allebei inclusief; de boekdatum is de datum van
+    de factuur, dus daarmee valt een factuur van 31 maart in het eerste
+    kwartaal en een van 1 april in het tweede.
+    """
+    vraag = "SELECT * FROM boekingen WHERE administratie_id = ?"
+    waarden: list[Any] = [administratie_id]
+    if van is not None:
+        vraag += " AND boekdatum >= ?"
+        waarden.append(str(van))
+    if tot is not None:
+        vraag += " AND boekdatum <= ?"
+        waarden.append(str(tot))
+    vraag += " ORDER BY boekdatum, id"
+
+    cursor = conn.execute(vraag, waarden)
+    kolommen = [k[0] for k in cursor.description]
+    return [
+        _boeking_met_regels(conn, dict(zip(kolommen, rij)))
+        for rij in cursor.fetchall()
+    ]
+
+
+def boeking_bij_factuur(
+    conn: sqlite3.Connection, factuur_id: int
+) -> Optional[dict[str, Any]]:
+    """Geef de boeking van deze factuur, of None als hij nog niet geboekt is."""
+    rij = conn.execute(
+        "SELECT id FROM boekingen WHERE factuur_id = ?", (factuur_id,)
+    ).fetchone()
+    return None if rij is None else lees_boeking(conn, rij[0])
+
+
+def boek_factuur(
+    conn: sqlite3.Connection, factuur_id: int, door: str = "eigenaar"
+) -> tuple[Optional[int], list[str]]:
+    """Maak de boeking bij een goedgekeurde factuur.
+
+    Alleen een goedgekeurde factuur wordt geboekt: de code controleert,
+    de mens beslist, en pas daarna gaat het het grootboek in.
+    """
+    from .grootboek import stel_boeking_samen
+
+    factuur = lees_factuur(conn, factuur_id)
+    if factuur["goedgekeurd_op"] is None:
+        return None, [
+            "deze factuur is nog niet goedgekeurd; alleen een goedgekeurde "
+            "factuur wordt geboekt"
+        ]
+
+    voorstel = stel_boeking_samen(factuur, factuur["rekening"])
+    return sla_boeking_op(conn, factuur["administratie_id"], voorstel, door=door)
+
+
+def maak_tegenboeking(
+    conn: sqlite3.Connection,
+    boeking_id: int,
+    reden: str,
+    door: str = "eigenaar",
+    boekdatum: Optional[date] = None,
+) -> tuple[Optional[int], list[str]]:
+    """Zet een boeking recht met een tegenboeking.
+
+    De oorspronkelijke boeking blijft ongewijzigd staan; dit is een
+    nieuwe boeking met dezelfde bedragen aan de andere kant en een
+    verwijzing naar het origineel.
+    """
+    from .grootboek import stel_tegenboeking_samen
+
+    boeking = lees_boeking(conn, boeking_id)
+    bestaat = conn.execute(
+        "SELECT id FROM boekingen WHERE corrigeert_boeking_id = ?", (boeking_id,)
+    ).fetchone()
+    if bestaat is not None:
+        return None, [
+            f"boeking {boeking_id} is al gecorrigeerd met boeking {bestaat[0]}"
+        ]
+
+    voorstel = stel_tegenboeking_samen(boeking, reden, boekdatum)
+    return sla_boeking_op(
+        conn, boeking["administratie_id"], voorstel, door=door
+    )

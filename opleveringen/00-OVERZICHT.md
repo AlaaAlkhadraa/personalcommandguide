@@ -24,6 +24,7 @@ Branch: `claude/nl-accounting-invoice-module-f2vzr3`
 | `12-fix-module5-idor.md` | Fix: elk adres hoort bij één administratie (404, niet 403) |
 | `13-webinterface-draaien.md` | De webinterface starten met testdata: adres, telefoon, elk scherm |
 | `14-efactuur-leesbaar.md` | Fix: een e-factuur leesbaar in het reviewscherm, ruwe XML achter een knop |
+| `15-module6-grootboek-btw.md` | Module 6: grootboek, dubbel boekhouden en de btw-aangifte per kwartaal |
 | `CODE-COMPLEET.md` | de volledige actuele code, uitleg en tests |
 | `testfacturen-overzicht.json` | grondwaarheid bij de 10 testfacturen |
 | `schermen/` | schermafbeeldingen van de draaiende webinterface |
@@ -31,7 +32,7 @@ Branch: `claude/nl-accounting-invoice-module-f2vzr3`
 
 ## Waar het nu staat
 
-- **270 pytest-tests, allemaal groen.** De testsuite doet nooit een echte
+- **346 pytest-tests, allemaal groen.** De testsuite doet nooit een echte
   API-aanroep.
 - **Module 1** — schema met Decimal-bedragen, alle rekencontroles, datum- en
   duplicaatcheck. Elke fout wordt `review_nodig` met reden, nooit een
@@ -59,6 +60,14 @@ Branch: `claude/nl-accounting-invoice-module-f2vzr3`
   wordt links leesbaar getoond — velden onder elkaar met hun UBL-herkomst en
   de factuurregels — met de ruwe XML achter een knop; het bewaarde bestand
   verandert niet.
+- **Module 6** — het grootboek en de btw. Een goedgekeurde factuur wordt een
+  boeking die exact in balans moet zijn, zonder de cent speling die een
+  factuur wél krijgt. Boekingen worden nooit gewijzigd of verwijderd: een fout
+  gaat er met een tegenboeking uit. Het rekeningschema staat per jaar in een
+  configbestand. De btw-aangifte rekent 1a, 1b, 5a, 5b en het saldo uit met
+  vaste formules, en rekent níéts uit zolang er in dat kwartaal nog een
+  factuur open staat — dan krijg je de lijst met wat er mist. Het resultaat is
+  een voorstel; indienen doet de eigenaar zelf.
 - **Testmateriaal** — 10 facturen die deterministisch worden gegenereerd,
   inclusief de lastige gevallen (korting, creditnota, scan zonder tekstlaag,
   ontbrekend factuurnummer, bedragen die niet kloppen).
@@ -81,5 +90,14 @@ Branch: `claude/nl-accounting-invoice-module-f2vzr3`
    gebouwd; het schema kent alleen 21, 9 en 0.
 5. **DOCX, XLSX en CSV** staan in de routeringssectie van CLAUDE.md maar
    worden nog als onbekende soort afgewezen.
-6. **Administratietype uitbreiden vereist een migratie** — SQLite kan een
+6. **De RGS-codes zijn niet geverifieerd.** Ze zijn met de hand samengesteld
+   en niet vergeleken met de officiële RGS-lijst. Het systeem boekt op het
+   veld `code` (4100, 8000, 1600); `rgs_code` is alleen een verwijzing.
+   Controleer die kolom voordat je er een export op baseert.
+7. **Btw-rubriek 1e, 2a en 3a zijn er niet.** Omzet met 0%, vrijgesteld of
+   verlegd wordt wél gemeld op het aangiftescherm, maar niet in een rubriek
+   gezet.
+8. **Bedragen worden niet afgerond naar hele euro's.** De Belastingdienst
+   vraagt hele euro's in de aangifte; het voorstel toont centen.
+9. **Administratietype uitbreiden vereist een migratie** — SQLite kan een
    CHECK-constraint niet aanpassen met `ALTER TABLE`.

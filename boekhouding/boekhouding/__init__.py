@@ -4,6 +4,7 @@ Module 1: factuur-schema, validatie en audit trail.
 Module 2: PDF-tekstextractie en veilige bewaring van originelen.
 Module 3: AI-extractie van factuurgegevens (voorstel, geen boeking).
 Module 4: UBL / e-facturen rechtstreeks uitlezen (zonder AI).
+Module 6: grootboek (dubbel boekhouden) en btw-aangifte per kwartaal.
 
 AI stelt voor, code valideert, mens beslist (Gouden regel 1).
 """
@@ -44,6 +45,31 @@ from .ubl import (
     te_groot,
     verwerk_efactuur,
 )
+from .rekeningschema import (
+    KIESBARE_SOORTEN,
+    SOORTEN,
+    Rekening,
+    Rekeningschema,
+    rekeningschema_voor_jaar,
+)
+from .grootboek import (
+    Boekingsregel,
+    BoekingVoorstel,
+    controleer_balans,
+    som_credit,
+    som_debet,
+    stel_boeking_samen,
+    stel_tegenboeking_samen,
+)
+from .btw_aangifte import (
+    Aangifte,
+    Blokkade,
+    Rubriek,
+    bereken_aangifte,
+    kwartaal_grenzen,
+    kwartaal_van,
+    zoek_blokkades,
+)
 from .routering import bestandssoort, routeer_document, zoek_ingebedde_efactuur
 from .omgeving import api_sleutel, sleutel_aanwezig
 from .database import (
@@ -61,6 +87,13 @@ from .database import (
     lees_facturen,
     keur_factuur_goed,
     lees_extractie_bij_document,
+    kies_rekening,
+    sla_boeking_op,
+    lees_boeking,
+    lees_boekingen,
+    boeking_bij_factuur,
+    boek_factuur,
+    maak_tegenboeking,
 )
 
 __all__ = [
@@ -114,4 +147,30 @@ __all__ = [
     "zoek_ingebedde_efactuur",
     "api_sleutel",
     "sleutel_aanwezig",
+    "Rekening",
+    "Rekeningschema",
+    "rekeningschema_voor_jaar",
+    "SOORTEN",
+    "KIESBARE_SOORTEN",
+    "Boekingsregel",
+    "BoekingVoorstel",
+    "controleer_balans",
+    "som_debet",
+    "som_credit",
+    "stel_boeking_samen",
+    "stel_tegenboeking_samen",
+    "kies_rekening",
+    "sla_boeking_op",
+    "lees_boeking",
+    "lees_boekingen",
+    "boeking_bij_factuur",
+    "boek_factuur",
+    "maak_tegenboeking",
+    "Aangifte",
+    "Blokkade",
+    "Rubriek",
+    "bereken_aangifte",
+    "kwartaal_van",
+    "kwartaal_grenzen",
+    "zoek_blokkades",
 ]

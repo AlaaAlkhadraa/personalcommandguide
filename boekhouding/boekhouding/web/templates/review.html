@@ -122,10 +122,67 @@
         </div>
       {% endfor %}
 
+      <div class="veld">
+        <label for="rekening">Grootboekrekening</label>
+        {% if boeking %}
+          <input type="text" value="{{ factuur.rekening }}" disabled>
+          <div class="onder" style="color:var(--zacht);font-size:14px">
+            Deze factuur is geboekt, dus de rekening ligt vast. Klopt hij niet,
+            dan hoort daar een tegenboeking bij; een boeking wordt nooit
+            gewijzigd.
+          </div>
+        {% elif rekeningen %}
+          <select id="rekening" name="rekening">
+            <option value="">— nog niet gekozen —</option>
+            {% for rekening in rekeningen %}
+              <option value="{{ rekening.code }}"
+                      {% if rekening.code == factuur.rekening %}selected{% endif %}>
+                {{ rekening.code }} · {{ rekening.omschrijving }}
+                ({{ rekening.soort }})
+              </option>
+            {% endfor %}
+          </select>
+          <div class="onder" style="color:var(--zacht);font-size:14px">
+            Kies je een kostenrekening, dan wordt dit een inkoopfactuur; kies je
+            omzet, dan een verkoopfactuur. Zonder keuze komt de factuur niet in
+            het grootboek en houdt hij de btw-aangifte tegen.
+          </div>
+        {% else %}
+          <div class="onder" style="color:var(--let-op);font-size:14px">
+            Er is geen rekeningschema voor dit boekjaar, of de factuurdatum
+            ontbreekt nog. Vul eerst de datum in.
+          </div>
+        {% endif %}
+      </div>
+
       <div class="knoppen">
         <button type="submit" class="tweede">Opslaan en later beoordelen</button>
       </div>
     </form>
+
+    {% if boeking %}
+      <div class="kaart">
+        <h3 style="margin:0 0 8px;font-size:15px">
+          Boeking {{ boeking.id }} — {{ boeking.boekdatum }}
+        </h3>
+        {% for regel in boeking.regels %}
+          <div class="ubl-rij">
+            <div>
+              <div class="label">{{ regel.rekening }} · {{ regel.omschrijving }}</div>
+            </div>
+            <div class="waarde">
+              {% if regel.debet != '0.00' %}{{ regel.debet }} debet
+              {% else %}{{ regel.credit }} credit{% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% elif factuur.goedgekeurd_op %}
+      <div class="waarschuwing">
+        Deze factuur is goedgekeurd maar staat nog niet in het grootboek, en
+        telt dus niet mee in de btw-aangifte.
+      </div>
+    {% endif %}
 
     <form class="kaart" method="post" action="/administratie/{{ administratie_id }}/factuur/{{ factuur.id }}/goedkeuren">
       <div class="knoppen">

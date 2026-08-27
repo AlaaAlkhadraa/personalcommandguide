@@ -1,0 +1,231 @@
+{
+  "jaar": 2026,
+  "let_op": "De RGS-codes in dit bestand zijn een met de hand gemaakte subset en zijn NIET geverifieerd tegen de officiele RGS-lijst van het RGS-beheerplatform. Controleer ze voordat je hier een echte aangifte of een export naar een accountant op baseert. De code waarop dit systeem boekt is het veld 'code'; 'rgs_code' is alleen een verwijzing.",
+  "standaardrekeningen": {
+    "crediteuren": "1600",
+    "debiteuren": "1300",
+    "btw_voorbelasting": "1520",
+    "btw_verschuldigd": {
+      "21": "1510",
+      "9": "1511"
+    }
+  },
+  "rekeningen": [
+    {
+      "code": "0100",
+      "rgs_code": "BIvaMvaIni",
+      "omschrijving": "Inventaris",
+      "soort": "activa"
+    },
+    {
+      "code": "0110",
+      "rgs_code": "BIvaMvaCom",
+      "omschrijving": "Computers en apparatuur",
+      "soort": "activa"
+    },
+    {
+      "code": "0120",
+      "rgs_code": "BIvaMvaVer",
+      "omschrijving": "Vervoermiddelen",
+      "soort": "activa"
+    },
+    {
+      "code": "0150",
+      "rgs_code": "BIvaMvaAfs",
+      "omschrijving": "Cumulatieve afschrijving",
+      "soort": "activa"
+    },
+    {
+      "code": "1000",
+      "rgs_code": "BLimKasKas",
+      "omschrijving": "Kas",
+      "soort": "activa"
+    },
+    {
+      "code": "1100",
+      "rgs_code": "BLimBanRba",
+      "omschrijving": "Bankrekening",
+      "soort": "activa"
+    },
+    {
+      "code": "1300",
+      "rgs_code": "BVorHanDeb",
+      "omschrijving": "Debiteuren",
+      "soort": "activa"
+    },
+    {
+      "code": "1400",
+      "rgs_code": "BVorOvrVoo",
+      "omschrijving": "Vooruitbetaalde kosten",
+      "soort": "activa"
+    },
+    {
+      "code": "1520",
+      "rgs_code": "BVorOvrTvb",
+      "omschrijving": "Te vorderen btw (voorbelasting)",
+      "soort": "btw"
+    },
+    {
+      "code": "0500",
+      "rgs_code": "BEivKapKap",
+      "omschrijving": "Eigen vermogen",
+      "soort": "passiva"
+    },
+    {
+      "code": "0550",
+      "rgs_code": "BEivKapPro",
+      "omschrijving": "Privé-opnamen",
+      "soort": "passiva"
+    },
+    {
+      "code": "0560",
+      "rgs_code": "BEivKapPrs",
+      "omschrijving": "Privé-stortingen",
+      "soort": "passiva"
+    },
+    {
+      "code": "1600",
+      "rgs_code": "BSchHanCre",
+      "omschrijving": "Crediteuren",
+      "soort": "passiva"
+    },
+    {
+      "code": "1610",
+      "rgs_code": "BSchOvsTbb",
+      "omschrijving": "Te betalen kosten",
+      "soort": "passiva"
+    },
+    {
+      "code": "1510",
+      "rgs_code": "BSchBtwBth",
+      "omschrijving": "Te betalen btw hoog tarief",
+      "soort": "btw"
+    },
+    {
+      "code": "1511",
+      "rgs_code": "BSchBtwBtl",
+      "omschrijving": "Te betalen btw laag tarief",
+      "soort": "btw"
+    },
+    {
+      "code": "8000",
+      "rgs_code": "WOmzNetOmh",
+      "omschrijving": "Omzet diensten hoog tarief",
+      "soort": "opbrengsten"
+    },
+    {
+      "code": "8010",
+      "rgs_code": "WOmzNetOml",
+      "omschrijving": "Omzet diensten laag tarief",
+      "soort": "opbrengsten"
+    },
+    {
+      "code": "8020",
+      "rgs_code": "WOmzNetOmn",
+      "omschrijving": "Omzet nultarief of vrijgesteld",
+      "soort": "opbrengsten"
+    },
+    {
+      "code": "8100",
+      "rgs_code": "WOmzOvoOvo",
+      "omschrijving": "Overige opbrengsten",
+      "soort": "opbrengsten"
+    },
+    {
+      "code": "7000",
+      "rgs_code": "WKprInkInk",
+      "omschrijving": "Inkoopwaarde materialen",
+      "soort": "kosten"
+    },
+    {
+      "code": "7100",
+      "rgs_code": "WKprUitUit",
+      "omschrijving": "Uitbesteed werk",
+      "soort": "kosten"
+    },
+    {
+      "code": "4000",
+      "rgs_code": "WBedHuiHui",
+      "omschrijving": "Huisvestingskosten",
+      "soort": "kosten"
+    },
+    {
+      "code": "4100",
+      "rgs_code": "WBedKanKan",
+      "omschrijving": "Kantoorkosten",
+      "soort": "kosten"
+    },
+    {
+      "code": "4110",
+      "rgs_code": "WBedKanTel",
+      "omschrijving": "Telefoon en internet",
+      "soort": "kosten"
+    },
+    {
+      "code": "4120",
+      "rgs_code": "WBedKanAut",
+      "omschrijving": "Software en abonnementen",
+      "soort": "kosten"
+    },
+    {
+      "code": "4130",
+      "rgs_code": "WBedKanKla",
+      "omschrijving": "Kleine aanschaffingen",
+      "soort": "kosten"
+    },
+    {
+      "code": "4140",
+      "rgs_code": "WBedKanVak",
+      "omschrijving": "Contributies en vakliteratuur",
+      "soort": "kosten"
+    },
+    {
+      "code": "4200",
+      "rgs_code": "WBedVkkAut",
+      "omschrijving": "Autokosten",
+      "soort": "kosten"
+    },
+    {
+      "code": "4210",
+      "rgs_code": "WBedVkkRei",
+      "omschrijving": "Reis- en verblijfkosten",
+      "soort": "kosten"
+    },
+    {
+      "code": "4220",
+      "rgs_code": "WBedVkkRep",
+      "omschrijving": "Representatiekosten",
+      "soort": "kosten"
+    },
+    {
+      "code": "4230",
+      "rgs_code": "WBedVkkRec",
+      "omschrijving": "Marketing en reclame",
+      "soort": "kosten"
+    },
+    {
+      "code": "4300",
+      "rgs_code": "WBedAlgVer",
+      "omschrijving": "Verzekeringen",
+      "soort": "kosten"
+    },
+    {
+      "code": "4310",
+      "rgs_code": "WBedAlgAdv",
+      "omschrijving": "Accountants- en advieskosten",
+      "soort": "kosten"
+    },
+    {
+      "code": "4320",
+      "rgs_code": "WBedAlgBan",
+      "omschrijving": "Bankkosten",
+      "soort": "kosten"
+    },
+    {
+      "code": "4400",
+      "rgs_code": "WBedAfsAfs",
+      "omschrijving": "Afschrijvingskosten",
+      "soort": "kosten"
+    }
+  ]
+}

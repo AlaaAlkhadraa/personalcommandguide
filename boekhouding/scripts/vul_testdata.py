@@ -14,6 +14,14 @@ Wil je ook zien hoe het reviewscherm eruitziet met een échte PDF ernaast:
 
 Dat laadt ook de Factur-X-PDF in (ook zonder sleutel — de e-factuur zit
 als bijlage in de PDF).
+
+Wil je ook het btw-scherm met cijfers zien in plaats van met blokkades:
+
+    python scripts/vul_testdata.py --met-pdf --boek
+
+Dan wordt bij elke factuur die klopt een grootboekrekening gekozen, wordt
+hij goedgekeurd en geboekt. Dat is normaal handwerk van de eigenaar; hier
+gebeurt het zodat er iets te zien is.
 """
 
 import sys
@@ -23,6 +31,9 @@ BASIS = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(BASIS))
 
 from boekhouding import (  # noqa: E402
+    boek_factuur,
+    keur_factuur_goed,
+    kies_rekening,
     lees_facturen,
     maak_administratie,
     maak_tabellen,
@@ -41,8 +52,18 @@ BESTANDEN = [
 ]
 
 
+# Welke rekening bij welk testbestand hoort. Normaal kiest de eigenaar
+# die zelf in het reviewscherm; voor de demo staat het hier.
+REKENINGEN = {
+    "01-standaard-21procent.xml": "4100",   # kantoorkosten
+    "02-diensten-9procent.xml": "4310",     # advieskosten
+    "06-factuur-x.pdf": "4120",             # software
+}
+
+
 def main() -> int:
     met_pdf = "--met-pdf" in sys.argv
+    boeken = "--boek" in sys.argv
     bestanden = BESTANDEN + (["06-factuur-x.pdf"] if met_pdf else [])
 
     GEGEVENS.mkdir(exist_ok=True)
@@ -68,6 +89,15 @@ def main() -> int:
         print(f"  {naam:<28} -> factuur {resultaat.factuur_id}  [{merk}]")
         for reden in resultaat.redenen:
             print(f"       {reden[:88]}")
+
+        if boeken and resultaat.status != "review_nodig" and naam in REKENINGEN:
+            kies_rekening(conn, resultaat.factuur_id, REKENINGEN[naam])
+            keur_factuur_goed(conn, resultaat.factuur_id)
+            boeking_id, redenen = boek_factuur(conn, resultaat.factuur_id)
+            if boeking_id is None:
+                print(f"       niet geboekt: {redenen[0][:78]}")
+            else:
+                print(f"       geboekt op {REKENINGEN[naam]} (boeking {boeking_id})")
 
     facturen = lees_facturen(conn, administratie_id)
     conn.close()

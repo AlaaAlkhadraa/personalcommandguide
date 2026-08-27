@@ -1,0 +1,93 @@
+{% extends "basis.html" %}
+{% block titel %}Btw {{ aangifte.jaar }} K{{ aangifte.kwartaal }}{% endblock %}
+{% block kruimel %}<a href="/administratie/{{ administratie_id }}">&larr; Terug naar de lijst</a>{% endblock %}
+{% block kop %}Btw-aangifte {{ aangifte.jaar }} · kwartaal {{ aangifte.kwartaal }}{% endblock %}
+{% block inhoud %}
+
+<div class="knoppen stappen" style="margin-bottom:14px">
+  <a class="knop tweede" href="/administratie/{{ administratie_id }}/btw/{{ vorig[0] }}/{{ vorig[1] }}">
+    &larr; {{ vorig[0] }} K{{ vorig[1] }}
+  </a>
+  <a class="knop tweede" href="/administratie/{{ administratie_id }}/btw/{{ volgend[0] }}/{{ volgend[1] }}">
+    {{ volgend[0] }} K{{ volgend[1] }} &rarr;
+  </a>
+</div>
+
+<p class="onder" style="color:var(--zacht);font-size:14px;margin-top:0">
+  Periode {{ aangifte.van }} tot en met {{ aangifte.tot }}.
+</p>
+
+{% if aangifte.status == 'geblokkeerd' %}
+
+  <div class="waarschuwing">
+    <strong>Er is niets uitgerekend.</strong>
+    <ul>{% for reden in aangifte.redenen %}<li>{{ reden }}</li>{% endfor %}</ul>
+  </div>
+
+  {% if aangifte.blokkades %}
+    <h2 style="font-size:17px">Dit staat nog open</h2>
+    {% for blokkade in aangifte.blokkades %}
+      <a class="rij" href="/administratie/{{ administratie_id }}/factuur/{{ blokkade.factuur_id }}">
+        <div class="boven">
+          <span class="naam">{{ blokkade.leverancier or "onbekende leverancier" }}</span>
+          <span class="bedrag">{{ blokkade.bedrag_incl or "" }}</span>
+        </div>
+        <div class="onder">{{ blokkade.factuurdatum }} · {{ blokkade.reden }}</div>
+      </a>
+    {% endfor %}
+  {% endif %}
+
+{% else %}
+
+  <div class="kaart">
+    <div class="ubl-groep">
+      <h3>Rubrieken</h3>
+      {% for rubriek in aangifte.rubrieken %}
+        <div class="ubl-rij">
+          <div>
+            <div class="label">{{ rubriek.code }} · {{ rubriek.omschrijving }}</div>
+            <div class="herkomst">omzet {{ rubriek.grondslag }}</div>
+          </div>
+          <div class="waarde">{{ rubriek.btw }}</div>
+        </div>
+      {% endfor %}
+      <div class="ubl-rij">
+        <div><div class="label">5a · Verschuldigde omzetbelasting</div></div>
+        <div class="waarde">{{ aangifte.verschuldigd }}</div>
+      </div>
+      <div class="ubl-rij">
+        <div><div class="label">5b · Voorbelasting</div></div>
+        <div class="waarde">{{ aangifte.voorbelasting }}</div>
+      </div>
+    </div>
+
+    <div class="ubl-groep">
+      <h3>Saldo</h3>
+      <div class="ubl-rij">
+        <div>
+          <div class="label">
+            {% if aangifte.saldo_richting == 'betalen' %}Te betalen aan de Belastingdienst
+            {% elif aangifte.saldo_richting == 'terugvragen' %}Terug te vragen
+            {% else %}Niets te betalen en niets terug te vragen{% endif %}
+          </div>
+          <div class="herkomst">5a min 5b, over {{ aangifte.aantal_boekingen }} boekingen</div>
+        </div>
+        <div class="waarde">{{ aangifte.saldo }}</div>
+      </div>
+    </div>
+  </div>
+
+{% endif %}
+
+{% for waarschuwing in aangifte.waarschuwingen %}
+  <div class="waarschuwing">{{ waarschuwing }}</div>
+{% endfor %}
+
+<div class="kaart">
+  <strong>Dit is een voorstel, geen aangifte.</strong>
+  <p class="onder" style="color:var(--zacht);font-size:14px;margin-bottom:0">
+    {{ aangifte.voorbehoud }}
+  </p>
+</div>
+
+{% endblock %}

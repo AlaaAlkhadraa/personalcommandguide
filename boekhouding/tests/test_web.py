@@ -10,7 +10,12 @@ from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
 
-from boekhouding import lees_audit_trail, lees_facturen, maak_verbinding
+from boekhouding import (
+    boeking_bij_factuur,
+    lees_audit_trail,
+    lees_facturen,
+    maak_verbinding,
+)
 from boekhouding.web import maak_app
 from conftest import maak_pdf
 from test_ai_extractie import NageaapteClient, NageaapteRespons, goede_extractie, veld
@@ -282,8 +287,22 @@ def test_goedkeuren_kan_niet_bij_openstaande_punten(web, werkmap):
     conn.close()
 
 
+def kies_rekening_via_scherm(web, factuur_id=1, code="4100", administratie_id=1):
+    """Kies de grootboekrekening zoals het reviewscherm dat doet.
+
+    Het formulier stuurt alleen de velden die erin staan; hier is dat
+    alleen de rekening, zodat de factuurvelden onaangeroerd blijven.
+    """
+    return web.post(
+        f"/administratie/{administratie_id}/factuur/{factuur_id}/opslaan",
+        data={"rekening": code},
+        follow_redirects=False,
+    )
+
+
 def test_goedkeuren_lukt_als_alles_klopt(web, werkmap):
     upload(web, UBLMAP / "01-standaard-21procent.xml", "goed.xml")
+    kies_rekening_via_scherm(web)
 
     antwoord = web.post("/administratie/1/factuur/1/goedkeuren", follow_redirects=False)
     assert antwoord.status_code == 303
@@ -304,6 +323,7 @@ def test_twee_keer_goedkeuren_gebeurt_niet(web):
     from urllib.parse import unquote
 
     upload(web, UBLMAP / "01-standaard-21procent.xml", "goed.xml")
+    kies_rekening_via_scherm(web)
     web.post("/administratie/1/factuur/1/goedkeuren", follow_redirects=False)
     antwoord = web.post("/administratie/1/factuur/1/goedkeuren", follow_redirects=False)
     assert "al goedgekeurd" in unquote(antwoord.headers["location"])
@@ -553,3 +573,119 @@ def test_de_weergave_lekt_niets_van_een_andere_administratie(twee_administraties
     # er mag geen letter van dat bestand in dit antwoord staan.
     assert "Van Dijk" not in antwoord.text
     assert "cbc:" not in antwoord.text
+
+
+# --- grootboek en btw-aangifte (module 6) -------------------------------
+
+def test_het_reviewscherm_laat_de_rekeningen_kiezen(web):
+    upload(web, UBLMAP / "01-standaard-21procent.xml", "goed.xml")
+    pagina = web.get("/administratie/1/factuur/1").text
+
+    assert 'name="rekening"' in pagina
+    assert "— nog niet gekozen —" in pagina
+    assert "4100" in pagina and "Kantoorkosten" in pagina
+    # Crediteuren vult de boeking zelf in; die staat niet in de keuzelijst.
+    assert "Crediteuren" not in pagina
+
+
+def test_een_gekozen_rekening_blijft_staan(web):
+    upload(web, UBLMAP / "01-standaard-21procent.xml", "goed.xml")
+    kies_rekening_via_scherm(web, code="4110")
+
+    pagina = web.get("/administratie/1/factuur/1").text
+    assert 'value="4110"\n                      selected' in pagina.replace("\r", "") \
+        or 'selected' in pagina.split('value="4110"')[1][:60]
+
+
+def test_een_rekening_die_niet_bestaat_wordt_geweigerd(web):
+    from urllib.parse import unquote
+
+    upload(web, UBLMAP / "01-standaard-21procent.xml", "goed.xml")
+    antwoord = kies_rekening_via_scherm(web, code="9999")
+
+    assert "staat niet in het schema" in unquote(antwoord.headers["location"])
+
+
+def test_goedkeuren_maakt_meteen_de_boeking(web, werkmap):
+    upload(web, UBLMAP / "01-standaard-21procent.xml", "goed.xml")
+    kies_rekening_via_scherm(web, code="4100")
+    web.post("/administratie/1/factuur/1/goedkeuren", follow_redirects=False)
+
+    conn = maak_verbinding(str(werkmap / "boekhouding.sqlite"))
+    boeking = boeking_bij_factuur(conn, 1)
+    conn.close()
+
+    assert boeking is not None
+    assert [r["rekening"] for r in boeking["regels"]] == ["4100", "1520", "1600"]
+    assert "Boeking 1" in web.get("/administratie/1/factuur/1").text
+
+
+def test_goedkeuren_zonder_rekening_zegt_dat_er_niet_geboekt_is(web):
+    from urllib.parse import unquote
+
+    upload(web, UBLMAP / "01-standaard-21procent.xml", "goed.xml")
+    antwoord = web.post("/administratie/1/factuur/1/goedkeuren", follow_redirects=False)
+
+    melding = unquote(antwoord.headers["location"])
+    assert "nog niet geboekt" in melding
+    assert "geen grootboekrekening gekozen" in melding
+    assert "niet in het grootboek" in web.get("/administratie/1/factuur/1").text
+
+
+def test_het_btw_scherm_gaat_naar_het_huidige_kwartaal(web):
+    antwoord = web.get("/administratie/1/btw", follow_redirects=False)
+    assert antwoord.status_code == 303
+    # VANDAAG in deze tests is 27 augustus 2026, dus kwartaal 3.
+    assert antwoord.headers["location"] == "/administratie/1/btw/2026/3"
+
+
+def test_het_btw_scherm_toont_de_rubrieken_en_het_saldo(web):
+    upload(web, UBLMAP / "01-standaard-21procent.xml", "goed.xml")
+    kies_rekening_via_scherm(web, code="4100")
+    web.post("/administratie/1/factuur/1/goedkeuren", follow_redirects=False)
+
+    # De e-factuur van 14 juli 2026 valt in kwartaal 3.
+    pagina = web.get("/administratie/1/btw/2026/3").text
+    assert "1a" in pagina and "1b" in pagina
+    assert "5a" in pagina and "5b" in pagina
+    assert "84.00" in pagina          # de voorbelasting van deze factuur
+    assert "-84.00" in pagina         # het saldo: terug te vragen
+    assert "Terug te vragen" in pagina
+    assert "Niets te betalen" not in pagina
+
+
+def test_het_btw_scherm_zegt_dat_de_eigenaar_zelf_indient(web):
+    pagina = web.get("/administratie/1/btw/2026/3").text
+    assert "voorstel, geen aangifte" in pagina
+    assert "indienen doet u zelf bij de belastingdienst" in pagina.lower()
+
+
+def test_het_btw_scherm_toont_wat_de_aangifte_blokkeert(web):
+    upload(web, UBLMAP / "01-standaard-21procent.xml", "goed.xml")   # niet goedgekeurd
+    pagina = web.get("/administratie/1/btw/2026/3").text
+
+    assert "Er is niets uitgerekend" in pagina
+    assert "nog niet goedgekeurd" in pagina
+    assert "Van Dijk ICT-diensten" in pagina
+    assert "/administratie/1/factuur/1" in pagina   # klikbaar naar de factuur
+
+
+def test_een_kwartaal_dat_niet_bestaat_geeft_404(web):
+    assert web.get("/administratie/1/btw/2026/5").status_code == 404
+    assert web.get("/administratie/1/btw/1500/1").status_code == 404
+
+
+def test_het_btw_scherm_van_een_andere_administratie(twee_administraties):
+    """Ook hier: een administratie die niet bestaat is 404, geen lege pagina."""
+    assert twee_administraties.get("/administratie/9/btw/2026/3").status_code == 404
+
+
+def test_na_het_boeken_ligt_de_rekening_vast_op_het_scherm(web):
+    upload(web, UBLMAP / "01-standaard-21procent.xml", "goed.xml")
+    kies_rekening_via_scherm(web, code="4100")
+    web.post("/administratie/1/factuur/1/goedkeuren", follow_redirects=False)
+
+    pagina = web.get("/administratie/1/factuur/1").text
+    assert "<select" not in pagina
+    assert "de rekening ligt vast" in pagina
+    assert "tegenboeking" in pagina

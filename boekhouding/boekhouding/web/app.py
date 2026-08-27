@@ -16,9 +16,13 @@ from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
 from ..ai_extractie import VELDEN
+from ..btw_aangifte import bereken_aangifte, kwartaal_van
 from ..database import (
     FACTUUR_VELDEN,
+    boek_factuur,
+    boeking_bij_factuur,
     keur_factuur_goed,
+    kies_rekening,
     lees_document,
     lees_extractie_bij_document,
     lees_facturen,
@@ -28,6 +32,7 @@ from ..database import (
     maak_verbinding,
     wijzig_factuur,
 )
+from ..rekeningschema import rekeningschema_voor_jaar
 from ..ubl import te_groot
 from ..verwerking import verwerk_upload
 from .ubl_weergave import Weergave, leesbare_ubl
@@ -248,6 +253,7 @@ def maak_app(
                 )
                 if factuur["document_id"] else None
             )
+            boeking = boeking_bij_factuur(conn, factuur_id)
         finally:
             conn.close()
 
@@ -258,6 +264,8 @@ def maak_app(
             velden=_veldregels(factuur, extractie),
             extractie=extractie,
             ubl=_ubl_weergave(registratie),
+            rekeningen=_kiesbare_rekeningen(factuur),
+            boeking=boeking,
             melding=melding,
             mag_goedkeuren=(
                 factuur["status"] == "gevalideerd"
@@ -281,11 +289,21 @@ def maak_app(
             # Wijzigingen gaan altijd via wijzig_factuur: die bewaart de
             # oude waarde in de audit trail en hervalideert de factuur.
             wijzig_factuur(conn, factuur_id, wijzigingen, vandaag=app.state.vandaag)
+            # De grootboekrekening staat los van de factuurvelden: die
+            # wordt niet uit het document gelezen maar door de eigenaar
+            # gekozen, en gaat langs het rekeningschema van dat jaar.
+            melding = "Opgeslagen"
+            if "rekening" in formulier:
+                gelukt, redenen = kies_rekening(
+                    conn, factuur_id, str(formulier["rekening"])
+                )
+                if not gelukt:
+                    melding = redenen[0]
         finally:
             conn.close()
         return RedirectResponse(
             f"/administratie/{administratie_id}/factuur/{factuur_id}"
-            f"?melding=Opgeslagen",
+            f"?melding={melding}",
             status_code=303,
         )
 
@@ -306,7 +324,64 @@ def maak_app(
                 f"?melding={redenen[0]}",
                 status_code=303,
             )
+
+        # Goedgekeurd, dus mag hij het grootboek in. Lukt dat niet — meestal
+        # omdat er nog geen rekening is gekozen — dan blijft de factuur
+        # goedgekeurd maar ongeboekt, en zegt het scherm waarom. Stil laten
+        # verdwijnen mag niet: bij de btw-aangifte zou het bedrag dan
+        # ontbreken zonder dat iemand het ziet.
+        conn = verbinding()
+        try:
+            boeking_id, boekredenen = boek_factuur(conn, factuur_id)
+        finally:
+            conn.close()
+        if boeking_id is None:
+            return RedirectResponse(
+                f"/administratie/{administratie_id}/factuur/{factuur_id}"
+                f"?melding=Goedgekeurd, maar nog niet geboekt: {boekredenen[0]}",
+                status_code=303,
+            )
         return RedirectResponse(f"/administratie/{administratie_id}", status_code=303)
+
+    # --- btw-aangifte per kwartaal ---------------------------------------
+
+    @app.get("/administratie/{administratie_id}/btw", response_class=HTMLResponse)
+    def btw_nu(administratie_id: int):
+        """Ga naar het kwartaal waar we nu in zitten."""
+        vandaag = app.state.vandaag or date.today()
+        return RedirectResponse(
+            f"/administratie/{administratie_id}/btw/{vandaag.year}/"
+            f"{kwartaal_van(vandaag)}",
+            status_code=303,
+        )
+
+    @app.get(
+        "/administratie/{administratie_id}/btw/{jaar}/{kwartaal}",
+        response_class=HTMLResponse,
+    )
+    def btw_kwartaal(
+        request: Request, administratie_id: int, jaar: int, kwartaal: int
+    ):
+        if kwartaal not in (1, 2, 3, 4) or not (2000 <= jaar <= 2100):
+            raise NietGevonden("kwartaal")
+
+        conn = verbinding()
+        try:
+            administratie = administratie_van(conn, administratie_id)
+            aangifte = bereken_aangifte(conn, administratie_id, jaar, kwartaal)
+        finally:
+            conn.close()
+
+        vorig = (jaar - 1, 4) if kwartaal == 1 else (jaar, kwartaal - 1)
+        volgend = (jaar + 1, 1) if kwartaal == 4 else (jaar, kwartaal + 1)
+        return toon(
+            request, "btw.html",
+            administratie_id=administratie_id,
+            administratie_naam=administratie[1],
+            aangifte=aangifte,
+            vorig=vorig,
+            volgend=volgend,
+        )
 
     # --- het originele document laten zien -------------------------------
 
@@ -333,6 +408,33 @@ def maak_app(
         )
 
     return app
+
+
+def _kiesbare_rekeningen(factuur: dict) -> list[dict]:
+    """De rekeningen die bij deze factuur gekozen mogen worden.
+
+    Welk schema geldt, hangt af van het boekjaar van de factuur. Is er
+    geen datum of geen schema voor dat jaar, dan is de lijst leeg en
+    toont het scherm dat — er wordt geen schema van een ander jaar
+    gebruikt.
+    """
+    if not factuur.get("factuurdatum"):
+        return []
+    try:
+        jaar = date.fromisoformat(str(factuur["factuurdatum"])).year
+    except ValueError:
+        return []
+    schema = rekeningschema_voor_jaar(jaar)
+    if schema is None:
+        return []
+    return [
+        {
+            "code": rekening.code,
+            "omschrijving": rekening.omschrijving,
+            "soort": rekening.soort,
+        }
+        for rekening in sorted(schema.kiesbaar(), key=lambda r: (r.soort, r.code))
+    ]
 
 
 def _ubl_weergave(registratie: Optional[dict]) -> Optional[Weergave]:

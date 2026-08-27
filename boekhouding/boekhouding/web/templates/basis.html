@@ -62,7 +62,7 @@
   .rij .onder { color: var(--zacht); font-size: 14px; margin-top: 4px; }
   .rij .bedrag { font-variant-numeric: tabular-nums; font-weight: 600; }
   label { display: block; font-size: 14px; color: var(--zacht); margin-bottom: 4px; }
-  input[type=text], input[type=file] {
+  input[type=text], input[type=file], select {
     width: 100%; padding: 12px; font-size: 16px; border-radius: 8px;
     border: 1px solid var(--lijn); background: var(--vel);
   }
@@ -123,6 +123,8 @@
   .knoppen { display: flex; gap: 10px; flex-wrap: wrap; }
   .knoppen button, .knoppen a.knop { flex: 1 1 160px; text-align: center; }
   .leeg { color: var(--zacht); text-align: center; padding: 40px 10px; }
+  /* Navigatie tussen kwartalen: geen brede knoppen, het zijn stappen. */
+  .stappen a.knop { flex: 0 0 auto; padding: 10px 14px; min-height: 40px; }
   @media (min-width: 860px) {
     .twee-kolommen { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
     /* Zonder min-width:0 duwt brede inhoud (de ruwe XML) de kolom op en

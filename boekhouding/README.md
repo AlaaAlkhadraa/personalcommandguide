@@ -10,6 +10,7 @@ geboekt — elke fout leidt tot status `review_nodig` met een leesbare reden.
   de code controleert, de mens beslist)
 - **Module 4** — UBL / e-facturen rechtstreeks uitlezen, zonder AI
 - **Module 5** — webinterface, fase 1: de reviewschermen van de eigenaar
+- **Module 6** — grootboek (dubbel boekhouden) en de btw-aangifte per kwartaal
 
 ## Installeren en testen
 
@@ -584,6 +585,137 @@ Het originele document wordt geserveerd met het pad **uit de database** —
 nooit uit het verzoek. Een bezoeker kan dus ook geen ander bestand van de
 schijf opvragen.
 
+## Module 6 — Grootboek en btw-aangifte
+
+Hier wordt het boekhouden zelf gedaan: een goedgekeurde factuur wordt een
+boeking, en de boekingen van een kwartaal worden samen een voorstel voor de
+btw-aangifte.
+
+### Het rekeningschema staat in een bestand, niet in de code
+
+`config/rekeningen_2024.json`, `_2025.json`, `_2026.json` — per jaar een
+lijst van ongeveer 35 rekeningen die een zzp'er nodig heeft, elk met een
+code, een RGS-code, een omschrijving en een soort (kosten, opbrengsten,
+activa, passiva, btw). `rekeningschema.py` leest zo'n bestand. Is er geen
+bestand voor het boekjaar van een factuur, dan zegt de module dat eerlijk
+(None) in plaats van het schema van een ander jaar te pakken.
+
+**Let op bij de RGS-codes.** Die zijn met de hand samengesteld en niet
+gecontroleerd tegen de officiële RGS-lijst. De code waarop dit systeem boekt
+is het veld `code`; `rgs_code` is alleen een verwijzing. Controleer ze
+voordat je er een echte aangifte of een export naar een accountant op
+baseert. Die waarschuwing staat ook in de configbestanden zelf.
+
+Er kan alleen op een rekening uit de lijst worden geboekt. Een code die er
+niet in staat wordt geweigerd — er wordt nooit een rekening bijgemaakt.
+
+### De eigenaar kiest de rekening, en die keuze bepaalt de richting
+
+In het reviewscherm staat onder de bedragen een keuzelijst met alleen de
+kosten- en opbrengstenrekeningen. Bank, crediteuren en btw staan daar niet
+bij: die vult de boeking zelf in.
+
+Die ene keuze bepaalt wat voor factuur het is:
+
+| Gekozen rekening | Wat het wordt |
+|---|---|
+| een **kostenrekening** | inkoopfactuur: btw te vorderen, schuld aan de leverancier |
+| een **opbrengstenrekening** | verkoopfactuur: btw af te dragen, vordering op de klant |
+
+Dat is dus geen gok van het systeem maar het gevolg van een keuze van een
+mens. Zonder keuze ontstaat er geen boeking, en dan zegt het scherm dat ook.
+
+Een inkoopfactuur van 121 euro met 21 euro btw wordt:
+
+```
+4100  Kantoorkosten                    100,00 debet
+1520  Te vorderen btw                   21,00 debet
+1600  Crediteuren                                    121,00 credit
+```
+
+### Exact in balans, geen tolerantie
+
+De factuurcontrole van module 1 laat een cent afronding toe (±0,02), want dat
+komt op echte facturen voor. Een boeking niet: als debet en credit een cent
+verschillen klopt de administratie niet meer. Zo'n factuur wordt dus **niet
+geboekt**, met de reden erbij:
+
+> de bedragen tellen niet exact op: 100.00 + 21.00 = 121.00, maar er staat
+> 121.01. De factuurcontrole laat een cent afronding toe, een boeking niet —
+> corrigeer het bedrag eerst
+
+De balans wordt twee keer gecontroleerd: bij het samenstellen en nog een keer
+vlak vóór het opslaan. Dat is met opzet dubbelop — een boeking die niet klopt
+mag de database niet in, ook niet als een aanroeper de eerste controle zou
+overslaan.
+
+### Een boeking wordt nooit gewijzigd of verwijderd
+
+Een fout wordt rechtgezet met een **tegenboeking**: dezelfde bedragen aan de
+andere kant, met een verwijzing naar het origineel. Beide blijven staan, en
+samen zijn ze nul. Een boeking kan maar één keer worden gecorrigeerd, en
+dezelfde factuur kan maar één keer worden geboekt (de databasekolom
+`factuur_id` is UNIQUE).
+
+Om dezelfde reden ligt de gekozen rekening vast zodra er een boeking staat.
+Zou je hem daarna nog kunnen wijzigen, dan zou de factuur iets anders zeggen
+dan het grootboek. Het scherm toont de rekening dan als vaste tekst en
+verwijst naar de tegenboeking.
+
+De boekdatum van een tegenboeking is standaard die van de oorspronkelijke
+boeking, zodat de correctie in hetzelfde kwartaal valt. Is dat kwartaal al
+aangegeven, geef dan een datum in het lopende kwartaal mee.
+
+### De btw-aangifte per kwartaal
+
+`btw_aangifte.py` rekent uit wat er in de kwartaalaangifte hoort:
+
+```
+1a   omzet belast met het hoge tarief, en de btw daarover
+1b   omzet belast met het lage tarief, en de btw daarover
+5a   totaal verschuldigde omzetbelasting (de btw uit 1a en 1b)
+5b   voorbelasting
+saldo   5a min 5b: te betalen, terug te vragen, of precies nul
+```
+
+Alles met vaste formules in Python; er komt geen model aan te pas. Per
+boeking wordt gekeken welke btw-rekening erin voorkomt — dat bepaalt de
+rubriek — en de omzet van diezelfde boeking is dan de grondslag. Een
+tegenboeking heeft de bedragen aan de andere kant en telt daardoor vanzelf
+negatief mee; daarom `credit - debet` en niet alleen `credit`.
+
+Kwartaalgrenzen lopen op de factuurdatum: 31 maart valt in K1, 1 april in K2.
+
+### Bij twijfel geen getal
+
+Staat er in het kwartaal ook maar één factuur die nog niet rond is, dan wordt
+er **niets** uitgerekend. Je krijgt een lijst van wat er open staat, met een
+link naar elke factuur. Drie dingen houden een aangifte tegen:
+
+1. de factuur moet nog nagekeken worden (`review_nodig`);
+2. de factuur klopt, maar niemand heeft hem goedgekeurd;
+3. de factuur is goedgekeurd, maar er staat nog geen boeking — meestal omdat
+   er geen rekening is gekozen.
+
+Punt 2 en 3 staan niet in de opdracht maar horen er wel bij: in beide
+gevallen bestaat de factuur wél en telt het bedrag níét mee. Een aangifte die
+"bijna klopt" is gevaarlijker dan geen aangifte — hij ziet er af uit, en het
+verschil merk je pas bij een controle.
+
+Twee dingen worden gemeld zonder te blokkeren, omdat blokkeren daar niet
+helpt: facturen zonder factuurdatum (die vallen in geen enkel kwartaal), en
+omzet zonder btw (0%, vrijgesteld of verlegd). Dat laatste hoort in rubriek
+1e, 2a of 3a, en die zijn niet gebouwd; stilzwijgend weglaten mag niet, dus
+staat het als waarschuwing op het scherm.
+
+### Het scherm
+
+`/administratie/1/btw` gaat naar het kwartaal waar je nu in zit; met de
+knoppen erboven loop je terug en vooruit. Onderaan staat, altijd:
+
+> **Dit is een voorstel, geen aangifte.** Het indienen doet u zelf bij de
+> Belastingdienst; dit systeem verstuurt niets.
+
 ## Testmateriaal: synthetische facturen
 
 Voor module 3 (AI-extractie) is materiaal nodig om op te oefenen. Het script
@@ -623,7 +755,7 @@ de stack blijft Python, SQLite, Pydantic en pytest.
 
 ### `tests/` — de bewijslast
 
-270 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
+346 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
 onzin-tekst, ontbrekende velden, verkeerde btw-percentages, ambigue
 bedragen, toekomst- en te oude datums, duplicaten, de audit trail bij
 aanmaken en wijzigen, en voor module 2: een PDF zonder tekstlaag, een
