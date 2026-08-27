@@ -20,13 +20,14 @@ Branch: `claude/nl-accounting-invoice-module-f2vzr3`
 | `08-eval-tegen-de-api.md` | SDK-aanroep geverifieerd, datumfout gevonden, runs geblokkeerd op de sleutel |
 | `09-module4-ubl-efacturen.md` | Module 4: UBL / e-facturen, routering op inhoud, XXE-bescherming |
 | `10-fix-module4-review.md` | Fixes: groottelimiet vóór het parsen, UTF-16 herkennen |
+| `11-module5-webinterface.md` | CLAUDE.md aangevuld + Module 5: webinterface fase 1 |
 | `CODE-COMPLEET.md` | de volledige actuele code, uitleg en tests |
 | `testfacturen-overzicht.json` | grondwaarheid bij de 10 testfacturen |
 | `boekhouding-compleet.zip` | alles in één archief: code, tests, facturen, rapporten |
 
 ## Waar het nu staat
 
-- **205 pytest-tests, allemaal groen.** De testsuite doet nooit een echte
+- **233 pytest-tests, allemaal groen.** De testsuite doet nooit een echte
   API-aanroep.
 - **Module 1** — schema met Decimal-bedragen, alle rekencontroles, datum- en
   duplicaatcheck. Elke fout wordt `review_nodig` met reden, nooit een
@@ -42,6 +43,10 @@ Branch: `claude/nl-accounting-invoice-module-f2vzr3`
   staan als XML in het bestand, dus niets te raden en gratis. Routering kijkt
   naar de werkelijke inhoud, een PDF met ingebedde e-factuur gaat langs het
   XML-pad, en XML wordt veilig gelezen (geen DTD, dus geen XXE).
+- **Module 5** — webinterface (FastAPI + Jinja2, mobiel-eerst, lokaal, geen
+  login): overzicht met review bovenaan, uploaden met camera, en het
+  reviewscherm met het origineel links en de bewerkbare velden rechts.
+  Goedkeuren kan alleen zonder openstaande punten.
 - **Testmateriaal** — 10 facturen die deterministisch worden gegenereerd,
   inclusief de lastige gevallen (korting, creditnota, scan zonder tekstlaag,
   ontbrekend factuurnummer, bedragen die niet kloppen).
@@ -60,5 +65,9 @@ Branch: `claude/nl-accounting-invoice-module-f2vzr3`
 3. **Geen documentsoort.** Een creditnota is nu een factuur met negatieve
    bedragen. Er is geen veld "dit is een creditnota" en geen verwijzing naar
    de oorspronkelijke factuur.
-4. **Administratietype uitbreiden vereist een migratie** — SQLite kan een
+4. **btw "vrijgesteld" en "verlegd"** staan in CLAUDE.md maar zijn niet
+   gebouwd; het schema kent alleen 21, 9 en 0.
+5. **DOCX, XLSX en CSV** staan in de routeringssectie van CLAUDE.md maar
+   worden nog als onbekende soort afgewezen.
+6. **Administratietype uitbreiden vereist een migratie** — SQLite kan een
    CHECK-constraint niet aanpassen met `ALTER TABLE`.

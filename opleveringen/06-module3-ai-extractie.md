@@ -111,7 +111,7 @@ controleren onder meer:
 ### De twee scripts (eis 7 en 8)
 
 ```
-python scripts/handmatige_api_test.py [bestand]   # één echte aanroep
+python scripts/handmatige_api_proef.py [bestand]   # één echte aanroep
 python scripts/eval_extractie.py                  # de eval, vraagt bevestiging
 python scripts/eval_extractie.py --ja 01 07       # zonder vraag, twee bestanden
 ```

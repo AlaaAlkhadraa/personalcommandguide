@@ -1,8 +1,8 @@
-# Volledige code — boekhoudsysteem, modules 1 t/m 4
+# Volledige code — boekhoudsysteem, modules 1 t/m 5
 
 Branch `claude/nl-accounting-invoice-module-f2vzr3`. Wordt bij elke oplevering ververst.
 
-# Boekhouding — modules 1 t/m 4
+# Boekhouding — modules 1 t/m 5
 
 Boekhoudsysteem voor Nederlandse zzp'ers.
 AI stelt voor, code valideert, mens beslist: niets wordt hier automatisch
@@ -13,6 +13,7 @@ geboekt — elke fout leidt tot status `review_nodig` met een leesbare reden.
 - **Module 3** — AI-extractie van factuurgegevens (het model stelt voor,
   de code controleert, de mens beslist)
 - **Module 4** — UBL / e-facturen rechtstreeks uitlezen, zonder AI
+- **Module 5** — webinterface, fase 1: de reviewschermen van de eigenaar
 
 ## Installeren en testen
 
@@ -315,7 +316,7 @@ ook als het model intussen is vervangen.
 
 - **`python -m pytest`** — de testsuite doet **nooit** een echte API-aanroep.
   De client wordt nagemaakt en meegegeven; er is geen sleutel voor nodig.
-- **`python scripts/handmatige_api_test.py [bestand]`** — één echte aanroep,
+- **`python scripts/handmatige_api_proef.py [bestand]`** — één echte aanroep,
   om te controleren of de sleutel werkt en wat het model van een echt
   document maakt.
 - **`python scripts/eval_extractie.py`** — haalt alle tien de testfacturen
@@ -430,6 +431,72 @@ externe DTD.
 één zonder `IssueDate`, en een Factur-X-PDF met de e-factuur als bijlage —
 die laatste heeft óók een tekstlaag, zodat te testen is dat de XML voorgaat.
 
+## Module 5 — Webinterface (fase 1)
+
+```
+python scripts/start_webinterface.py
+```
+
+Daarna staat hij op `http://127.0.0.1:8000`. Op je telefoon werkt hij ook, als
+die op hetzelfde wifi zit — gebruik dan het IP-adres van deze computer. Fase 1
+heeft **geen login**, dus draai hem alleen op je eigen netwerk.
+
+FastAPI met server-side HTML (Jinja2). Geen React, geen build-stap: je start
+hem en het werkt. De opmaak staat in één `<style>`-blok in `basis.html` en is
+mobiel-eerst — één kolom op een telefoon, twee kolommen zodra het scherm breed
+genoeg is.
+
+### De drie schermen
+
+**Overzicht** (`/administratie/1`) — bovenaan drie tellers: hoeveel facturen op
+jou wachten, hoeveel er klaar zijn om goed te keuren, en hoeveel er in totaal
+zijn. Daaronder de lijst, in werkvolgorde: eerst wat je aandacht nodig heeft,
+dan wat al klopt maar nog niet is goedgekeurd, onderaan wat af is. Per rij de
+leverancier, de datum, het bedrag inclusief btw en de status; bij een factuur
+in review staat de eerste reden er meteen onder.
+
+**Uploaden** (`/administratie/1/upload`) — één veld met
+`accept="image/*,.pdf,.xml" capture`, zodat je op een telefoon direct de camera
+krijgt. Wat er daarna gebeurt is precies de keten uit de vorige modules:
+bewaren → routeren → uitlezen → valideren en opslaan. Een e-factuur gaat
+rechtstreeks, een PDF of foto langs het model.
+
+**Reviewscherm** (`/factuur/1`) — het belangrijkste scherm. Links het originele
+document, ingebed in de pagina. Rechts alle uitgelezen velden, stuk voor stuk
+bewerkbaar. Bij elk veld staat hoe zeker het model was; een veld met lage
+zekerheid krijgt een rode rand, een merkje en de reden eronder. Bovenaan staan
+alle openstaande punten in gewone taal.
+
+Twee knoppen: **Opslaan en later beoordelen** en **Goedkeuren**. Goedkeuren kan
+alleen als er geen openstaande punten meer zijn — de knop staat dan letterlijk
+uit, en ook als iemand het formulier tóch verstuurt weigert
+`keur_factuur_goed` het. De code bepaalt of het mág, de mens bepaalt of het
+gebeurt.
+
+### Waar de logica staat
+
+De routes doen drie dingen en niet meer: gegevens ophalen, een bestaande
+functie aanroepen, en het resultaat aan een sjabloon geven. Er wordt in een
+route niet gerekend en niets over btw bepaald.
+
+- Uploaden roept `verwerk_upload` aan (`boekhouding/verwerking.py`) — de lijm
+  tussen de modules, bewust buiten de webinterface zodat dezelfde keten
+  straks ook vanaf de opdrachtregel of een e-mailpostbus werkt.
+- Opslaan roept `wijzig_factuur` aan: de oude waarde gaat de audit trail in en
+  de factuur wordt opnieuw gevalideerd. Een correctie kan een factuur dus
+  vanzelf uit review halen.
+- Goedkeuren roept `keur_factuur_goed` aan, die twee kolommen vult
+  (`goedgekeurd_op`, `goedgekeurd_door`) en dat ook in de audit trail zet.
+
+Goedkeuring is bewust een aparte kolom en geen derde status: `gevalideerd`
+zegt dat de sommen kloppen, `goedgekeurd_op` zegt dat een mens ja heeft
+gezegd. Dat scheelt bovendien een tabelmigratie, want een CHECK-constraint is
+in SQLite niet te wijzigen.
+
+Het originele document wordt geserveerd op `/document/{id}`, met het pad uit
+de database — nooit uit het verzoek. Een bezoeker kan dus geen ander bestand
+van de schijf opvragen.
+
 ## Testmateriaal: synthetische facturen
 
 Voor module 3 (AI-extractie) is materiaal nodig om op te oefenen. Het script
@@ -469,7 +536,7 @@ de stack blijft Python, SQLite, Pydantic en pytest.
 
 ### `tests/` — de bewijslast
 
-205 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
+233 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
 onzin-tekst, ontbrekende velden, verkeerde btw-percentages, ambigue
 bedragen, toekomst- en te oude datums, duplicaten, de audit trail bij
 aanmaken en wijzigen, en voor module 2: een PDF zonder tekstlaag, een
@@ -547,6 +614,9 @@ from .database import (
     lees_document,
     sla_extractie_op,
     lees_extractie,
+    lees_facturen,
+    keur_factuur_goed,
+    lees_extractie_bij_document,
 )
 
 __all__ = [
@@ -571,6 +641,9 @@ __all__ = [
     "lees_document",
     "sla_extractie_op",
     "lees_extractie",
+    "lees_facturen",
+    "keur_factuur_goed",
+    "lees_extractie_bij_document",
     "ExtractieResultaat",
     "FactuurExtractie",
     "VeldExtractie",
@@ -2088,7 +2161,19 @@ def extraheer_factuur(
         )
 
     if client is None:
-        client = maak_client(env_pad)
+        # Ook dit hoort geen exception te worden: draait de webinterface
+        # zonder sleutel, dan moet de factuur ter review komen en niet
+        # het hele scherm omvallen (Gouden regel 4).
+        try:
+            client = maak_client(env_pad)
+        except Exception as fout:
+            return ExtractieResultaat(
+                status="review_nodig",
+                redenen=[str(fout)],
+                model=model,
+                invoerpad=invoerpad,
+                bestandsnaam=pad.name,
+            )
 
     # Alles wat hier misgaat wordt een reden, nooit een exception: een
     # rate limit of een netwerkstoring mag het verwerken van een stapel
@@ -2148,6 +2233,166 @@ def extraheer_factuur(
         invoer_tokens=invoer_tokens,
         uitvoer_tokens=uitvoer_tokens,
         bestandsnaam=pad.name,
+    )
+```
+
+## `boekhouding/boekhouding/verwerking.py`
+
+```python
+"""Een aangeleverd bestand van upload tot factuur in de database.
+
+Dit is de lijm tussen de modules, niet een nieuwe module: er wordt hier
+geen enkele boekhoudregel bijbedacht. De volgorde is steeds dezelfde:
+
+    bewaren  →  routeren  →  uitlezen  →  valideren en opslaan
+
+De webinterface roept alleen deze functie aan. Zo staat er nooit
+boekhoudlogica in een route, en werkt dezelfde keten straks ook vanaf
+de opdrachtregel of een e-mailpostbus.
+"""
+
+import tempfile
+from datetime import date
+from pathlib import Path
+from typing import Any, Literal, Optional
+
+from pydantic import BaseModel
+
+from .ai_extractie import VELDEN, extraheer_factuur
+from .database import bewaar_document, sla_extractie_op, sla_factuur_op
+from .routering import bestandssoort, routeer_document
+from .ubl import verwerk_efactuur
+
+# Welke extensie hoort bij welke herkende inhoud. De bestandsnaam van de
+# gebruiker doet er niet toe: de inhoud bepaalt hoe we het bewaren.
+EXTENSIE_BIJ_SOORT = {
+    "pdf": ".pdf",
+    "jpg": ".jpg",
+    "png": ".png",
+    "xml": ".xml",
+}
+
+
+class UploadResultaat(BaseModel):
+    """Wat er van een aangeleverd bestand terechtkwam."""
+
+    status: Literal["gevalideerd", "review_nodig"]
+    redenen: list[str] = []
+    factuur_id: Optional[int] = None
+    document_id: Optional[int] = None
+    extractie_id: Optional[int] = None
+    route: Optional[str] = None
+    bestandsnaam: str = ""
+
+
+def verwerk_upload(
+    conn,
+    administratie_id: int,
+    bestandsnaam: str,
+    inhoud: bytes,
+    opslagmap: str | Path,
+    *,
+    ai_client: Any = None,
+    vandaag: Optional[date] = None,
+) -> UploadResultaat:
+    """Neem een aangeleverd bestand aan en zet het om in een factuur.
+
+    Geeft altijd een resultaat terug, nooit een exception: gaat er iets
+    mis, dan is dat een reden bij een factuur die op review wacht.
+    """
+    if not inhoud:
+        return UploadResultaat(
+            status="review_nodig",
+            redenen=["het aangeleverde bestand is leeg"],
+            bestandsnaam=bestandsnaam,
+        )
+
+    soort = bestandssoort(inhoud[:1024])
+    extensie = EXTENSIE_BIJ_SOORT.get(soort or "")
+    if extensie is None:
+        return UploadResultaat(
+            status="review_nodig",
+            redenen=[
+                f"'{bestandsnaam}' is geen PDF, afbeelding of e-factuur; "
+                f"dit bestand wordt niet als factuur verwerkt"
+            ],
+            bestandsnaam=bestandsnaam,
+        )
+
+    # Het bestand komt binnen als bytes en moet als bestand op schijf
+    # staan voordat het bewaard en gerouteerd kan worden.
+    with tempfile.TemporaryDirectory() as tijdelijke_map:
+        tijdelijk = Path(tijdelijke_map) / f"aangeleverd{extensie}"
+        tijdelijk.write_bytes(inhoud)
+        return _verwerk_bestand(
+            conn, administratie_id, tijdelijk, bestandsnaam, opslagmap,
+            ai_client=ai_client, vandaag=vandaag,
+        )
+
+
+def _verwerk_bestand(
+    conn, administratie_id, pad: Path, bestandsnaam: str, opslagmap,
+    *, ai_client, vandaag,
+) -> UploadResultaat:
+    # 1. Bewaren (bewaarplicht) — dit gebeurt vóór het uitlezen, zodat
+    #    het origineel er ook staat als het uitlezen mislukt.
+    document = bewaar_document(conn, administratie_id, str(pad), str(opslagmap))
+    if document.status == "review_nodig":
+        return UploadResultaat(
+            status="review_nodig",
+            redenen=document.redenen,
+            bestandsnaam=bestandsnaam,
+        )
+
+    # 2. Routeren op werkelijke inhoud.
+    route, routefout = routeer_document(pad)
+    if route is None:
+        return UploadResultaat(
+            status="review_nodig",
+            redenen=[routefout or "onbekende bestandssoort"],
+            document_id=document.document_id,
+            bestandsnaam=bestandsnaam,
+        )
+
+    # 3. Uitlezen: e-factuur rechtstreeks, anders via het model.
+    extractie_id = None
+    if route == "ubl":
+        gelezen = verwerk_efactuur(pad, vandaag=vandaag)
+        velden, redenen = gelezen.velden, gelezen.redenen
+    else:
+        gelezen = extraheer_factuur(
+            pad, client=ai_client, vandaag=vandaag
+        )
+        redenen = gelezen.redenen
+        velden = {}
+        if gelezen.extractie is not None:
+            for veld in VELDEN:
+                waarde = getattr(gelezen.extractie, veld).waarde
+                if waarde is not None and str(waarde).strip():
+                    velden[veld] = waarde
+        # De extractie zelf gaat de audit trail in: welk model, welke
+        # prompt, welke ruwe respons.
+        extractie_id = sla_extractie_op(
+            conn, administratie_id, gelezen, document_id=document.document_id
+        )
+
+    # 4. Valideren en opslaan — altijd via sla_factuur_op, ook als er al
+    #    redenen zijn. De factuur moet zichtbaar worden in de lijst.
+    factuur_id, resultaat = sla_factuur_op(
+        conn, administratie_id, velden,
+        vandaag=vandaag,
+        document_id=document.document_id,
+        extra_redenen=tuple(redenen),
+    )
+
+    return UploadResultaat(
+        status=resultaat.status,
+        redenen=resultaat.redenen,
+        factuur_id=factuur_id,
+        document_id=document.document_id,
+        extractie_id=extractie_id,
+        route=route,
+        bestandsnaam=bestandsnaam,
     )
 ```
 
@@ -2335,6 +2580,14 @@ def maak_tabellen(conn: sqlite3.Connection) -> None:
         conn, "extracties", "prompt_versie",
         "TEXT NOT NULL DEFAULT 'onbekend'",
     )
+    # Goedkeuring is een aparte handeling van de mens, los van de
+    # status die de code bepaalt. Daarom twee eigen kolommen in plaats
+    # van een derde status: "gevalideerd" zegt dat de sommen kloppen,
+    # "goedgekeurd_op" zegt dat een mens ernaar heeft gekeken en ja
+    # heeft gezegd. Dat scheelt bovendien een tabelmigratie, want een
+    # CHECK-constraint is in SQLite niet te wijzigen.
+    _voeg_kolom_toe(conn, "facturen", "goedgekeurd_op", "TEXT")
+    _voeg_kolom_toe(conn, "facturen", "goedgekeurd_door", "TEXT")
 
     conn.commit()
 
@@ -2379,6 +2632,7 @@ def sla_factuur_op(
     *,
     vandaag: Optional[date] = None,
     document_id: Optional[int] = None,
+    extra_redenen: tuple[str, ...] = (),
 ) -> tuple[int, ValidatieResultaat]:
     """Valideer en bewaar een factuur; geef (factuur_id, resultaat) terug.
 
@@ -2389,6 +2643,12 @@ def sla_factuur_op(
     document_id koppelt de factuur optioneel aan het bewaarde originele
     bestand (tabel documenten), zodat bij een controle altijd de bron
     terug te vinden is.
+
+    extra_redenen zijn redenen die niet uit de rekencontroles komen maar
+    van eerder in de keten — bijvoorbeeld een veld dat het model met
+    lage zekerheid heeft gelezen. Die horen bij de factuur bewaard te
+    worden, anders zou de eigenaar in het reviewscherm niet zien waarom
+    er twijfel was.
     """
     resultaat = valideer_factuur(
         data,
@@ -2397,6 +2657,13 @@ def sla_factuur_op(
             conn, administratie_id, f.leverancier, f.factuurnummer
         ),
     )
+    if extra_redenen:
+        resultaat = resultaat.model_copy(
+            update={
+                "redenen": list(extra_redenen) + resultaat.redenen,
+                "status": "review_nodig",
+            }
+        )
 
     if resultaat.factuur is not None:
         velden = {v: _als_tekst(getattr(resultaat.factuur, v)) for v in FACTUUR_VELDEN}
@@ -2779,6 +3046,694 @@ def lees_extractie(conn: sqlite3.Connection, extractie_id: int) -> dict[str, Any
     extractie = dict(zip(kolommen, rij))
     extractie["redenen"] = json.loads(extractie["redenen"])
     return extractie
+
+
+def lees_facturen(
+    conn: sqlite3.Connection, administratie_id: int
+) -> list[dict[str, Any]]:
+    """Alle facturen van een administratie, review_nodig bovenaan.
+
+    De volgorde is de werkvolgorde van de eigenaar: eerst wat zijn
+    aandacht nodig heeft, daarna wat al klopt maar nog niet is
+    goedgekeurd, en onderaan wat af is. Binnen elke groep de nieuwste
+    factuur eerst.
+    """
+    cursor = conn.execute(
+        """
+        SELECT * FROM facturen
+        WHERE administratie_id = ?
+        ORDER BY
+            CASE
+                WHEN status = 'review_nodig' THEN 0
+                WHEN goedgekeurd_op IS NULL THEN 1
+                ELSE 2
+            END,
+            id DESC
+        """,
+        (administratie_id,),
+    )
+    kolommen = [k[0] for k in cursor.description]
+    facturen = []
+    for rij in cursor.fetchall():
+        factuur = dict(zip(kolommen, rij))
+        factuur["review_redenen"] = json.loads(factuur["review_redenen"])
+        factuur["originele_data"] = json.loads(factuur["originele_data"])
+        facturen.append(factuur)
+    return facturen
+
+
+def keur_factuur_goed(
+    conn: sqlite3.Connection, factuur_id: int, door: str = "eigenaar"
+) -> tuple[bool, list[str]]:
+    """Leg vast dat een mens deze factuur heeft goedgekeurd.
+
+    Geeft (gelukt, redenen). Goedkeuren kan alleen als er geen
+    openstaande validatiefouten meer zijn: de code bepaalt of het mág,
+    de mens bepaalt of het gebeurt (Gouden regel 1). Een factuur die
+    al is goedgekeurd wordt niet nog een keer goedgekeurd.
+    """
+    factuur = lees_factuur(conn, factuur_id)
+
+    if factuur["status"] != "gevalideerd":
+        return False, [
+            "deze factuur kan nog niet worden goedgekeurd; los eerst de "
+            "openstaande punten op"
+        ] + factuur["review_redenen"]
+
+    if factuur["goedgekeurd_op"] is not None:
+        return False, ["deze factuur is al goedgekeurd"]
+
+    tijd = _nu()
+    conn.execute(
+        "UPDATE facturen SET goedgekeurd_op = ?, goedgekeurd_door = ?, "
+        "gewijzigd_op = ? WHERE id = ?",
+        (tijd, door, tijd, factuur_id),
+    )
+    for veld, waarde in (("goedgekeurd_op", tijd), ("goedgekeurd_door", door)):
+        conn.execute(
+            """
+            INSERT INTO audit_log (
+                administratie_id, tabel, record_id, actie,
+                veld, oude_waarde, nieuwe_waarde, tijdstip
+            ) VALUES (?, 'facturen', ?, 'gewijzigd', ?, NULL, ?, ?)
+            """,
+            (factuur["administratie_id"], factuur_id, veld, waarde, tijd),
+        )
+    conn.commit()
+    return True, []
+
+
+def lees_extractie_bij_document(
+    conn: sqlite3.Connection, document_id: Optional[int]
+) -> Optional[dict[str, Any]]:
+    """Zoek de laatste AI-extractie bij een document, of None.
+
+    Het reviewscherm gebruikt dit om per veld de zekerheid te tonen.
+    Bij een e-factuur is er geen extractie; dan is er ook niets
+    onzekers, want de velden stonden letterlijk in het bestand.
+    """
+    if document_id is None:
+        return None
+    cursor = conn.execute(
+        "SELECT * FROM extracties WHERE document_id = ? ORDER BY id DESC LIMIT 1",
+        (document_id,),
+    )
+    rij = cursor.fetchone()
+    if rij is None:
+        return None
+    kolommen = [k[0] for k in cursor.description]
+    extractie = dict(zip(kolommen, rij))
+    extractie["redenen"] = json.loads(extractie["redenen"])
+    return extractie
+```
+
+## `boekhouding/boekhouding/web/__init__.py`
+
+```python
+"""Webinterface, fase 1: de reviewschermen van de eigenaar.
+
+FastAPI met server-side HTML (Jinja2). Geen React, geen SPA, geen
+build-stap — je start hem en het werkt. Mobiel-eerst, want de eigenaar
+staat met zijn telefoon bij de brievenbus.
+
+Fase 1 draait lokaal en heeft geen login: er zijn nog geen
+klantaccounts, dus er valt nog niets af te schermen.
+"""
+
+from .app import maak_app
+
+__all__ = ["maak_app"]
+```
+
+## `boekhouding/boekhouding/web/app.py`
+
+```python
+"""De routes van de webinterface.
+
+Elke route doet drie dingen en niet meer: gegevens ophalen, een functie
+uit de boekhoudmodules aanroepen, en het resultaat aan een sjabloon
+geven. Er wordt hier niet gerekend, niet gevalideerd en niets bepaald
+over btw — dat zit allemaal in de modules eronder.
+"""
+
+import sqlite3
+from datetime import date
+from pathlib import Path
+from typing import Any, Optional
+
+from fastapi import FastAPI, Form, Request, UploadFile
+from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
+from fastapi.templating import Jinja2Templates
+
+from ..ai_extractie import VELDEN
+from ..database import (
+    FACTUUR_VELDEN,
+    keur_factuur_goed,
+    lees_document,
+    lees_extractie_bij_document,
+    lees_facturen,
+    lees_factuur,
+    maak_administratie,
+    maak_tabellen,
+    maak_verbinding,
+    wijzig_factuur,
+)
+from ..verwerking import verwerk_upload
+
+SJABLONEN = Jinja2Templates(directory=str(Path(__file__).parent / "templates"))
+
+# Hoe de velden in het reviewscherm heten, in de volgorde waarin ze op
+# een factuur staan.
+VELDLABELS = {
+    "leverancier": "Leverancier",
+    "factuurdatum": "Factuurdatum",
+    "factuurnummer": "Factuurnummer",
+    "bedrag_excl": "Bedrag excl. btw",
+    "btw_percentage": "Btw-percentage",
+    "btw_bedrag": "Btw-bedrag",
+    "bedrag_incl": "Totaal incl. btw",
+}
+
+MEDIATYPEN = {
+    ".pdf": "application/pdf",
+    ".jpg": "image/jpeg",
+    ".jpeg": "image/jpeg",
+    ".png": "image/png",
+    ".xml": "application/xml",
+}
+
+
+def maak_app(
+    db_pad: str,
+    opslagmap: str,
+    *,
+    ai_client: Any = None,
+    vandaag: Optional[date] = None,
+    administratie_naam: str = "Mijn eenmanszaak",
+) -> FastAPI:
+    """Bouw de applicatie.
+
+    ai_client en vandaag zijn er om te kunnen testen zonder echte
+    API-aanroepen en zonder afhankelijk te zijn van de klok.
+    """
+    app = FastAPI(title="Boekhouding — review")
+    app.state.db_pad = db_pad
+    app.state.opslagmap = opslagmap
+    app.state.ai_client = ai_client
+    app.state.vandaag = vandaag
+
+    # Zorg dat er een database en minstens één administratie is.
+    Path(opslagmap).mkdir(parents=True, exist_ok=True)
+    start = maak_verbinding(db_pad)
+    maak_tabellen(start)
+    if start.execute("SELECT count(*) FROM administraties").fetchone()[0] == 0:
+        maak_administratie(start, administratie_naam)
+    start.close()
+
+    def verbinding() -> sqlite3.Connection:
+        return maak_verbinding(app.state.db_pad)
+
+    def toon(request: Request, sjabloon: str, **gegevens) -> HTMLResponse:
+        return SJABLONEN.TemplateResponse(
+            request=request, name=sjabloon, context=gegevens
+        )
+
+    # --- overzicht ------------------------------------------------------
+
+    @app.get("/", response_class=HTMLResponse)
+    def start_pagina():
+        conn = verbinding()
+        eerste = conn.execute("SELECT id FROM administraties ORDER BY id").fetchone()
+        conn.close()
+        return RedirectResponse(f"/administratie/{eerste[0]}", status_code=303)
+
+    @app.get("/administratie/{administratie_id}", response_class=HTMLResponse)
+    def overzicht(request: Request, administratie_id: int):
+        conn = verbinding()
+        administratie = conn.execute(
+            "SELECT id, naam FROM administraties WHERE id = ?", (administratie_id,)
+        ).fetchone()
+        facturen = lees_facturen(conn, administratie_id) if administratie else []
+        conn.close()
+
+        if administratie is None:
+            return toon(
+                request, "fout.html",
+                titel="Administratie niet gevonden",
+                bericht=f"Er is geen administratie met nummer {administratie_id}.",
+            )
+
+        return toon(
+            request, "overzicht.html",
+            administratie_id=administratie_id,
+            administratie_naam=administratie[1],
+            facturen=facturen,
+            aantal_review=sum(1 for f in facturen if f["status"] == "review_nodig"),
+            aantal_wacht=sum(
+                1 for f in facturen
+                if f["status"] == "gevalideerd" and f["goedgekeurd_op"] is None
+            ),
+        )
+
+    # --- uploaden -------------------------------------------------------
+
+    @app.get("/administratie/{administratie_id}/upload", response_class=HTMLResponse)
+    def uploadscherm(request: Request, administratie_id: int):
+        return toon(request, "upload.html", administratie_id=administratie_id)
+
+    @app.post("/administratie/{administratie_id}/upload")
+    async def upload_ontvangen(
+        request: Request, administratie_id: int, bestand: UploadFile
+    ):
+        inhoud = await bestand.read()
+        conn = verbinding()
+        resultaat = verwerk_upload(
+            conn, administratie_id, bestand.filename or "onbekend", inhoud,
+            app.state.opslagmap,
+            ai_client=app.state.ai_client, vandaag=app.state.vandaag,
+        )
+        conn.close()
+
+        if resultaat.factuur_id is None:
+            # Er is geen factuur ontstaan; laat zien waarom, in plaats
+            # van de gebruiker terug te sturen naar een lege lijst.
+            return toon(
+                request, "fout.html",
+                titel="Dit bestand is niet verwerkt",
+                bericht=" ".join(resultaat.redenen),
+                terug=f"/administratie/{administratie_id}/upload",
+            )
+        return RedirectResponse(f"/factuur/{resultaat.factuur_id}", status_code=303)
+
+    # --- reviewscherm ---------------------------------------------------
+
+    @app.get("/factuur/{factuur_id}", response_class=HTMLResponse)
+    def review(request: Request, factuur_id: int, melding: str = ""):
+        conn = verbinding()
+        try:
+            factuur = lees_factuur(conn, factuur_id)
+        except ValueError:
+            conn.close()
+            return toon(
+                request, "fout.html",
+                titel="Factuur niet gevonden",
+                bericht=f"Er is geen factuur met nummer {factuur_id}.",
+            )
+        extractie = lees_extractie_bij_document(conn, factuur["document_id"])
+        conn.close()
+
+        return toon(
+            request, "review.html",
+            factuur=factuur,
+            velden=_veldregels(factuur, extractie),
+            extractie=extractie,
+            melding=melding,
+            mag_goedkeuren=(
+                factuur["status"] == "gevalideerd"
+                and factuur["goedgekeurd_op"] is None
+            ),
+        )
+
+    @app.post("/factuur/{factuur_id}/opslaan")
+    async def opslaan(request: Request, factuur_id: int):
+        formulier = await request.form()
+        wijzigingen = {
+            veld: str(formulier[veld]).strip()
+            for veld in FACTUUR_VELDEN
+            if veld in formulier
+        }
+        conn = verbinding()
+        # Wijzigingen gaan altijd via wijzig_factuur: die bewaart de
+        # oude waarde in de audit trail en hervalideert de factuur.
+        wijzig_factuur(conn, factuur_id, wijzigingen, vandaag=app.state.vandaag)
+        conn.close()
+        return RedirectResponse(
+            f"/factuur/{factuur_id}?melding=Opgeslagen", status_code=303
+        )
+
+    @app.post("/factuur/{factuur_id}/goedkeuren")
+    def goedkeuren(factuur_id: int):
+        conn = verbinding()
+        gelukt, redenen = keur_factuur_goed(conn, factuur_id)
+        administratie_id = lees_factuur(conn, factuur_id)["administratie_id"]
+        conn.close()
+
+        if not gelukt:
+            return RedirectResponse(
+                f"/factuur/{factuur_id}?melding={redenen[0]}", status_code=303
+            )
+        return RedirectResponse(f"/administratie/{administratie_id}", status_code=303)
+
+    # --- het originele document laten zien -------------------------------
+
+    @app.get("/document/{document_id}")
+    def document(document_id: int):
+        conn = verbinding()
+        try:
+            registratie = lees_document(conn, document_id)
+        except ValueError:
+            conn.close()
+            return HTMLResponse("Document niet gevonden", status_code=404)
+        conn.close()
+
+        # Het pad komt uit de database, nooit uit het verzoek: een
+        # bezoeker kan dus geen ander bestand van de schijf opvragen.
+        pad = Path(registratie["opslagpad"])
+        if not pad.is_file():
+            return HTMLResponse("Bestand niet meer gevonden", status_code=404)
+        return FileResponse(
+            pad,
+            media_type=MEDIATYPEN.get(pad.suffix.lower(), "application/octet-stream"),
+            filename=registratie["originele_bestandsnaam"],
+            content_disposition_type="inline",
+        )
+
+    return app
+
+
+def _veldregels(factuur: dict, extractie: Optional[dict]) -> list[dict]:
+    """Zet de velden klaar voor het scherm, met zekerheid per veld."""
+    zekerheden = _zekerheden(extractie)
+    regels = []
+    for veld in VELDEN:
+        gegeven = zekerheden.get(veld, {})
+        regels.append(
+            {
+                "naam": veld,
+                "label": VELDLABELS.get(veld, veld),
+                "waarde": factuur.get(veld) or "",
+                "zekerheid": gegeven.get("zekerheid"),
+                "reden": gegeven.get("reden"),
+            }
+        )
+    return regels
+
+
+def _zekerheden(extractie: Optional[dict]) -> dict[str, dict]:
+    """Haal de zekerheid per veld uit de bewaarde modelrespons.
+
+    Bij een e-factuur is er geen extractie: dan is er ook niets
+    onzekers, want de velden stonden letterlijk in het XML-bestand.
+    """
+    if extractie is None:
+        return {}
+    import json
+
+    try:
+        ruw = json.loads(extractie["ruwe_respons"])
+    except (ValueError, TypeError):
+        return {}
+    if not isinstance(ruw, dict):
+        return {}
+    return {
+        veld: gegeven
+        for veld, gegeven in ruw.items()
+        if isinstance(gegeven, dict) and "zekerheid" in gegeven
+    }
+```
+
+## `boekhouding/boekhouding/web/templates/basis.html`
+
+```html
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block titel %}Boekhouding{% endblock %}</title>
+<style>
+  /* Mobiel-eerst: alles staat onder elkaar, en pas op een breed scherm
+     naast elkaar. Geen build-stap, geen framework. */
+  :root {
+    --inkt: #1b1b1b; --zacht: #5c5c5c; --lijn: #dcdcdc; --vel: #ffffff;
+    --achter: #f4f4f2; --let-op: #b4381f; --let-op-vlak: #fdeeea;
+    --wacht: #8a6d1f; --wacht-vlak: #fdf6e3; --klaar: #1f6b3a;
+    --klaar-vlak: #eaf5ee; --knop: #1b1b1b;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--achter); color: var(--inkt);
+    font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    -webkit-text-size-adjust: 100%;
+  }
+  header {
+    background: var(--vel); border-bottom: 1px solid var(--lijn);
+    padding: 14px 16px; position: sticky; top: 0; z-index: 5;
+  }
+  header a { color: var(--zacht); text-decoration: none; font-size: 15px; }
+  header h1 { margin: 4px 0 0; font-size: 19px; }
+  main { padding: 16px; max-width: 1100px; margin: 0 auto; }
+  a.knop, button {
+    display: inline-block; padding: 13px 18px; border-radius: 8px;
+    border: 1px solid var(--knop); background: var(--knop); color: #fff;
+    font-size: 16px; font-weight: 600; text-decoration: none; cursor: pointer;
+    min-height: 46px;  /* groot genoeg voor een duim */
+  }
+  button.tweede, a.knop.tweede { background: var(--vel); color: var(--inkt); }
+  button[disabled] { opacity: .45; cursor: not-allowed; }
+  .kaart {
+    background: var(--vel); border: 1px solid var(--lijn); border-radius: 10px;
+    padding: 16px; margin-bottom: 14px;
+  }
+  .merk {
+    display: inline-block; padding: 3px 9px; border-radius: 999px;
+    font-size: 13px; font-weight: 600; white-space: nowrap;
+  }
+  .merk.review { background: var(--let-op-vlak); color: var(--let-op); }
+  .merk.wacht { background: var(--wacht-vlak); color: var(--wacht); }
+  .merk.klaar { background: var(--klaar-vlak); color: var(--klaar); }
+  .telling { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+  .telling div {
+    flex: 1 1 130px; background: var(--vel); border: 1px solid var(--lijn);
+    border-radius: 10px; padding: 12px 14px;
+  }
+  .telling strong { display: block; font-size: 26px; line-height: 1.2; }
+  .telling span { color: var(--zacht); font-size: 14px; }
+  .rij {
+    display: block; background: var(--vel); border: 1px solid var(--lijn);
+    border-radius: 10px; padding: 14px; margin-bottom: 10px;
+    text-decoration: none; color: inherit;
+  }
+  .rij .boven { display: flex; justify-content: space-between; gap: 10px; }
+  .rij .naam { font-weight: 600; }
+  .rij .onder { color: var(--zacht); font-size: 14px; margin-top: 4px; }
+  .rij .bedrag { font-variant-numeric: tabular-nums; font-weight: 600; }
+  label { display: block; font-size: 14px; color: var(--zacht); margin-bottom: 4px; }
+  input[type=text], input[type=file] {
+    width: 100%; padding: 12px; font-size: 16px; border-radius: 8px;
+    border: 1px solid var(--lijn); background: var(--vel);
+  }
+  .veld { margin-bottom: 14px; }
+  .veld.laag input { border-color: var(--let-op); background: var(--let-op-vlak); }
+  .waarschuwing {
+    background: var(--let-op-vlak); border: 1px solid var(--let-op);
+    color: var(--let-op); border-radius: 10px; padding: 14px; margin-bottom: 14px;
+  }
+  .waarschuwing ul { margin: 8px 0 0; padding-left: 20px; }
+  .melding {
+    background: var(--klaar-vlak); border: 1px solid var(--klaar);
+    color: var(--klaar); border-radius: 10px; padding: 12px; margin-bottom: 14px;
+  }
+  .bron { width: 100%; height: 60vh; border: 1px solid var(--lijn); border-radius: 10px; }
+  .bron img { width: 100%; height: auto; display: block; }
+  .knoppen { display: flex; gap: 10px; flex-wrap: wrap; }
+  .knoppen button, .knoppen a.knop { flex: 1 1 160px; text-align: center; }
+  .leeg { color: var(--zacht); text-align: center; padding: 40px 10px; }
+  @media (min-width: 860px) {
+    .twee-kolommen { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .bron { height: 78vh; position: sticky; top: 80px; }
+  }
+</style>
+</head>
+<body>
+<header>
+  {% block kruimel %}{% endblock %}
+  <h1>{% block kop %}Boekhouding{% endblock %}</h1>
+</header>
+<main>{% block inhoud %}{% endblock %}</main>
+</body>
+</html>
+```
+
+## `boekhouding/boekhouding/web/templates/overzicht.html`
+
+```html
+{% extends "basis.html" %}
+{% block titel %}Facturen — {{ administratie_naam }}{% endblock %}
+{% block kop %}{{ administratie_naam }}{% endblock %}
+{% block inhoud %}
+
+<div class="telling">
+  <div>
+    <strong>{{ aantal_review }}</strong>
+    <span>{% if aantal_review == 1 %}factuur wacht op jou{% else %}facturen wachten op jou{% endif %}</span>
+  </div>
+  <div>
+    <strong>{{ aantal_wacht }}</strong>
+    <span>klaar om goed te keuren</span>
+  </div>
+  <div>
+    <strong>{{ facturen|length }}</strong>
+    <span>facturen totaal</span>
+  </div>
+</div>
+
+<p><a class="knop" href="/administratie/{{ administratie_id }}/upload">Factuur toevoegen</a></p>
+
+{% if not facturen %}
+  <p class="leeg">Nog geen facturen. Voeg er een toe met de knop hierboven.</p>
+{% endif %}
+
+{% for factuur in facturen %}
+  <a class="rij" href="/factuur/{{ factuur.id }}">
+    <div class="boven">
+      <span class="naam">{{ factuur.leverancier or "Leverancier onbekend" }}</span>
+      {% if factuur.status == "review_nodig" %}
+        <span class="merk review">Review nodig</span>
+      {% elif factuur.goedgekeurd_op %}
+        <span class="merk klaar">Goedgekeurd</span>
+      {% else %}
+        <span class="merk wacht">Klaar om goed te keuren</span>
+      {% endif %}
+    </div>
+    <div class="boven onder">
+      <span>{{ factuur.factuurdatum or "datum onbekend" }}</span>
+      <span class="bedrag">{{ factuur.bedrag_incl or "—" }}</span>
+    </div>
+    {% if factuur.status == "review_nodig" and factuur.review_redenen %}
+      <div class="onder">{{ factuur.review_redenen[0] }}</div>
+    {% endif %}
+  </a>
+{% endfor %}
+
+{% endblock %}
+```
+
+## `boekhouding/boekhouding/web/templates/upload.html`
+
+```html
+{% extends "basis.html" %}
+{% block titel %}Factuur toevoegen{% endblock %}
+{% block kruimel %}<a href="/administratie/{{ administratie_id }}">&larr; Terug naar de lijst</a>{% endblock %}
+{% block kop %}Factuur toevoegen{% endblock %}
+{% block inhoud %}
+
+<form class="kaart" method="post" enctype="multipart/form-data"
+      action="/administratie/{{ administratie_id }}/upload">
+  <div class="veld">
+    <label for="bestand">Kies een bestand of maak een foto</label>
+    <input type="file" id="bestand" name="bestand" required
+           accept="image/*,.pdf,.xml" capture>
+  </div>
+  <p class="onder" style="color:#5c5c5c;font-size:14px">
+    Een PDF, een foto van een papieren factuur, of een e-factuur (XML).
+    Een e-factuur wordt rechtstreeks uitgelezen; bij een PDF of foto
+    leest het model hem voor je uit en kijk jij het daarna na.
+  </p>
+  <button type="submit">Toevoegen</button>
+</form>
+
+{% endblock %}
+```
+
+## `boekhouding/boekhouding/web/templates/review.html`
+
+```html
+{% extends "basis.html" %}
+{% block titel %}Factuur {{ factuur.factuurnummer or factuur.id }}{% endblock %}
+{% block kruimel %}<a href="/administratie/{{ factuur.administratie_id }}">&larr; Terug naar de lijst</a>{% endblock %}
+{% block kop %}{{ factuur.leverancier or "Factuur nakijken" }}{% endblock %}
+{% block inhoud %}
+
+{% if melding %}<div class="melding">{{ melding }}</div>{% endif %}
+
+{% if factuur.review_redenen %}
+  <div class="waarschuwing">
+    <strong>Dit moet nog nagekeken worden:</strong>
+    <ul>{% for reden in factuur.review_redenen %}<li>{{ reden }}</li>{% endfor %}</ul>
+  </div>
+{% elif factuur.goedgekeurd_op %}
+  <div class="melding">Goedgekeurd op {{ factuur.goedgekeurd_op }}.</div>
+{% endif %}
+
+<div class="twee-kolommen">
+
+  <div>
+    {% if factuur.document_id %}
+      <object class="bron" data="/document/{{ factuur.document_id }}">
+        <p style="padding:14px">
+          Het document kan hier niet worden getoond.
+          <a href="/document/{{ factuur.document_id }}">Open het in een nieuw tabblad</a>.
+        </p>
+      </object>
+    {% else %}
+      <div class="kaart leeg">Geen origineel document bij deze factuur.</div>
+    {% endif %}
+  </div>
+
+  <div>
+    <form class="kaart" method="post" action="/factuur/{{ factuur.id }}/opslaan">
+      {% for veld in velden %}
+        <div class="veld {% if veld.zekerheid == 'laag' %}laag{% endif %}">
+          <label for="{{ veld.naam }}">
+            {{ veld.label }}
+            {% if veld.zekerheid == 'laag' %}
+              <span class="merk review">lage zekerheid</span>
+            {% elif veld.zekerheid == 'hoog' %}
+              <span class="merk klaar">zeker</span>
+            {% endif %}
+          </label>
+          <input type="text" id="{{ veld.naam }}" name="{{ veld.naam }}"
+                 value="{{ veld.waarde }}" inputmode="{% if 'bedrag' in veld.naam or 'percentage' in veld.naam %}decimal{% else %}text{% endif %}">
+          {% if veld.reden %}
+            <div class="onder" style="color:#b4381f">{{ veld.reden }}</div>
+          {% endif %}
+        </div>
+      {% endfor %}
+
+      <div class="knoppen">
+        <button type="submit" class="tweede">Opslaan en later beoordelen</button>
+      </div>
+    </form>
+
+    <form class="kaart" method="post" action="/factuur/{{ factuur.id }}/goedkeuren">
+      <div class="knoppen">
+        <button type="submit" {% if not mag_goedkeuren %}disabled{% endif %}>
+          {% if factuur.goedgekeurd_op %}Al goedgekeurd{% else %}Goedkeuren{% endif %}
+        </button>
+      </div>
+      {% if not mag_goedkeuren and not factuur.goedgekeurd_op %}
+        <p class="onder" style="color:#5c5c5c;font-size:14px;margin-bottom:0">
+          Goedkeuren kan pas als de punten hierboven zijn opgelost.
+          Pas een veld aan en sla op; de controle loopt dan opnieuw.
+        </p>
+      {% endif %}
+    </form>
+
+    {% if extractie %}
+      <div class="kaart">
+        <div class="onder" style="color:#5c5c5c;font-size:14px">
+          Uitgelezen door {{ extractie.model }}
+          (prompt {{ extractie.prompt_versie }}, via {{ extractie.invoerpad }}).
+        </div>
+      </div>
+    {% endif %}
+  </div>
+
+</div>
+{% endblock %}
+```
+
+## `boekhouding/boekhouding/web/templates/fout.html`
+
+```html
+{% extends "basis.html" %}
+{% block titel %}{{ titel }}{% endblock %}
+{% block kop %}{{ titel }}{% endblock %}
+{% block inhoud %}
+<div class="waarschuwing">{{ bericht }}</div>
+<a class="knop tweede" href="{{ terug|default('/') }}">Terug</a>
+{% endblock %}
 ```
 
 ## `boekhouding/boekhouding/config/btw_2024.json`
@@ -2808,13 +3763,55 @@ def lees_extractie(conn: sqlite3.Connection, extractie_id: int) -> dict[str, Any
 }
 ```
 
-## `boekhouding/scripts/handmatige_api_test.py`
+## `boekhouding/scripts/start_webinterface.py`
+
+```python
+#!/usr/bin/env python3
+"""Start de webinterface lokaal.
+
+    python scripts/start_webinterface.py
+
+Daarna staat hij op http://127.0.0.1:8000 — ook te openen op je telefoon
+als die op hetzelfde wifi-netwerk zit (gebruik dan het IP-adres van deze
+computer in plaats van 127.0.0.1).
+
+Fase 1 heeft geen login. Draai hem dus alleen op je eigen netwerk.
+"""
+
+import sys
+from pathlib import Path
+
+BASIS = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(BASIS))
+
+import uvicorn  # noqa: E402
+
+from boekhouding.web import maak_app  # noqa: E402
+
+GEGEVENS = BASIS / "gegevens"
+
+
+def main() -> int:
+    GEGEVENS.mkdir(exist_ok=True)
+    app = maak_app(str(GEGEVENS / "boekhouding.sqlite"), str(GEGEVENS / "opslag"))
+    print(f"Database  : {GEGEVENS / 'boekhouding.sqlite'}")
+    print(f"Originelen: {GEGEVENS / 'opslag'}")
+    print("Open http://127.0.0.1:8000 in je browser. Stoppen met Ctrl-C.\n")
+    uvicorn.run(app, host="127.0.0.1", port=8000, log_level="warning")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+```
+
+## `boekhouding/scripts/handmatige_api_proef.py`
 
 ```python
 #!/usr/bin/env python3
 """Eén echte API-aanroep, met de hand te draaien.
 
-    python scripts/handmatige_api_test.py [pad-naar-factuur]
+    python scripts/handmatige_api_proef.py [pad-naar-factuur]
 
 Dit script staat bewust buiten pytest: de testsuite doet nooit een echte
 aanroep. Gebruik dit om te controleren of de sleutel werkt en of het
@@ -6865,6 +7862,337 @@ def test_utf16_wordt_als_xml_herkend(groot_eerst):
     assert bestandssoort(_als_utf16(DTD_AANVAL, groot_eerst)) == "xml"
 ```
 
+## `boekhouding/tests/test_web.py`
+
+```python
+"""Tests voor de webinterface (module 5).
+
+Er gaat hier nooit een echt verzoek naar de API: waar de AI-route wordt
+geraakt, krijgt de app een nagemaakte client mee.
+"""
+
+from datetime import date
+from pathlib import Path
+
+import pytest
+from fastapi.testclient import TestClient
+
+from boekhouding import lees_audit_trail, lees_facturen, maak_verbinding
+from boekhouding.web import maak_app
+from conftest import maak_pdf
+from test_ai_extractie import NageaapteClient, NageaapteRespons, goede_extractie, veld
+
+VANDAAG = date(2026, 8, 27)
+UBLMAP = Path(__file__).parent / "testfacturen" / "ubl"
+
+
+def client_met(extractie):
+    return NageaapteClient(
+        NageaapteRespons(extractie, ruwe_json=extractie.model_dump_json())
+    )
+
+
+@pytest.fixture
+def werkmap(tmp_path):
+    return tmp_path
+
+
+@pytest.fixture
+def app_en_client(werkmap):
+    """Een app met een nagemaakte AI-client die altijd hetzelfde teruggeeft."""
+    ai = client_met(goede_extractie())
+    app = maak_app(
+        str(werkmap / "boekhouding.sqlite"), str(werkmap / "opslag"),
+        ai_client=ai, vandaag=VANDAAG,
+    )
+    return app, TestClient(app), ai
+
+
+@pytest.fixture
+def web(app_en_client):
+    return app_en_client[1]
+
+
+def upload(web, pad_of_bytes, naam="factuur.pdf"):
+    inhoud = (
+        pad_of_bytes.read_bytes()
+        if isinstance(pad_of_bytes, Path) else pad_of_bytes
+    )
+    return web.post(
+        "/administratie/1/upload",
+        files={"bestand": (naam, inhoud, "application/octet-stream")},
+        follow_redirects=False,
+    )
+
+
+# --- opstarten ----------------------------------------------------------
+
+def test_startpagina_gaat_naar_de_lijst(web):
+    antwoord = web.get("/", follow_redirects=False)
+    assert antwoord.status_code == 303
+    assert antwoord.headers["location"] == "/administratie/1"
+
+
+def test_lege_lijst_zegt_dat_netjes(web):
+    pagina = web.get("/administratie/1").text
+    assert "Nog geen facturen" in pagina
+    assert "Factuur toevoegen" in pagina
+
+
+def test_onbekende_administratie_geeft_een_nette_pagina(web):
+    antwoord = web.get("/administratie/999")
+    assert antwoord.status_code == 200
+    assert "niet gevonden" in antwoord.text
+
+
+def test_de_pagina_is_mobiel_eerst(web):
+    pagina = web.get("/administratie/1").text
+    assert 'name="viewport"' in pagina
+    assert "width=device-width" in pagina
+
+
+# --- uploaden -----------------------------------------------------------
+
+def test_efactuur_uploaden_levert_een_factuur_op(web):
+    antwoord = upload(web, UBLMAP / "01-standaard-21procent.xml", "efactuur.xml")
+    assert antwoord.status_code == 303
+    assert antwoord.headers["location"] == "/factuur/1"
+
+    pagina = web.get("/factuur/1").text
+    assert "Van Dijk ICT-diensten" in pagina
+    assert "484.00" in pagina
+
+
+def test_efactuur_gebruikt_geen_ai(app_en_client):
+    _, web, ai = app_en_client
+    upload(web, UBLMAP / "01-standaard-21procent.xml", "efactuur.xml")
+    assert ai.aanroepen == []  # een e-factuur hoeft niet uitgelezen te worden
+
+
+def test_pdf_uploaden_gaat_wel_langs_het_model(app_en_client):
+    _, web, ai = app_en_client
+    antwoord = upload(web, maak_pdf("Factuur 2026-0412 Van Dijk"), "factuur.pdf")
+    assert antwoord.status_code == 303
+    assert len(ai.aanroepen) == 1
+
+
+def test_uploadscherm_laat_een_foto_maken(web):
+    pagina = web.get("/administratie/1/upload").text
+    assert 'type="file"' in pagina
+    assert 'accept="image/*,.pdf,.xml"' in pagina
+    assert "capture" in pagina
+
+
+def test_onbruikbaar_bestand_wordt_uitgelegd(web):
+    antwoord = upload(web, b"PK\x03\x04 nep-docx", "factuur.docx")
+    assert antwoord.status_code == 200
+    assert "niet verwerkt" in antwoord.text
+    assert "geen PDF, afbeelding of e-factuur" in antwoord.text
+
+
+def test_leeg_bestand_wordt_uitgelegd(web):
+    antwoord = upload(web, b"", "leeg.pdf")
+    assert "leeg" in antwoord.text
+
+
+def test_het_origineel_wordt_bewaard(app_en_client, werkmap):
+    _, web, _ = app_en_client
+    upload(web, UBLMAP / "01-standaard-21procent.xml", "efactuur.xml")
+    bewaard = list((werkmap / "opslag").rglob("*.xml"))
+    assert len(bewaard) == 1
+
+
+# --- overzicht ----------------------------------------------------------
+
+def test_review_staat_bovenaan(app_en_client, werkmap):
+    _, web, _ = app_en_client
+    # Eerst een goede e-factuur, daarna een met een ontbrekend veld.
+    upload(web, UBLMAP / "01-standaard-21procent.xml", "goed.xml")
+    upload(web, UBLMAP / "05-zonder-factuurdatum.xml", "fout.xml")
+
+    conn = maak_verbinding(str(werkmap / "boekhouding.sqlite"))
+    facturen = lees_facturen(conn, 1)
+    conn.close()
+    assert facturen[0]["status"] == "review_nodig"
+
+    pagina = web.get("/administratie/1").text
+    assert pagina.index("Review nodig") < pagina.index("Klaar om goed te keuren")
+
+
+def test_de_teller_laat_zien_hoeveel_er_wachten(web):
+    upload(web, UBLMAP / "05-zonder-factuurdatum.xml", "fout.xml")
+    pagina = web.get("/administratie/1").text
+    assert "factuur wacht op jou" in pagina
+
+
+def test_elke_rij_toont_leverancier_datum_bedrag_en_status(web):
+    upload(web, UBLMAP / "01-standaard-21procent.xml", "goed.xml")
+    pagina = web.get("/administratie/1").text
+    assert "Van Dijk ICT-diensten" in pagina
+    assert "2026-07-14" in pagina
+    assert "484.00" in pagina
+    assert "Klaar om goed te keuren" in pagina
+
+
+# --- reviewscherm -------------------------------------------------------
+
+def test_reviewscherm_toont_het_originele_document(web):
+    upload(web, UBLMAP / "01-standaard-21procent.xml", "goed.xml")
+    pagina = web.get("/factuur/1").text
+    assert "/document/1" in pagina
+
+
+def test_het_document_kan_worden_opgehaald(web):
+    upload(web, maak_pdf("Factuur 2026-0412"), "factuur.pdf")
+    antwoord = web.get("/document/1")
+    assert antwoord.status_code == 200
+    assert antwoord.headers["content-type"] == "application/pdf"
+    assert "inline" in antwoord.headers["content-disposition"]
+
+
+def test_onbekend_document_geeft_404(web):
+    assert web.get("/document/999").status_code == 404
+
+
+def test_alle_velden_zijn_bewerkbaar(web):
+    upload(web, UBLMAP / "01-standaard-21procent.xml", "goed.xml")
+    pagina = web.get("/factuur/1").text
+    for veldnaam in ("leverancier", "factuurdatum", "factuurnummer",
+                     "bedrag_excl", "btw_percentage", "btw_bedrag", "bedrag_incl"):
+        assert f'name="{veldnaam}"' in pagina
+
+
+def test_lage_zekerheid_wordt_gemarkeerd(werkmap):
+    onzeker = goede_extractie(
+        bedrag_incl=veld("544,50", "laag", "cijfer onscherp door vouw")
+    )
+    app = maak_app(
+        str(werkmap / "db.sqlite"), str(werkmap / "opslag"),
+        ai_client=client_met(onzeker), vandaag=VANDAAG,
+    )
+    web = TestClient(app)
+    upload(web, maak_pdf("Factuur 2026-0412"), "factuur.pdf")
+
+    pagina = web.get("/factuur/1").text
+    assert "lage zekerheid" in pagina
+    assert "cijfer onscherp door vouw" in pagina
+
+
+def test_redenen_staan_bovenaan_in_gewone_taal(web):
+    upload(web, UBLMAP / "05-zonder-factuurdatum.xml", "fout.xml")
+    pagina = web.get("/factuur/1").text
+    assert "Dit moet nog nagekeken worden" in pagina
+    assert "factuurdatum ontbreekt" in pagina
+
+
+def test_bij_een_efactuur_staat_er_geen_zekerheid(web):
+    upload(web, UBLMAP / "01-standaard-21procent.xml", "goed.xml")
+    pagina = web.get("/factuur/1").text
+    assert "lage zekerheid" not in pagina
+    assert "Uitgelezen door" not in pagina  # geen model gebruikt
+
+
+def test_onbekende_factuur_geeft_een_nette_pagina(web):
+    antwoord = web.get("/factuur/999")
+    assert antwoord.status_code == 200
+    assert "niet gevonden" in antwoord.text
+
+
+# --- opslaan en goedkeuren ---------------------------------------------
+
+def test_opslaan_gaat_via_wijzig_factuur_met_audit_trail(app_en_client, werkmap):
+    _, web, _ = app_en_client
+    upload(web, UBLMAP / "01-standaard-21procent.xml", "goed.xml")
+
+    web.post(
+        "/factuur/1/opslaan",
+        data={"leverancier": "Van Dijk ICT B.V."},
+        follow_redirects=False,
+    )
+
+    conn = maak_verbinding(str(werkmap / "boekhouding.sqlite"))
+    trail = [r for r in lees_audit_trail(conn, 1) if r["actie"] == "gewijzigd"]
+    conn.close()
+    assert any(
+        r["veld"] == "leverancier" and r["oude_waarde"] == "Van Dijk ICT-diensten"
+        and r["nieuwe_waarde"] == "Van Dijk ICT B.V."
+        for r in trail
+    )
+
+
+def test_een_correctie_haalt_de_factuur_uit_review(web):
+    upload(web, UBLMAP / "05-zonder-factuurdatum.xml", "fout.xml")
+    assert "Review nodig" in web.get("/administratie/1").text
+
+    web.post(
+        "/factuur/1/opslaan",
+        data={"factuurdatum": "2026-08-18"},
+        follow_redirects=False,
+    )
+    pagina = web.get("/administratie/1").text
+    assert "Review nodig" not in pagina
+    assert "Klaar om goed te keuren" in pagina
+
+
+def test_goedkeuren_kan_niet_bij_openstaande_punten(web, werkmap):
+    upload(web, UBLMAP / "05-zonder-factuurdatum.xml", "fout.xml")
+
+    pagina = web.get("/factuur/1").text
+    assert "disabled" in pagina  # de knop staat uit
+
+    # En ook als iemand het formulier tóch verstuurt, gebeurt het niet.
+    antwoord = web.post("/factuur/1/goedkeuren", follow_redirects=False)
+    assert antwoord.status_code == 303
+    assert "/factuur/1" in antwoord.headers["location"]
+
+    conn = maak_verbinding(str(werkmap / "boekhouding.sqlite"))
+    assert lees_facturen(conn, 1)[0]["goedgekeurd_op"] is None
+    conn.close()
+
+
+def test_goedkeuren_lukt_als_alles_klopt(web, werkmap):
+    upload(web, UBLMAP / "01-standaard-21procent.xml", "goed.xml")
+
+    antwoord = web.post("/factuur/1/goedkeuren", follow_redirects=False)
+    assert antwoord.status_code == 303
+    assert antwoord.headers["location"] == "/administratie/1"
+
+    conn = maak_verbinding(str(werkmap / "boekhouding.sqlite"))
+    factuur = lees_facturen(conn, 1)[0]
+    trail = lees_audit_trail(conn, 1)
+    conn.close()
+
+    assert factuur["goedgekeurd_op"] is not None
+    assert factuur["goedgekeurd_door"] == "eigenaar"
+    assert any(r["veld"] == "goedgekeurd_op" for r in trail)
+    assert "Goedgekeurd" in web.get("/administratie/1").text
+
+
+def test_twee_keer_goedkeuren_gebeurt_niet(web):
+    from urllib.parse import unquote
+
+    upload(web, UBLMAP / "01-standaard-21procent.xml", "goed.xml")
+    web.post("/factuur/1/goedkeuren", follow_redirects=False)
+    antwoord = web.post("/factuur/1/goedkeuren", follow_redirects=False)
+    assert "al goedgekeurd" in unquote(antwoord.headers["location"])
+
+
+def test_zonder_api_sleutel_valt_de_upload_niet_om(werkmap, monkeypatch):
+    """Draait de app zonder sleutel, dan hoort dat een reden te zijn."""
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    app = maak_app(
+        str(werkmap / "db.sqlite"), str(werkmap / "opslag"),
+        ai_client=None, vandaag=VANDAAG,
+    )
+    web = TestClient(app)
+    antwoord = upload(web, maak_pdf("Factuur 2026-0412"), "factuur.pdf")
+
+    assert antwoord.status_code == 303  # er is wél een factuur aangemaakt
+    pagina = web.get("/factuur/1").text
+    assert "ANTHROPIC_API_KEY" in pagina
+    assert "Dit moet nog nagekeken worden" in pagina
+```
+
 ## `boekhouding/pytest.ini`
 
 ```ini
@@ -6883,6 +8211,13 @@ pytest>=8
 # Alleen nodig om echt met het model te praten (module 3). De tests
 # draaien zonder: die maken de client na.
 anthropic>=1
+
+# Webinterface (module 5).
+fastapi>=0.115
+jinja2>=3.1
+python-multipart>=0.0.9
+uvicorn>=0.30
+httpx>=0.27   # alleen voor de tests: FastAPI TestClient gebruikt hem
 ```
 
 ## `boekhouding/.gitignore`
@@ -6901,6 +8236,9 @@ __pycache__/
 
 # Meetresultaat van de eval; wordt opnieuw gemaakt bij elke run.
 tests/testfacturen/eval-rapport-*.json
+
+# Lokale gegevens van de webinterface: database en bewaarde originelen.
+gegevens/
 ```
 
 ## `boekhouding/.env.voorbeeld`
@@ -6925,7 +8263,7 @@ ANTHROPIC_API_KEY=vul-hier-je-eigen-sleutel-in
 # Testresultaat
 
 ```
-........................................................................ [ 70%]
-.............................................................            [100%]
-205 passed in 1.05s
+........................................................................ [ 92%]
+.................                                                        [100%]
+233 passed in 1.88s
 ```
