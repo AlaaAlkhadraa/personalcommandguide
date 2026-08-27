@@ -19,7 +19,7 @@ UBL-pad en niet langs de tekstlaag, ook al is die er wel.
 from pathlib import Path
 from typing import Literal, Optional
 
-from .ubl import is_ubl, lees_xml_veilig
+from .ubl import MAX_XML_BYTES, is_ubl, lees_xml_veilig, te_groot
 
 Route = Optional[Literal["ubl", "tekst", "beeld"]]
 
@@ -45,7 +45,16 @@ def bestandssoort(begin: bytes) -> Optional[str]:
     for handtekening, naam in MAGISCHE_BYTES.items():
         if begin.startswith(handtekening):
             return naam
-    # XML mag beginnen met een declaratie, een BOM of meteen met '<'.
+    # UTF-16 met BOM: de tekens staan er als twee bytes, dus na de BOM
+    # volgt "<\x00" (little endian) of "\x00<" (big endian). Zonder deze
+    # controle zou een geldige e-factuur in UTF-16 als onbekende soort
+    # worden afgewezen, terwijl de XML-standaard die codering voorschrijft.
+    if begin.startswith(b"\xff\xfe") and begin[2:4] in (b"<\x00", b"?\x00"):
+        return "xml"
+    if begin.startswith(b"\xfe\xff") and begin[2:4] in (b"\x00<", b"\x00?"):
+        return "xml"
+
+    # UTF-8, met of zonder BOM: een declaratie of meteen '<'.
     kop = begin.lstrip(b"\xef\xbb\xbf").lstrip()
     if kop.startswith(b"<?xml") or kop.startswith(b"<"):
         return "xml"
@@ -106,6 +115,10 @@ def routeer_document(pad: str | Path) -> tuple[Route, Optional[str]]:
     soort = bestandssoort(begin)
 
     if soort == "xml":
+        # Grootte eerst, zonder het bestand te lezen.
+        reden = te_groot(pad.stat().st_size)
+        if reden is not None:
+            return None, reden
         try:
             wortel = lees_xml_veilig(pad.read_bytes())
         except Exception as fout:

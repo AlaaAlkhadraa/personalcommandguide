@@ -36,6 +36,13 @@ NS_CREDITNOTE = "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2"
 CBC = "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
 CAC = "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
 
+# Bovengrens voor een XML-bestand dat we überhaupt inlezen. Een echte
+# e-factuur is een paar kilobyte; twintig megabyte is dus ruim, en het
+# houdt tegen dat een bestand van honderden megabytes het geheugen
+# opvreet nog vóór er één controle aan bod komt. De grootte wordt op de
+# schijf gecontroleerd, dus zonder het bestand te lezen.
+MAX_XML_BYTES = 20 * 1024 * 1024
+
 UBL_WORTELS = {
     f"{{{NS_INVOICE}}}Invoice": "factuur",
     f"{{{NS_CREDITNOTE}}}CreditNote": "creditnota",
@@ -107,12 +114,29 @@ def _veilige_parser(bouwer: ET.TreeBuilder) -> "expat.XMLParserType":
     return parser
 
 
+def te_groot(aantal_bytes: int) -> Optional[str]:
+    """Geef een reden als het bestand boven de grens ligt, anders None."""
+    if aantal_bytes <= MAX_XML_BYTES:
+        return None
+    return (
+        f"het XML-bestand is {aantal_bytes / 1024 / 1024:.1f} MB en daarmee "
+        f"groter dan de grens van {MAX_XML_BYTES // (1024 * 1024)} MB; het "
+        f"wordt niet ingelezen. Een e-factuur is normaal een paar kilobyte, "
+        f"dus controleer wat dit bestand is"
+    )
+
+
 def lees_xml_veilig(inhoud: bytes) -> ET.Element:
     """Lees XML zonder DTD en zonder entiteiten; geef het hoofdelement.
 
-    Gooit XmlOnveilig bij een aanvalspoging en ET.ParseError bij kapotte
-    XML. De aanroeper vertaalt dat naar review_nodig.
+    Gooit XmlOnveilig bij een aanvalspoging of bij een bestand boven de
+    grens, en ET.ParseError bij kapotte XML. De aanroeper vertaalt dat
+    naar review_nodig.
     """
+    reden = te_groot(len(inhoud))
+    if reden is not None:
+        raise XmlOnveilig(reden)
+
     bouwer = ET.TreeBuilder()
     parser = _veilige_parser(bouwer)
     try:
@@ -269,6 +293,16 @@ def lees_ubl(pad: str | Path) -> UblResultaat:
             redenen=[f"bestand niet gevonden: {pad}"],
             bestandsnaam=pad.name,
         )
+
+    # Eerst de grootte op de schijf, dan pas lezen: een bestand van
+    # honderden megabytes mag het geheugen niet vullen voordat er ook
+    # maar één controle aan bod komt.
+    reden = te_groot(pad.stat().st_size)
+    if reden is not None:
+        return UblResultaat(
+            status="review_nodig", redenen=[reden], bestandsnaam=pad.name
+        )
+
     return lees_ubl_bytes(pad.read_bytes(), pad.name)
 
 

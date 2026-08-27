@@ -383,3 +383,111 @@ def test_efactuur_kan_bewaard_worden(conn, administratie_id, tmp_path):
     assert lees_document(conn, resultaat.document_id)["originele_bestandsnaam"] == (
         "efactuur.xml"
     )
+
+
+# --- groottelimiet ------------------------------------------------------
+
+def test_te_groot_bestand_wordt_niet_ingelezen(tmp_path):
+    """Een XML boven de grens gaat naar review zonder te worden gelezen."""
+    from boekhouding import MAX_XML_BYTES
+
+    groot = tmp_path / "enorm.xml"
+    # Geldige UBL, maar met zoveel opvulling dat hij over de grens gaat.
+    opvulling = b"<!-- " + b"x" * (MAX_XML_BYTES + 1024) + b" -->"
+    groot.write_bytes(kleine_ubl().replace(b"<cbc:ID>", opvulling + b"<cbc:ID>"))
+    assert groot.stat().st_size > MAX_XML_BYTES
+
+    resultaat = lees_ubl(groot)
+    assert resultaat.status == "review_nodig"
+    assert any("groter dan de grens" in reden for reden in resultaat.redenen)
+    assert resultaat.velden == {}
+
+
+def test_te_groot_bestand_wordt_ook_niet_gerouteerd(tmp_path):
+    from boekhouding import MAX_XML_BYTES
+
+    groot = tmp_path / "enorm.xml"
+    groot.write_bytes(b'<?xml version="1.0"?><Invoice>' + b"x" * MAX_XML_BYTES)
+
+    route, reden = routeer_document(groot)
+    assert route is None
+    assert "groter dan de grens" in reden
+
+
+def test_de_grens_wordt_ook_op_losse_bytes_toegepast():
+    """Ook bytes uit een PDF-bijlage gaan door dezelfde grens."""
+    from boekhouding import MAX_XML_BYTES
+
+    with pytest.raises(XmlOnveilig, match="groter dan de grens"):
+        lees_xml_veilig(b"<Invoice>" + b"x" * MAX_XML_BYTES)
+
+
+def test_een_bestand_op_de_grens_mag_nog(tmp_path):
+    from boekhouding import te_groot, MAX_XML_BYTES
+
+    assert te_groot(MAX_XML_BYTES) is None       # precies op de grens: goed
+    assert te_groot(MAX_XML_BYTES + 1) is not None
+
+
+def test_normale_efactuur_valt_ruim_binnen_de_grens():
+    from boekhouding import MAX_XML_BYTES
+
+    echte = (UBLMAP / "01-standaard-21procent.xml").stat().st_size
+    assert echte < MAX_XML_BYTES / 1000  # een e-factuur is kilobytes, geen MB
+
+
+# --- andere tekencodering ----------------------------------------------
+
+def _als_utf16(tekst: str, groot_eerst: bool) -> bytes:
+    """Zet XML om naar UTF-16 met de bijbehorende BOM."""
+    if groot_eerst:
+        return b"\xfe\xff" + tekst.encode("utf-16-be")
+    return b"\xff\xfe" + tekst.encode("utf-16-le")
+
+
+DTD_AANVAL = (
+    '<?xml version="1.0" encoding="UTF-16"?>\n'
+    '<!DOCTYPE Invoice [ <!ENTITY lek SYSTEM "file:///etc/passwd"> ]>\n'
+    "<Invoice><ID>&lek;</ID></Invoice>"
+)
+
+
+@pytest.mark.parametrize("groot_eerst", [False, True], ids=["utf-16-le", "utf-16-be"])
+def test_dtd_aanval_in_utf16_wordt_ook_geweigerd(groot_eerst):
+    """Dezelfde aanval in een andere codering hoort net zo af te ketsen."""
+    with pytest.raises(XmlOnveilig, match="DTD"):
+        lees_xml_veilig(_als_utf16(DTD_AANVAL, groot_eerst))
+
+
+@pytest.mark.parametrize("groot_eerst", [False, True], ids=["utf-16-le", "utf-16-be"])
+def test_utf16_aanval_via_de_normale_weg_geeft_review(tmp_path, groot_eerst):
+    bestand = tmp_path / "aanval.xml"
+    bestand.write_bytes(_als_utf16(DTD_AANVAL, groot_eerst))
+
+    resultaat = lees_ubl(bestand)
+    assert resultaat.status == "review_nodig"
+    assert any("onveilige XML" in reden for reden in resultaat.redenen)
+    assert "root:" not in str(resultaat.model_dump())  # niets uit /etc/passwd
+
+
+@pytest.mark.parametrize("groot_eerst", [False, True], ids=["utf-16-le", "utf-16-be"])
+def test_nette_utf16_efactuur_wordt_gewoon_gelezen(tmp_path, groot_eerst):
+    """De weigering mag geen geldige UTF-16 e-factuur meeslepen."""
+    tekst = kleine_ubl().decode("utf-8").replace(
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        '<?xml version="1.0" encoding="UTF-16"?>',
+    )
+    bestand = tmp_path / "efactuur.xml"
+    bestand.write_bytes(_als_utf16(tekst, groot_eerst))
+
+    assert routeer_document(bestand)[0] == "ubl"
+    resultaat = verwerk_efactuur(bestand, vandaag=VANDAAG)
+    assert resultaat.status == "gevalideerd"
+    assert resultaat.velden["leverancier"] == "Van Dijk ICT-diensten"
+
+
+@pytest.mark.parametrize("groot_eerst", [False, True], ids=["utf-16-le", "utf-16-be"])
+def test_utf16_wordt_als_xml_herkend(groot_eerst):
+    from boekhouding import bestandssoort
+
+    assert bestandssoort(_als_utf16(DTD_AANVAL, groot_eerst)) == "xml"
