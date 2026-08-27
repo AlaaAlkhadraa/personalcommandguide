@@ -135,16 +135,28 @@ daar later bovenop.
   als de bestandsnaam anders is. Daar rust de duplicaatherkenning op. Het
   bestand wordt in blokken gelezen, dus ook een hele grote PDF past in het
   geheugen.
-- `opslagpad_voor(hash, opslagmap)` — bepaalt waar een document hoort te
-  staan: `<opslagmap>/<eerste twee tekens van de hash>/<hash>.pdf`. Die
-  submap voorkomt dat één map volloopt met honderdduizenden bestanden.
-- `kopieer_naar_opslag(bron, hash, opslagmap)` — kopieert het origineel
-  daarheen. Staat het bestand er al, dan gebeurt er niets: de inhoud is per
-  definitie identiek, want de naam ís de vingerafdruk van de inhoud. Er
-  wordt eerst naar een tijdelijke naam gekopieerd en daarna hernoemd, zodat
-  er nooit een half bestand op de definitieve plek staat. Het bewaarde
-  bestand wordt alleen-lezen gemaakt (bewaarplicht: 7 jaar bewaren, nooit
-  overschrijven).
+- `extensie_van(bron)` — leest de bestandssoort van het aangeleverde
+  bestand, schrijft hem klein en toetst hem aan een witte lijst:
+  `.pdf`, `.jpg`, `.jpeg`, `.png`. Een factuur komt namelijk ook wel eens
+  binnen als foto. Staat de extensie er niet op, of ontbreekt hij, dan geeft
+  deze functie niets terug en gaat het document ter review — de bestandssoort
+  wordt nooit gegokt.
+- `opslagpad_voor(hash, opslagmap, extensie)` — bepaalt waar een document
+  hoort te staan: `<opslagmap>/<eerste twee tekens van de hash>/<hash><ext>`.
+  Die submap voorkomt dat één map volloopt met honderdduizenden bestanden.
+  De extensie komt van het bronbestand, zodat een bewaarde foto ook echt als
+  foto te openen blijft.
+- `kopieer_naar_opslag(bron, hash, opslagmap, extensie)` — kopieert het
+  origineel daarheen. Staat het bestand er al, dan gebeurt er niets: de
+  inhoud is per definitie identiek, want de naam ís de vingerafdruk van de
+  inhoud. Er wordt eerst naar een tijdelijk bestand gekopieerd en daarna
+  hernoemd, zodat er nooit een half bestand op de definitieve plek staat.
+  Die tijdelijke naam komt van `tempfile.mkstemp` en is uniek per aanroep:
+  met een vaste naam zouden twee gelijktijdige aanroepen voor hetzelfde
+  bestand elkaars tijdelijke bestand overschrijven. Gaat er onderweg iets
+  mis, dan wordt het tijdelijke bestand in een `finally` opgeruimd. Het
+  bewaarde bestand wordt alleen-lezen gemaakt (bewaarplicht: 7 jaar bewaren,
+  nooit overschrijven).
 
 ### Nieuwe tabel `documenten` en de koppeling
 
@@ -168,6 +180,20 @@ Dezelfde PDF in twee verschillende administraties krijgt wél een eigen
 registratie (het zijn aparte boekhoudingen), maar staat maar één keer op
 schijf.
 
+### Openstaand punt: weesbestanden
+
+Tussen het kopiëren van het bestand en de regel in de tabel `documenten` zit
+een klein venster. Crasht het proces precies daartussen, dan staat het
+bestand wél in de opslagmap maar hoort er geen administratie bij — een
+weesbestand. Dat is geen dataverlies: het origineel staat er nog, en dezelfde
+PDF opnieuw aanbieden slaat hem gewoon weer op onder dezelfde vingerafdruk.
+Het kost alleen schijfruimte en het bestand is niet terug te vinden via de
+administratie. Een latere opruimfunctie zou de opslagmap moeten vergelijken
+met de tabel `documenten` en weesbestanden moeten **rapporteren** — nooit
+stilzwijgend verwijderen, want de bewaarplicht geldt ook voor die bestanden.
+Bewust nog niet gebouwd (Gouden regel 7); het staat als comment in
+`database.py` bij de betreffende plek.
+
 ### Migratie voor bestaande databases
 
 Databases die vóór module 2 zijn aangemaakt, missen de kolom `document_id`.
@@ -177,11 +203,13 @@ hij ontbreekt. Bestaande facturen houden gewoon `NULL` als document.
 
 ### `tests/` — de bewijslast
 
-64 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
+75 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
 onzin-tekst, ontbrekende velden, verkeerde btw-percentages, ambigue
 bedragen, toekomst- en te oude datums, duplicaten, de audit trail bij
 aanmaken en wijzigen, en voor module 2: een PDF zonder tekstlaag, een
 kapotte PDF, een bestand dat geen PDF is, een leeg bestand, een bestand dat
-niet bestaat, en dezelfde PDF twee keer aanbieden. De test-PDF's worden in
+niet bestaat, dezelfde PDF twee keer aanbieden, en bestandssoorten binnen en
+buiten de witte lijst (`.docx` en een bestand zonder extensie gaan ter
+review). De test-PDF's worden in
 de tests zelf gegenereerd (`maak_pdf` in `conftest.py`); er wordt niets
 gedownload. `python -m pytest` in deze map draait alles.

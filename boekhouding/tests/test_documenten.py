@@ -112,7 +112,7 @@ def test_document_wordt_bewaard(conn, administratie_id, factuur_pdf, opslagmap):
     assert resultaat.document_id is not None
     assert resultaat.hash == bereken_hash(factuur_pdf)
 
-    bewaard = opslagpad_voor(resultaat.hash, opslagmap)
+    bewaard = opslagpad_voor(resultaat.hash, opslagmap, ".pdf")
     assert bewaard.is_file()
     assert bewaard.read_bytes() == factuur_pdf.read_bytes()
     assert factuur_pdf.is_file()  # het origineel blijft staan
@@ -133,7 +133,7 @@ def test_bewaard_bestand_is_alleen_lezen(
     resultaat = bewaar_document(
         conn, administratie_id, str(factuur_pdf), str(opslagmap)
     )
-    bewaard = opslagpad_voor(resultaat.hash, opslagmap)
+    bewaard = opslagpad_voor(resultaat.hash, opslagmap, ".pdf")
     assert bewaard.stat().st_mode & 0o777 == 0o444
 
 
@@ -143,7 +143,7 @@ def test_tweede_keer_bewaren_laat_het_bestand_ongemoeid(
     eerste = bewaar_document(
         conn, administratie_id, str(factuur_pdf), str(opslagmap)
     )
-    bewaard = opslagpad_voor(eerste.hash, opslagmap)
+    bewaard = opslagpad_voor(eerste.hash, opslagmap, ".pdf")
     gewijzigd_op = bewaard.stat().st_mtime_ns
 
     bewaar_document(conn, administratie_id, str(factuur_pdf), str(opslagmap))
@@ -298,3 +298,127 @@ def test_koppeling_staat_in_de_audit_trail(
     koppeling = [regel for regel in trail if regel["veld"] == "document_id"]
     assert len(koppeling) == 1
     assert koppeling[0]["nieuwe_waarde"] == str(document.document_id)
+
+
+# --- bestandssoort (witte lijst) --------------------------------------
+
+def test_extensie_van_accepteert_witte_lijst(tmp_path):
+    from boekhouding import extensie_van
+
+    assert extensie_van(tmp_path / "factuur.pdf") == ".pdf"
+    assert extensie_van(tmp_path / "foto.jpg") == ".jpg"
+    assert extensie_van(tmp_path / "foto.jpeg") == ".jpeg"
+    assert extensie_van(tmp_path / "scan.png") == ".png"
+
+
+def test_extensie_van_is_hoofdletterongevoelig(tmp_path):
+    from boekhouding import extensie_van
+
+    assert extensie_van(tmp_path / "FACTUUR.PDF") == ".pdf"
+    assert extensie_van(tmp_path / "Foto.JPG") == ".jpg"
+
+
+def test_extensie_van_weigert_onbekende_soort(tmp_path):
+    from boekhouding import extensie_van
+
+    assert extensie_van(tmp_path / "factuur.docx") is None
+    assert extensie_van(tmp_path / "factuur.exe") is None
+    assert extensie_van(tmp_path / "factuur") is None  # helemaal geen extensie
+
+
+def test_opslagpad_gebruikt_de_meegegeven_extensie(tmp_path):
+    hash_waarde = "a" * 64
+    pad = opslagpad_voor(hash_waarde, tmp_path, ".jpg")
+    assert pad == tmp_path / "aa" / f"{hash_waarde}.jpg"
+
+
+def test_opslagpad_weigert_extensie_buiten_de_witte_lijst(tmp_path):
+    with pytest.raises(ValueError, match="witte lijst"):
+        opslagpad_voor("a" * 64, tmp_path, ".docx")
+
+
+def test_foto_van_factuur_wordt_bewaard_als_jpg(
+    conn, administratie_id, opslagmap, tmp_path
+):
+    foto = tmp_path / "factuur-foto.jpg"
+    foto.write_bytes(b"\xff\xd8\xff\xe0 nep-jpeg met wat bytes")
+
+    resultaat = bewaar_document(conn, administratie_id, str(foto), str(opslagmap))
+
+    assert resultaat.status == "opgeslagen"
+    bewaard = opslagpad_voor(resultaat.hash, opslagmap, ".jpg")
+    assert bewaard.is_file()
+    assert resultaat.opslagpad == str(bewaard)
+    assert lees_document(conn, resultaat.document_id)["originele_bestandsnaam"] == (
+        "factuur-foto.jpg"
+    )
+
+
+def test_png_wordt_bewaard(conn, administratie_id, opslagmap, tmp_path):
+    plaatje = tmp_path / "scan.png"
+    plaatje.write_bytes(b"\x89PNG\r\n\x1a\n nep-png")
+
+    resultaat = bewaar_document(
+        conn, administratie_id, str(plaatje), str(opslagmap)
+    )
+
+    assert resultaat.status == "opgeslagen"
+    assert resultaat.opslagpad.endswith(".png")
+
+
+def test_hoofdletterextensie_wordt_kleingeschreven_bewaard(
+    conn, administratie_id, opslagmap, tmp_path
+):
+    foto = tmp_path / "FACTUUR.PDF"
+    foto.write_bytes(maak_pdf("Factuur F2026-0009"))
+
+    resultaat = bewaar_document(conn, administratie_id, str(foto), str(opslagmap))
+
+    assert resultaat.status == "opgeslagen"
+    assert resultaat.opslagpad.endswith(".pdf")
+    # De originele naam blijft wel bewaard zoals de klant hem aanleverde.
+    assert lees_document(conn, resultaat.document_id)["originele_bestandsnaam"] == (
+        "FACTUUR.PDF"
+    )
+
+
+def test_onbekende_bestandssoort_geeft_review(
+    conn, administratie_id, opslagmap, tmp_path
+):
+    document = tmp_path / "factuur.docx"
+    document.write_bytes(b"PK\x03\x04 nep-docx")
+
+    resultaat = bewaar_document(
+        conn, administratie_id, str(document), str(opslagmap)
+    )
+
+    assert resultaat.status == "review_nodig"
+    assert any("wordt niet bewaard" in reden for reden in resultaat.redenen)
+    assert any(".docx" in reden for reden in resultaat.redenen)
+    assert resultaat.document_id is None
+    # Niets opgeslagen, niets geregistreerd: er wordt niet gegokt.
+    assert conn.execute("SELECT count(*) FROM documenten").fetchone()[0] == 0
+    assert not opslagmap.exists()
+
+
+def test_bestand_zonder_extensie_geeft_review(
+    conn, administratie_id, opslagmap, tmp_path
+):
+    document = tmp_path / "factuur-zonder-extensie"
+    document.write_bytes(maak_pdf("Factuur F2026-0010"))
+
+    resultaat = bewaar_document(
+        conn, administratie_id, str(document), str(opslagmap)
+    )
+
+    assert resultaat.status == "review_nodig"
+    assert any("geen" in reden for reden in resultaat.redenen)
+    assert conn.execute("SELECT count(*) FROM documenten").fetchone()[0] == 0
+
+
+def test_geen_tijdelijke_bestanden_blijven_achter(
+    conn, administratie_id, factuur_pdf, opslagmap
+):
+    # De tijdelijke naam van mkstemp moet na afloop weg zijn.
+    bewaar_document(conn, administratie_id, str(factuur_pdf), str(opslagmap))
+    assert list(opslagmap.rglob("*.tmp")) == []

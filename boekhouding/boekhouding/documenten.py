@@ -16,6 +16,7 @@ Gouden regels die hier gelden:
 import hashlib
 import os
 import shutil
+import tempfile
 from pathlib import Path
 from typing import Literal, Optional
 
@@ -24,6 +25,10 @@ from pydantic import BaseModel
 # Blokgrootte voor het hashen; zo past ook een PDF van 100 MB in het
 # geheugen zonder problemen.
 BLOK = 1024 * 1024
+
+# Bestandssoorten die we bewaren. Een factuur komt binnen als PDF of
+# als foto/scan; iets anders wordt niet gegokt maar ter review gelegd.
+TOEGESTANE_EXTENSIES = (".pdf", ".jpg", ".jpeg", ".png")
 
 
 class TekstResultaat(BaseModel):
@@ -99,17 +104,38 @@ def bereken_hash(pad: str | Path) -> str:
     return hasher.hexdigest()
 
 
-def opslagpad_voor(hash_waarde: str, opslagmap: str | Path) -> Path:
+def extensie_van(bron: str | Path) -> str | None:
+    """Geef de gecontroleerde extensie van een bronbestand, of None.
+
+    De extensie wordt kleingeschreven en getoetst aan een witte lijst.
+    Staat hij daar niet op (of ontbreekt hij), dan geeft deze functie
+    None terug: de aanroeper legt het document dan ter review en gokt
+    nooit een bestandssoort (Gouden regel 4).
+    """
+    extensie = Path(bron).suffix.lower()
+    return extensie if extensie in TOEGESTANE_EXTENSIES else None
+
+
+def opslagpad_voor(
+    hash_waarde: str, opslagmap: str | Path, extensie: str
+) -> Path:
     """Bepaal waar een document met deze hash hoort te staan.
 
     De eerste twee tekens van de hash worden een submap, zodat één map
-    niet volloopt met honderdduizenden bestanden.
+    niet volloopt met honderdduizenden bestanden. De extensie komt van
+    het bronbestand: een factuur kan ook als foto worden aangeleverd,
+    en dan moet het bewaarde bestand nog steeds te openen zijn.
     """
-    return Path(opslagmap) / hash_waarde[:2] / f"{hash_waarde}.pdf"
+    if extensie not in TOEGESTANE_EXTENSIES:
+        raise ValueError(
+            f"extensie '{extensie}' staat niet op de witte lijst: "
+            f"{', '.join(TOEGESTANE_EXTENSIES)}"
+        )
+    return Path(opslagmap) / hash_waarde[:2] / f"{hash_waarde}{extensie}"
 
 
 def kopieer_naar_opslag(
-    bron: str | Path, hash_waarde: str, opslagmap: str | Path
+    bron: str | Path, hash_waarde: str, opslagmap: str | Path, extensie: str
 ) -> tuple[Path, bool]:
     """Kopieer het origineel naar de opslagmap; geef (pad, is_nieuw).
 
@@ -119,30 +145,34 @@ def kopieer_naar_opslag(
     per ongeluk overschrijven ook technisch wordt tegengehouden
     (bewaarplicht: 7 jaar bewaren, nooit overschrijven).
     """
-    doel = opslagpad_voor(hash_waarde, opslagmap)
+    doel = opslagpad_voor(hash_waarde, opslagmap, extensie)
     if doel.exists():
         return doel, False
 
     doel.parent.mkdir(parents=True, exist_ok=True)
-    # Eerst naar een tijdelijke naam in dezelfde map, dan hernoemen:
+    # Eerst naar een tijdelijk bestand in dezelfde map, dan hernoemen:
     # zo staat er nooit een half gekopieerd bestand op de definitieve
     # plek. os.replace is atomair binnen hetzelfde filesystem.
-    tijdelijk = doel.with_suffix(".tmp")
-    shutil.copyfile(bron, tijdelijk)
-    os.replace(tijdelijk, doel)
+    #
+    # De tijdelijke naam komt van tempfile.mkstemp en is dus uniek per
+    # aanroep. Met een vaste naam (<hash>.tmp) zouden twee gelijktijdige
+    # aanroepen voor hetzelfde bestand elkaars tijdelijke bestand
+    # overschrijven, en zou de een het bestand van de ander kunnen
+    # hernoemen terwijl die er nog in schrijft.
+    beschrijving, tijdelijk = tempfile.mkstemp(
+        dir=doel.parent, prefix=f"{hash_waarde}-", suffix=".tmp"
+    )
+    os.close(beschrijving)
+    try:
+        shutil.copyfile(bron, tijdelijk)
+        os.replace(tijdelijk, doel)
+    finally:
+        # Na een geslaagde os.replace bestaat het tijdelijke bestand
+        # niet meer; ging er iets mis, dan ruimen we het hier op.
+        if os.path.exists(tijdelijk):
+            os.unlink(tijdelijk)
     os.chmod(doel, 0o444)
     return doel, True
-
-
-def verwijder_tijdelijk_bestand(pad: str | Path) -> None:
-    """Ruim een half gekopieerd tijdelijk bestand op na een fout.
-
-    Alleen bedoeld voor `.tmp`-bestanden van kopieer_naar_opslag;
-    opgeslagen originelen worden nooit verwijderd.
-    """
-    pad = Path(pad)
-    if pad.suffix == ".tmp" and pad.is_file():
-        pad.unlink()
 
 
 class DocumentResultaat(BaseModel):

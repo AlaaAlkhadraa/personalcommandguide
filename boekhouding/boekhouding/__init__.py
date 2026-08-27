@@ -9,9 +9,11 @@ AI stelt voor, code valideert, mens beslist (Gouden regel 1).
 from .models import Factuur, ValidatieResultaat
 from .validatie import valideer_factuur
 from .documenten import (
+    TOEGESTANE_EXTENSIES,
     DocumentResultaat,
     TekstResultaat,
     bereken_hash,
+    extensie_van,
     lees_pdf_tekst,
     opslagpad_voor,
 )
@@ -31,9 +33,11 @@ __all__ = [
     "Factuur",
     "ValidatieResultaat",
     "valideer_factuur",
+    "TOEGESTANE_EXTENSIES",
     "DocumentResultaat",
     "TekstResultaat",
     "bereken_hash",
+    "extensie_van",
     "lees_pdf_tekst",
     "opslagpad_voor",
     "maak_verbinding",

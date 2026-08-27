@@ -20,11 +20,11 @@ from typing import Any, Optional
 from .validatie import valideer_factuur
 from .models import ValidatieResultaat
 from .documenten import (
+    TOEGESTANE_EXTENSIES,
     DocumentResultaat,
     bereken_hash,
+    extensie_van,
     kopieer_naar_opslag,
-    opslagpad_voor,
-    verwijder_tijdelijk_bestand,
 )
 
 ADMINISTRATIE_TYPEN = ("eenmanszaak",)  # later uitbreidbaar (bv. "bv")
@@ -410,13 +410,28 @@ def bewaar_document(
     geregistreerd in de tabel documenten, met een regel in de audit
     trail.
 
-    Bestaat het bronbestand niet of is het niet te lezen, dan volgt
-    status "review_nodig" met reden — geen exception (Gouden regel 4).
+    Bestaat het bronbestand niet, heeft het een bestandssoort die we
+    niet bewaren, of is het niet te lezen, dan volgt status
+    "review_nodig" met reden — geen exception (Gouden regel 4).
     """
     bron = Path(pad)
     if not bron.is_file():
         return DocumentResultaat(
             status="review_nodig", redenen=[f"bestand niet gevonden: {pad}"]
+        )
+
+    # De bestandssoort wordt niet gegokt: staat de extensie niet op de
+    # witte lijst, dan gaat het document ter review.
+    extensie = extensie_van(bron)
+    if extensie is None:
+        gevonden = bron.suffix.lower() or "geen"
+        return DocumentResultaat(
+            status="review_nodig",
+            redenen=[
+                f"bestandssoort '{gevonden}' wordt niet bewaard; "
+                f"toegestaan: {', '.join(TOEGESTANE_EXTENSIES)} — "
+                f"controleer het origineel"
+            ],
         )
 
     try:
@@ -441,15 +456,24 @@ def bewaar_document(
         )
 
     try:
-        doel, _ = kopieer_naar_opslag(bron, hash_waarde, opslagmap)
+        doel, _ = kopieer_naar_opslag(bron, hash_waarde, opslagmap, extensie)
     except OSError as fout:
-        verwijder_tijdelijk_bestand(
-            opslagpad_voor(hash_waarde, opslagmap).with_suffix(".tmp")
-        )
         return DocumentResultaat(
             status="review_nodig",
             redenen=[f"kon het bestand niet opslaan: {fout}"],
         )
+
+    # OPENSTAAND PUNT (bewust nog niet gebouwd): tussen het kopiëren
+    # hierboven en de INSERT hieronder zit een klein venster. Crasht het
+    # proces daartussen, dan staat het bestand wél in de opslagmap maar
+    # is er geen regel in de tabel documenten — een "weesbestand".
+    # Dat is geen dataverlies (het origineel staat er nog, en een
+    # volgende aanbieding van dezelfde PDF slaat hem gewoon opnieuw op
+    # onder dezelfde hash), maar het kost schijfruimte en het bestand is
+    # niet meer terug te vinden via de administratie. Een latere
+    # opruimfunctie zou de opslagmap moeten vergelijken met de tabel
+    # documenten en weesbestanden moeten rapporteren — nooit stilzwijgend
+    # verwijderen, want de bewaarplicht geldt ook voor deze bestanden.
 
     tijd = _nu()
     cursor = conn.execute(
