@@ -1,7 +1,6 @@
 # Volledige code — boekhoudsysteem, modules 1 t/m 3
 
-Branch `claude/nl-accounting-invoice-module-f2vzr3`. Dit bestand wordt bij
-elke oplevering ververst en bevat altijd de actuele code.
+Branch `claude/nl-accounting-invoice-module-f2vzr3`. Wordt bij elke oplevering ververst.
 
 # Boekhouding — modules 1, 2 en 3
 
@@ -51,9 +50,14 @@ drie dingen:
    dat kan 1250,00 (Nederlands duizendtal) of 1,250 (Engels decimaal)
    zijn. Dan wordt er niet gegokt maar wordt het `review_nodig`
    (Gouden regel 4); `"100.00"` en `"0.5"` blijven gewoon geldig.
-2. **Het btw-percentage moet bestaan** in het config-bestand van het jaar
+2. **De factuurdatum mag ook in de Nederlandse schrijfwijze.** `2026-07-31`
+   werkt, en `31-07-2026` ook: 31 kan alleen een dag zijn, dus daar valt
+   niets te gokken. Maar `03-04-2026` kan 3 april of 4 maart zijn — dan
+   volgt `review_nodig` met een reden die beide lezingen noemt. Dezelfde
+   regel als bij `"1.250"`.
+3. **Het btw-percentage moet bestaan** in het config-bestand van het jaar
    van de factuurdatum (nu: 21, 9 of 0).
-3. **Leverancier en factuurnummer mogen niet leeg zijn.**
+4. **Leverancier en factuurnummer mogen niet leeg zijn.**
 
 `ValidatieResultaat` is het antwoord dat elke controle teruggeeft: de
 status (`gevalideerd` of `review_nodig`), de lijst met redenen, de nette
@@ -319,7 +323,9 @@ ook als het model intussen is vervangen.
   bevestiging (`--ja` slaat de vraag over). Met `--model=...` leg je een
   goedkoper model ernaast; elk model krijgt zijn eigen rapportbestand.
   Bedragen worden als Decimal vergeleken en datums als datum, zodat de eval
-  de inhoud meet en niet de schrijfwijze.
+  de inhoud meet en niet de schrijfwijze. Het tokenverbruik wordt geteld en,
+  als de prijs van het model bekend is, omgerekend naar kosten per run en
+  per factuur.
 
   De eval telt vier uitkomsten, en **verzonnen** staat bovenaan:
 
@@ -374,7 +380,7 @@ de stack blijft Python, SQLite, Pydantic en pytest.
 
 ### `tests/` — de bewijslast
 
-147 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
+157 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
 onzin-tekst, ontbrekende velden, verkeerde btw-percentages, ambigue
 bedragen, toekomst- en te oude datums, duplicaten, de audit trail bij
 aanmaken en wijzigen, en voor module 2: een PDF zonder tekstlaag, een
@@ -586,6 +592,38 @@ class Factuur(BaseModel):
             except InvalidOperation:
                 raise ValueError(f"'{origineel}' is geen geldig bedrag")
         return waarde
+
+    @field_validator("factuurdatum", mode="before")
+    @classmethod
+    def nederlandse_datum(cls, waarde: Any) -> Any:
+        """Accepteer JJJJ-MM-DD, en DD-MM-JJJJ alleen als die eenduidig is.
+
+        Op een Nederlandse factuur staat "12-07-2026". De AI-module vraagt
+        het model om JJJJ-MM-DD terug te geven, maar als er tóch de
+        geschreven vorm binnenkomt moet dat geen onleesbare foutmelding
+        opleveren.
+
+        Is het eerste getal groter dan 12, dan kan het alleen een dag zijn
+        en is de datum eenduidig. Is het 12 of lager, dan kan "03-04-2026"
+        zowel 3 april als 4 maart zijn — dan wordt er niet gegokt maar
+        volgt review (Gouden regel 4), met een reden die beide lezingen
+        noemt.
+        """
+        if not isinstance(waarde, str):
+            return waarde
+        tekst = waarde.strip()
+        gevonden = re.fullmatch(r"(\d{1,2})-(\d{1,2})-(\d{4})", tekst)
+        if gevonden is None:
+            return tekst
+        eerste, tweede, jaar = (int(g) for g in gevonden.groups())
+        if eerste > 12:
+            return f"{jaar:04d}-{tweede:02d}-{eerste:02d}"
+        raise ValueError(
+            f"ambigue datum '{tekst}': kan {eerste} van maand {tweede} of "
+            f"{tweede} van maand {eerste} zijn — noteer hem als "
+            f"{jaar:04d}-{tweede:02d}-{eerste:02d} als het de Nederlandse "
+            f"schrijfwijze is"
+        )
 
     @model_validator(mode="after")
     def btw_percentage_toegestaan(self) -> "Factuur":
@@ -1126,6 +1164,8 @@ class ExtractieResultaat(BaseModel):
     extractie: Optional[FactuurExtractie] = None
     model: str = ""
     prompt_versie: str = PROMPT_VERSIE
+    invoer_tokens: int = 0
+    uitvoer_tokens: int = 0
     invoerpad: Optional[Literal["tekst", "beeld"]] = None
     ruwe_respons: str = ""
     bestandsnaam: str = ""
@@ -1214,6 +1254,17 @@ def bouw_inhoud(pad: str | Path, invoerpad: str) -> list[dict[str, Any]]:
             },
         }
     return [blok, {"type": "text", "text": VRAAG_BEELD}]
+
+
+def _tokens(respons: Any) -> tuple[int, int]:
+    """Lees het tokenverbruik uit het antwoord, als de SDK dat meegeeft."""
+    verbruik = getattr(respons, "usage", None)
+    if verbruik is None:
+        return 0, 0
+    return (
+        int(getattr(verbruik, "input_tokens", 0) or 0),
+        int(getattr(verbruik, "output_tokens", 0) or 0),
+    )
 
 
 def _ruwe_tekst(respons: Any, extractie: Optional[FactuurExtractie]) -> str:
@@ -1391,6 +1442,7 @@ def extraheer_factuur(
     status, redenen, factuur = beoordeel_extractie(
         extractie, vandaag=vandaag, is_duplicaat=is_duplicaat
     )
+    invoer_tokens, uitvoer_tokens = _tokens(respons)
     return ExtractieResultaat(
         status=status,
         redenen=redenen,
@@ -1399,6 +1451,8 @@ def extraheer_factuur(
         model=model,
         invoerpad=invoerpad,
         ruwe_respons=_ruwe_tekst(respons, extractie),
+        invoer_tokens=invoer_tokens,
+        uitvoer_tokens=uitvoer_tokens,
         bestandsnaam=pad.name,
     )
 ```
@@ -2191,6 +2245,26 @@ BEDRAGVELDEN = {"bedrag_excl", "btw_percentage", "btw_bedrag", "bedrag_incl"}
 # Volgorde waarin de uitkomsten worden gerapporteerd: het gevaarlijkst eerst.
 OORDELEN = ("verzonnen", "fout", "gemist", "correct")
 
+# Prijs per miljoen tokens (invoer, uitvoer), in dollars. Dit is een
+# momentopname en géén bron van waarheid: controleer hem tegen
+# anthropic.com/pricing voordat je er een besluit op baseert. Staat een
+# model er niet bij, dan worden alleen de tokens gerapporteerd.
+PRIJZEN = {
+    "claude-opus-5": (5.00, 25.00),
+    "claude-sonnet-5": (2.00, 10.00),
+    "claude-haiku-4-5": (1.00, 5.00),
+}
+
+
+def kosten(model: str, invoer_tokens: int, uitvoer_tokens: int):
+    """Bereken de kosten in dollars, of None als de prijs onbekend is."""
+    if model not in PRIJZEN:
+        return None
+    invoerprijs, uitvoerprijs = PRIJZEN[model]
+    return invoer_tokens / 1_000_000 * invoerprijs + (
+        uitvoer_tokens / 1_000_000 * uitvoerprijs
+    )
+
 
 def rapportpad(model: str) -> Path:
     veilig = "".join(t if t.isalnum() or t in "-_." else "-" for t in model)
@@ -2279,6 +2353,7 @@ def main() -> int:
     print()
 
     tellingen = {naam: 0 for naam in OORDELEN}
+    invoer_tokens = uitvoer_tokens = 0
     status_goed = 0
     regels = []
 
@@ -2297,6 +2372,8 @@ def main() -> int:
             tellingen[oordeel] += 1
             oordelen[veld] = {"oordeel": oordeel, "toelichting": toelichting}
 
+        invoer_tokens += resultaat.invoer_tokens
+        uitvoer_tokens += resultaat.uitvoer_tokens
         statusklopt = resultaat.status == verwacht["verwachte_status"]
         status_goed += int(statusklopt)
 
@@ -2353,12 +2430,25 @@ def main() -> int:
     score = tellingen["correct"] / totaal * 100 if totaal else 0
     print(f"Score    : {score:.1f}% velden correct")
 
+    print(f"Tokens   : {invoer_tokens} in, {uitvoer_tokens} uit")
+    prijs = kosten(gekozen_model, invoer_tokens, uitvoer_tokens)
+    if prijs is None:
+        print(f"Kosten   : onbekend — geen prijs bekend voor {gekozen_model}")
+    else:
+        per_stuk = prijs / len(overzicht) if overzicht else 0
+        print(f"Kosten   : ${prijs:.4f} voor deze run (${per_stuk:.4f} per factuur)")
+
     rapport = rapportpad(gekozen_model)
     rapport.write_text(
         json.dumps(
             {
                 "model": gekozen_model,
                 "verzonnen": tellingen["verzonnen"],
+                "invoer_tokens": invoer_tokens,
+                "uitvoer_tokens": uitvoer_tokens,
+                "kosten_dollar": kosten(
+                    gekozen_model, invoer_tokens, uitvoer_tokens
+                ),
                 "tellingen": tellingen,
                 "score_procent": round(score, 1),
                 "status_goed": status_goed,
@@ -3694,6 +3784,48 @@ def test_onzin_input_gooit_nooit_een_exception():
     )
     assert resultaat.status == "review_nodig"
     assert len(resultaat.redenen) >= 3
+
+
+# --- datumnotatie -------------------------------------------------------
+
+def test_iso_datum_wordt_begrepen():
+    data = geldige_factuur() | {"factuurdatum": "2026-08-01"}
+    resultaat = valideer_factuur(data, vandaag=VANDAAG)
+    assert resultaat.status == "gevalideerd"
+    assert str(resultaat.factuur.factuurdatum) == "2026-08-01"
+
+
+def test_eenduidige_nederlandse_datum_wordt_omgezet():
+    # 31 kan alleen een dag zijn, dus hier valt niets te gokken.
+    data = geldige_factuur() | {"factuurdatum": "31-07-2026"}
+    resultaat = valideer_factuur(data, vandaag=VANDAAG)
+    assert resultaat.status == "gevalideerd"
+    assert str(resultaat.factuur.factuurdatum) == "2026-07-31"
+
+
+def test_ambigue_datum_geeft_review_met_beide_lezingen():
+    # 03-04-2026 kan 3 april of 4 maart zijn — niet gokken.
+    data = geldige_factuur() | {"factuurdatum": "03-04-2026"}
+    resultaat = valideer_factuur(data, vandaag=VANDAAG)
+    assert resultaat.status == "review_nodig"
+    assert any(
+        "ambigue datum" in reden and "2026-04-03" in reden
+        for reden in resultaat.redenen
+    )
+
+
+def test_ambigue_datum_op_de_grens_van_twaalf():
+    data = geldige_factuur() | {"factuurdatum": "12-07-2026"}
+    resultaat = valideer_factuur(data, vandaag=VANDAAG)
+    assert resultaat.status == "review_nodig"
+    assert any("ambigue datum" in reden for reden in resultaat.redenen)
+
+
+def test_onbestaande_datum_geeft_gewoon_review():
+    data = geldige_factuur() | {"factuurdatum": "2026-13-01"}
+    resultaat = valideer_factuur(data, vandaag=VANDAAG)
+    assert resultaat.status == "review_nodig"
+    assert any("factuurdatum" in reden for reden in resultaat.redenen)
 ```
 
 ## `boekhouding/tests/test_validatie.py`
@@ -4995,6 +5127,32 @@ def test_gebruikt_model_wordt_opgeslagen(conn, administratie_id, factuur_pdf):
     )
     extractie_id = sla_extractie_op(conn, administratie_id, resultaat)
     assert lees_extractie(conn, extractie_id)["model"] == "claude-haiku-4-5"
+
+# --- tokenverbruik (voor de kostenrapportage van de eval) ---------------
+
+class Verbruik:
+    def __init__(self, invoer, uitvoer):
+        self.input_tokens = invoer
+        self.output_tokens = uitvoer
+
+
+def test_tokenverbruik_wordt_overgenomen(factuur_pdf):
+    extractie = goede_extractie()
+    respons = NageaapteRespons(extractie, ruwe_json=extractie.model_dump_json())
+    respons.usage = Verbruik(1234, 210)
+    client = NageaapteClient(respons)
+
+    resultaat = extraheer_factuur(factuur_pdf, client=client, vandaag=VANDAAG)
+    assert resultaat.invoer_tokens == 1234
+    assert resultaat.uitvoer_tokens == 210
+
+
+def test_zonder_verbruik_blijven_de_tellers_nul(factuur_pdf):
+    # Niet elke respons hoeft usage te hebben; dat mag niet crashen.
+    client = client_met(goede_extractie())
+    resultaat = extraheer_factuur(factuur_pdf, client=client, vandaag=VANDAAG)
+    assert resultaat.invoer_tokens == 0
+    assert resultaat.uitvoer_tokens == 0
 ```
 
 ## `boekhouding/tests/test_eval_logica.py`
@@ -5126,6 +5284,32 @@ def test_elk_model_krijgt_een_eigen_rapportbestand():
 def test_rapportnaam_blijft_een_veilige_bestandsnaam():
     naam = rapportpad("raar/model:naam").name
     assert "/" not in naam and ":" not in naam
+
+
+# --- kostenberekening ---------------------------------------------------
+
+def test_kosten_worden_per_miljoen_tokens_gerekend():
+    from eval_extractie import kosten
+
+    # claude-opus-5: $5 per miljoen invoer, $25 per miljoen uitvoer.
+    assert kosten("claude-opus-5", 1_000_000, 0) == pytest.approx(5.00)
+    assert kosten("claude-opus-5", 0, 1_000_000) == pytest.approx(25.00)
+    assert kosten("claude-opus-5", 200_000, 20_000) == pytest.approx(1.5)
+
+
+def test_goedkoper_model_kost_minder_bij_hetzelfde_verbruik():
+    from eval_extractie import kosten
+
+    opus = kosten("claude-opus-5", 100_000, 10_000)
+    sonnet = kosten("claude-sonnet-5", 100_000, 10_000)
+    haiku = kosten("claude-haiku-4-5", 100_000, 10_000)
+    assert opus > sonnet > haiku
+
+
+def test_onbekend_model_geeft_geen_verzonnen_prijs():
+    from eval_extractie import kosten
+
+    assert kosten("een-model-dat-we-niet-kennen", 1_000_000, 1_000_000) is None
 ```
 
 ## `boekhouding/pytest.ini`
@@ -5188,7 +5372,7 @@ ANTHROPIC_API_KEY=vul-hier-je-eigen-sleutel-in
 # Testresultaat
 
 ```
-........................................................................ [ 97%]
-...                                                                      [100%]
-147 passed in 0.35s
+........................................................................ [ 91%]
+.............                                                            [100%]
+157 passed in 0.35s
 ```
