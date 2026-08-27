@@ -1,6 +1,6 @@
 {% extends "basis.html" %}
 {% block titel %}Factuur {{ factuur.factuurnummer or factuur.id }}{% endblock %}
-{% block kruimel %}<a href="/administratie/{{ factuur.administratie_id }}">&larr; Terug naar de lijst</a>{% endblock %}
+{% block kruimel %}<a href="/administratie/{{ administratie_id }}">&larr; Terug naar de lijst</a>{% endblock %}
 {% block kop %}{{ factuur.leverancier or "Factuur nakijken" }}{% endblock %}
 {% block inhoud %}
 
@@ -19,10 +19,10 @@
 
   <div>
     {% if factuur.document_id %}
-      <object class="bron" data="/document/{{ factuur.document_id }}">
+      <object class="bron" data="/administratie/{{ administratie_id }}/document/{{ factuur.document_id }}">
         <p style="padding:14px">
           Het document kan hier niet worden getoond.
-          <a href="/document/{{ factuur.document_id }}">Open het in een nieuw tabblad</a>.
+          <a href="/administratie/{{ administratie_id }}/document/{{ factuur.document_id }}">Open het in een nieuw tabblad</a>.
         </p>
       </object>
     {% else %}
@@ -31,7 +31,7 @@
   </div>
 
   <div>
-    <form class="kaart" method="post" action="/factuur/{{ factuur.id }}/opslaan">
+    <form class="kaart" method="post" action="/administratie/{{ administratie_id }}/factuur/{{ factuur.id }}/opslaan">
       {% for veld in velden %}
         <div class="veld {% if veld.zekerheid == 'laag' %}laag{% endif %}">
           <label for="{{ veld.naam }}">
@@ -55,7 +55,7 @@
       </div>
     </form>
 
-    <form class="kaart" method="post" action="/factuur/{{ factuur.id }}/goedkeuren">
+    <form class="kaart" method="post" action="/administratie/{{ administratie_id }}/factuur/{{ factuur.id }}/goedkeuren">
       <div class="knoppen">
         <button type="submit" {% if not mag_goedkeuren %}disabled{% endif %}>
           {% if factuur.goedgekeurd_op %}Al goedgekeurd{% else %}Goedkeuren{% endif %}

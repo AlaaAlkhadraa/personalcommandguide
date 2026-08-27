@@ -489,9 +489,38 @@ zegt dat de sommen kloppen, `goedgekeurd_op` zegt dat een mens ja heeft
 gezegd. Dat scheelt bovendien een tabelmigratie, want een CHECK-constraint is
 in SQLite niet te wijzigen.
 
-Het originele document wordt geserveerd op `/document/{id}`, met het pad uit
-de database — nooit uit het verzoek. Een bezoeker kan dus geen ander bestand
-van de schijf opvragen.
+### Elk adres hoort bij één administratie
+
+Alle routes die een factuur of document aanraken hangen onder de
+administratie:
+
+```
+/administratie/{a}/factuur/{f}
+/administratie/{a}/factuur/{f}/opslaan
+/administratie/{a}/factuur/{f}/goedkeuren
+/administratie/{a}/document/{d}
+```
+
+Elke route gaat langs één gedeelde functie, `hoort_bij_administratie`, die het
+record ophaalt én controleert of het werkelijk bij die administratie hoort. Zo
+niet, dan volgt **404** — niet 403. Een 403 ("mag niet") zou verklappen dat het
+record bestaat, en dan weet iemand die de nummers in de adresbalk aan het
+aflopen is precies waar wat zit. Bestaat-niet en hoort-bij-een-ander geven
+daarom exact hetzelfde antwoord; daar is een test voor die de twee
+antwoordpagina's letterlijk vergelijkt.
+
+Nu is er nog één gebruiker en kan dit geen kwaad. Maar het adres van een
+factuur is een nummer dat iedereen kan ophogen, en zodra er klantaccounts
+komen zou klant B anders de facturen van klant A kunnen bekijken én aanpassen.
+Dat is makkelijker nu goed te zetten dan later.
+
+Er is ook een test die de routes zelf leest: elke route met een ander id dan
+`administratie_id` in het pad móét `hoort_bij_administratie` gebruiken. Voegt
+iemand later een route toe en vergeet die controle, dan valt die test om.
+
+Het originele document wordt geserveerd met het pad **uit de database** —
+nooit uit het verzoek. Een bezoeker kan dus ook geen ander bestand van de
+schijf opvragen.
 
 ## Testmateriaal: synthetische facturen
 
@@ -532,7 +561,7 @@ de stack blijft Python, SQLite, Pydantic en pytest.
 
 ### `tests/` — de bewijslast
 
-233 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
+241 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
 onzin-tekst, ontbrekende velden, verkeerde btw-percentages, ambigue
 bedragen, toekomst- en te oude datums, duplicaten, de audit trail bij
 aanmaken en wijzigen, en voor module 2: een PDF zonder tekstlaag, een

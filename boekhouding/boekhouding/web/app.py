@@ -11,7 +11,7 @@ from datetime import date
 from pathlib import Path
 from typing import Any, Optional
 
-from fastapi import FastAPI, Form, Request, UploadFile
+from fastapi import FastAPI, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
@@ -53,6 +53,47 @@ MEDIATYPEN = {
 }
 
 
+class NietGevonden(HTTPException):
+    """Eén antwoord voor twee gevallen, en dat is met opzet.
+
+    Vraagt iemand een factuur op die niet bestaat, of een factuur die
+    wel bestaat maar bij een andere administratie hoort, dan krijgt hij
+    exact hetzelfde te zien: 404, niet gevonden. Een 403 ("mag niet")
+    zou verklappen dat het record bestaat, en dan weet iemand die de
+    nummers in de adresbalk aan het aflopen is precies waar wat zit.
+    """
+
+    def __init__(self, soort: str = "pagina"):
+        super().__init__(status_code=404, detail=soort)
+
+
+def hoort_bij_administratie(
+    conn: sqlite3.Connection,
+    lees: Any,
+    record_id: int,
+    administratie_id: int,
+    soort: str,
+) -> dict[str, Any]:
+    """Haal een record op en controleer dat het bij deze administratie hoort.
+
+    Dit is de enige plek waar die controle staat. Elke route die een
+    factuur of een document aanraakt gaat hierlangs, zodat er straks —
+    als er klantaccounts komen — geen route vergeten kan zijn.
+
+    Nu is er nog één gebruiker en dus geen kwaad kunnen, maar het adres
+    van een factuur is een nummer dat iedereen kan ophogen. Zonder deze
+    controle zou klant B straks de facturen van klant A kunnen bekijken
+    en aanpassen door het nummer in de adresbalk te veranderen.
+    """
+    try:
+        record = lees(conn, record_id)
+    except ValueError:
+        raise NietGevonden(soort)
+    if record.get("administratie_id") != administratie_id:
+        raise NietGevonden(soort)
+    return record
+
+
 def maak_app(
     db_pad: str,
     opslagmap: str,
@@ -88,6 +129,27 @@ def maak_app(
             request=request, name=sjabloon, context=gegevens
         )
 
+    @app.exception_handler(404)
+    def niet_gevonden(request: Request, fout: HTTPException):
+        """Een 404 is ook gewoon een pagina, geen brok JSON."""
+        return SJABLONEN.TemplateResponse(
+            request=request, name="fout.html", status_code=404,
+            context={
+                "titel": "Niet gevonden",
+                "bericht": "Deze pagina bestaat niet, of hoort niet bij deze "
+                           "administratie.",
+                "terug": "/",
+            },
+        )
+
+    def administratie_van(conn: sqlite3.Connection, administratie_id: int):
+        rij = conn.execute(
+            "SELECT id, naam FROM administraties WHERE id = ?", (administratie_id,)
+        ).fetchone()
+        if rij is None:
+            raise NietGevonden("administratie")
+        return rij
+
     # --- overzicht ------------------------------------------------------
 
     @app.get("/", response_class=HTMLResponse)
@@ -100,18 +162,11 @@ def maak_app(
     @app.get("/administratie/{administratie_id}", response_class=HTMLResponse)
     def overzicht(request: Request, administratie_id: int):
         conn = verbinding()
-        administratie = conn.execute(
-            "SELECT id, naam FROM administraties WHERE id = ?", (administratie_id,)
-        ).fetchone()
-        facturen = lees_facturen(conn, administratie_id) if administratie else []
-        conn.close()
-
-        if administratie is None:
-            return toon(
-                request, "fout.html",
-                titel="Administratie niet gevonden",
-                bericht=f"Er is geen administratie met nummer {administratie_id}.",
-            )
+        try:
+            administratie = administratie_van(conn, administratie_id)
+            facturen = lees_facturen(conn, administratie_id)
+        finally:
+            conn.close()
 
         return toon(
             request, "overzicht.html",
@@ -129,6 +184,11 @@ def maak_app(
 
     @app.get("/administratie/{administratie_id}/upload", response_class=HTMLResponse)
     def uploadscherm(request: Request, administratie_id: int):
+        conn = verbinding()
+        try:
+            administratie_van(conn, administratie_id)
+        finally:
+            conn.close()
         return toon(request, "upload.html", administratie_id=administratie_id)
 
     @app.post("/administratie/{administratie_id}/upload")
@@ -137,12 +197,15 @@ def maak_app(
     ):
         inhoud = await bestand.read()
         conn = verbinding()
-        resultaat = verwerk_upload(
-            conn, administratie_id, bestand.filename or "onbekend", inhoud,
-            app.state.opslagmap,
-            ai_client=app.state.ai_client, vandaag=app.state.vandaag,
-        )
-        conn.close()
+        try:
+            administratie_van(conn, administratie_id)
+            resultaat = verwerk_upload(
+                conn, administratie_id, bestand.filename or "onbekend", inhoud,
+                app.state.opslagmap,
+                ai_client=app.state.ai_client, vandaag=app.state.vandaag,
+            )
+        finally:
+            conn.close()
 
         if resultaat.factuur_id is None:
             # Er is geen factuur ontstaan; laat zien waarom, in plaats
@@ -153,27 +216,32 @@ def maak_app(
                 bericht=" ".join(resultaat.redenen),
                 terug=f"/administratie/{administratie_id}/upload",
             )
-        return RedirectResponse(f"/factuur/{resultaat.factuur_id}", status_code=303)
+        return RedirectResponse(
+            f"/administratie/{administratie_id}/factuur/{resultaat.factuur_id}",
+            status_code=303,
+        )
 
     # --- reviewscherm ---------------------------------------------------
 
-    @app.get("/factuur/{factuur_id}", response_class=HTMLResponse)
-    def review(request: Request, factuur_id: int, melding: str = ""):
+    @app.get(
+        "/administratie/{administratie_id}/factuur/{factuur_id}",
+        response_class=HTMLResponse,
+    )
+    def review(
+        request: Request, administratie_id: int, factuur_id: int, melding: str = ""
+    ):
         conn = verbinding()
         try:
-            factuur = lees_factuur(conn, factuur_id)
-        except ValueError:
-            conn.close()
-            return toon(
-                request, "fout.html",
-                titel="Factuur niet gevonden",
-                bericht=f"Er is geen factuur met nummer {factuur_id}.",
+            factuur = hoort_bij_administratie(
+                conn, lees_factuur, factuur_id, administratie_id, "factuur"
             )
-        extractie = lees_extractie_bij_document(conn, factuur["document_id"])
-        conn.close()
+            extractie = lees_extractie_bij_document(conn, factuur["document_id"])
+        finally:
+            conn.close()
 
         return toon(
             request, "review.html",
+            administratie_id=administratie_id,
             factuur=factuur,
             velden=_veldregels(factuur, extractie),
             extractie=extractie,
@@ -184,8 +252,8 @@ def maak_app(
             ),
         )
 
-    @app.post("/factuur/{factuur_id}/opslaan")
-    async def opslaan(request: Request, factuur_id: int):
+    @app.post("/administratie/{administratie_id}/factuur/{factuur_id}/opslaan")
+    async def opslaan(request: Request, administratie_id: int, factuur_id: int):
         formulier = await request.form()
         wijzigingen = {
             veld: str(formulier[veld]).strip()
@@ -193,44 +261,57 @@ def maak_app(
             if veld in formulier
         }
         conn = verbinding()
-        # Wijzigingen gaan altijd via wijzig_factuur: die bewaart de
-        # oude waarde in de audit trail en hervalideert de factuur.
-        wijzig_factuur(conn, factuur_id, wijzigingen, vandaag=app.state.vandaag)
-        conn.close()
+        try:
+            hoort_bij_administratie(
+                conn, lees_factuur, factuur_id, administratie_id, "factuur"
+            )
+            # Wijzigingen gaan altijd via wijzig_factuur: die bewaart de
+            # oude waarde in de audit trail en hervalideert de factuur.
+            wijzig_factuur(conn, factuur_id, wijzigingen, vandaag=app.state.vandaag)
+        finally:
+            conn.close()
         return RedirectResponse(
-            f"/factuur/{factuur_id}?melding=Opgeslagen", status_code=303
+            f"/administratie/{administratie_id}/factuur/{factuur_id}"
+            f"?melding=Opgeslagen",
+            status_code=303,
         )
 
-    @app.post("/factuur/{factuur_id}/goedkeuren")
-    def goedkeuren(factuur_id: int):
+    @app.post("/administratie/{administratie_id}/factuur/{factuur_id}/goedkeuren")
+    def goedkeuren(administratie_id: int, factuur_id: int):
         conn = verbinding()
-        gelukt, redenen = keur_factuur_goed(conn, factuur_id)
-        administratie_id = lees_factuur(conn, factuur_id)["administratie_id"]
-        conn.close()
+        try:
+            hoort_bij_administratie(
+                conn, lees_factuur, factuur_id, administratie_id, "factuur"
+            )
+            gelukt, redenen = keur_factuur_goed(conn, factuur_id)
+        finally:
+            conn.close()
 
         if not gelukt:
             return RedirectResponse(
-                f"/factuur/{factuur_id}?melding={redenen[0]}", status_code=303
+                f"/administratie/{administratie_id}/factuur/{factuur_id}"
+                f"?melding={redenen[0]}",
+                status_code=303,
             )
         return RedirectResponse(f"/administratie/{administratie_id}", status_code=303)
 
     # --- het originele document laten zien -------------------------------
 
-    @app.get("/document/{document_id}")
-    def document(document_id: int):
+    @app.get("/administratie/{administratie_id}/document/{document_id}")
+    def document(administratie_id: int, document_id: int):
         conn = verbinding()
         try:
-            registratie = lees_document(conn, document_id)
-        except ValueError:
+            registratie = hoort_bij_administratie(
+                conn, lees_document, document_id, administratie_id, "document"
+            )
+        finally:
             conn.close()
-            return HTMLResponse("Document niet gevonden", status_code=404)
-        conn.close()
 
         # Het pad komt uit de database, nooit uit het verzoek: een
         # bezoeker kan dus geen ander bestand van de schijf opvragen.
         pad = Path(registratie["opslagpad"])
         if not pad.is_file():
-            return HTMLResponse("Bestand niet meer gevonden", status_code=404)
+            raise NietGevonden("document")
         return FileResponse(
             pad,
             media_type=MEDIATYPEN.get(pad.suffix.lower(), "application/octet-stream"),

@@ -25,7 +25,7 @@
 {% endif %}
 
 {% for factuur in facturen %}
-  <a class="rij" href="/factuur/{{ factuur.id }}">
+  <a class="rij" href="/administratie/{{ administratie_id }}/factuur/{{ factuur.id }}">
     <div class="boven">
       <span class="naam">{{ factuur.leverancier or "Leverancier onbekend" }}</span>
       {% if factuur.status == "review_nodig" %}
