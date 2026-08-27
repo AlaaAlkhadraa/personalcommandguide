@@ -70,6 +70,13 @@ from .btw_aangifte import (
     kwartaal_van,
     zoek_blokkades,
 )
+from .volledigheid import (
+    Signaal,
+    afwijkend_aantal,
+    gaten_in_factuurnummers,
+    ontbrekende_leveranciers,
+    zoek_signalen,
+)
 from .routering import bestandssoort, routeer_document, zoek_ingebedde_efactuur
 from .omgeving import api_sleutel, sleutel_aanwezig
 from .database import (
@@ -173,4 +180,9 @@ __all__ = [
     "kwartaal_van",
     "kwartaal_grenzen",
     "zoek_blokkades",
+    "Signaal",
+    "zoek_signalen",
+    "ontbrekende_leveranciers",
+    "gaten_in_factuurnummers",
+    "afwijkend_aantal",
 ]

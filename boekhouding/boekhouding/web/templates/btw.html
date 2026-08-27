@@ -79,6 +79,24 @@
 
 {% endif %}
 
+{% if aangifte.signalen %}
+  {# Vragen, geen fouten: ze blokkeren niets. Een leverancier kan
+     opgezegd zijn en een rustig kwartaal bestaat. Daarom een andere
+     kleur dan de rode blokkades hierboven. #}
+  <div class="kaart signalen">
+    <h3 style="margin:0 0 4px;font-size:15px">Even nakijken</h3>
+    <p class="onder" style="color:var(--zacht);font-size:14px;margin-top:0">
+      Dit zijn vragen, geen fouten. Ze houden de aangifte niet tegen — het
+      systeem ziet alleen dat er iets anders is dan anders.
+    </p>
+    <ul>
+      {% for signaal in aangifte.signalen %}
+        <li>{{ signaal.vraag }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}
+
 {% for waarschuwing in aangifte.waarschuwingen %}
   <div class="waarschuwing">{{ waarschuwing }}</div>
 {% endfor %}

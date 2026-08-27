@@ -712,6 +712,46 @@ omzet zonder btw (0%, vrijgesteld of verlegd). Dat laatste hoort in rubriek
 1e, 2a of 3a, en die zijn niet gebouwd; stilzwijgend weglaten mag niet, dus
 staat het als waarschuwing op het scherm.
 
+### Wat er níét is: volledigheidssignalen
+
+Blokkeren kan alleen op facturen die er zijn. Het gevaarlijkste geval zit daar
+niet bij: een factuur die nooit is aangeleverd staat nergens, dus er valt niets
+op te blokkeren, en de aangifte rekent een te laag bedrag uit dat er volkomen
+correct uitziet.
+
+`volledigheid.py` kijkt daarom naar het patroon in plaats van naar de facturen
+zelf. Drie controles, alle drie **waarschuwend en nooit blokkerend**:
+
+1. **Een leverancier die ineens ontbreekt.** Kwam iemand minstens drie maanden
+   op rij langs, doorlopend tot vlak vóór het kwartaal, en staat hij dit
+   kwartaal nergens? Dan wordt dat gemeld met naam, startmaand en de laatste
+   factuurdatum. Wie al langer dan een half jaar weg is telt niet meer mee.
+2. **Gaten in de factuurnummers.** Per leverancier en per voorloop
+   (`F-2026-`) worden de nummers van het kwartaal op een rij gezet;
+   `001, 002, 004` meldt `F-2026-003`. Verschillende voorlopen zijn
+   verschillende reeksen, en meer dan acht ontbrekende nummers worden
+   samengevat in plaats van opgesomd.
+3. **Ineens veel minder (of meer) facturen.** Het aantal van dit kwartaal
+   tegenover het gemiddelde van de vorige vier. Kwartalen van vóór de
+   allereerste factuur tellen niet mee, en bij minder dan twee kwartalen
+   historie of een gemiddelde onder de drie houdt het systeem zijn mond — dan
+   zegt een verschil niets.
+
+**Elke melding is een vraag, geen conclusie:**
+
+> KPN staat sinds oktober 2025 elke maand op de lijst maar ontbreekt dit
+> kwartaal (laatste factuur 2026-06-05) — is die factuur er wel?
+
+Dat is met opzet. Een leverancier kan opgezegd zijn, een factuurnummer kan bij
+een andere klant horen, en een rustig kwartaal bestaat. Het systeem ziet alleen
+dat er iets anders is dan anders; de eigenaar weet of dat klopt. Op het scherm
+staan ze in een geel blok "Even nakijken", los van de rode blokkades — die
+houden de aangifte wél tegen.
+
+Alle facturen tellen mee voor deze controles, ook die nog nagekeken of
+goedgekeurd moeten worden: de vraag is hier of iets is aangeleverd, niet of het
+al is verwerkt.
+
 ### Het scherm
 
 `/administratie/1/btw` gaat naar het kwartaal waar je nu in zit; met de
@@ -759,7 +799,7 @@ de stack blijft Python, SQLite, Pydantic en pytest.
 
 ### `tests/` — de bewijslast
 
-346 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
+378 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
 onzin-tekst, ontbrekende velden, verkeerde btw-percentages, ambigue
 bedragen, toekomst- en te oude datums, duplicaten, de audit trail bij
 aanmaken en wijzigen, en voor module 2: een PDF zonder tekstlaag, een
@@ -859,6 +899,13 @@ from .btw_aangifte import (
     kwartaal_grenzen,
     kwartaal_van,
     zoek_blokkades,
+)
+from .volledigheid import (
+    Signaal,
+    afwijkend_aantal,
+    gaten_in_factuurnummers,
+    ontbrekende_leveranciers,
+    zoek_signalen,
 )
 from .routering import bestandssoort, routeer_document, zoek_ingebedde_efactuur
 from .omgeving import api_sleutel, sleutel_aanwezig
@@ -963,6 +1010,11 @@ __all__ = [
     "kwartaal_van",
     "kwartaal_grenzen",
     "zoek_blokkades",
+    "Signaal",
+    "zoek_signalen",
+    "ontbrekende_leveranciers",
+    "gaten_in_factuurnummers",
+    "afwijkend_aantal",
 ]
 ```
 
@@ -4231,6 +4283,14 @@ Twee dingen zijn hier belangrijker dan het rekenwerk:
 te pas — niet bij het optellen, niet bij het indelen in rubrieken
 (Gouden regel 2).
 
+**Wat er niet is, wordt apart gemeld.** Blokkeren kan alleen op
+facturen die er zijn. Een factuur die nooit is aangeleverd staat
+nergens, en dan rekent de aangifte een te laag bedrag uit dat er
+correct uitziet. Daarom staan er bij het kwartaal ook signalen: vragen
+over leveranciers die ineens ontbreken, gaten in factuurnummers en een
+aantal dat afwijkt van eerdere kwartalen. Zie `volledigheid.py`. Die
+signalen blokkeren niets.
+
 **Bij twijfel geen getal.** Staat er in het kwartaal ook maar één
 factuur die nog niet helemaal rond is, dan wordt er niets uitgerekend.
 Je krijgt een lijst van wat er open staat. Een aangifte die "bijna
@@ -4247,6 +4307,7 @@ from pydantic import BaseModel
 
 from .database import boeking_bij_factuur, lees_boekingen
 from .rekeningschema import Rekeningschema, rekeningschema_voor_jaar
+from .volledigheid import Signaal, zoek_signalen
 
 NUL = Decimal("0.00")
 
@@ -4306,6 +4367,10 @@ class Aangifte(BaseModel):
     blokkades: list[Blokkade] = []
     redenen: list[str] = []
     waarschuwingen: list[str] = []
+    # Vragen over wat er misschien ontbreekt. Deze blokkeren niets: een
+    # factuur die nooit is aangeleverd staat nergens, dus er valt ook
+    # niets op te blokkeren — alleen iets over op te merken.
+    signalen: list[Signaal] = []
     aantal_boekingen: int = 0
     voorbehoud: str = VOORBEHOUD
 
@@ -4460,6 +4525,11 @@ def bereken_aangifte(
     aangifte = Aangifte(status="geblokkeerd", jaar=jaar, kwartaal=kwartaal,
                         van=van, tot=tot)
 
+    # De volledigheidssignalen staan los van het rekenen: ze gaan over
+    # wat er misschien níét is aangeleverd. Ze horen er dus ook bij als
+    # de aangifte verderop wordt geblokkeerd.
+    aangifte.signalen = zoek_signalen(conn, administratie_id, jaar, kwartaal)
+
     zonder_datum = _facturen_zonder_datum(conn, administratie_id)
     if zonder_datum:
         aangifte.waarschuwingen.append(
@@ -4520,6 +4590,358 @@ def bereken_aangifte(
         "betalen" if saldo > NUL else "terugvragen" if saldo < NUL else "niets"
     )
     return aangifte
+```
+
+## `boekhouding/boekhouding/volledigheid.py`
+
+```python
+"""Volledigheidscontroles: merken wat er níét is.
+
+De btw-aangifte blokkeert op facturen die er zijn maar nog niet rond
+zijn. Het gevaarlijkste geval zit daar niet bij: een factuur die de
+klant nooit heeft aangeleverd. Die staat nergens, dus er is niets om
+op te blokkeren, en de aangifte rekent een te laag bedrag uit dat er
+volkomen correct uitziet.
+
+Deze module kijkt daarom naar het patroon in plaats van naar de
+facturen zelf: wie kwam er elke maand en ontbreekt nu, welke
+factuurnummers zijn overgeslagen, en zijn het er ineens veel minder dan
+anders.
+
+Drie dingen gelden hier:
+
+- **Het zijn signalen, geen fouten.** Ze blokkeren niets. Een
+  leverancier kan opgezegd zijn, een nummer kan bij een andere klant
+  horen, een kwartaal kan gewoon rustig zijn geweest.
+- **Elke melding is een vraag, geen conclusie.** "KPN staat sinds maart
+  elke maand op de lijst maar ontbreekt dit kwartaal — is die factuur er
+  wel?" Het systeem weet niet wat er ontbreekt; de eigenaar wel.
+- **Alle facturen tellen mee**, ook die nog nagekeken of goedgekeurd
+  moeten worden. De vraag is hier of iets is aangeleverd, niet of het al
+  is verwerkt.
+"""
+
+import re
+import sqlite3
+from datetime import date
+from decimal import Decimal
+from typing import Any, Literal, Optional
+
+from pydantic import BaseModel
+
+# Hoeveel maanden vóór het kwartaal een leverancier gezien moet zijn om
+# überhaupt mee te tellen. Wie langer dan een half jaar weg is, is geen
+# vraag meer waard.
+MAANDEN_TERUG = 6
+
+# Hoe ver we terugkijken om de reeks zélf te bepalen. Dit staat los van
+# het venster hierboven: staat een leverancier al twee jaar elke maand
+# op de lijst, dan hoort de melding dat ook te zeggen en niet "sinds"
+# de rand van het venster.
+MAANDEN_HISTORIE = 24
+
+# Hoeveel maanden op rij een leverancier moet zijn langsgekomen voordat
+# we hem "maandelijks" noemen. Twee maanden is toeval, drie is een
+# patroon.
+MINIMAAL_OP_RIJ = 3
+
+# Hoeveel kwartalen we vergelijken bij het aantal facturen, en vanaf
+# welk gemiddelde dat zinnig is. Bij een gemiddelde van twee facturen
+# zegt een verschil van één niets.
+KWARTALEN_TERUG = 4
+MINIMAAL_GEMIDDELDE = Decimal("3")
+
+# Eén kwartaal is geen vergelijking: dan is elk verschil "afwijkend".
+# Pas vanaf twee kwartalen historie zeggen we er iets van.
+MINIMAAL_KWARTALEN = 2
+
+# Wanneer een aantal "een groot verschil" is: minder dan 60% of meer dan
+# 150% van het gemiddelde.
+ONDERGRENS = Decimal("0.6")
+BOVENGRENS = Decimal("1.5")
+
+# Hoeveel ontbrekende factuurnummers we hoogstens opsommen voordat we
+# er een bereik van maken.
+MAX_NUMMERS = 8
+
+MAANDNAMEN = (
+    "januari", "februari", "maart", "april", "mei", "juni",
+    "juli", "augustus", "september", "oktober", "november", "december",
+)
+
+# Een factuurnummer dat op cijfers eindigt: "F-2026-001" wordt
+# ("F-2026-", "001"). Alleen zo'n nummer kan een gat hebben.
+NUMMERPATROON = re.compile(r"^(.*?)(\d+)$")
+
+
+class Signaal(BaseModel):
+    """Eén vraag aan de eigenaar. Blokkeert niets."""
+
+    soort: Literal["ontbrekende_leverancier", "gat_in_nummers", "aantal_facturen"]
+    vraag: str
+    leverancier: Optional[str] = None
+    laatste_factuurdatum: Optional[str] = None
+    ontbrekende_nummers: list[str] = []
+
+
+def _maandsleutel(datum: str) -> str:
+    """'2026-03-17' wordt '2026-03'."""
+    return datum[:7]
+
+
+def _maanden_voor(van: date, aantal: int) -> list[str]:
+    """De `aantal` maanden vóór deze datum, oudste eerst."""
+    maanden = []
+    jaar, maand = van.year, van.month
+    for _ in range(aantal):
+        maand -= 1
+        if maand == 0:
+            jaar, maand = jaar - 1, 12
+        maanden.append(f"{jaar:04d}-{maand:02d}")
+    return list(reversed(maanden))
+
+
+def _kwartaal_grenzen(jaar: int, kwartaal: int) -> tuple[date, date]:
+    from .btw_aangifte import kwartaal_grenzen
+
+    return kwartaal_grenzen(jaar, kwartaal)
+
+
+def _facturen(
+    conn: sqlite3.Connection, administratie_id: int, van: date, tot: date
+) -> list[dict[str, Any]]:
+    """Alle facturen met een datum in deze periode, welke status ook."""
+    cursor = conn.execute(
+        """
+        SELECT id, leverancier, factuurdatum, factuurnummer
+        FROM facturen
+        WHERE administratie_id = ?
+          AND factuurdatum IS NOT NULL AND factuurdatum != ''
+          AND factuurdatum >= ? AND factuurdatum <= ?
+        ORDER BY factuurdatum, id
+        """,
+        (administratie_id, str(van), str(tot)),
+    )
+    kolommen = [k[0] for k in cursor.description]
+    return [dict(zip(kolommen, rij)) for rij in cursor.fetchall()]
+
+
+def _eerste_factuurdatum(
+    conn: sqlite3.Connection, administratie_id: int
+) -> Optional[str]:
+    """De oudste factuurdatum in deze administratie, of None."""
+    rij = conn.execute(
+        "SELECT min(factuurdatum) FROM facturen "
+        "WHERE administratie_id = ? AND factuurdatum IS NOT NULL "
+        "AND factuurdatum != ''",
+        (administratie_id,),
+    ).fetchone()
+    return rij[0]
+
+
+def _naam(leverancier: Optional[str]) -> str:
+    return (leverancier or "").strip()
+
+
+# --- 1. leveranciers die ineens ontbreken -------------------------------
+
+def ontbrekende_leveranciers(
+    conn: sqlite3.Connection, administratie_id: int, van: date, tot: date
+) -> list[Signaal]:
+    """Wie kwam er elke maand langs en ontbreekt dit kwartaal?
+
+    We kijken naar de maanden vlak vóór het kwartaal en zoeken per
+    leverancier de reeks maanden op rij waarin hij voorkwam, eindigend
+    in de laatste maand vóór het kwartaal. Is die reeks lang genoeg en
+    staat hij dit kwartaal nergens, dan is dat een vraag waard.
+    """
+    maanden = _maanden_voor(van, MAANDEN_HISTORIE)
+    if not maanden:
+        return []
+    # De laatste maanden van dat venster: alleen wie hier voorkwam is een
+    # vraag waard.
+    recent = set(maanden[-MAANDEN_TERUG:])
+
+    eerste_maand = date(int(maanden[0][:4]), int(maanden[0][5:7]), 1)
+    eerder = _facturen(conn, administratie_id, eerste_maand, van)
+    # `van` zelf hoort al bij het kwartaal, dus die dag valt af.
+    eerder = [f for f in eerder if f["factuurdatum"] < str(van)]
+    nu = {_naam(f["leverancier"]) for f in _facturen(conn, administratie_id, van, tot)}
+
+    per_leverancier: dict[str, dict[str, str]] = {}
+    for factuur in eerder:
+        naam = _naam(factuur["leverancier"])
+        if not naam:
+            continue
+        maand = _maandsleutel(factuur["factuurdatum"])
+        gezien = per_leverancier.setdefault(naam, {})
+        # Per maand de laatste factuurdatum bewaren.
+        if maand not in gezien or factuur["factuurdatum"] > gezien[maand]:
+            gezien[maand] = factuur["factuurdatum"]
+
+    signalen = []
+    for naam, gezien in sorted(per_leverancier.items()):
+        if naam in nu:
+            continue
+
+        if not (recent & set(gezien)):
+            continue
+
+        # Tel terug vanaf de laatste maand vóór het kwartaal zolang er
+        # elke maand een factuur was. Dat kan verder terug lopen dan het
+        # venster van MAANDEN_TERUG, en dan zegt de melding dat ook.
+        op_rij = 0
+        for maand in reversed(maanden):
+            if maand not in gezien:
+                break
+            op_rij += 1
+        if op_rij < MINIMAAL_OP_RIJ:
+            continue
+
+        start = maanden[len(maanden) - op_rij]
+        laatste = max(gezien.values())
+        signalen.append(Signaal(
+            soort="ontbrekende_leverancier",
+            leverancier=naam,
+            laatste_factuurdatum=laatste,
+            vraag=(
+                f"{naam} staat sinds {MAANDNAMEN[int(start[5:7]) - 1]} "
+                f"{start[:4]} elke maand op de lijst maar ontbreekt dit "
+                f"kwartaal (laatste factuur {laatste}) — is die factuur er wel?"
+            ),
+        ))
+    return signalen
+
+
+# --- 2. gaten in een reeks factuurnummers -------------------------------
+
+def _splits_nummer(nummer: Optional[str]) -> Optional[tuple[str, int, int]]:
+    """Splits 'F-2026-001' in ('F-2026-', 1, 3): voorloop, getal, breedte."""
+    if not nummer:
+        return None
+    treffer = NUMMERPATROON.match(nummer.strip())
+    if treffer is None:
+        return None
+    cijfers = treffer.group(2)
+    return treffer.group(1), int(cijfers), len(cijfers)
+
+
+def gaten_in_factuurnummers(
+    conn: sqlite3.Connection, administratie_id: int, van: date, tot: date
+) -> list[Signaal]:
+    """Welke nummers zijn overgeslagen in een oplopende reeks?
+
+    Per leverancier en per voorloop ("F-2026-") worden de nummers van dit
+    kwartaal op een rij gezet. Zit er een gat tussen het laagste en het
+    hoogste nummer, dan is dat een vraag waard.
+
+    Dit werkt alleen bij een leverancier die per klant doornummert, en
+    bij je eigen verkoopfacturen. Nummert een leverancier over al zijn
+    klanten heen, dan zijn gaten normaal — vandaar dat dit een vraag is
+    en geen fout.
+    """
+    reeksen: dict[tuple[str, str], list[tuple[int, int]]] = {}
+    for factuur in _facturen(conn, administratie_id, van, tot):
+        naam = _naam(factuur["leverancier"])
+        gesplitst = _splits_nummer(factuur["factuurnummer"])
+        if not naam or gesplitst is None:
+            continue
+        voorloop, getal, breedte = gesplitst
+        reeksen.setdefault((naam, voorloop), []).append((getal, breedte))
+
+    signalen = []
+    for (naam, voorloop), nummers in sorted(reeksen.items()):
+        if len(nummers) < 2:
+            continue
+        aanwezig = {getal for getal, _ in nummers}
+        breedte = min(b for _, b in nummers)
+        ontbreekt = sorted(set(range(min(aanwezig), max(aanwezig) + 1)) - aanwezig)
+        if not ontbreekt:
+            continue
+
+        namen = [f"{voorloop}{getal:0{breedte}d}" for getal in ontbreekt]
+        if len(namen) <= MAX_NUMMERS:
+            opsomming = ", ".join(namen)
+        else:
+            opsomming = (
+                f"{len(namen)} nummers tussen {namen[0]} en {namen[-1]}"
+            )
+        signalen.append(Signaal(
+            soort="gat_in_nummers",
+            leverancier=naam,
+            ontbrekende_nummers=namen,
+            vraag=(
+                f"Bij {naam} loopt de nummering door maar ontbreekt "
+                f"{opsomming} — {'is die factuur' if len(namen) == 1 else 'zijn die facturen'} "
+                f"er wel?"
+            ),
+        ))
+    return signalen
+
+
+# --- 3. ineens veel minder (of meer) facturen ---------------------------
+
+def afwijkend_aantal(
+    conn: sqlite3.Connection, administratie_id: int, jaar: int, kwartaal: int
+) -> list[Signaal]:
+    """Staan er dit kwartaal ineens veel minder facturen dan normaal?
+
+    Vergeleken wordt met het gemiddelde van de vorige vier kwartalen.
+    Bij een laag gemiddelde zegt een verschil niets, dus dan houden we
+    onze mond.
+    """
+    van, tot = _kwartaal_grenzen(jaar, kwartaal)
+    nu = len(_facturen(conn, administratie_id, van, tot))
+
+    # Kwartalen van vóór de allereerste factuur tellen niet mee. Anders
+    # krijgt iemand die net begonnen is meteen de melding dat het er
+    # "een stuk meer" zijn dan de kwartalen waarin de administratie nog
+    # niet bestond.
+    begin = _eerste_factuurdatum(conn, administratie_id)
+
+    aantallen = []
+    vorig_jaar, vorig_kwartaal = jaar, kwartaal
+    for _ in range(KWARTALEN_TERUG):
+        vorig_kwartaal -= 1
+        if vorig_kwartaal == 0:
+            vorig_jaar, vorig_kwartaal = vorig_jaar - 1, 4
+        eerder_van, eerder_tot = _kwartaal_grenzen(vorig_jaar, vorig_kwartaal)
+        if begin is None or str(eerder_tot) < begin:
+            continue
+        aantallen.append(len(_facturen(conn, administratie_id, eerder_van, eerder_tot)))
+
+    if len(aantallen) < MINIMAAL_KWARTALEN:
+        return []
+
+    gemiddelde = Decimal(sum(aantallen)) / Decimal(len(aantallen))
+    if gemiddelde < MINIMAAL_GEMIDDELDE:
+        return []
+
+    if ONDERGRENS * gemiddelde <= nu <= BOVENGRENS * gemiddelde:
+        return []
+
+    afgerond = gemiddelde.quantize(Decimal("0.1"))
+    richting = "minder" if nu < gemiddelde else "meer"
+    return [Signaal(
+        soort="aantal_facturen",
+        vraag=(
+            f"Dit kwartaal staan er {nu} factu{'ur' if nu == 1 else 'ren'}; "
+            f"de vorige {len(aantallen)} kwartalen waren het er gemiddeld "
+            f"{afgerond}. Dat is een stuk {richting} — is alles aangeleverd?"
+        ),
+    )]
+
+
+def zoek_signalen(
+    conn: sqlite3.Connection, administratie_id: int, jaar: int, kwartaal: int
+) -> list[Signaal]:
+    """Alle volledigheidssignalen voor één kwartaal, in leesvolgorde."""
+    van, tot = _kwartaal_grenzen(jaar, kwartaal)
+    return (
+        ontbrekende_leveranciers(conn, administratie_id, van, tot)
+        + gaten_in_factuurnummers(conn, administratie_id, van, tot)
+        + afwijkend_aantal(conn, administratie_id, jaar, kwartaal)
+    )
 ```
 
 ## `boekhouding/boekhouding/web/__init__.py`
@@ -5527,6 +5949,11 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
     border: 1px solid var(--lijn); border-radius: 8px; padding: 12px;
     font-size: 12px; line-height: 1.45; white-space: pre;
   }
+  /* Signalen zijn vragen, geen fouten: geel, niet rood. */
+  .kaart.signalen { border-color: var(--wacht); background: var(--wacht-vlak); }
+  .kaart.signalen h3 { color: var(--wacht); }
+  .kaart.signalen ul { margin: 8px 0 0; padding-left: 20px; }
+  .kaart.signalen li { margin-bottom: 6px; }
   .knoppen { display: flex; gap: 10px; flex-wrap: wrap; }
   .knoppen button, .knoppen a.knop { flex: 1 1 160px; text-align: center; }
   .leeg { color: var(--zacht); text-align: center; padding: 40px 10px; }
@@ -5936,6 +6363,24 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
     </div>
   </div>
 
+{% endif %}
+
+{% if aangifte.signalen %}
+  {# Vragen, geen fouten: ze blokkeren niets. Een leverancier kan
+     opgezegd zijn en een rustig kwartaal bestaat. Daarom een andere
+     kleur dan de rode blokkades hierboven. #}
+  <div class="kaart signalen">
+    <h3 style="margin:0 0 4px;font-size:15px">Even nakijken</h3>
+    <p class="onder" style="color:var(--zacht);font-size:14px;margin-top:0">
+      Dit zijn vragen, geen fouten. Ze houden de aangifte niet tegen — het
+      systeem ziet alleen dat er iets anders is dan anders.
+    </p>
+    <ul>
+      {% for signaal in aangifte.signalen %}
+        <li>{{ signaal.vraag }}</li>
+      {% endfor %}
+    </ul>
+  </div>
 {% endif %}
 
 {% for waarschuwing in aangifte.waarschuwingen %}
@@ -6939,6 +7384,7 @@ BRONBESTANDEN = [
     "boekhouding/database.py",
     "boekhouding/grootboek.py",
     "boekhouding/btw_aangifte.py",
+    "boekhouding/volledigheid.py",
     "boekhouding/web/__init__.py",
     "boekhouding/web/app.py",
     "boekhouding/web/ubl_weergave.py",
@@ -6977,6 +7423,7 @@ BRONBESTANDEN = [
     "tests/test_rekeningschema.py",
     "tests/test_grootboek.py",
     "tests/test_btw_aangifte.py",
+    "tests/test_volledigheid.py",
     "tests/test_web.py",
     "pytest.ini",
     "requirements.txt",
@@ -12207,6 +12654,386 @@ def test_een_kwartaal_met_alleen_inkoop_en_verkoop_die_elkaar_opheffen(conn):
     assert aangifte.saldo_richting == "niets"
 ```
 
+## `boekhouding/tests/test_volledigheid.py`
+
+```python
+"""Tests voor de volledigheidscontroles.
+
+Deze controles gaan over wat er níét is: een factuur die nooit is
+aangeleverd staat nergens, dus er valt niets op te blokkeren. Ze
+waarschuwen en houden de aangifte nooit tegen.
+
+Bij elke controle staat ook de rustige situatie: als er niets aan de
+hand is, hoort er ook niets te worden gemeld. Een systeem dat elk
+kwartaal iets roept wordt weggeklikt.
+"""
+
+from datetime import date
+
+import pytest
+
+from boekhouding import (
+    afwijkend_aantal,
+    bereken_aangifte,
+    gaten_in_factuurnummers,
+    maak_administratie,
+    maak_tabellen,
+    maak_verbinding,
+    ontbrekende_leveranciers,
+    sla_factuur_op,
+    zoek_signalen,
+)
+
+VANDAAG = date(2026, 12, 31)
+Q3 = (date(2026, 7, 1), date(2026, 9, 30))
+
+
+@pytest.fixture
+def conn(tmp_path):
+    verbinding = maak_verbinding(str(tmp_path / "boekhouding.sqlite"))
+    maak_tabellen(verbinding)
+    maak_administratie(verbinding, "Zaak van Alaa")
+    yield verbinding
+    verbinding.close()
+
+
+def zet_factuur(conn, leverancier, nummer, datum, bedrag="100.00"):
+    """Een gewone, kloppende factuur — status doet er hier niet toe."""
+    btw = "21.00" if bedrag == "100.00" else "0.00"
+    incl = "121.00" if bedrag == "100.00" else bedrag
+    factuur_id, _ = sla_factuur_op(
+        conn, 1,
+        {
+            "leverancier": leverancier, "factuurdatum": datum,
+            "factuurnummer": nummer, "bedrag_excl": bedrag,
+            "btw_percentage": "21" if btw != "0.00" else "0",
+            "btw_bedrag": btw, "bedrag_incl": incl,
+        },
+        vandaag=VANDAAG,
+    )
+    return factuur_id
+
+
+def maandelijks(conn, leverancier, maanden, jaar=2026, voorloop="KPN-"):
+    """Zet elke maand één factuur neer voor deze leverancier."""
+    for nummer, maand in enumerate(maanden, start=1):
+        zet_factuur(
+            conn, leverancier, f"{voorloop}{maand:02d}", f"{jaar}-{maand:02d}-05"
+        )
+
+
+# --- 1. leverancier die ineens ontbreekt --------------------------------
+
+def test_een_maandelijkse_leverancier_die_ontbreekt_wordt_gemeld(conn):
+    maandelijks(conn, "KPN", [3, 4, 5, 6])          # maart t/m juni
+    zet_factuur(conn, "Van Dijk", "VD-1", "2026-08-04")   # kwartaal is niet leeg
+
+    signalen = ontbrekende_leveranciers(conn, 1, *Q3)
+
+    assert len(signalen) == 1
+    signaal = signalen[0]
+    assert signaal.soort == "ontbrekende_leverancier"
+    assert signaal.leverancier == "KPN"
+    assert signaal.laatste_factuurdatum == "2026-06-05"
+    assert "KPN staat sinds maart 2026 elke maand op de lijst" in signaal.vraag
+    assert signaal.vraag.endswith("?")
+
+
+def test_een_leverancier_die_er_gewoon_is_wordt_niet_gemeld(conn):
+    """De rustige situatie: niets aan de hand, dus niets melden."""
+    maandelijks(conn, "KPN", [3, 4, 5, 6])
+    zet_factuur(conn, "KPN", "KPN-07", "2026-07-05")
+
+    assert ontbrekende_leveranciers(conn, 1, *Q3) == []
+
+
+def test_twee_maanden_op_rij_is_nog_geen_patroon(conn):
+    """Twee keer is toeval; daar hoort geen vraag bij."""
+    maandelijks(conn, "Incidenteel BV", [5, 6])
+
+    assert ontbrekende_leveranciers(conn, 1, *Q3) == []
+
+
+def test_een_gat_in_de_reeks_breekt_het_patroon(conn):
+    """Wie april oversloeg, kwam niet 'elke maand'."""
+    maandelijks(conn, "Onregelmatig BV", [3, 5, 6])
+
+    assert ontbrekende_leveranciers(conn, 1, *Q3) == []
+
+
+def test_een_leverancier_die_al_langer_weg_is_wordt_niet_gemeld(conn):
+    """De reeks moet doorlopen tot vlak vóór het kwartaal."""
+    maandelijks(conn, "Oude Leverancier", [1, 2, 3])   # stopte in maart
+
+    assert ontbrekende_leveranciers(conn, 1, *Q3) == []
+
+
+def test_facturen_zonder_leveranciersnaam_tellen_niet_mee(conn):
+    for maand in (3, 4, 5, 6):
+        zet_factuur(conn, "   ", f"X-{maand}", f"2026-{maand:02d}-05")
+
+    assert ontbrekende_leveranciers(conn, 1, *Q3) == []
+
+
+def test_de_status_van_de_factuur_doet_er_niet_toe(conn):
+    """De vraag is of iets is aangeleverd, niet of het al is verwerkt."""
+    maandelijks(conn, "KPN", [3, 4, 5, 6])
+    # Een factuur die nog nagekeken moet worden telt gewoon mee als
+    # 'aangeleverd'.
+    sla_factuur_op(
+        conn, 1,
+        {"leverancier": "KPN", "factuurdatum": "2026-07-05",
+         "factuurnummer": "KPN-07", "bedrag_excl": "100.00",
+         "btw_percentage": "21", "btw_bedrag": "21.00", "bedrag_incl": "999.00"},
+        vandaag=VANDAAG,
+    )
+    assert ontbrekende_leveranciers(conn, 1, *Q3) == []
+
+
+# --- 2. gaten in factuurnummers -----------------------------------------
+
+def test_een_overgeslagen_nummer_wordt_gemeld(conn):
+    zet_factuur(conn, "Van Dijk", "F-2026-001", "2026-07-03")
+    zet_factuur(conn, "Van Dijk", "F-2026-002", "2026-08-03")
+    zet_factuur(conn, "Van Dijk", "F-2026-004", "2026-09-03")
+
+    signalen = gaten_in_factuurnummers(conn, 1, *Q3)
+
+    assert len(signalen) == 1
+    assert signalen[0].ontbrekende_nummers == ["F-2026-003"]
+    assert "F-2026-003" in signalen[0].vraag
+    assert signalen[0].vraag.endswith("?")
+
+
+def test_een_doorlopende_reeks_wordt_niet_gemeld(conn):
+    """De rustige situatie."""
+    for nummer, maand in ((1, 7), (2, 8), (3, 9)):
+        zet_factuur(conn, "Van Dijk", f"F-2026-{nummer:03d}", f"2026-{maand:02d}-03")
+
+    assert gaten_in_factuurnummers(conn, 1, *Q3) == []
+
+
+def test_meerdere_gaten_worden_allemaal_genoemd(conn):
+    zet_factuur(conn, "Van Dijk", "F-2026-001", "2026-07-03")
+    zet_factuur(conn, "Van Dijk", "F-2026-005", "2026-09-03")
+
+    signalen = gaten_in_factuurnummers(conn, 1, *Q3)
+    assert signalen[0].ontbrekende_nummers == [
+        "F-2026-002", "F-2026-003", "F-2026-004",
+    ]
+
+
+def test_heel_veel_gaten_worden_samengevat(conn):
+    """Anders wordt het scherm een muur met nummers."""
+    zet_factuur(conn, "Van Dijk", "F-001", "2026-07-03")
+    zet_factuur(conn, "Van Dijk", "F-050", "2026-09-03")
+
+    signaal = gaten_in_factuurnummers(conn, 1, *Q3)[0]
+    assert len(signaal.ontbrekende_nummers) == 48
+    assert "48 nummers tussen F-002 en F-049" in signaal.vraag
+
+
+def test_nummers_van_verschillende_leveranciers_lopen_niet_door_elkaar(conn):
+    zet_factuur(conn, "Van Dijk", "F-001", "2026-07-03")
+    zet_factuur(conn, "Bakkerij", "F-002", "2026-07-04")
+    zet_factuur(conn, "Van Dijk", "F-003", "2026-07-05")
+
+    signalen = gaten_in_factuurnummers(conn, 1, *Q3)
+    assert len(signalen) == 1
+    assert signalen[0].leverancier == "Van Dijk"
+    assert signalen[0].ontbrekende_nummers == ["F-002"]
+
+
+def test_verschillende_voorlopen_zijn_verschillende_reeksen(conn):
+    """2025-004 hoort niet in de reeks van 2026."""
+    zet_factuur(conn, "Van Dijk", "F-2026-001", "2026-07-03")
+    zet_factuur(conn, "Van Dijk", "F-2026-002", "2026-08-03")
+    zet_factuur(conn, "Van Dijk", "F-2025-009", "2026-09-03")
+
+    assert gaten_in_factuurnummers(conn, 1, *Q3) == []
+
+
+def test_een_nummer_zonder_cijfers_doet_niet_mee(conn):
+    zet_factuur(conn, "Van Dijk", "spoedfactuur", "2026-07-03")
+    zet_factuur(conn, "Van Dijk", "nog een", "2026-08-03")
+
+    assert gaten_in_factuurnummers(conn, 1, *Q3) == []
+
+
+def test_een_enkele_factuur_kan_geen_gat_hebben(conn):
+    zet_factuur(conn, "Van Dijk", "F-2026-007", "2026-07-03")
+
+    assert gaten_in_factuurnummers(conn, 1, *Q3) == []
+
+
+# --- 3. afwijkend aantal facturen ---------------------------------------
+
+def vier_kwartalen(conn, per_kwartaal=10):
+    """Vul 2025 K3 t/m 2026 K2 met evenveel facturen per kwartaal."""
+    maanden = [(2025, 8), (2025, 11), (2026, 2), (2026, 5)]
+    for jaar, maand in maanden:
+        for nummer in range(per_kwartaal):
+            zet_factuur(
+                conn, f"Leverancier {nummer}", f"A-{jaar}{maand:02d}-{nummer:03d}",
+                f"{jaar}-{maand:02d}-10",
+            )
+
+
+def test_veel_minder_facturen_dan_normaal_wordt_gemeld(conn):
+    vier_kwartalen(conn, per_kwartaal=12)
+    zet_factuur(conn, "Leverancier 0", "Q3-1", "2026-07-10")
+
+    signalen = afwijkend_aantal(conn, 1, 2026, 3)
+
+    assert len(signalen) == 1
+    assert signalen[0].soort == "aantal_facturen"
+    assert "1 factuur" in signalen[0].vraag
+    assert "gemiddeld 12.0" in signalen[0].vraag
+    assert "minder" in signalen[0].vraag
+    assert signalen[0].vraag.endswith("?")
+
+
+def test_ongeveer_evenveel_facturen_wordt_niet_gemeld(conn):
+    """De rustige situatie: tien tegenover twaalf is geen signaal."""
+    vier_kwartalen(conn, per_kwartaal=12)
+    for nummer in range(10):
+        zet_factuur(conn, f"Leverancier {nummer}", f"Q3-{nummer}", "2026-07-10")
+
+    assert afwijkend_aantal(conn, 1, 2026, 3) == []
+
+
+def test_veel_meer_facturen_wordt_ook_gemeld(conn):
+    vier_kwartalen(conn, per_kwartaal=4)
+    for nummer in range(20):
+        zet_factuur(conn, f"Leverancier {nummer}", f"Q3-{nummer}", "2026-07-10")
+
+    signalen = afwijkend_aantal(conn, 1, 2026, 3)
+    assert len(signalen) == 1
+    assert "meer" in signalen[0].vraag
+
+
+def test_bij_weinig_historie_wordt_er_niets_geroepen(conn):
+    """Bij een gemiddelde van twee zegt een verschil van één niets."""
+    vier_kwartalen(conn, per_kwartaal=2)
+
+    assert afwijkend_aantal(conn, 1, 2026, 3) == []
+
+
+def test_een_administratie_zonder_verleden_geeft_geen_signaal(conn):
+    zet_factuur(conn, "Van Dijk", "F-1", "2026-07-10")
+
+    assert afwijkend_aantal(conn, 1, 2026, 3) == []
+
+
+# --- samen, en in de aangifte -------------------------------------------
+
+def test_een_rustig_kwartaal_geeft_helemaal_geen_signalen(conn):
+    """Alles normaal: geen enkele vraag."""
+    for maand in (1, 2, 3, 4, 5, 6, 7, 8, 9):
+        for nummer in (1, 2, 3):
+            zet_factuur(
+                conn, f"Leverancier {nummer}",
+                f"L{nummer}-{maand:03d}", f"2026-{maand:02d}-10",
+            )
+
+    assert zoek_signalen(conn, 1, 2026, 3) == []
+
+
+def test_de_signalen_staan_in_de_aangifte_en_blokkeren_niets(conn):
+    maandelijks(conn, "KPN", [3, 4, 5, 6])
+    aangifte = bereken_aangifte(conn, 1, 2026, 3)
+
+    assert aangifte.status == "voorstel"      # niets tegengehouden
+    assert aangifte.saldo is not None
+    assert any(s.leverancier == "KPN" for s in aangifte.signalen)
+
+
+def test_de_signalen_staan_er_ook_bij_een_geblokkeerde_aangifte(conn):
+    maandelijks(conn, "KPN", [3, 4, 5, 6])
+    # Een factuur die niet klopt blokkeert de aangifte.
+    sla_factuur_op(
+        conn, 1,
+        {"leverancier": "Van Dijk", "factuurdatum": "2026-07-05",
+         "factuurnummer": "VD-1", "bedrag_excl": "100.00",
+         "btw_percentage": "21", "btw_bedrag": "21.00", "bedrag_incl": "999.00"},
+        vandaag=VANDAAG,
+    )
+    aangifte = bereken_aangifte(conn, 1, 2026, 3)
+
+    assert aangifte.status == "geblokkeerd"
+    assert any(s.leverancier == "KPN" for s in aangifte.signalen)
+
+
+def test_elk_signaal_is_een_vraag_en_geen_conclusie(conn):
+    """Het systeem weet niet wat er ontbreekt; de eigenaar wel."""
+    maandelijks(conn, "KPN", [3, 4, 5, 6])
+    zet_factuur(conn, "Van Dijk", "F-2026-001", "2026-07-03")
+    zet_factuur(conn, "Van Dijk", "F-2026-003", "2026-08-03")
+    vier_kwartalen(conn, per_kwartaal=12)
+
+    signalen = zoek_signalen(conn, 1, 2026, 3)
+    assert len(signalen) == 3
+    for signaal in signalen:
+        assert signaal.vraag.endswith("?")
+        for verboden in ("fout", "ontbreekt een factuur", "moet"):
+            assert verboden not in signaal.vraag.lower()
+
+
+def test_kwartalen_van_voor_de_eerste_factuur_tellen_niet_mee(conn):
+    """Wie net begonnen is, hoort niet te horen dat het er 'meer' zijn."""
+    for maand in (1, 2, 4, 5):         # de administratie begint in januari
+        for nummer in range(6):
+            zet_factuur(
+                conn, f"Leverancier {nummer}", f"L{nummer}-{maand:02d}",
+                f"2026-{maand:02d}-10",
+            )
+    for nummer in range(12):            # en gaat in Q3 gewoon door
+        zet_factuur(conn, f"Leverancier {nummer}", f"Q3-{nummer}", "2026-07-10")
+
+    # Q1 en Q2 hadden er allebei 12; Q3 ook. De kwartalen van 2025 tellen
+    # niet mee, anders zou het gemiddelde 6 zijn en zou dit "veel meer" heten.
+    assert afwijkend_aantal(conn, 1, 2026, 3) == []
+
+
+def test_met_maar_een_kwartaal_historie_zegt_het_systeem_niets(conn):
+    """Eén kwartaal is geen vergelijking; dan is elk verschil 'afwijkend'."""
+    for nummer in range(12):
+        zet_factuur(conn, f"Leverancier {nummer}", f"Q2-{nummer}", "2026-05-10")
+    zet_factuur(conn, "Leverancier 0", "Q3-1", "2026-07-10")
+
+    assert afwijkend_aantal(conn, 1, 2026, 3) == []
+
+
+def test_de_melding_noemt_hoeveel_kwartalen_er_zijn_vergeleken(conn):
+    """Zijn het er maar twee, dan zegt de tekst dat ook."""
+    for maand in (2, 5):
+        for nummer in range(12):
+            zet_factuur(
+                conn, f"Leverancier {nummer}", f"L{nummer}-{maand:02d}",
+                f"2026-{maand:02d}-10",
+            )
+    zet_factuur(conn, "Leverancier 0", "Q3-1", "2026-07-10")
+
+    signaal = afwijkend_aantal(conn, 1, 2026, 3)[0]
+    assert "de vorige 2 kwartalen" in signaal.vraag
+
+
+def test_de_melding_noemt_de_echte_startmaand_en_niet_de_rand_van_het_venster(conn):
+    """Wie er al sinds oktober elke maand is, hoort niet 'sinds januari' te krijgen."""
+    maandelijks(conn, "KPN", [10, 11, 12], jaar=2025)
+    maandelijks(conn, "KPN", [1, 2, 3, 4, 5, 6], jaar=2026)
+
+    signaal = ontbrekende_leveranciers(conn, 1, *Q3)[0]
+    assert "sinds oktober 2025" in signaal.vraag
+
+
+def test_een_leverancier_die_al_een_half_jaar_weg_is_telt_niet_meer(conn):
+    """Een reeks die lang geleden eindigde is geen vraag meer."""
+    maandelijks(conn, "Oude Leverancier", [1, 2, 3, 4, 5, 6], jaar=2025)
+
+    assert ontbrekende_leveranciers(conn, 1, *Q3) == []
+```
+
 ## `boekhouding/tests/test_web.py`
 
 ```python
@@ -12901,6 +13728,55 @@ def test_na_het_boeken_ligt_de_rekening_vast_op_het_scherm(web):
     assert "<select" not in pagina
     assert "de rekening ligt vast" in pagina
     assert "tegenboeking" in pagina
+
+
+# --- volledigheidssignalen op het btw-scherm ----------------------------
+
+def maandelijkse_facturen(werkmap, leverancier, maanden, jaar=2026):
+    """Zet rechtstreeks facturen in de database, zonder upload.
+
+    Voor deze tests doet het document er niet toe; het gaat om het
+    patroon over de maanden heen.
+    """
+    from boekhouding import maak_tabellen, sla_factuur_op
+
+    conn = maak_verbinding(str(werkmap / "boekhouding.sqlite"))
+    maak_tabellen(conn)
+    for maand in maanden:
+        sla_factuur_op(
+            conn, 1,
+            {"leverancier": leverancier, "factuurdatum": f"{jaar}-{maand:02d}-05",
+             "factuurnummer": f"{leverancier}-{maand:02d}",
+             "bedrag_excl": "100.00", "btw_percentage": "21",
+             "btw_bedrag": "21.00", "bedrag_incl": "121.00"},
+            vandaag=VANDAAG,
+        )
+    conn.close()
+
+
+def test_het_btw_scherm_stelt_de_vraag_over_een_ontbrekende_leverancier(web, werkmap):
+    maandelijkse_facturen(werkmap, "KPN", [3, 4, 5, 6])
+
+    pagina = web.get("/administratie/1/btw/2026/3").text
+    assert "Even nakijken" in pagina
+    assert "KPN staat sinds maart 2026 elke maand op de lijst" in pagina
+    assert "is die factuur er wel?" in pagina
+    assert "vragen, geen fouten" in pagina
+
+
+def test_signalen_houden_de_aangifte_niet_tegen(web, werkmap):
+    maandelijkse_facturen(werkmap, "KPN", [3, 4, 5, 6])
+
+    pagina = web.get("/administratie/1/btw/2026/3").text
+    assert "Even nakijken" in pagina
+    assert "Er is niets uitgerekend" not in pagina
+    assert "5a · Verschuldigde omzetbelasting" in pagina
+
+
+def test_zonder_signalen_staat_er_geen_lege_kop(web):
+    """Een systeem dat elk kwartaal iets roept wordt weggeklikt."""
+    pagina = web.get("/administratie/1/btw/2026/3").text
+    assert "Even nakijken" not in pagina
 ```
 
 ## `boekhouding/pytest.ini`

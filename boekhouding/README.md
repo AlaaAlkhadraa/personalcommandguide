@@ -708,6 +708,46 @@ omzet zonder btw (0%, vrijgesteld of verlegd). Dat laatste hoort in rubriek
 1e, 2a of 3a, en die zijn niet gebouwd; stilzwijgend weglaten mag niet, dus
 staat het als waarschuwing op het scherm.
 
+### Wat er níét is: volledigheidssignalen
+
+Blokkeren kan alleen op facturen die er zijn. Het gevaarlijkste geval zit daar
+niet bij: een factuur die nooit is aangeleverd staat nergens, dus er valt niets
+op te blokkeren, en de aangifte rekent een te laag bedrag uit dat er volkomen
+correct uitziet.
+
+`volledigheid.py` kijkt daarom naar het patroon in plaats van naar de facturen
+zelf. Drie controles, alle drie **waarschuwend en nooit blokkerend**:
+
+1. **Een leverancier die ineens ontbreekt.** Kwam iemand minstens drie maanden
+   op rij langs, doorlopend tot vlak vóór het kwartaal, en staat hij dit
+   kwartaal nergens? Dan wordt dat gemeld met naam, startmaand en de laatste
+   factuurdatum. Wie al langer dan een half jaar weg is telt niet meer mee.
+2. **Gaten in de factuurnummers.** Per leverancier en per voorloop
+   (`F-2026-`) worden de nummers van het kwartaal op een rij gezet;
+   `001, 002, 004` meldt `F-2026-003`. Verschillende voorlopen zijn
+   verschillende reeksen, en meer dan acht ontbrekende nummers worden
+   samengevat in plaats van opgesomd.
+3. **Ineens veel minder (of meer) facturen.** Het aantal van dit kwartaal
+   tegenover het gemiddelde van de vorige vier. Kwartalen van vóór de
+   allereerste factuur tellen niet mee, en bij minder dan twee kwartalen
+   historie of een gemiddelde onder de drie houdt het systeem zijn mond — dan
+   zegt een verschil niets.
+
+**Elke melding is een vraag, geen conclusie:**
+
+> KPN staat sinds oktober 2025 elke maand op de lijst maar ontbreekt dit
+> kwartaal (laatste factuur 2026-06-05) — is die factuur er wel?
+
+Dat is met opzet. Een leverancier kan opgezegd zijn, een factuurnummer kan bij
+een andere klant horen, en een rustig kwartaal bestaat. Het systeem ziet alleen
+dat er iets anders is dan anders; de eigenaar weet of dat klopt. Op het scherm
+staan ze in een geel blok "Even nakijken", los van de rode blokkades — die
+houden de aangifte wél tegen.
+
+Alle facturen tellen mee voor deze controles, ook die nog nagekeken of
+goedgekeurd moeten worden: de vraag is hier of iets is aangeleverd, niet of het
+al is verwerkt.
+
 ### Het scherm
 
 `/administratie/1/btw` gaat naar het kwartaal waar je nu in zit; met de
@@ -755,7 +795,7 @@ de stack blijft Python, SQLite, Pydantic en pytest.
 
 ### `tests/` — de bewijslast
 
-346 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
+378 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
 onzin-tekst, ontbrekende velden, verkeerde btw-percentages, ambigue
 bedragen, toekomst- en te oude datums, duplicaten, de audit trail bij
 aanmaken en wijzigen, en voor module 2: een PDF zonder tekstlaag, een

@@ -689,3 +689,52 @@ def test_na_het_boeken_ligt_de_rekening_vast_op_het_scherm(web):
     assert "<select" not in pagina
     assert "de rekening ligt vast" in pagina
     assert "tegenboeking" in pagina
+
+
+# --- volledigheidssignalen op het btw-scherm ----------------------------
+
+def maandelijkse_facturen(werkmap, leverancier, maanden, jaar=2026):
+    """Zet rechtstreeks facturen in de database, zonder upload.
+
+    Voor deze tests doet het document er niet toe; het gaat om het
+    patroon over de maanden heen.
+    """
+    from boekhouding import maak_tabellen, sla_factuur_op
+
+    conn = maak_verbinding(str(werkmap / "boekhouding.sqlite"))
+    maak_tabellen(conn)
+    for maand in maanden:
+        sla_factuur_op(
+            conn, 1,
+            {"leverancier": leverancier, "factuurdatum": f"{jaar}-{maand:02d}-05",
+             "factuurnummer": f"{leverancier}-{maand:02d}",
+             "bedrag_excl": "100.00", "btw_percentage": "21",
+             "btw_bedrag": "21.00", "bedrag_incl": "121.00"},
+            vandaag=VANDAAG,
+        )
+    conn.close()
+
+
+def test_het_btw_scherm_stelt_de_vraag_over_een_ontbrekende_leverancier(web, werkmap):
+    maandelijkse_facturen(werkmap, "KPN", [3, 4, 5, 6])
+
+    pagina = web.get("/administratie/1/btw/2026/3").text
+    assert "Even nakijken" in pagina
+    assert "KPN staat sinds maart 2026 elke maand op de lijst" in pagina
+    assert "is die factuur er wel?" in pagina
+    assert "vragen, geen fouten" in pagina
+
+
+def test_signalen_houden_de_aangifte_niet_tegen(web, werkmap):
+    maandelijkse_facturen(werkmap, "KPN", [3, 4, 5, 6])
+
+    pagina = web.get("/administratie/1/btw/2026/3").text
+    assert "Even nakijken" in pagina
+    assert "Er is niets uitgerekend" not in pagina
+    assert "5a · Verschuldigde omzetbelasting" in pagina
+
+
+def test_zonder_signalen_staat_er_geen_lege_kop(web):
+    """Een systeem dat elk kwartaal iets roept wordt weggeklikt."""
+    pagina = web.get("/administratie/1/btw/2026/3").text
+    assert "Even nakijken" not in pagina

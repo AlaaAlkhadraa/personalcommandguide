@@ -25,6 +25,7 @@ Branch: `claude/nl-accounting-invoice-module-f2vzr3`
 | `13-webinterface-draaien.md` | De webinterface starten met testdata: adres, telefoon, elk scherm |
 | `14-efactuur-leesbaar.md` | Fix: een e-factuur leesbaar in het reviewscherm, ruwe XML achter een knop |
 | `15-module6-grootboek-btw.md` | Module 6: grootboek, dubbel boekhouden en de btw-aangifte per kwartaal |
+| `16-volledigheidscontroles.md` | Signalen over wat er níét is aangeleverd: waarschuwen, nooit blokkeren |
 | `CODE-COMPLEET.md` | de volledige actuele code, uitleg en tests |
 | `testfacturen-overzicht.json` | grondwaarheid bij de 10 testfacturen |
 | `schermen/` | schermafbeeldingen van de draaiende webinterface |
@@ -32,7 +33,7 @@ Branch: `claude/nl-accounting-invoice-module-f2vzr3`
 
 ## Waar het nu staat
 
-- **346 pytest-tests, allemaal groen.** De testsuite doet nooit een echte
+- **378 pytest-tests, allemaal groen.** De testsuite doet nooit een echte
   API-aanroep.
 - **Module 1** — schema met Decimal-bedragen, alle rekencontroles, datum- en
   duplicaatcheck. Elke fout wordt `review_nodig` met reden, nooit een
@@ -68,6 +69,12 @@ Branch: `claude/nl-accounting-invoice-module-f2vzr3`
   vaste formules, en rekent níéts uit zolang er in dat kwartaal nog een
   factuur open staat — dan krijg je de lijst met wat er mist. Het resultaat is
   een voorstel; indienen doet de eigenaar zelf.
+- **Volledigheidssignalen** — blokkeren kan alleen op facturen die er zijn. Een
+  factuur die nooit is aangeleverd staat nergens, en dan klopt de aangifte
+  ogenschijnlijk gewoon. Daarom drie controles die het patroon bekijken: een
+  leverancier die elke maand kwam en nu ontbreekt, een gat in een oplopende
+  factuurnummering, en een aantal facturen dat afwijkt van de vorige kwartalen.
+  Ze staan als vragen op het scherm en houden niets tegen.
 - **Testmateriaal** — 10 facturen die deterministisch worden gegenereerd,
   inclusief de lastige gevallen (korting, creditnota, scan zonder tekstlaag,
   ontbrekend factuurnummer, bedragen die niet kloppen).

@@ -19,6 +19,14 @@ Twee dingen zijn hier belangrijker dan het rekenwerk:
 te pas — niet bij het optellen, niet bij het indelen in rubrieken
 (Gouden regel 2).
 
+**Wat er niet is, wordt apart gemeld.** Blokkeren kan alleen op
+facturen die er zijn. Een factuur die nooit is aangeleverd staat
+nergens, en dan rekent de aangifte een te laag bedrag uit dat er
+correct uitziet. Daarom staan er bij het kwartaal ook signalen: vragen
+over leveranciers die ineens ontbreken, gaten in factuurnummers en een
+aantal dat afwijkt van eerdere kwartalen. Zie `volledigheid.py`. Die
+signalen blokkeren niets.
+
 **Bij twijfel geen getal.** Staat er in het kwartaal ook maar één
 factuur die nog niet helemaal rond is, dan wordt er niets uitgerekend.
 Je krijgt een lijst van wat er open staat. Een aangifte die "bijna
@@ -35,6 +43,7 @@ from pydantic import BaseModel
 
 from .database import boeking_bij_factuur, lees_boekingen
 from .rekeningschema import Rekeningschema, rekeningschema_voor_jaar
+from .volledigheid import Signaal, zoek_signalen
 
 NUL = Decimal("0.00")
 
@@ -94,6 +103,10 @@ class Aangifte(BaseModel):
     blokkades: list[Blokkade] = []
     redenen: list[str] = []
     waarschuwingen: list[str] = []
+    # Vragen over wat er misschien ontbreekt. Deze blokkeren niets: een
+    # factuur die nooit is aangeleverd staat nergens, dus er valt ook
+    # niets op te blokkeren — alleen iets over op te merken.
+    signalen: list[Signaal] = []
     aantal_boekingen: int = 0
     voorbehoud: str = VOORBEHOUD
 
@@ -247,6 +260,11 @@ def bereken_aangifte(
     van, tot = kwartaal_grenzen(jaar, kwartaal)
     aangifte = Aangifte(status="geblokkeerd", jaar=jaar, kwartaal=kwartaal,
                         van=van, tot=tot)
+
+    # De volledigheidssignalen staan los van het rekenen: ze gaan over
+    # wat er misschien níét is aangeleverd. Ze horen er dus ook bij als
+    # de aangifte verderop wordt geblokkeerd.
+    aangifte.signalen = zoek_signalen(conn, administratie_id, jaar, kwartaal)
 
     zonder_datum = _facturen_zonder_datum(conn, administratie_id)
     if zonder_datum:
