@@ -1,4 +1,4 @@
-# Boekhouding — modules 1 en 2
+# Boekhouding — modules 1, 2 en 3
 
 Boekhoudsysteem voor Nederlandse zzp'ers.
 AI stelt voor, code valideert, mens beslist: niets wordt hier automatisch
@@ -6,7 +6,8 @@ geboekt — elke fout leidt tot status `review_nodig` met een leesbare reden.
 
 - **Module 1** — factuur-schema, validatie en audit trail
 - **Module 2** — PDF-tekstextractie en veilige bewaring van originelen
-  (nog zonder AI)
+- **Module 3** — AI-extractie van factuurgegevens (het model stelt voor,
+  de code controleert, de mens beslist)
 
 ## Installeren en testen
 
@@ -201,6 +202,89 @@ Databases die vóór module 2 zijn aangemaakt, missen de kolom `document_id`.
 `maak_tabellen` zet die kolom er los bij met `ALTER TABLE ADD COLUMN` als
 hij ontbreekt. Bestaande facturen houden gewoon `NULL` als document.
 
+## Module 3 — AI-extractie
+
+Hier komt voor het eerst een taalmodel in beeld. Het doet precies één ding:
+lezen wat er op de factuur staat. Het rekent niet, het gokt niet, en het
+boekt niets. Alle sommen blijven van `valideer_factuur` uit module 1.
+
+### De sleutel
+
+De API-sleutel staat in een bestand `.env` naast deze README:
+
+```
+ANTHROPIC_API_KEY=...jouw sleutel...
+```
+
+Dat bestand staat in `.gitignore` en hoort daar te blijven. Zie
+`.env.voorbeeld` voor de vorm. De sleutel komt nooit in code, tests, logs
+of foutmeldingen. Komt hij ooit ergens anders terecht — een chat, een
+screenshot, een commit — dan is het antwoord: intrekken en een nieuwe maken.
+
+### Twee invoerpaden
+
+`bepaal_invoerpad(pad)` kiest eerst op bestandssoort en pas daarna op inhoud:
+
+- **Pad A (tekst)** — een PDF mét tekstlaag. De uitgelezen tekst uit module 2
+  gaat naar het model. Dit is het betrouwbaarste pad: de letters staan al
+  vast, het model hoeft niets te herkennen.
+- **Pad B (beeld)** — een foto (`.jpg`, `.jpeg`, `.png`) of een gescande PDF
+  zonder tekstlaag. Het document zelf gaat mee als base64. Een JPG wordt dus
+  meteen als plaatje behandeld en niet eerst als kapotte PDF.
+
+Een bestandssoort die we niet lezen levert `review_nodig` op zonder dat er
+ook maar één aanroep naar het model gaat.
+
+### Het formulier dat het model invult
+
+Het model krijgt geen vrije tekst maar een vast formulier
+(`FactuurExtractie`), en per veld drie dingen:
+
+- `waarde` — wat er staat, of `null` als het er niet staat
+- `zekerheid` — `hoog` of `laag`
+- `reden` — verplicht zodra de zekerheid `laag` is
+
+Regels die het model in de systeemprompt meekrijgt: vul alleen in wat je
+letterlijk ziet, verzin nooit een waarde, leid nooit iets af, reken niets uit,
+en neem bedragen exact over zoals ze op de factuur staan (dus `1.250,00`
+blijft `1.250,00`). Twijfel je of een veld er staat → `null` met een reden.
+
+### Van extractie naar oordeel
+
+`beoordeel_extractie` legt drie soorten redenen naast elkaar:
+
+1. een veld met `waarde: null` → "extractie: … niet op het document gevonden"
+2. een veld met `zekerheid: laag` → "extractie: … met lage zekerheid gelezen"
+3. alles wat `valideer_factuur` uit module 1 vindt: optelling, btw-berekening,
+   datum, duplicaat
+
+Eén reden is genoeg: dan is de hele factuur `review_nodig`. Alleen als er geen
+enkele reden is, staat er `gevalideerd` — en zelfs dan is dat een voorstel,
+geen boeking.
+
+### Audit trail
+
+`sla_extractie_op` bewaart per extractie het gebruikte model, het invoerpad,
+de letterlijke modelrespons, de status met redenen en het `document_id` van
+het bewaarde origineel. Zo is later na te gaan waar een boeking vandaan komt,
+ook als het model intussen is vervangen.
+
+### Testen en meten
+
+- **`python -m pytest`** — de testsuite doet **nooit** een echte API-aanroep.
+  De client wordt nagemaakt en meegegeven; er is geen sleutel voor nodig.
+- **`python scripts/handmatige_api_test.py [bestand]`** — één echte aanroep,
+  om te controleren of de sleutel werkt en wat het model van een echt
+  document maakt.
+- **`python scripts/eval_extractie.py`** — haalt alle tien de testfacturen
+  door de extractie en telt per veld correct / fout / gemist, met een
+  totaalscore. Doet tien echte aanroepen en vraagt daarom eerst om
+  bevestiging (`--ja` slaat de vraag over). Bedragen worden als Decimal
+  vergeleken en datums als datum, zodat de eval de inhoud meet en niet de
+  schrijfwijze. Een waarde die het model invult terwijl die niet op het
+  document staat, telt als fout met de toelichting "verzonnen" — dat is
+  precies het gedrag dat Gouden regel 4 verbiedt.
+
 ## Testmateriaal: synthetische facturen
 
 Voor module 3 (AI-extractie) is materiaal nodig om op te oefenen. Het script
@@ -240,7 +324,7 @@ de stack blijft Python, SQLite, Pydantic en pytest.
 
 ### `tests/` — de bewijslast
 
-75 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
+104 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
 onzin-tekst, ontbrekende velden, verkeerde btw-percentages, ambigue
 bedragen, toekomst- en te oude datums, duplicaten, de audit trail bij
 aanmaken en wijzigen, en voor module 2: een PDF zonder tekstlaag, een

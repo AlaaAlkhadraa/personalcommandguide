@@ -2,6 +2,7 @@
 
 Module 1: factuur-schema, validatie en audit trail.
 Module 2: PDF-tekstextractie en veilige bewaring van originelen.
+Module 3: AI-extractie van factuurgegevens (voorstel, geen boeking).
 
 AI stelt voor, code valideert, mens beslist (Gouden regel 1).
 """
@@ -17,6 +18,15 @@ from .documenten import (
     lees_pdf_tekst,
     opslagpad_voor,
 )
+from .ai_extractie import (
+    ExtractieResultaat,
+    FactuurExtractie,
+    VeldExtractie,
+    beoordeel_extractie,
+    bepaal_invoerpad,
+    extraheer_factuur,
+)
+from .omgeving import api_sleutel, sleutel_aanwezig
 from .database import (
     maak_verbinding,
     maak_tabellen,
@@ -27,6 +37,8 @@ from .database import (
     lees_audit_trail,
     bewaar_document,
     lees_document,
+    sla_extractie_op,
+    lees_extractie,
 )
 
 __all__ = [
@@ -49,4 +61,14 @@ __all__ = [
     "lees_audit_trail",
     "bewaar_document",
     "lees_document",
+    "sla_extractie_op",
+    "lees_extractie",
+    "ExtractieResultaat",
+    "FactuurExtractie",
+    "VeldExtractie",
+    "beoordeel_extractie",
+    "bepaal_invoerpad",
+    "extraheer_factuur",
+    "api_sleutel",
+    "sleutel_aanwezig",
 ]

@@ -118,6 +118,21 @@ def maak_tabellen(conn: sqlite3.Connection) -> None:
         CREATE INDEX IF NOT EXISTS idx_facturen_duplicaat
             ON facturen (administratie_id, leverancier, factuurnummer);
 
+        CREATE TABLE IF NOT EXISTS extracties (
+            id               INTEGER PRIMARY KEY,
+            administratie_id INTEGER NOT NULL REFERENCES administraties(id),
+            document_id      INTEGER REFERENCES documenten(id),
+            model            TEXT NOT NULL,
+            invoerpad        TEXT
+                             CHECK (invoerpad IS NULL
+                                    OR invoerpad IN ('tekst', 'beeld')),
+            ruwe_respons     TEXT NOT NULL,
+            status           TEXT NOT NULL
+                             CHECK (status IN ('gevalideerd', 'review_nodig')),
+            redenen          TEXT NOT NULL DEFAULT '[]',
+            aangemaakt_op    TEXT NOT NULL
+        );
+
         CREATE TABLE IF NOT EXISTS audit_log (
             id               INTEGER PRIMARY KEY,
             administratie_id INTEGER NOT NULL REFERENCES administraties(id),
@@ -519,3 +534,69 @@ def lees_document(conn: sqlite3.Connection, document_id: int) -> dict[str, Any]:
         raise ValueError(f"document {document_id} bestaat niet")
     kolommen = [k[0] for k in cursor.description]
     return dict(zip(kolommen, rij))
+
+
+def sla_extractie_op(
+    conn: sqlite3.Connection,
+    administratie_id: int,
+    resultaat: Any,
+    *,
+    document_id: Optional[int] = None,
+) -> int:
+    """Bewaar een AI-extractie met model, ruwe respons en document_id.
+
+    De volledige audit trail: welk model het was, wat het letterlijk
+    terugstuurde, welk invoerpad is gebruikt en bij welk bewaarde
+    document het hoort. Zo is later na te gaan waar een boeking vandaan
+    komt — ook als het model intussen is vervangen.
+    """
+    tijd = _nu()
+    cursor = conn.execute(
+        """
+        INSERT INTO extracties (
+            administratie_id, document_id, model, invoerpad,
+            ruwe_respons, status, redenen, aangemaakt_op
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            administratie_id,
+            document_id,
+            resultaat.model,
+            resultaat.invoerpad,
+            resultaat.ruwe_respons,
+            resultaat.status,
+            json.dumps(resultaat.redenen, ensure_ascii=False),
+            tijd,
+        ),
+    )
+    extractie_id = cursor.lastrowid
+
+    for veld, waarde in (
+        ("model", resultaat.model),
+        ("invoerpad", resultaat.invoerpad),
+        ("status", resultaat.status),
+        ("document_id", None if document_id is None else str(document_id)),
+    ):
+        conn.execute(
+            """
+            INSERT INTO audit_log (
+                administratie_id, tabel, record_id, actie,
+                veld, oude_waarde, nieuwe_waarde, tijdstip
+            ) VALUES (?, 'extracties', ?, 'aangemaakt', ?, NULL, ?, ?)
+            """,
+            (administratie_id, extractie_id, veld, waarde, tijd),
+        )
+    conn.commit()
+    return extractie_id
+
+
+def lees_extractie(conn: sqlite3.Connection, extractie_id: int) -> dict[str, Any]:
+    """Lees één extractie terug, met de redenen als lijst."""
+    cursor = conn.execute("SELECT * FROM extracties WHERE id = ?", (extractie_id,))
+    rij = cursor.fetchone()
+    if rij is None:
+        raise ValueError(f"extractie {extractie_id} bestaat niet")
+    kolommen = [k[0] for k in cursor.description]
+    extractie = dict(zip(kolommen, rij))
+    extractie["redenen"] = json.loads(extractie["redenen"])
+    return extractie

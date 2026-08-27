@@ -1,3 +1,7 @@
 pydantic>=2
 pypdf>=5
 pytest>=8
+
+# Alleen nodig om echt met het model te praten (module 3). De tests
+# draaien zonder: die maken de client na.
+anthropic>=1
