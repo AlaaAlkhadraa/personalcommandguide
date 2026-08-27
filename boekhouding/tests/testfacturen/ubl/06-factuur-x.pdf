@@ -1,0 +1,140 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R /Names << /EmbeddedFiles << /Names [(factur-x.xml) 7 0 R] >> >> /AF [7 0 R] >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 954 >>
+stream
+BT /F2 15 Tf 56 772 Td (Techniek Groothandel Oost) Tj ET
+BT /F2 20 Tf 443.46 770 Td (FACTUUR) Tj ET
+BT /F1 8.5 Tf 56 742 Td (KvK-nummer: 06081234) Tj ET
+BT /F1 8.5 Tf 56 730 Td (Btw-id: NL801234567B01) Tj ET
+BT /F1 9 Tf 56 682 Td (Factuurnummer:) Tj ET
+BT /F1 9 Tf 481.472 682 Td (EF-2026-0106) Tj ET
+BT /F1 9 Tf 56 668 Td (Factuurdatum:) Tj ET
+BT /F1 9 Tf 492.974 668 Td (06-08-2026) Tj ET
+BT /F1 9 Tf 56 654 Td (Vervaldatum:) Tj ET
+BT /F1 9 Tf 492.974 654 Td (05-09-2026) Tj ET
+0 G 0.8 w 56 632 m 539 632 l S
+BT /F1 9 Tf 56 614 Td (Netwerkapparatuur) Tj ET
+BT /F1 9 Tf 511.478 614 Td (512,50) Tj ET
+BT /F1 9 Tf 340 582 Td (Subtotaal excl. btw) Tj ET
+BT /F1 9 Tf 511.478 582 Td (512,50) Tj ET
+BT /F1 9 Tf 340 567 Td (Btw 21%) Tj ET
+BT /F1 9 Tf 511.478 567 Td (107,63) Tj ET
+BT /F2 10 Tf 340 546 Td (Totaal incl. btw) Tj ET
+BT /F2 10 Tf 508.42 546 Td (620,13) Tj ET
+BT /F1 8 Tf 56 502 Td (Deze factuur bevat een e-factuur als bijlage \(Factur-X\).) Tj ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+7 0 obj
+<< /Type /Filespec /F (factur-x.xml) /UF (factur-x.xml) /AFRelationship /Data /Desc (Factuur als e-factuur) /EF << /F 8 0 R >> >>
+endobj
+8 0 obj
+<< /Type /EmbeddedFile /Subtype /text#2Fxml /Length 3398 >>
+stream
+<?xml version="1.0" encoding="UTF-8"?>
+<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+  xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+  xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+  <cbc:CustomizationID>urn:cen.eu:en16931:2017#compliant#urn:fdc:nen.nl:nlcius:v1.0</cbc:CustomizationID>
+  <cbc:ProfileID>urn:fdc:peppol.eu:2017:poacc:billing:01:1.0</cbc:ProfileID>
+  <cbc:ID>EF-2026-0106</cbc:ID>
+  <cbc:IssueDate>2026-08-06</cbc:IssueDate>
+  <cbc:DueDate>2026-09-05</cbc:DueDate>
+  <cbc:DocumentCurrencyCode>EUR</cbc:DocumentCurrencyCode>
+  <cac:AccountingSupplierParty>
+    <cac:Party>
+      <cbc:EndpointID schemeID="0106">06081234</cbc:EndpointID>
+      <cac:PartyName><cbc:Name>Techniek Groothandel Oost</cbc:Name></cac:PartyName>
+      <cac:PostalAddress>
+        <cbc:StreetName>Industrieweg 45</cbc:StreetName>
+        <cbc:CityName>Hengelo</cbc:CityName>
+        <cbc:PostalZone>7554 NB</cbc:PostalZone>
+        <cac:Country><cbc:IdentificationCode>NL</cbc:IdentificationCode></cac:Country>
+      </cac:PostalAddress>
+      <cac:PartyTaxScheme>
+        <cbc:CompanyID>NL801234567B01</cbc:CompanyID>
+        <cac:TaxScheme><cbc:ID>VAT</cbc:ID></cac:TaxScheme>
+      </cac:PartyTaxScheme>
+      <cac:PartyLegalEntity>
+        <cbc:RegistrationName>Techniek Groothandel Oost</cbc:RegistrationName>
+        <cbc:CompanyID schemeID="0106">06081234</cbc:CompanyID>
+      </cac:PartyLegalEntity>
+    </cac:Party>
+  </cac:AccountingSupplierParty>
+  <cac:AccountingCustomerParty>
+    <cac:Party>
+      <cac:PartyName><cbc:Name>Alkhadraa Advies</cbc:Name></cac:PartyName>
+      <cac:PostalAddress>
+        <cbc:StreetName>Zonnebloemstraat 14</cbc:StreetName>
+        <cbc:CityName>Rotterdam</cbc:CityName>
+        <cbc:PostalZone>3011 AB</cbc:PostalZone>
+        <cac:Country><cbc:IdentificationCode>NL</cbc:IdentificationCode></cac:Country>
+      </cac:PostalAddress>
+    </cac:Party>
+  </cac:AccountingCustomerParty>
+  <cac:TaxTotal>
+    <cbc:TaxAmount currencyID="EUR">107.63</cbc:TaxAmount>
+    <cac:TaxSubtotal>
+      <cbc:TaxableAmount currencyID="EUR">512.50</cbc:TaxableAmount>
+      <cbc:TaxAmount currencyID="EUR">107.63</cbc:TaxAmount>
+      <cac:TaxCategory>
+        <cbc:ID>S</cbc:ID>
+        <cbc:Percent>21.00</cbc:Percent>
+        <cac:TaxScheme><cbc:ID>VAT</cbc:ID></cac:TaxScheme>
+      </cac:TaxCategory>
+    </cac:TaxSubtotal>
+  </cac:TaxTotal>
+  <cac:LegalMonetaryTotal>
+    <cbc:LineExtensionAmount currencyID="EUR">512.50</cbc:LineExtensionAmount>
+    <cbc:TaxExclusiveAmount currencyID="EUR">512.50</cbc:TaxExclusiveAmount>
+    <cbc:TaxInclusiveAmount currencyID="EUR">620.13</cbc:TaxInclusiveAmount>
+    <cbc:PayableAmount currencyID="EUR">620.13</cbc:PayableAmount>
+  </cac:LegalMonetaryTotal>
+  <cac:InvoiceLine>
+    <cbc:ID>1</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="C62">1</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="EUR">512.50</cbc:LineExtensionAmount>
+    <cac:Item>
+      <cbc:Name>Netwerkapparatuur</cbc:Name>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID>S</cbc:ID>
+        <cbc:Percent>21.00</cbc:Percent>
+        <cac:TaxScheme><cbc:ID>VAT</cbc:ID></cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price><cbc:PriceAmount currencyID="EUR">512.50</cbc:PriceAmount></cac:Price>
+  </cac:InvoiceLine>
+</Invoice>
+
+endstream
+endobj
+xref
+0 9
+0000000000 65535 f 
+0000000009 00000 n 
+0000000134 00000 n 
+0000000191 00000 n 
+0000000327 00000 n 
+0000001332 00000 n 
+0000001429 00000 n 
+0000001531 00000 n 
+0000001676 00000 n 
+trailer
+<< /Size 9 /Root 1 0 R >>
+startxref
+5167
+%%EOF

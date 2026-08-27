@@ -3,6 +3,7 @@
 Module 1: factuur-schema, validatie en audit trail.
 Module 2: PDF-tekstextractie en veilige bewaring van originelen.
 Module 3: AI-extractie van factuurgegevens (voorstel, geen boeking).
+Module 4: UBL / e-facturen rechtstreeks uitlezen (zonder AI).
 
 AI stelt voor, code valideert, mens beslist (Gouden regel 1).
 """
@@ -30,6 +31,18 @@ from .ai_extractie import (
     foutreden,
     standaard_model,
 )
+from .ubl import (
+    EfactuurResultaat,
+    UblResultaat,
+    XmlOnveilig,
+    beoordeel_ubl,
+    is_ubl,
+    lees_ubl,
+    lees_ubl_bytes,
+    lees_xml_veilig,
+    verwerk_efactuur,
+)
+from .routering import bestandssoort, routeer_document, zoek_ingebedde_efactuur
 from .omgeving import api_sleutel, sleutel_aanwezig
 from .database import (
     maak_verbinding,
@@ -77,6 +90,18 @@ __all__ = [
     "standaard_model",
     "PROMPT_VERSIE",
     "STANDAARD_MODEL",
+    "EfactuurResultaat",
+    "UblResultaat",
+    "XmlOnveilig",
+    "beoordeel_ubl",
+    "is_ubl",
+    "lees_ubl",
+    "lees_ubl_bytes",
+    "lees_xml_veilig",
+    "verwerk_efactuur",
+    "bestandssoort",
+    "routeer_document",
+    "zoek_ingebedde_efactuur",
     "api_sleutel",
     "sleutel_aanwezig",
 ]

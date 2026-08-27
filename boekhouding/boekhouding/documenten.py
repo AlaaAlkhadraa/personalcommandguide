@@ -26,9 +26,10 @@ from pydantic import BaseModel
 # geheugen zonder problemen.
 BLOK = 1024 * 1024
 
-# Bestandssoorten die we bewaren. Een factuur komt binnen als PDF of
-# als foto/scan; iets anders wordt niet gegokt maar ter review gelegd.
-TOEGESTANE_EXTENSIES = (".pdf", ".jpg", ".jpeg", ".png")
+# Bestandssoorten die we bewaren. Een factuur komt binnen als PDF, als
+# foto/scan, of als e-factuur in XML; iets anders wordt niet gegokt
+# maar ter review gelegd.
+TOEGESTANE_EXTENSIES = (".pdf", ".jpg", ".jpeg", ".png", ".xml")
 
 
 class TekstResultaat(BaseModel):

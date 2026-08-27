@@ -1,0 +1,70 @@
+[
+  {
+    "bestand": "01-standaard-21procent.xml",
+    "waarom": "gewone e-factuur met het hoge tarief",
+    "verwacht": "gevalideerd",
+    "velden": {
+      "leverancier": "Van Dijk ICT-diensten",
+      "factuurnummer": "EF-2026-0101",
+      "factuurdatum": "2026-07-14",
+      "bedrag_excl": "400.00",
+      "btw_percentage": "21.00",
+      "btw_bedrag": "84.00",
+      "bedrag_incl": "484.00"
+    }
+  },
+  {
+    "bestand": "02-diensten-9procent.xml",
+    "waarom": "laag tarief van 9%",
+    "verwacht": "gevalideerd",
+    "velden": {
+      "leverancier": "Bakkerij De Korenaar",
+      "factuurnummer": "EF-2026-0102",
+      "factuurdatum": "2026-07-21",
+      "bedrag_excl": "250.00",
+      "btw_percentage": "9.00",
+      "btw_bedrag": "22.50",
+      "bedrag_incl": "272.50"
+    }
+  },
+  {
+    "bestand": "03-creditnota.xml",
+    "waarom": "CreditNote als hoofdelement; UBL noteert de bedragen positief",
+    "verwacht": "review_nodig",
+    "velden": {
+      "leverancier": "Van Dijk ICT-diensten",
+      "factuurnummer": "EF-2026-0103C",
+      "factuurdatum": "2026-08-04",
+      "bedrag_excl": "400.00",
+      "btw_percentage": "21.00",
+      "btw_bedrag": "84.00",
+      "bedrag_incl": "484.00"
+    }
+  },
+  {
+    "bestand": "04-twee-btw-tarieven.xml",
+    "waarom": "twee TaxSubtotal-blokken: 21% en 9% op één factuur",
+    "verwacht": "review_nodig",
+    "velden": {}
+  },
+  {
+    "bestand": "05-zonder-factuurdatum.xml",
+    "waarom": "verplichte IssueDate ontbreekt",
+    "verwacht": "review_nodig",
+    "velden": {}
+  },
+  {
+    "bestand": "06-factuur-x.pdf",
+    "waarom": "PDF met ingebedde e-factuur; de XML gaat voor op de tekstlaag",
+    "verwacht": "gevalideerd",
+    "velden": {
+      "leverancier": "Techniek Groothandel Oost",
+      "factuurnummer": "EF-2026-0106",
+      "factuurdatum": "2026-08-06",
+      "bedrag_excl": "512.50",
+      "btw_percentage": "21.00",
+      "btw_bedrag": "107.63",
+      "bedrag_incl": "620.13"
+    }
+  }
+]

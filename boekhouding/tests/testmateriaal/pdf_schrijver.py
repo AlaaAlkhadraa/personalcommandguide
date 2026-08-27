@@ -93,11 +93,24 @@ class Pagina:
         return b"\n".join(self._opdrachten)
 
 
-def schrijf_pdf(pagina: Pagina, pad: str | Path) -> Path:
-    """Schrijf één pagina weg als PDF-bestand."""
+def _bouw_pdf(pagina: "Pagina", bijlage: tuple[str, bytes] | None) -> bytes:
+    """Zet de PDF-objecten in elkaar, eventueel met een ingebed bestand.
+
+    Een bijlage maakt hier een Factur-X/ZUGFeRD-achtige PDF van: dezelfde
+    factuur is dan zowel leesbaar voor een mens als machineleesbaar als
+    XML. De XML is dan de betrouwbaarste bron.
+    """
     stroom = pagina.inhoudsstroom()
+    catalogus = b"<< /Type /Catalog /Pages 2 0 R"
+    if bijlage is not None:
+        catalogus += (
+            b" /Names << /EmbeddedFiles << /Names [(" + bijlage[0].encode()
+            + b") 7 0 R] >> >> /AF [7 0 R]"
+        )
+    catalogus += b" >>"
+
     objecten = [
-        b"<< /Type /Catalog /Pages 2 0 R >>",
+        catalogus,
         b"<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
         b"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 "
         + f"{pagina.breedte} {pagina.hoogte}".encode()
@@ -109,6 +122,19 @@ def schrijf_pdf(pagina: Pagina, pad: str | Path) -> Path:
         b"<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold "
         b"/Encoding /WinAnsiEncoding >>",
     ]
+
+    if bijlage is not None:
+        naam, gegevens = bijlage[0].encode(), bijlage[1]
+        objecten.append(
+            b"<< /Type /Filespec /F (" + naam + b") /UF (" + naam
+            + b") /AFRelationship /Data /Desc (Factuur als e-factuur)"
+            b" /EF << /F 8 0 R >> >>"
+        )
+        objecten.append(
+            b"<< /Type /EmbeddedFile /Subtype /text#2Fxml /Length "
+            + str(len(gegevens)).encode() + b" >>\nstream\n" + gegevens
+            + b"\nendstream"
+        )
 
     uit = bytearray(b"%PDF-1.4\n")
     posities = []
@@ -125,8 +151,22 @@ def schrijf_pdf(pagina: Pagina, pad: str | Path) -> Path:
         b"trailer\n<< /Size " + str(aantal).encode() + b" /Root 1 0 R >>\n"
         b"startxref\n" + str(start_xref).encode() + b"\n%%EOF\n"
     )
+    return bytes(uit)
 
+
+def schrijf_pdf(pagina: "Pagina", pad: str | Path) -> Path:
+    """Schrijf één pagina weg als PDF-bestand."""
     pad = Path(pad)
     pad.parent.mkdir(parents=True, exist_ok=True)
-    pad.write_bytes(bytes(uit))
+    pad.write_bytes(_bouw_pdf(pagina, None))
+    return pad
+
+
+def schrijf_pdf_met_bijlage(
+    pagina: "Pagina", pad: str | Path, bijlage_naam: str, bijlage: bytes
+) -> Path:
+    """Schrijf een PDF met een ingebed bestand (Factur-X / ZUGFeRD)."""
+    pad = Path(pad)
+    pad.parent.mkdir(parents=True, exist_ok=True)
+    pad.write_bytes(_bouw_pdf(pagina, (bijlage_naam, bijlage)))
     return pad

@@ -1,4 +1,4 @@
-# Boekhouding — modules 1, 2 en 3
+# Boekhouding — modules 1 t/m 4
 
 Boekhoudsysteem voor Nederlandse zzp'ers.
 AI stelt voor, code valideert, mens beslist: niets wordt hier automatisch
@@ -8,6 +8,7 @@ geboekt — elke fout leidt tot status `review_nodig` met een leesbare reden.
 - **Module 2** — PDF-tekstextractie en veilige bewaring van originelen
 - **Module 3** — AI-extractie van factuurgegevens (het model stelt voor,
   de code controleert, de mens beslist)
+- **Module 4** — UBL / e-facturen rechtstreeks uitlezen, zonder AI
 
 ## Installeren en testen
 
@@ -337,6 +338,94 @@ ook als het model intussen is vervangen.
   gewoon op, klopt met de btw en glipt als `gevalideerd` langs elke controle.
   Factuur 09 (zonder factuurnummer) is daarvoor de testcase.
 
+## Module 4 — UBL / e-facturen
+
+Een e-factuur is XML. De velden staan er letterlijk in mét hun naam:
+`<cbc:IssueDate>2026-07-14</cbc:IssueDate>` is de factuurdatum, punt. Er valt
+dus niets te herkennen, te lezen of te raden. Dit pad is daarmee nauwkeuriger
+dan zowel de tekstlaag als het model, en het kost niets. Er komt geen AI aan
+te pas.
+
+### Routeren op inhoud, niet op naam
+
+`routeer_document(pad)` kijkt naar de eerste bytes van het bestand en, bij
+XML, naar het hoofdelement — niet naar de extensie. Een bestand dat
+`factuur.pdf` heet maar UBL bevat gaat gewoon langs het UBL-pad.
+
+| Wat er in het bestand staat | Route |
+|---|---|
+| XML met `Invoice` of `CreditNote` als hoofdelement | `ubl` |
+| PDF mét ingebedde e-factuur (Factur-X / ZUGFeRD) | `ubl` |
+| PDF met tekstlaag, zonder bijlage | `tekst` |
+| PDF zonder tekstlaag, of een foto | `beeld` |
+| iets anders | geen — `review_nodig` met reden |
+
+De volgorde is bewust: zit er een e-factuur in de PDF, dan wint die van de
+tekstlaag. Zo'n PDF is namelijk twee dingen tegelijk — leesbaar voor de mens,
+en dezelfde factuur als XML voor de computer — en die XML is de betrouwbaarste
+bron.
+
+### Welke velden, en waar ze staan
+
+Ondersteund is UBL 2.1 zoals gebruikt in NLCIUS en EN 16931:
+
+| Veld | Waar het in het XML-bestand staat |
+|---|---|
+| factuurnummer | `cbc:ID` |
+| factuurdatum | `cbc:IssueDate` |
+| leverancier | `cac:AccountingSupplierParty/cac:Party/cac:PartyName/cbc:Name`, anders `cac:PartyLegalEntity/cbc:RegistrationName` |
+| bedrag_excl | `cac:LegalMonetaryTotal/cbc:TaxExclusiveAmount` |
+| bedrag_incl | `cac:LegalMonetaryTotal/cbc:TaxInclusiveAmount` |
+| btw_bedrag | `cac:TaxTotal/cac:TaxSubtotal/cbc:TaxAmount` |
+| btw_percentage | `cac:TaxSubtotal/cac:TaxCategory/cbc:Percent` |
+
+Ontbreekt een element, of staat er iets onleesbaars in (een bedrag dat geen
+getal is), dan volgt `review_nodig` met een reden die het element bij naam
+noemt — er wordt nooit een standaardwaarde ingevuld.
+
+**Meerdere btw-tarieven** op één factuur (meerdere `TaxSubtotal`-blokken)
+worden **niet** opgeteld tot één percentage. Het schema kent er één, dus dan
+gaat de factuur naar review met de gevonden tarieven erbij. Optellen zou een
+getal opleveren dat op geen enkele regel van de factuur staat.
+
+**Een creditnota** wordt herkend aan het hoofdelement `CreditNote`. UBL
+schrijft daar positieve bedragen voor; het documentsoort draagt het minteken.
+Ons schema kent geen documentsoort, dus die omkering doet de code niet zelf:
+dat zou een teruggave als kosten kunnen boeken. De velden worden gelezen zoals
+ze er staan en de factuur gaat naar review met de vraag of de tekens moeten
+worden omgedraaid.
+
+Daarna gaan alle bedragen door **dezelfde `valideer_factuur` van module 1**.
+Ook een e-factuur wordt nagerekend: optelling, btw-berekening, datum en
+duplicaatcheck.
+
+### Veilig XML lezen (XXE)
+
+XML kent "entiteiten": afkortingen die je bovenaan een bestand definieert.
+Twee aanvallen misbruiken dat.
+
+1. **XXE** — een entiteit die naar een bestand of netwerkadres wijst
+   (`file:///etc/passwd`). De parser haalt die inhoud op en zet hem in het
+   document. Zo laat een factuur die iemand je toestuurt je schijf leeglopen.
+2. **Uitdijende entiteiten** ("billion laughs") — een entiteit die zichzelf
+   steeds herhaalt. Een bestand van een paar regels vreet dan al het geheugen.
+
+De standaardparser van Python haalt externe bestanden niet op, maar breidt
+interne entiteiten wél uit — de tweede aanval werkt daar dus gewoon. Ik heb
+dat nagemeten voordat ik iets bouwde. In plaats van per aanval een
+verdediging weigert `lees_xml_veilig` daarom het hele stuk waarin entiteiten
+worden gedeclareerd: de DTD. Een UBL-factuur heeft er nooit een nodig, dus
+dat kost niets. Er zijn tests met een echte XXE-poging (die een testbestand
+met geheime inhoud probeert te lezen), een billion-laughs-poging en een
+externe DTD.
+
+### Testbestanden
+
+`python tests/genereer_ubl_testbestanden.py` maakt zes bestanden in
+`tests/testfacturen/ubl/`: 21%, 9%, een creditnota, één met twee btw-tarieven,
+één zonder `IssueDate`, en een Factur-X-PDF met de e-factuur als bijlage —
+die laatste heeft óók een tekstlaag, zodat te testen is dat de XML voorgaat.
+
 ## Testmateriaal: synthetische facturen
 
 Voor module 3 (AI-extractie) is materiaal nodig om op te oefenen. Het script
@@ -376,7 +465,7 @@ de stack blijft Python, SQLite, Pydantic en pytest.
 
 ### `tests/` — de bewijslast
 
-157 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
+192 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
 onzin-tekst, ontbrekende velden, verkeerde btw-percentages, ambigue
 bedragen, toekomst- en te oude datums, duplicaten, de audit trail bij
 aanmaken en wijzigen, en voor module 2: een PDF zonder tekstlaag, een
