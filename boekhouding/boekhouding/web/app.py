@@ -28,7 +28,9 @@ from ..database import (
     maak_verbinding,
     wijzig_factuur,
 )
+from ..ubl import te_groot
 from ..verwerking import verwerk_upload
+from .ubl_weergave import Weergave, leesbare_ubl
 
 SJABLONEN = Jinja2Templates(directory=str(Path(__file__).parent / "templates"))
 
@@ -236,6 +238,16 @@ def maak_app(
                 conn, lees_factuur, factuur_id, administratie_id, "factuur"
             )
             extractie = lees_extractie_bij_document(conn, factuur["document_id"])
+            # Het document gaat langs dezelfde eigenaarscontrole als de
+            # factuur; ook voor het tonen ervan geldt dat een nummer in
+            # de adresbalk niets van een andere administratie ontsluit.
+            registratie = (
+                hoort_bij_administratie(
+                    conn, lees_document, factuur["document_id"],
+                    administratie_id, "document",
+                )
+                if factuur["document_id"] else None
+            )
         finally:
             conn.close()
 
@@ -245,6 +257,7 @@ def maak_app(
             factuur=factuur,
             velden=_veldregels(factuur, extractie),
             extractie=extractie,
+            ubl=_ubl_weergave(registratie),
             melding=melding,
             mag_goedkeuren=(
                 factuur["status"] == "gevalideerd"
@@ -320,6 +333,35 @@ def maak_app(
         )
 
     return app
+
+
+def _ubl_weergave(registratie: Optional[dict]) -> Optional[Weergave]:
+    """Maak de leesbare weergave als het bewaarde bestand een e-factuur is.
+
+    Alleen voor XML: een PDF laat de browser zelf zien, en dat is precies
+    wat je naast de velden wilt hebben. XML toonde de browser als ruwe
+    tekst vol naamruimten, en daar valt niets mee te vergelijken.
+
+    Het bewaarde bestand wordt alleen gelezen, nooit gewijzigd. De
+    grootte wordt eerst op de schijf gecontroleerd, net als in module 4:
+    een bestand van honderden megabytes hoort de reviewpagina niet op te
+    houden.
+    """
+    if registratie is None:
+        return None
+    pad = Path(registratie["opslagpad"])
+    if pad.suffix.lower() != ".xml" or not pad.is_file():
+        return None
+
+    reden = te_groot(pad.stat().st_size)
+    if reden is not None:
+        return Weergave(status="onleesbaar", reden=reden)
+    try:
+        return leesbare_ubl(pad.read_bytes())
+    except OSError as fout:
+        return Weergave(
+            status="onleesbaar", reden=f"kon het bestand niet lezen: {fout}"
+        )
 
 
 def _veldregels(factuur: dict, extractie: Optional[dict]) -> list[dict]:

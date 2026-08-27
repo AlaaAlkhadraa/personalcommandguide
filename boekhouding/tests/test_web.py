@@ -483,3 +483,73 @@ def test_ook_bij_de_ai_route_geen_dubbele_redenen(werkmap):
     pagina = web.get("/administratie/1/factuur/1").text
     assert pagina.count("factuurnummer niet op het document gevonden") == 1
     assert pagina.count("factuurnummer: Field required") == 1
+
+
+# --- de e-factuur leesbaar in het reviewscherm --------------------------
+
+def test_een_efactuur_wordt_leesbaar_getoond(web):
+    """Ruwe XML naast de velden leggen kan een mens niet; leesbaar wel."""
+    upload(web, UBLMAP / "01-standaard-21procent.xml", "goed.xml")
+    pagina = web.get("/administratie/1/factuur/1").text
+
+    leesbaar = pagina.split('class="bron-lees"')[1].split("<details")[0]
+    assert "Factuurdatum" in leesbaar
+    assert "cbc:IssueDate" in leesbaar          # de UBL-herkomst staat erbij
+    assert "2026-07-14" in leesbaar
+    assert "Van Dijk ICT-diensten" in leesbaar
+    assert "Onderhoud werkplekken juli 2026" in leesbaar   # de factuurregel
+
+
+def test_de_ruwe_xml_zit_achter_een_knop(web):
+    upload(web, UBLMAP / "01-standaard-21procent.xml", "goed.xml")
+    pagina = web.get("/administratie/1/factuur/1").text
+
+    assert "<details" in pagina and "Toon XML" in pagina
+    achter_de_knop = pagina.split("<details")[1]
+    assert "cbc:IssueDate&gt;2026-07-14" in achter_de_knop
+
+
+def test_een_ontbrekend_veld_wordt_benoemd_en_niet_ingevuld(web):
+    upload(web, UBLMAP / "05-zonder-factuurdatum.xml", "zonder-datum.xml")
+    leesbaar = web.get("/administratie/1/factuur/1").text.split("<details")[0]
+
+    assert "niet in het bestand" in leesbaar
+    assert "cbc:IssueDate" in leesbaar
+
+
+def test_beide_btw_tarieven_staan_in_beeld(web):
+    upload(web, UBLMAP / "04-twee-btw-tarieven.xml", "twee.xml")
+    leesbaar = web.get("/administratie/1/factuur/1").text.split("<details")[0]
+
+    assert "Btw-percentage 1" in leesbaar and "21.00%" in leesbaar
+    assert "Btw-percentage 2" in leesbaar and "9.00%" in leesbaar
+
+
+def test_een_pdf_houdt_gewoon_het_documentvenster(web):
+    """Een PDF laat de browser zelf zien; daar is niets aan te verbeteren."""
+    upload(web, maak_pdf("Factuur 2026-0412"), "factuur.pdf")
+    pagina = web.get("/administratie/1/factuur/1").text
+
+    assert '<object class="bron"' in pagina
+    assert 'class="bron-lees"' not in pagina
+
+
+def test_het_bewaarde_bestand_verandert_niet_door_het_tonen(web, werkmap):
+    """De weergave is weergave; het origineel blijft byte voor byte staan."""
+    origineel = (UBLMAP / "01-standaard-21procent.xml").read_bytes()
+    upload(web, origineel, "goed.xml")
+    web.get("/administratie/1/factuur/1")
+
+    bewaard = list((werkmap / "opslag").rglob("*.xml"))
+    assert len(bewaard) == 1
+    assert bewaard[0].read_bytes() == origineel
+
+
+def test_de_weergave_lekt_niets_van_een_andere_administratie(twee_administraties):
+    """Het leesvenster leest het bewaarde bestand; dat mag geen nieuwe ingang zijn."""
+    antwoord = twee_administraties.get("/administratie/2/factuur/1")
+    assert antwoord.status_code == 404
+    # Factuur 1 is een e-factuur van Van Dijk en hoort bij administratie 1;
+    # er mag geen letter van dat bestand in dit antwoord staan.
+    assert "Van Dijk" not in antwoord.text
+    assert "cbc:" not in antwoord.text

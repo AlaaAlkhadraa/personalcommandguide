@@ -18,15 +18,87 @@
 <div class="twee-kolommen">
 
   <div>
-    {% if factuur.document_id %}
+    {% if not factuur.document_id %}
+      <div class="kaart leeg">Geen origineel document bij deze factuur.</div>
+    {% elif ubl %}
+      {# Een e-factuur is XML. De browser toont die als een muur ruwe
+         tekst, dus zetten we de velden leesbaar onder elkaar, met de
+         UBL-plek waar elk veld vandaan komt. Het bewaarde bestand
+         verandert niet: dat blijft het origineel. #}
+      <div class="bron-kolom">
+       <div class="bron-lees">
+        {% if ubl.status == 'leesbaar' %}
+          <div>
+            <div class="onder" style="color:var(--zacht);font-size:14px;margin-bottom:10px">
+              {{ ubl.soortnaam }} — zoals de leverancier hem verstuurde
+            </div>
+
+            {% for groep in ubl.groepen %}
+              <div class="ubl-groep">
+                <h3>{{ groep.titel }}</h3>
+                {% for rij in groep.rijen %}
+                  <div class="ubl-rij {% if rij.waarde is none %}ontbreekt{% endif %}">
+                    <div>
+                      <div class="label">{{ rij.label }}</div>
+                      <div class="herkomst">{{ rij.herkomst }}</div>
+                    </div>
+                    <div class="waarde">
+                      {%- if rij.waarde is none -%}niet in het bestand{%- else -%}{{ rij.waarde }}{%- endif -%}
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            {% endfor %}
+
+            {% if ubl.regels %}
+              <div class="ubl-groep">
+                <h3>Factuurregels</h3>
+                {% for regel in ubl.regels %}
+                  <div class="ubl-rij">
+                    <div>
+                      <div class="label">
+                        {% if regel.nummer %}{{ regel.nummer }}. {% endif %}
+                        {{ regel.omschrijving or "zonder omschrijving" }}
+                      </div>
+                      <div class="herkomst">
+                        {% if regel.aantal %}aantal {{ regel.aantal }}{% endif %}
+                        {% if regel.btw_percentage %} &middot; btw {{ regel.btw_percentage }}{% endif %}
+                      </div>
+                    </div>
+                    <div class="waarde">{{ regel.bedrag or "" }}</div>
+                  </div>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+        {% else %}
+          <div class="waarschuwing">
+            Dit XML-bestand is niet als e-factuur te lezen: {{ ubl.reden }}
+          </div>
+        {% endif %}
+       </div>
+
+        <details class="kaart">
+          <summary>Toon XML</summary>
+          <p class="onder" style="color:var(--zacht);font-size:14px">
+            Het originele bestand blijft leidend voor de bewaarplicht en de
+            audit trail. Hierboven staat alleen een leesbare weergave ervan.
+            {% if ubl.xml_afgekapt %}
+              Alleen het begin wordt getoond;
+              <a href="/administratie/{{ administratie_id }}/document/{{ factuur.document_id }}">open het hele bestand</a>.
+            {% endif %}
+          </p>
+          <pre class="xml">{{ ubl.ruwe_xml }}</pre>
+          <a class="knop tweede" href="/administratie/{{ administratie_id }}/document/{{ factuur.document_id }}">Origineel downloaden</a>
+        </details>
+      </div>
+    {% else %}
       <object class="bron" data="/administratie/{{ administratie_id }}/document/{{ factuur.document_id }}">
         <p style="padding:14px">
           Het document kan hier niet worden getoond.
           <a href="/administratie/{{ administratie_id }}/document/{{ factuur.document_id }}">Open het in een nieuw tabblad</a>.
         </p>
       </object>
-    {% else %}
-      <div class="kaart leeg">Geen origineel document bij deze factuur.</div>
     {% endif %}
   </div>
 

@@ -38,6 +38,7 @@ BRONBESTANDEN = [
     "boekhouding/database.py",
     "boekhouding/web/__init__.py",
     "boekhouding/web/app.py",
+    "boekhouding/web/ubl_weergave.py",
     "boekhouding/web/templates/basis.html",
     "boekhouding/web/templates/overzicht.html",
     "boekhouding/web/templates/upload.html",
@@ -65,6 +66,7 @@ BRONBESTANDEN = [
     "tests/test_ai_extractie.py",
     "tests/test_eval_logica.py",
     "tests/test_ubl.py",
+    "tests/test_ubl_weergave.py",
     "tests/test_web.py",
     "pytest.ini",
     "requirements.txt",
@@ -78,6 +80,10 @@ TAAL = {".py": "python", ".html": "html", ".json": "json", ".ini": "ini"}
 # Wat nooit in het archief hoort: gecompileerde rommel, de lokale
 # database met eigen gegevens, en een .env met een sleutel erin.
 OVERSLAAN_MAPPEN = {"__pycache__", ".pytest_cache", "gegevens", ".git"}
+
+# Wel in het archief, niet in CODE-COMPLEET.md: dit zijn testbestanden
+# (facturen en hun grondwaarheid), geen code om te lezen.
+GEEN_CODE = {"testfacturen"}
 OVERSLAAN_NAMEN = {".env"}
 OVERSLAAN_EXTENSIES = {".pyc", ".sqlite", ".db"}
 
@@ -121,6 +127,34 @@ def maak_code_compleet() -> Path:
         print("LET OP, deze bestanden staan in de lijst maar bestaan niet:")
         for naam in ontbreekt:
             print(f"  {naam}")
+
+    # Een nieuw bestand mag niet uit de bundel vallen omdat iemand vergat
+    # het aan de lijst hierboven toe te voegen. Wat niet in de lijst
+    # staat, komt er achteraan bij — met een melding, zodat het alsnog op
+    # zijn plek gezet kan worden.
+    vergeten = [
+        pad for pad in sorted(BASIS.rglob("*"))
+        if pad.is_file()
+        and pad.suffix in TAAL
+        and str(pad.relative_to(BASIS)) not in BRONBESTANDEN
+        and not any(
+            deel in OVERSLAAN_MAPPEN or deel in GEEN_CODE
+            for deel in pad.relative_to(BASIS).parts
+        )
+    ]
+    if vergeten:
+        print("Deze bestanden stonden niet in de lijst en zijn achteraan gezet:")
+        delen.append("## Nog niet ingedeeld")
+        delen.append("")
+        for pad in vergeten:
+            naam = pad.relative_to(BASIS)
+            print(f"  {naam}")
+            delen.append(f"## `boekhouding/{naam}`")
+            delen.append("")
+            delen.append(f"```{taal_van(pad)}")
+            delen.append(pad.read_text(encoding="utf-8").rstrip())
+            delen.append("```")
+            delen.append("")
 
     doel = OPLEVERINGEN / "CODE-COMPLEET.md"
     doel.write_text("\n".join(delen), encoding="utf-8")

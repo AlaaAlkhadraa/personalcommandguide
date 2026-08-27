@@ -79,12 +79,58 @@
   }
   .bron { width: 100%; height: 60vh; border: 1px solid var(--lijn); border-radius: 10px; }
   .bron img { width: 100%; height: auto; display: block; }
+  /* De leesbare weergave van een e-factuur (XML). Zelfde hoogte als
+     het documentvenster ernaast, zodat de twee kolommen uitlijnen. */
+  .bron-lees {
+    background: var(--vel); border: 1px solid var(--lijn); border-radius: 10px;
+    padding: 16px; margin-bottom: 14px;
+    /* Eigen schuifgebied, zodat de velden ernaast bereikbaar blijven
+       zonder eerst het hele document door te scrollen. De rand staat om
+       het schuifgebied zelf, anders lijkt een afgekapte regel een fout
+       in plaats van "hier gaat het verder". */
+    max-height: 55vh; overflow: auto; overscroll-behavior: contain;
+  }
+  .ubl-groep + .ubl-groep { margin-top: 16px; }
+  .ubl-groep h3 {
+    margin: 0 0 6px; font-size: 13px; text-transform: uppercase;
+    letter-spacing: .04em; color: var(--zacht);
+  }
+  .ubl-rij {
+    display: flex; justify-content: space-between; gap: 12px;
+    padding: 7px 0; border-top: 1px solid var(--lijn);
+  }
+  .ubl-rij .label { font-size: 15px; }
+  .ubl-rij .herkomst {
+    color: var(--zacht); font-size: 12px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    word-break: break-all;
+  }
+  .ubl-rij .waarde {
+    font-variant-numeric: tabular-nums; font-weight: 600; text-align: right;
+    white-space: nowrap;
+  }
+  .ubl-rij.ontbreekt .waarde {
+    color: var(--let-op); font-weight: 400; font-style: italic;
+  }
+  details summary {
+    cursor: pointer; font-weight: 600; min-height: 24px; padding: 4px 0;
+  }
+  pre.xml {
+    overflow: auto; max-height: 45vh; background: var(--achter);
+    border: 1px solid var(--lijn); border-radius: 8px; padding: 12px;
+    font-size: 12px; line-height: 1.45; white-space: pre;
+  }
   .knoppen { display: flex; gap: 10px; flex-wrap: wrap; }
   .knoppen button, .knoppen a.knop { flex: 1 1 160px; text-align: center; }
   .leeg { color: var(--zacht); text-align: center; padding: 40px 10px; }
   @media (min-width: 860px) {
     .twee-kolommen { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    /* Zonder min-width:0 duwt brede inhoud (de ruwe XML) de kolom op en
+       wordt de andere kolom smaller. */
+    .twee-kolommen > * { min-width: 0; }
     .bron { height: 78vh; position: sticky; top: 80px; }
+    .bron-kolom { position: sticky; top: 80px; }
+    .bron-lees { max-height: 62vh; }
   }
 </style>
 </head>

@@ -447,11 +447,7 @@ login**, dus alleen op je eigen netwerk doen.
 `scripts/vul_testdata.py` maakt de administratie aan en laadt de vijf
 UBL-testbestanden in. Die werken zonder API-sleutel: bij een e-factuur staan
 de velden letterlijk in het bestand. Met `--met-pdf` komt de Factur-X-PDF er
-ook bij, en die is de moeite waard: een PDF wordt in het reviewscherm netjes
-naast de velden getoond, terwijl een los XML-bestand daar als onleesbare
-platte tekst verschijnt (de browser laat de tags weg). Voor XML is dat
-documentvenster dus nog niet bruikbaar — een leesbare weergave van de
-XML-velden is een openstaand punt.
+ook bij, zodat je ook ziet hoe het scherm eruitziet met een echte PDF ernaast.
 
 FastAPI met server-side HTML (Jinja2). Geen React, geen build-stap: je start
 hem en het werkt. De opmaak staat in één `<style>`-blok in `basis.html` en is
@@ -474,7 +470,8 @@ bewaren → routeren → uitlezen → valideren en opslaan. Een e-factuur gaat
 rechtstreeks, een PDF of foto langs het model.
 
 **Reviewscherm** (`/administratie/1/factuur/1`) — het belangrijkste scherm. Links het originele
-document, ingebed in de pagina. Rechts alle uitgelezen velden, stuk voor stuk
+document: een PDF of foto ingebed in de pagina, een e-factuur als leesbare
+weergave met de ruwe XML achter een knop (zie hieronder). Rechts alle uitgelezen velden, stuk voor stuk
 bewerkbaar. Bij elk veld staat hoe zeker het model was; een veld met lage
 zekerheid krijgt een rode rand, een merkje en de reden eronder. Bovenaan staan
 alle openstaande punten in gewone taal.
@@ -484,6 +481,50 @@ alleen als er geen openstaande punten meer zijn — de knop staat dan letterlijk
 uit, en ook als iemand het formulier tóch verstuurt weigert
 `keur_factuur_goed` het. De code bepaalt of het mág, de mens bepaalt of het
 gebeurt.
+
+### Een e-factuur leesbaar naast de velden
+
+Het reviewscherm bestaat om te vergelijken: links wat de leverancier stuurde,
+rechts wat het systeem eruit heeft gehaald. Bij een PDF gaat dat vanzelf. Maar
+een e-factuur is XML, en die toonde de browser als een muur ruwe tekst vol
+naamruimten (`urn:cen.eu:en16931…`). Daar valt niets mee te vergelijken, en
+daarmee deed het belangrijkste scherm zijn werk niet.
+
+`web/ubl_weergave.py` zet diezelfde XML om in leesbare regels, gegroepeerd
+zoals een factuur is opgebouwd: kop, leverancier, afnemer, bedragen, btw,
+betaling, en daaronder de factuurregels. Bij elk veld staat waar het in UBL
+vandaan komt:
+
+```
+Factuurdatum            2026-08-04
+cbc:IssueDate
+```
+
+Die herkomst staat er niet voor de sier. Een leverancier kiest zijn eigen
+indeling, en zie je waar een waarde vandaan komt, dan zie je ook waarom het
+systeem hem zo heeft gelezen. De getoonde tekst ís bovendien het pad waarmee
+gezocht is (`_et_pad` vertaalt hem naar wat ElementTree wil), dus label en
+werkelijkheid kunnen niet uit elkaar gaan lopen. Daar is een test voor.
+
+Twee keuzes die het gedrag bepalen:
+
+- **Kernvelden staan er altijd**, ook als ze ontbreken — dan juist. Bij de
+  factuur zonder datum staat er letterlijk "Factuurdatum — niet in het
+  bestand". Dat een verplicht veld ontbreekt, is precies wat de mens moet
+  zien. Aanvullende velden (vervaldatum, IBAN, KvK) staan er alleen als ze in
+  het bestand voorkomen, anders wordt het scherm een lijst met strepen.
+- **Er wordt niets opgeteld en niets omgezet.** Bij twee btw-tarieven op één
+  factuur staan beide tarieven met hun grondslag en bedrag onder elkaar, en
+  geen van beide wordt als hét btw-veld gepresenteerd. Bij een creditnota
+  blijven de bedragen positief staan zoals UBL ze noteert. De weergavelaag
+  toont; de mens beslist.
+
+De ruwe XML blijft één klik weg, achter **Toon XML**. Voor de bewaarplicht en
+de audit trail blijft het originele bestand leidend, en dat verandert niet:
+er wordt alleen gelezen. Ook de weergave leest de XML met `lees_xml_veilig` —
+geen DTD, geen entiteiten, geen externe verwijzingen — zodat een aanval niet
+alsnog via het leesvenster binnenkomt. Voor een PDF verandert er niets: die
+laat de browser zelf zien, en dat is precies wat je naast de velden wilt.
 
 ### Waar de logica staat
 
@@ -586,7 +627,7 @@ de stack blijft Python, SQLite, Pydantic en pytest.
 
 ### `tests/` — de bewijslast
 
-243 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
+270 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
 onzin-tekst, ontbrekende velden, verkeerde btw-percentages, ambigue
 bedragen, toekomst- en te oude datums, duplicaten, de audit trail bij
 aanmaken en wijzigen, en voor module 2: een PDF zonder tekstlaag, een
@@ -3289,7 +3330,9 @@ from ..database import (
     maak_verbinding,
     wijzig_factuur,
 )
+from ..ubl import te_groot
 from ..verwerking import verwerk_upload
+from .ubl_weergave import Weergave, leesbare_ubl
 
 SJABLONEN = Jinja2Templates(directory=str(Path(__file__).parent / "templates"))
 
@@ -3497,6 +3540,16 @@ def maak_app(
                 conn, lees_factuur, factuur_id, administratie_id, "factuur"
             )
             extractie = lees_extractie_bij_document(conn, factuur["document_id"])
+            # Het document gaat langs dezelfde eigenaarscontrole als de
+            # factuur; ook voor het tonen ervan geldt dat een nummer in
+            # de adresbalk niets van een andere administratie ontsluit.
+            registratie = (
+                hoort_bij_administratie(
+                    conn, lees_document, factuur["document_id"],
+                    administratie_id, "document",
+                )
+                if factuur["document_id"] else None
+            )
         finally:
             conn.close()
 
@@ -3506,6 +3559,7 @@ def maak_app(
             factuur=factuur,
             velden=_veldregels(factuur, extractie),
             extractie=extractie,
+            ubl=_ubl_weergave(registratie),
             melding=melding,
             mag_goedkeuren=(
                 factuur["status"] == "gevalideerd"
@@ -3583,6 +3637,35 @@ def maak_app(
     return app
 
 
+def _ubl_weergave(registratie: Optional[dict]) -> Optional[Weergave]:
+    """Maak de leesbare weergave als het bewaarde bestand een e-factuur is.
+
+    Alleen voor XML: een PDF laat de browser zelf zien, en dat is precies
+    wat je naast de velden wilt hebben. XML toonde de browser als ruwe
+    tekst vol naamruimten, en daar valt niets mee te vergelijken.
+
+    Het bewaarde bestand wordt alleen gelezen, nooit gewijzigd. De
+    grootte wordt eerst op de schijf gecontroleerd, net als in module 4:
+    een bestand van honderden megabytes hoort de reviewpagina niet op te
+    houden.
+    """
+    if registratie is None:
+        return None
+    pad = Path(registratie["opslagpad"])
+    if pad.suffix.lower() != ".xml" or not pad.is_file():
+        return None
+
+    reden = te_groot(pad.stat().st_size)
+    if reden is not None:
+        return Weergave(status="onleesbaar", reden=reden)
+    try:
+        return leesbare_ubl(pad.read_bytes())
+    except OSError as fout:
+        return Weergave(
+            status="onleesbaar", reden=f"kon het bestand niet lezen: {fout}"
+        )
+
+
 def _veldregels(factuur: dict, extractie: Optional[dict]) -> list[dict]:
     """Zet de velden klaar voor het scherm, met zekerheid per veld."""
     zekerheden = _zekerheden(extractie)
@@ -3622,6 +3705,356 @@ def _zekerheden(extractie: Optional[dict]) -> dict[str, dict]:
         for veld, gegeven in ruw.items()
         if isinstance(gegeven, dict) and "zekerheid" in gegeven
     }
+```
+
+## `boekhouding/boekhouding/web/ubl_weergave.py`
+
+```python
+"""Een e-factuur leesbaar tonen in het reviewscherm.
+
+Dit is puur weergave. Er wordt niets gerekend, niets gecorrigeerd en
+niets opgeslagen: het bewaarde bestand blijft byte voor byte wat de
+leverancier stuurde, want dat is wat de bewaarplicht en de audit trail
+leidend maken.
+
+Waarom dit nodig is: het reviewscherm bestaat om te vergelijken. Links
+hoort te staan wat de leverancier stuurde, rechts wat het systeem eruit
+heeft gehaald. Bij een PDF gaat dat vanzelf, maar een e-factuur is XML,
+en die toonde de browser als een muur ruwe tekst vol naamruimten. Daar
+valt niets mee te vergelijken.
+
+Wat hier gebeurt is dus: dezelfde XML, maar dan als leesbare regels, met
+bij elk veld de UBL-plek waar het vandaan komt ("Factuurdatum
+(cbc:IssueDate): 2026-08-04"). Die herkomst staat erbij omdat een
+leverancier zijn eigen indeling kiest: zie je waar een waarde vandaan
+komt, dan zie je ook waarom het systeem hem zo heeft gelezen. De ruwe
+XML blijft één klik weg.
+
+De XML wordt hier met dezelfde veilige lezer geopend als in module 4:
+geen DTD, geen entiteiten, geen externe verwijzingen. Een aanval mag
+niet alsnog langs de weergavelaag binnenkomen.
+"""
+
+import xml.etree.ElementTree as ET
+from typing import Literal, Optional
+
+from pydantic import BaseModel
+
+from ..ubl import CAC, CBC, XmlOnveilig, is_ubl, lees_xml_veilig
+
+# Hoeveel ruwe XML we hoogstens in de pagina zetten. Een e-factuur is
+# een paar kilobyte; is het bestand veel groter, dan tonen we het begin
+# en verwijzen we naar het origineel. Anders zou één raar bestand de
+# reviewpagina onbruikbaar traag maken.
+MAX_TOON_BYTES = 100 * 1024
+
+# De voorvoegsels die in een herkomstpad mogen staan.
+NAAMRUIMTEN = {"cbc": CBC, "cac": CAC}
+
+SOORTNAMEN = {
+    "factuur": "Factuur (UBL Invoice)",
+    "creditnota": "Creditnota (UBL CreditNote)",
+}
+
+# De velden per groep, in de volgorde waarin ze op een factuur staan.
+# Per veld: het label op het scherm, waar het in UBL staat, en of het
+# een kernveld is.
+#
+# Een kernveld is een veld dat het systeem zelf uitleest en rechts in
+# het formulier zet. Die regel staat er altijd, ook als hij ontbreekt —
+# dan juist: dat een verplicht veld er niet in staat, is precies wat de
+# mens moet zien. De overige velden staan er alleen als ze in het
+# bestand voorkomen, anders wordt het scherm een lijst lege regels.
+#
+# Sommige velden mogen op twee plekken staan; dan staan beide paden
+# hier, in dezelfde volgorde waarin module 4 ze ook probeert.
+GROEPEN: list[tuple[str, list[tuple[str, tuple[str, ...], bool]]]] = [
+    ("Kop", [
+        ("Factuurnummer", ("cbc:ID",), True),
+        ("Factuurdatum", ("cbc:IssueDate",), True),
+        ("Vervaldatum", ("cbc:DueDate",), False),
+        ("Valuta", ("cbc:DocumentCurrencyCode",), False),
+        ("Toelichting", ("cbc:Note",), False),
+    ]),
+    ("Leverancier", [
+        ("Naam", (
+            "cac:AccountingSupplierParty/cac:Party/cac:PartyName/cbc:Name",
+            "cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity"
+            "/cbc:RegistrationName",
+        ), True),
+        ("Btw-nummer", (
+            "cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme"
+            "/cbc:CompanyID",
+        ), False),
+        ("Handelsregister", (
+            "cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity"
+            "/cbc:CompanyID",
+        ), False),
+        ("Plaats", (
+            "cac:AccountingSupplierParty/cac:Party/cac:PostalAddress"
+            "/cbc:CityName",
+        ), False),
+    ]),
+    ("Afnemer", [
+        ("Naam", (
+            "cac:AccountingCustomerParty/cac:Party/cac:PartyName/cbc:Name",
+            "cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity"
+            "/cbc:RegistrationName",
+        ), False),
+    ]),
+    ("Bedragen", [
+        ("Som van de regels", (
+            "cac:LegalMonetaryTotal/cbc:LineExtensionAmount",
+        ), False),
+        ("Bedrag excl. btw", (
+            "cac:LegalMonetaryTotal/cbc:TaxExclusiveAmount",
+        ), True),
+        ("Totaal incl. btw", (
+            "cac:LegalMonetaryTotal/cbc:TaxInclusiveAmount",
+        ), True),
+        ("Te betalen", ("cac:LegalMonetaryTotal/cbc:PayableAmount",), False),
+    ]),
+    ("Betaling", [
+        ("IBAN", (
+            "cac:PaymentMeans/cac:PayeeFinancialAccount/cbc:ID",
+        ), False),
+        ("Betalingskenmerk", ("cac:PaymentMeans/cbc:PaymentID",), False),
+    ]),
+]
+
+# De factuurregels heten anders in een creditnota dan in een factuur.
+REGELELEMENT = {"factuur": "InvoiceLine", "creditnota": "CreditNoteLine"}
+AANTALELEMENT = {"factuur": "InvoicedQuantity", "creditnota": "CreditedQuantity"}
+
+
+class Rij(BaseModel):
+    """Eén veld uit de e-factuur, zoals het op het scherm komt."""
+
+    label: str
+    herkomst: str
+    waarde: Optional[str] = None
+    kern: bool = False
+
+
+class Groep(BaseModel):
+    titel: str
+    rijen: list[Rij]
+
+
+class Regel(BaseModel):
+    """Eén factuurregel."""
+
+    nummer: Optional[str] = None
+    omschrijving: Optional[str] = None
+    aantal: Optional[str] = None
+    btw_percentage: Optional[str] = None
+    bedrag: Optional[str] = None
+
+
+class Weergave(BaseModel):
+    """Wat het reviewscherm van een e-factuur laat zien."""
+
+    status: Literal["leesbaar", "onleesbaar"]
+    reden: str = ""
+    documentsoort: Optional[str] = None
+    soortnaam: str = ""
+    groepen: list[Groep] = []
+    regels: list[Regel] = []
+    ruwe_xml: str = ""
+    xml_afgekapt: bool = False
+
+
+def _et_pad(herkomst: str) -> str:
+    """Vertaal 'cac:Party/cbc:Name' naar het pad dat ElementTree wil.
+
+    Zo hoeft de herkomst maar op één plek te staan: de tekst die de
+    gebruiker ziet, is letterlijk het pad waarmee gezocht is. Ze kunnen
+    dus niet uit elkaar gaan lopen.
+    """
+    stukken = []
+    for stuk in herkomst.split("/"):
+        voorvoegsel, _, naam = stuk.partition(":")
+        stukken.append(f"{{{NAAMRUIMTEN[voorvoegsel]}}}{naam}")
+    return "/".join(stukken)
+
+
+def _tekst(element: Optional[ET.Element]) -> Optional[str]:
+    if element is None or element.text is None:
+        return None
+    return element.text.strip() or None
+
+
+def _zoek(wortel: ET.Element, herkomsten: tuple[str, ...]) -> tuple[Optional[str], str]:
+    """Zoek de eerste plek waar dit veld staat; geef (waarde, herkomst).
+
+    Staat het nergens, dan komt de eerste (meest gebruikelijke) plek
+    terug, zodat het scherm kan tonen wáár het gemist wordt.
+    """
+    for herkomst in herkomsten:
+        waarde = _tekst(wortel.find(_et_pad(herkomst)))
+        if waarde is not None:
+            return waarde, herkomst
+    return None, herkomsten[0]
+
+
+def _btw_groep(wortel: ET.Element) -> Groep:
+    """Bouw de btw-groep; bij meerdere tarieven komen ze allemaal in beeld.
+
+    Er wordt hier bewust niets opgeteld en niets gekozen. Staan er twee
+    tarieven op één factuur, dan ziet de mens ze allebei staan — dat is
+    dezelfde boodschap die module 4 als reden meegeeft, maar dan met de
+    getallen erbij.
+    """
+    subtotalen = wortel.findall(f"{{{CAC}}}TaxTotal/{{{CAC}}}TaxSubtotal")
+    if not subtotalen:
+        return Groep(
+            titel="Btw",
+            rijen=[
+                Rij(
+                    label="Btw-percentage",
+                    herkomst="cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory/cbc:Percent",
+                    kern=True,
+                ),
+                Rij(
+                    label="Btw-bedrag",
+                    herkomst="cac:TaxTotal/cac:TaxSubtotal/cbc:TaxAmount",
+                    kern=True,
+                ),
+            ],
+        )
+
+    meerdere = len(subtotalen) > 1
+    rijen: list[Rij] = []
+    for nummer, subtotaal in enumerate(subtotalen, start=1):
+        # Bij één tarief is er niets te nummeren; bij meerdere wel, want
+        # dan moet zichtbaar zijn welk bedrag bij welk tarief hoort.
+        merk = f" {nummer}" if meerdere else ""
+        percentage = _tekst(
+            subtotaal.find(f"{{{CAC}}}TaxCategory/{{{CBC}}}Percent")
+        )
+        rijen.append(Rij(
+            label=f"Btw-percentage{merk}",
+            herkomst="cac:TaxSubtotal/cac:TaxCategory/cbc:Percent",
+            waarde=f"{percentage}%" if percentage else None,
+            kern=not meerdere,
+        ))
+        rijen.append(Rij(
+            label=f"Grondslag{merk}",
+            herkomst="cac:TaxSubtotal/cbc:TaxableAmount",
+            waarde=_tekst(subtotaal.find(f"{{{CBC}}}TaxableAmount")),
+        ))
+        rijen.append(Rij(
+            label=f"Btw-bedrag{merk}",
+            herkomst="cac:TaxSubtotal/cbc:TaxAmount",
+            waarde=_tekst(subtotaal.find(f"{{{CBC}}}TaxAmount")),
+            kern=not meerdere,
+        ))
+    return Groep(titel="Btw", rijen=rijen)
+
+
+def _regels(wortel: ET.Element, soort: str) -> list[Regel]:
+    """Haal de factuurregels op, als het bestand ze heeft."""
+    naam = REGELELEMENT.get(soort)
+    if naam is None:
+        return []
+    aantalnaam = AANTALELEMENT[soort]
+
+    regels = []
+    for element in wortel.findall(f"{{{CAC}}}{naam}"):
+        item = element.find(f"{{{CAC}}}Item")
+        percentage = None
+        if item is not None:
+            percentage = _tekst(
+                item.find(f"{{{CAC}}}ClassifiedTaxCategory/{{{CBC}}}Percent")
+            )
+        regels.append(Regel(
+            nummer=_tekst(element.find(f"{{{CBC}}}ID")),
+            omschrijving=_tekst(item.find(f"{{{CBC}}}Name")) if item is not None else None,
+            aantal=_tekst(element.find(f"{{{CBC}}}{aantalnaam}")),
+            btw_percentage=f"{percentage}%" if percentage else None,
+            bedrag=_tekst(element.find(f"{{{CBC}}}LineExtensionAmount")),
+        ))
+    return regels
+
+
+def ruwe_tekst(inhoud: bytes) -> tuple[str, bool]:
+    """Maak de XML toonbaar als tekst; geef (tekst, is_afgekapt).
+
+    Een e-factuur mag ook UTF-16 zijn. Lukt geen van beide, dan tonen we
+    wat er te tonen valt met vervangingstekens in plaats van niets: dit
+    is een leesvenster, geen verwerkingsstap.
+    """
+    afgekapt = len(inhoud) > MAX_TOON_BYTES
+    stuk = inhoud[:MAX_TOON_BYTES]
+    for codering in ("utf-8", "utf-16"):
+        try:
+            return stuk.decode(codering), afgekapt
+        except (UnicodeDecodeError, UnicodeError):
+            continue
+    return stuk.decode("utf-8", errors="replace"), afgekapt
+
+
+def leesbare_ubl(inhoud: bytes) -> Weergave:
+    """Zet een e-factuur om in leesbare regels; geeft nooit een exception.
+
+    Lukt het lezen niet — kapotte XML, een DTD-aanval, of gewoon een
+    XML-bestand dat geen e-factuur is — dan komt dat als reden terug en
+    blijft alleen de ruwe tekst over. Er wordt nooit iets ingevuld of
+    gegokt.
+    """
+    ruw, afgekapt = ruwe_tekst(inhoud)
+
+    def onleesbaar(reden: str) -> Weergave:
+        return Weergave(
+            status="onleesbaar", reden=reden, ruwe_xml=ruw, xml_afgekapt=afgekapt
+        )
+
+    try:
+        wortel = lees_xml_veilig(inhoud)
+    except XmlOnveilig as fout:
+        return onleesbaar(f"onveilige XML geweigerd: {fout}")
+    except ET.ParseError as fout:
+        return onleesbaar(f"het XML-bestand is niet leesbaar: {fout}")
+    except Exception as fout:  # nooit een exception uit de weergavelaag
+        return onleesbaar(f"kon het XML-bestand niet lezen: {type(fout).__name__}: {fout}")
+
+    soort = is_ubl(wortel)
+    if soort is None:
+        return onleesbaar(
+            f"het hoofdelement '{wortel.tag}' is geen UBL Invoice of CreditNote"
+        )
+
+    groepen: list[Groep] = []
+    for titel, velden in GROEPEN:
+        rijen = []
+        for label, herkomsten, kern in velden:
+            waarde, herkomst = _zoek(wortel, herkomsten)
+            # Een kernveld staat er altijd, ook leeg: dat het ontbreekt
+            # is juist informatie. Een aanvullend veld alleen als het er
+            # is, anders wordt het scherm een lijst met strepen.
+            if waarde is None and not kern:
+                continue
+            rijen.append(
+                Rij(label=label, herkomst=herkomst, waarde=waarde, kern=kern)
+            )
+        if titel == "Bedragen":
+            # De btw hoort tussen de bedragen en de betaling in.
+            if rijen:
+                groepen.append(Groep(titel=titel, rijen=rijen))
+            groepen.append(_btw_groep(wortel))
+            continue
+        if rijen:
+            groepen.append(Groep(titel=titel, rijen=rijen))
+
+    return Weergave(
+        status="leesbaar",
+        documentsoort=soort,
+        soortnaam=SOORTNAMEN.get(soort, soort),
+        groepen=groepen,
+        regels=_regels(wortel, soort),
+        ruwe_xml=ruw,
+        xml_afgekapt=afgekapt,
+    )
 ```
 
 ## `boekhouding/boekhouding/web/templates/basis.html`
@@ -3708,12 +4141,58 @@ def _zekerheden(extractie: Optional[dict]) -> dict[str, dict]:
   }
   .bron { width: 100%; height: 60vh; border: 1px solid var(--lijn); border-radius: 10px; }
   .bron img { width: 100%; height: auto; display: block; }
+  /* De leesbare weergave van een e-factuur (XML). Zelfde hoogte als
+     het documentvenster ernaast, zodat de twee kolommen uitlijnen. */
+  .bron-lees {
+    background: var(--vel); border: 1px solid var(--lijn); border-radius: 10px;
+    padding: 16px; margin-bottom: 14px;
+    /* Eigen schuifgebied, zodat de velden ernaast bereikbaar blijven
+       zonder eerst het hele document door te scrollen. De rand staat om
+       het schuifgebied zelf, anders lijkt een afgekapte regel een fout
+       in plaats van "hier gaat het verder". */
+    max-height: 55vh; overflow: auto; overscroll-behavior: contain;
+  }
+  .ubl-groep + .ubl-groep { margin-top: 16px; }
+  .ubl-groep h3 {
+    margin: 0 0 6px; font-size: 13px; text-transform: uppercase;
+    letter-spacing: .04em; color: var(--zacht);
+  }
+  .ubl-rij {
+    display: flex; justify-content: space-between; gap: 12px;
+    padding: 7px 0; border-top: 1px solid var(--lijn);
+  }
+  .ubl-rij .label { font-size: 15px; }
+  .ubl-rij .herkomst {
+    color: var(--zacht); font-size: 12px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    word-break: break-all;
+  }
+  .ubl-rij .waarde {
+    font-variant-numeric: tabular-nums; font-weight: 600; text-align: right;
+    white-space: nowrap;
+  }
+  .ubl-rij.ontbreekt .waarde {
+    color: var(--let-op); font-weight: 400; font-style: italic;
+  }
+  details summary {
+    cursor: pointer; font-weight: 600; min-height: 24px; padding: 4px 0;
+  }
+  pre.xml {
+    overflow: auto; max-height: 45vh; background: var(--achter);
+    border: 1px solid var(--lijn); border-radius: 8px; padding: 12px;
+    font-size: 12px; line-height: 1.45; white-space: pre;
+  }
   .knoppen { display: flex; gap: 10px; flex-wrap: wrap; }
   .knoppen button, .knoppen a.knop { flex: 1 1 160px; text-align: center; }
   .leeg { color: var(--zacht); text-align: center; padding: 40px 10px; }
   @media (min-width: 860px) {
     .twee-kolommen { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    /* Zonder min-width:0 duwt brede inhoud (de ruwe XML) de kolom op en
+       wordt de andere kolom smaller. */
+    .twee-kolommen > * { min-width: 0; }
     .bron { height: 78vh; position: sticky; top: 80px; }
+    .bron-kolom { position: sticky; top: 80px; }
+    .bron-lees { max-height: 62vh; }
   }
 </style>
 </head>
@@ -3831,15 +4310,87 @@ def _zekerheden(extractie: Optional[dict]) -> dict[str, dict]:
 <div class="twee-kolommen">
 
   <div>
-    {% if factuur.document_id %}
+    {% if not factuur.document_id %}
+      <div class="kaart leeg">Geen origineel document bij deze factuur.</div>
+    {% elif ubl %}
+      {# Een e-factuur is XML. De browser toont die als een muur ruwe
+         tekst, dus zetten we de velden leesbaar onder elkaar, met de
+         UBL-plek waar elk veld vandaan komt. Het bewaarde bestand
+         verandert niet: dat blijft het origineel. #}
+      <div class="bron-kolom">
+       <div class="bron-lees">
+        {% if ubl.status == 'leesbaar' %}
+          <div>
+            <div class="onder" style="color:var(--zacht);font-size:14px;margin-bottom:10px">
+              {{ ubl.soortnaam }} — zoals de leverancier hem verstuurde
+            </div>
+
+            {% for groep in ubl.groepen %}
+              <div class="ubl-groep">
+                <h3>{{ groep.titel }}</h3>
+                {% for rij in groep.rijen %}
+                  <div class="ubl-rij {% if rij.waarde is none %}ontbreekt{% endif %}">
+                    <div>
+                      <div class="label">{{ rij.label }}</div>
+                      <div class="herkomst">{{ rij.herkomst }}</div>
+                    </div>
+                    <div class="waarde">
+                      {%- if rij.waarde is none -%}niet in het bestand{%- else -%}{{ rij.waarde }}{%- endif -%}
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            {% endfor %}
+
+            {% if ubl.regels %}
+              <div class="ubl-groep">
+                <h3>Factuurregels</h3>
+                {% for regel in ubl.regels %}
+                  <div class="ubl-rij">
+                    <div>
+                      <div class="label">
+                        {% if regel.nummer %}{{ regel.nummer }}. {% endif %}
+                        {{ regel.omschrijving or "zonder omschrijving" }}
+                      </div>
+                      <div class="herkomst">
+                        {% if regel.aantal %}aantal {{ regel.aantal }}{% endif %}
+                        {% if regel.btw_percentage %} &middot; btw {{ regel.btw_percentage }}{% endif %}
+                      </div>
+                    </div>
+                    <div class="waarde">{{ regel.bedrag or "" }}</div>
+                  </div>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+        {% else %}
+          <div class="waarschuwing">
+            Dit XML-bestand is niet als e-factuur te lezen: {{ ubl.reden }}
+          </div>
+        {% endif %}
+       </div>
+
+        <details class="kaart">
+          <summary>Toon XML</summary>
+          <p class="onder" style="color:var(--zacht);font-size:14px">
+            Het originele bestand blijft leidend voor de bewaarplicht en de
+            audit trail. Hierboven staat alleen een leesbare weergave ervan.
+            {% if ubl.xml_afgekapt %}
+              Alleen het begin wordt getoond;
+              <a href="/administratie/{{ administratie_id }}/document/{{ factuur.document_id }}">open het hele bestand</a>.
+            {% endif %}
+          </p>
+          <pre class="xml">{{ ubl.ruwe_xml }}</pre>
+          <a class="knop tweede" href="/administratie/{{ administratie_id }}/document/{{ factuur.document_id }}">Origineel downloaden</a>
+        </details>
+      </div>
+    {% else %}
       <object class="bron" data="/administratie/{{ administratie_id }}/document/{{ factuur.document_id }}">
         <p style="padding:14px">
           Het document kan hier niet worden getoond.
           <a href="/administratie/{{ administratie_id }}/document/{{ factuur.document_id }}">Open het in een nieuw tabblad</a>.
         </p>
       </object>
-    {% else %}
-      <div class="kaart leeg">Geen origineel document bij deze factuur.</div>
     {% endif %}
   </div>
 
@@ -4144,6 +4695,7 @@ BRONBESTANDEN = [
     "boekhouding/database.py",
     "boekhouding/web/__init__.py",
     "boekhouding/web/app.py",
+    "boekhouding/web/ubl_weergave.py",
     "boekhouding/web/templates/basis.html",
     "boekhouding/web/templates/overzicht.html",
     "boekhouding/web/templates/upload.html",
@@ -4171,6 +4723,7 @@ BRONBESTANDEN = [
     "tests/test_ai_extractie.py",
     "tests/test_eval_logica.py",
     "tests/test_ubl.py",
+    "tests/test_ubl_weergave.py",
     "tests/test_web.py",
     "pytest.ini",
     "requirements.txt",
@@ -4184,6 +4737,10 @@ TAAL = {".py": "python", ".html": "html", ".json": "json", ".ini": "ini"}
 # Wat nooit in het archief hoort: gecompileerde rommel, de lokale
 # database met eigen gegevens, en een .env met een sleutel erin.
 OVERSLAAN_MAPPEN = {"__pycache__", ".pytest_cache", "gegevens", ".git"}
+
+# Wel in het archief, niet in CODE-COMPLEET.md: dit zijn testbestanden
+# (facturen en hun grondwaarheid), geen code om te lezen.
+GEEN_CODE = {"testfacturen"}
 OVERSLAAN_NAMEN = {".env"}
 OVERSLAAN_EXTENSIES = {".pyc", ".sqlite", ".db"}
 
@@ -4227,6 +4784,34 @@ def maak_code_compleet() -> Path:
         print("LET OP, deze bestanden staan in de lijst maar bestaan niet:")
         for naam in ontbreekt:
             print(f"  {naam}")
+
+    # Een nieuw bestand mag niet uit de bundel vallen omdat iemand vergat
+    # het aan de lijst hierboven toe te voegen. Wat niet in de lijst
+    # staat, komt er achteraan bij — met een melding, zodat het alsnog op
+    # zijn plek gezet kan worden.
+    vergeten = [
+        pad for pad in sorted(BASIS.rglob("*"))
+        if pad.is_file()
+        and pad.suffix in TAAL
+        and str(pad.relative_to(BASIS)) not in BRONBESTANDEN
+        and not any(
+            deel in OVERSLAAN_MAPPEN or deel in GEEN_CODE
+            for deel in pad.relative_to(BASIS).parts
+        )
+    ]
+    if vergeten:
+        print("Deze bestanden stonden niet in de lijst en zijn achteraan gezet:")
+        delen.append("## Nog niet ingedeeld")
+        delen.append("")
+        for pad in vergeten:
+            naam = pad.relative_to(BASIS)
+            print(f"  {naam}")
+            delen.append(f"## `boekhouding/{naam}`")
+            delen.append("")
+            delen.append(f"```{taal_van(pad)}")
+            delen.append(pad.read_text(encoding="utf-8").rstrip())
+            delen.append("```")
+            delen.append("")
 
     doel = OPLEVERINGEN / "CODE-COMPLEET.md"
     doel.write_text("\n".join(delen), encoding="utf-8")
@@ -8335,6 +8920,238 @@ def test_utf16_wordt_als_xml_herkend(groot_eerst):
     assert bestandssoort(_als_utf16(DTD_AANVAL, groot_eerst)) == "xml"
 ```
 
+## `boekhouding/tests/test_ubl_weergave.py`
+
+```python
+"""Tests voor de leesbare weergave van een e-factuur (weergavelaag).
+
+Deze laag mag niets bepalen: geen bedragen optellen, geen ontbrekend
+veld invullen, geen bestand aanpassen. Wat hij wél moet doen is tonen
+wat er in het bestand staat, met de UBL-plek erbij, zodat een mens het
+naast de uitgelezen velden kan leggen.
+"""
+
+from pathlib import Path
+
+import pytest
+
+from boekhouding.ubl import MAX_XML_BYTES
+from boekhouding.web.ubl_weergave import (
+    GROEPEN,
+    MAX_TOON_BYTES,
+    NAAMRUIMTEN,
+    _et_pad,
+    leesbare_ubl,
+)
+from test_ubl import DTD_AANVAL, _als_utf16
+
+UBLMAP = Path(__file__).parent / "testfacturen" / "ubl"
+
+
+def lees(naam: str):
+    return leesbare_ubl((UBLMAP / naam).read_bytes())
+
+
+def _rijen(weergave, groep=None):
+    """De rijen, eventueel beperkt tot één groep.
+
+    Beperken kan nodig zijn: "Naam" staat zowel onder Leverancier als
+    onder Afnemer, en op het scherm zegt de kop erboven welke het is.
+    """
+    return [
+        rij
+        for g in weergave.groepen
+        if groep is None or g.titel == groep
+        for rij in g.rijen
+    ]
+
+
+def rijen(weergave, groep=None) -> dict[str, object]:
+    return {rij.label: rij.waarde for rij in _rijen(weergave, groep)}
+
+
+def herkomsten(weergave, groep=None) -> dict[str, str]:
+    return {rij.label: rij.herkomst for rij in _rijen(weergave, groep)}
+
+
+# --- de gewone factuur --------------------------------------------------
+
+def test_de_velden_komen_leesbaar_terug():
+    weergave = lees("01-standaard-21procent.xml")
+    assert weergave.status == "leesbaar"
+    assert weergave.documentsoort == "factuur"
+
+    waarden = rijen(weergave)
+    assert waarden["Factuurnummer"] == "EF-2026-0101"
+    assert waarden["Factuurdatum"] == "2026-07-14"
+    assert rijen(weergave, "Leverancier")["Naam"] == "Van Dijk ICT-diensten"
+    assert waarden["Bedrag excl. btw"] == "400.00"
+    assert waarden["Totaal incl. btw"] == "484.00"
+    assert waarden["Btw-percentage"] == "21.00%"
+    assert waarden["Btw-bedrag"] == "84.00"
+
+
+def test_bij_elk_veld_staat_waar_het_vandaan_komt():
+    weergave = lees("01-standaard-21procent.xml")
+    waar = herkomsten(weergave)
+    assert waar["Factuurdatum"] == "cbc:IssueDate"
+    assert waar["Bedrag excl. btw"] == "cac:LegalMonetaryTotal/cbc:TaxExclusiveAmount"
+    assert herkomsten(weergave, "Leverancier")["Naam"] == (
+        "cac:AccountingSupplierParty/cac:Party/cac:PartyName/cbc:Name"
+    )
+
+
+def test_de_getoonde_herkomst_is_het_pad_waarmee_gezocht_is():
+    """Anders kan het label gaan afwijken van waar de waarde vandaan komt."""
+    for _titel, velden in GROEPEN:
+        for _label, paden, _kern in velden:
+            for pad in paden:
+                vertaald = _et_pad(pad)
+                assert vertaald.count("{") == len(pad.split("/"))
+                for voorvoegsel in pad.split("/"):
+                    assert voorvoegsel.split(":")[0] in NAAMRUIMTEN
+
+
+def test_de_factuurregels_komen_erbij():
+    weergave = lees("01-standaard-21procent.xml")
+    assert len(weergave.regels) == 1
+    regel = weergave.regels[0]
+    assert regel.omschrijving == "Onderhoud werkplekken juli 2026"
+    assert regel.aantal == "1"
+    assert regel.bedrag == "400.00"
+    assert regel.btw_percentage == "21.00%"
+
+
+def test_een_aanvullend_veld_zonder_waarde_wordt_weggelaten():
+    """Anders wordt het scherm een lijst met lege regels."""
+    weergave = lees("01-standaard-21procent.xml")
+    # Deze factuur heeft geen cac:PaymentMeans, dus geen IBAN-regel.
+    assert "IBAN" not in rijen(weergave)
+    assert all(groep.titel != "Betaling" for groep in weergave.groepen)
+
+
+# --- de lastige gevallen ------------------------------------------------
+
+def test_een_ontbrekend_kernveld_blijft_zichtbaar():
+    """Dat een verplicht veld er niet in staat, is juist wat je wilt zien."""
+    weergave = lees("05-zonder-factuurdatum.xml")
+    waarden = rijen(weergave)
+    assert "Factuurdatum" in waarden
+    assert waarden["Factuurdatum"] is None
+    assert herkomsten(weergave)["Factuurdatum"] == "cbc:IssueDate"
+
+
+def test_twee_btw_tarieven_worden_allebei_getoond():
+    weergave = lees("04-twee-btw-tarieven.xml")
+    waarden = rijen(weergave)
+    assert waarden["Btw-percentage 1"] == "21.00%"
+    assert waarden["Btw-bedrag 1"] == "21.00"
+    assert waarden["Btw-percentage 2"] == "9.00%"
+    assert waarden["Btw-bedrag 2"] == "18.00"
+
+
+def test_bij_twee_tarieven_wordt_er_niets_opgeteld():
+    """De weergavelaag rekent niet; 21 + 18 verschijnt hier nergens."""
+    weergave = lees("04-twee-btw-tarieven.xml")
+    alle = [rij.waarde for groep in weergave.groepen for rij in groep.rijen]
+    assert "39.00" not in alle
+    # En geen van beide tarieven wordt als hét btw-veld gepresenteerd.
+    btw = [g for g in weergave.groepen if g.titel == "Btw"][0]
+    assert not any(rij.kern for rij in btw.rijen)
+
+
+def test_een_creditnota_wordt_als_creditnota_getoond():
+    weergave = lees("03-creditnota.xml")
+    assert weergave.documentsoort == "creditnota"
+    assert "Creditnota" in weergave.soortnaam
+    # De regels heten in een creditnota anders; ze horen er toch te staan.
+    assert len(weergave.regels) == 1
+    assert weergave.regels[0].omschrijving
+
+
+def test_er_wordt_geen_teken_omgezet():
+    """UBL noteert een creditnota positief; dat blijft hier ook zo staan."""
+    weergave = lees("03-creditnota.xml")
+    assert rijen(weergave)["Totaal incl. btw"] == "484.00"
+
+
+# --- de ruwe XML --------------------------------------------------------
+
+def test_de_ruwe_xml_blijft_beschikbaar():
+    weergave = lees("01-standaard-21procent.xml")
+    assert "<cbc:IssueDate>2026-07-14</cbc:IssueDate>" in weergave.ruwe_xml
+    assert weergave.xml_afgekapt is False
+
+
+def test_een_heel_groot_bestand_wordt_afgekapt():
+    opvulling = b"<!-- " + b"x" * (MAX_TOON_BYTES + 1000) + b" -->"
+    inhoud = (UBLMAP / "01-standaard-21procent.xml").read_bytes() + opvulling
+
+    weergave = leesbare_ubl(inhoud)
+    assert weergave.xml_afgekapt is True
+    assert len(weergave.ruwe_xml.encode("utf-8")) <= MAX_TOON_BYTES
+
+
+def test_boven_de_grens_van_module4_wordt_niet_gelezen():
+    """Dezelfde grens als bij het verwerken; ook de weergave leest niet door."""
+    inhoud = b"<Invoice>" + b" " * (MAX_XML_BYTES + 1) + b"</Invoice>"
+    weergave = leesbare_ubl(inhoud)
+    assert weergave.status == "onleesbaar"
+    assert "groter dan de grens" in weergave.reden
+
+
+def test_utf16_wordt_leesbaar_getoond():
+    tekst = (UBLMAP / "01-standaard-21procent.xml").read_text(encoding="utf-8")
+    tekst = tekst.replace('encoding="UTF-8"', 'encoding="UTF-16"')
+
+    weergave = leesbare_ubl(_als_utf16(tekst, groot_eerst=False))
+    assert weergave.status == "leesbaar"
+    assert rijen(weergave)["Factuurnummer"] == "EF-2026-0101"
+    assert "IssueDate" in weergave.ruwe_xml
+
+
+# --- wat er niet doorheen mag ------------------------------------------
+
+def test_een_dtd_aanval_wordt_ook_in_de_weergave_geweigerd():
+    """De weergavelaag mag geen tweede, zwakkere ingang worden."""
+    aanval = (
+        b'<?xml version="1.0"?>\n'
+        b'<!DOCTYPE Invoice [ <!ENTITY lek SYSTEM "file:///etc/passwd"> ]>\n'
+        b"<Invoice><ID>&lek;</ID></Invoice>"
+    )
+    weergave = leesbare_ubl(aanval)
+    assert weergave.status == "onleesbaar"
+    assert "DTD" in weergave.reden
+    assert weergave.groepen == []
+    assert "root:" not in str(weergave.model_dump())
+
+
+@pytest.mark.parametrize("groot_eerst", [False, True], ids=["utf-16-le", "utf-16-be"])
+def test_dezelfde_aanval_in_utf16_ketst_ook_af(groot_eerst):
+    weergave = leesbare_ubl(_als_utf16(DTD_AANVAL, groot_eerst))
+    assert weergave.status == "onleesbaar"
+    assert "DTD" in weergave.reden
+
+
+def test_xml_dat_geen_efactuur_is_wordt_niet_gelezen():
+    weergave = leesbare_ubl(b"<html><body>geen factuur</body></html>")
+    assert weergave.status == "onleesbaar"
+    assert "geen UBL" in weergave.reden
+    # De ruwe tekst blijft wel te zien; een mens moet kunnen kijken.
+    assert "geen factuur" in weergave.ruwe_xml
+
+
+def test_kapotte_xml_geeft_geen_exception():
+    weergave = leesbare_ubl(b"<Invoice><cbc:ID>kapot")
+    assert weergave.status == "onleesbaar"
+    assert weergave.reden
+
+
+def test_leeg_bestand_geeft_geen_exception():
+    weergave = leesbare_ubl(b"")
+    assert weergave.status == "onleesbaar"
+```
+
 ## `boekhouding/tests/test_web.py`
 
 ```python
@@ -8823,6 +9640,76 @@ def test_ook_bij_de_ai_route_geen_dubbele_redenen(werkmap):
     pagina = web.get("/administratie/1/factuur/1").text
     assert pagina.count("factuurnummer niet op het document gevonden") == 1
     assert pagina.count("factuurnummer: Field required") == 1
+
+
+# --- de e-factuur leesbaar in het reviewscherm --------------------------
+
+def test_een_efactuur_wordt_leesbaar_getoond(web):
+    """Ruwe XML naast de velden leggen kan een mens niet; leesbaar wel."""
+    upload(web, UBLMAP / "01-standaard-21procent.xml", "goed.xml")
+    pagina = web.get("/administratie/1/factuur/1").text
+
+    leesbaar = pagina.split('class="bron-lees"')[1].split("<details")[0]
+    assert "Factuurdatum" in leesbaar
+    assert "cbc:IssueDate" in leesbaar          # de UBL-herkomst staat erbij
+    assert "2026-07-14" in leesbaar
+    assert "Van Dijk ICT-diensten" in leesbaar
+    assert "Onderhoud werkplekken juli 2026" in leesbaar   # de factuurregel
+
+
+def test_de_ruwe_xml_zit_achter_een_knop(web):
+    upload(web, UBLMAP / "01-standaard-21procent.xml", "goed.xml")
+    pagina = web.get("/administratie/1/factuur/1").text
+
+    assert "<details" in pagina and "Toon XML" in pagina
+    achter_de_knop = pagina.split("<details")[1]
+    assert "cbc:IssueDate&gt;2026-07-14" in achter_de_knop
+
+
+def test_een_ontbrekend_veld_wordt_benoemd_en_niet_ingevuld(web):
+    upload(web, UBLMAP / "05-zonder-factuurdatum.xml", "zonder-datum.xml")
+    leesbaar = web.get("/administratie/1/factuur/1").text.split("<details")[0]
+
+    assert "niet in het bestand" in leesbaar
+    assert "cbc:IssueDate" in leesbaar
+
+
+def test_beide_btw_tarieven_staan_in_beeld(web):
+    upload(web, UBLMAP / "04-twee-btw-tarieven.xml", "twee.xml")
+    leesbaar = web.get("/administratie/1/factuur/1").text.split("<details")[0]
+
+    assert "Btw-percentage 1" in leesbaar and "21.00%" in leesbaar
+    assert "Btw-percentage 2" in leesbaar and "9.00%" in leesbaar
+
+
+def test_een_pdf_houdt_gewoon_het_documentvenster(web):
+    """Een PDF laat de browser zelf zien; daar is niets aan te verbeteren."""
+    upload(web, maak_pdf("Factuur 2026-0412"), "factuur.pdf")
+    pagina = web.get("/administratie/1/factuur/1").text
+
+    assert '<object class="bron"' in pagina
+    assert 'class="bron-lees"' not in pagina
+
+
+def test_het_bewaarde_bestand_verandert_niet_door_het_tonen(web, werkmap):
+    """De weergave is weergave; het origineel blijft byte voor byte staan."""
+    origineel = (UBLMAP / "01-standaard-21procent.xml").read_bytes()
+    upload(web, origineel, "goed.xml")
+    web.get("/administratie/1/factuur/1")
+
+    bewaard = list((werkmap / "opslag").rglob("*.xml"))
+    assert len(bewaard) == 1
+    assert bewaard[0].read_bytes() == origineel
+
+
+def test_de_weergave_lekt_niets_van_een_andere_administratie(twee_administraties):
+    """Het leesvenster leest het bewaarde bestand; dat mag geen nieuwe ingang zijn."""
+    antwoord = twee_administraties.get("/administratie/2/factuur/1")
+    assert antwoord.status_code == 404
+    # Factuur 1 is een e-factuur van Van Dijk en hoort bij administratie 1;
+    # er mag geen letter van dat bestand in dit antwoord staan.
+    assert "Van Dijk" not in antwoord.text
+    assert "cbc:" not in antwoord.text
 ```
 
 ## `boekhouding/pytest.ini`

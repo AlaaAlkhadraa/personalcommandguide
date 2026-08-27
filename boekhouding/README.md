@@ -443,11 +443,7 @@ login**, dus alleen op je eigen netwerk doen.
 `scripts/vul_testdata.py` maakt de administratie aan en laadt de vijf
 UBL-testbestanden in. Die werken zonder API-sleutel: bij een e-factuur staan
 de velden letterlijk in het bestand. Met `--met-pdf` komt de Factur-X-PDF er
-ook bij, en die is de moeite waard: een PDF wordt in het reviewscherm netjes
-naast de velden getoond, terwijl een los XML-bestand daar als onleesbare
-platte tekst verschijnt (de browser laat de tags weg). Voor XML is dat
-documentvenster dus nog niet bruikbaar — een leesbare weergave van de
-XML-velden is een openstaand punt.
+ook bij, zodat je ook ziet hoe het scherm eruitziet met een echte PDF ernaast.
 
 FastAPI met server-side HTML (Jinja2). Geen React, geen build-stap: je start
 hem en het werkt. De opmaak staat in één `<style>`-blok in `basis.html` en is
@@ -470,7 +466,8 @@ bewaren → routeren → uitlezen → valideren en opslaan. Een e-factuur gaat
 rechtstreeks, een PDF of foto langs het model.
 
 **Reviewscherm** (`/administratie/1/factuur/1`) — het belangrijkste scherm. Links het originele
-document, ingebed in de pagina. Rechts alle uitgelezen velden, stuk voor stuk
+document: een PDF of foto ingebed in de pagina, een e-factuur als leesbare
+weergave met de ruwe XML achter een knop (zie hieronder). Rechts alle uitgelezen velden, stuk voor stuk
 bewerkbaar. Bij elk veld staat hoe zeker het model was; een veld met lage
 zekerheid krijgt een rode rand, een merkje en de reden eronder. Bovenaan staan
 alle openstaande punten in gewone taal.
@@ -480,6 +477,50 @@ alleen als er geen openstaande punten meer zijn — de knop staat dan letterlijk
 uit, en ook als iemand het formulier tóch verstuurt weigert
 `keur_factuur_goed` het. De code bepaalt of het mág, de mens bepaalt of het
 gebeurt.
+
+### Een e-factuur leesbaar naast de velden
+
+Het reviewscherm bestaat om te vergelijken: links wat de leverancier stuurde,
+rechts wat het systeem eruit heeft gehaald. Bij een PDF gaat dat vanzelf. Maar
+een e-factuur is XML, en die toonde de browser als een muur ruwe tekst vol
+naamruimten (`urn:cen.eu:en16931…`). Daar valt niets mee te vergelijken, en
+daarmee deed het belangrijkste scherm zijn werk niet.
+
+`web/ubl_weergave.py` zet diezelfde XML om in leesbare regels, gegroepeerd
+zoals een factuur is opgebouwd: kop, leverancier, afnemer, bedragen, btw,
+betaling, en daaronder de factuurregels. Bij elk veld staat waar het in UBL
+vandaan komt:
+
+```
+Factuurdatum            2026-08-04
+cbc:IssueDate
+```
+
+Die herkomst staat er niet voor de sier. Een leverancier kiest zijn eigen
+indeling, en zie je waar een waarde vandaan komt, dan zie je ook waarom het
+systeem hem zo heeft gelezen. De getoonde tekst ís bovendien het pad waarmee
+gezocht is (`_et_pad` vertaalt hem naar wat ElementTree wil), dus label en
+werkelijkheid kunnen niet uit elkaar gaan lopen. Daar is een test voor.
+
+Twee keuzes die het gedrag bepalen:
+
+- **Kernvelden staan er altijd**, ook als ze ontbreken — dan juist. Bij de
+  factuur zonder datum staat er letterlijk "Factuurdatum — niet in het
+  bestand". Dat een verplicht veld ontbreekt, is precies wat de mens moet
+  zien. Aanvullende velden (vervaldatum, IBAN, KvK) staan er alleen als ze in
+  het bestand voorkomen, anders wordt het scherm een lijst met strepen.
+- **Er wordt niets opgeteld en niets omgezet.** Bij twee btw-tarieven op één
+  factuur staan beide tarieven met hun grondslag en bedrag onder elkaar, en
+  geen van beide wordt als hét btw-veld gepresenteerd. Bij een creditnota
+  blijven de bedragen positief staan zoals UBL ze noteert. De weergavelaag
+  toont; de mens beslist.
+
+De ruwe XML blijft één klik weg, achter **Toon XML**. Voor de bewaarplicht en
+de audit trail blijft het originele bestand leidend, en dat verandert niet:
+er wordt alleen gelezen. Ook de weergave leest de XML met `lees_xml_veilig` —
+geen DTD, geen entiteiten, geen externe verwijzingen — zodat een aanval niet
+alsnog via het leesvenster binnenkomt. Voor een PDF verandert er niets: die
+laat de browser zelf zien, en dat is precies wat je naast de velden wilt.
 
 ### Waar de logica staat
 
@@ -582,7 +623,7 @@ de stack blijft Python, SQLite, Pydantic en pytest.
 
 ### `tests/` — de bewijslast
 
-243 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
+270 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
 onzin-tekst, ontbrekende velden, verkeerde btw-percentages, ambigue
 bedragen, toekomst- en te oude datums, duplicaten, de audit trail bij
 aanmaken en wijzigen, en voor module 2: een PDF zonder tekstlaag, een
