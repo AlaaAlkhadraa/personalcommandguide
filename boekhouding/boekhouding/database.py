@@ -14,10 +14,18 @@ import json
 import sqlite3
 from datetime import date, datetime, timezone
 from decimal import Decimal
+from pathlib import Path
 from typing import Any, Optional
 
 from .validatie import valideer_factuur
 from .models import ValidatieResultaat
+from .documenten import (
+    DocumentResultaat,
+    bereken_hash,
+    kopieer_naar_opslag,
+    opslagpad_voor,
+    verwijder_tijdelijk_bestand,
+)
 
 ADMINISTRATIE_TYPEN = ("eenmanszaak",)  # later uitbreidbaar (bv. "bv")
 
@@ -78,9 +86,20 @@ def maak_tabellen(conn: sqlite3.Connection) -> None:
             aangemaakt_op  TEXT NOT NULL
         );
 
+        CREATE TABLE IF NOT EXISTS documenten (
+            id                   INTEGER PRIMARY KEY,
+            administratie_id     INTEGER NOT NULL REFERENCES administraties(id),
+            hash                 TEXT NOT NULL,
+            originele_bestandsnaam TEXT NOT NULL,
+            opslagpad            TEXT NOT NULL,
+            aangemaakt_op        TEXT NOT NULL,
+            UNIQUE (administratie_id, hash)
+        );
+
         CREATE TABLE IF NOT EXISTS facturen (
             id               INTEGER PRIMARY KEY,
             administratie_id INTEGER NOT NULL REFERENCES administraties(id),
+            document_id      INTEGER REFERENCES documenten(id),
             leverancier      TEXT,
             factuurdatum     TEXT,
             factuurnummer    TEXT,
@@ -113,6 +132,18 @@ def maak_tabellen(conn: sqlite3.Connection) -> None:
         );
         """
     )
+
+    # Migratie voor databases die vóór module 2 zijn aangemaakt:
+    # CREATE TABLE IF NOT EXISTS raakt een bestaande facturen-tabel
+    # niet aan, dus de kolom document_id moet er los bij. SQLite staat
+    # ADD COLUMN met een foreign key toe zolang de default NULL is.
+    kolommen = {rij[1] for rij in conn.execute("PRAGMA table_info(facturen)")}
+    if "document_id" not in kolommen:
+        conn.execute(
+            "ALTER TABLE facturen ADD COLUMN document_id INTEGER "
+            "REFERENCES documenten(id)"
+        )
+
     conn.commit()
 
 
@@ -155,12 +186,17 @@ def sla_factuur_op(
     data: dict[str, Any],
     *,
     vandaag: Optional[date] = None,
+    document_id: Optional[int] = None,
 ) -> tuple[int, ValidatieResultaat]:
     """Valideer en bewaar een factuur; geef (factuur_id, resultaat) terug.
 
     Ook een afgekeurde factuur wordt opgeslagen (status "review_nodig"
     met redenen) — er gaat nooit data verloren. De originele ruwe input
     wordt integraal bewaard en elk veld komt in de audit trail.
+
+    document_id koppelt de factuur optioneel aan het bewaarde originele
+    bestand (tabel documenten), zodat bij een controle altijd de bron
+    terug te vinden is.
     """
     resultaat = valideer_factuur(
         data,
@@ -180,13 +216,15 @@ def sla_factuur_op(
     cursor = conn.execute(
         """
         INSERT INTO facturen (
-            administratie_id, leverancier, factuurdatum, factuurnummer,
-            bedrag_excl, btw_percentage, btw_bedrag, bedrag_incl,
-            status, review_redenen, originele_data, aangemaakt_op, gewijzigd_op
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            administratie_id, document_id, leverancier, factuurdatum,
+            factuurnummer, bedrag_excl, btw_percentage, btw_bedrag,
+            bedrag_incl, status, review_redenen, originele_data,
+            aangemaakt_op, gewijzigd_op
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
             administratie_id,
+            document_id,
             velden["leverancier"],
             velden["factuurdatum"],
             velden["factuurnummer"],
@@ -213,6 +251,21 @@ def sla_factuur_op(
             """,
             (administratie_id, factuur_id, veld, waarde, tijd),
         )
+
+    # De koppeling naar het originele document is ook data en krijgt
+    # dus een eigen auditregel — alleen als er echt een document is,
+    # zodat een factuur zonder bron geen lege regel oplevert.
+    if document_id is not None:
+        conn.execute(
+            """
+            INSERT INTO audit_log (
+                administratie_id, tabel, record_id, actie,
+                veld, oude_waarde, nieuwe_waarde, tijdstip
+            ) VALUES (?, 'facturen', ?, 'aangemaakt', 'document_id', NULL, ?, ?)
+            """,
+            (administratie_id, factuur_id, str(document_id), tijd),
+        )
+
     conn.commit()
     return factuur_id, resultaat
 
@@ -326,16 +379,119 @@ def lees_factuur(conn: sqlite3.Connection, factuur_id: int) -> dict[str, Any]:
 
 
 def lees_audit_trail(
-    conn: sqlite3.Connection, factuur_id: int
+    conn: sqlite3.Connection, record_id: int, tabel: str = "facturen"
 ) -> list[dict[str, Any]]:
-    """Lees de volledige audit trail van één factuur, oudste eerst."""
+    """Lees de volledige audit trail van één record, oudste eerst."""
     cursor = conn.execute(
         """
         SELECT * FROM audit_log
-        WHERE tabel = 'facturen' AND record_id = ?
+        WHERE tabel = ? AND record_id = ?
         ORDER BY id
         """,
-        (factuur_id,),
+        (tabel, record_id),
     )
     kolommen = [k[0] for k in cursor.description]
     return [dict(zip(kolommen, rij)) for rij in cursor.fetchall()]
+
+
+def bewaar_document(
+    conn: sqlite3.Connection,
+    administratie_id: int,
+    pad: str,
+    opslagmap: str,
+) -> DocumentResultaat:
+    """Bewaar een origineel factuurbestand en registreer het.
+
+    Werkwijze: eerst de sha256-hash van de inhoud berekenen, dan kijken
+    of dit document al in deze administratie bekend is. Zo ja, dan komt
+    er geen tweede kopie en geen tweede regel — het resultaat is
+    "bestond_al" met het id van het bestaande document. Zo nee, dan
+    wordt het bestand gekopieerd naar de opslagmap (naam = de hash) en
+    geregistreerd in de tabel documenten, met een regel in de audit
+    trail.
+
+    Bestaat het bronbestand niet of is het niet te lezen, dan volgt
+    status "review_nodig" met reden — geen exception (Gouden regel 4).
+    """
+    bron = Path(pad)
+    if not bron.is_file():
+        return DocumentResultaat(
+            status="review_nodig", redenen=[f"bestand niet gevonden: {pad}"]
+        )
+
+    try:
+        hash_waarde = bereken_hash(bron)
+    except OSError as fout:
+        return DocumentResultaat(
+            status="review_nodig",
+            redenen=[f"kon het bestand niet lezen: {fout}"],
+        )
+
+    bestaand = conn.execute(
+        "SELECT id, opslagpad FROM documenten "
+        "WHERE administratie_id = ? AND hash = ?",
+        (administratie_id, hash_waarde),
+    ).fetchone()
+    if bestaand is not None:
+        return DocumentResultaat(
+            status="bestond_al",
+            document_id=bestaand[0],
+            hash=hash_waarde,
+            opslagpad=bestaand[1],
+        )
+
+    try:
+        doel, _ = kopieer_naar_opslag(bron, hash_waarde, opslagmap)
+    except OSError as fout:
+        verwijder_tijdelijk_bestand(
+            opslagpad_voor(hash_waarde, opslagmap).with_suffix(".tmp")
+        )
+        return DocumentResultaat(
+            status="review_nodig",
+            redenen=[f"kon het bestand niet opslaan: {fout}"],
+        )
+
+    tijd = _nu()
+    cursor = conn.execute(
+        """
+        INSERT INTO documenten (
+            administratie_id, hash, originele_bestandsnaam,
+            opslagpad, aangemaakt_op
+        ) VALUES (?, ?, ?, ?, ?)
+        """,
+        (administratie_id, hash_waarde, bron.name, str(doel), tijd),
+    )
+    document_id = cursor.lastrowid
+
+    for veld, waarde in (
+        ("hash", hash_waarde),
+        ("originele_bestandsnaam", bron.name),
+        ("opslagpad", str(doel)),
+    ):
+        conn.execute(
+            """
+            INSERT INTO audit_log (
+                administratie_id, tabel, record_id, actie,
+                veld, oude_waarde, nieuwe_waarde, tijdstip
+            ) VALUES (?, 'documenten', ?, 'aangemaakt', ?, NULL, ?, ?)
+            """,
+            (administratie_id, document_id, veld, waarde, tijd),
+        )
+    conn.commit()
+
+    return DocumentResultaat(
+        status="opgeslagen",
+        document_id=document_id,
+        hash=hash_waarde,
+        opslagpad=str(doel),
+    )
+
+
+def lees_document(conn: sqlite3.Connection, document_id: int) -> dict[str, Any]:
+    """Lees één documentregistratie als dict."""
+    cursor = conn.execute("SELECT * FROM documenten WHERE id = ?", (document_id,))
+    rij = cursor.fetchone()
+    if rij is None:
+        raise ValueError(f"document {document_id} bestaat niet")
+    kolommen = [k[0] for k in cursor.description]
+    return dict(zip(kolommen, rij))

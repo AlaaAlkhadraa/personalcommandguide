@@ -1,11 +1,20 @@
-"""Boekhoudsysteem voor Nederlandse zzp'ers — Module 1: factuur-schema,
-validatie en audit trail.
+"""Boekhoudsysteem voor Nederlandse zzp'ers.
+
+Module 1: factuur-schema, validatie en audit trail.
+Module 2: PDF-tekstextractie en veilige bewaring van originelen.
 
 AI stelt voor, code valideert, mens beslist (Gouden regel 1).
 """
 
 from .models import Factuur, ValidatieResultaat
 from .validatie import valideer_factuur
+from .documenten import (
+    DocumentResultaat,
+    TekstResultaat,
+    bereken_hash,
+    lees_pdf_tekst,
+    opslagpad_voor,
+)
 from .database import (
     maak_verbinding,
     maak_tabellen,
@@ -14,12 +23,19 @@ from .database import (
     wijzig_factuur,
     lees_factuur,
     lees_audit_trail,
+    bewaar_document,
+    lees_document,
 )
 
 __all__ = [
     "Factuur",
     "ValidatieResultaat",
     "valideer_factuur",
+    "DocumentResultaat",
+    "TekstResultaat",
+    "bereken_hash",
+    "lees_pdf_tekst",
+    "opslagpad_voor",
     "maak_verbinding",
     "maak_tabellen",
     "maak_administratie",
@@ -27,4 +43,6 @@ __all__ = [
     "wijzig_factuur",
     "lees_factuur",
     "lees_audit_trail",
+    "bewaar_document",
+    "lees_document",
 ]

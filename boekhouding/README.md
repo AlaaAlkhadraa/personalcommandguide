@@ -1,8 +1,12 @@
-# Boekhouding — Module 1: factuur-schema, validatie en audit trail
+# Boekhouding — modules 1 en 2
 
-Eerste module van het boekhoudsysteem voor Nederlandse zzp'ers.
+Boekhoudsysteem voor Nederlandse zzp'ers.
 AI stelt voor, code valideert, mens beslist: niets wordt hier automatisch
 geboekt — elke fout leidt tot status `review_nodig` met een leesbare reden.
+
+- **Module 1** — factuur-schema, validatie en audit trail
+- **Module 2** — PDF-tekstextractie en veilige bewaring van originelen
+  (nog zonder AI)
 
 ## Installeren en testen
 
@@ -109,9 +113,75 @@ De functies:
 - `lees_factuur` en `lees_audit_trail` — lezen een factuur en zijn
   volledige logboek terug.
 
+## Module 2 — PDF-tekstextractie en bewaarplicht
+
+Deze module haalt de ruwe tekst uit een factuur-PDF en zet het originele
+bestand veilig weg. Er komt nog géén AI aan te pas: er wordt niets
+geïnterpreteerd, alleen gelezen en bewaard. Module 3 (AI-extractie) bouwt
+daar later bovenop.
+
+### `boekhouding/documenten.py` — lezen en bewaren
+
+- `lees_pdf_tekst(pad)` — haalt met pypdf de tekstlaag uit een PDF en geeft
+  altijd een resultaat terug, nooit een exception. Vier gevallen leiden tot
+  `review_nodig` met een reden in gewone taal: het bestand bestaat niet, de
+  PDF is kapot of is helemaal geen PDF, of de PDF bevat wel pagina's maar
+  geen letters — dat laatste is meestal een scan (foto van papier), en de
+  reden luidt dan letterlijk "geen tekstlaag gevonden, mogelijk een scan".
+  Lukt het wel, dan is de status `gelezen` en zitten de tekst en het aantal
+  pagina's in het resultaat.
+- `bereken_hash(pad)` — berekent de sha256-vingerafdruk van de inhoud van
+  het bestand. Twee keer hetzelfde bestand geeft dezelfde vingerafdruk, ook
+  als de bestandsnaam anders is. Daar rust de duplicaatherkenning op. Het
+  bestand wordt in blokken gelezen, dus ook een hele grote PDF past in het
+  geheugen.
+- `opslagpad_voor(hash, opslagmap)` — bepaalt waar een document hoort te
+  staan: `<opslagmap>/<eerste twee tekens van de hash>/<hash>.pdf`. Die
+  submap voorkomt dat één map volloopt met honderdduizenden bestanden.
+- `kopieer_naar_opslag(bron, hash, opslagmap)` — kopieert het origineel
+  daarheen. Staat het bestand er al, dan gebeurt er niets: de inhoud is per
+  definitie identiek, want de naam ís de vingerafdruk van de inhoud. Er
+  wordt eerst naar een tijdelijke naam gekopieerd en daarna hernoemd, zodat
+  er nooit een half bestand op de definitieve plek staat. Het bewaarde
+  bestand wordt alleen-lezen gemaakt (bewaarplicht: 7 jaar bewaren, nooit
+  overschrijven).
+
+### Nieuwe tabel `documenten` en de koppeling
+
+- **documenten** — per administratie (`administratie_id`, Gouden regel 8) de
+  vingerafdruk, de originele bestandsnaam zoals de klant hem aanleverde, het
+  opslagpad en het tijdstip. De combinatie administratie + hash is uniek.
+- **facturen.document_id** — een factuur mag optioneel verwijzen naar het
+  bewaarde origineel, zodat bij een controle altijd de bron terug te vinden
+  is. Het is een foreign key: een verwijzing naar een niet-bestaand document
+  wordt geweigerd.
+- `bewaar_document(conn, administratie_id, pad, opslagmap)` — berekent de
+  vingerafdruk, kijkt of dit document al bekend is in deze administratie, en
+  slaat het anders op. Drie mogelijke uitkomsten: `opgeslagen` (nieuw),
+  `bestond_al` (dezelfde PDF is al bewaard — geen tweede kopie, geen tweede
+  regel, wel het id van het bestaande document) of `review_nodig` (bestand
+  niet gevonden of niet op te slaan). Elk nieuw document krijgt regels in de
+  audit trail.
+- `lees_document(conn, document_id)` — leest de registratie terug.
+
+Dezelfde PDF in twee verschillende administraties krijgt wél een eigen
+registratie (het zijn aparte boekhoudingen), maar staat maar één keer op
+schijf.
+
+### Migratie voor bestaande databases
+
+Databases die vóór module 2 zijn aangemaakt, missen de kolom `document_id`.
+`CREATE TABLE IF NOT EXISTS` past een bestaande tabel niet aan, dus
+`maak_tabellen` zet die kolom er los bij met `ALTER TABLE ADD COLUMN` als
+hij ontbreekt. Bestaande facturen houden gewoon `NULL` als document.
+
 ### `tests/` — de bewijslast
 
-35 pytest-tests, één of meer per controle, inclusief foute inputs:
-floats, onzin-tekst, ontbrekende velden, verkeerde btw-percentages,
-toekomst- en te oude datums, duplicaten, en de audit trail bij aanmaken
-en wijzigen. `python -m pytest` in deze map draait alles.
+64 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
+onzin-tekst, ontbrekende velden, verkeerde btw-percentages, ambigue
+bedragen, toekomst- en te oude datums, duplicaten, de audit trail bij
+aanmaken en wijzigen, en voor module 2: een PDF zonder tekstlaag, een
+kapotte PDF, een bestand dat geen PDF is, een leeg bestand, een bestand dat
+niet bestaat, en dezelfde PDF twee keer aanbieden. De test-PDF's worden in
+de tests zelf gegenereerd (`maak_pdf` in `conftest.py`); er wordt niets
+gedownload. `python -m pytest` in deze map draait alles.

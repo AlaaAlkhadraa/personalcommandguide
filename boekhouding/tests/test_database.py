@@ -5,6 +5,8 @@ import sqlite3
 import pytest
 
 from boekhouding import (
+    maak_verbinding,
+    maak_tabellen,
     maak_administratie,
     sla_factuur_op,
     wijzig_factuur,
@@ -25,6 +27,47 @@ def test_administratie_heeft_type_eenmanszaak(conn):
 def test_onbekend_administratietype_wordt_geweigerd(conn):
     with pytest.raises(ValueError, match="bv"):
         maak_administratie(conn, "Testzaak", "bv")
+
+
+def test_migratie_voegt_document_id_toe_aan_oude_database():
+    # Een database van vóór module 2: facturen zonder document_id.
+    # CREATE TABLE IF NOT EXISTS raakt zo'n tabel niet aan, dus
+    # maak_tabellen moet de kolom er alsnog bij zetten.
+    oud = maak_verbinding(":memory:")
+    oud.executescript(
+        """
+        CREATE TABLE administraties (
+            id INTEGER PRIMARY KEY, naam TEXT NOT NULL,
+            type TEXT NOT NULL DEFAULT 'eenmanszaak', aangemaakt_op TEXT NOT NULL
+        );
+        CREATE TABLE facturen (
+            id INTEGER PRIMARY KEY,
+            administratie_id INTEGER NOT NULL REFERENCES administraties(id),
+            leverancier TEXT, factuurdatum TEXT, factuurnummer TEXT,
+            bedrag_excl TEXT, btw_percentage TEXT, btw_bedrag TEXT,
+            bedrag_incl TEXT, status TEXT NOT NULL,
+            review_redenen TEXT NOT NULL DEFAULT '[]',
+            originele_data TEXT NOT NULL,
+            aangemaakt_op TEXT NOT NULL, gewijzigd_op TEXT NOT NULL
+        );
+        """
+    )
+    assert "document_id" not in {
+        rij[1] for rij in oud.execute("PRAGMA table_info(facturen)")
+    }
+
+    maak_tabellen(oud)
+
+    assert "document_id" in {
+        rij[1] for rij in oud.execute("PRAGMA table_info(facturen)")
+    }
+    admin_id = maak_administratie(oud, "Bestaande zaak")
+    factuur_id, resultaat = sla_factuur_op(
+        oud, admin_id, geldige_factuur(), vandaag=VANDAAG
+    )
+    assert resultaat.status == "gevalideerd"
+    assert lees_factuur(oud, factuur_id)["document_id"] is None
+    oud.close()
 
 
 def test_onbestaand_administratie_id_wordt_geweigerd(conn):
