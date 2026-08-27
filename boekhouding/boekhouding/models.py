@@ -7,6 +7,7 @@ Gouden regels die hier gelden:
   boekjaar, nooit hardcoded (nu: 21, 9, 0).
 """
 
+import re
 from datetime import date
 from decimal import Decimal, InvalidOperation
 from typing import Any, Literal, Optional
@@ -53,8 +54,19 @@ class Factuur(BaseModel):
             # Nederlandse notatie: punt én komma → punt is
             # duizendtalscheiding ("1.250,00"); alleen komma →
             # decimaalteken ("100,00"); alleen punt → decimaalteken.
+            # Uitzondering (Gouden regel 4): alléén een punt gevolgd
+            # door precies 3 cijfers ("1.250") kan zowel een Nederlands
+            # duizendtal (1250) als een Engels decimaal (1,250) zijn —
+            # dan nooit gokken, maar review.
             if "." in waarde and "," in waarde:
                 waarde = waarde.replace(".", "").replace(",", ".")
+            elif re.fullmatch(r"\d{1,3}\.\d{3}", waarde):
+                raise ValueError(
+                    f"ambigu bedrag '{origineel}': kan "
+                    f"{waarde.replace('.', '')},00 of "
+                    f"{waarde.replace('.', ',')} zijn — "
+                    f"controleer het origineel"
+                )
             else:
                 waarde = waarde.replace(",", ".")
             try:

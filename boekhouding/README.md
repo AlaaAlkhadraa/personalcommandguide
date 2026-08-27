@@ -36,7 +36,11 @@ drie dingen:
    review-reden. Nederlandse notatie wordt netjes begrepen: staat er
    punt én komma (`"1.250,00"`), dan is de punt duizendtalscheiding en
    de komma het decimaalteken; alleen een komma (`"100,00"`) of alleen
-   een punt (`"100.00"`) is het decimaalteken.
+   een punt (`"100.00"`) is het decimaalteken. Eén uitzondering: alléén
+   een punt gevolgd door precies 3 cijfers (`"1.250"`) is ambigu —
+   dat kan 1250,00 (Nederlands duizendtal) of 1,250 (Engels decimaal)
+   zijn. Dan wordt er niet gegokt maar wordt het `review_nodig`
+   (Gouden regel 4); `"100.00"` en `"0.5"` blijven gewoon geldig.
 2. **Het btw-percentage moet bestaan** in het config-bestand van het jaar
    van de factuurdatum (nu: 21, 9 of 0).
 3. **Leverancier en factuurnummer mogen niet leeg zijn.**

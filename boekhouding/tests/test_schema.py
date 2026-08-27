@@ -57,6 +57,49 @@ def test_nederlands_duizendtal_wordt_begrepen():
     assert resultaat.factuur.bedrag_incl == Decimal("1512.50")
 
 
+def test_ambigu_bedrag_geeft_review():
+    # "1.250" kan 1250,00 (NL duizendtal) of 1,250 (Engels decimaal)
+    # zijn — nooit gokken (Gouden regel 4), dus review. Zonder deze
+    # check zou een 0%-factuur met 1.25 i.p.v. 1250 gewoon door alle
+    # rekencontroles glippen.
+    data = geldige_factuur() | {
+        "bedrag_excl": "1.250",
+        "btw_percentage": "0",
+        "btw_bedrag": "0",
+        "bedrag_incl": "1.250",
+    }
+    resultaat = valideer_factuur(data, vandaag=VANDAAG)
+    assert resultaat.status == "review_nodig"
+    assert any(
+        "ambigu bedrag" in reden and "1250,00" in reden and "1,250" in reden
+        for reden in resultaat.redenen
+    )
+
+
+def test_groter_ambigu_bedrag_geeft_review():
+    data = geldige_factuur() | {
+        "bedrag_excl": "12.500",
+        "btw_percentage": "0",
+        "btw_bedrag": "0",
+        "bedrag_incl": "12.500",
+    }
+    resultaat = valideer_factuur(data, vandaag=VANDAAG)
+    assert resultaat.status == "review_nodig"
+    assert any("ambigu bedrag" in reden for reden in resultaat.redenen)
+
+
+def test_een_decimaal_achter_de_punt_blijft_geldig():
+    data = geldige_factuur() | {
+        "bedrag_excl": "0.5",
+        "btw_percentage": "0",
+        "btw_bedrag": "0.00",
+        "bedrag_incl": "0.5",
+    }
+    resultaat = valideer_factuur(data, vandaag=VANDAAG)
+    assert resultaat.status == "gevalideerd"
+    assert resultaat.factuur.bedrag_excl == Decimal("0.5")
+
+
 def test_groter_nederlands_duizendtal_wordt_begrepen():
     data = geldige_factuur() | {
         "bedrag_excl": "12.500,50",
