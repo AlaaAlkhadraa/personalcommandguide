@@ -140,6 +140,11 @@ class ExtractieResultaat(BaseModel):
     extractie: Optional[FactuurExtractie] = None
     model: str = ""
     prompt_versie: str = PROMPT_VERSIE
+    # Alleen wat het model zelf aangeeft (ontbrekend veld, lage
+    # zekerheid). De rekencontroles zitten in `redenen`; die worden
+    # verderop nog een keer gedraaid met de duplicaatcheck erbij, en
+    # zouden anders dubbel op het scherm komen.
+    extractie_redenen: list[str] = []
     invoer_tokens: int = 0
     uitvoer_tokens: int = 0
     invoerpad: Optional[Literal["tekst", "beeld"]] = None
@@ -256,14 +261,12 @@ def _ruwe_tekst(respons: Any, extractie: Optional[FactuurExtractie]) -> str:
     return ""
 
 
-def beoordeel_extractie(
-    extractie: FactuurExtractie, *, vandaag=None, is_duplicaat=None
-) -> tuple[str, list[str], Optional[Factuur]]:
-    """Zet een extractie om in een status, redenen en een nette factuur.
+def extractie_redenen(extractie: FactuurExtractie) -> tuple[list[str], dict[str, Any]]:
+    """Geef wat het model zelf aangeeft, plus de bruikbare waarden.
 
-    Twee soorten redenen komen samen: wat het model zelf aangeeft
-    (ontbrekend veld of lage zekerheid, met prefix "extractie:") en wat
-    de rekencontroles van module 1 vinden. De AI rekent niet mee.
+    Alleen de redenen die uit de extractie komen: een veld dat niet op
+    het document stond, of een veld dat met lage zekerheid is gelezen.
+    De rekencontroles zitten hier niet bij — die zijn van module 1.
     """
     redenen: list[str] = []
     data: dict[str, Any] = {}
@@ -284,6 +287,20 @@ def beoordeel_extractie(
                 f"'{gegeven.waarde}' — {gegeven.reden}"
             )
         data[veld] = gegeven.waarde
+
+    return redenen, data
+
+
+def beoordeel_extractie(
+    extractie: FactuurExtractie, *, vandaag=None, is_duplicaat=None
+) -> tuple[str, list[str], Optional[Factuur]]:
+    """Zet een extractie om in een status, redenen en een nette factuur.
+
+    Twee soorten redenen komen samen: wat het model zelf aangeeft
+    (ontbrekend veld of lage zekerheid, met prefix "extractie:") en wat
+    de rekencontroles van module 1 vinden. De AI rekent niet mee.
+    """
+    redenen, data = extractie_redenen(extractie)
 
     # Alle rekenregels en datumcontroles blijven van module 1.
     resultaat = valideer_factuur(data, vandaag=vandaag, is_duplicaat=is_duplicaat)
@@ -431,9 +448,11 @@ def extraheer_factuur(
         extractie, vandaag=vandaag, is_duplicaat=is_duplicaat
     )
     invoer_tokens, uitvoer_tokens = _tokens(respons)
+    alleen_extractie, _ = extractie_redenen(extractie)
     return ExtractieResultaat(
         status=status,
         redenen=redenen,
+        extractie_redenen=alleen_extractie,
         factuur=factuur,
         extractie=extractie,
         model=model,

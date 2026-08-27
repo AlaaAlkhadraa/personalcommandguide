@@ -117,12 +117,18 @@ def _verwerk_bestand(
     extractie_id = None
     if route == "ubl":
         gelezen = verwerk_efactuur(pad, vandaag=vandaag)
-        velden, redenen = gelezen.velden, gelezen.redenen
+        # Alleen de leesredenen doorgeven: de rekencontroles draait
+        # sla_factuur_op zo meteen zelf, met de duplicaatcheck erbij.
+        # Ze allebei doorgeven zou ze dubbel op het scherm zetten.
+        velden, redenen = gelezen.velden, gelezen.leesredenen
     else:
         gelezen = extraheer_factuur(
             pad, client=ai_client, vandaag=vandaag
         )
-        redenen = gelezen.redenen
+        # Idem: alleen wat het model zelf aangaf. Ging de aanroep
+        # helemaal mis, dan staat dat niet in extractie_redenen maar
+        # wel in redenen — die moet dan wél mee.
+        redenen = gelezen.extractie_redenen or gelezen.redenen
         velden = {}
         if gelezen.extractie is not None:
             for veld in VELDEN:

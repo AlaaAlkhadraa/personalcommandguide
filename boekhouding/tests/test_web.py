@@ -459,3 +459,27 @@ def test_elke_route_met_een_id_loopt_langs_de_controle():
             assert "hoort_bij_administratie" in stuk, (
                 f"route {pad} gebruikt geen hoort_bij_administratie"
             )
+
+
+def test_redenen_staan_er_niet_dubbel_in(web):
+    """De validatie draait twee keer; de redenen horen er één keer te staan."""
+    upload(web, UBLMAP / "04-twee-btw-tarieven.xml", "twee-tarieven.xml")
+    pagina = web.get("/administratie/1/factuur/1").text
+    assert pagina.count("btw_percentage: Field required") == 1
+    assert pagina.count("btw-tarieven") == 1
+
+
+def test_ook_bij_de_ai_route_geen_dubbele_redenen(werkmap):
+    onzeker = goede_extractie(
+        factuurnummer=veld(None, "laag", "nummer niet leesbaar")
+    )
+    app = maak_app(
+        str(werkmap / "db.sqlite"), str(werkmap / "opslag"),
+        ai_client=client_met(onzeker), vandaag=VANDAAG,
+    )
+    web = TestClient(app)
+    upload(web, maak_pdf("Factuur 2026-0412"), "factuur.pdf")
+
+    pagina = web.get("/administratie/1/factuur/1").text
+    assert pagina.count("factuurnummer niet op het document gevonden") == 1
+    assert pagina.count("factuurnummer: Field required") == 1

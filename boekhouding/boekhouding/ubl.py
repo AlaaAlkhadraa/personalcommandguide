@@ -338,6 +338,10 @@ class EfactuurResultaat(BaseModel):
     redenen: list[str] = []
     factuur: Optional[Factuur] = None
     velden: dict[str, str] = {}
+    # Alleen wat het lezen van het XML-bestand opleverde (ontbrekend
+    # element, meerdere btw-tarieven, creditnota). De rekencontroles
+    # zitten in `redenen` en worden verderop opnieuw gedraaid.
+    leesredenen: list[str] = []
     documentsoort: Optional[str] = None
     bron: Literal["xml", "pdf-bijlage"] = "xml"
     bestandsnaam: str = ""
@@ -361,6 +365,7 @@ def beoordeel_ubl(
     return EfactuurResultaat(
         status="gevalideerd" if not redenen else "review_nodig",
         redenen=redenen,
+        leesredenen=list(gelezen.redenen),
         factuur=resultaat.factuur,
         velden=gelezen.velden,
         documentsoort=gelezen.documentsoort,
