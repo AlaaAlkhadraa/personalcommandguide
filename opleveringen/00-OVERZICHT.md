@@ -16,12 +16,13 @@ Branch: `claude/nl-accounting-invoice-module-f2vzr3`
 | `04-fix-module2-review.md` | Fixes: unieke tijdelijke naam, extensie-witte-lijst |
 | `05-testmateriaal-facturen.md` | 10 synthetische Nederlandse factuurdocumenten |
 | `06-module3-ai-extractie.md` | Module 3: AI-extractie met zekerheid per veld |
+| `07-fix-module3-review.md` | Fixes: foutafhandeling, promptversie, verzonnen, model instelbaar |
 | `CODE-COMPLEET.md` | de volledige actuele code, uitleg en tests |
 | `testfacturen-overzicht.json` | grondwaarheid bij de 10 testfacturen |
 
 ## Waar het nu staat
 
-- **104 pytest-tests, allemaal groen.** De testsuite doet nooit een echte
+- **147 pytest-tests, allemaal groen.** De testsuite doet nooit een echte
   API-aanroep.
 - **Module 1** — schema met Decimal-bedragen, alle rekencontroles, datum- en
   duplicaatcheck. Elke fout wordt `review_nodig` met reden, nooit een
@@ -31,7 +32,8 @@ Branch: `claude/nl-accounting-invoice-module-f2vzr3`
   audit trail overal.
 - **Module 3** — het model leest en stelt voor, de code rekent en controleert,
   de mens beslist. Twee invoerpaden (tekst en beeld), verplichte zekerheid per
-  veld, nooit gokken.
+  veld, nooit gokken. Een storing bij de dienst breekt een stapel facturen niet
+  af: elke fout wordt een reden. Model en promptversie staan in de audit trail.
 - **Testmateriaal** — 10 facturen die deterministisch worden gegenereerd,
   inclusief de lastige gevallen (korting, creditnota, scan zonder tekstlaag,
   ontbrekend factuurnummer, bedragen die niet kloppen).

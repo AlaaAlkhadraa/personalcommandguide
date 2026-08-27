@@ -254,6 +254,38 @@ letterlijk ziet, verzin nooit een waarde, leid nooit iets af, reken niets uit,
 en neem bedragen exact over zoals ze op de factuur staan (dus `1.250,00`
 blijft `1.250,00`). Twijfel je of een veld er staat → `null` met een reden.
 
+### Als er iets misgaat met de dienst
+
+Een netwerkstoring, een rate limit of een serverfout mag het verwerken van een
+stapel facturen niet afbreken. De aanroep staat daarom in een `try/except` en
+elke fout wordt een reden in gewone taal, met de status `review_nodig`:
+
+| Wat er misgaat | Wat de eigenaar leest |
+|---|---|
+| 429 | "te veel verzoeken achter elkaar (rate limit) — later opnieuw proberen" |
+| 401 / 403 | "geen toegang met deze API-sleutel; controleer de sleutel in .env" |
+| 404 | "het opgegeven model bestaat niet of is niet beschikbaar" |
+| 400 | "de dienst wees het verzoek af als ongeldig — fout in het verzoek, niet in de factuur" |
+| 5xx | "de dienst gaf een serverfout — later opnieuw proberen" |
+| geen antwoord | "geen verbinding met de dienst — later opnieuw proberen" |
+
+Elke melding zegt erbij of het zin heeft het later nog eens te proberen. Er
+gaat nooit een exception naar buiten, dus factuur 3 in een stapel van 20 laat
+factuur 4 tot en met 20 gewoon doorlopen.
+
+### Welk model, en met welke prompt
+
+Het model is niet vastgezet in de code. De volgorde is: wat de aanroeper
+meegeeft, anders `ANTHROPIC_MODEL` uit `.env`, anders `claude-opus-5`. Zo kan
+de eval een goedkoper model ernaast leggen zonder dat er code verandert.
+
+`PROMPT_VERSIE` (nu `"v1"`) hoort omhoog zodra `SYSTEEM_PROMPT` wijzigt. Die
+versie gaat mee de audit trail in: leest hetzelfde model dezelfde factuur over
+een half jaar anders uit, dan is terug te zien of dat aan het model lag of aan
+een aangepaste instructie. Een extractie uit een database van vóór deze kolom
+krijgt `"onbekend"` — niet de huidige versie, want dat zou de audit trail een
+onwaarheid laten vertellen.
+
 ### Van extractie naar oordeel
 
 `beoordeel_extractie` legt drie soorten redenen naast elkaar:
@@ -284,11 +316,24 @@ ook als het model intussen is vervangen.
 - **`python scripts/eval_extractie.py`** — haalt alle tien de testfacturen
   door de extractie en telt per veld correct / fout / gemist, met een
   totaalscore. Doet tien echte aanroepen en vraagt daarom eerst om
-  bevestiging (`--ja` slaat de vraag over). Bedragen worden als Decimal
-  vergeleken en datums als datum, zodat de eval de inhoud meet en niet de
-  schrijfwijze. Een waarde die het model invult terwijl die niet op het
-  document staat, telt als fout met de toelichting "verzonnen" — dat is
-  precies het gedrag dat Gouden regel 4 verbiedt.
+  bevestiging (`--ja` slaat de vraag over). Met `--model=...` leg je een
+  goedkoper model ernaast; elk model krijgt zijn eigen rapportbestand.
+  Bedragen worden als Decimal vergeleken en datums als datum, zodat de eval
+  de inhoud meet en niet de schrijfwijze.
+
+  De eval telt vier uitkomsten, en **verzonnen** staat bovenaan:
+
+  | Uitkomst | Wat het betekent |
+  |---|---|
+  | `verzonnen` | het veld staat niet op het document, maar het model vulde toch iets in |
+  | `fout` | er staat een andere waarde dan op het document |
+  | `gemist` | het document heeft de waarde wel, het model geeft niets terug |
+  | `correct` | de waarde klopt (ook: allebei leeg) |
+
+  `verzonnen` staat vooraan omdat het de gevaarlijkste uitkomst is: de
+  validatie van module 1 vangt hem niet. Een verzonnen factuurnummer telt
+  gewoon op, klopt met de btw en glipt als `gevalideerd` langs elke controle.
+  Factuur 09 (zonder factuurnummer) is daarvoor de testcase.
 
 ## Testmateriaal: synthetische facturen
 
@@ -329,7 +374,7 @@ de stack blijft Python, SQLite, Pydantic en pytest.
 
 ### `tests/` — de bewijslast
 
-104 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
+147 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
 onzin-tekst, ontbrekende velden, verkeerde btw-percentages, ambigue
 bedragen, toekomst- en te oude datums, duplicaten, de audit trail bij
 aanmaken en wijzigen, en voor module 2: een PDF zonder tekstlaag, een
@@ -368,12 +413,16 @@ from .documenten import (
     opslagpad_voor,
 )
 from .ai_extractie import (
+    PROMPT_VERSIE,
+    STANDAARD_MODEL,
     ExtractieResultaat,
     FactuurExtractie,
     VeldExtractie,
     beoordeel_extractie,
     bepaal_invoerpad,
     extraheer_factuur,
+    foutreden,
+    standaard_model,
 )
 from .omgeving import api_sleutel, sleutel_aanwezig
 from .database import (
@@ -418,6 +467,10 @@ __all__ = [
     "beoordeel_extractie",
     "bepaal_invoerpad",
     "extraheer_factuur",
+    "foutreden",
+    "standaard_model",
+    "PROMPT_VERSIE",
+    "STANDAARD_MODEL",
     "api_sleutel",
     "sleutel_aanwezig",
 ]
@@ -913,6 +966,16 @@ def api_sleutel(env_pad: str | Path = ".env") -> str | None:
     return sleutel or None
 
 
+def instelling(naam: str, standaard: str, env_pad: str | Path = ".env") -> str:
+    """Lees een gewone (niet-geheime) instelling uit .env of de omgeving.
+
+    Voor waarden als de modelnaam: die mogen wel gewoon zichtbaar zijn.
+    Staat hij nergens, dan geldt de meegegeven standaard.
+    """
+    laad_env(env_pad)
+    return os.environ.get(naam, "").strip() or standaard
+
+
 def sleutel_aanwezig(env_pad: str | Path = ".env") -> bool:
     """Alleen ja of nee — handig voor scripts, zonder de waarde te tonen."""
     return api_sleutel(env_pad) is not None
@@ -951,11 +1014,20 @@ from pydantic import BaseModel, model_validator
 
 from .documenten import extensie_van, lees_pdf_tekst
 from .models import Factuur
-from .omgeving import SLEUTELNAAM, api_sleutel
+from .omgeving import SLEUTELNAAM, api_sleutel, instelling
 from .validatie import valideer_factuur
 
-MODEL = "claude-opus-5"
+# Het model is instelbaar. De volgorde is: wat de aanroeper meegeeft,
+# anders ANTHROPIC_MODEL uit .env, anders dit standaardmodel. Zo kan de
+# eval een goedkoper model ernaast leggen zonder code te wijzigen.
+STANDAARD_MODEL = "claude-opus-5"
+MODELNAAM_INSTELLING = "ANTHROPIC_MODEL"
 MAX_TOKENS = 16000
+
+# Versie van de systeemprompt. Hoog dit op zodra SYSTEEM_PROMPT wijzigt:
+# het staat bij elke extractie in de audit trail, zodat later te zien is
+# met welke instructie een factuur is uitgelezen.
+PROMPT_VERSIE = "v1"
 
 # Welke bestandssoort langs welk pad gaat.
 BEELD_MEDIATYPEN = {
@@ -1052,10 +1124,20 @@ class ExtractieResultaat(BaseModel):
     redenen: list[str] = []
     factuur: Optional[Factuur] = None
     extractie: Optional[FactuurExtractie] = None
-    model: str = MODEL
+    model: str = ""
+    prompt_versie: str = PROMPT_VERSIE
     invoerpad: Optional[Literal["tekst", "beeld"]] = None
     ruwe_respons: str = ""
     bestandsnaam: str = ""
+
+
+def standaard_model(env_pad: str | Path = ".env") -> str:
+    """Welk model er gebruikt wordt als de aanroeper niets meegeeft.
+
+    Zet ANTHROPIC_MODEL in .env om een ander model te kiezen, bijvoorbeeld
+    om in de eval een goedkoper model ernaast te leggen.
+    """
+    return instelling(MODELNAAM_INSTELLING, STANDAARD_MODEL, env_pad)
 
 
 def maak_client(env_pad: str | Path = ".env"):
@@ -1184,11 +1266,58 @@ def beoordeel_extractie(
     return status, redenen, resultaat.factuur
 
 
+def foutreden(fout: BaseException) -> str:
+    """Vertaal een fout van de API naar een reden in gewone taal.
+
+    We kijken naar `status_code` in plaats van naar de fouttypes van de
+    SDK: elke APIStatusError van anthropic draagt dat veld, en zo werkt
+    deze functie ook als de SDK niet geïnstalleerd is (in de tests).
+    De boodschap zegt er steeds bij of het zin heeft om het later nog
+    eens te proberen — dat scheelt de eigenaar zoekwerk.
+    """
+    code = getattr(fout, "status_code", None)
+    soort = type(fout).__name__
+
+    if code == 429:
+        return (
+            "te veel verzoeken achter elkaar (rate limit); "
+            "deze factuur is niet uitgelezen — later opnieuw proberen"
+        )
+    if code in (401, 403):
+        return (
+            "geen toegang met deze API-sleutel; controleer de sleutel "
+            "in .env (de factuur is niet uitgelezen)"
+        )
+    if code == 404:
+        return (
+            "het opgegeven model bestaat niet of is niet beschikbaar "
+            "(de factuur is niet uitgelezen)"
+        )
+    if code == 400:
+        return (
+            f"de dienst wees het verzoek af als ongeldig ({soort}); "
+            f"dit is een fout in het verzoek, niet in de factuur"
+        )
+    if isinstance(code, int) and code >= 500:
+        return (
+            f"de dienst gaf een serverfout ({code}); deze factuur is "
+            f"niet uitgelezen — later opnieuw proberen"
+        )
+    if isinstance(code, int):
+        return f"de dienst gaf foutcode {code}; deze factuur is niet uitgelezen"
+
+    # Geen HTTP-antwoord: netwerk eruit, tijdslimiet, DNS, enzovoort.
+    return (
+        f"geen verbinding met de dienst ({soort}: {fout}); deze factuur "
+        f"is niet uitgelezen — later opnieuw proberen"
+    )
+
+
 def extraheer_factuur(
     pad: str | Path,
     *,
     client: Any = None,
-    model: str = MODEL,
+    model: Optional[str] = None,
     vandaag=None,
     is_duplicaat=None,
     env_pad: str | Path = ".env",
@@ -1203,6 +1332,7 @@ def extraheer_factuur(
     hangen; laat je hem weg, dan wordt de echte client gebouwd.
     """
     pad = Path(pad)
+    model = model or standaard_model(env_pad)
     invoerpad, fout = bepaal_invoerpad(pad)
     if invoerpad is None:
         return ExtractieResultaat(
@@ -1215,13 +1345,25 @@ def extraheer_factuur(
     if client is None:
         client = maak_client(env_pad)
 
-    respons = client.messages.parse(
-        model=model,
-        max_tokens=MAX_TOKENS,
-        system=SYSTEEM_PROMPT,
-        messages=[{"role": "user", "content": bouw_inhoud(pad, invoerpad)}],
-        output_format=FactuurExtractie,
-    )
+    # Alles wat hier misgaat wordt een reden, nooit een exception: een
+    # rate limit of een netwerkstoring mag het verwerken van een stapel
+    # facturen niet afbreken (Gouden regel 4).
+    try:
+        respons = client.messages.parse(
+            model=model,
+            max_tokens=MAX_TOKENS,
+            system=SYSTEEM_PROMPT,
+            messages=[{"role": "user", "content": bouw_inhoud(pad, invoerpad)}],
+            output_format=FactuurExtractie,
+        )
+    except Exception as fout:
+        return ExtractieResultaat(
+            status="review_nodig",
+            redenen=[foutreden(fout)],
+            model=model,
+            invoerpad=invoerpad,
+            bestandsnaam=pad.name,
+        )
 
     # Het model kan een verzoek weigeren; dan is er geen inhoud om te
     # lezen. Nooit doorgaan alsof er wel iets stond.
@@ -1334,6 +1476,23 @@ def maak_verbinding(pad: str) -> sqlite3.Connection:
     return conn
 
 
+def _voeg_kolom_toe(
+    conn: sqlite3.Connection, tabel: str, kolom: str, definitie: str
+) -> bool:
+    """Voeg een kolom toe als die nog ontbreekt; geef terug of dat gebeurde.
+
+    Bestaande rijen krijgen de default. Bij prompt_versie is dat bewust
+    'onbekend' en niet de huidige versie: van een extractie van vóór deze
+    kolom weten we níét met welke prompt hij is gemaakt, en dat invullen
+    zou de audit trail een onwaarheid laten vertellen.
+    """
+    kolommen = {rij[1] for rij in conn.execute(f"PRAGMA table_info({tabel})")}
+    if kolom in kolommen:
+        return False
+    conn.execute(f"ALTER TABLE {tabel} ADD COLUMN {kolom} {definitie}")
+    return True
+
+
 def maak_tabellen(conn: sqlite3.Connection) -> None:
     """Maak de tabellen aan als ze nog niet bestaan."""
     conn.executescript(
@@ -1389,6 +1548,7 @@ def maak_tabellen(conn: sqlite3.Connection) -> None:
             administratie_id INTEGER NOT NULL REFERENCES administraties(id),
             document_id      INTEGER REFERENCES documenten(id),
             model            TEXT NOT NULL,
+            prompt_versie    TEXT NOT NULL DEFAULT 'onbekend',
             invoerpad        TEXT
                              CHECK (invoerpad IS NULL
                                     OR invoerpad IN ('tekst', 'beeld')),
@@ -1414,16 +1574,19 @@ def maak_tabellen(conn: sqlite3.Connection) -> None:
         """
     )
 
-    # Migratie voor databases die vóór module 2 zijn aangemaakt:
-    # CREATE TABLE IF NOT EXISTS raakt een bestaande facturen-tabel
-    # niet aan, dus de kolom document_id moet er los bij. SQLite staat
-    # ADD COLUMN met een foreign key toe zolang de default NULL is.
-    kolommen = {rij[1] for rij in conn.execute("PRAGMA table_info(facturen)")}
-    if "document_id" not in kolommen:
-        conn.execute(
-            "ALTER TABLE facturen ADD COLUMN document_id INTEGER "
-            "REFERENCES documenten(id)"
-        )
+    # Migraties voor databases die eerder zijn aangemaakt.
+    # CREATE TABLE IF NOT EXISTS raakt een bestaande tabel niet aan, dus
+    # een nieuwe kolom moet er los bij met ALTER TABLE ADD COLUMN.
+    # SQLite staat dat toe zolang de default NULL is, of bij NOT NULL een
+    # vaste waarde heeft.
+    _voeg_kolom_toe(
+        conn, "facturen", "document_id",
+        "INTEGER REFERENCES documenten(id)",
+    )
+    _voeg_kolom_toe(
+        conn, "extracties", "prompt_versie",
+        "TEXT NOT NULL DEFAULT 'onbekend'",
+    )
 
     conn.commit()
 
@@ -1811,23 +1974,24 @@ def sla_extractie_op(
 ) -> int:
     """Bewaar een AI-extractie met model, ruwe respons en document_id.
 
-    De volledige audit trail: welk model het was, wat het letterlijk
-    terugstuurde, welk invoerpad is gebruikt en bij welk bewaarde
-    document het hoort. Zo is later na te gaan waar een boeking vandaan
+    De volledige audit trail: welk model het was, met welke versie van
+    de systeemprompt, wat het letterlijk terugstuurde, welk invoerpad is
+    gebruikt en bij welk bewaarde document het hoort. Zo is later na te gaan waar een boeking vandaan
     komt — ook als het model intussen is vervangen.
     """
     tijd = _nu()
     cursor = conn.execute(
         """
         INSERT INTO extracties (
-            administratie_id, document_id, model, invoerpad,
+            administratie_id, document_id, model, prompt_versie, invoerpad,
             ruwe_respons, status, redenen, aangemaakt_op
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
             administratie_id,
             document_id,
             resultaat.model,
+            resultaat.prompt_versie,
             resultaat.invoerpad,
             resultaat.ruwe_respons,
             resultaat.status,
@@ -1839,6 +2003,7 @@ def sla_extractie_op(
 
     for veld, waarde in (
         ("model", resultaat.model),
+        ("prompt_versie", resultaat.prompt_versie),
         ("invoerpad", resultaat.invoerpad),
         ("status", resultaat.status),
         ("document_id", None if document_id is None else str(document_id)),
@@ -1979,20 +2144,29 @@ if __name__ == "__main__":
 #!/usr/bin/env python3
 """Eval: haal alle testfacturen door de extractie en tel de score.
 
-    python scripts/eval_extractie.py            # vraagt eerst om bevestiging
-    python scripts/eval_extractie.py --ja       # meteen draaien
-    python scripts/eval_extractie.py --ja 01 07 # alleen deze nummers
+    python scripts/eval_extractie.py                       # vraagt bevestiging
+    python scripts/eval_extractie.py --ja                  # meteen draaien
+    python scripts/eval_extractie.py --ja 01 07            # alleen deze nummers
+    python scripts/eval_extractie.py --ja --model=claude-haiku-4-5
+
+Met --model leg je een goedkoper model naast het standaardmodel. Elk model
+krijgt zijn eigen rapportbestand, zodat twee runs elkaar niet overschrijven.
 
 Dit script staat buiten pytest en doet WEL echte API-aanroepen: één per
 document, dus tien keer betalen bij een volledige run. Daarom vraagt het
 eerst om bevestiging.
 
 Per veld wordt geteld:
-  correct  de waarde komt overeen met de grondwaarheid in overzicht.json
-           (ook: allebei leeg — dan is "niets gevonden" het juiste antwoord)
-  fout     er staat een andere waarde dan verwacht, of het model heeft een
-           waarde ingevuld die niet op het document staat (verzonnen)
-  gemist   het document heeft de waarde wel, het model geeft niets terug
+  verzonnen  het document heeft dit veld NIET, maar het model vulde toch iets
+             in. Dit is de gevaarlijkste uitkomst en staat daarom bovenaan het
+             rapport: de validatie van module 1 vangt hem niet. Een verzonnen
+             factuurnummer telt gewoon op, klopt met de btw en glipt als
+             "gevalideerd" langs elke controle. Factuur 09 (zonder
+             factuurnummer) is hiervoor de testcase.
+  fout       er staat een andere waarde dan op het document
+  gemist     het document heeft de waarde wel, het model geeft niets terug
+  correct    de waarde komt overeen met de grondwaarheid in overzicht.json
+             (ook: allebei leeg — dan is "niets gevonden" het juiste antwoord)
 
 Bedragen worden als Decimal vergeleken (dus "1.250,00" telt gelijk aan
 "1250.00"), datums als datum (dus "12-07-2026" telt gelijk aan
@@ -2009,11 +2183,18 @@ BASIS = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(BASIS))
 
 from boekhouding import extraheer_factuur, sleutel_aanwezig  # noqa: E402
-from boekhouding.ai_extractie import MODEL, VELDEN  # noqa: E402
+from boekhouding.ai_extractie import VELDEN, standaard_model  # noqa: E402
 
 TESTMAP = BASIS / "tests" / "testfacturen"
-RAPPORT = BASIS / "tests" / "testfacturen" / "eval-rapport.json"
 BEDRAGVELDEN = {"bedrag_excl", "btw_percentage", "btw_bedrag", "bedrag_incl"}
+
+# Volgorde waarin de uitkomsten worden gerapporteerd: het gevaarlijkst eerst.
+OORDELEN = ("verzonnen", "fout", "gemist", "correct")
+
+
+def rapportpad(model: str) -> Path:
+    veilig = "".join(t if t.isalnum() or t in "-_." else "-" for t in model)
+    return TESTMAP / f"eval-rapport-{veilig}.json"
 
 
 def als_decimal(waarde: str) -> Decimal | None:
@@ -2058,7 +2239,10 @@ def beoordeel_veld(veld: str, gelezen, verwacht) -> tuple[str, str]:
     if not heeft_verwacht and not heeft_gelezen:
         return "correct", "staat niet op het document en is niet ingevuld"
     if not heeft_verwacht and heeft_gelezen:
-        return "fout", f"verzonnen: '{gelezen}' staat niet op het document"
+        # Het model vulde iets in wat er niet staat. Dit komt níét door de
+        # validatie aan het licht, want een verzonnen waarde kan gewoon
+        # kloppen met de rest van de factuur.
+        return "verzonnen", f"'{gelezen}' staat niet op het document"
     if heeft_verwacht and not heeft_gelezen:
         return "gemist", f"verwacht '{verwacht}', niets teruggekregen"
     if gelijk(veld, gelezen, verwacht):
@@ -2070,6 +2254,10 @@ def main() -> int:
     argumenten = sys.argv[1:]
     bevestigd = "--ja" in argumenten
     nummers = [a for a in argumenten if not a.startswith("--")]
+    gekozen_model = next(
+        (a.split("=", 1)[1] for a in argumenten if a.startswith("--model=")),
+        None,
+    ) or standaard_model()
 
     overzicht = json.loads((TESTMAP / "overzicht.json").read_text(encoding="utf-8"))
     if nummers:
@@ -2081,7 +2269,7 @@ def main() -> int:
         print("Geen ANTHROPIC_API_KEY gevonden (zie .env.voorbeeld).")
         return 1
 
-    print(f"Eval van {len(overzicht)} document(en) met {MODEL}.")
+    print(f"Eval van {len(overzicht)} document(en) met {gekozen_model}.")
     print(f"Dit doet {len(overzicht)} echte, betaalde API-aanroepen.")
     if not bevestigd:
         antwoord = input("Doorgaan? [j/N] ").strip().lower()
@@ -2090,13 +2278,15 @@ def main() -> int:
             return 0
     print()
 
-    tellingen = {"correct": 0, "fout": 0, "gemist": 0}
+    tellingen = {naam: 0 for naam in OORDELEN}
     status_goed = 0
     regels = []
 
     for verwacht in overzicht:
         pad = TESTMAP / verwacht["bestand"]
-        resultaat = extraheer_factuur(pad, vandaag=date.today())
+        resultaat = extraheer_factuur(
+            pad, model=gekozen_model, vandaag=date.today()
+        )
 
         oordelen = {}
         for veld in VELDEN:
@@ -2116,9 +2306,15 @@ def main() -> int:
             f"{vinkje} {verwacht['bestand']:<34} velden {goed}/{len(VELDEN)}  "
             f"status {resultaat.status} (verwacht {verwacht['verwachte_status']})"
         )
-        for veld, oordeel in oordelen.items():
-            if oordeel["oordeel"] != "correct":
-                print(f"      {oordeel['oordeel']:<8} {veld}: {oordeel['toelichting']}")
+        for soort in OORDELEN:
+            if soort == "correct":
+                continue
+            for veld, oordeel in oordelen.items():
+                if oordeel["oordeel"] == soort:
+                    merk = "!!" if soort == "verzonnen" else "  "
+                    print(
+                        f"    {merk} {soort:<10} {veld}: {oordeel['toelichting']}"
+                    )
 
         regels.append(
             {
@@ -2134,18 +2330,35 @@ def main() -> int:
 
     totaal = sum(tellingen.values())
     print("\n" + "=" * 66)
+    if tellingen["verzonnen"]:
+        print(
+            f"!! VERZONNEN: {tellingen['verzonnen']} veld(en) ingevuld die niet "
+            f"op het document staan."
+        )
+        print(
+            "   Dit is de gevaarlijkste uitkomst: de validatie vangt hem niet, "
+            "want een"
+        )
+        print(
+            "   verzonnen waarde kan prima kloppen met de rest van de factuur.\n"
+        )
+    else:
+        print("Verzonnen: 0 — het model heeft niets ingevuld dat er niet staat.\n")
+
     print(f"Velden   : {totaal} beoordeeld")
-    for naam in ("correct", "fout", "gemist"):
+    for naam in OORDELEN:
         deel = tellingen[naam] / totaal * 100 if totaal else 0
-        print(f"  {naam:<8} {tellingen[naam]:>3}  ({deel:.0f}%)")
+        print(f"  {naam:<10} {tellingen[naam]:>3}  ({deel:.0f}%)")
     print(f"Status   : {status_goed}/{len(overzicht)} documenten in de juiste bak")
     score = tellingen["correct"] / totaal * 100 if totaal else 0
     print(f"Score    : {score:.1f}% velden correct")
 
-    RAPPORT.write_text(
+    rapport = rapportpad(gekozen_model)
+    rapport.write_text(
         json.dumps(
             {
-                "model": MODEL,
+                "model": gekozen_model,
+                "verzonnen": tellingen["verzonnen"],
                 "tellingen": tellingen,
                 "score_procent": round(score, 1),
                 "status_goed": status_goed,
@@ -2157,7 +2370,7 @@ def main() -> int:
         + "\n",
         encoding="utf-8",
     )
-    print(f"\nRapport: {RAPPORT}")
+    print(f"\nRapport: {rapport}")
     return 0
 
 
@@ -4252,7 +4465,14 @@ from boekhouding import (
     lees_extractie,
     sla_extractie_op,
 )
-from boekhouding.ai_extractie import MODEL, SYSTEEM_PROMPT, maak_client
+from boekhouding.ai_extractie import (
+    PROMPT_VERSIE,
+    STANDAARD_MODEL,
+    SYSTEEM_PROMPT,
+    foutreden,
+    maak_client,
+    standaard_model,
+)
 from conftest import VANDAAG, maak_pdf
 
 
@@ -4493,7 +4713,7 @@ def test_er_wordt_om_structured_output_gevraagd(factuur_pdf):
 
     aanroep = client.aanroepen[0]
     assert aanroep["output_format"] is FactuurExtractie  # geen vrije tekst
-    assert aanroep["model"] == MODEL
+    assert aanroep["model"] == STANDAARD_MODEL
 
 
 def test_de_systeemprompt_verbiedt_gokken_en_rekenen(factuur_pdf):
@@ -4586,7 +4806,7 @@ def test_extractie_wordt_opgeslagen_met_model_en_ruwe_respons(
     )
     bewaard = lees_extractie(conn, extractie_id)
 
-    assert bewaard["model"] == MODEL
+    assert bewaard["model"] == STANDAARD_MODEL
     assert bewaard["invoerpad"] == "tekst"
     assert bewaard["document_id"] == document.document_id
     assert bewaard["status"] == "gevalideerd"
@@ -4602,7 +4822,7 @@ def test_audit_trail_bij_extractie(conn, administratie_id, factuur_pdf):
 
     trail = lees_audit_trail(conn, extractie_id, tabel="extracties")
     per_veld = {regel["veld"]: regel["nieuwe_waarde"] for regel in trail}
-    assert per_veld["model"] == MODEL
+    assert per_veld["model"] == STANDAARD_MODEL
     assert per_veld["invoerpad"] == "tekst"
     assert per_veld["status"] == "gevalideerd"
     assert all(regel["tijdstip"] for regel in trail)
@@ -4619,6 +4839,293 @@ def test_afgekeurde_extractie_wordt_ook_bewaard(conn, administratie_id, factuur_
     bewaard = lees_extractie(conn, extractie_id)
     assert bewaard["status"] == "review_nodig"
     assert len(bewaard["redenen"]) >= 1
+
+
+# --- foutafhandeling: nooit een exception naar buiten -------------------
+
+class ApiFout(Exception):
+    """Doet zich voor als een fout van de SDK (die draagt status_code)."""
+
+    def __init__(self, status_code=None, bericht="fout"):
+        super().__init__(bericht)
+        if status_code is not None:
+            self.status_code = status_code
+
+
+@pytest.mark.parametrize(
+    "fout, kern",
+    [
+        (ApiFout(429), "rate limit"),
+        (ApiFout(500), "serverfout"),
+        (ApiFout(503), "serverfout"),
+        (ApiFout(401), "API-sleutel"),
+        (ApiFout(403), "API-sleutel"),
+        (ApiFout(404), "model bestaat niet"),
+        (ApiFout(400), "ongeldig"),
+        (ApiFout(418), "foutcode 418"),
+        (ConnectionError("verbinding verbroken"), "geen verbinding"),
+        (TimeoutError("te lang"), "geen verbinding"),
+        (RuntimeError("iets onverwachts"), "geen verbinding"),
+    ],
+)
+def test_api_fout_wordt_review_en_nooit_een_exception(factuur_pdf, fout, kern):
+    client = NageaapteClient(fout)
+    resultaat = extraheer_factuur(factuur_pdf, client=client, vandaag=VANDAAG)
+
+    assert resultaat.status == "review_nodig"
+    assert any(kern in reden for reden in resultaat.redenen)
+    assert resultaat.factuur is None
+
+
+def test_stapel_facturen_loopt_door_na_een_fout(factuur_pdf, tmp_path):
+    # Eén kapotte aanroep mag de rest van de stapel niet meeslepen.
+    tweede = tmp_path / "tweede.pdf"
+    tweede.write_bytes(maak_pdf("Factuur 2026-0413"))
+
+    uitkomsten = []
+    for pad, client in (
+        (factuur_pdf, NageaapteClient(ApiFout(429))),
+        (tweede, client_met(goede_extractie())),
+    ):
+        uitkomsten.append(extraheer_factuur(pad, client=client, vandaag=VANDAAG))
+
+    assert uitkomsten[0].status == "review_nodig"
+    assert uitkomsten[1].status == "gevalideerd"
+
+
+def test_foutreden_noemt_nooit_de_sleutel():
+    reden = foutreden(ApiFout(401))
+    assert "sleutel" in reden           # zegt wél wát er mis is
+    assert "nep-sleutel" not in reden   # maar nooit de waarde
+
+
+# --- promptversie in de audit trail ------------------------------------
+
+def test_promptversie_staat_in_het_resultaat(factuur_pdf):
+    client = client_met(goede_extractie())
+    resultaat = extraheer_factuur(factuur_pdf, client=client, vandaag=VANDAAG)
+    assert resultaat.prompt_versie == PROMPT_VERSIE
+
+
+def test_promptversie_wordt_opgeslagen(conn, administratie_id, factuur_pdf):
+    client = client_met(goede_extractie())
+    resultaat = extraheer_factuur(factuur_pdf, client=client, vandaag=VANDAAG)
+    extractie_id = sla_extractie_op(conn, administratie_id, resultaat)
+
+    assert lees_extractie(conn, extractie_id)["prompt_versie"] == PROMPT_VERSIE
+    trail = lees_audit_trail(conn, extractie_id, tabel="extracties")
+    per_veld = {regel["veld"]: regel["nieuwe_waarde"] for regel in trail}
+    assert per_veld["prompt_versie"] == PROMPT_VERSIE
+
+
+def test_oude_extractie_krijgt_geen_verzonnen_promptversie():
+    # Een database van vóór deze kolom weet niet met welke prompt er is
+    # uitgelezen; dan hoort er 'onbekend' te staan, niet de huidige versie.
+    from boekhouding import maak_tabellen, maak_verbinding
+
+    oud = maak_verbinding(":memory:")
+    oud.executescript(
+        """
+        CREATE TABLE administraties (
+            id INTEGER PRIMARY KEY, naam TEXT NOT NULL,
+            type TEXT NOT NULL DEFAULT 'eenmanszaak', aangemaakt_op TEXT NOT NULL
+        );
+        CREATE TABLE extracties (
+            id INTEGER PRIMARY KEY,
+            administratie_id INTEGER NOT NULL REFERENCES administraties(id),
+            document_id INTEGER, model TEXT NOT NULL, invoerpad TEXT,
+            ruwe_respons TEXT NOT NULL, status TEXT NOT NULL,
+            redenen TEXT NOT NULL DEFAULT '[]', aangemaakt_op TEXT NOT NULL
+        );
+        INSERT INTO administraties VALUES (1, 'Oud', 'eenmanszaak', '2026-01-01');
+        INSERT INTO extracties VALUES
+            (1, 1, NULL, 'oud-model', 'tekst', '{}', 'gevalideerd', '[]', '2026-01-01');
+        """
+    )
+    maak_tabellen(oud)
+
+    rij = oud.execute("SELECT prompt_versie FROM extracties WHERE id = 1").fetchone()
+    assert rij[0] == "onbekend"
+    oud.close()
+
+
+# --- model instelbaar ---------------------------------------------------
+
+def test_model_kan_worden_meegegeven(factuur_pdf):
+    client = client_met(goede_extractie())
+    resultaat = extraheer_factuur(
+        factuur_pdf, client=client, model="claude-haiku-4-5", vandaag=VANDAAG
+    )
+    assert client.aanroepen[0]["model"] == "claude-haiku-4-5"
+    assert resultaat.model == "claude-haiku-4-5"
+
+
+def test_model_uit_env_wordt_gebruikt(factuur_pdf, tmp_path, monkeypatch):
+    monkeypatch.delenv("ANTHROPIC_MODEL", raising=False)
+    env = tmp_path / ".env"
+    env.write_text("ANTHROPIC_MODEL=claude-sonnet-5\n", encoding="utf-8")
+
+    client = client_met(goede_extractie())
+    extraheer_factuur(factuur_pdf, client=client, env_pad=env, vandaag=VANDAAG)
+    assert client.aanroepen[0]["model"] == "claude-sonnet-5"
+
+
+def test_zonder_instelling_geldt_het_standaardmodel(tmp_path, monkeypatch):
+    monkeypatch.delenv("ANTHROPIC_MODEL", raising=False)
+    assert standaard_model(tmp_path / "bestaat-niet.env") == STANDAARD_MODEL
+
+
+def test_meegegeven_model_gaat_voor_op_env(factuur_pdf, tmp_path, monkeypatch):
+    monkeypatch.delenv("ANTHROPIC_MODEL", raising=False)
+    env = tmp_path / ".env"
+    env.write_text("ANTHROPIC_MODEL=claude-sonnet-5\n", encoding="utf-8")
+
+    client = client_met(goede_extractie())
+    extraheer_factuur(
+        factuur_pdf, client=client, model="claude-opus-5", env_pad=env,
+        vandaag=VANDAAG,
+    )
+    assert client.aanroepen[0]["model"] == "claude-opus-5"
+
+
+def test_gebruikt_model_wordt_opgeslagen(conn, administratie_id, factuur_pdf):
+    client = client_met(goede_extractie())
+    resultaat = extraheer_factuur(
+        factuur_pdf, client=client, model="claude-haiku-4-5", vandaag=VANDAAG
+    )
+    extractie_id = sla_extractie_op(conn, administratie_id, resultaat)
+    assert lees_extractie(conn, extractie_id)["model"] == "claude-haiku-4-5"
+```
+
+## `boekhouding/tests/test_eval_logica.py`
+
+```python
+"""Tests voor de vergelijkingslogica van de eval.
+
+Het evalscript zelf draait buiten pytest omdat het echte API-aanroepen
+doet. De manier waarop het een gelezen waarde met de grondwaarheid
+vergelijkt is echter gewone rekenkunde zonder API, en juist die moet
+kloppen: anders meet de eval het verkeerde.
+"""
+
+import sys
+from pathlib import Path
+
+import pytest
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
+
+from eval_extractie import (  # noqa: E402
+    OORDELEN,
+    als_datum,
+    als_decimal,
+    beoordeel_veld,
+    rapportpad,
+)
+
+
+def test_gevaarlijkste_oordeel_staat_vooraan():
+    assert OORDELEN[0] == "verzonnen"
+
+
+# --- verzonnen: het model vult iets in dat er niet staat ---------------
+
+def test_verzonnen_is_een_eigen_categorie():
+    # Factuur 09 heeft geen factuurnummer. Vult het model er toch een in,
+    # dan telt dat niet als "fout" maar als "verzonnen": de validatie van
+    # module 1 vangt dit namelijk niet.
+    oordeel, toelichting = beoordeel_veld("factuurnummer", "2026-9999", None)
+    assert oordeel == "verzonnen"
+    assert "2026-9999" in toelichting
+    assert "staat niet op het document" in toelichting
+
+
+def test_verzonnen_bij_lege_grondwaarheid():
+    assert beoordeel_veld("factuurnummer", "X-1", "")[0] == "verzonnen"
+
+
+def test_niets_invullen_bij_ontbrekend_veld_is_correct():
+    # Dit is het gewenste gedrag bij factuur 09.
+    oordeel, toelichting = beoordeel_veld("factuurnummer", None, None)
+    assert oordeel == "correct"
+    assert "niet ingevuld" in toelichting
+
+
+# --- de andere drie ----------------------------------------------------
+
+def test_gemist_als_het_veld_er_wel_staat():
+    oordeel, toelichting = beoordeel_veld("factuurnummer", None, "2026-0412")
+    assert oordeel == "gemist"
+    assert "2026-0412" in toelichting
+
+
+def test_fout_bij_een_andere_waarde():
+    oordeel, _ = beoordeel_veld("factuurnummer", "2026-0413", "2026-0412")
+    assert oordeel == "fout"
+
+
+def test_gelijke_waarde_is_correct():
+    assert beoordeel_veld("leverancier", "KPN B.V.", "KPN B.V.")[0] == "correct"
+
+
+def test_hoofdletters_en_spaties_tellen_niet_mee():
+    oordeel, _ = beoordeel_veld(
+        "leverancier", "  van dijk ICT-diensten ", "Van Dijk ICT-diensten"
+    )
+    assert oordeel == "correct"
+
+
+# --- notatie mag verschillen, de waarde niet ---------------------------
+
+@pytest.mark.parametrize(
+    "gelezen, verwacht, verwachting",
+    [
+        ("1.250,00", "1250.00", "correct"),   # Nederlands duizendtal
+        ("1250,00", "1250.00", "correct"),
+        ("1250.00", "1250.00", "correct"),
+        ("-544,50", "-544.50", "correct"),    # creditnota
+        ("125,00", "1250.00", "fout"),        # factor 10 mis
+        ("1.250", "1250.00", "fout"),         # ambigu, dus niet zomaar goed
+    ],
+)
+def test_bedragen_worden_op_waarde_vergeleken(gelezen, verwacht, verwachting):
+    assert beoordeel_veld("bedrag_excl", gelezen, verwacht)[0] == verwachting
+
+
+@pytest.mark.parametrize(
+    "gelezen, verwacht, verwachting",
+    [
+        ("2026-07-12", "12-07-2026", "correct"),  # ISO tegen Nederlands
+        ("12-07-2026", "12-07-2026", "correct"),
+        ("2026-07-11", "12-07-2026", "fout"),
+        ("12 juli 2026", "12-07-2026", "fout"),   # onleesbare notatie
+    ],
+)
+def test_datums_worden_op_datum_vergeleken(gelezen, verwacht, verwachting):
+    assert beoordeel_veld("factuurdatum", gelezen, verwacht)[0] == verwachting
+
+
+def test_onleesbaar_bedrag_telt_niet_stiekem_als_goed():
+    assert als_decimal("geen bedrag") is None
+    assert beoordeel_veld("bedrag_excl", "geen bedrag", "450.00")[0] == "fout"
+
+
+def test_onleesbare_datum_telt_niet_stiekem_als_goed():
+    assert als_datum("gisteren") is None
+
+
+# --- rapport per model -------------------------------------------------
+
+def test_elk_model_krijgt_een_eigen_rapportbestand():
+    een = rapportpad("claude-opus-5")
+    twee = rapportpad("claude-haiku-4-5")
+    assert een != twee
+    assert een.name == "eval-rapport-claude-opus-5.json"
+
+
+def test_rapportnaam_blijft_een_veilige_bestandsnaam():
+    naam = rapportpad("raar/model:naam").name
+    assert "/" not in naam and ":" not in naam
 ```
 
 ## `boekhouding/pytest.ini`
@@ -4654,6 +5161,9 @@ __pycache__/
 .env
 .env.*
 !.env.voorbeeld
+
+# Meetresultaat van de eval; wordt opnieuw gemaakt bij elke run.
+tests/testfacturen/eval-rapport-*.json
 ```
 
 ## `boekhouding/.env.voorbeeld`
@@ -4666,6 +5176,11 @@ __pycache__/
 # chat, een screenshot of een commit terecht: meteen intrekken en een
 # nieuwe maken.
 ANTHROPIC_API_KEY=vul-hier-je-eigen-sleutel-in
+
+# Optioneel: welk model de extractie gebruikt. Laat je dit weg, dan geldt
+# claude-opus-5. Handig om in de eval een goedkoper model te vergelijken;
+# dat kan ook per run met --model=...
+# ANTHROPIC_MODEL=claude-opus-5
 ```
 
 ---
@@ -4673,7 +5188,7 @@ ANTHROPIC_API_KEY=vul-hier-je-eigen-sleutel-in
 # Testresultaat
 
 ```
-........................................................................ [ 69%]
-................................                                         [100%]
-104 passed in 0.30s
+........................................................................ [ 97%]
+...                                                                      [100%]
+147 passed in 0.35s
 ```
