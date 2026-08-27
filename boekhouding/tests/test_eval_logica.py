@@ -124,3 +124,29 @@ def test_elk_model_krijgt_een_eigen_rapportbestand():
 def test_rapportnaam_blijft_een_veilige_bestandsnaam():
     naam = rapportpad("raar/model:naam").name
     assert "/" not in naam and ":" not in naam
+
+
+# --- kostenberekening ---------------------------------------------------
+
+def test_kosten_worden_per_miljoen_tokens_gerekend():
+    from eval_extractie import kosten
+
+    # claude-opus-5: $5 per miljoen invoer, $25 per miljoen uitvoer.
+    assert kosten("claude-opus-5", 1_000_000, 0) == pytest.approx(5.00)
+    assert kosten("claude-opus-5", 0, 1_000_000) == pytest.approx(25.00)
+    assert kosten("claude-opus-5", 200_000, 20_000) == pytest.approx(1.5)
+
+
+def test_goedkoper_model_kost_minder_bij_hetzelfde_verbruik():
+    from eval_extractie import kosten
+
+    opus = kosten("claude-opus-5", 100_000, 10_000)
+    sonnet = kosten("claude-sonnet-5", 100_000, 10_000)
+    haiku = kosten("claude-haiku-4-5", 100_000, 10_000)
+    assert opus > sonnet > haiku
+
+
+def test_onbekend_model_geeft_geen_verzonnen_prijs():
+    from eval_extractie import kosten
+
+    assert kosten("een-model-dat-we-niet-kennen", 1_000_000, 1_000_000) is None

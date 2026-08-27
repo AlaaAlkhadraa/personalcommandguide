@@ -75,6 +75,38 @@ class Factuur(BaseModel):
                 raise ValueError(f"'{origineel}' is geen geldig bedrag")
         return waarde
 
+    @field_validator("factuurdatum", mode="before")
+    @classmethod
+    def nederlandse_datum(cls, waarde: Any) -> Any:
+        """Accepteer JJJJ-MM-DD, en DD-MM-JJJJ alleen als die eenduidig is.
+
+        Op een Nederlandse factuur staat "12-07-2026". De AI-module vraagt
+        het model om JJJJ-MM-DD terug te geven, maar als er tóch de
+        geschreven vorm binnenkomt moet dat geen onleesbare foutmelding
+        opleveren.
+
+        Is het eerste getal groter dan 12, dan kan het alleen een dag zijn
+        en is de datum eenduidig. Is het 12 of lager, dan kan "03-04-2026"
+        zowel 3 april als 4 maart zijn — dan wordt er niet gegokt maar
+        volgt review (Gouden regel 4), met een reden die beide lezingen
+        noemt.
+        """
+        if not isinstance(waarde, str):
+            return waarde
+        tekst = waarde.strip()
+        gevonden = re.fullmatch(r"(\d{1,2})-(\d{1,2})-(\d{4})", tekst)
+        if gevonden is None:
+            return tekst
+        eerste, tweede, jaar = (int(g) for g in gevonden.groups())
+        if eerste > 12:
+            return f"{jaar:04d}-{tweede:02d}-{eerste:02d}"
+        raise ValueError(
+            f"ambigue datum '{tekst}': kan {eerste} van maand {tweede} of "
+            f"{tweede} van maand {eerste} zijn — noteer hem als "
+            f"{jaar:04d}-{tweede:02d}-{eerste:02d} als het de Nederlandse "
+            f"schrijfwijze is"
+        )
+
     @model_validator(mode="after")
     def btw_percentage_toegestaan(self) -> "Factuur":
         toegestaan = btw_percentages_voor_jaar(self.factuurdatum.year)

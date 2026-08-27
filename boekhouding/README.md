@@ -46,9 +46,14 @@ drie dingen:
    dat kan 1250,00 (Nederlands duizendtal) of 1,250 (Engels decimaal)
    zijn. Dan wordt er niet gegokt maar wordt het `review_nodig`
    (Gouden regel 4); `"100.00"` en `"0.5"` blijven gewoon geldig.
-2. **Het btw-percentage moet bestaan** in het config-bestand van het jaar
+2. **De factuurdatum mag ook in de Nederlandse schrijfwijze.** `2026-07-31`
+   werkt, en `31-07-2026` ook: 31 kan alleen een dag zijn, dus daar valt
+   niets te gokken. Maar `03-04-2026` kan 3 april of 4 maart zijn — dan
+   volgt `review_nodig` met een reden die beide lezingen noemt. Dezelfde
+   regel als bij `"1.250"`.
+3. **Het btw-percentage moet bestaan** in het config-bestand van het jaar
    van de factuurdatum (nu: 21, 9 of 0).
-3. **Leverancier en factuurnummer mogen niet leeg zijn.**
+4. **Leverancier en factuurnummer mogen niet leeg zijn.**
 
 `ValidatieResultaat` is het antwoord dat elke controle teruggeeft: de
 status (`gevalideerd` of `review_nodig`), de lijst met redenen, de nette
@@ -314,7 +319,9 @@ ook als het model intussen is vervangen.
   bevestiging (`--ja` slaat de vraag over). Met `--model=...` leg je een
   goedkoper model ernaast; elk model krijgt zijn eigen rapportbestand.
   Bedragen worden als Decimal vergeleken en datums als datum, zodat de eval
-  de inhoud meet en niet de schrijfwijze.
+  de inhoud meet en niet de schrijfwijze. Het tokenverbruik wordt geteld en,
+  als de prijs van het model bekend is, omgerekend naar kosten per run en
+  per factuur.
 
   De eval telt vier uitkomsten, en **verzonnen** staat bovenaan:
 
@@ -369,7 +376,7 @@ de stack blijft Python, SQLite, Pydantic en pytest.
 
 ### `tests/` — de bewijslast
 
-147 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
+157 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
 onzin-tekst, ontbrekende velden, verkeerde btw-percentages, ambigue
 bedragen, toekomst- en te oude datums, duplicaten, de audit trail bij
 aanmaken en wijzigen, en voor module 2: een PDF zonder tekstlaag, een

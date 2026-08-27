@@ -163,3 +163,45 @@ def test_onzin_input_gooit_nooit_een_exception():
     )
     assert resultaat.status == "review_nodig"
     assert len(resultaat.redenen) >= 3
+
+
+# --- datumnotatie -------------------------------------------------------
+
+def test_iso_datum_wordt_begrepen():
+    data = geldige_factuur() | {"factuurdatum": "2026-08-01"}
+    resultaat = valideer_factuur(data, vandaag=VANDAAG)
+    assert resultaat.status == "gevalideerd"
+    assert str(resultaat.factuur.factuurdatum) == "2026-08-01"
+
+
+def test_eenduidige_nederlandse_datum_wordt_omgezet():
+    # 31 kan alleen een dag zijn, dus hier valt niets te gokken.
+    data = geldige_factuur() | {"factuurdatum": "31-07-2026"}
+    resultaat = valideer_factuur(data, vandaag=VANDAAG)
+    assert resultaat.status == "gevalideerd"
+    assert str(resultaat.factuur.factuurdatum) == "2026-07-31"
+
+
+def test_ambigue_datum_geeft_review_met_beide_lezingen():
+    # 03-04-2026 kan 3 april of 4 maart zijn — niet gokken.
+    data = geldige_factuur() | {"factuurdatum": "03-04-2026"}
+    resultaat = valideer_factuur(data, vandaag=VANDAAG)
+    assert resultaat.status == "review_nodig"
+    assert any(
+        "ambigue datum" in reden and "2026-04-03" in reden
+        for reden in resultaat.redenen
+    )
+
+
+def test_ambigue_datum_op_de_grens_van_twaalf():
+    data = geldige_factuur() | {"factuurdatum": "12-07-2026"}
+    resultaat = valideer_factuur(data, vandaag=VANDAAG)
+    assert resultaat.status == "review_nodig"
+    assert any("ambigue datum" in reden for reden in resultaat.redenen)
+
+
+def test_onbestaande_datum_geeft_gewoon_review():
+    data = geldige_factuur() | {"factuurdatum": "2026-13-01"}
+    resultaat = valideer_factuur(data, vandaag=VANDAAG)
+    assert resultaat.status == "review_nodig"
+    assert any("factuurdatum" in reden for reden in resultaat.redenen)

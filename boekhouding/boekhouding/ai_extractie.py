@@ -140,6 +140,8 @@ class ExtractieResultaat(BaseModel):
     extractie: Optional[FactuurExtractie] = None
     model: str = ""
     prompt_versie: str = PROMPT_VERSIE
+    invoer_tokens: int = 0
+    uitvoer_tokens: int = 0
     invoerpad: Optional[Literal["tekst", "beeld"]] = None
     ruwe_respons: str = ""
     bestandsnaam: str = ""
@@ -228,6 +230,17 @@ def bouw_inhoud(pad: str | Path, invoerpad: str) -> list[dict[str, Any]]:
             },
         }
     return [blok, {"type": "text", "text": VRAAG_BEELD}]
+
+
+def _tokens(respons: Any) -> tuple[int, int]:
+    """Lees het tokenverbruik uit het antwoord, als de SDK dat meegeeft."""
+    verbruik = getattr(respons, "usage", None)
+    if verbruik is None:
+        return 0, 0
+    return (
+        int(getattr(verbruik, "input_tokens", 0) or 0),
+        int(getattr(verbruik, "output_tokens", 0) or 0),
+    )
 
 
 def _ruwe_tekst(respons: Any, extractie: Optional[FactuurExtractie]) -> str:
@@ -405,6 +418,7 @@ def extraheer_factuur(
     status, redenen, factuur = beoordeel_extractie(
         extractie, vandaag=vandaag, is_duplicaat=is_duplicaat
     )
+    invoer_tokens, uitvoer_tokens = _tokens(respons)
     return ExtractieResultaat(
         status=status,
         redenen=redenen,
@@ -413,5 +427,7 @@ def extraheer_factuur(
         model=model,
         invoerpad=invoerpad,
         ruwe_respons=_ruwe_tekst(respons, extractie),
+        invoer_tokens=invoer_tokens,
+        uitvoer_tokens=uitvoer_tokens,
         bestandsnaam=pad.name,
     )

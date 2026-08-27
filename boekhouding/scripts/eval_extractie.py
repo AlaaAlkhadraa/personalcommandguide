@@ -48,6 +48,26 @@ BEDRAGVELDEN = {"bedrag_excl", "btw_percentage", "btw_bedrag", "bedrag_incl"}
 # Volgorde waarin de uitkomsten worden gerapporteerd: het gevaarlijkst eerst.
 OORDELEN = ("verzonnen", "fout", "gemist", "correct")
 
+# Prijs per miljoen tokens (invoer, uitvoer), in dollars. Dit is een
+# momentopname en géén bron van waarheid: controleer hem tegen
+# anthropic.com/pricing voordat je er een besluit op baseert. Staat een
+# model er niet bij, dan worden alleen de tokens gerapporteerd.
+PRIJZEN = {
+    "claude-opus-5": (5.00, 25.00),
+    "claude-sonnet-5": (2.00, 10.00),
+    "claude-haiku-4-5": (1.00, 5.00),
+}
+
+
+def kosten(model: str, invoer_tokens: int, uitvoer_tokens: int):
+    """Bereken de kosten in dollars, of None als de prijs onbekend is."""
+    if model not in PRIJZEN:
+        return None
+    invoerprijs, uitvoerprijs = PRIJZEN[model]
+    return invoer_tokens / 1_000_000 * invoerprijs + (
+        uitvoer_tokens / 1_000_000 * uitvoerprijs
+    )
+
 
 def rapportpad(model: str) -> Path:
     veilig = "".join(t if t.isalnum() or t in "-_." else "-" for t in model)
@@ -136,6 +156,7 @@ def main() -> int:
     print()
 
     tellingen = {naam: 0 for naam in OORDELEN}
+    invoer_tokens = uitvoer_tokens = 0
     status_goed = 0
     regels = []
 
@@ -154,6 +175,8 @@ def main() -> int:
             tellingen[oordeel] += 1
             oordelen[veld] = {"oordeel": oordeel, "toelichting": toelichting}
 
+        invoer_tokens += resultaat.invoer_tokens
+        uitvoer_tokens += resultaat.uitvoer_tokens
         statusklopt = resultaat.status == verwacht["verwachte_status"]
         status_goed += int(statusklopt)
 
@@ -210,12 +233,25 @@ def main() -> int:
     score = tellingen["correct"] / totaal * 100 if totaal else 0
     print(f"Score    : {score:.1f}% velden correct")
 
+    print(f"Tokens   : {invoer_tokens} in, {uitvoer_tokens} uit")
+    prijs = kosten(gekozen_model, invoer_tokens, uitvoer_tokens)
+    if prijs is None:
+        print(f"Kosten   : onbekend — geen prijs bekend voor {gekozen_model}")
+    else:
+        per_stuk = prijs / len(overzicht) if overzicht else 0
+        print(f"Kosten   : ${prijs:.4f} voor deze run (${per_stuk:.4f} per factuur)")
+
     rapport = rapportpad(gekozen_model)
     rapport.write_text(
         json.dumps(
             {
                 "model": gekozen_model,
                 "verzonnen": tellingen["verzonnen"],
+                "invoer_tokens": invoer_tokens,
+                "uitvoer_tokens": uitvoer_tokens,
+                "kosten_dollar": kosten(
+                    gekozen_model, invoer_tokens, uitvoer_tokens
+                ),
                 "tellingen": tellingen,
                 "score_procent": round(score, 1),
                 "status_goed": status_goed,

@@ -552,3 +552,29 @@ def test_gebruikt_model_wordt_opgeslagen(conn, administratie_id, factuur_pdf):
     )
     extractie_id = sla_extractie_op(conn, administratie_id, resultaat)
     assert lees_extractie(conn, extractie_id)["model"] == "claude-haiku-4-5"
+
+# --- tokenverbruik (voor de kostenrapportage van de eval) ---------------
+
+class Verbruik:
+    def __init__(self, invoer, uitvoer):
+        self.input_tokens = invoer
+        self.output_tokens = uitvoer
+
+
+def test_tokenverbruik_wordt_overgenomen(factuur_pdf):
+    extractie = goede_extractie()
+    respons = NageaapteRespons(extractie, ruwe_json=extractie.model_dump_json())
+    respons.usage = Verbruik(1234, 210)
+    client = NageaapteClient(respons)
+
+    resultaat = extraheer_factuur(factuur_pdf, client=client, vandaag=VANDAAG)
+    assert resultaat.invoer_tokens == 1234
+    assert resultaat.uitvoer_tokens == 210
+
+
+def test_zonder_verbruik_blijven_de_tellers_nul(factuur_pdf):
+    # Niet elke respons hoeft usage te hebben; dat mag niet crashen.
+    client = client_met(goede_extractie())
+    resultaat = extraheer_factuur(factuur_pdf, client=client, vandaag=VANDAAG)
+    assert resultaat.invoer_tokens == 0
+    assert resultaat.uitvoer_tokens == 0
