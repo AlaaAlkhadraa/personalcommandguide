@@ -21,13 +21,14 @@ Branch: `claude/nl-accounting-invoice-module-f2vzr3`
 | `09-module4-ubl-efacturen.md` | Module 4: UBL / e-facturen, routering op inhoud, XXE-bescherming |
 | `10-fix-module4-review.md` | Fixes: groottelimiet vóór het parsen, UTF-16 herkennen |
 | `11-module5-webinterface.md` | CLAUDE.md aangevuld + Module 5: webinterface fase 1 |
+| `12-fix-module5-idor.md` | Fix: elk adres hoort bij één administratie (404, niet 403) |
 | `CODE-COMPLEET.md` | de volledige actuele code, uitleg en tests |
 | `testfacturen-overzicht.json` | grondwaarheid bij de 10 testfacturen |
 | `boekhouding-compleet.zip` | alles in één archief: code, tests, facturen, rapporten |
 
 ## Waar het nu staat
 
-- **233 pytest-tests, allemaal groen.** De testsuite doet nooit een echte
+- **241 pytest-tests, allemaal groen.** De testsuite doet nooit een echte
   API-aanroep.
 - **Module 1** — schema met Decimal-bedragen, alle rekencontroles, datum- en
   duplicaatcheck. Elke fout wordt `review_nodig` met reden, nooit een
@@ -46,7 +47,9 @@ Branch: `claude/nl-accounting-invoice-module-f2vzr3`
 - **Module 5** — webinterface (FastAPI + Jinja2, mobiel-eerst, lokaal, geen
   login): overzicht met review bovenaan, uploaden met camera, en het
   reviewscherm met het origineel links en de bewerkbare velden rechts.
-  Goedkeuren kan alleen zonder openstaande punten.
+  Goedkeuren kan alleen zonder openstaande punten. Alle adressen hangen
+  onder een administratie en worden op eigenaarschap gecontroleerd (404,
+  niet 403), zodat klantaccounts er later veilig op kunnen.
 - **Testmateriaal** — 10 facturen die deterministisch worden gegenereerd,
   inclusief de lastige gevallen (korting, creditnota, scan zonder tekstlaag,
   ontbrekend factuurnummer, bedragen die niet kloppen).

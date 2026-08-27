@@ -493,9 +493,38 @@ zegt dat de sommen kloppen, `goedgekeurd_op` zegt dat een mens ja heeft
 gezegd. Dat scheelt bovendien een tabelmigratie, want een CHECK-constraint is
 in SQLite niet te wijzigen.
 
-Het originele document wordt geserveerd op `/document/{id}`, met het pad uit
-de database — nooit uit het verzoek. Een bezoeker kan dus geen ander bestand
-van de schijf opvragen.
+### Elk adres hoort bij één administratie
+
+Alle routes die een factuur of document aanraken hangen onder de
+administratie:
+
+```
+/administratie/{a}/factuur/{f}
+/administratie/{a}/factuur/{f}/opslaan
+/administratie/{a}/factuur/{f}/goedkeuren
+/administratie/{a}/document/{d}
+```
+
+Elke route gaat langs één gedeelde functie, `hoort_bij_administratie`, die het
+record ophaalt én controleert of het werkelijk bij die administratie hoort. Zo
+niet, dan volgt **404** — niet 403. Een 403 ("mag niet") zou verklappen dat het
+record bestaat, en dan weet iemand die de nummers in de adresbalk aan het
+aflopen is precies waar wat zit. Bestaat-niet en hoort-bij-een-ander geven
+daarom exact hetzelfde antwoord; daar is een test voor die de twee
+antwoordpagina's letterlijk vergelijkt.
+
+Nu is er nog één gebruiker en kan dit geen kwaad. Maar het adres van een
+factuur is een nummer dat iedereen kan ophogen, en zodra er klantaccounts
+komen zou klant B anders de facturen van klant A kunnen bekijken én aanpassen.
+Dat is makkelijker nu goed te zetten dan later.
+
+Er is ook een test die de routes zelf leest: elke route met een ander id dan
+`administratie_id` in het pad móét `hoort_bij_administratie` gebruiken. Voegt
+iemand later een route toe en vergeet die controle, dan valt die test om.
+
+Het originele document wordt geserveerd met het pad **uit de database** —
+nooit uit het verzoek. Een bezoeker kan dus ook geen ander bestand van de
+schijf opvragen.
 
 ## Testmateriaal: synthetische facturen
 
@@ -536,7 +565,7 @@ de stack blijft Python, SQLite, Pydantic en pytest.
 
 ### `tests/` — de bewijslast
 
-233 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
+241 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
 onzin-tekst, ontbrekende velden, verkeerde btw-percentages, ambigue
 bedragen, toekomst- en te oude datums, duplicaten, de audit trail bij
 aanmaken en wijzigen, en voor module 2: een PDF zonder tekstlaag, een
@@ -3181,7 +3210,7 @@ from datetime import date
 from pathlib import Path
 from typing import Any, Optional
 
-from fastapi import FastAPI, Form, Request, UploadFile
+from fastapi import FastAPI, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
@@ -3223,6 +3252,47 @@ MEDIATYPEN = {
 }
 
 
+class NietGevonden(HTTPException):
+    """Eén antwoord voor twee gevallen, en dat is met opzet.
+
+    Vraagt iemand een factuur op die niet bestaat, of een factuur die
+    wel bestaat maar bij een andere administratie hoort, dan krijgt hij
+    exact hetzelfde te zien: 404, niet gevonden. Een 403 ("mag niet")
+    zou verklappen dat het record bestaat, en dan weet iemand die de
+    nummers in de adresbalk aan het aflopen is precies waar wat zit.
+    """
+
+    def __init__(self, soort: str = "pagina"):
+        super().__init__(status_code=404, detail=soort)
+
+
+def hoort_bij_administratie(
+    conn: sqlite3.Connection,
+    lees: Any,
+    record_id: int,
+    administratie_id: int,
+    soort: str,
+) -> dict[str, Any]:
+    """Haal een record op en controleer dat het bij deze administratie hoort.
+
+    Dit is de enige plek waar die controle staat. Elke route die een
+    factuur of een document aanraakt gaat hierlangs, zodat er straks —
+    als er klantaccounts komen — geen route vergeten kan zijn.
+
+    Nu is er nog één gebruiker en dus geen kwaad kunnen, maar het adres
+    van een factuur is een nummer dat iedereen kan ophogen. Zonder deze
+    controle zou klant B straks de facturen van klant A kunnen bekijken
+    en aanpassen door het nummer in de adresbalk te veranderen.
+    """
+    try:
+        record = lees(conn, record_id)
+    except ValueError:
+        raise NietGevonden(soort)
+    if record.get("administratie_id") != administratie_id:
+        raise NietGevonden(soort)
+    return record
+
+
 def maak_app(
     db_pad: str,
     opslagmap: str,
@@ -3258,6 +3328,27 @@ def maak_app(
             request=request, name=sjabloon, context=gegevens
         )
 
+    @app.exception_handler(404)
+    def niet_gevonden(request: Request, fout: HTTPException):
+        """Een 404 is ook gewoon een pagina, geen brok JSON."""
+        return SJABLONEN.TemplateResponse(
+            request=request, name="fout.html", status_code=404,
+            context={
+                "titel": "Niet gevonden",
+                "bericht": "Deze pagina bestaat niet, of hoort niet bij deze "
+                           "administratie.",
+                "terug": "/",
+            },
+        )
+
+    def administratie_van(conn: sqlite3.Connection, administratie_id: int):
+        rij = conn.execute(
+            "SELECT id, naam FROM administraties WHERE id = ?", (administratie_id,)
+        ).fetchone()
+        if rij is None:
+            raise NietGevonden("administratie")
+        return rij
+
     # --- overzicht ------------------------------------------------------
 
     @app.get("/", response_class=HTMLResponse)
@@ -3270,18 +3361,11 @@ def maak_app(
     @app.get("/administratie/{administratie_id}", response_class=HTMLResponse)
     def overzicht(request: Request, administratie_id: int):
         conn = verbinding()
-        administratie = conn.execute(
-            "SELECT id, naam FROM administraties WHERE id = ?", (administratie_id,)
-        ).fetchone()
-        facturen = lees_facturen(conn, administratie_id) if administratie else []
-        conn.close()
-
-        if administratie is None:
-            return toon(
-                request, "fout.html",
-                titel="Administratie niet gevonden",
-                bericht=f"Er is geen administratie met nummer {administratie_id}.",
-            )
+        try:
+            administratie = administratie_van(conn, administratie_id)
+            facturen = lees_facturen(conn, administratie_id)
+        finally:
+            conn.close()
 
         return toon(
             request, "overzicht.html",
@@ -3299,6 +3383,11 @@ def maak_app(
 
     @app.get("/administratie/{administratie_id}/upload", response_class=HTMLResponse)
     def uploadscherm(request: Request, administratie_id: int):
+        conn = verbinding()
+        try:
+            administratie_van(conn, administratie_id)
+        finally:
+            conn.close()
         return toon(request, "upload.html", administratie_id=administratie_id)
 
     @app.post("/administratie/{administratie_id}/upload")
@@ -3307,12 +3396,15 @@ def maak_app(
     ):
         inhoud = await bestand.read()
         conn = verbinding()
-        resultaat = verwerk_upload(
-            conn, administratie_id, bestand.filename or "onbekend", inhoud,
-            app.state.opslagmap,
-            ai_client=app.state.ai_client, vandaag=app.state.vandaag,
-        )
-        conn.close()
+        try:
+            administratie_van(conn, administratie_id)
+            resultaat = verwerk_upload(
+                conn, administratie_id, bestand.filename or "onbekend", inhoud,
+                app.state.opslagmap,
+                ai_client=app.state.ai_client, vandaag=app.state.vandaag,
+            )
+        finally:
+            conn.close()
 
         if resultaat.factuur_id is None:
             # Er is geen factuur ontstaan; laat zien waarom, in plaats
@@ -3323,27 +3415,32 @@ def maak_app(
                 bericht=" ".join(resultaat.redenen),
                 terug=f"/administratie/{administratie_id}/upload",
             )
-        return RedirectResponse(f"/factuur/{resultaat.factuur_id}", status_code=303)
+        return RedirectResponse(
+            f"/administratie/{administratie_id}/factuur/{resultaat.factuur_id}",
+            status_code=303,
+        )
 
     # --- reviewscherm ---------------------------------------------------
 
-    @app.get("/factuur/{factuur_id}", response_class=HTMLResponse)
-    def review(request: Request, factuur_id: int, melding: str = ""):
+    @app.get(
+        "/administratie/{administratie_id}/factuur/{factuur_id}",
+        response_class=HTMLResponse,
+    )
+    def review(
+        request: Request, administratie_id: int, factuur_id: int, melding: str = ""
+    ):
         conn = verbinding()
         try:
-            factuur = lees_factuur(conn, factuur_id)
-        except ValueError:
-            conn.close()
-            return toon(
-                request, "fout.html",
-                titel="Factuur niet gevonden",
-                bericht=f"Er is geen factuur met nummer {factuur_id}.",
+            factuur = hoort_bij_administratie(
+                conn, lees_factuur, factuur_id, administratie_id, "factuur"
             )
-        extractie = lees_extractie_bij_document(conn, factuur["document_id"])
-        conn.close()
+            extractie = lees_extractie_bij_document(conn, factuur["document_id"])
+        finally:
+            conn.close()
 
         return toon(
             request, "review.html",
+            administratie_id=administratie_id,
             factuur=factuur,
             velden=_veldregels(factuur, extractie),
             extractie=extractie,
@@ -3354,8 +3451,8 @@ def maak_app(
             ),
         )
 
-    @app.post("/factuur/{factuur_id}/opslaan")
-    async def opslaan(request: Request, factuur_id: int):
+    @app.post("/administratie/{administratie_id}/factuur/{factuur_id}/opslaan")
+    async def opslaan(request: Request, administratie_id: int, factuur_id: int):
         formulier = await request.form()
         wijzigingen = {
             veld: str(formulier[veld]).strip()
@@ -3363,44 +3460,57 @@ def maak_app(
             if veld in formulier
         }
         conn = verbinding()
-        # Wijzigingen gaan altijd via wijzig_factuur: die bewaart de
-        # oude waarde in de audit trail en hervalideert de factuur.
-        wijzig_factuur(conn, factuur_id, wijzigingen, vandaag=app.state.vandaag)
-        conn.close()
+        try:
+            hoort_bij_administratie(
+                conn, lees_factuur, factuur_id, administratie_id, "factuur"
+            )
+            # Wijzigingen gaan altijd via wijzig_factuur: die bewaart de
+            # oude waarde in de audit trail en hervalideert de factuur.
+            wijzig_factuur(conn, factuur_id, wijzigingen, vandaag=app.state.vandaag)
+        finally:
+            conn.close()
         return RedirectResponse(
-            f"/factuur/{factuur_id}?melding=Opgeslagen", status_code=303
+            f"/administratie/{administratie_id}/factuur/{factuur_id}"
+            f"?melding=Opgeslagen",
+            status_code=303,
         )
 
-    @app.post("/factuur/{factuur_id}/goedkeuren")
-    def goedkeuren(factuur_id: int):
+    @app.post("/administratie/{administratie_id}/factuur/{factuur_id}/goedkeuren")
+    def goedkeuren(administratie_id: int, factuur_id: int):
         conn = verbinding()
-        gelukt, redenen = keur_factuur_goed(conn, factuur_id)
-        administratie_id = lees_factuur(conn, factuur_id)["administratie_id"]
-        conn.close()
+        try:
+            hoort_bij_administratie(
+                conn, lees_factuur, factuur_id, administratie_id, "factuur"
+            )
+            gelukt, redenen = keur_factuur_goed(conn, factuur_id)
+        finally:
+            conn.close()
 
         if not gelukt:
             return RedirectResponse(
-                f"/factuur/{factuur_id}?melding={redenen[0]}", status_code=303
+                f"/administratie/{administratie_id}/factuur/{factuur_id}"
+                f"?melding={redenen[0]}",
+                status_code=303,
             )
         return RedirectResponse(f"/administratie/{administratie_id}", status_code=303)
 
     # --- het originele document laten zien -------------------------------
 
-    @app.get("/document/{document_id}")
-    def document(document_id: int):
+    @app.get("/administratie/{administratie_id}/document/{document_id}")
+    def document(administratie_id: int, document_id: int):
         conn = verbinding()
         try:
-            registratie = lees_document(conn, document_id)
-        except ValueError:
+            registratie = hoort_bij_administratie(
+                conn, lees_document, document_id, administratie_id, "document"
+            )
+        finally:
             conn.close()
-            return HTMLResponse("Document niet gevonden", status_code=404)
-        conn.close()
 
         # Het pad komt uit de database, nooit uit het verzoek: een
         # bezoeker kan dus geen ander bestand van de schijf opvragen.
         pad = Path(registratie["opslagpad"])
         if not pad.is_file():
-            return HTMLResponse("Bestand niet meer gevonden", status_code=404)
+            raise NietGevonden("document")
         return FileResponse(
             pad,
             media_type=MEDIATYPEN.get(pad.suffix.lower(), "application/octet-stream"),
@@ -3585,7 +3695,7 @@ def _zekerheden(extractie: Optional[dict]) -> dict[str, dict]:
 {% endif %}
 
 {% for factuur in facturen %}
-  <a class="rij" href="/factuur/{{ factuur.id }}">
+  <a class="rij" href="/administratie/{{ administratie_id }}/factuur/{{ factuur.id }}">
     <div class="boven">
       <span class="naam">{{ factuur.leverancier or "Leverancier onbekend" }}</span>
       {% if factuur.status == "review_nodig" %}
@@ -3641,7 +3751,7 @@ def _zekerheden(extractie: Optional[dict]) -> dict[str, dict]:
 ```html
 {% extends "basis.html" %}
 {% block titel %}Factuur {{ factuur.factuurnummer or factuur.id }}{% endblock %}
-{% block kruimel %}<a href="/administratie/{{ factuur.administratie_id }}">&larr; Terug naar de lijst</a>{% endblock %}
+{% block kruimel %}<a href="/administratie/{{ administratie_id }}">&larr; Terug naar de lijst</a>{% endblock %}
 {% block kop %}{{ factuur.leverancier or "Factuur nakijken" }}{% endblock %}
 {% block inhoud %}
 
@@ -3660,10 +3770,10 @@ def _zekerheden(extractie: Optional[dict]) -> dict[str, dict]:
 
   <div>
     {% if factuur.document_id %}
-      <object class="bron" data="/document/{{ factuur.document_id }}">
+      <object class="bron" data="/administratie/{{ administratie_id }}/document/{{ factuur.document_id }}">
         <p style="padding:14px">
           Het document kan hier niet worden getoond.
-          <a href="/document/{{ factuur.document_id }}">Open het in een nieuw tabblad</a>.
+          <a href="/administratie/{{ administratie_id }}/document/{{ factuur.document_id }}">Open het in een nieuw tabblad</a>.
         </p>
       </object>
     {% else %}
@@ -3672,7 +3782,7 @@ def _zekerheden(extractie: Optional[dict]) -> dict[str, dict]:
   </div>
 
   <div>
-    <form class="kaart" method="post" action="/factuur/{{ factuur.id }}/opslaan">
+    <form class="kaart" method="post" action="/administratie/{{ administratie_id }}/factuur/{{ factuur.id }}/opslaan">
       {% for veld in velden %}
         <div class="veld {% if veld.zekerheid == 'laag' %}laag{% endif %}">
           <label for="{{ veld.naam }}">
@@ -3696,7 +3806,7 @@ def _zekerheden(extractie: Optional[dict]) -> dict[str, dict]:
       </div>
     </form>
 
-    <form class="kaart" method="post" action="/factuur/{{ factuur.id }}/goedkeuren">
+    <form class="kaart" method="post" action="/administratie/{{ administratie_id }}/factuur/{{ factuur.id }}/goedkeuren">
       <div class="knoppen">
         <button type="submit" {% if not mag_goedkeuren %}disabled{% endif %}>
           {% if factuur.goedgekeurd_op %}Al goedgekeurd{% else %}Goedkeuren{% endif %}
@@ -7939,10 +8049,10 @@ def test_lege_lijst_zegt_dat_netjes(web):
     assert "Factuur toevoegen" in pagina
 
 
-def test_onbekende_administratie_geeft_een_nette_pagina(web):
+def test_onbekende_administratie_geeft_404(web):
     antwoord = web.get("/administratie/999")
-    assert antwoord.status_code == 200
-    assert "niet gevonden" in antwoord.text
+    assert antwoord.status_code == 404
+    assert "Niet gevonden" in antwoord.text
 
 
 def test_de_pagina_is_mobiel_eerst(web):
@@ -7956,9 +8066,9 @@ def test_de_pagina_is_mobiel_eerst(web):
 def test_efactuur_uploaden_levert_een_factuur_op(web):
     antwoord = upload(web, UBLMAP / "01-standaard-21procent.xml", "efactuur.xml")
     assert antwoord.status_code == 303
-    assert antwoord.headers["location"] == "/factuur/1"
+    assert antwoord.headers["location"] == "/administratie/1/factuur/1"
 
-    pagina = web.get("/factuur/1").text
+    pagina = web.get("/administratie/1/factuur/1").text
     assert "Van Dijk ICT-diensten" in pagina
     assert "484.00" in pagina
 
@@ -8038,25 +8148,25 @@ def test_elke_rij_toont_leverancier_datum_bedrag_en_status(web):
 
 def test_reviewscherm_toont_het_originele_document(web):
     upload(web, UBLMAP / "01-standaard-21procent.xml", "goed.xml")
-    pagina = web.get("/factuur/1").text
-    assert "/document/1" in pagina
+    pagina = web.get("/administratie/1/factuur/1").text
+    assert "/administratie/1/document/1" in pagina
 
 
 def test_het_document_kan_worden_opgehaald(web):
     upload(web, maak_pdf("Factuur 2026-0412"), "factuur.pdf")
-    antwoord = web.get("/document/1")
+    antwoord = web.get("/administratie/1/document/1")
     assert antwoord.status_code == 200
     assert antwoord.headers["content-type"] == "application/pdf"
     assert "inline" in antwoord.headers["content-disposition"]
 
 
 def test_onbekend_document_geeft_404(web):
-    assert web.get("/document/999").status_code == 404
+    assert web.get("/administratie/1/document/999").status_code == 404
 
 
 def test_alle_velden_zijn_bewerkbaar(web):
     upload(web, UBLMAP / "01-standaard-21procent.xml", "goed.xml")
-    pagina = web.get("/factuur/1").text
+    pagina = web.get("/administratie/1/factuur/1").text
     for veldnaam in ("leverancier", "factuurdatum", "factuurnummer",
                      "bedrag_excl", "btw_percentage", "btw_bedrag", "bedrag_incl"):
         assert f'name="{veldnaam}"' in pagina
@@ -8073,29 +8183,28 @@ def test_lage_zekerheid_wordt_gemarkeerd(werkmap):
     web = TestClient(app)
     upload(web, maak_pdf("Factuur 2026-0412"), "factuur.pdf")
 
-    pagina = web.get("/factuur/1").text
+    pagina = web.get("/administratie/1/factuur/1").text
     assert "lage zekerheid" in pagina
     assert "cijfer onscherp door vouw" in pagina
 
 
 def test_redenen_staan_bovenaan_in_gewone_taal(web):
     upload(web, UBLMAP / "05-zonder-factuurdatum.xml", "fout.xml")
-    pagina = web.get("/factuur/1").text
+    pagina = web.get("/administratie/1/factuur/1").text
     assert "Dit moet nog nagekeken worden" in pagina
     assert "factuurdatum ontbreekt" in pagina
 
 
 def test_bij_een_efactuur_staat_er_geen_zekerheid(web):
     upload(web, UBLMAP / "01-standaard-21procent.xml", "goed.xml")
-    pagina = web.get("/factuur/1").text
+    pagina = web.get("/administratie/1/factuur/1").text
     assert "lage zekerheid" not in pagina
     assert "Uitgelezen door" not in pagina  # geen model gebruikt
 
 
-def test_onbekende_factuur_geeft_een_nette_pagina(web):
-    antwoord = web.get("/factuur/999")
-    assert antwoord.status_code == 200
-    assert "niet gevonden" in antwoord.text
+def test_onbekende_factuur_geeft_404(web):
+    antwoord = web.get("/administratie/1/factuur/999")
+    assert antwoord.status_code == 404
 
 
 # --- opslaan en goedkeuren ---------------------------------------------
@@ -8105,7 +8214,7 @@ def test_opslaan_gaat_via_wijzig_factuur_met_audit_trail(app_en_client, werkmap)
     upload(web, UBLMAP / "01-standaard-21procent.xml", "goed.xml")
 
     web.post(
-        "/factuur/1/opslaan",
+        "/administratie/1/factuur/1/opslaan",
         data={"leverancier": "Van Dijk ICT B.V."},
         follow_redirects=False,
     )
@@ -8125,7 +8234,7 @@ def test_een_correctie_haalt_de_factuur_uit_review(web):
     assert "Review nodig" in web.get("/administratie/1").text
 
     web.post(
-        "/factuur/1/opslaan",
+        "/administratie/1/factuur/1/opslaan",
         data={"factuurdatum": "2026-08-18"},
         follow_redirects=False,
     )
@@ -8137,13 +8246,13 @@ def test_een_correctie_haalt_de_factuur_uit_review(web):
 def test_goedkeuren_kan_niet_bij_openstaande_punten(web, werkmap):
     upload(web, UBLMAP / "05-zonder-factuurdatum.xml", "fout.xml")
 
-    pagina = web.get("/factuur/1").text
+    pagina = web.get("/administratie/1/factuur/1").text
     assert "disabled" in pagina  # de knop staat uit
 
     # En ook als iemand het formulier tóch verstuurt, gebeurt het niet.
-    antwoord = web.post("/factuur/1/goedkeuren", follow_redirects=False)
+    antwoord = web.post("/administratie/1/factuur/1/goedkeuren", follow_redirects=False)
     assert antwoord.status_code == 303
-    assert "/factuur/1" in antwoord.headers["location"]
+    assert "/administratie/1/factuur/1" in antwoord.headers["location"]
 
     conn = maak_verbinding(str(werkmap / "boekhouding.sqlite"))
     assert lees_facturen(conn, 1)[0]["goedgekeurd_op"] is None
@@ -8153,7 +8262,7 @@ def test_goedkeuren_kan_niet_bij_openstaande_punten(web, werkmap):
 def test_goedkeuren_lukt_als_alles_klopt(web, werkmap):
     upload(web, UBLMAP / "01-standaard-21procent.xml", "goed.xml")
 
-    antwoord = web.post("/factuur/1/goedkeuren", follow_redirects=False)
+    antwoord = web.post("/administratie/1/factuur/1/goedkeuren", follow_redirects=False)
     assert antwoord.status_code == 303
     assert antwoord.headers["location"] == "/administratie/1"
 
@@ -8172,8 +8281,8 @@ def test_twee_keer_goedkeuren_gebeurt_niet(web):
     from urllib.parse import unquote
 
     upload(web, UBLMAP / "01-standaard-21procent.xml", "goed.xml")
-    web.post("/factuur/1/goedkeuren", follow_redirects=False)
-    antwoord = web.post("/factuur/1/goedkeuren", follow_redirects=False)
+    web.post("/administratie/1/factuur/1/goedkeuren", follow_redirects=False)
+    antwoord = web.post("/administratie/1/factuur/1/goedkeuren", follow_redirects=False)
     assert "al goedgekeurd" in unquote(antwoord.headers["location"])
 
 
@@ -8188,9 +8297,145 @@ def test_zonder_api_sleutel_valt_de_upload_niet_om(werkmap, monkeypatch):
     antwoord = upload(web, maak_pdf("Factuur 2026-0412"), "factuur.pdf")
 
     assert antwoord.status_code == 303  # er is wél een factuur aangemaakt
-    pagina = web.get("/factuur/1").text
+    pagina = web.get("/administratie/1/factuur/1").text
     assert "ANTHROPIC_API_KEY" in pagina
     assert "Dit moet nog nagekeken worden" in pagina
+
+
+# --- geen toegang tot een andere administratie (IDOR) -------------------
+
+@pytest.fixture
+def twee_administraties(werkmap):
+    """Administratie 1 en 2, elk met één eigen factuur.
+
+    De factuur van A krijgt nummer 1, die van B nummer 2 — precies de
+    situatie waarin iemand het nummer in de adresbalk kan ophogen.
+    """
+    from boekhouding import maak_administratie, maak_tabellen, maak_verbinding
+
+    db = werkmap / "boekhouding.sqlite"
+    app = maak_app(
+        str(db), str(werkmap / "opslag"),
+        ai_client=client_met(goede_extractie()), vandaag=VANDAAG,
+    )
+    web = TestClient(app)
+
+    conn = maak_verbinding(str(db))
+    maak_tabellen(conn)
+    if conn.execute("SELECT count(*) FROM administraties").fetchone()[0] < 2:
+        maak_administratie(conn, "Zaak B")
+    conn.close()
+
+    # Factuur 1 hoort bij administratie 1.
+    web.post(
+        "/administratie/1/upload",
+        files={"bestand": ("a.xml",
+               (UBLMAP / "01-standaard-21procent.xml").read_bytes(), "application/xml")},
+        follow_redirects=False,
+    )
+    # Factuur 2 hoort bij administratie 2.
+    web.post(
+        "/administratie/2/upload",
+        files={"bestand": ("b.xml",
+               (UBLMAP / "02-diensten-9procent.xml").read_bytes(), "application/xml")},
+        follow_redirects=False,
+    )
+    return web
+
+
+def test_opzet_klopt(twee_administraties, werkmap):
+    """Controleer eerst dat factuur 1 bij A hoort en factuur 2 bij B."""
+    from boekhouding import lees_factuur, maak_verbinding
+
+    conn = maak_verbinding(str(werkmap / "boekhouding.sqlite"))
+    assert lees_factuur(conn, 1)["administratie_id"] == 1
+    assert lees_factuur(conn, 2)["administratie_id"] == 2
+    conn.close()
+
+
+def test_factuur_van_een_ander_bekijken_geeft_404(twee_administraties):
+    web = twee_administraties
+    assert web.get("/administratie/1/factuur/1").status_code == 200   # eigen
+    assert web.get("/administratie/2/factuur/1").status_code == 404   # van A
+
+
+def test_factuur_van_een_ander_opslaan_geeft_404(twee_administraties, werkmap):
+    from boekhouding import lees_factuur, maak_verbinding
+
+    web = twee_administraties
+    antwoord = web.post(
+        "/administratie/2/factuur/1/opslaan",
+        data={"leverancier": "GEKAAPT"},
+        follow_redirects=False,
+    )
+    assert antwoord.status_code == 404
+
+    conn = maak_verbinding(str(werkmap / "boekhouding.sqlite"))
+    assert lees_factuur(conn, 1)["leverancier"] == "Van Dijk ICT-diensten"
+    conn.close()
+
+
+def test_factuur_van_een_ander_goedkeuren_geeft_404(twee_administraties, werkmap):
+    from boekhouding import lees_factuur, maak_verbinding
+
+    web = twee_administraties
+    antwoord = web.post(
+        "/administratie/2/factuur/1/goedkeuren", follow_redirects=False
+    )
+    assert antwoord.status_code == 404
+
+    conn = maak_verbinding(str(werkmap / "boekhouding.sqlite"))
+    assert lees_factuur(conn, 1)["goedgekeurd_op"] is None
+    conn.close()
+
+
+def test_document_van_een_ander_ophalen_geeft_404(twee_administraties):
+    web = twee_administraties
+    assert web.get("/administratie/1/document/1").status_code == 200  # eigen
+    assert web.get("/administratie/2/document/1").status_code == 404  # van A
+
+
+def test_het_antwoord_verraadt_niet_dat_het_record_bestaat(twee_administraties):
+    """Bestaand-maar-van-een-ander en niet-bestaand geven hetzelfde."""
+    web = twee_administraties
+    bestaat_wel = web.get("/administratie/2/factuur/1")     # bestaat, van A
+    bestaat_niet = web.get("/administratie/2/factuur/9999")  # bestaat niet
+
+    assert bestaat_wel.status_code == bestaat_niet.status_code == 404
+    assert bestaat_wel.text == bestaat_niet.text
+    # Geen 403: die zou juist verklappen dat het record er is.
+    assert bestaat_wel.status_code != 403
+
+
+def test_de_oude_paden_zonder_administratie_bestaan_niet_meer(twee_administraties):
+    """De routes hangen nu allemaal onder de administratie."""
+    web = twee_administraties
+    for pad in ("/factuur/1", "/document/1"):
+        assert web.get(pad).status_code == 404
+
+
+def test_elke_route_met_een_id_loopt_langs_de_controle():
+    """Vangnet: een nieuwe route mag de controle niet vergeten.
+
+    Elke route waarin zowel een administratie_id als een ander id staat,
+    hoort hoort_bij_administratie te gebruiken. Deze test leest de code
+    en valt om zodra iemand een route toevoegt zonder die controle.
+    """
+    import inspect
+    import re
+
+    from boekhouding.web import app as webmodule
+
+    bron = inspect.getsource(webmodule.maak_app)
+    # Knip de bron in stukken per route-decorator.
+    stukken = re.split(r"\n    @app\.(?:get|post)\(", bron)[1:]
+    for stuk in stukken:
+        pad = stuk.split(")")[0]
+        heeft_ander_id = re.search(r"\{(?!administratie_id)\w+_id\}", pad)
+        if heeft_ander_id:
+            assert "hoort_bij_administratie" in stuk, (
+                f"route {pad} gebruikt geen hoort_bij_administratie"
+            )
 ```
 
 ## `boekhouding/pytest.ini`
@@ -8263,7 +8508,7 @@ ANTHROPIC_API_KEY=vul-hier-je-eigen-sleutel-in
 # Testresultaat
 
 ```
-........................................................................ [ 92%]
-.................                                                        [100%]
-233 passed in 1.88s
+........................................................................ [ 89%]
+.........................                                                [100%]
+241 passed in 2.39s
 ```
