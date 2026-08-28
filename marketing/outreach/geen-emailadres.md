@@ -233,3 +233,12 @@ zoekrondes.
 | Koelpartner | Haarlem | Eenmanszaak, KvK 82649847, opgericht 06-05-2021, eigen domein koelpartners.nl vermeld maar geen telefoon of e-mailadres vindbaar | 2026-08-28 |
 | RichComfort Airconditioning | Dordrecht | Eenmanszaak, KvK 78322618, opgericht 25-06-2020. Alleen gidsvermeldingen (airco-expres.nl e.d.), geen contactgegevens | 2026-08-28 |
 | Hejazi Airco | Gouda | Eenmanszaak, KvK 85339547, opgericht 10-02-2022. Geen telefoon, e-mailadres of website gevonden; nul reviews | 2026-08-28 |
+| K.D Airco's | Ede | Eenmanszaak, KvK 85743534, opgericht 01-03-2022 | 2026-08-28 |
+| Brummel airconditioning | Apeldoorn | Eenmanszaak, KvK 85452548, opgericht 17-02-2022, eigenaar Lars Brummel, eigen site + Facebookpagina | 2026-08-28 |
+| Voltvisie | Harderwijk/Nunspeet | Eenmanszaak, KvK 82838763, opgericht 03-05-2021 | 2026-08-28 |
+| KW Zonnepanelen | Doetinchem | Eenmanszaak, KvK 88385809, opgericht 05-12-2022, Ruyslaan 27, alleen telefoon 06-19940739 | 2026-08-28 |
+| EW Solar Techniek | Nijmegen | Eenmanszaak, KvK 83563296, opgericht 01-08-2021 | 2026-08-28 |
+| Devas montager | Dronten | Eenmanszaak, KvK 81734638, opgericht 01-01-2021, website devasmontage.nl | 2026-08-28 |
+| Bij De Broers | Twente (Almelo e.o.) | Eigenaren Rob en Jack, gestart 2024, eigen site bijdebroers.nl | 2026-08-28 |
+| Eylin Multidiensten | Almere | KvK 91631556, sinds 2023, glazenwasser | 2026-08-28 |
+| Aircovoordeliger | Zwolle | Eenmanszaak, KvK 87035030, geen telefoon, website of reviews vindbaar | 2026-08-28 |

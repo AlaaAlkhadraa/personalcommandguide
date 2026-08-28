@@ -319,3 +319,13 @@ search could not prove them alive, not that closure was confirmed.
 | RFVD Installaties (voorheen Reinder Montage) | Leiden | not fit - buiten profiel | 2026-08-28 lane D; de eenmanszaaknaam is pas in 2022 vernieuwd, maar de eigenaar is al 30+ jaar actief als loodgieter/cv-monteur — geen groeifase-verhaal. Nooit benaderd |
 | Gastouderbureau Het Liefbeestje | landelijk (o.a. Utrecht, Gouda) | not fit - franchise | 2026-08-28 lane D; landelijke franchise sinds 2008. Nooit benaderd |
 | Kroostopvang | Lisse | not fit - closed | 2026-08-28 lane D; KvK-status "Opgeheven". Nooit benaderd |
+| Multi-Verduurzamers | Apeldoorn | drafted | 2026-08-28 lane B; KvK 85151017, opgericht 12-01-2022, TLOKB-certificaathouder, recente klantreview ("Fantastisch werk!", 12 augustus); E-MAIL: info@multiverduurzamers.nl |
+| Rubi Installatietechniek | Ens | drafted | 2026-08-28 lane B; KvK 90599233, opgericht 03-07-2023, erkend leerbedrijf, eigenaar Ruben Beens; E-MAIL: info@rubi-installatietechniek.nl |
+| Master Airco WF | Zutphen | drafted | 2026-08-28 lane B; KvK 82838674, opgericht 27-05-2021, eigen webshop zonder zichtbaar portfolio; E-MAIL: info@masterairco.nl |
+| Gomar Multidiensten | Markelo | drafted | 2026-08-28 lane B; opgericht 2022, eigenaar Bertwin van Gortel, Werkspot-reviews maart/aug 2026; E-MAIL: info@gomar-multidiensten.nl |
+| SolarNOP | Espel | drafted | 2026-08-28 lane B; KvK 92847587, opgericht 23-01-2024 (jonger dan gebruikelijk, gecompenseerd door 40+ Google-reviews op 4,9), oprichters Paul Dekker en Peter de Bruijn; E-MAIL: info@solarnop.nl |
+| MKI-Techniek | Maurik | drafted | 2026-08-28 lane B; KvK 84957263, opgericht 06-01-2022, eigenaar Mitchell Koch, Trustoo-score 9,5; E-MAIL: info@mki-techniek.nl |
+| Mobiele Fietsenmaker Tom | Enschede | not fit - te oud | 2026-08-28 lane B: actief sinds 2015, buiten het groeifaseprofiel van 1-6 jaar. Nooit benaderd |
+| J-Care | Zwolle | not fit - te oud | 2026-08-28 lane B: KvK 58620567, opgericht 26-08-2013. Nooit benaderd |
+| Salland Solar | Deventer | not fit - te groot | 2026-08-28 lane B: bij doorzoeken bleek dit Salland Solar Services Holding B.V., vestigingen in Deventer, Soest én Assen, dus een holding buiten het eenmanszaak-profiel. Nooit benaderd |
+| HJB Schoonmaakservice | Vaassen | aangehouden | 2026-08-28 lane B: KvK 93274866, e-mail info@hjbschoonmaakservice.nl bevestigd, serveert Zwolle/Elburg/Epe/Kampen/Harderwijk/Nunspeet, maar geen enkel gedateerd teken van leven gevonden in drie zoekrondes. Terug op het bord zodra iemand één review of post met datum vindt |
