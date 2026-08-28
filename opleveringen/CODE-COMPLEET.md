@@ -924,6 +924,20 @@ heeft nog géén nummer, en dat is de hele reden: zou een concept al genummerd
 worden, dan ontstaat er een gat zodra je het weggooit — en juist naar gaten in
 de nummering wordt gekeken.
 
+**Twee tegelijk mag niet misgaan.** Het hoogste nummer opzoeken en er één bij
+optellen is een race: twee aanroepen die tegelijk beginnen lezen hetzelfde
+getal. Daarom wordt het nummer toegekend binnen een schrijfslot
+(`BEGIN IMMEDIATE`); een tweede aanroep wacht tot de eerste klaar is en leest
+dan het net weggeschreven nummer. Daarnáást staat er een unieke index op
+`(administratie_id, nummer_jaar, nummer_volg)`, ook als migratie voor
+databases van vóór module 8 — SQLite kan een constraint niet met `ALTER TABLE`
+bijzetten, een index wel.
+
+Die twee doen niet hetzelfde. De index verhindert een dubbel nummer maar maakt
+er een foutmelding van; het slot zorgt dat de tweede aanroep gewoon het
+volgende nummer krijgt. Er is een test met twee threads die precies dat
+aantoont: zet je het slot uit, dan klapt de tweede thread eruit op de index.
+
 ### Wat er verplicht op moet
 
 Ontbreekt er iets, dan kan de factuur niet definitief worden en staat de lijst
@@ -1041,7 +1055,7 @@ de stack blijft Python, SQLite, Pydantic en pytest.
 
 ### `tests/` — de bewijslast
 
-509 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
+513 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
 onzin-tekst, ontbrekende velden, verkeerde btw-percentages, ambigue
 bedragen, toekomst- en te oude datums, duplicaten, de audit trail bij
 aanmaken en wijzigen, en voor module 2: een PDF zonder tekstlaag, een
@@ -5039,6 +5053,18 @@ def _verkoop_tabellen(conn: sqlite3.Connection) -> None:
     _voeg_kolom_toe(
         conn, "verkoopfacturen", "document_id", "INTEGER REFERENCES documenten(id)"
     )
+    # Dezelfde regel als de UNIQUE in CREATE TABLE hierboven, maar dan als
+    # index — en die kan wél aan een bestaande tabel worden toegevoegd.
+    # SQLite kan geen constraint bijzetten met ALTER TABLE, dus zonder dit
+    # zou een database van vóór module 8 het dubbele nummer niet tegenhouden.
+    # NULL telt in een index als "verschillend", dus concepten (die nog geen
+    # nummer hebben) botsen hier niet op.
+    conn.execute(
+        """
+        CREATE UNIQUE INDEX IF NOT EXISTS idx_verkoopfacturen_nummer
+            ON verkoopfacturen (administratie_id, nummer_jaar, nummer_volg)
+        """
+    )
     conn.commit()
 
 
@@ -5510,6 +5536,25 @@ def maak_definitief(
         return None, ontbreekt
 
     jaar = date.fromisoformat(factuur["factuurdatum"]).year
+
+    # Vanaf hier tot het opslaan van de boeking geldt een schrijfslot.
+    #
+    # Zonder dat slot kunnen twee aanroepen tegelijk hetzelfde hoogste
+    # nummer lezen en er allebei één bij optellen — dan krijgen twee
+    # facturen hetzelfde nummer. Zodra er via het web wordt gewerkt
+    # gebeurt dat vroeg of laat, en een dubbel factuurnummer is precies
+    # wat niet mag.
+    #
+    # BEGIN IMMEDIATE pakt meteen het schrijfslot van de database. Een
+    # tweede aanroep blijft daar wachten (tot de timeout van de
+    # verbinding, standaard vijf seconden) en leest daarna het nummer dat
+    # de eerste net heeft weggeschreven. De unieke index is de tweede
+    # verdediging: mocht er ooit toch een tweede weg omheen zijn, dan
+    # weigert de database het.
+    eigen_slot = not conn.in_transaction
+    if eigen_slot:
+        conn.execute("BEGIN IMMEDIATE")
+
     hoogste = conn.execute(
         "SELECT max(nummer_volg) FROM verkoopfacturen "
         "WHERE administratie_id = ? AND nummer_jaar = ?",
@@ -5542,7 +5587,9 @@ def maak_definitief(
     )
     if boeking_id is None:
         # Zonder boeking geen definitieve factuur: anders staat er wel een
-        # nummer maar niets in het grootboek.
+        # nummer maar niets in het grootboek. De rollback laat meteen het
+        # schrijfslot los, zodat een wachtende aanroep verder kan — en die
+        # krijgt dan hetzelfde nummer, want dit nummer is niet gebruikt.
         conn.rollback()
         return None, boekredenen
 
@@ -18782,6 +18829,125 @@ def test_een_concept_kan_niet_worden_afgeletterd(conn, opslag):
     )
     assert boeking_id is None
     assert "eerst definitief" in redenen[0]
+
+
+# --- twee tegelijk ------------------------------------------------------
+
+def test_twee_gelijktijdige_aanroepen_geven_twee_nummers(tmp_path):
+    """Twee threads die tegelijk definitief maken: geen duplicaat, geen gat.
+
+    Elke thread krijgt een eigen verbinding, net als twee verzoeken aan de
+    webinterface. Zonder schrijfslot lezen ze allebei hetzelfde hoogste
+    nummer en krijgen twee facturen hetzelfde nummer.
+    """
+    import threading
+
+    pad = str(tmp_path / "boekhouding.sqlite")
+    opzet = maak_verbinding(pad)
+    maak_tabellen(opzet)
+    maak_administratie(opzet, "Alkhadraa Advies")
+    wijzig_administratie(opzet, 1, {
+        "adres": "Zonnebloemstraat 14", "plaats": "Rotterdam",
+        "btw_id": "NL002233445B01",
+    })
+    klant_id = maak_klant(opzet, 1, {
+        "naam": "Van Dijk ICT-diensten", "adres": "Keizersgracht 218",
+        "plaats": "Amsterdam",
+    })
+    factuur_ids = []
+    for _ in range(2):
+        factuur_id = maak_verkoopfactuur(opzet, 1, klant_id, "2026-07-14")
+        zet_verkoopregels(opzet, factuur_id, REGELS)
+        factuur_ids.append(factuur_id)
+    opzet.close()
+
+    startschot = threading.Barrier(2)
+    uitkomsten: dict[int, tuple] = {}
+
+    def maak_definitief_in_thread(factuur_id: int) -> None:
+        eigen = maak_verbinding(pad)
+        try:
+            startschot.wait(timeout=5)
+            uitkomsten[factuur_id] = maak_definitief(eigen, factuur_id)
+        finally:
+            eigen.close()
+
+    threads = [
+        threading.Thread(target=maak_definitief_in_thread, args=(factuur_id,))
+        for factuur_id in factuur_ids
+    ]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join(timeout=15)
+
+    assert len(uitkomsten) == 2, f"een thread liep vast: {uitkomsten}"
+    nummers = sorted(nummer for nummer, _ in uitkomsten.values())
+    assert nummers == ["2026-0001", "2026-0002"], uitkomsten
+
+    controle = maak_verbinding(pad)
+    volgnummers = sorted(
+        rij[0] for rij in controle.execute(
+            "SELECT nummer_volg FROM verkoopfacturen WHERE nummer_volg IS NOT NULL"
+        )
+    )
+    controle.close()
+    assert volgnummers == [1, 2]
+
+
+def test_de_database_weigert_een_dubbel_nummer(conn, opslag):
+    """De tweede verdediging: ook rechtstreekse SQL komt er niet langs."""
+    import sqlite3 as sqlite
+
+    klant_id = klant(conn)
+    maak_definitief(conn, concept(conn, klant_id), opslagmap=opslag)
+    tweede = concept(conn, klant_id)
+
+    with pytest.raises(sqlite.IntegrityError):
+        conn.execute(
+            "UPDATE verkoopfacturen SET nummer_jaar = 2026, nummer_volg = 1 "
+            "WHERE id = ?",
+            (tweede,),
+        )
+
+
+def test_de_unieke_index_staat_er_ook_na_een_migratie(tmp_path):
+    """Een database van vóór module 8 krijgt de index alsnog.
+
+    SQLite kan geen UNIQUE-constraint aan een bestaande tabel toevoegen,
+    dus die staat er als index bij — en die kan wél achteraf.
+    """
+    import sqlite3 as sqlite
+
+    pad = str(tmp_path / "oud.sqlite")
+    oud = maak_verbinding(pad)
+    maak_tabellen(oud)
+    # Doe alsof de index er nog niet was.
+    oud.execute("DROP INDEX idx_verkoopfacturen_nummer")
+    oud.commit()
+    oud.close()
+
+    nieuw = maak_verbinding(pad)
+    maak_tabellen(nieuw)          # de migratie draait bij het opstarten
+    indexen = {
+        rij[0] for rij in nieuw.execute(
+            "SELECT name FROM sqlite_master WHERE type = 'index'"
+        )
+    }
+    nieuw.close()
+    assert "idx_verkoopfacturen_nummer" in indexen
+
+
+def test_concepten_botsen_niet_op_de_unieke_index(conn):
+    """Concepten hebben allemaal nog geen nummer; die mogen naast elkaar."""
+    klant_id = klant(conn)
+    for _ in range(3):
+        concept(conn, klant_id)
+
+    concepten = [
+        f for f in lees_verkoopfacturen(conn, 1) if f["status"] == "concept"
+    ]
+    assert len(concepten) == 3
 ```
 
 ## `boekhouding/tests/test_web.py`

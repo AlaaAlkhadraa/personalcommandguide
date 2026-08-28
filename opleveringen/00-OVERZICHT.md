@@ -29,6 +29,7 @@ Branch: `claude/nl-accounting-invoice-module-f2vzr3`
 | `17-module7-bank-afletteren.md` | Module 7: MT940 en CAMT.053 inlezen en afletteren tegen de facturen |
 | `18-fix-module7-richting.md` | Fix: een onbekende richting geeft nooit hoge zekerheid |
 | `19-module8-verkoopfacturen.md` | Module 8: klanten, verkoopfacturen, PDF, openstaande posten |
+| `20-fix-module8-nummering.md` | Fix: twee tegelijk kunnen niet hetzelfde factuurnummer krijgen |
 | `CODE-COMPLEET.md` | de volledige actuele code, uitleg en tests |
 | `testfacturen-overzicht.json` | grondwaarheid bij de 10 testfacturen |
 | `schermen/` | schermafbeeldingen van de draaiende webinterface |
@@ -36,7 +37,7 @@ Branch: `claude/nl-accounting-invoice-module-f2vzr3`
 
 ## Waar het nu staat
 
-- **509 pytest-tests, allemaal groen.** De testsuite doet nooit een echte
+- **513 pytest-tests, allemaal groen.** De testsuite doet nooit een echte
   API-aanroep.
 - **Module 1** — schema met Decimal-bedragen, alle rekencontroles, datum- en
   duplicaatcheck. Elke fout wordt `review_nodig` met reden, nooit een
@@ -87,7 +88,8 @@ Branch: `claude/nl-accounting-invoice-module-f2vzr3`
   en een definitieve factuur die nooit meer verandert — corrigeren gaat met een
   creditfactuur. Definitief maken levert het nummer, de boeking en de PDF op.
   Openstaande posten laten zien wat nog niet betaald is en hoeveel dagen te
-  laat.
+  laat. Het nummer wordt toegekend binnen een schrijfslot, met een unieke index
+  eronder, zodat twee gelijktijdige aanroepen niet hetzelfde nummer krijgen.
 - **Volledigheidssignalen** — blokkeren kan alleen op facturen die er zijn. Een
   factuur die nooit is aangeleverd staat nergens, en dan klopt de aangifte
   ogenschijnlijk gewoon. Daarom drie controles die het patroon bekijken: een

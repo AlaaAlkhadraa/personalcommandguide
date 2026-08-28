@@ -646,3 +646,122 @@ def test_een_concept_kan_niet_worden_afgeletterd(conn, opslag):
     )
     assert boeking_id is None
     assert "eerst definitief" in redenen[0]
+
+
+# --- twee tegelijk ------------------------------------------------------
+
+def test_twee_gelijktijdige_aanroepen_geven_twee_nummers(tmp_path):
+    """Twee threads die tegelijk definitief maken: geen duplicaat, geen gat.
+
+    Elke thread krijgt een eigen verbinding, net als twee verzoeken aan de
+    webinterface. Zonder schrijfslot lezen ze allebei hetzelfde hoogste
+    nummer en krijgen twee facturen hetzelfde nummer.
+    """
+    import threading
+
+    pad = str(tmp_path / "boekhouding.sqlite")
+    opzet = maak_verbinding(pad)
+    maak_tabellen(opzet)
+    maak_administratie(opzet, "Alkhadraa Advies")
+    wijzig_administratie(opzet, 1, {
+        "adres": "Zonnebloemstraat 14", "plaats": "Rotterdam",
+        "btw_id": "NL002233445B01",
+    })
+    klant_id = maak_klant(opzet, 1, {
+        "naam": "Van Dijk ICT-diensten", "adres": "Keizersgracht 218",
+        "plaats": "Amsterdam",
+    })
+    factuur_ids = []
+    for _ in range(2):
+        factuur_id = maak_verkoopfactuur(opzet, 1, klant_id, "2026-07-14")
+        zet_verkoopregels(opzet, factuur_id, REGELS)
+        factuur_ids.append(factuur_id)
+    opzet.close()
+
+    startschot = threading.Barrier(2)
+    uitkomsten: dict[int, tuple] = {}
+
+    def maak_definitief_in_thread(factuur_id: int) -> None:
+        eigen = maak_verbinding(pad)
+        try:
+            startschot.wait(timeout=5)
+            uitkomsten[factuur_id] = maak_definitief(eigen, factuur_id)
+        finally:
+            eigen.close()
+
+    threads = [
+        threading.Thread(target=maak_definitief_in_thread, args=(factuur_id,))
+        for factuur_id in factuur_ids
+    ]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join(timeout=15)
+
+    assert len(uitkomsten) == 2, f"een thread liep vast: {uitkomsten}"
+    nummers = sorted(nummer for nummer, _ in uitkomsten.values())
+    assert nummers == ["2026-0001", "2026-0002"], uitkomsten
+
+    controle = maak_verbinding(pad)
+    volgnummers = sorted(
+        rij[0] for rij in controle.execute(
+            "SELECT nummer_volg FROM verkoopfacturen WHERE nummer_volg IS NOT NULL"
+        )
+    )
+    controle.close()
+    assert volgnummers == [1, 2]
+
+
+def test_de_database_weigert_een_dubbel_nummer(conn, opslag):
+    """De tweede verdediging: ook rechtstreekse SQL komt er niet langs."""
+    import sqlite3 as sqlite
+
+    klant_id = klant(conn)
+    maak_definitief(conn, concept(conn, klant_id), opslagmap=opslag)
+    tweede = concept(conn, klant_id)
+
+    with pytest.raises(sqlite.IntegrityError):
+        conn.execute(
+            "UPDATE verkoopfacturen SET nummer_jaar = 2026, nummer_volg = 1 "
+            "WHERE id = ?",
+            (tweede,),
+        )
+
+
+def test_de_unieke_index_staat_er_ook_na_een_migratie(tmp_path):
+    """Een database van vóór module 8 krijgt de index alsnog.
+
+    SQLite kan geen UNIQUE-constraint aan een bestaande tabel toevoegen,
+    dus die staat er als index bij — en die kan wél achteraf.
+    """
+    import sqlite3 as sqlite
+
+    pad = str(tmp_path / "oud.sqlite")
+    oud = maak_verbinding(pad)
+    maak_tabellen(oud)
+    # Doe alsof de index er nog niet was.
+    oud.execute("DROP INDEX idx_verkoopfacturen_nummer")
+    oud.commit()
+    oud.close()
+
+    nieuw = maak_verbinding(pad)
+    maak_tabellen(nieuw)          # de migratie draait bij het opstarten
+    indexen = {
+        rij[0] for rij in nieuw.execute(
+            "SELECT name FROM sqlite_master WHERE type = 'index'"
+        )
+    }
+    nieuw.close()
+    assert "idx_verkoopfacturen_nummer" in indexen
+
+
+def test_concepten_botsen_niet_op_de_unieke_index(conn):
+    """Concepten hebben allemaal nog geen nummer; die mogen naast elkaar."""
+    klant_id = klant(conn)
+    for _ in range(3):
+        concept(conn, klant_id)
+
+    concepten = [
+        f for f in lees_verkoopfacturen(conn, 1) if f["status"] == "concept"
+    ]
+    assert len(concepten) == 3

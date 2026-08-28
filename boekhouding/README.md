@@ -920,6 +920,20 @@ heeft nog géén nummer, en dat is de hele reden: zou een concept al genummerd
 worden, dan ontstaat er een gat zodra je het weggooit — en juist naar gaten in
 de nummering wordt gekeken.
 
+**Twee tegelijk mag niet misgaan.** Het hoogste nummer opzoeken en er één bij
+optellen is een race: twee aanroepen die tegelijk beginnen lezen hetzelfde
+getal. Daarom wordt het nummer toegekend binnen een schrijfslot
+(`BEGIN IMMEDIATE`); een tweede aanroep wacht tot de eerste klaar is en leest
+dan het net weggeschreven nummer. Daarnáást staat er een unieke index op
+`(administratie_id, nummer_jaar, nummer_volg)`, ook als migratie voor
+databases van vóór module 8 — SQLite kan een constraint niet met `ALTER TABLE`
+bijzetten, een index wel.
+
+Die twee doen niet hetzelfde. De index verhindert een dubbel nummer maar maakt
+er een foutmelding van; het slot zorgt dat de tweede aanroep gewoon het
+volgende nummer krijgt. Er is een test met twee threads die precies dat
+aantoont: zet je het slot uit, dan klapt de tweede thread eruit op de index.
+
 ### Wat er verplicht op moet
 
 Ontbreekt er iets, dan kan de factuur niet definitief worden en staat de lijst
@@ -1037,7 +1051,7 @@ de stack blijft Python, SQLite, Pydantic en pytest.
 
 ### `tests/` — de bewijslast
 
-509 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
+513 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
 onzin-tekst, ontbrekende velden, verkeerde btw-percentages, ambigue
 bedragen, toekomst- en te oude datums, duplicaten, de audit trail bij
 aanmaken en wijzigen, en voor module 2: een PDF zonder tekstlaag, een

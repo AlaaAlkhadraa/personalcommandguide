@@ -1596,6 +1596,18 @@ def _verkoop_tabellen(conn: sqlite3.Connection) -> None:
     _voeg_kolom_toe(
         conn, "verkoopfacturen", "document_id", "INTEGER REFERENCES documenten(id)"
     )
+    # Dezelfde regel als de UNIQUE in CREATE TABLE hierboven, maar dan als
+    # index — en die kan wél aan een bestaande tabel worden toegevoegd.
+    # SQLite kan geen constraint bijzetten met ALTER TABLE, dus zonder dit
+    # zou een database van vóór module 8 het dubbele nummer niet tegenhouden.
+    # NULL telt in een index als "verschillend", dus concepten (die nog geen
+    # nummer hebben) botsen hier niet op.
+    conn.execute(
+        """
+        CREATE UNIQUE INDEX IF NOT EXISTS idx_verkoopfacturen_nummer
+            ON verkoopfacturen (administratie_id, nummer_jaar, nummer_volg)
+        """
+    )
     conn.commit()
 
 
@@ -2067,6 +2079,25 @@ def maak_definitief(
         return None, ontbreekt
 
     jaar = date.fromisoformat(factuur["factuurdatum"]).year
+
+    # Vanaf hier tot het opslaan van de boeking geldt een schrijfslot.
+    #
+    # Zonder dat slot kunnen twee aanroepen tegelijk hetzelfde hoogste
+    # nummer lezen en er allebei één bij optellen — dan krijgen twee
+    # facturen hetzelfde nummer. Zodra er via het web wordt gewerkt
+    # gebeurt dat vroeg of laat, en een dubbel factuurnummer is precies
+    # wat niet mag.
+    #
+    # BEGIN IMMEDIATE pakt meteen het schrijfslot van de database. Een
+    # tweede aanroep blijft daar wachten (tot de timeout van de
+    # verbinding, standaard vijf seconden) en leest daarna het nummer dat
+    # de eerste net heeft weggeschreven. De unieke index is de tweede
+    # verdediging: mocht er ooit toch een tweede weg omheen zijn, dan
+    # weigert de database het.
+    eigen_slot = not conn.in_transaction
+    if eigen_slot:
+        conn.execute("BEGIN IMMEDIATE")
+
     hoogste = conn.execute(
         "SELECT max(nummer_volg) FROM verkoopfacturen "
         "WHERE administratie_id = ? AND nummer_jaar = ?",
@@ -2099,7 +2130,9 @@ def maak_definitief(
     )
     if boeking_id is None:
         # Zonder boeking geen definitieve factuur: anders staat er wel een
-        # nummer maar niets in het grootboek.
+        # nummer maar niets in het grootboek. De rollback laat meteen het
+        # schrijfslot los, zodat een wachtende aanroep verder kan — en die
+        # krijgt dan hetzelfde nummer, want dit nummer is niet gebruikt.
         conn.rollback()
         return None, boekredenen
 
