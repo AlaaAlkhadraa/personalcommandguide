@@ -103,3 +103,46 @@ vaste bodem, plus gastouders, kleine installateurs en zonnepaneelmonteurs,
 schoonmaak- en glazenwassersbedrijven en mobiele fietsenmakers — alle vier
 nog onaangeraakt, alle vier sectoren waar het adres doorgaans in de
 gidsvermelding staat.
+
+## 28 augustus
+
+**Dagresultaat: 18 kaarten geschreven, 1 goedgekeurd, 2 afgekeurd, 15
+aangehouden.** Drie afzonderlijke oorzaken, alle drie nu verholpen of
+vastgelegd voor morgen — geen ervan is een reden om morgen soepeler te
+worden.
+
+**Kinderen altijd expliciet op `model: "claude-opus-5"` spawnen.** Deze
+sessie stond tijdelijk op Sonnet 5, en `create_session` erft het model van
+de aanroepende sessie als je niets opgeeft. Twee Azzouz-kinderen die zo
+stilzwijgend Sonnet 5 meekregen liepen allebei vast op een vals-positieve
+"prompt injection"-waarschuwing over hun eigen rolbriefing — een derde
+poging met het model expliciet op Opus 5 gezet werkte meteen. Elke eerdere
+Azzouz- en Sam-run deze week draaide op Opus 5 en had dit probleem nooit.
+
+**Bordparser brak stilzwijgend op een nieuw metaveld-format.** Twee lanes
+schreven `**E-mail** — adres` in plaats van `**E-mail:** adres`. De parser
+op zevren.nl herkende alleen het dubbele-punt-format en zou alle achttien
+kaarten van vandaag onzichtbaar hebben gemaakt op het bord — precies het
+lot dat de e-mailregel moest voorkomen. Gevonden en gerepareerd vóór het
+zichtbaar werd; `META_RE` accepteert nu beide scheidingstekens.
+
+**Twee verboden formuleringen doken bulksgewijs op**, vastgelegd door
+Azzouz in `.agents/product-marketing.md` 1.3 en 1.4: de zin over "werk dat
+u zelf kunt aanklikken" (al sinds 26 augustus verboden, keerde vandaag
+tweemaal terug) en een nieuwe: een fotoformulier beloven dat nergens op
+zevren.nl bestaat. Beide zaten in de terugkerende slot- en
+oplossingsalinea's, die van kaart naar kaart gekopieerd worden zonder
+herlezen. Voor Sam staat nu een concrete instructie: zoek de eigen tekst
+op `aanklikken` en `een foto van`, per bestand, vóór het pushen — geen
+herlezing uit het geheugen.
+
+**Het echte plafond vandaag was geen schrijfkwaliteit maar poort (a):**
+Azzouz kon in negen van de tien nog-openstaande gevallen alle poorten
+sluiten behalve een gedateerd levensteken binnen twaalf maanden, omdat
+Nederlandse mkb-sites en reviewplatforms in zoekresultaten zelden een
+leesbare datum tonen. Voor die kaarten staat de definitieve, verzendklare
+tekst al klaar in de verified-bestanden — er ontbreekt letterlijk één
+blik op een pagina die alleen een browser kan openen, iets wat noch Sam
+noch Azzouz in deze omgeving kan. Dat is het eerste dat de owner zelf kan
+oplossen als hij tijd heeft: een AANGEHOUDEN-kaart met "één controle van
+een minuut" opent hij, checkt de genoemde datum, en verstuurt.
