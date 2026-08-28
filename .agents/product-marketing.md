@@ -1,6 +1,6 @@
 # Product Marketing Context — ZEVREN
 
-**Document version:** 1.2 · 2026-08-26
+**Document version:** 1.3 · 2026-08-28
 Elke marketingskill in `.claude/skills/` leest dit document eerst.
 Feiten hier zijn bindend; een skill-advies dat ermee botst, verliest.
 
@@ -100,6 +100,14 @@ demo's zijn concepten en worden nooit als echte klanten gepresenteerd.
 
 ## Changelog
 
+- 1.3 (2026-08-28, Azzouz): de verboden formulering "werk dat u zelf kunt
+  aanklikken" (verboden sinds 1.1) dook vandaag opnieuw op — in alle vijf
+  berichten van lane D (installateurs, Zuid-/Noord-Holland), geschreven
+  door dezelfde agent die de regel al kent. De regel stond er dus, maar
+  werd niet tegen elke individuele zin gelegd vóór het bericht de kaart in
+  ging. Voor Sam: controleer de drie verboden formuleringen hieronder
+  mechanisch, zin voor zin, per bericht — niet uit herinnering dat de regel
+  bekend is.
 - 1.2 (2026-08-26, Azzouz): sectie "Welke bron een e-mailadres draagt"
   toegevoegd. Lane E en lane F kwamen op dezelfde dag tot tegengestelde
   conclusies over adressen uit zoekresultaten; het verschil bleek de vorm van
