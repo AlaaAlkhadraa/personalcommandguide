@@ -40,6 +40,13 @@ MINIMALE_NUMMERLENGTE = 4
 # noemen. Alleen gebruikt voor een voorstel met LAGE zekerheid.
 NAAMGRENS = 0.75
 
+# Wat erbij komt te staan als niet vast te stellen is of een factuur
+# inkoop of verkoop is.
+RICHTING_ONBEKEND = (
+    "de richting van deze factuur is niet bekend, controleer of dit een "
+    "inkoop of verkoop is"
+)
+
 # Woorden die niets zeggen over wie een bedrijf is. Ze worden weggelaten
 # voordat twee namen worden vergeleken.
 RECHTSVORMEN = {
@@ -110,16 +117,44 @@ def _genoemd(tekst: str, factuur: dict[str, Any]) -> bool:
     return nummer in tekst
 
 
-def _past_de_richting(bedrag: Decimal, factuur: dict[str, Any]) -> bool:
-    """Geld eraf hoort bij een inkoopfactuur, geld erbij bij een verkoop.
+def past_de_richting(
+    bedrag: Decimal, factuur: dict[str, Any]
+) -> Literal["past", "past_niet", "onbekend"]:
+    """Past deze transactie qua richting bij deze factuur?
 
+    Geld eraf hoort bij een inkoopfactuur, geld erbij bij een verkoop.
     De richting komt uit de boeking die bij de factuur hoort, niet uit
     een gok: staat er crediteuren in, dan is het een inkoopfactuur.
+
+    Drie uitkomsten, en "onbekend" is er met opzet een aparte van. Is er
+    geen boeking of geen rekeningschema voor dat jaar, dan wéten we het
+    niet — en dan mag dat niet stilzwijgend als "past" doorgaan. De
+    factuur blijft wel een kandidaat (misschien klopt het), maar het
+    voorstel dat eruit komt krijgt nooit hoge zekerheid.
     """
     richting = factuur.get("richting")
-    if richting is None:
-        return True  # onbekend: dan laten we de richting niet meewegen
-    return (bedrag < NUL) if richting == "inkoop" else (bedrag > NUL)
+    if richting not in ("inkoop", "verkoop"):
+        return "onbekend"
+    past = (bedrag < NUL) if richting == "inkoop" else (bedrag > NUL)
+    return "past" if past else "past_niet"
+
+
+def _bij_twijfel_verlagen(
+    voorstel: Voorstel, factuur: dict[str, Any], bedrag: Decimal
+) -> Voorstel:
+    """Zet een voorstel op lage zekerheid als de richting onbekend is.
+
+    Het bedrag en het nummer kunnen kloppen terwijl we niet weten of dit
+    een inkoop- of een verkoopfactuur is. Dan is het voorstel bruikbaar,
+    maar "hoge zekerheid" zou het meer zeggen dan we kunnen waarmaken
+    (Gouden regel 4).
+    """
+    if past_de_richting(bedrag, factuur) != "onbekend":
+        return voorstel
+    return voorstel.model_copy(update={
+        "zekerheid": "laag",
+        "uitleg": f"{voorstel.uitleg}. Let op: {RICHTING_ONBEKEND}",
+    })
 
 
 def zoek_voorstel(
@@ -144,7 +179,12 @@ def zoek_voorstel(
     tegenpartij = transactie.get("tegenpartij")
     open_bedrag = abs(bedrag)
 
-    passend = [f for f in facturen if _past_de_richting(bedrag, f)]
+    # Een factuur waarvan de richting niet past valt af. Een factuur
+    # waarvan de richting onbekend is blijft meedoen — maar wat daaruit
+    # komt, wordt hieronder nooit "hoge zekerheid".
+    passend = [
+        f for f in facturen if past_de_richting(bedrag, f) != "past_niet"
+    ]
     genoemd = [f for f in passend if _genoemd(tekst, f)]
 
     # --- 1. het factuurnummer staat er letterlijk in --------------------
@@ -173,12 +213,15 @@ def zoek_voorstel(
             "leverancier": factuur.get("leverancier"),
         }
         if factuurbedrag == open_bedrag:
-            return Voorstel(
-                soort="exact", zekerheid="hoog", **gedeeld,
-                uitleg=(
-                    f"het factuurnummer staat in de omschrijving en het bedrag "
-                    f"klopt tot op de cent"
+            return _bij_twijfel_verlagen(
+                Voorstel(
+                    soort="exact", zekerheid="hoog", **gedeeld,
+                    uitleg=(
+                        f"het factuurnummer staat in de omschrijving en het "
+                        f"bedrag klopt tot op de cent"
+                    ),
                 ),
+                factuur, bedrag,
             )
         if open_bedrag < factuurbedrag:
             return Voorstel(
@@ -210,16 +253,19 @@ def zoek_voorstel(
 
     if len(gelijkende_naam) == 1:
         factuur = gelijkende_naam[0]
-        return Voorstel(
-            soort="waarschijnlijk", zekerheid="laag",
-            factuur_id=factuur["id"],
-            factuurnummer=factuur.get("factuurnummer"),
-            leverancier=factuur.get("leverancier"),
-            uitleg=(
-                f"het bedrag klopt exact en '{tegenpartij}' lijkt op "
-                f"'{factuur.get('leverancier')}', maar er staat geen "
-                f"factuurnummer bij. Controleer of dit de juiste factuur is"
+        return _bij_twijfel_verlagen(
+            Voorstel(
+                soort="waarschijnlijk", zekerheid="laag",
+                factuur_id=factuur["id"],
+                factuurnummer=factuur.get("factuurnummer"),
+                leverancier=factuur.get("leverancier"),
+                uitleg=(
+                    f"het bedrag klopt exact en '{tegenpartij}' lijkt op "
+                    f"'{factuur.get('leverancier')}', maar er staat geen "
+                    f"factuurnummer bij. Controleer of dit de juiste factuur is"
+                ),
             ),
+            factuur, bedrag,
         )
 
     if len(gelijkende_naam) > 1:

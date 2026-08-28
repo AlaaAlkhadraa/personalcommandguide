@@ -495,3 +495,115 @@ def test_een_ongeboekte_factuur_kan_niet_worden_gekoppeld(conn, opslag):
     boeking_id, redenen = koppel_transactie(conn, betaling["id"], factuur_id)
     assert boeking_id is None
     assert "boek de factuur eerst" in redenen[0]
+
+
+# --- twijfel over de richting -------------------------------------------
+
+def zonder_richting(**afwijkingen):
+    """Een factuur waarvan niet bekend is of het inkoop of verkoop is.
+
+    Dat gebeurt bijvoorbeeld als er voor het boekjaar van de boeking geen
+    rekeningschema is: dan valt uit de boeking niet af te lezen of er
+    crediteuren of debiteuren in staat.
+    """
+    factuur = {
+        "id": 1, "factuurnummer": "EF-2026-0101",
+        "leverancier": "Van Dijk ICT-diensten", "bedrag_incl": "484.00",
+        "richting": None,
+    }
+    factuur.update(afwijkingen)
+    return factuur
+
+
+def test_de_richting_heeft_drie_uitkomsten():
+    from decimal import Decimal
+
+    from boekhouding import past_de_richting
+
+    inkoop = {"richting": "inkoop"}
+    assert past_de_richting(Decimal("-484.00"), inkoop) == "past"
+    assert past_de_richting(Decimal("484.00"), inkoop) == "past_niet"
+    assert past_de_richting(Decimal("-484.00"), {"richting": None}) == "onbekend"
+    assert past_de_richting(Decimal("-484.00"), {}) == "onbekend"
+
+
+def test_een_onbekende_richting_verlaagt_een_exacte_match_naar_laag():
+    """Nummer en bedrag kloppen, maar we weten niet of het inkoop is."""
+    voorstel = zoek_voorstel(
+        transactie("-484.00", "Factuur EF-2026-0101", "Van Dijk ICT-diensten"),
+        [zonder_richting()],
+    )
+
+    assert voorstel.soort == "exact"
+    assert voorstel.zekerheid == "laag"
+    assert voorstel.factuur_id == 1
+    assert "de richting van deze factuur is niet bekend" in voorstel.uitleg
+    assert "inkoop of verkoop" in voorstel.uitleg
+
+
+def test_bij_een_bekende_richting_blijft_het_gedrag_hetzelfde():
+    voorstel = zoek_voorstel(
+        transactie("-484.00", "Factuur EF-2026-0101", "Van Dijk ICT-diensten"),
+        [zonder_richting(richting="inkoop")],
+    )
+
+    assert voorstel.soort == "exact"
+    assert voorstel.zekerheid == "hoog"
+    assert "de richting van deze factuur is niet bekend" not in voorstel.uitleg
+
+
+def test_een_onbekende_richting_verlaagt_ook_bij_alleen_een_bedrag():
+    """Die stond al op laag; de reden hoort er wel bij te komen."""
+    voorstel = zoek_voorstel(
+        transactie("-484.00", "SEPA overboeking", "Van Dijk ICT diensten"),
+        [zonder_richting()],
+    )
+
+    assert voorstel.soort == "waarschijnlijk"
+    assert voorstel.zekerheid == "laag"
+    assert "de richting van deze factuur is niet bekend" in voorstel.uitleg
+
+
+def test_een_factuur_met_onbekende_richting_valt_niet_af():
+    """Twijfel is geen afwijzing: de factuur blijft een kandidaat."""
+    voorstel = zoek_voorstel(
+        transactie("484.00", "Factuur EF-2026-0101"), [zonder_richting()]
+    )
+
+    assert voorstel.factuur_id == 1
+    assert voorstel.zekerheid == "laag"
+
+
+def test_een_factuur_met_de_verkeerde_richting_valt_wel_af():
+    voorstel = zoek_voorstel(
+        transactie("484.00", "Factuur EF-2026-0101"),
+        [zonder_richting(richting="inkoop")],
+    )
+
+    assert voorstel.soort == "geen"
+    assert voorstel.factuur_id is None
+
+
+def test_koppelen_blijft_geweigerd_bij_een_onbekende_richting(conn, opslag):
+    """Een voorstel met lage zekerheid is nog geen boeking.
+
+    Zolang de richting onbekend is, kan er ook geen betaling geboekt
+    worden: dan is niet te bepalen of het crediteuren of debiteuren is.
+    """
+    factuur_id, _ = sla_factuur_op(
+        conn, 1,
+        {"leverancier": "Van Dijk ICT-diensten", "factuurdatum": "2026-07-01",
+         "factuurnummer": "EF-2026-0101", "bedrag_excl": "400.00",
+         "btw_percentage": "21", "btw_bedrag": "84.00", "bedrag_incl": "484.00"},
+        vandaag=VANDAAG,
+    )
+    importeer_bankafschrift(
+        conn, 1, "juli.sta", (BANKMAP / "01-mt940-ing.sta").read_bytes(), opslag
+    )
+    betaling = [
+        t for t in lees_banktransacties(conn, 1) if t["bedrag"] == "-484.00"
+    ][0]
+
+    boeking_id, redenen = koppel_transactie(conn, betaling["id"], factuur_id)
+    assert boeking_id is None
+    assert "boek de factuur eerst" in redenen[0]

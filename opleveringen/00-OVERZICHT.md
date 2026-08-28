@@ -27,6 +27,7 @@ Branch: `claude/nl-accounting-invoice-module-f2vzr3`
 | `15-module6-grootboek-btw.md` | Module 6: grootboek, dubbel boekhouden en de btw-aangifte per kwartaal |
 | `16-volledigheidscontroles.md` | Signalen over wat er níét is aangeleverd: waarschuwen, nooit blokkeren |
 | `17-module7-bank-afletteren.md` | Module 7: MT940 en CAMT.053 inlezen en afletteren tegen de facturen |
+| `18-fix-module7-richting.md` | Fix: een onbekende richting geeft nooit hoge zekerheid |
 | `CODE-COMPLEET.md` | de volledige actuele code, uitleg en tests |
 | `testfacturen-overzicht.json` | grondwaarheid bij de 10 testfacturen |
 | `schermen/` | schermafbeeldingen van de draaiende webinterface |
@@ -34,7 +35,7 @@ Branch: `claude/nl-accounting-invoice-module-f2vzr3`
 
 ## Waar het nu staat
 
-- **442 pytest-tests, allemaal groen.** De testsuite doet nooit een echte
+- **450 pytest-tests, allemaal groen.** De testsuite doet nooit een echte
   API-aanroep.
 - **Module 1** — schema met Decimal-bedragen, alle rekencontroles, datum- en
   duplicaatcheck. Elke fout wordt `review_nodig` met reden, nooit een
@@ -76,7 +77,9 @@ Branch: `claude/nl-accounting-invoice-module-f2vzr3`
   Afletteren gaat van streng naar los: nummer én bedrag is hoge zekerheid,
   bedrag én naam is lage zekerheid, en een deelbetaling of verzamelbetaling
   wordt nooit automatisch gekoppeld. Pas bij bevestiging ontstaat de boeking
-  (crediteuren tegen bank, of andersom bij ontvangst).
+  (crediteuren tegen bank, of andersom bij ontvangst). Is niet vast te stellen
+  of een factuur inkoop of verkoop is, dan blijft hij kandidaat maar krijgt het
+  voorstel nooit hoge zekerheid.
 - **Volledigheidssignalen** — blokkeren kan alleen op facturen die er zijn. Een
   factuur die nooit is aangeleverd staat nergens, en dan klopt de aangifte
   ogenschijnlijk gewoon. Daarom drie controles die het patroon bekijken: een

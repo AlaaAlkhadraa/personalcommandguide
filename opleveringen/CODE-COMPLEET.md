@@ -836,6 +836,22 @@ inkoop. Ook de keuzelijst "zelf koppelen" toont daarom alleen facturen die
 qua richting kunnen — een keuze aanbieden die daarna wordt geweigerd is geen
 keuze.
 
+`past_de_richting` heeft daarbij **drie** uitkomsten en niet twee: past, past
+niet, en onbekend. Onbekend komt voor als er geen boeking is, of geen
+rekeningschema voor dat boekjaar. Zo'n factuur valt niet af — misschien klopt
+het gewoon — maar een voorstel erover krijgt **nooit hoge zekerheid**. Het
+zakt naar laag met de reden erbij:
+
+> het factuurnummer staat in de omschrijving en het bedrag klopt tot op de
+> cent. Let op: de richting van deze factuur is niet bekend, controleer of dit
+> een inkoop of verkoop is
+
+Twijfel stilzwijgend als "akkoord" behandelen zou precies het soort zekerheid
+suggereren dat er niet is (Gouden regel 4). Koppelen lukt in dat geval trouwens
+sowieso niet: zonder richting is niet te bepalen of de betaling tegen
+crediteuren of tegen debiteuren geboekt hoort te worden, en dat wordt geweigerd
+met "boek de factuur eerst".
+
 ### Deelbetalingen en verzamelbetalingen worden nooit geraden
 
 Drie gevallen leveren met opzet **geen** voorstel op, alleen een uitleg:
@@ -912,7 +928,7 @@ de stack blijft Python, SQLite, Pydantic en pytest.
 
 ### `tests/` — de bewijslast
 
-442 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
+450 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
 onzin-tekst, ontbrekende velden, verkeerde btw-percentages, ambigue
 bedragen, toekomst- en te oude datums, duplicaten, de audit trail bij
 aanmaken en wijzigen, en voor module 2: een PDF zonder tekstlaag, een
@@ -1029,7 +1045,14 @@ from .bank import (
     lees_camt,
     lees_mt940,
 )
-from .afletteren import Voorstel, namen_lijken_op_elkaar, stel_betaling_samen, zoek_voorstel
+from .afletteren import (
+    RICHTING_ONBEKEND,
+    Voorstel,
+    namen_lijken_op_elkaar,
+    past_de_richting,
+    stel_betaling_samen,
+    zoek_voorstel,
+)
 from .routering import bestandssoort, routeer_document, zoek_ingebedde_efactuur
 from .omgeving import api_sleutel, sleutel_aanwezig
 from .database import (
@@ -1153,6 +1176,8 @@ __all__ = [
     "Voorstel",
     "zoek_voorstel",
     "namen_lijken_op_elkaar",
+    "past_de_richting",
+    "RICHTING_ONBEKEND",
     "stel_betaling_samen",
     "importeer_bankafschrift",
     "lees_banktransacties",
@@ -5945,6 +5970,13 @@ MINIMALE_NUMMERLENGTE = 4
 # noemen. Alleen gebruikt voor een voorstel met LAGE zekerheid.
 NAAMGRENS = 0.75
 
+# Wat erbij komt te staan als niet vast te stellen is of een factuur
+# inkoop of verkoop is.
+RICHTING_ONBEKEND = (
+    "de richting van deze factuur is niet bekend, controleer of dit een "
+    "inkoop of verkoop is"
+)
+
 # Woorden die niets zeggen over wie een bedrijf is. Ze worden weggelaten
 # voordat twee namen worden vergeleken.
 RECHTSVORMEN = {
@@ -6015,16 +6047,44 @@ def _genoemd(tekst: str, factuur: dict[str, Any]) -> bool:
     return nummer in tekst
 
 
-def _past_de_richting(bedrag: Decimal, factuur: dict[str, Any]) -> bool:
-    """Geld eraf hoort bij een inkoopfactuur, geld erbij bij een verkoop.
+def past_de_richting(
+    bedrag: Decimal, factuur: dict[str, Any]
+) -> Literal["past", "past_niet", "onbekend"]:
+    """Past deze transactie qua richting bij deze factuur?
 
+    Geld eraf hoort bij een inkoopfactuur, geld erbij bij een verkoop.
     De richting komt uit de boeking die bij de factuur hoort, niet uit
     een gok: staat er crediteuren in, dan is het een inkoopfactuur.
+
+    Drie uitkomsten, en "onbekend" is er met opzet een aparte van. Is er
+    geen boeking of geen rekeningschema voor dat jaar, dan wéten we het
+    niet — en dan mag dat niet stilzwijgend als "past" doorgaan. De
+    factuur blijft wel een kandidaat (misschien klopt het), maar het
+    voorstel dat eruit komt krijgt nooit hoge zekerheid.
     """
     richting = factuur.get("richting")
-    if richting is None:
-        return True  # onbekend: dan laten we de richting niet meewegen
-    return (bedrag < NUL) if richting == "inkoop" else (bedrag > NUL)
+    if richting not in ("inkoop", "verkoop"):
+        return "onbekend"
+    past = (bedrag < NUL) if richting == "inkoop" else (bedrag > NUL)
+    return "past" if past else "past_niet"
+
+
+def _bij_twijfel_verlagen(
+    voorstel: Voorstel, factuur: dict[str, Any], bedrag: Decimal
+) -> Voorstel:
+    """Zet een voorstel op lage zekerheid als de richting onbekend is.
+
+    Het bedrag en het nummer kunnen kloppen terwijl we niet weten of dit
+    een inkoop- of een verkoopfactuur is. Dan is het voorstel bruikbaar,
+    maar "hoge zekerheid" zou het meer zeggen dan we kunnen waarmaken
+    (Gouden regel 4).
+    """
+    if past_de_richting(bedrag, factuur) != "onbekend":
+        return voorstel
+    return voorstel.model_copy(update={
+        "zekerheid": "laag",
+        "uitleg": f"{voorstel.uitleg}. Let op: {RICHTING_ONBEKEND}",
+    })
 
 
 def zoek_voorstel(
@@ -6049,7 +6109,12 @@ def zoek_voorstel(
     tegenpartij = transactie.get("tegenpartij")
     open_bedrag = abs(bedrag)
 
-    passend = [f for f in facturen if _past_de_richting(bedrag, f)]
+    # Een factuur waarvan de richting niet past valt af. Een factuur
+    # waarvan de richting onbekend is blijft meedoen — maar wat daaruit
+    # komt, wordt hieronder nooit "hoge zekerheid".
+    passend = [
+        f for f in facturen if past_de_richting(bedrag, f) != "past_niet"
+    ]
     genoemd = [f for f in passend if _genoemd(tekst, f)]
 
     # --- 1. het factuurnummer staat er letterlijk in --------------------
@@ -6078,12 +6143,15 @@ def zoek_voorstel(
             "leverancier": factuur.get("leverancier"),
         }
         if factuurbedrag == open_bedrag:
-            return Voorstel(
-                soort="exact", zekerheid="hoog", **gedeeld,
-                uitleg=(
-                    f"het factuurnummer staat in de omschrijving en het bedrag "
-                    f"klopt tot op de cent"
+            return _bij_twijfel_verlagen(
+                Voorstel(
+                    soort="exact", zekerheid="hoog", **gedeeld,
+                    uitleg=(
+                        f"het factuurnummer staat in de omschrijving en het "
+                        f"bedrag klopt tot op de cent"
+                    ),
                 ),
+                factuur, bedrag,
             )
         if open_bedrag < factuurbedrag:
             return Voorstel(
@@ -6115,16 +6183,19 @@ def zoek_voorstel(
 
     if len(gelijkende_naam) == 1:
         factuur = gelijkende_naam[0]
-        return Voorstel(
-            soort="waarschijnlijk", zekerheid="laag",
-            factuur_id=factuur["id"],
-            factuurnummer=factuur.get("factuurnummer"),
-            leverancier=factuur.get("leverancier"),
-            uitleg=(
-                f"het bedrag klopt exact en '{tegenpartij}' lijkt op "
-                f"'{factuur.get('leverancier')}', maar er staat geen "
-                f"factuurnummer bij. Controleer of dit de juiste factuur is"
+        return _bij_twijfel_verlagen(
+            Voorstel(
+                soort="waarschijnlijk", zekerheid="laag",
+                factuur_id=factuur["id"],
+                factuurnummer=factuur.get("factuurnummer"),
+                leverancier=factuur.get("leverancier"),
+                uitleg=(
+                    f"het bedrag klopt exact en '{tegenpartij}' lijkt op "
+                    f"'{factuur.get('leverancier')}', maar er staat geen "
+                    f"factuurnummer bij. Controleer of dit de juiste factuur is"
+                ),
             ),
+            factuur, bedrag,
         )
 
     if len(gelijkende_naam) > 1:
@@ -15550,6 +15621,118 @@ def test_een_ongeboekte_factuur_kan_niet_worden_gekoppeld(conn, opslag):
         conn, 1,
         {"leverancier": "Van Dijk ICT-diensten", "factuurdatum": "2026-07-01",
          "factuurnummer": "EF-2026-0199", "bedrag_excl": "400.00",
+         "btw_percentage": "21", "btw_bedrag": "84.00", "bedrag_incl": "484.00"},
+        vandaag=VANDAAG,
+    )
+    importeer_bankafschrift(
+        conn, 1, "juli.sta", (BANKMAP / "01-mt940-ing.sta").read_bytes(), opslag
+    )
+    betaling = [
+        t for t in lees_banktransacties(conn, 1) if t["bedrag"] == "-484.00"
+    ][0]
+
+    boeking_id, redenen = koppel_transactie(conn, betaling["id"], factuur_id)
+    assert boeking_id is None
+    assert "boek de factuur eerst" in redenen[0]
+
+
+# --- twijfel over de richting -------------------------------------------
+
+def zonder_richting(**afwijkingen):
+    """Een factuur waarvan niet bekend is of het inkoop of verkoop is.
+
+    Dat gebeurt bijvoorbeeld als er voor het boekjaar van de boeking geen
+    rekeningschema is: dan valt uit de boeking niet af te lezen of er
+    crediteuren of debiteuren in staat.
+    """
+    factuur = {
+        "id": 1, "factuurnummer": "EF-2026-0101",
+        "leverancier": "Van Dijk ICT-diensten", "bedrag_incl": "484.00",
+        "richting": None,
+    }
+    factuur.update(afwijkingen)
+    return factuur
+
+
+def test_de_richting_heeft_drie_uitkomsten():
+    from decimal import Decimal
+
+    from boekhouding import past_de_richting
+
+    inkoop = {"richting": "inkoop"}
+    assert past_de_richting(Decimal("-484.00"), inkoop) == "past"
+    assert past_de_richting(Decimal("484.00"), inkoop) == "past_niet"
+    assert past_de_richting(Decimal("-484.00"), {"richting": None}) == "onbekend"
+    assert past_de_richting(Decimal("-484.00"), {}) == "onbekend"
+
+
+def test_een_onbekende_richting_verlaagt_een_exacte_match_naar_laag():
+    """Nummer en bedrag kloppen, maar we weten niet of het inkoop is."""
+    voorstel = zoek_voorstel(
+        transactie("-484.00", "Factuur EF-2026-0101", "Van Dijk ICT-diensten"),
+        [zonder_richting()],
+    )
+
+    assert voorstel.soort == "exact"
+    assert voorstel.zekerheid == "laag"
+    assert voorstel.factuur_id == 1
+    assert "de richting van deze factuur is niet bekend" in voorstel.uitleg
+    assert "inkoop of verkoop" in voorstel.uitleg
+
+
+def test_bij_een_bekende_richting_blijft_het_gedrag_hetzelfde():
+    voorstel = zoek_voorstel(
+        transactie("-484.00", "Factuur EF-2026-0101", "Van Dijk ICT-diensten"),
+        [zonder_richting(richting="inkoop")],
+    )
+
+    assert voorstel.soort == "exact"
+    assert voorstel.zekerheid == "hoog"
+    assert "de richting van deze factuur is niet bekend" not in voorstel.uitleg
+
+
+def test_een_onbekende_richting_verlaagt_ook_bij_alleen_een_bedrag():
+    """Die stond al op laag; de reden hoort er wel bij te komen."""
+    voorstel = zoek_voorstel(
+        transactie("-484.00", "SEPA overboeking", "Van Dijk ICT diensten"),
+        [zonder_richting()],
+    )
+
+    assert voorstel.soort == "waarschijnlijk"
+    assert voorstel.zekerheid == "laag"
+    assert "de richting van deze factuur is niet bekend" in voorstel.uitleg
+
+
+def test_een_factuur_met_onbekende_richting_valt_niet_af():
+    """Twijfel is geen afwijzing: de factuur blijft een kandidaat."""
+    voorstel = zoek_voorstel(
+        transactie("484.00", "Factuur EF-2026-0101"), [zonder_richting()]
+    )
+
+    assert voorstel.factuur_id == 1
+    assert voorstel.zekerheid == "laag"
+
+
+def test_een_factuur_met_de_verkeerde_richting_valt_wel_af():
+    voorstel = zoek_voorstel(
+        transactie("484.00", "Factuur EF-2026-0101"),
+        [zonder_richting(richting="inkoop")],
+    )
+
+    assert voorstel.soort == "geen"
+    assert voorstel.factuur_id is None
+
+
+def test_koppelen_blijft_geweigerd_bij_een_onbekende_richting(conn, opslag):
+    """Een voorstel met lage zekerheid is nog geen boeking.
+
+    Zolang de richting onbekend is, kan er ook geen betaling geboekt
+    worden: dan is niet te bepalen of het crediteuren of debiteuren is.
+    """
+    factuur_id, _ = sla_factuur_op(
+        conn, 1,
+        {"leverancier": "Van Dijk ICT-diensten", "factuurdatum": "2026-07-01",
+         "factuurnummer": "EF-2026-0101", "bedrag_excl": "400.00",
          "btw_percentage": "21", "btw_bedrag": "84.00", "bedrag_incl": "484.00"},
         vandaag=VANDAAG,
     )

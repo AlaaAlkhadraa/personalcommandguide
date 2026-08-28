@@ -86,7 +86,14 @@ from .bank import (
     lees_camt,
     lees_mt940,
 )
-from .afletteren import Voorstel, namen_lijken_op_elkaar, stel_betaling_samen, zoek_voorstel
+from .afletteren import (
+    RICHTING_ONBEKEND,
+    Voorstel,
+    namen_lijken_op_elkaar,
+    past_de_richting,
+    stel_betaling_samen,
+    zoek_voorstel,
+)
 from .routering import bestandssoort, routeer_document, zoek_ingebedde_efactuur
 from .omgeving import api_sleutel, sleutel_aanwezig
 from .database import (
@@ -210,6 +217,8 @@ __all__ = [
     "Voorstel",
     "zoek_voorstel",
     "namen_lijken_op_elkaar",
+    "past_de_richting",
+    "RICHTING_ONBEKEND",
     "stel_betaling_samen",
     "importeer_bankafschrift",
     "lees_banktransacties",

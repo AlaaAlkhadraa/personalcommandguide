@@ -832,6 +832,22 @@ inkoop. Ook de keuzelijst "zelf koppelen" toont daarom alleen facturen die
 qua richting kunnen — een keuze aanbieden die daarna wordt geweigerd is geen
 keuze.
 
+`past_de_richting` heeft daarbij **drie** uitkomsten en niet twee: past, past
+niet, en onbekend. Onbekend komt voor als er geen boeking is, of geen
+rekeningschema voor dat boekjaar. Zo'n factuur valt niet af — misschien klopt
+het gewoon — maar een voorstel erover krijgt **nooit hoge zekerheid**. Het
+zakt naar laag met de reden erbij:
+
+> het factuurnummer staat in de omschrijving en het bedrag klopt tot op de
+> cent. Let op: de richting van deze factuur is niet bekend, controleer of dit
+> een inkoop of verkoop is
+
+Twijfel stilzwijgend als "akkoord" behandelen zou precies het soort zekerheid
+suggereren dat er niet is (Gouden regel 4). Koppelen lukt in dat geval trouwens
+sowieso niet: zonder richting is niet te bepalen of de betaling tegen
+crediteuren of tegen debiteuren geboekt hoort te worden, en dat wordt geweigerd
+met "boek de factuur eerst".
+
 ### Deelbetalingen en verzamelbetalingen worden nooit geraden
 
 Drie gevallen leveren met opzet **geen** voorstel op, alleen een uitleg:
@@ -908,7 +924,7 @@ de stack blijft Python, SQLite, Pydantic en pytest.
 
 ### `tests/` — de bewijslast
 
-442 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
+450 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
 onzin-tekst, ontbrekende velden, verkeerde btw-percentages, ambigue
 bedragen, toekomst- en te oude datums, duplicaten, de audit trail bij
 aanmaken en wijzigen, en voor module 2: een PDF zonder tekstlaag, een
