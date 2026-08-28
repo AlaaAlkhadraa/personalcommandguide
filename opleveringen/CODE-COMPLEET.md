@@ -15,6 +15,7 @@ geboekt — elke fout leidt tot status `review_nodig` met een leesbare reden.
 - **Module 4** — UBL / e-facturen rechtstreeks uitlezen, zonder AI
 - **Module 5** — webinterface, fase 1: de reviewschermen van de eigenaar
 - **Module 6** — grootboek (dubbel boekhouden) en de btw-aangifte per kwartaal
+- **Module 7** — bankafschriften importeren en afletteren tegen de facturen
 
 ## Installeren en testen
 
@@ -760,6 +761,118 @@ knoppen erboven loop je terug en vooruit. Onderaan staat, altijd:
 > **Dit is een voorstel, geen aangifte.** Het indienen doet u zelf bij de
 > Belastingdienst; dit systeem verstuurt niets.
 
+## Module 7 — Bankafschriften en afletteren
+
+Geen AI. Een bankafschrift is een vast formaat en afletteren is regelwerk:
+staat het factuurnummer in de omschrijving en klopt het bedrag, dan is het een
+match. Meer zit er niet achter, en meer hoort er ook niet achter te zitten.
+
+### Twee formaten, dezelfde uitkomst
+
+`bank.py` leest allebei de formaten die Nederlandse banken leveren:
+
+- **MT940** — het oude SWIFT-formaat, platte tekst met `:20:`, `:61:` en
+  `:86:`-regels. ING, Rabobank en ABN AMRO gebruiken kleine varianten van de
+  omschrijvingsregel; de gestructureerde tags (`/IBAN/`, `/NAME/`, `/REMI/`,
+  `/EREF/`) worden herkend, en staan ze er niet, dan is de hele regel de
+  omschrijving en wordt er nog een IBAN in gezocht.
+- **CAMT.053** — de XML-opvolger, gelezen met dezelfde veilige parser als de
+  e-facturen van module 4: geen DTD, geen entiteiten, geen externe
+  verwijzingen, dezelfde grens van 20 MB. De versie achter de naamruimte
+  (.02, .04, .08) verschilt per bank, dus daar wordt op het begin vergeleken.
+
+Het formaat komt uit de inhoud, niet uit de bestandsnaam: een MT940 heet bij
+de ene bank `.sta` en bij de andere `.txt`. Er is een test die precies dat
+bewijst, en een test die aantoont dat hetzelfde afschrift in beide formaten
+dezelfde transacties oplevert.
+
+Bedragen zijn ondertekend: **negatief is eraf, positief is erbij**. Zo hoeft
+er nergens anders een debet/credit-vlaggetje meegesleept te worden.
+
+### Een kapotte regel breekt de import niet af
+
+Een afschrift van 200 regels is onbruikbaar als één rare regel het hele
+bestand tegenhoudt. Een regel die niet te lezen is wordt daarom overgeslagen
+met een reden erbij, en de rest wordt gewoon verwerkt. Is er helemaal niets
+te lezen, dan gaat het bestand als geheel naar review — bijvoorbeeld als
+iemand per ongeluk een e-mail uploadt.
+
+### Twee keer inlezen voegt niets toe
+
+Elke transactie krijgt een vingerafdruk: datum, bedrag, tegenrekening,
+tegenpartij, omschrijving, kenmerk en de referentie van de bank, samen
+gehasht. Die is uniek per administratie. Hetzelfde afschrift twee keer
+inlezen levert dus dezelfde vingerafdrukken op en voegt niets toe — en omdat
+het op de inhoud van de transactie gaat en niet op de bestandsnaam, geldt dat
+ook voor twee afschriften die elkaar overlappen, en zelfs voor hetzelfde
+afschrift in het andere formaat.
+
+### Afletteren: van streng naar los
+
+`afletteren.py` zoekt in deze volgorde, en stopt bij de eerste die past:
+
+| Wat er wordt gevonden | Uitkomst |
+|---|---|
+| factuurnummer in de omschrijving **én** bedrag klopt exact | voorstel, **hoge** zekerheid |
+| bedrag klopt exact **én** de tegenpartij lijkt op de leverancier | voorstel, **lage** zekerheid |
+| het lijkt een deelbetaling of verzamelbetaling | **geen** voorstel, wel uitleg |
+| niets gevonden | blijft open staan |
+
+Bij het zoeken naar een factuurnummer worden leestekens weggelaten, dus
+`EF-2026-0101`, `EF 2026 0101` en `ef20260101` zijn hetzelfde nummer. Een
+nummer korter dan vier tekens wordt niet opgezocht: "7" komt in bijna elke
+omschrijving voor, en dan koppel je de verkeerde factuur.
+
+Namen vergelijken gebeurt na het weglaten van rechtsvormen en leestekens, dus
+"KPN B.V." en "KPN" zijn dezelfde partij. Daarna telt een naam als gelijk
+wanneer alle woorden van de kortste in de langste voorkomen, of wanneer de
+namen als geheel genoeg op elkaar lijken. Dat laatste vangt "Bakkerij
+Korenaar" tegenover "Bakkerij de Korenaar" op.
+
+**De richting moet kloppen.** Geld eraf hoort bij een inkoopfactuur, geld
+erbij bij een verkoopfactuur. Of een factuur inkoop of verkoop is, staat niet
+in de factuur maar in haar boeking: staat er crediteuren in, dan is het
+inkoop. Ook de keuzelijst "zelf koppelen" toont daarom alleen facturen die
+qua richting kunnen — een keuze aanbieden die daarna wordt geweigerd is geen
+keuze.
+
+### Deelbetalingen en verzamelbetalingen worden nooit geraden
+
+Drie gevallen leveren met opzet **geen** voorstel op, alleen een uitleg:
+
+- er staan meerdere factuurnummers in de omschrijving (en er staat bij of ze
+  samen precies het bedrag zijn);
+- er is minder betaald dan de factuur — een termijn;
+- het bedrag is precies het totaal van meerdere openstaande facturen van
+  dezelfde partij.
+
+In alle drie de gevallen weet het systeem niet hoe het bedrag verdeeld moet
+worden, en gokken zou de verkeerde factuur op betaald zetten.
+
+### Bevestigen is boeken
+
+Een voorstel is nooit definitief. Pas als de eigenaar bevestigt (of zelf een
+factuur kiest) ontstaat de boeking, via dezelfde grootboekfuncties als module
+6 — met balanscontrole en audit trail:
+
+```
+betaling van een inkoopfactuur     ontvangst op een verkoopfactuur
+1600  Crediteuren   484,00 debet   1100  Bankrekening  2904,00 debet
+1100  Bankrekening        484,00   1300  Debiteuren          2904,00
+                          credit                             credit
+```
+
+Een factuur hangt aan hoogstens één transactie en een transactie aan
+hoogstens één factuur; een tweede poging wordt geweigerd met de reden erbij.
+
+### Testmateriaal
+
+`tests/genereer_banktestbestanden.py` maakt vier bestanden in
+`tests/testfacturen/bank/`: hetzelfde afschrift als MT940 en als CAMT.053,
+een MT940 met één onleesbare regel, en een bestand dat helemaal geen afschrift
+is. De bedragen sluiten aan op de UBL-testfacturen, zodat het afletteren op
+echt materiaal getest wordt.
+
 ## Testmateriaal: synthetische facturen
 
 Voor module 3 (AI-extractie) is materiaal nodig om op te oefenen. Het script
@@ -799,7 +912,7 @@ de stack blijft Python, SQLite, Pydantic en pytest.
 
 ### `tests/` — de bewijslast
 
-378 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
+442 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
 onzin-tekst, ontbrekende velden, verkeerde btw-percentages, ambigue
 bedragen, toekomst- en te oude datums, duplicaten, de audit trail bij
 aanmaken en wijzigen, en voor module 2: een PDF zonder tekstlaag, een
@@ -907,6 +1020,16 @@ from .volledigheid import (
     ontbrekende_leveranciers,
     zoek_signalen,
 )
+from .bank import (
+    Banktransactie,
+    ImportResultaat,
+    is_camt,
+    is_mt940,
+    lees_bankbestand,
+    lees_camt,
+    lees_mt940,
+)
+from .afletteren import Voorstel, namen_lijken_op_elkaar, stel_betaling_samen, zoek_voorstel
 from .routering import bestandssoort, routeer_document, zoek_ingebedde_efactuur
 from .omgeving import api_sleutel, sleutel_aanwezig
 from .database import (
@@ -931,6 +1054,11 @@ from .database import (
     boeking_bij_factuur,
     boek_factuur,
     maak_tegenboeking,
+    importeer_bankafschrift,
+    lees_banktransacties,
+    lees_banktransactie,
+    open_facturen,
+    koppel_transactie,
 )
 
 __all__ = [
@@ -1015,6 +1143,22 @@ __all__ = [
     "ontbrekende_leveranciers",
     "gaten_in_factuurnummers",
     "afwijkend_aantal",
+    "Banktransactie",
+    "ImportResultaat",
+    "lees_bankbestand",
+    "lees_mt940",
+    "lees_camt",
+    "is_mt940",
+    "is_camt",
+    "Voorstel",
+    "zoek_voorstel",
+    "namen_lijken_op_elkaar",
+    "stel_betaling_samen",
+    "importeer_bankafschrift",
+    "lees_banktransacties",
+    "lees_banktransactie",
+    "open_facturen",
+    "koppel_transactie",
 ]
 ```
 
@@ -1449,9 +1593,12 @@ from pydantic import BaseModel
 BLOK = 1024 * 1024
 
 # Bestandssoorten die we bewaren. Een factuur komt binnen als PDF, als
-# foto/scan, of als e-factuur in XML; iets anders wordt niet gegokt
-# maar ter review gelegd.
-TOEGESTANE_EXTENSIES = (".pdf", ".jpg", ".jpeg", ".png", ".xml")
+# foto/scan, of als e-factuur in XML; een bankafschrift als MT940 (.sta,
+# .mt940 of gewoon .txt) of als CAMT.053 (.xml). Iets anders wordt niet
+# gegokt maar ter review gelegd.
+TOEGESTANE_EXTENSIES = (
+    ".pdf", ".jpg", ".jpeg", ".png", ".xml", ".sta", ".mt940", ".txt",
+)
 
 
 class TekstResultaat(BaseModel):
@@ -2909,6 +3056,7 @@ Gouden regels die hier gelden:
 
 import json
 import sqlite3
+import tempfile
 from datetime import date, datetime, timezone
 from decimal import Decimal
 from pathlib import Path
@@ -3119,6 +3267,7 @@ def maak_tabellen(conn: sqlite3.Connection) -> None:
     _voeg_kolom_toe(conn, "facturen", "goedgekeurd_door", "TEXT")
 
     conn.commit()
+    _bank_tabellen(conn)
 
 
 def maak_administratie(
@@ -3954,6 +4103,339 @@ def maak_tegenboeking(
     return sla_boeking_op(
         conn, boeking["administratie_id"], voorstel, door=door
     )
+
+
+# --- bankafschriften en afletteren (module 7) ---------------------------
+
+def _bank_tabellen(conn: sqlite3.Connection) -> None:
+    """De tabellen van module 7; aangeroepen vanuit maak_tabellen."""
+    conn.executescript(
+        """
+        CREATE TABLE IF NOT EXISTS bankafschriften (
+            id               INTEGER PRIMARY KEY,
+            administratie_id INTEGER NOT NULL REFERENCES administraties(id),
+            document_id      INTEGER REFERENCES documenten(id),
+            bestandsnaam     TEXT NOT NULL,
+            formaat          TEXT NOT NULL
+                             CHECK (formaat IN ('mt940', 'camt053')),
+            rekening         TEXT,
+            aangemaakt_op    TEXT NOT NULL
+        );
+
+        CREATE TABLE IF NOT EXISTS banktransacties (
+            id               INTEGER PRIMARY KEY,
+            administratie_id INTEGER NOT NULL REFERENCES administraties(id),
+            afschrift_id     INTEGER NOT NULL REFERENCES bankafschriften(id),
+            volgnummer       INTEGER NOT NULL,
+            boekdatum        TEXT NOT NULL,
+            -- Ondertekend: negatief is eraf, positief is erbij. Als tekst
+            -- opgeslagen, net als elk ander bedrag, zodat er nooit een
+            -- float aan te pas komt.
+            bedrag           TEXT NOT NULL,
+            tegenrekening    TEXT,
+            tegenpartij      TEXT,
+            omschrijving     TEXT NOT NULL DEFAULT '',
+            betalingskenmerk TEXT,
+            bankreferentie   TEXT,
+            -- De vingerafdruk van de transactie. Hierop rust de
+            -- duplicaatherkenning: hetzelfde afschrift twee keer inlezen
+            -- levert dezelfde vingerafdrukken op en voegt dus niets toe.
+            kenmerk          TEXT NOT NULL,
+            status           TEXT NOT NULL DEFAULT 'open'
+                             CHECK (status IN ('open', 'gekoppeld')),
+            factuur_id       INTEGER REFERENCES facturen(id),
+            boeking_id       INTEGER REFERENCES boekingen(id),
+            gekoppeld_op     TEXT,
+            gekoppeld_door   TEXT,
+            aangemaakt_op    TEXT NOT NULL,
+            UNIQUE (administratie_id, kenmerk)
+        );
+
+        CREATE INDEX IF NOT EXISTS idx_banktransacties_status
+            ON banktransacties (administratie_id, status, boekdatum);
+        """
+    )
+    conn.commit()
+
+
+def importeer_bankafschrift(
+    conn: sqlite3.Connection,
+    administratie_id: int,
+    bestandsnaam: str,
+    inhoud: bytes,
+    opslagmap: str,
+    door: str = "eigenaar",
+) -> dict[str, Any]:
+    """Lees een bankafschrift in en bewaar de nieuwe transacties.
+
+    Geeft een samenvatting terug: hoeveel er nieuw zijn, hoeveel er al
+    stonden en welke regels zijn overgeslagen. Gooit nooit een
+    exception: een onleesbaar bestand is een reden, geen crash.
+
+    Hetzelfde afschrift twee keer inlezen voegt niets toe. Dat gaat niet
+    op de bestandsnaam maar op de inhoud van elke transactie, zodat ook
+    twee afschriften die elkaar overlappen geen dubbele regels opleveren.
+    """
+    from .bank import lees_bankbestand
+
+    gelezen = lees_bankbestand(inhoud, bestandsnaam)
+    samenvatting: dict[str, Any] = {
+        "status": gelezen.status,
+        "formaat": gelezen.formaat,
+        "afschrift_id": None,
+        "nieuw": 0,
+        "al_bekend": 0,
+        "redenen": list(gelezen.redenen),
+    }
+    if gelezen.status != "gelezen":
+        return samenvatting
+
+    # Het origineel wordt bewaard vóór het verwerken (bewaarplicht), net
+    # als bij een factuur. Lukt dat niet, dan gaat de import wel door:
+    # de transacties zelf zijn belangrijker dan het bronbestand, en het
+    # mislukken staat als reden in de samenvatting.
+    document_id = None
+    extensie = ".xml" if gelezen.formaat == "camt053" else ".sta"
+    with tempfile.TemporaryDirectory() as tijdelijke_map:
+        tijdelijk = Path(tijdelijke_map) / f"afschrift{extensie}"
+        tijdelijk.write_bytes(inhoud)
+        document = bewaar_document(
+            conn, administratie_id, str(tijdelijk), str(opslagmap)
+        )
+    if document.status == "review_nodig":
+        samenvatting["redenen"].append(
+            f"het originele afschrift kon niet worden bewaard: "
+            f"{'; '.join(document.redenen)}"
+        )
+    else:
+        document_id = document.document_id
+
+    tijd = _nu()
+    cursor = conn.execute(
+        """
+        INSERT INTO bankafschriften (
+            administratie_id, document_id, bestandsnaam, formaat,
+            rekening, aangemaakt_op
+        ) VALUES (?, ?, ?, ?, ?, ?)
+        """,
+        (
+            administratie_id, document_id, bestandsnaam, gelezen.formaat,
+            gelezen.rekening, tijd,
+        ),
+    )
+    afschrift_id = cursor.lastrowid
+    samenvatting["afschrift_id"] = afschrift_id
+
+    for transactie in gelezen.transacties:
+        kenmerk = transactie.kenmerk()
+        bestaat = conn.execute(
+            "SELECT id FROM banktransacties WHERE administratie_id = ? "
+            "AND kenmerk = ?",
+            (administratie_id, kenmerk),
+        ).fetchone()
+        if bestaat is not None:
+            samenvatting["al_bekend"] += 1
+            continue
+
+        regel = conn.execute(
+            """
+            INSERT INTO banktransacties (
+                administratie_id, afschrift_id, volgnummer, boekdatum,
+                bedrag, tegenrekening, tegenpartij, omschrijving,
+                betalingskenmerk, bankreferentie, kenmerk, aangemaakt_op
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                administratie_id, afschrift_id, transactie.volgnummer,
+                str(transactie.boekdatum), str(transactie.bedrag),
+                transactie.tegenrekening, transactie.tegenpartij,
+                transactie.omschrijving, transactie.betalingskenmerk,
+                transactie.bankreferentie, kenmerk, tijd,
+            ),
+        )
+        samenvatting["nieuw"] += 1
+        conn.execute(
+            """
+            INSERT INTO audit_log (
+                administratie_id, tabel, record_id, actie,
+                veld, oude_waarde, nieuwe_waarde, tijdstip
+            ) VALUES (?, 'banktransacties', ?, 'aangemaakt', NULL, NULL, ?, ?)
+            """,
+            (
+                administratie_id, regel.lastrowid,
+                json.dumps(
+                    {
+                        "boekdatum": str(transactie.boekdatum),
+                        "bedrag": str(transactie.bedrag),
+                        "tegenpartij": transactie.tegenpartij,
+                        "omschrijving": transactie.omschrijving,
+                        "afschrift": bestandsnaam,
+                    },
+                    ensure_ascii=False,
+                ),
+                tijd,
+            ),
+        )
+
+    conn.commit()
+    if samenvatting["nieuw"] == 0 and samenvatting["al_bekend"]:
+        samenvatting["redenen"].append(
+            f"alle {samenvatting['al_bekend']} transacties uit dit afschrift "
+            f"stonden er al; er is niets bijgekomen"
+        )
+    return samenvatting
+
+
+def lees_banktransacties(
+    conn: sqlite3.Connection, administratie_id: int
+) -> list[dict[str, Any]]:
+    """De banktransacties van een administratie, openstaande bovenaan."""
+    cursor = conn.execute(
+        """
+        SELECT * FROM banktransacties
+        WHERE administratie_id = ?
+        ORDER BY CASE WHEN status = 'open' THEN 0 ELSE 1 END,
+                 boekdatum DESC, id DESC
+        """,
+        (administratie_id,),
+    )
+    kolommen = [k[0] for k in cursor.description]
+    return [dict(zip(kolommen, rij)) for rij in cursor.fetchall()]
+
+
+def lees_banktransactie(
+    conn: sqlite3.Connection, transactie_id: int
+) -> dict[str, Any]:
+    cursor = conn.execute(
+        "SELECT * FROM banktransacties WHERE id = ?", (transactie_id,)
+    )
+    rij = cursor.fetchone()
+    if rij is None:
+        raise ValueError(f"banktransactie {transactie_id} bestaat niet")
+    kolommen = [k[0] for k in cursor.description]
+    return dict(zip(kolommen, rij))
+
+
+def _richting_van_boeking(conn: sqlite3.Connection, factuur_id: int) -> Optional[str]:
+    """Is dit een inkoop- of een verkoopfactuur?
+
+    Dat staat niet in de factuur maar in haar boeking: staat er
+    crediteuren in, dan is het inkoop; staat er debiteuren in, dan
+    verkoop. Zo hoeft er nergens iets geraden te worden.
+    """
+    from .rekeningschema import rekeningschema_voor_jaar
+
+    boeking = boeking_bij_factuur(conn, factuur_id)
+    if boeking is None:
+        return None
+    jaar = int(str(boeking["boekdatum"])[:4])
+    schema = rekeningschema_voor_jaar(jaar)
+    if schema is None:
+        return None
+    rekeningen = {regel["rekening"] for regel in boeking["regels"]}
+    if schema.standaard("crediteuren") in rekeningen:
+        return "inkoop"
+    if schema.standaard("debiteuren") in rekeningen:
+        return "verkoop"
+    return None
+
+
+def open_facturen(
+    conn: sqlite3.Connection, administratie_id: int
+) -> list[dict[str, Any]]:
+    """De facturen die nog op een betaling wachten.
+
+    Alleen geboekte facturen doen mee: zolang een factuur niet in het
+    grootboek staat, is er ook geen schuld of vordering om af te
+    letteren. Facturen die al aan een transactie hangen vallen af.
+    """
+    cursor = conn.execute(
+        """
+        SELECT f.* FROM facturen f
+        JOIN boekingen b ON b.factuur_id = f.id
+        WHERE f.administratie_id = ?
+          AND f.id NOT IN (
+              SELECT factuur_id FROM banktransacties
+              WHERE administratie_id = ? AND factuur_id IS NOT NULL
+          )
+        ORDER BY f.factuurdatum, f.id
+        """,
+        (administratie_id, administratie_id),
+    )
+    kolommen = [k[0] for k in cursor.description]
+    facturen = []
+    for rij in cursor.fetchall():
+        factuur = dict(zip(kolommen, rij))
+        factuur["review_redenen"] = json.loads(factuur["review_redenen"])
+        factuur["originele_data"] = json.loads(factuur["originele_data"])
+        factuur["richting"] = _richting_van_boeking(conn, factuur["id"])
+        facturen.append(factuur)
+    return facturen
+
+
+def koppel_transactie(
+    conn: sqlite3.Connection,
+    transactie_id: int,
+    factuur_id: int,
+    door: str = "eigenaar",
+) -> tuple[Optional[int], list[str]]:
+    """Koppel een banktransactie aan een factuur en boek de betaling.
+
+    Dit gebeurt alleen op bevestiging van een mens: een voorstel uit het
+    afletteren is nooit definitief. Geeft (boeking_id, redenen).
+    """
+    from .afletteren import stel_betaling_samen
+
+    transactie = lees_banktransactie(conn, transactie_id)
+    if transactie["status"] != "open":
+        return None, [
+            f"deze transactie is al gekoppeld aan factuur "
+            f"{transactie['factuur_id']}"
+        ]
+
+    factuur = lees_factuur(conn, factuur_id)
+    if factuur["administratie_id"] != transactie["administratie_id"]:
+        return None, ["deze factuur hoort bij een andere administratie"]
+
+    al_gekoppeld = conn.execute(
+        "SELECT id FROM banktransacties WHERE factuur_id = ? AND id != ?",
+        (factuur_id, transactie_id),
+    ).fetchone()
+    if al_gekoppeld is not None:
+        return None, [
+            f"factuur {factuur_id} hangt al aan banktransactie "
+            f"{al_gekoppeld[0]}"
+        ]
+
+    factuur["richting"] = _richting_van_boeking(conn, factuur_id)
+    voorstel = stel_betaling_samen(transactie, factuur)
+    boeking_id, redenen = sla_boeking_op(
+        conn, transactie["administratie_id"], voorstel, door=door
+    )
+    if boeking_id is None:
+        return None, redenen
+
+    tijd = _nu()
+    conn.execute(
+        """
+        UPDATE banktransacties
+        SET status = 'gekoppeld', factuur_id = ?, boeking_id = ?,
+            gekoppeld_op = ?, gekoppeld_door = ?
+        WHERE id = ?
+        """,
+        (factuur_id, boeking_id, tijd, door, transactie_id),
+    )
+    conn.execute(
+        """
+        INSERT INTO audit_log (
+            administratie_id, tabel, record_id, actie,
+            veld, oude_waarde, nieuwe_waarde, tijdstip
+        ) VALUES (?, 'banktransacties', ?, 'gewijzigd', 'factuur_id', NULL, ?, ?)
+        """,
+        (transactie["administratie_id"], transactie_id, str(factuur_id), tijd),
+    )
+    conn.commit()
+    return boeking_id, []
 ```
 
 ## `boekhouding/boekhouding/grootboek.py`
@@ -4944,6 +5426,862 @@ def zoek_signalen(
     )
 ```
 
+## `boekhouding/boekhouding/bank.py`
+
+```python
+"""Bankafschriften inlezen: MT940 en CAMT.053.
+
+Geen AI in deze module. Een bankafschrift is een vast formaat: de velden
+staan er met een naam bij, net als bij een e-factuur. Er valt niets te
+herkennen en niets te interpreteren — alleen te lezen wat er staat.
+
+Twee formaten, allebei standaard bij Nederlandse banken:
+
+- **MT940**: het oude SWIFT-formaat, platte tekst met regels die met
+  `:20:`, `:61:`, `:86:` beginnen. ING, Rabobank en ABN AMRO leveren het
+  allemaal, met kleine onderlinge verschillen in de omschrijvingsregel.
+- **CAMT.053**: de XML-opvolger. Wordt gelezen met dezelfde veilige
+  parser als de e-facturen van module 4: geen DTD, geen entiteiten, geen
+  externe verwijzingen, en dezelfde groottegrens.
+
+Wat hier geldt:
+
+- **Een onleesbare regel breekt de import niet af.** De rest van het
+  bestand wordt gewoon verwerkt en de kapotte regel komt terug als reden
+  (Gouden regel 4). Een afschrift van 200 regels is anders onbruikbaar
+  door één rare regel.
+- **Er wordt niets ingevuld.** Ontbreekt de tegenrekening of de
+  omschrijving, dan blijft dat veld leeg. Leeg is informatie.
+- **Bedragen zijn Decimal en ondertekend**: een afschrijving is negatief,
+  een bijschrijving positief. Zo hoeft nergens anders een debet/credit-
+  vlaggetje meegesleept te worden.
+"""
+
+import hashlib
+import re
+import xml.etree.ElementTree as ET
+from datetime import date
+from decimal import Decimal, InvalidOperation
+from typing import Literal, Optional
+
+from pydantic import BaseModel
+
+from .ubl import XmlOnveilig, lees_xml_veilig, te_groot
+
+# De naamruimte van CAMT.053. De versie erachter verschilt per bank en
+# per jaar (.02, .04, .08), dus we vergelijken op het begin.
+CAMT_NAAMRUIMTE = "urn:iso:std:iso:20022:tech:xsd:camt.053"
+
+# De regel in een MT940 met het bedrag. Opgebouwd volgens de SWIFT-
+# beschrijving: valutadatum, eventueel een boekdatum, D of C, eventueel
+# een muntteken, het bedrag met een komma, de transactiesoort (N + drie
+# tekens) en de referentie van de bank.
+MT940_BEDRAGREGEL = re.compile(
+    r"^(?P<valuta>\d{6})"
+    r"(?P<boekdatum>\d{4})?"
+    r"(?P<teken>RC|RD|C|D)"
+    r"(?P<munt>[A-Z])?"
+    r"(?P<bedrag>[\d.,]+)"
+    r"(?P<soort>N[A-Z0-9]{3})"
+    r"(?P<referentie>[^/\n]*)"
+    r"(?://(?P<bankreferentie>.*))?$"
+)
+
+# De gestructureerde omschrijving die Nederlandse banken in :86: zetten:
+# /TRTP/SEPA OVERBOEKING/IBAN/NL..../NAME/Van Dijk/REMI/Factuur 123
+MT940_TAGS = re.compile(r"/(?P<tag>[A-Z]{2,8})/(?P<waarde>(?:(?!/[A-Z]{2,8}/).)*)")
+
+# Welke tag welk veld vult. Meerdere namen per veld, want de banken
+# gebruiken niet allemaal dezelfde.
+TAG_TEGENREKENING = ("IBAN", "CNTP", "ACCT")
+TAG_TEGENPARTIJ = ("NAME", "NAM", "BENM", "ORDP")
+TAG_OMSCHRIJVING = ("REMI", "OMSCHRIJVING")
+TAG_KENMERK = ("EREF", "PREF", "MARF")
+
+# Waarden die "geen kenmerk" betekenen. Ze staan er wel, maar er staat
+# niets in; ze overnemen zou een kenmerk suggereren dat er niet is.
+GEEN_KENMERK = ("", "NONREF", "NOTPROVIDED")
+
+# Een IBAN zoals die in een omschrijving kan staan.
+IBAN_PATROON = re.compile(r"\b([A-Z]{2}\d{2}[A-Z0-9]{10,30})\b")
+
+
+class Banktransactie(BaseModel):
+    """Eén regel van een bankafschrift.
+
+    bedrag is ondertekend: negatief is eraf, positief is erbij.
+    """
+
+    boekdatum: date
+    bedrag: Decimal
+    tegenrekening: Optional[str] = None
+    tegenpartij: Optional[str] = None
+    omschrijving: str = ""
+    betalingskenmerk: Optional[str] = None
+    bankreferentie: Optional[str] = None
+    volgnummer: int = 0
+
+    def kenmerk(self) -> str:
+        """Een vingerafdruk van deze transactie, voor duplicaatherkenning.
+
+        Alles wat de bank meestuurt telt mee. Twee keer hetzelfde
+        afschrift inlezen levert dus twee keer dezelfde vingerafdrukken
+        op, en dan wordt de tweede overgeslagen.
+        """
+        stukken = [
+            str(self.boekdatum), str(self.bedrag), self.tegenrekening or "",
+            self.tegenpartij or "", self.omschrijving,
+            self.betalingskenmerk or "", self.bankreferentie or "",
+        ]
+        return hashlib.sha256("|".join(stukken).encode("utf-8")).hexdigest()
+
+
+class ImportResultaat(BaseModel):
+    """Uitkomst van het inlezen van een bankbestand.
+
+    status "gelezen"      → er zijn transacties gevonden
+    status "review_nodig" → geen enkele bruikbare regel; zie redenen
+
+    Ook bij "gelezen" kunnen er redenen zijn: dat zijn de regels die
+    zijn overgeslagen omdat ze niet te lezen waren. De rest van het
+    bestand is dan gewoon verwerkt.
+    """
+
+    status: Literal["gelezen", "review_nodig"]
+    formaat: Optional[Literal["mt940", "camt053"]] = None
+    transacties: list[Banktransactie] = []
+    redenen: list[str] = []
+    rekening: Optional[str] = None
+
+
+def _bedrag_van(tekst: str, negatief: bool) -> Optional[Decimal]:
+    """Lees een bedrag als '1.234,56' of '1234,56'; None als het geen getal is."""
+    schoon = tekst.strip().replace(".", "").replace(",", ".")
+    try:
+        waarde = Decimal(schoon)
+    except InvalidOperation:
+        return None
+    return -waarde if negatief else waarde
+
+
+def _datum_van(jjmmdd: str) -> Optional[date]:
+    """'260714' wordt 2026-07-14. Een bankafschrift kent geen eeuw."""
+    try:
+        return date(2000 + int(jjmmdd[:2]), int(jjmmdd[2:4]), int(jjmmdd[4:6]))
+    except ValueError:
+        return None
+
+
+def _tags_van(regel: str) -> dict[str, str]:
+    return {
+        t.group("tag"): t.group("waarde").strip()
+        for t in MT940_TAGS.finditer(regel)
+    }
+
+
+def _eerste(tags: dict[str, str], namen: tuple[str, ...]) -> Optional[str]:
+    for naam in namen:
+        waarde = tags.get(naam)
+        if waarde:
+            return waarde
+    return None
+
+
+def _lees_86(regel: str) -> dict[str, Optional[str]]:
+    """Haal tegenrekening, tegenpartij, omschrijving en kenmerk uit :86:.
+
+    Staan er geen tags in (sommige banken sturen gewoon een zin), dan is
+    de hele regel de omschrijving en zoeken we er nog een IBAN in.
+    """
+    tags = _tags_van(regel)
+    if not tags:
+        gevonden = IBAN_PATROON.search(regel)
+        return {
+            "tegenrekening": gevonden.group(1) if gevonden else None,
+            "tegenpartij": None,
+            "omschrijving": regel.strip(),
+            "betalingskenmerk": None,
+        }
+    return {
+        "tegenrekening": _eerste(tags, TAG_TEGENREKENING),
+        "tegenpartij": _eerste(tags, TAG_TEGENPARTIJ),
+        "omschrijving": _eerste(tags, TAG_OMSCHRIJVING) or "",
+        "betalingskenmerk": _eerste(tags, TAG_KENMERK),
+    }
+
+
+def is_mt940(tekst: str) -> bool:
+    """Herken MT940 aan de kenmerkende veldcodes, niet aan de extensie."""
+    return ":61:" in tekst and (":20:" in tekst or ":25:" in tekst)
+
+
+def lees_mt940(tekst: str) -> ImportResultaat:
+    """Lees een MT940-afschrift; geeft nooit een exception.
+
+    Een regel die niet te lezen is wordt overgeslagen met een reden; de
+    rest van het bestand wordt gewoon verwerkt.
+    """
+    # Regels die niet met ':xx:' beginnen horen bij de vorige regel:
+    # MT940 breekt lange omschrijvingen af.
+    velden: list[tuple[str, str]] = []
+    for ruwe_regel in tekst.replace("\r\n", "\n").split("\n"):
+        treffer = re.match(r"^:(\d{2}[A-Z]?):(.*)$", ruwe_regel)
+        if treffer:
+            velden.append((treffer.group(1), treffer.group(2)))
+        elif velden and ruwe_regel.strip():
+            code, waarde = velden[-1]
+            velden[-1] = (code, waarde + ruwe_regel.strip())
+
+    transacties: list[Banktransactie] = []
+    redenen: list[str] = []
+    rekening: Optional[str] = None
+    volgnummer = 0
+    openstaand: Optional[Banktransactie] = None
+
+    def rond_af() -> None:
+        nonlocal openstaand
+        if openstaand is not None:
+            transacties.append(openstaand)
+            openstaand = None
+
+    for code, waarde in velden:
+        if code == "25":
+            gevonden = IBAN_PATROON.search(waarde)
+            rekening = gevonden.group(1) if gevonden else waarde.strip() or None
+        elif code == "61":
+            rond_af()
+            volgnummer += 1
+            treffer = MT940_BEDRAGREGEL.match(waarde.strip())
+            if treffer is None:
+                redenen.append(
+                    f"regel {volgnummer} van het afschrift is niet te lezen "
+                    f"(:61:{waarde.strip()[:40]}); die is overgeslagen"
+                )
+                continue
+            boekdatum = _datum_van(treffer.group("valuta"))
+            bedrag = _bedrag_van(
+                treffer.group("bedrag"), treffer.group("teken").endswith("D")
+            )
+            if boekdatum is None or bedrag is None:
+                redenen.append(
+                    f"regel {volgnummer} heeft een onleesbare datum of een "
+                    f"onleesbaar bedrag; die is overgeslagen"
+                )
+                continue
+            referentie = (treffer.group("referentie") or "").strip()
+            openstaand = Banktransactie(
+                boekdatum=boekdatum,
+                bedrag=bedrag,
+                betalingskenmerk=(
+                    None if referentie.upper() in GEEN_KENMERK else referentie
+                ),
+                bankreferentie=(treffer.group("bankreferentie") or "").strip() or None,
+                volgnummer=volgnummer,
+            )
+        elif code == "86" and openstaand is not None:
+            gegevens = _lees_86(waarde)
+            openstaand = openstaand.model_copy(update={
+                "tegenrekening": gegevens["tegenrekening"],
+                "tegenpartij": gegevens["tegenpartij"],
+                "omschrijving": gegevens["omschrijving"] or "",
+                "betalingskenmerk": gegevens["betalingskenmerk"]
+                or openstaand.betalingskenmerk,
+            })
+    rond_af()
+
+    if not transacties:
+        return ImportResultaat(
+            status="review_nodig",
+            formaat="mt940",
+            redenen=redenen or ["geen enkele boekingsregel (:61:) gevonden"],
+            rekening=rekening,
+        )
+    return ImportResultaat(
+        status="gelezen", formaat="mt940", transacties=transacties,
+        redenen=redenen, rekening=rekening,
+    )
+
+
+def _lokaal(element: ET.Element) -> str:
+    """De naam van een element zonder de naamruimte ervoor."""
+    return element.tag.rsplit("}", 1)[-1]
+
+
+def _kind(ouder: Optional[ET.Element], *namen: str) -> Optional[ET.Element]:
+    """Loop een pad af op lokale naam, zodat de camt-versie niet uitmaakt."""
+    huidig = ouder
+    for naam in namen:
+        if huidig is None:
+            return None
+        huidig = next((k for k in huidig if _lokaal(k) == naam), None)
+    return huidig
+
+
+def _tekst(element: Optional[ET.Element]) -> Optional[str]:
+    if element is None or element.text is None:
+        return None
+    return element.text.strip() or None
+
+
+def is_camt(wortel: ET.Element) -> bool:
+    return CAMT_NAAMRUIMTE in wortel.tag and _lokaal(wortel) == "Document"
+
+
+def _tekst_diep(ouder: ET.Element, naam: str) -> Optional[str]:
+    """De eerste waarde met deze lokale naam, waar hij ook staat."""
+    for element in ouder.iter():
+        if _lokaal(element) == naam:
+            waarde = _tekst(element)
+            if waarde:
+                return waarde
+    return None
+
+
+def _lees_ntry(
+    ntry: ET.Element, volgnummer: int
+) -> tuple[Optional[Banktransactie], Optional[str]]:
+    """Lees één boeking uit een CAMT-afschrift; geef (transactie, reden)."""
+    bedrag_tekst = _tekst(_kind(ntry, "Amt"))
+    richting = _tekst(_kind(ntry, "CdtDbtInd"))
+    datum_tekst = _tekst(_kind(ntry, "BookgDt", "Dt")) or _tekst(
+        _kind(ntry, "ValDt", "Dt")
+    )
+
+    if bedrag_tekst is None or richting is None or datum_tekst is None:
+        return None, (
+            f"regel {volgnummer} mist een bedrag, een richting of een datum "
+            f"(Amt / CdtDbtInd / BookgDt); die is overgeslagen"
+        )
+    try:
+        bedrag = Decimal(bedrag_tekst)
+        boekdatum = date.fromisoformat(datum_tekst[:10])
+    except (InvalidOperation, ValueError):
+        return None, (
+            f"regel {volgnummer} heeft een onleesbaar bedrag of een "
+            f"onleesbare datum; die is overgeslagen"
+        )
+    if richting == "DBIT":
+        bedrag = -bedrag
+
+    details = _kind(ntry, "NtryDtls", "TxDtls")
+    partijen = _kind(details, "RltdPties") if details is not None else None
+
+    tegenpartij = None
+    tegenrekening = None
+    if partijen is not None:
+        # Bij een afschrijving is de tegenpartij de begunstigde (Cdtr),
+        # bij een bijschrijving de betaler (Dbtr).
+        volgorde = ("Cdtr", "Dbtr") if bedrag < 0 else ("Dbtr", "Cdtr")
+        for rol in volgorde:
+            tegenpartij = tegenpartij or _tekst(_kind(partijen, rol, "Nm"))
+            tegenrekening = tegenrekening or _tekst(
+                _kind(partijen, f"{rol}Acct", "Id", "IBAN")
+            )
+
+    omschrijving = ""
+    kenmerk = None
+    if details is not None:
+        remi = _kind(details, "RmtInf")
+        if remi is not None:
+            regels = [_tekst(k) for k in remi if _lokaal(k) == "Ustrd"]
+            omschrijving = " ".join(r for r in regels if r)
+            kenmerk = _tekst_diep(remi, "Ref")
+        kenmerk = kenmerk or _tekst(_kind(details, "Refs", "EndToEndId"))
+        if kenmerk and kenmerk.upper() in GEEN_KENMERK:
+            kenmerk = None
+
+    return Banktransactie(
+        boekdatum=boekdatum,
+        bedrag=bedrag,
+        tegenrekening=tegenrekening,
+        tegenpartij=tegenpartij,
+        omschrijving=omschrijving or (_tekst(_kind(ntry, "AddtlNtryInf")) or ""),
+        betalingskenmerk=kenmerk,
+        bankreferentie=_tekst(_kind(ntry, "AcctSvcrRef")),
+        volgnummer=volgnummer,
+    ), None
+
+
+def lees_camt(inhoud: bytes) -> ImportResultaat:
+    """Lees een CAMT.053-afschrift; geeft nooit een exception.
+
+    Gebruikt dezelfde veilige XML-lezer als module 4: geen DTD, geen
+    entiteiten, geen externe verwijzingen, en dezelfde groottegrens van
+    20 MB die vóór het lezen wordt gecontroleerd.
+    """
+    try:
+        wortel = lees_xml_veilig(inhoud)
+    except XmlOnveilig as fout:
+        return ImportResultaat(
+            status="review_nodig", formaat="camt053",
+            redenen=[f"onveilige XML geweigerd: {fout}"],
+        )
+    except ET.ParseError as fout:
+        return ImportResultaat(
+            status="review_nodig", formaat="camt053",
+            redenen=[f"het XML-bestand is niet leesbaar: {fout}"],
+        )
+    except Exception as fout:  # nooit een exception naar buiten
+        return ImportResultaat(
+            status="review_nodig", formaat="camt053",
+            redenen=[f"kon het bestand niet lezen: {type(fout).__name__}: {fout}"],
+        )
+
+    if not is_camt(wortel):
+        return ImportResultaat(
+            status="review_nodig",
+            redenen=[
+                f"het hoofdelement '{wortel.tag}' is geen CAMT.053-afschrift"
+            ],
+        )
+
+    rekening = None
+    for element in wortel.iter():
+        if _lokaal(element) == "Acct":
+            rekening = _tekst(_kind(element, "Id", "IBAN"))
+            break
+
+    transacties: list[Banktransactie] = []
+    redenen: list[str] = []
+    volgnummer = 0
+    for element in wortel.iter():
+        if _lokaal(element) != "Ntry":
+            continue
+        volgnummer += 1
+        transactie, reden = _lees_ntry(element, volgnummer)
+        if transactie is None:
+            redenen.append(reden or "onleesbare regel")
+        else:
+            transacties.append(transactie)
+
+    if not transacties:
+        return ImportResultaat(
+            status="review_nodig", formaat="camt053",
+            redenen=redenen or ["geen enkele boeking (Ntry) gevonden"],
+            rekening=rekening,
+        )
+    return ImportResultaat(
+        status="gelezen", formaat="camt053", transacties=transacties,
+        redenen=redenen, rekening=rekening,
+    )
+
+
+def lees_bankbestand(inhoud: bytes, bestandsnaam: str = "") -> ImportResultaat:
+    """Bepaal het formaat op inhoud en lees het afschrift.
+
+    De bestandsnaam doet er niet toe: een MT940 heet bij de ene bank
+    .sta en bij de andere .txt. Er wordt gekeken wat erin staat.
+    """
+    reden = te_groot(len(inhoud))
+    if reden is not None:
+        return ImportResultaat(status="review_nodig", redenen=[reden])
+
+    begin = inhoud[:512].lstrip()
+    if begin.startswith((b"<", b"\xef\xbb\xbf<", b"\xff\xfe<", b"\xfe\xff\x00<")):
+        return lees_camt(inhoud)
+
+    try:
+        tekst = inhoud.decode("utf-8")
+    except UnicodeDecodeError:
+        # MT940 van oudere systemen is vaak latin-1.
+        tekst = inhoud.decode("latin-1")
+
+    if is_mt940(tekst):
+        return lees_mt940(tekst)
+
+    naam = f" ({bestandsnaam})" if bestandsnaam else ""
+    return ImportResultaat(
+        status="review_nodig",
+        redenen=[
+            f"dit bestand{naam} is geen MT940 en geen CAMT.053; er is geen "
+            f"regel met :61: en geen XML gevonden. Vraag bij je bank om een "
+            f"MT940- of CAMT.053-download"
+        ],
+    )
+```
+
+## `boekhouding/boekhouding/afletteren.py`
+
+```python
+"""Banktransacties koppelen aan facturen — regelwerk, geen interpretatie.
+
+Geen AI. Er wordt gezocht op wat er letterlijk staat: een factuurnummer
+in de omschrijving, een bedrag dat exact klopt, een naam die op de
+leverancier lijkt. Meer niet.
+
+De volgorde is met opzet streng naar los:
+
+1. **Exact** — het factuurnummer of betalingskenmerk staat in de
+   omschrijving én het bedrag klopt tot op de cent. Hoge zekerheid.
+2. **Waarschijnlijk** — het bedrag klopt exact en de tegenpartij lijkt op
+   de leverancier, maar er staat geen nummer bij. Lage zekerheid.
+3. **Handmatig** — het lijkt een deelbetaling of een verzamelbetaling.
+   Dan wordt er niets voorgesteld, alleen uitgelegd wat er aan de hand
+   lijkt.
+4. **Geen** — niets gevonden; de transactie blijft open staan.
+
+Een voorstel is nooit definitief. Het staat op het scherm met de
+zekerheid erbij en de eigenaar bevestigt of koppelt zelf iets anders
+(Gouden regel 1). Pas bij die bevestiging ontstaat er een boeking.
+"""
+
+import re
+from decimal import Decimal, InvalidOperation
+from difflib import SequenceMatcher
+from typing import Any, Literal, Optional
+
+from pydantic import BaseModel
+
+from .grootboek import Boekingsregel, BoekingVoorstel, controleer_balans
+from .rekeningschema import Rekeningschema, rekeningschema_voor_jaar
+
+NUL = Decimal("0.00")
+
+# Een factuurnummer korter dan dit zoeken we niet op in een omschrijving.
+# "7" komt in bijna elke tekst voor; dan koppel je de verkeerde factuur.
+MINIMALE_NUMMERLENGTE = 4
+
+# Hoe sterk twee namen op elkaar moeten lijken voordat we ze hetzelfde
+# noemen. Alleen gebruikt voor een voorstel met LAGE zekerheid.
+NAAMGRENS = 0.75
+
+# Woorden die niets zeggen over wie een bedrijf is. Ze worden weggelaten
+# voordat twee namen worden vergeleken.
+RECHTSVORMEN = {
+    "bv", "b", "v", "nv", "n", "vof", "cv", "holding", "beheer",
+    "eenmanszaak", "the", "de", "het", "een", "van", "der", "den",
+}
+
+
+class Voorstel(BaseModel):
+    """Wat het afletteren van deze transactie oplevert."""
+
+    soort: Literal["exact", "waarschijnlijk", "handmatig", "geen"]
+    zekerheid: Optional[Literal["hoog", "laag"]] = None
+    factuur_id: Optional[int] = None
+    factuurnummer: Optional[str] = None
+    leverancier: Optional[str] = None
+    uitleg: str = ""
+    kandidaten: list[int] = []
+
+
+def _decimal(waarde: Any) -> Optional[Decimal]:
+    if waarde is None or waarde == "":
+        return None
+    try:
+        return Decimal(str(waarde))
+    except InvalidOperation:
+        return None
+
+
+def _plat(tekst: Optional[str]) -> str:
+    """Alleen letters en cijfers, in hoofdletters.
+
+    Zo maakt het niet uit of er 'EF-2026-0101', 'EF 2026 0101' of
+    'ef20260101' in de omschrijving staat.
+    """
+    return re.sub(r"[^A-Z0-9]", "", (tekst or "").upper())
+
+
+def _woorden(naam: Optional[str]) -> list[str]:
+    stukken = re.split(r"[^a-z0-9]+", (naam or "").lower())
+    return [s for s in stukken if s and s not in RECHTSVORMEN]
+
+
+def namen_lijken_op_elkaar(links: Optional[str], rechts: Optional[str]) -> bool:
+    """Lijkt de naam op het afschrift op die van de leverancier?
+
+    Eerst worden rechtsvormen en leestekens weggelaten ('KPN B.V.' wordt
+    'kpn'). Daarna telt een naam als gelijk wanneer alle woorden van de
+    kortste naam in de andere voorkomen, of wanneer de namen als geheel
+    genoeg op elkaar lijken. Dat laatste vangt tikfouten en afkortingen
+    op zoals 'Bakkerij Korenaar' tegenover 'Bakkerij de Korenaar'.
+    """
+    a, b = _woorden(links), _woorden(rechts)
+    if not a or not b:
+        return False
+
+    kort, lang = (a, b) if len(a) <= len(b) else (b, a)
+    if all(woord in lang for woord in kort):
+        return True
+    return SequenceMatcher(None, " ".join(a), " ".join(b)).ratio() >= NAAMGRENS
+
+
+def _genoemd(tekst: str, factuur: dict[str, Any]) -> bool:
+    """Staat het factuurnummer van deze factuur in de tekst?"""
+    nummer = _plat(factuur.get("factuurnummer"))
+    if len(nummer) < MINIMALE_NUMMERLENGTE:
+        return False
+    return nummer in tekst
+
+
+def _past_de_richting(bedrag: Decimal, factuur: dict[str, Any]) -> bool:
+    """Geld eraf hoort bij een inkoopfactuur, geld erbij bij een verkoop.
+
+    De richting komt uit de boeking die bij de factuur hoort, niet uit
+    een gok: staat er crediteuren in, dan is het een inkoopfactuur.
+    """
+    richting = factuur.get("richting")
+    if richting is None:
+        return True  # onbekend: dan laten we de richting niet meewegen
+    return (bedrag < NUL) if richting == "inkoop" else (bedrag > NUL)
+
+
+def zoek_voorstel(
+    transactie: dict[str, Any], facturen: list[dict[str, Any]]
+) -> Voorstel:
+    """Zoek de factuur bij een banktransactie.
+
+    `facturen` zijn de openstaande facturen: geboekt, nog niet betaald.
+    Elke factuur is een dict met minstens id, factuurnummer, leverancier,
+    bedrag_incl en richting ('inkoop' of 'verkoop').
+    """
+    bedrag = _decimal(transactie.get("bedrag"))
+    if bedrag is None:
+        return Voorstel(
+            soort="geen", uitleg="deze transactie heeft geen leesbaar bedrag"
+        )
+
+    tekst = _plat(
+        f"{transactie.get('omschrijving') or ''} "
+        f"{transactie.get('betalingskenmerk') or ''}"
+    )
+    tegenpartij = transactie.get("tegenpartij")
+    open_bedrag = abs(bedrag)
+
+    passend = [f for f in facturen if _past_de_richting(bedrag, f)]
+    genoemd = [f for f in passend if _genoemd(tekst, f)]
+
+    # --- 1. het factuurnummer staat er letterlijk in --------------------
+    if len(genoemd) > 1:
+        totaal = sum(
+            (abs(_decimal(f.get("bedrag_incl")) or NUL) for f in genoemd), NUL
+        )
+        klopt = " en samen zijn ze precies dit bedrag" if totaal == open_bedrag else ""
+        nummers = ", ".join(str(f.get("factuurnummer")) for f in genoemd)
+        return Voorstel(
+            soort="handmatig",
+            kandidaten=[f["id"] for f in genoemd],
+            uitleg=(
+                f"er staan meerdere factuurnummers in de omschrijving "
+                f"({nummers}){klopt}. Een verzamelbetaling wordt niet "
+                f"automatisch gekoppeld — koppel de facturen met de hand"
+            ),
+        )
+
+    if len(genoemd) == 1:
+        factuur = genoemd[0]
+        factuurbedrag = abs(_decimal(factuur.get("bedrag_incl")) or NUL)
+        gedeeld = {
+            "factuur_id": factuur["id"],
+            "factuurnummer": factuur.get("factuurnummer"),
+            "leverancier": factuur.get("leverancier"),
+        }
+        if factuurbedrag == open_bedrag:
+            return Voorstel(
+                soort="exact", zekerheid="hoog", **gedeeld,
+                uitleg=(
+                    f"het factuurnummer staat in de omschrijving en het bedrag "
+                    f"klopt tot op de cent"
+                ),
+            )
+        if open_bedrag < factuurbedrag:
+            return Voorstel(
+                soort="handmatig", kandidaten=[factuur["id"]], **gedeeld,
+                uitleg=(
+                    f"dit lijkt een deelbetaling: er is {open_bedrag} betaald "
+                    f"op een factuur van {factuurbedrag}. Termijnen worden niet "
+                    f"automatisch gekoppeld — bevestig het met de hand"
+                ),
+            )
+        return Voorstel(
+            soort="handmatig", kandidaten=[factuur["id"]], **gedeeld,
+            uitleg=(
+                f"het bedrag ({open_bedrag}) is hoger dan de factuur "
+                f"({factuurbedrag}). Mogelijk zijn er meer facturen mee betaald "
+                f"— koppel het met de hand"
+            ),
+        )
+
+    # --- 2. het bedrag klopt exact -------------------------------------
+    zelfde_bedrag = [
+        f for f in passend
+        if abs(_decimal(f.get("bedrag_incl")) or NUL) == open_bedrag
+    ]
+    gelijkende_naam = [
+        f for f in zelfde_bedrag
+        if namen_lijken_op_elkaar(tegenpartij, f.get("leverancier"))
+    ]
+
+    if len(gelijkende_naam) == 1:
+        factuur = gelijkende_naam[0]
+        return Voorstel(
+            soort="waarschijnlijk", zekerheid="laag",
+            factuur_id=factuur["id"],
+            factuurnummer=factuur.get("factuurnummer"),
+            leverancier=factuur.get("leverancier"),
+            uitleg=(
+                f"het bedrag klopt exact en '{tegenpartij}' lijkt op "
+                f"'{factuur.get('leverancier')}', maar er staat geen "
+                f"factuurnummer bij. Controleer of dit de juiste factuur is"
+            ),
+        )
+
+    if len(gelijkende_naam) > 1:
+        return Voorstel(
+            soort="handmatig",
+            kandidaten=[f["id"] for f in gelijkende_naam],
+            uitleg=(
+                f"er staan {len(gelijkende_naam)} facturen open met precies dit "
+                f"bedrag van dezelfde leverancier; welke het is valt niet uit het "
+                f"afschrift op te maken"
+            ),
+        )
+
+    # --- 3. lijkt dit een verzamelbetaling? -----------------------------
+    van_deze_partij = [
+        f for f in passend
+        if namen_lijken_op_elkaar(tegenpartij, f.get("leverancier"))
+    ]
+    if len(van_deze_partij) > 1:
+        totaal = sum(
+            (abs(_decimal(f.get("bedrag_incl")) or NUL) for f in van_deze_partij),
+            NUL,
+        )
+        if totaal == open_bedrag:
+            return Voorstel(
+                soort="handmatig",
+                kandidaten=[f["id"] for f in van_deze_partij],
+                uitleg=(
+                    f"dit bedrag is precies het totaal van {len(van_deze_partij)} "
+                    f"openstaande facturen van '{tegenpartij}'. Een "
+                    f"verzamelbetaling wordt niet automatisch gekoppeld — koppel "
+                    f"ze met de hand"
+                ),
+            )
+
+    if zelfde_bedrag:
+        namen = ", ".join(
+            str(f.get("leverancier")) for f in zelfde_bedrag[:3]
+        )
+        return Voorstel(
+            soort="geen",
+            kandidaten=[f["id"] for f in zelfde_bedrag],
+            uitleg=(
+                f"het bedrag klopt bij {namen}, maar '{tegenpartij}' lijkt daar "
+                f"niet op en er staat geen factuurnummer bij. Er wordt niets "
+                f"voorgesteld; koppel het zelf als het toch klopt"
+            ),
+        )
+
+    return Voorstel(
+        soort="geen",
+        uitleg="geen openstaande factuur gevonden met dit bedrag of nummer",
+    )
+
+
+def stel_betaling_samen(
+    transactie: dict[str, Any],
+    factuur: dict[str, Any],
+    schema: Optional[Rekeningschema] = None,
+) -> BoekingVoorstel:
+    """Maak de boeking bij een bevestigde koppeling.
+
+    Bij een betaalde inkoopfactuur verdwijnt de schuld aan de leverancier
+    en gaat er geld van de bank af:
+
+        crediteuren   debet
+        bank                    credit
+
+    Bij een ontvangen verkoopfactuur precies andersom. Welke van de twee
+    het is, komt uit de boeking van de factuur zelf — niet uit een gok.
+    """
+    def weiger(*redenen: str) -> BoekingVoorstel:
+        return BoekingVoorstel(status="geweigerd", redenen=list(redenen))
+
+    from datetime import date
+
+    bedrag = _decimal(transactie.get("bedrag"))
+    if bedrag is None or bedrag == NUL:
+        return weiger("deze transactie heeft geen bruikbaar bedrag")
+
+    boekdatum = transactie.get("boekdatum")
+    if isinstance(boekdatum, str):
+        try:
+            boekdatum = date.fromisoformat(boekdatum)
+        except ValueError:
+            return weiger(f"'{boekdatum}' is geen geldige boekdatum")
+    if boekdatum is None:
+        return weiger("deze transactie heeft geen boekdatum")
+
+    richting = factuur.get("richting")
+    if richting not in ("inkoop", "verkoop"):
+        return weiger(
+            "van deze factuur is niet bekend of het inkoop of verkoop is; "
+            "boek de factuur eerst"
+        )
+    if (richting == "inkoop") != (bedrag < NUL):
+        return weiger(
+            f"de richting klopt niet: dit is een {'afschrijving' if bedrag < NUL else 'bijschrijving'} "
+            f"terwijl de factuur een {richting}factuur is"
+        )
+
+    if schema is None:
+        schema = rekeningschema_voor_jaar(boekdatum.year)
+    if schema is None:
+        return weiger(
+            f"er is geen rekeningschema voor boekjaar {boekdatum.year}"
+        )
+
+    bank = schema.standaard("bank")
+    tegenover = schema.standaard(
+        "crediteuren" if richting == "inkoop" else "debiteuren"
+    )
+    if bank is None or schema.zoek(bank) is None:
+        return weiger(
+            f"er staat geen bankrekening in het schema van {schema.jaar}; "
+            f"vul 'bank' aan bij de standaardrekeningen"
+        )
+
+    som = abs(bedrag)
+    if richting == "inkoop":
+        regels = [
+            Boekingsregel(
+                rekening=tegenover, omschrijving=schema.zoek(tegenover).omschrijving,
+                debet=som,
+            ),
+            Boekingsregel(
+                rekening=bank, omschrijving=schema.zoek(bank).omschrijving,
+                credit=som,
+            ),
+        ]
+    else:
+        regels = [
+            Boekingsregel(
+                rekening=bank, omschrijving=schema.zoek(bank).omschrijving,
+                debet=som,
+            ),
+            Boekingsregel(
+                rekening=tegenover, omschrijving=schema.zoek(tegenover).omschrijving,
+                credit=som,
+            ),
+        ]
+
+    redenen = controleer_balans(regels)
+    if redenen:
+        return weiger(*redenen)
+
+    nummer = factuur.get("factuurnummer") or f"factuur {factuur.get('id')}"
+    return BoekingVoorstel(
+        status="gemaakt",
+        regels=regels,
+        boekdatum=boekdatum,
+        omschrijving=(
+            f"{'Betaling' if richting == 'inkoop' else 'Ontvangst'} {nummer}"
+        ),
+    )
+```
+
 ## `boekhouding/boekhouding/web/__init__.py`
 
 ```python
@@ -4982,14 +6320,20 @@ from fastapi import FastAPI, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
+from ..afletteren import zoek_voorstel
 from ..ai_extractie import VELDEN
 from ..btw_aangifte import bereken_aangifte, kwartaal_van
 from ..database import (
     FACTUUR_VELDEN,
     boek_factuur,
     boeking_bij_factuur,
+    importeer_bankafschrift,
     keur_factuur_goed,
     kies_rekening,
+    koppel_transactie,
+    lees_banktransactie,
+    lees_banktransacties,
+    open_facturen,
     lees_document,
     lees_extractie_bij_document,
     lees_facturen,
@@ -5348,6 +6692,128 @@ def maak_app(
             aangifte=aangifte,
             vorig=vorig,
             volgend=volgend,
+        )
+
+    # --- bankafschriften en afletteren -----------------------------------
+
+    @app.get("/administratie/{administratie_id}/bank", response_class=HTMLResponse)
+    def bank(request: Request, administratie_id: int, melding: str = ""):
+        conn = verbinding()
+        try:
+            administratie = administratie_van(conn, administratie_id)
+            transacties = lees_banktransacties(conn, administratie_id)
+            facturen = open_facturen(conn, administratie_id)
+        finally:
+            conn.close()
+
+        # Het voorstel wordt hier uitgerekend en niet bewaard: het is een
+        # voorstel, geen besluit. Verandert er iets aan de facturen, dan
+        # klopt het voorstel de volgende keer vanzelf weer.
+        regels = []
+        for transactie in transacties:
+            # Alleen facturen die qua richting kunnen: geld eraf hoort bij
+            # een inkoopfactuur, geld erbij bij een verkoopfactuur. Ze toch
+            # in de lijst zetten zou de eigenaar een keuze laten maken die
+            # daarna alsnog wordt geweigerd.
+            eraf = str(transactie["bedrag"]).startswith("-")
+            koppelbaar = [
+                factuur for factuur in facturen
+                if factuur["richting"] == ("inkoop" if eraf else "verkoop")
+            ]
+            regels.append({
+                "transactie": transactie,
+                "koppelbaar": koppelbaar,
+                "voorstel": (
+                    zoek_voorstel(transactie, facturen)
+                    if transactie["status"] == "open" else None
+                ),
+            })
+
+        return toon(
+            request, "bank.html",
+            administratie_id=administratie_id,
+            administratie_naam=administratie[1],
+            regels=regels,
+            facturen=facturen,
+            melding=melding,
+            aantal_open=sum(1 for t in transacties if t["status"] == "open"),
+            aantal_voorstel=sum(
+                1 for r in regels
+                if r["voorstel"] is not None
+                and r["voorstel"].soort in ("exact", "waarschijnlijk")
+            ),
+        )
+
+    @app.post("/administratie/{administratie_id}/bank")
+    async def bank_import(request: Request, administratie_id: int, bestand: UploadFile):
+        inhoud = await bestand.read()
+        conn = verbinding()
+        try:
+            administratie_van(conn, administratie_id)
+            samenvatting = importeer_bankafschrift(
+                conn, administratie_id, bestand.filename or "afschrift",
+                inhoud, app.state.opslagmap,
+            )
+        finally:
+            conn.close()
+
+        if samenvatting["status"] != "gelezen":
+            return toon(
+                request, "fout.html",
+                titel="Dit afschrift is niet ingelezen",
+                bericht=" ".join(samenvatting["redenen"]),
+                terug=f"/administratie/{administratie_id}/bank",
+            )
+        melding = (
+            f"{samenvatting['nieuw']} nieuwe transacties ingelezen"
+            + (f", {samenvatting['al_bekend']} stonden er al"
+               if samenvatting["al_bekend"] else "")
+        )
+        if samenvatting["redenen"]:
+            melding += ". " + " ".join(samenvatting["redenen"])
+        return RedirectResponse(
+            f"/administratie/{administratie_id}/bank?melding={melding}",
+            status_code=303,
+        )
+
+    @app.post("/administratie/{administratie_id}/bank/{transactie_id}/koppel")
+    async def bank_koppel(
+        request: Request, administratie_id: int, transactie_id: int
+    ):
+        formulier = await request.form()
+        gekozen = str(formulier.get("factuur_id") or "").strip()
+        if not gekozen.isdigit():
+            return RedirectResponse(
+                f"/administratie/{administratie_id}/bank"
+                f"?melding=Kies eerst een factuur om aan te koppelen",
+                status_code=303,
+            )
+
+        conn = verbinding()
+        try:
+            hoort_bij_administratie(
+                conn, lees_banktransactie, transactie_id, administratie_id,
+                "banktransactie",
+            )
+            # Ook de factuur uit het formulier gaat langs de controle: een
+            # nummer in een verborgen veld is net zo goed te veranderen als
+            # een nummer in de adresbalk.
+            hoort_bij_administratie(
+                conn, lees_factuur, int(gekozen), administratie_id, "factuur"
+            )
+            boeking_id, redenen = koppel_transactie(
+                conn, transactie_id, int(gekozen)
+            )
+        finally:
+            conn.close()
+
+        melding = (
+            f"Gekoppeld en geboekt (boeking {boeking_id})"
+            if boeking_id is not None else redenen[0]
+        )
+        return RedirectResponse(
+            f"/administratie/{administratie_id}/bank?melding={melding}",
+            status_code=303,
         )
 
     # --- het originele document laten zien -------------------------------
@@ -6005,6 +7471,7 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
 
 <div class="knoppen" style="margin-bottom:16px">
   <a class="knop" href="/administratie/{{ administratie_id }}/upload">Factuur toevoegen</a>
+  <a class="knop tweede" href="/administratie/{{ administratie_id }}/bank">Bank</a>
   <a class="knop tweede" href="/administratie/{{ administratie_id }}/btw">Btw-aangifte</a>
 </div>
 
@@ -6397,6 +7864,135 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
 {% endblock %}
 ```
 
+## `boekhouding/boekhouding/web/templates/bank.html`
+
+```html
+{% extends "basis.html" %}
+{% block titel %}Bank — {{ administratie_naam }}{% endblock %}
+{% block kruimel %}<a href="/administratie/{{ administratie_id }}">&larr; Terug naar de facturen</a>{% endblock %}
+{% block kop %}Banktransacties{% endblock %}
+{% block inhoud %}
+
+{% if melding %}<div class="melding">{{ melding }}</div>{% endif %}
+
+<div class="telling">
+  <div>
+    <strong>{{ aantal_open }}</strong>
+    <span>{% if aantal_open == 1 %}transactie staat nog open{% else %}transacties staan nog open{% endif %}</span>
+  </div>
+  <div>
+    <strong>{{ aantal_voorstel }}</strong>
+    <span>met een voorstel</span>
+  </div>
+  <div>
+    <strong>{{ facturen|length }}</strong>
+    <span>facturen wachten op betaling</span>
+  </div>
+</div>
+
+<form class="kaart" method="post" enctype="multipart/form-data"
+      action="/administratie/{{ administratie_id }}/bank">
+  <div class="veld">
+    <label for="bestand">Afschrift inlezen (MT940 of CAMT.053)</label>
+    <input type="file" id="bestand" name="bestand" accept=".sta,.mt940,.txt,.xml" required>
+    <div class="onder" style="color:var(--zacht);font-size:14px">
+      Download bij je bank een MT940- of CAMT.053-bestand. Hetzelfde afschrift
+      twee keer inlezen voegt niets dubbel toe.
+    </div>
+  </div>
+  <div class="knoppen"><button type="submit">Inlezen</button></div>
+</form>
+
+{% if not regels %}
+  <p class="leeg">Nog geen banktransacties. Lees hierboven een afschrift in.</p>
+{% endif %}
+
+{% for regel in regels %}
+  {% set transactie = regel.transactie %}
+  {% set voorstel = regel.voorstel %}
+  {% set koppelbaar = regel.koppelbaar %}
+  <div class="kaart">
+    <div class="boven">
+      <span class="naam">{{ transactie.tegenpartij or "Onbekende tegenpartij" }}</span>
+      <span class="bedrag">{{ transactie.bedrag }}</span>
+    </div>
+    <div class="onder">
+      {{ transactie.boekdatum }}
+      {% if transactie.tegenrekening %} · {{ transactie.tegenrekening }}{% endif %}
+    </div>
+    {% if transactie.omschrijving %}
+      <div class="onder">{{ transactie.omschrijving }}</div>
+    {% endif %}
+
+    {% if transactie.status == 'gekoppeld' %}
+      <div class="melding" style="margin-top:12px;margin-bottom:0">
+        Gekoppeld aan factuur {{ transactie.factuur_id }} en geboekt
+        (boeking {{ transactie.boeking_id }}).
+      </div>
+    {% else %}
+      {% if voorstel.soort in ('exact', 'waarschijnlijk') %}
+        <div class="ubl-rij" style="margin-top:12px">
+          <div>
+            <div class="label">
+              Voorstel: {{ voorstel.leverancier }} · {{ voorstel.factuurnummer }}
+              {% if voorstel.zekerheid == 'hoog' %}
+                <span class="merk klaar">hoge zekerheid</span>
+              {% else %}
+                <span class="merk wacht">lage zekerheid</span>
+              {% endif %}
+            </div>
+            <div class="herkomst" style="font-family:inherit">{{ voorstel.uitleg }}</div>
+          </div>
+        </div>
+        <form method="post"
+              action="/administratie/{{ administratie_id }}/bank/{{ transactie.id }}/koppel">
+          <input type="hidden" name="factuur_id" value="{{ voorstel.factuur_id }}">
+          <div class="knoppen" style="margin-top:12px">
+            <button type="submit">Bevestigen en boeken</button>
+          </div>
+        </form>
+      {% elif voorstel.soort == 'handmatig' %}
+        <div class="waarschuwing" style="margin-top:12px">
+          {{ voorstel.uitleg }}
+        </div>
+      {% else %}
+        <div class="onder" style="color:var(--zacht);margin-top:12px">
+          {{ voorstel.uitleg }}
+        </div>
+      {% endif %}
+
+      {% if not koppelbaar %}
+        <div class="onder" style="color:var(--zacht);margin-top:12px">
+          Er staat geen {{ "inkoopfactuur" if transactie.bedrag.startswith("-") else "verkoopfactuur" }}
+          open die hierbij kan horen.
+        </div>
+      {% else %}
+        <form method="post"
+              action="/administratie/{{ administratie_id }}/bank/{{ transactie.id }}/koppel">
+          <div class="veld" style="margin-top:12px;margin-bottom:8px">
+            <label for="factuur-{{ transactie.id }}">Zelf koppelen</label>
+            <select id="factuur-{{ transactie.id }}" name="factuur_id">
+              <option value="">— kies een factuur —</option>
+              {% for factuur in koppelbaar %}
+                <option value="{{ factuur.id }}">
+                  {{ factuur.factuurdatum }} · {{ factuur.leverancier }} ·
+                  {{ factuur.factuurnummer }} · {{ factuur.bedrag_incl }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="knoppen">
+            <button type="submit" class="tweede">Koppelen en boeken</button>
+          </div>
+        </form>
+      {% endif %}
+    {% endif %}
+  </div>
+{% endfor %}
+
+{% endblock %}
+```
+
 ## `boekhouding/boekhouding/web/templates/fout.html`
 
 ```html
@@ -6449,7 +8045,8 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
     "btw_verschuldigd": {
       "21": "1510",
       "9": "1511"
-    }
+    },
+    "bank": "1100"
   },
   "rekeningen": [
     {
@@ -6685,7 +8282,8 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
     "btw_verschuldigd": {
       "21": "1510",
       "9": "1511"
-    }
+    },
+    "bank": "1100"
   },
   "rekeningen": [
     {
@@ -6921,7 +8519,8 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
     "btw_verschuldigd": {
       "21": "1510",
       "9": "1511"
-    }
+    },
+    "bank": "1100"
   },
   "rekeningen": [
     {
@@ -7250,6 +8849,11 @@ Wil je ook het btw-scherm met cijfers zien in plaats van met blokkades:
 Dan wordt bij elke factuur die klopt een grootboekrekening gekozen, wordt
 hij goedgekeurd en geboekt. Dat is normaal handwerk van de eigenaar; hier
 gebeurt het zodat er iets te zien is.
+
+En met `--bank` wordt er ook een bankafschrift ingelezen (MT940), zodat
+het aflettersscherm gevuld is:
+
+    python scripts/vul_testdata.py --met-pdf --boek --bank
 """
 
 import sys
@@ -7260,6 +8864,7 @@ sys.path.insert(0, str(BASIS))
 
 from boekhouding import (  # noqa: E402
     boek_factuur,
+    importeer_bankafschrift,
     keur_factuur_goed,
     kies_rekening,
     lees_facturen,
@@ -7271,6 +8876,8 @@ from boekhouding.verwerking import verwerk_upload  # noqa: E402
 
 GEGEVENS = BASIS / "gegevens"
 UBLMAP = BASIS / "tests" / "testfacturen" / "ubl"
+BANKMAP = BASIS / "tests" / "testfacturen" / "bank"
+AFSCHRIFT = "01-mt940-ing.sta"
 BESTANDEN = [
     "01-standaard-21procent.xml",
     "02-diensten-9procent.xml",
@@ -7292,6 +8899,7 @@ REKENINGEN = {
 def main() -> int:
     met_pdf = "--met-pdf" in sys.argv
     boeken = "--boek" in sys.argv
+    met_bank = "--bank" in sys.argv
     bestanden = BESTANDEN + (["06-factuur-x.pdf"] if met_pdf else [])
 
     GEGEVENS.mkdir(exist_ok=True)
@@ -7326,6 +8934,18 @@ def main() -> int:
                 print(f"       niet geboekt: {redenen[0][:78]}")
             else:
                 print(f"       geboekt op {REKENINGEN[naam]} (boeking {boeking_id})")
+
+    if met_bank:
+        samenvatting = importeer_bankafschrift(
+            conn, administratie_id, AFSCHRIFT,
+            (BANKMAP / AFSCHRIFT).read_bytes(), str(GEGEVENS / "opslag"),
+        )
+        print(
+            f"\n  {AFSCHRIFT:<28} -> {samenvatting['nieuw']} nieuwe transacties"
+            f" ({samenvatting['formaat']})"
+        )
+        for reden in samenvatting["redenen"]:
+            print(f"       {reden[:88]}")
 
     facturen = lees_facturen(conn, administratie_id)
     conn.close()
@@ -7385,6 +9005,8 @@ BRONBESTANDEN = [
     "boekhouding/grootboek.py",
     "boekhouding/btw_aangifte.py",
     "boekhouding/volledigheid.py",
+    "boekhouding/bank.py",
+    "boekhouding/afletteren.py",
     "boekhouding/web/__init__.py",
     "boekhouding/web/app.py",
     "boekhouding/web/ubl_weergave.py",
@@ -7393,6 +9015,7 @@ BRONBESTANDEN = [
     "boekhouding/web/templates/upload.html",
     "boekhouding/web/templates/review.html",
     "boekhouding/web/templates/btw.html",
+    "boekhouding/web/templates/bank.html",
     "boekhouding/web/templates/fout.html",
     "boekhouding/config/btw_2024.json",
     "boekhouding/config/btw_2025.json",
@@ -7407,6 +9030,7 @@ BRONBESTANDEN = [
     "scripts/eval_extractie.py",
     "tests/genereer_testfacturen.py",
     "tests/genereer_ubl_testbestanden.py",
+    "tests/genereer_banktestbestanden.py",
     "tests/testmateriaal/__init__.py",
     "tests/testmateriaal/pdf_schrijver.py",
     "tests/testmateriaal/bitmapfont.py",
@@ -7424,6 +9048,8 @@ BRONBESTANDEN = [
     "tests/test_grootboek.py",
     "tests/test_btw_aangifte.py",
     "tests/test_volledigheid.py",
+    "tests/test_bank.py",
+    "tests/test_afletteren.py",
     "tests/test_web.py",
     "pytest.ini",
     "requirements.txt",
@@ -8767,6 +10393,154 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+```
+
+## `boekhouding/tests/genereer_banktestbestanden.py`
+
+```python
+#!/usr/bin/env python3
+"""Genereer synthetische bankafschriften voor de tests van module 7.
+
+    python tests/genereer_banktestbestanden.py
+
+Vier bestanden in tests/testfacturen/bank/, deterministisch en zonder
+internet:
+
+    01-mt940-ing.sta          MT940 met vier regels, Nederlandse opmaak
+    02-camt053.xml            hetzelfde afschrift als CAMT.053 (XML)
+    03-mt940-kapotte-regel.sta  één onleesbare regel, de rest klopt
+    04-geen-afschrift.txt     geen bankbestand; hoort geweigerd te worden
+
+De bedragen sluiten aan op de UBL-testfacturen, zodat het afletteren op
+echte gevallen getest kan worden: een exacte match op factuurnummer, een
+betaling waarvan alleen het bedrag klopt, een deelbetaling en een
+verzamelbetaling.
+"""
+
+import sys
+from pathlib import Path
+
+BASIS = Path(__file__).resolve().parent
+DOEL = BASIS / "testfacturen" / "bank"
+
+MT940 = """:20:250701ING
+:25:NL91INGB0417164300 EUR
+:28C:1/1
+:60F:C260701EUR2500,00
+:61:2607010701D484,00N123EF-2026-0101//INGB0001
+:86:/TRTP/SEPA OVERBOEKING/IBAN/NL02VDIJ0123456789/BIC/INGBNL2A/NAME/Van Dijk ICT-diensten/EREF/EF-2026-0101/REMI/Factuur EF-2026-0101 onderhoud juli
+:61:2607050705C2904,00N123NOTPROVIDED//INGB0002
+:86:/TRTP/SEPA OVERBOEKING/IBAN/NL44RABO0123456789/NAME/Alkhadraa Advies/REMI/Betaling factuur V-2026-014
+:61:2607080708D272,50N123NONREF//INGB0003
+:86:/TRTP/SEPA OVERBOEKING/IBAN/NL18BAKK0123456789/NAME/Bakkerij de Korenaar/REMI/Bestelling week 28
+:61:2607120712D75,00N123NONREF//INGB0004
+:86:/TRTP/SEPA INCASSO/IBAN/NL30KPNN0123456789/NAME/KPN B.V./REMI/Maandnota telefonie juli
+:62F:C260731EUR4627,00
+"""
+
+MT940_KAPOT = """:20:250801ING
+:25:NL91INGB0417164300 EUR
+:28C:2/1
+:60F:C260801EUR1000,00
+:61:2608010801D242,00N123EF-2026-0102//INGB0101
+:86:/TRTP/SEPA OVERBOEKING/IBAN/NL02VDIJ0123456789/NAME/Van Dijk ICT-diensten/REMI/Factuur EF-2026-0102
+:61:dit is geen geldige boekingsregel
+:86:/TRTP/ONBEKEND/REMI/hier hoort niets van terecht te komen
+:61:2608050805C500,00N123NONREF//INGB0103
+:86:/TRTP/SEPA OVERBOEKING/IBAN/NL44RABO0123456789/NAME/Alkhadraa Advies/REMI/Deelbetaling V-2026-015
+:62F:C260831EUR1258,00
+"""
+
+GEEN_AFSCHRIFT = """Beste Alaa,
+
+Hierbij het overzicht van juli. De bedragen staan in de bijlage.
+
+Met vriendelijke groet,
+Van Dijk ICT-diensten
+"""
+
+
+def camt_regel(
+    referentie: str, bedrag: str, richting: str, datum: str,
+    iban: str, naam: str, omschrijving: str, kenmerk: str,
+) -> str:
+    return f"""    <Ntry>
+      <Amt Ccy="EUR">{bedrag}</Amt>
+      <CdtDbtInd>{richting}</CdtDbtInd>
+      <Sts>BOOK</Sts>
+      <BookgDt><Dt>{datum}</Dt></BookgDt>
+      <ValDt><Dt>{datum}</Dt></ValDt>
+      <AcctSvcrRef>{referentie}</AcctSvcrRef>
+      <NtryDtls>
+        <TxDtls>
+          <Refs><EndToEndId>{kenmerk}</EndToEndId></Refs>
+          <RltdPties>
+            <{"Cdtr" if richting == "DBIT" else "Dbtr"}><Nm>{naam}</Nm></{"Cdtr" if richting == "DBIT" else "Dbtr"}>
+            <{"Cdtr" if richting == "DBIT" else "Dbtr"}Acct><Id><IBAN>{iban}</IBAN></Id></{"Cdtr" if richting == "DBIT" else "Dbtr"}Acct>
+          </RltdPties>
+          <RmtInf><Ustrd>{omschrijving}</Ustrd></RmtInf>
+        </TxDtls>
+      </NtryDtls>
+    </Ntry>
+"""
+
+
+CAMT_REGELS = [
+    camt_regel("INGB0001", "484.00", "DBIT", "2026-07-01",
+               "NL02VDIJ0123456789", "Van Dijk ICT-diensten",
+               "Factuur EF-2026-0101 onderhoud juli", "EF-2026-0101"),
+    camt_regel("INGB0002", "2904.00", "CRDT", "2026-07-05",
+               "NL44RABO0123456789", "Alkhadraa Advies",
+               "Betaling factuur V-2026-014", "NOTPROVIDED"),
+    camt_regel("INGB0003", "272.50", "DBIT", "2026-07-08",
+               "NL18BAKK0123456789", "Bakkerij de Korenaar",
+               "Bestelling week 28", "NOTPROVIDED"),
+    camt_regel("INGB0004", "75.00", "DBIT", "2026-07-12",
+               "NL30KPNN0123456789", "KPN B.V.",
+               "Maandnota telefonie juli", "NOTPROVIDED"),
+]
+
+CAMT = f"""<?xml version="1.0" encoding="UTF-8"?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:camt.053.001.02">
+  <BkToCstmrStmt>
+    <GrpHdr>
+      <MsgId>AFSCHRIFT-2026-07</MsgId>
+      <CreDtTm>2026-08-01T06:00:00</CreDtTm>
+    </GrpHdr>
+    <Stmt>
+      <Id>NL91INGB0417164300-2026-07</Id>
+      <Acct><Id><IBAN>NL91INGB0417164300</IBAN></Id><Ccy>EUR</Ccy></Acct>
+      <Bal>
+        <Tp><CdOrPrtry><Cd>OPBD</Cd></CdOrPrtry></Tp>
+        <Amt Ccy="EUR">2500.00</Amt>
+        <CdtDbtInd>CRDT</CdtDbtInd>
+        <Dt><Dt>2026-07-01</Dt></Dt>
+      </Bal>
+{"".join(CAMT_REGELS)}    </Stmt>
+  </BkToCstmrStmt>
+</Document>
+"""
+
+BESTANDEN = {
+    "01-mt940-ing.sta": MT940,
+    "02-camt053.xml": CAMT,
+    "03-mt940-kapotte-regel.sta": MT940_KAPOT,
+    "04-geen-afschrift.txt": GEEN_AFSCHRIFT,
+}
+
+
+def main() -> int:
+    DOEL.mkdir(parents=True, exist_ok=True)
+    for naam, inhoud in BESTANDEN.items():
+        pad = DOEL / naam
+        pad.write_text(inhoud, encoding="utf-8", newline="\n")
+        print(f"  {naam:<28} {pad.stat().st_size:>6} bytes")
+    print(f"\n{len(BESTANDEN)} bestanden in {DOEL}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
 ```
 
 ## `boekhouding/tests/testmateriaal/__init__.py`
@@ -13034,6 +14808,763 @@ def test_een_leverancier_die_al_een_half_jaar_weg_is_telt_niet_meer(conn):
     assert ontbrekende_leveranciers(conn, 1, *Q3) == []
 ```
 
+## `boekhouding/tests/test_bank.py`
+
+```python
+"""Tests voor het inlezen van bankafschriften (module 7).
+
+MT940 en CAMT.053 horen hetzelfde afschrift op dezelfde manier te
+lezen. Een onleesbare regel mag de rest van het bestand niet meenemen,
+en een bestand dat geen afschrift is wordt geweigerd met een reden.
+"""
+
+from datetime import date
+from decimal import Decimal
+from pathlib import Path
+
+import pytest
+
+from boekhouding import lees_bankbestand, lees_camt, lees_mt940
+from boekhouding.ubl import MAX_XML_BYTES
+from test_ubl import DTD_AANVAL, _als_utf16
+
+BANKMAP = Path(__file__).parent / "testfacturen" / "bank"
+
+
+def lees(naam: str):
+    return lees_bankbestand((BANKMAP / naam).read_bytes(), naam)
+
+
+# --- MT940 --------------------------------------------------------------
+
+def test_mt940_wordt_gelezen():
+    resultaat = lees("01-mt940-ing.sta")
+
+    assert resultaat.status == "gelezen"
+    assert resultaat.formaat == "mt940"
+    assert resultaat.rekening == "NL91INGB0417164300"
+    assert len(resultaat.transacties) == 4
+    assert resultaat.redenen == []
+
+
+def test_alle_velden_van_een_transactie_komen_terug():
+    eerste = lees("01-mt940-ing.sta").transacties[0]
+
+    assert eerste.boekdatum == date(2026, 7, 1)
+    assert eerste.bedrag == Decimal("-484.00")
+    assert eerste.tegenrekening == "NL02VDIJ0123456789"
+    assert eerste.tegenpartij == "Van Dijk ICT-diensten"
+    assert "EF-2026-0101" in eerste.omschrijving
+    assert eerste.betalingskenmerk == "EF-2026-0101"
+    assert eerste.bankreferentie == "INGB0001"
+
+
+def test_een_afschrijving_is_negatief_en_een_bijschrijving_positief():
+    bedragen = [t.bedrag for t in lees("01-mt940-ing.sta").transacties]
+
+    assert bedragen[0] < 0          # betaling aan Van Dijk
+    assert bedragen[1] > 0          # ontvangst van een klant
+    assert bedragen == [
+        Decimal("-484.00"), Decimal("2904.00"),
+        Decimal("-272.50"), Decimal("-75.00"),
+    ]
+
+
+def test_nonref_en_notprovided_zijn_geen_kenmerk():
+    """Er staat wel iets, maar het betekent 'geen kenmerk'."""
+    transacties = lees("01-mt940-ing.sta").transacties
+
+    assert transacties[1].betalingskenmerk is None
+    assert transacties[2].betalingskenmerk is None
+
+
+def test_een_onleesbare_regel_wordt_overgeslagen_en_de_rest_verwerkt():
+    resultaat = lees("03-mt940-kapotte-regel.sta")
+
+    assert resultaat.status == "gelezen"
+    assert len(resultaat.transacties) == 2
+    assert len(resultaat.redenen) == 1
+    assert "niet te lezen" in resultaat.redenen[0]
+    assert "overgeslagen" in resultaat.redenen[0]
+
+
+def test_een_omschrijving_zonder_tags_wordt_gewoon_overgenomen():
+    tekst = (
+        ":20:TEST\n:25:NL91INGB0417164300\n"
+        ":61:2607010701D50,00N123NONREF\n"
+        ":86:Betaling aan NL02VDIJ0123456789 voor onderhoud\n"
+    )
+    transactie = lees_mt940(tekst).transacties[0]
+
+    assert transactie.omschrijving == "Betaling aan NL02VDIJ0123456789 voor onderhoud"
+    assert transactie.tegenrekening == "NL02VDIJ0123456789"
+
+
+def test_een_afgebroken_omschrijving_wordt_weer_aan_elkaar_geplakt():
+    """MT940 knipt lange regels af; die horen bij elkaar te blijven."""
+    tekst = (
+        ":20:TEST\n:25:NL91INGB0417164300\n"
+        ":61:2607010701D50,00N123NONREF\n"
+        ":86:/TRTP/SEPA/NAME/Van Dijk ICT-diensten/REMI/Factuur EF-2026\n"
+        "-0101 onderhoud juli\n"
+    )
+    transactie = lees_mt940(tekst).transacties[0]
+
+    assert transactie.omschrijving == "Factuur EF-2026-0101 onderhoud juli"
+
+
+def test_een_bestand_zonder_boekingsregels_gaat_naar_review():
+    resultaat = lees_mt940(":20:TEST\n:25:NL91INGB0417164300\n:62F:C260731EUR0,00\n")
+
+    assert resultaat.status == "review_nodig"
+    assert "geen enkele boekingsregel" in resultaat.redenen[0]
+
+
+def test_een_bedrag_met_duizendtal():
+    tekst = (
+        ":20:TEST\n:25:NL91INGB0417164300\n"
+        ":61:2607010701C1.250,50N123NONREF\n:86:/REMI/test\n"
+    )
+    assert lees_mt940(tekst).transacties[0].bedrag == Decimal("1250.50")
+
+
+# --- CAMT.053 -----------------------------------------------------------
+
+def test_camt_wordt_gelezen():
+    resultaat = lees("02-camt053.xml")
+
+    assert resultaat.status == "gelezen"
+    assert resultaat.formaat == "camt053"
+    assert resultaat.rekening == "NL91INGB0417164300"
+    assert len(resultaat.transacties) == 4
+
+
+def test_camt_en_mt940_geven_hetzelfde_afschrift():
+    """Hetzelfde afschrift in twee formaten hoort hetzelfde te zijn."""
+    velden = ("boekdatum", "bedrag", "tegenrekening", "tegenpartij",
+              "omschrijving", "betalingskenmerk")
+    uit_mt940 = lees("01-mt940-ing.sta").transacties
+    uit_camt = lees("02-camt053.xml").transacties
+
+    for links, rechts in zip(uit_mt940, uit_camt):
+        for veld in velden:
+            assert getattr(links, veld) == getattr(rechts, veld), veld
+
+
+def test_camt_zonder_bedrag_slaat_die_regel_over():
+    xml = b"""<?xml version="1.0"?>
+    <Document xmlns="urn:iso:std:iso:20022:tech:xsd:camt.053.001.02">
+      <BkToCstmrStmt><Stmt>
+        <Acct><Id><IBAN>NL91INGB0417164300</IBAN></Id></Acct>
+        <Ntry><CdtDbtInd>DBIT</CdtDbtInd></Ntry>
+        <Ntry>
+          <Amt Ccy="EUR">10.00</Amt><CdtDbtInd>DBIT</CdtDbtInd>
+          <BookgDt><Dt>2026-07-01</Dt></BookgDt>
+        </Ntry>
+      </Stmt></BkToCstmrStmt>
+    </Document>"""
+    resultaat = lees_camt(xml)
+
+    assert resultaat.status == "gelezen"
+    assert len(resultaat.transacties) == 1
+    assert "mist een bedrag" in resultaat.redenen[0]
+
+
+def test_een_andere_camt_versie_wordt_ook_gelezen():
+    """De versie achter de naamruimte verschilt per bank en per jaar."""
+    xml = (BANKMAP / "02-camt053.xml").read_bytes().replace(
+        b"camt.053.001.02", b"camt.053.001.08"
+    )
+    assert lees_camt(xml).status == "gelezen"
+
+
+def test_xml_dat_geen_afschrift_is_wordt_geweigerd():
+    resultaat = lees_camt(b"<Invoice><ID>1</ID></Invoice>")
+
+    assert resultaat.status == "review_nodig"
+    assert "geen CAMT.053-afschrift" in resultaat.redenen[0]
+
+
+# --- veiligheid: dezelfde lezer als module 4 ----------------------------
+
+def test_een_dtd_aanval_in_een_afschrift_wordt_geweigerd():
+    aanval = (
+        b'<?xml version="1.0"?>\n'
+        b'<!DOCTYPE Document [ <!ENTITY lek SYSTEM "file:///etc/passwd"> ]>\n'
+        b'<Document xmlns="urn:iso:std:iso:20022:tech:xsd:camt.053.001.02">'
+        b"<Ntry>&lek;</Ntry></Document>"
+    )
+    resultaat = lees_bankbestand(aanval, "aanval.xml")
+
+    assert resultaat.status == "review_nodig"
+    assert "onveilige XML" in resultaat.redenen[0]
+    assert "root:" not in str(resultaat.model_dump())
+
+
+@pytest.mark.parametrize("groot_eerst", [False, True], ids=["utf-16-le", "utf-16-be"])
+def test_dezelfde_aanval_in_utf16_ketst_ook_af(groot_eerst):
+    resultaat = lees_bankbestand(_als_utf16(DTD_AANVAL, groot_eerst), "aanval.xml")
+
+    assert resultaat.status == "review_nodig"
+    assert any("onveilige XML" in reden for reden in resultaat.redenen)
+
+
+def test_een_te_groot_bestand_wordt_niet_gelezen():
+    resultaat = lees_bankbestand(b"x" * (MAX_XML_BYTES + 1), "groot.sta")
+
+    assert resultaat.status == "review_nodig"
+    assert "groter dan de grens" in resultaat.redenen[0]
+
+
+# --- geen afschrift -----------------------------------------------------
+
+def test_een_bestand_dat_geen_afschrift_is_wordt_geweigerd():
+    resultaat = lees("04-geen-afschrift.txt")
+
+    assert resultaat.status == "review_nodig"
+    assert resultaat.transacties == []
+    assert "geen MT940 en geen CAMT.053" in resultaat.redenen[0]
+    assert "vraag bij je bank" in resultaat.redenen[0].lower()
+
+
+def test_een_leeg_bestand_geeft_geen_exception():
+    assert lees_bankbestand(b"", "leeg.sta").status == "review_nodig"
+
+
+def test_kapotte_xml_geeft_geen_exception():
+    resultaat = lees_bankbestand(b"<Document><Ntry>", "kapot.xml")
+
+    assert resultaat.status == "review_nodig"
+    assert resultaat.redenen
+
+
+def test_het_formaat_komt_uit_de_inhoud_en_niet_uit_de_naam():
+    """Een MT940 heet bij de ene bank .sta en bij de andere .txt."""
+    inhoud = (BANKMAP / "01-mt940-ing.sta").read_bytes()
+
+    assert lees_bankbestand(inhoud, "afschrift.xml").formaat == "mt940"
+    assert lees_bankbestand(
+        (BANKMAP / "02-camt053.xml").read_bytes(), "afschrift.sta"
+    ).formaat == "camt053"
+
+
+# --- vingerafdruk voor duplicaten ---------------------------------------
+
+def test_dezelfde_transactie_geeft_dezelfde_vingerafdruk():
+    eerste = lees("01-mt940-ing.sta").transacties
+    tweede = lees("01-mt940-ing.sta").transacties
+
+    assert [t.kenmerk() for t in eerste] == [t.kenmerk() for t in tweede]
+
+
+def test_verschillende_transacties_geven_verschillende_vingerafdrukken():
+    kenmerken = {t.kenmerk() for t in lees("01-mt940-ing.sta").transacties}
+
+    assert len(kenmerken) == 4
+```
+
+## `boekhouding/tests/test_afletteren.py`
+
+```python
+"""Tests voor het afletteren: banktransacties aan facturen koppelen.
+
+Drie dingen worden hier bewezen. Dat een exacte match ook echt exact is
+(nummer én bedrag). Dat een deelbetaling of verzamelbetaling nooit
+automatisch wordt gekoppeld. En dat een bevestiging een kloppende
+boeking oplevert — crediteuren tegen bank, of andersom bij ontvangst.
+"""
+
+from datetime import date
+from decimal import Decimal
+from pathlib import Path
+
+import pytest
+
+from boekhouding import (
+    boek_factuur,
+    importeer_bankafschrift,
+    keur_factuur_goed,
+    kies_rekening,
+    koppel_transactie,
+    lees_audit_trail,
+    lees_banktransacties,
+    lees_boeking,
+    maak_administratie,
+    maak_tabellen,
+    maak_verbinding,
+    namen_lijken_op_elkaar,
+    open_facturen,
+    sla_factuur_op,
+    zoek_voorstel,
+)
+
+BANKMAP = Path(__file__).parent / "testfacturen" / "bank"
+VANDAAG = date(2026, 12, 31)
+
+
+@pytest.fixture
+def conn(tmp_path):
+    verbinding = maak_verbinding(str(tmp_path / "boekhouding.sqlite"))
+    maak_tabellen(verbinding)
+    maak_administratie(verbinding, "Zaak van Alaa")
+    yield verbinding
+    verbinding.close()
+
+
+@pytest.fixture
+def opslag(tmp_path):
+    return str(tmp_path / "opslag")
+
+
+def zet_factuur(conn, leverancier, nummer, datum, excl, pct, btw, incl, rekening):
+    """Een factuur van upload tot boeking, want alleen geboekte tellen mee."""
+    factuur_id, _ = sla_factuur_op(
+        conn, 1,
+        {"leverancier": leverancier, "factuurdatum": datum,
+         "factuurnummer": nummer, "bedrag_excl": excl,
+         "btw_percentage": pct, "btw_bedrag": btw, "bedrag_incl": incl},
+        vandaag=VANDAAG,
+    )
+    kies_rekening(conn, factuur_id, rekening)
+    keur_factuur_goed(conn, factuur_id)
+    boek_factuur(conn, factuur_id)
+    return factuur_id
+
+
+def inkoop(conn, nummer="EF-2026-0101", incl="484.00", excl="400.00",
+           btw="84.00", leverancier="Van Dijk ICT-diensten"):
+    return zet_factuur(conn, leverancier, nummer, "2026-07-01", excl, "21",
+                       btw, incl, "4120")
+
+
+def verkoop(conn, nummer="V-2026-014", incl="2904.00", excl="2400.00",
+            btw="504.00", klant="Alkhadraa Advies"):
+    return zet_factuur(conn, klant, nummer, "2026-07-02", excl, "21",
+                       btw, incl, "8000")
+
+
+def transactie(bedrag, omschrijving="", tegenpartij=None, kenmerk=None):
+    return {
+        "bedrag": bedrag, "omschrijving": omschrijving,
+        "tegenpartij": tegenpartij, "betalingskenmerk": kenmerk,
+        "boekdatum": "2026-07-10",
+    }
+
+
+# --- importeren in de database ------------------------------------------
+
+def test_een_afschrift_inlezen_zet_de_transacties_erin(conn, opslag):
+    inhoud = (BANKMAP / "01-mt940-ing.sta").read_bytes()
+
+    samenvatting = importeer_bankafschrift(conn, 1, "juli.sta", inhoud, opslag)
+
+    assert samenvatting["status"] == "gelezen"
+    assert samenvatting["formaat"] == "mt940"
+    assert samenvatting["nieuw"] == 4
+    assert samenvatting["al_bekend"] == 0
+    assert len(lees_banktransacties(conn, 1)) == 4
+
+
+def test_hetzelfde_afschrift_twee_keer_voegt_niets_toe(conn, opslag):
+    inhoud = (BANKMAP / "01-mt940-ing.sta").read_bytes()
+    importeer_bankafschrift(conn, 1, "juli.sta", inhoud, opslag)
+
+    tweede = importeer_bankafschrift(conn, 1, "juli-kopie.sta", inhoud, opslag)
+
+    assert tweede["nieuw"] == 0
+    assert tweede["al_bekend"] == 4
+    assert any("stonden er al" in reden for reden in tweede["redenen"])
+    assert len(lees_banktransacties(conn, 1)) == 4
+
+
+def test_hetzelfde_afschrift_in_het_andere_formaat_ook_niet(conn, opslag):
+    """MT940 en CAMT van dezelfde maand zijn dezelfde transacties."""
+    importeer_bankafschrift(
+        conn, 1, "juli.sta", (BANKMAP / "01-mt940-ing.sta").read_bytes(), opslag
+    )
+    tweede = importeer_bankafschrift(
+        conn, 1, "juli.xml", (BANKMAP / "02-camt053.xml").read_bytes(), opslag
+    )
+
+    assert tweede["nieuw"] == 0
+    assert len(lees_banktransacties(conn, 1)) == 4
+
+
+def test_een_onleesbaar_bestand_zet_niets_in_de_database(conn, opslag):
+    samenvatting = importeer_bankafschrift(
+        conn, 1, "brief.txt",
+        (BANKMAP / "04-geen-afschrift.txt").read_bytes(), opslag,
+    )
+
+    assert samenvatting["status"] == "review_nodig"
+    assert samenvatting["afschrift_id"] is None
+    assert lees_banktransacties(conn, 1) == []
+
+
+def test_de_kapotte_regel_houdt_de_rest_niet_tegen(conn, opslag):
+    samenvatting = importeer_bankafschrift(
+        conn, 1, "augustus.sta",
+        (BANKMAP / "03-mt940-kapotte-regel.sta").read_bytes(), opslag,
+    )
+
+    assert samenvatting["nieuw"] == 2
+    assert any("overgeslagen" in reden for reden in samenvatting["redenen"])
+
+
+def test_elke_transactie_komt_in_de_audit_trail(conn, opslag):
+    importeer_bankafschrift(
+        conn, 1, "juli.sta", (BANKMAP / "01-mt940-ing.sta").read_bytes(), opslag
+    )
+    eerste = lees_banktransacties(conn, 1)[0]
+
+    trail = lees_audit_trail(conn, eerste["id"], tabel="banktransacties")
+    assert trail and trail[0]["actie"] == "aangemaakt"
+
+
+def test_het_originele_afschrift_wordt_bewaard(conn, opslag, tmp_path):
+    importeer_bankafschrift(
+        conn, 1, "juli.sta", (BANKMAP / "01-mt940-ing.sta").read_bytes(), opslag
+    )
+
+    bewaard = list(Path(opslag).rglob("*.sta"))
+    assert len(bewaard) == 1
+    assert bewaard[0].read_bytes() == (BANKMAP / "01-mt940-ing.sta").read_bytes()
+
+
+# --- a. exacte match ----------------------------------------------------
+
+def test_nummer_in_de_omschrijving_en_bedrag_klopt_is_een_exacte_match(conn):
+    factuur_id = inkoop(conn)
+
+    voorstel = zoek_voorstel(
+        transactie("-484.00", "Factuur EF-2026-0101 onderhoud juli",
+                   "Van Dijk ICT-diensten"),
+        open_facturen(conn, 1),
+    )
+
+    assert voorstel.soort == "exact"
+    assert voorstel.zekerheid == "hoog"
+    assert voorstel.factuur_id == factuur_id
+
+
+def test_het_nummer_mag_ook_in_het_betalingskenmerk_staan(conn):
+    inkoop(conn)
+
+    voorstel = zoek_voorstel(
+        transactie("-484.00", "SEPA overboeking", "Van Dijk",
+                   kenmerk="EF-2026-0101"),
+        open_facturen(conn, 1),
+    )
+    assert voorstel.soort == "exact"
+
+
+def test_de_schrijfwijze_van_het_nummer_maakt_niet_uit(conn):
+    """'EF 2026 0101' en 'ef20260101' zijn hetzelfde nummer."""
+    inkoop(conn)
+    facturen = open_facturen(conn, 1)
+
+    for geschreven in ("EF 2026 0101", "ef20260101", "ref: EF-2026-0101."):
+        voorstel = zoek_voorstel(transactie("-484.00", geschreven), facturen)
+        assert voorstel.soort == "exact", geschreven
+
+
+def test_een_ontvangst_matcht_op_een_verkoopfactuur(conn):
+    factuur_id = verkoop(conn)
+
+    voorstel = zoek_voorstel(
+        transactie("2904.00", "Betaling factuur V-2026-014", "Alkhadraa Advies"),
+        open_facturen(conn, 1),
+    )
+
+    assert voorstel.soort == "exact"
+    assert voorstel.factuur_id == factuur_id
+
+
+def test_een_afschrijving_matcht_niet_op_een_verkoopfactuur(conn):
+    """Geld eraf hoort bij een inkoopfactuur; de richting moet kloppen."""
+    verkoop(conn)
+
+    voorstel = zoek_voorstel(
+        transactie("-2904.00", "Betaling factuur V-2026-014", "Alkhadraa Advies"),
+        open_facturen(conn, 1),
+    )
+    assert voorstel.soort == "geen"
+
+
+def test_een_heel_kort_factuurnummer_wordt_niet_opgezocht(conn):
+    """'7' komt in bijna elke omschrijving voor."""
+    zet_factuur(conn, "Van Dijk ICT-diensten", "7", "2026-07-01",
+                "400.00", "21", "84.00", "484.00", "4120")
+
+    voorstel = zoek_voorstel(
+        transactie("-484.00", "betaling week 7 2026"), open_facturen(conn, 1)
+    )
+    assert voorstel.soort != "exact"
+
+
+# --- b. bedrag klopt, naam lijkt erop -----------------------------------
+
+def test_bedrag_klopt_en_naam_lijkt_erop_geeft_lage_zekerheid(conn):
+    factuur_id = inkoop(conn)
+
+    voorstel = zoek_voorstel(
+        transactie("-484.00", "SEPA overboeking", "Van Dijk ICT diensten BV"),
+        open_facturen(conn, 1),
+    )
+
+    assert voorstel.soort == "waarschijnlijk"
+    assert voorstel.zekerheid == "laag"
+    assert voorstel.factuur_id == factuur_id
+    assert "geen factuurnummer" in voorstel.uitleg
+
+
+def test_bedrag_klopt_maar_naam_niet_geeft_geen_voorstel(conn):
+    """Alleen een bedrag is te weinig; dan koppelt de eigenaar zelf."""
+    inkoop(conn)
+
+    voorstel = zoek_voorstel(
+        transactie("-484.00", "SEPA overboeking", "Tuincentrum Zuid"),
+        open_facturen(conn, 1),
+    )
+
+    assert voorstel.soort == "geen"
+    assert voorstel.zekerheid is None
+    assert voorstel.factuur_id is None
+    assert "lijkt daar niet op" in voorstel.uitleg
+
+
+def test_twee_facturen_met_hetzelfde_bedrag_worden_niet_geraden(conn):
+    inkoop(conn, nummer="EF-2026-0101")
+    inkoop(conn, nummer="EF-2026-0102")
+
+    voorstel = zoek_voorstel(
+        transactie("-484.00", "SEPA overboeking", "Van Dijk ICT-diensten"),
+        open_facturen(conn, 1),
+    )
+
+    assert voorstel.soort == "handmatig"
+    assert len(voorstel.kandidaten) == 2
+
+
+def test_namen_vergelijken():
+    assert namen_lijken_op_elkaar("KPN B.V.", "KPN")
+    assert namen_lijken_op_elkaar("Bakkerij de Korenaar", "Bakkerij Korenaar B.V.")
+    assert not namen_lijken_op_elkaar("KPN", "Van Dijk ICT-diensten")
+    assert not namen_lijken_op_elkaar("", "Van Dijk")
+
+
+# --- c. deelbetaling en verzamelbetaling --------------------------------
+
+def test_een_deelbetaling_wordt_nooit_automatisch_gekoppeld(conn):
+    factuur_id = inkoop(conn)
+
+    voorstel = zoek_voorstel(
+        transactie("-200.00", "Eerste termijn factuur EF-2026-0101"),
+        open_facturen(conn, 1),
+    )
+
+    assert voorstel.soort == "handmatig"
+    assert voorstel.zekerheid is None
+    assert voorstel.kandidaten == [factuur_id]
+    assert "deelbetaling" in voorstel.uitleg
+    assert "met de hand" in voorstel.uitleg
+
+
+def test_een_verzamelbetaling_met_meerdere_nummers_wordt_niet_gekoppeld(conn):
+    inkoop(conn, nummer="EF-2026-0101", incl="484.00")
+    inkoop(conn, nummer="EF-2026-0102", incl="242.00", excl="200.00", btw="42.00")
+
+    voorstel = zoek_voorstel(
+        transactie("-726.00", "Betaling EF-2026-0101 en EF-2026-0102"),
+        open_facturen(conn, 1),
+    )
+
+    assert voorstel.soort == "handmatig"
+    assert len(voorstel.kandidaten) == 2
+    assert "meerdere factuurnummers" in voorstel.uitleg
+    assert "samen zijn ze precies dit bedrag" in voorstel.uitleg
+
+
+def test_een_verzamelbetaling_zonder_nummers_wordt_herkend_op_het_totaal(conn):
+    inkoop(conn, nummer="EF-2026-0101", incl="484.00")
+    inkoop(conn, nummer="EF-2026-0102", incl="242.00", excl="200.00", btw="42.00")
+
+    voorstel = zoek_voorstel(
+        transactie("-726.00", "SEPA verzamelbetaling", "Van Dijk ICT-diensten"),
+        open_facturen(conn, 1),
+    )
+
+    assert voorstel.soort == "handmatig"
+    assert "verzamelbetaling" in voorstel.uitleg
+    assert len(voorstel.kandidaten) == 2
+
+
+def test_een_bedrag_hoger_dan_de_factuur_wordt_ook_handmatig(conn):
+    inkoop(conn)
+
+    voorstel = zoek_voorstel(
+        transactie("-600.00", "Factuur EF-2026-0101 plus iets"),
+        open_facturen(conn, 1),
+    )
+
+    assert voorstel.soort == "handmatig"
+    assert "hoger dan de factuur" in voorstel.uitleg
+
+
+# --- d. geen match ------------------------------------------------------
+
+def test_zonder_openstaande_facturen_is_er_geen_voorstel(conn):
+    voorstel = zoek_voorstel(transactie("-75.00", "Maandnota KPN"), [])
+
+    assert voorstel.soort == "geen"
+    assert "geen openstaande factuur gevonden" in voorstel.uitleg
+
+
+def test_een_transactie_die_nergens_bij_hoort_blijft_open(conn):
+    inkoop(conn)
+
+    voorstel = zoek_voorstel(
+        transactie("-75.00", "Maandnota telefonie juli", "KPN B.V."),
+        open_facturen(conn, 1),
+    )
+    assert voorstel.soort == "geen"
+
+
+def test_een_al_gekoppelde_factuur_telt_niet_meer_mee(conn, opslag):
+    factuur_id = inkoop(conn)
+    importeer_bankafschrift(
+        conn, 1, "juli.sta", (BANKMAP / "01-mt940-ing.sta").read_bytes(), opslag
+    )
+    betaling = [
+        t for t in lees_banktransacties(conn, 1) if t["bedrag"] == "-484.00"
+    ][0]
+    koppel_transactie(conn, betaling["id"], factuur_id)
+
+    assert [f["id"] for f in open_facturen(conn, 1)] == []
+
+
+# --- de boeking bij bevestiging -----------------------------------------
+
+def test_bevestigen_boekt_crediteuren_tegen_bank(conn, opslag):
+    factuur_id = inkoop(conn)
+    importeer_bankafschrift(
+        conn, 1, "juli.sta", (BANKMAP / "01-mt940-ing.sta").read_bytes(), opslag
+    )
+    betaling = [
+        t for t in lees_banktransacties(conn, 1) if t["bedrag"] == "-484.00"
+    ][0]
+
+    boeking_id, redenen = koppel_transactie(conn, betaling["id"], factuur_id)
+
+    assert redenen == []
+    boeking = lees_boeking(conn, boeking_id)
+    assert [(r["rekening"], r["debet"], r["credit"]) for r in boeking["regels"]] == [
+        ("1600", "484.00", "0.00"),     # crediteuren debet: de schuld is weg
+        ("1100", "0.00", "484.00"),     # bank credit: het geld is eraf
+    ]
+    assert boeking["boekdatum"] == "2026-07-01"
+
+
+def test_bevestigen_van_een_ontvangst_boekt_bank_tegen_debiteuren(conn, opslag):
+    factuur_id = verkoop(conn)
+    importeer_bankafschrift(
+        conn, 1, "juli.sta", (BANKMAP / "01-mt940-ing.sta").read_bytes(), opslag
+    )
+    ontvangst = [
+        t for t in lees_banktransacties(conn, 1) if t["bedrag"] == "2904.00"
+    ][0]
+
+    boeking_id, _ = koppel_transactie(conn, ontvangst["id"], factuur_id)
+
+    boeking = lees_boeking(conn, boeking_id)
+    assert [(r["rekening"], r["debet"], r["credit"]) for r in boeking["regels"]] == [
+        ("1100", "2904.00", "0.00"),
+        ("1300", "0.00", "2904.00"),
+    ]
+
+
+def test_de_koppeling_komt_in_de_audit_trail(conn, opslag):
+    factuur_id = inkoop(conn)
+    importeer_bankafschrift(
+        conn, 1, "juli.sta", (BANKMAP / "01-mt940-ing.sta").read_bytes(), opslag
+    )
+    betaling = [
+        t for t in lees_banktransacties(conn, 1) if t["bedrag"] == "-484.00"
+    ][0]
+    koppel_transactie(conn, betaling["id"], factuur_id)
+
+    velden = [
+        r["veld"]
+        for r in lees_audit_trail(conn, betaling["id"], tabel="banktransacties")
+    ]
+    assert "factuur_id" in velden
+
+
+def test_twee_keer_koppelen_gebeurt_niet(conn, opslag):
+    factuur_id = inkoop(conn)
+    importeer_bankafschrift(
+        conn, 1, "juli.sta", (BANKMAP / "01-mt940-ing.sta").read_bytes(), opslag
+    )
+    betaling = [
+        t for t in lees_banktransacties(conn, 1) if t["bedrag"] == "-484.00"
+    ][0]
+    koppel_transactie(conn, betaling["id"], factuur_id)
+
+    nogmaals, redenen = koppel_transactie(conn, betaling["id"], factuur_id)
+    assert nogmaals is None
+    assert "al gekoppeld" in redenen[0]
+
+
+def test_een_factuur_hangt_maar_aan_een_transactie(conn, opslag):
+    factuur_id = inkoop(conn)
+    importeer_bankafschrift(
+        conn, 1, "juli.sta", (BANKMAP / "01-mt940-ing.sta").read_bytes(), opslag
+    )
+    transacties = lees_banktransacties(conn, 1)
+    betaling = [t for t in transacties if t["bedrag"] == "-484.00"][0]
+    andere = [t for t in transacties if t["bedrag"] == "-272.50"][0]
+    koppel_transactie(conn, betaling["id"], factuur_id)
+
+    tweede, redenen = koppel_transactie(conn, andere["id"], factuur_id)
+    assert tweede is None
+    assert "hangt al aan banktransactie" in redenen[0]
+
+
+def test_de_verkeerde_richting_wordt_geweigerd(conn, opslag):
+    """Een afschrijving koppelen aan een verkoopfactuur klopt niet."""
+    factuur_id = verkoop(conn)
+    importeer_bankafschrift(
+        conn, 1, "juli.sta", (BANKMAP / "01-mt940-ing.sta").read_bytes(), opslag
+    )
+    betaling = [
+        t for t in lees_banktransacties(conn, 1) if t["bedrag"] == "-484.00"
+    ][0]
+
+    boeking_id, redenen = koppel_transactie(conn, betaling["id"], factuur_id)
+    assert boeking_id is None
+    assert "richting klopt niet" in redenen[0]
+
+
+def test_een_ongeboekte_factuur_kan_niet_worden_gekoppeld(conn, opslag):
+    factuur_id, _ = sla_factuur_op(
+        conn, 1,
+        {"leverancier": "Van Dijk ICT-diensten", "factuurdatum": "2026-07-01",
+         "factuurnummer": "EF-2026-0199", "bedrag_excl": "400.00",
+         "btw_percentage": "21", "btw_bedrag": "84.00", "bedrag_incl": "484.00"},
+        vandaag=VANDAAG,
+    )
+    importeer_bankafschrift(
+        conn, 1, "juli.sta", (BANKMAP / "01-mt940-ing.sta").read_bytes(), opslag
+    )
+    betaling = [
+        t for t in lees_banktransacties(conn, 1) if t["bedrag"] == "-484.00"
+    ][0]
+
+    boeking_id, redenen = koppel_transactie(conn, betaling["id"], factuur_id)
+    assert boeking_id is None
+    assert "boek de factuur eerst" in redenen[0]
+```
+
 ## `boekhouding/tests/test_web.py`
 
 ```python
@@ -13052,6 +15583,7 @@ from fastapi.testclient import TestClient
 from boekhouding import (
     boeking_bij_factuur,
     lees_audit_trail,
+    lees_banktransacties,
     lees_facturen,
     maak_verbinding,
 )
@@ -13777,6 +16309,173 @@ def test_zonder_signalen_staat_er_geen_lege_kop(web):
     """Een systeem dat elk kwartaal iets roept wordt weggeklikt."""
     pagina = web.get("/administratie/1/btw/2026/3").text
     assert "Even nakijken" not in pagina
+
+
+# --- bankafschriften en afletteren (module 7) ---------------------------
+
+BANKMAP = Path(__file__).parent / "testfacturen" / "bank"
+
+
+def lees_afschrift_in(web, naam="01-mt940-ing.sta", administratie_id=1):
+    return web.post(
+        f"/administratie/{administratie_id}/bank",
+        files={"bestand": (naam, (BANKMAP / naam).read_bytes(), "text/plain")},
+        follow_redirects=False,
+    )
+
+
+def geboekte_factuur_via_scherm(web, rekening="4120"):
+    """Upload de e-factuur van Van Dijk (484,00) en boek hem."""
+    upload(web, UBLMAP / "01-standaard-21procent.xml", "goed.xml")
+    kies_rekening_via_scherm(web, code=rekening)
+    web.post("/administratie/1/factuur/1/goedkeuren", follow_redirects=False)
+
+
+def test_het_bankscherm_is_leeg_tot_je_een_afschrift_inleest(web):
+    pagina = web.get("/administratie/1/bank").text
+    assert "Nog geen banktransacties" in pagina
+    assert 'name="bestand"' in pagina
+
+
+def test_een_afschrift_inlezen_zet_de_transacties_op_het_scherm(web):
+    from urllib.parse import unquote
+
+    antwoord = lees_afschrift_in(web)
+    assert antwoord.status_code == 303
+    assert "4 nieuwe transacties" in unquote(antwoord.headers["location"])
+
+    pagina = web.get("/administratie/1/bank").text
+    assert "Van Dijk ICT-diensten" in pagina
+    assert "-484.00" in pagina
+    assert "4" in pagina  # de teller met openstaande transacties
+
+
+def test_hetzelfde_afschrift_twee_keer_zegt_dat_er_niets_bij_komt(web):
+    from urllib.parse import unquote
+
+    lees_afschrift_in(web)
+    antwoord = lees_afschrift_in(web)
+
+    melding = unquote(antwoord.headers["location"])
+    assert "0 nieuwe transacties" in melding
+    assert "4 stonden er al" in melding
+
+
+def test_een_bestand_dat_geen_afschrift_is_wordt_uitgelegd(web):
+    antwoord = web.post(
+        "/administratie/1/bank",
+        files={"bestand": ("brief.txt", b"Beste Alaa,\n\ngroeten", "text/plain")},
+        follow_redirects=False,
+    )
+    assert antwoord.status_code == 200
+    assert "niet ingelezen" in antwoord.text
+    assert "geen MT940 en geen CAMT.053" in antwoord.text
+
+
+def test_het_scherm_toont_het_voorstel_met_de_zekerheid(web):
+    geboekte_factuur_via_scherm(web)
+    lees_afschrift_in(web)
+
+    pagina = web.get("/administratie/1/bank").text
+    assert "Voorstel:" in pagina
+    assert "hoge zekerheid" in pagina
+    assert "Bevestigen en boeken" in pagina
+
+
+def test_bevestigen_koppelt_en_boekt(web, werkmap):
+    from urllib.parse import unquote
+
+    geboekte_factuur_via_scherm(web)
+    lees_afschrift_in(web)
+
+    conn = maak_verbinding(str(werkmap / "boekhouding.sqlite"))
+    betaling = [
+        t for t in lees_banktransacties(conn, 1) if t["bedrag"] == "-484.00"
+    ][0]
+    conn.close()
+
+    antwoord = web.post(
+        f"/administratie/1/bank/{betaling['id']}/koppel",
+        data={"factuur_id": "1"}, follow_redirects=False,
+    )
+    assert "Gekoppeld en geboekt" in unquote(antwoord.headers["location"])
+
+    pagina = web.get("/administratie/1/bank").text
+    assert "Gekoppeld aan factuur 1" in pagina
+
+
+def test_koppelen_zonder_factuur_te_kiezen_zegt_dat(web, werkmap):
+    from urllib.parse import unquote
+
+    lees_afschrift_in(web)
+    conn = maak_verbinding(str(werkmap / "boekhouding.sqlite"))
+    eerste = lees_banktransacties(conn, 1)[0]
+    conn.close()
+
+    antwoord = web.post(
+        f"/administratie/1/bank/{eerste['id']}/koppel",
+        data={"factuur_id": ""}, follow_redirects=False,
+    )
+    assert "Kies eerst een factuur" in unquote(antwoord.headers["location"])
+
+
+def test_een_transactie_van_een_ander_koppelen_geeft_404(twee_administraties, werkmap):
+    web = twee_administraties
+    lees_afschrift_in(web, administratie_id=1)
+
+    conn = maak_verbinding(str(werkmap / "boekhouding.sqlite"))
+    eerste = lees_banktransacties(conn, 1)[0]
+    conn.close()
+
+    antwoord = web.post(
+        f"/administratie/2/bank/{eerste['id']}/koppel",
+        data={"factuur_id": "1"}, follow_redirects=False,
+    )
+    assert antwoord.status_code == 404
+
+
+def test_een_factuur_van_een_ander_koppelen_geeft_ook_404(twee_administraties, werkmap):
+    """Een nummer in een verborgen veld is net zo goed te veranderen."""
+    web = twee_administraties
+    lees_afschrift_in(web, administratie_id=2)
+
+    conn = maak_verbinding(str(werkmap / "boekhouding.sqlite"))
+    van_b = lees_banktransacties(conn, 2)[0]
+    conn.close()
+
+    # Factuur 1 hoort bij administratie 1, de transactie bij administratie 2.
+    antwoord = web.post(
+        f"/administratie/2/bank/{van_b['id']}/koppel",
+        data={"factuur_id": "1"}, follow_redirects=False,
+    )
+    assert antwoord.status_code == 404
+
+
+def test_de_keuzelijst_toont_alleen_facturen_die_kunnen_kloppen(web, werkmap):
+    """Geld eraf hoort bij een inkoopfactuur; een verkoopfactuur hoort er niet in."""
+    upload(web, UBLMAP / "01-standaard-21procent.xml", "inkoop.xml")
+    kies_rekening_via_scherm(web, factuur_id=1, code="4120")     # kosten
+    web.post("/administratie/1/factuur/1/goedkeuren", follow_redirects=False)
+    upload(web, UBLMAP / "02-diensten-9procent.xml", "verkoop.xml")
+    kies_rekening_via_scherm(web, factuur_id=2, code="8000")     # omzet
+    web.post("/administratie/1/factuur/2/goedkeuren", follow_redirects=False)
+
+    lees_afschrift_in(web)
+
+    conn = maak_verbinding(str(werkmap / "boekhouding.sqlite"))
+    betaling = [
+        t for t in lees_banktransacties(conn, 1) if t["bedrag"] == "-484.00"
+    ][0]
+    conn.close()
+
+    # Pak precies het formulier van deze ene transactie.
+    pagina = web.get("/administratie/1/bank").text
+    formulier = pagina.split(
+        f"/administratie/1/bank/{betaling['id']}/koppel"
+    )[-1].split("</form>")[0]
+
+    assert 'value="1"' in formulier      # de inkoopfactuur mag
+    assert 'value="2"' not in formulier  # de verkoopfactuur niet
 ```
 
 ## `boekhouding/pytest.ini`

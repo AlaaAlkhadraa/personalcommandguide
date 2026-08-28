@@ -26,6 +26,7 @@ Branch: `claude/nl-accounting-invoice-module-f2vzr3`
 | `14-efactuur-leesbaar.md` | Fix: een e-factuur leesbaar in het reviewscherm, ruwe XML achter een knop |
 | `15-module6-grootboek-btw.md` | Module 6: grootboek, dubbel boekhouden en de btw-aangifte per kwartaal |
 | `16-volledigheidscontroles.md` | Signalen over wat er níét is aangeleverd: waarschuwen, nooit blokkeren |
+| `17-module7-bank-afletteren.md` | Module 7: MT940 en CAMT.053 inlezen en afletteren tegen de facturen |
 | `CODE-COMPLEET.md` | de volledige actuele code, uitleg en tests |
 | `testfacturen-overzicht.json` | grondwaarheid bij de 10 testfacturen |
 | `schermen/` | schermafbeeldingen van de draaiende webinterface |
@@ -33,7 +34,7 @@ Branch: `claude/nl-accounting-invoice-module-f2vzr3`
 
 ## Waar het nu staat
 
-- **378 pytest-tests, allemaal groen.** De testsuite doet nooit een echte
+- **442 pytest-tests, allemaal groen.** De testsuite doet nooit een echte
   API-aanroep.
 - **Module 1** — schema met Decimal-bedragen, alle rekencontroles, datum- en
   duplicaatcheck. Elke fout wordt `review_nodig` met reden, nooit een
@@ -69,6 +70,13 @@ Branch: `claude/nl-accounting-invoice-module-f2vzr3`
   vaste formules, en rekent níéts uit zolang er in dat kwartaal nog een
   factuur open staat — dan krijg je de lijst met wat er mist. Het resultaat is
   een voorstel; indienen doet de eigenaar zelf.
+- **Module 7** — bankafschriften. MT940 en CAMT.053 worden allebei gelezen,
+  op inhoud herkend en niet op bestandsnaam; een kapotte regel breekt de
+  import niet af en hetzelfde afschrift twee keer inlezen voegt niets toe.
+  Afletteren gaat van streng naar los: nummer én bedrag is hoge zekerheid,
+  bedrag én naam is lage zekerheid, en een deelbetaling of verzamelbetaling
+  wordt nooit automatisch gekoppeld. Pas bij bevestiging ontstaat de boeking
+  (crediteuren tegen bank, of andersom bij ontvangst).
 - **Volledigheidssignalen** — blokkeren kan alleen op facturen die er zijn. Een
   factuur die nooit is aangeleverd staat nergens, en dan klopt de aangifte
   ogenschijnlijk gewoon. Daarom drie controles die het patroon bekijken: een
@@ -97,14 +105,21 @@ Branch: `claude/nl-accounting-invoice-module-f2vzr3`
    gebouwd; het schema kent alleen 21, 9 en 0.
 5. **DOCX, XLSX en CSV** staan in de routeringssectie van CLAUDE.md maar
    worden nog als onbekende soort afgewezen.
-6. **De RGS-codes zijn niet geverifieerd.** Ze zijn met de hand samengesteld
+6. **Een banktransactie zonder factuur blijft open staan.** Bankkosten, een
+   privé-opname of een abonnement zonder factuur kunnen nog niet rechtstreeks
+   op een grootboekrekening worden geboekt.
+7. **Ontkoppelen kan niet.** Een verkeerde koppeling zet je recht met een
+   tegenboeking; de koppeling zelf blijft staan.
+8. **Deelbetalingen splitsen kan niet.** Je kunt de transactie met de hand aan
+   één factuur koppelen, maar het restant blijft onzichtbaar.
+9. **De RGS-codes zijn niet geverifieerd.** Ze zijn met de hand samengesteld
    en niet vergeleken met de officiële RGS-lijst. Het systeem boekt op het
    veld `code` (4100, 8000, 1600); `rgs_code` is alleen een verwijzing.
    Controleer die kolom voordat je er een export op baseert.
-7. **Btw-rubriek 1e, 2a en 3a zijn er niet.** Omzet met 0%, vrijgesteld of
+10. **Btw-rubriek 1e, 2a en 3a zijn er niet.** Omzet met 0%, vrijgesteld of
    verlegd wordt wél gemeld op het aangiftescherm, maar niet in een rubriek
    gezet.
-8. **Bedragen worden niet afgerond naar hele euro's.** De Belastingdienst
+11. **Bedragen worden niet afgerond naar hele euro's.** De Belastingdienst
    vraagt hele euro's in de aangifte; het voorstel toont centen.
-9. **Administratietype uitbreiden vereist een migratie** — SQLite kan een
+12. **Administratietype uitbreiden vereist een migratie** — SQLite kan een
    CHECK-constraint niet aanpassen met `ALTER TABLE`.

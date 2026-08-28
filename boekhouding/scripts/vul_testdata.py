@@ -22,6 +22,11 @@ Wil je ook het btw-scherm met cijfers zien in plaats van met blokkades:
 Dan wordt bij elke factuur die klopt een grootboekrekening gekozen, wordt
 hij goedgekeurd en geboekt. Dat is normaal handwerk van de eigenaar; hier
 gebeurt het zodat er iets te zien is.
+
+En met `--bank` wordt er ook een bankafschrift ingelezen (MT940), zodat
+het aflettersscherm gevuld is:
+
+    python scripts/vul_testdata.py --met-pdf --boek --bank
 """
 
 import sys
@@ -32,6 +37,7 @@ sys.path.insert(0, str(BASIS))
 
 from boekhouding import (  # noqa: E402
     boek_factuur,
+    importeer_bankafschrift,
     keur_factuur_goed,
     kies_rekening,
     lees_facturen,
@@ -43,6 +49,8 @@ from boekhouding.verwerking import verwerk_upload  # noqa: E402
 
 GEGEVENS = BASIS / "gegevens"
 UBLMAP = BASIS / "tests" / "testfacturen" / "ubl"
+BANKMAP = BASIS / "tests" / "testfacturen" / "bank"
+AFSCHRIFT = "01-mt940-ing.sta"
 BESTANDEN = [
     "01-standaard-21procent.xml",
     "02-diensten-9procent.xml",
@@ -64,6 +72,7 @@ REKENINGEN = {
 def main() -> int:
     met_pdf = "--met-pdf" in sys.argv
     boeken = "--boek" in sys.argv
+    met_bank = "--bank" in sys.argv
     bestanden = BESTANDEN + (["06-factuur-x.pdf"] if met_pdf else [])
 
     GEGEVENS.mkdir(exist_ok=True)
@@ -98,6 +107,18 @@ def main() -> int:
                 print(f"       niet geboekt: {redenen[0][:78]}")
             else:
                 print(f"       geboekt op {REKENINGEN[naam]} (boeking {boeking_id})")
+
+    if met_bank:
+        samenvatting = importeer_bankafschrift(
+            conn, administratie_id, AFSCHRIFT,
+            (BANKMAP / AFSCHRIFT).read_bytes(), str(GEGEVENS / "opslag"),
+        )
+        print(
+            f"\n  {AFSCHRIFT:<28} -> {samenvatting['nieuw']} nieuwe transacties"
+            f" ({samenvatting['formaat']})"
+        )
+        for reden in samenvatting["redenen"]:
+            print(f"       {reden[:88]}")
 
     facturen = lees_facturen(conn, administratie_id)
     conn.close()

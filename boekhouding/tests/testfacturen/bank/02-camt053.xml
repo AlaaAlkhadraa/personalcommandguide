@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:camt.053.001.02">
+  <BkToCstmrStmt>
+    <GrpHdr>
+      <MsgId>AFSCHRIFT-2026-07</MsgId>
+      <CreDtTm>2026-08-01T06:00:00</CreDtTm>
+    </GrpHdr>
+    <Stmt>
+      <Id>NL91INGB0417164300-2026-07</Id>
+      <Acct><Id><IBAN>NL91INGB0417164300</IBAN></Id><Ccy>EUR</Ccy></Acct>
+      <Bal>
+        <Tp><CdOrPrtry><Cd>OPBD</Cd></CdOrPrtry></Tp>
+        <Amt Ccy="EUR">2500.00</Amt>
+        <CdtDbtInd>CRDT</CdtDbtInd>
+        <Dt><Dt>2026-07-01</Dt></Dt>
+      </Bal>
+    <Ntry>
+      <Amt Ccy="EUR">484.00</Amt>
+      <CdtDbtInd>DBIT</CdtDbtInd>
+      <Sts>BOOK</Sts>
+      <BookgDt><Dt>2026-07-01</Dt></BookgDt>
+      <ValDt><Dt>2026-07-01</Dt></ValDt>
+      <AcctSvcrRef>INGB0001</AcctSvcrRef>
+      <NtryDtls>
+        <TxDtls>
+          <Refs><EndToEndId>EF-2026-0101</EndToEndId></Refs>
+          <RltdPties>
+            <Cdtr><Nm>Van Dijk ICT-diensten</Nm></Cdtr>
+            <CdtrAcct><Id><IBAN>NL02VDIJ0123456789</IBAN></Id></CdtrAcct>
+          </RltdPties>
+          <RmtInf><Ustrd>Factuur EF-2026-0101 onderhoud juli</Ustrd></RmtInf>
+        </TxDtls>
+      </NtryDtls>
+    </Ntry>
+    <Ntry>
+      <Amt Ccy="EUR">2904.00</Amt>
+      <CdtDbtInd>CRDT</CdtDbtInd>
+      <Sts>BOOK</Sts>
+      <BookgDt><Dt>2026-07-05</Dt></BookgDt>
+      <ValDt><Dt>2026-07-05</Dt></ValDt>
+      <AcctSvcrRef>INGB0002</AcctSvcrRef>
+      <NtryDtls>
+        <TxDtls>
+          <Refs><EndToEndId>NOTPROVIDED</EndToEndId></Refs>
+          <RltdPties>
+            <Dbtr><Nm>Alkhadraa Advies</Nm></Dbtr>
+            <DbtrAcct><Id><IBAN>NL44RABO0123456789</IBAN></Id></DbtrAcct>
+          </RltdPties>
+          <RmtInf><Ustrd>Betaling factuur V-2026-014</Ustrd></RmtInf>
+        </TxDtls>
+      </NtryDtls>
+    </Ntry>
+    <Ntry>
+      <Amt Ccy="EUR">272.50</Amt>
+      <CdtDbtInd>DBIT</CdtDbtInd>
+      <Sts>BOOK</Sts>
+      <BookgDt><Dt>2026-07-08</Dt></BookgDt>
+      <ValDt><Dt>2026-07-08</Dt></ValDt>
+      <AcctSvcrRef>INGB0003</AcctSvcrRef>
+      <NtryDtls>
+        <TxDtls>
+          <Refs><EndToEndId>NOTPROVIDED</EndToEndId></Refs>
+          <RltdPties>
+            <Cdtr><Nm>Bakkerij de Korenaar</Nm></Cdtr>
+            <CdtrAcct><Id><IBAN>NL18BAKK0123456789</IBAN></Id></CdtrAcct>
+          </RltdPties>
+          <RmtInf><Ustrd>Bestelling week 28</Ustrd></RmtInf>
+        </TxDtls>
+      </NtryDtls>
+    </Ntry>
+    <Ntry>
+      <Amt Ccy="EUR">75.00</Amt>
+      <CdtDbtInd>DBIT</CdtDbtInd>
+      <Sts>BOOK</Sts>
+      <BookgDt><Dt>2026-07-12</Dt></BookgDt>
+      <ValDt><Dt>2026-07-12</Dt></ValDt>
+      <AcctSvcrRef>INGB0004</AcctSvcrRef>
+      <NtryDtls>
+        <TxDtls>
+          <Refs><EndToEndId>NOTPROVIDED</EndToEndId></Refs>
+          <RltdPties>
+            <Cdtr><Nm>KPN B.V.</Nm></Cdtr>
+            <CdtrAcct><Id><IBAN>NL30KPNN0123456789</IBAN></Id></CdtrAcct>
+          </RltdPties>
+          <RmtInf><Ustrd>Maandnota telefonie juli</Ustrd></RmtInf>
+        </TxDtls>
+      </NtryDtls>
+    </Ntry>
+    </Stmt>
+  </BkToCstmrStmt>
+</Document>

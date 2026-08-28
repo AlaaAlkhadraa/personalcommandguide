@@ -77,6 +77,16 @@ from .volledigheid import (
     ontbrekende_leveranciers,
     zoek_signalen,
 )
+from .bank import (
+    Banktransactie,
+    ImportResultaat,
+    is_camt,
+    is_mt940,
+    lees_bankbestand,
+    lees_camt,
+    lees_mt940,
+)
+from .afletteren import Voorstel, namen_lijken_op_elkaar, stel_betaling_samen, zoek_voorstel
 from .routering import bestandssoort, routeer_document, zoek_ingebedde_efactuur
 from .omgeving import api_sleutel, sleutel_aanwezig
 from .database import (
@@ -101,6 +111,11 @@ from .database import (
     boeking_bij_factuur,
     boek_factuur,
     maak_tegenboeking,
+    importeer_bankafschrift,
+    lees_banktransacties,
+    lees_banktransactie,
+    open_facturen,
+    koppel_transactie,
 )
 
 __all__ = [
@@ -185,4 +200,20 @@ __all__ = [
     "ontbrekende_leveranciers",
     "gaten_in_factuurnummers",
     "afwijkend_aantal",
+    "Banktransactie",
+    "ImportResultaat",
+    "lees_bankbestand",
+    "lees_mt940",
+    "lees_camt",
+    "is_mt940",
+    "is_camt",
+    "Voorstel",
+    "zoek_voorstel",
+    "namen_lijken_op_elkaar",
+    "stel_betaling_samen",
+    "importeer_bankafschrift",
+    "lees_banktransacties",
+    "lees_banktransactie",
+    "open_facturen",
+    "koppel_transactie",
 ]

@@ -13,6 +13,7 @@ from fastapi.testclient import TestClient
 from boekhouding import (
     boeking_bij_factuur,
     lees_audit_trail,
+    lees_banktransacties,
     lees_facturen,
     maak_verbinding,
 )
@@ -738,3 +739,170 @@ def test_zonder_signalen_staat_er_geen_lege_kop(web):
     """Een systeem dat elk kwartaal iets roept wordt weggeklikt."""
     pagina = web.get("/administratie/1/btw/2026/3").text
     assert "Even nakijken" not in pagina
+
+
+# --- bankafschriften en afletteren (module 7) ---------------------------
+
+BANKMAP = Path(__file__).parent / "testfacturen" / "bank"
+
+
+def lees_afschrift_in(web, naam="01-mt940-ing.sta", administratie_id=1):
+    return web.post(
+        f"/administratie/{administratie_id}/bank",
+        files={"bestand": (naam, (BANKMAP / naam).read_bytes(), "text/plain")},
+        follow_redirects=False,
+    )
+
+
+def geboekte_factuur_via_scherm(web, rekening="4120"):
+    """Upload de e-factuur van Van Dijk (484,00) en boek hem."""
+    upload(web, UBLMAP / "01-standaard-21procent.xml", "goed.xml")
+    kies_rekening_via_scherm(web, code=rekening)
+    web.post("/administratie/1/factuur/1/goedkeuren", follow_redirects=False)
+
+
+def test_het_bankscherm_is_leeg_tot_je_een_afschrift_inleest(web):
+    pagina = web.get("/administratie/1/bank").text
+    assert "Nog geen banktransacties" in pagina
+    assert 'name="bestand"' in pagina
+
+
+def test_een_afschrift_inlezen_zet_de_transacties_op_het_scherm(web):
+    from urllib.parse import unquote
+
+    antwoord = lees_afschrift_in(web)
+    assert antwoord.status_code == 303
+    assert "4 nieuwe transacties" in unquote(antwoord.headers["location"])
+
+    pagina = web.get("/administratie/1/bank").text
+    assert "Van Dijk ICT-diensten" in pagina
+    assert "-484.00" in pagina
+    assert "4" in pagina  # de teller met openstaande transacties
+
+
+def test_hetzelfde_afschrift_twee_keer_zegt_dat_er_niets_bij_komt(web):
+    from urllib.parse import unquote
+
+    lees_afschrift_in(web)
+    antwoord = lees_afschrift_in(web)
+
+    melding = unquote(antwoord.headers["location"])
+    assert "0 nieuwe transacties" in melding
+    assert "4 stonden er al" in melding
+
+
+def test_een_bestand_dat_geen_afschrift_is_wordt_uitgelegd(web):
+    antwoord = web.post(
+        "/administratie/1/bank",
+        files={"bestand": ("brief.txt", b"Beste Alaa,\n\ngroeten", "text/plain")},
+        follow_redirects=False,
+    )
+    assert antwoord.status_code == 200
+    assert "niet ingelezen" in antwoord.text
+    assert "geen MT940 en geen CAMT.053" in antwoord.text
+
+
+def test_het_scherm_toont_het_voorstel_met_de_zekerheid(web):
+    geboekte_factuur_via_scherm(web)
+    lees_afschrift_in(web)
+
+    pagina = web.get("/administratie/1/bank").text
+    assert "Voorstel:" in pagina
+    assert "hoge zekerheid" in pagina
+    assert "Bevestigen en boeken" in pagina
+
+
+def test_bevestigen_koppelt_en_boekt(web, werkmap):
+    from urllib.parse import unquote
+
+    geboekte_factuur_via_scherm(web)
+    lees_afschrift_in(web)
+
+    conn = maak_verbinding(str(werkmap / "boekhouding.sqlite"))
+    betaling = [
+        t for t in lees_banktransacties(conn, 1) if t["bedrag"] == "-484.00"
+    ][0]
+    conn.close()
+
+    antwoord = web.post(
+        f"/administratie/1/bank/{betaling['id']}/koppel",
+        data={"factuur_id": "1"}, follow_redirects=False,
+    )
+    assert "Gekoppeld en geboekt" in unquote(antwoord.headers["location"])
+
+    pagina = web.get("/administratie/1/bank").text
+    assert "Gekoppeld aan factuur 1" in pagina
+
+
+def test_koppelen_zonder_factuur_te_kiezen_zegt_dat(web, werkmap):
+    from urllib.parse import unquote
+
+    lees_afschrift_in(web)
+    conn = maak_verbinding(str(werkmap / "boekhouding.sqlite"))
+    eerste = lees_banktransacties(conn, 1)[0]
+    conn.close()
+
+    antwoord = web.post(
+        f"/administratie/1/bank/{eerste['id']}/koppel",
+        data={"factuur_id": ""}, follow_redirects=False,
+    )
+    assert "Kies eerst een factuur" in unquote(antwoord.headers["location"])
+
+
+def test_een_transactie_van_een_ander_koppelen_geeft_404(twee_administraties, werkmap):
+    web = twee_administraties
+    lees_afschrift_in(web, administratie_id=1)
+
+    conn = maak_verbinding(str(werkmap / "boekhouding.sqlite"))
+    eerste = lees_banktransacties(conn, 1)[0]
+    conn.close()
+
+    antwoord = web.post(
+        f"/administratie/2/bank/{eerste['id']}/koppel",
+        data={"factuur_id": "1"}, follow_redirects=False,
+    )
+    assert antwoord.status_code == 404
+
+
+def test_een_factuur_van_een_ander_koppelen_geeft_ook_404(twee_administraties, werkmap):
+    """Een nummer in een verborgen veld is net zo goed te veranderen."""
+    web = twee_administraties
+    lees_afschrift_in(web, administratie_id=2)
+
+    conn = maak_verbinding(str(werkmap / "boekhouding.sqlite"))
+    van_b = lees_banktransacties(conn, 2)[0]
+    conn.close()
+
+    # Factuur 1 hoort bij administratie 1, de transactie bij administratie 2.
+    antwoord = web.post(
+        f"/administratie/2/bank/{van_b['id']}/koppel",
+        data={"factuur_id": "1"}, follow_redirects=False,
+    )
+    assert antwoord.status_code == 404
+
+
+def test_de_keuzelijst_toont_alleen_facturen_die_kunnen_kloppen(web, werkmap):
+    """Geld eraf hoort bij een inkoopfactuur; een verkoopfactuur hoort er niet in."""
+    upload(web, UBLMAP / "01-standaard-21procent.xml", "inkoop.xml")
+    kies_rekening_via_scherm(web, factuur_id=1, code="4120")     # kosten
+    web.post("/administratie/1/factuur/1/goedkeuren", follow_redirects=False)
+    upload(web, UBLMAP / "02-diensten-9procent.xml", "verkoop.xml")
+    kies_rekening_via_scherm(web, factuur_id=2, code="8000")     # omzet
+    web.post("/administratie/1/factuur/2/goedkeuren", follow_redirects=False)
+
+    lees_afschrift_in(web)
+
+    conn = maak_verbinding(str(werkmap / "boekhouding.sqlite"))
+    betaling = [
+        t for t in lees_banktransacties(conn, 1) if t["bedrag"] == "-484.00"
+    ][0]
+    conn.close()
+
+    # Pak precies het formulier van deze ene transactie.
+    pagina = web.get("/administratie/1/bank").text
+    formulier = pagina.split(
+        f"/administratie/1/bank/{betaling['id']}/koppel"
+    )[-1].split("</form>")[0]
+
+    assert 'value="1"' in formulier      # de inkoopfactuur mag
+    assert 'value="2"' not in formulier  # de verkoopfactuur niet

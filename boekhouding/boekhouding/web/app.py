@@ -15,14 +15,20 @@ from fastapi import FastAPI, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
+from ..afletteren import zoek_voorstel
 from ..ai_extractie import VELDEN
 from ..btw_aangifte import bereken_aangifte, kwartaal_van
 from ..database import (
     FACTUUR_VELDEN,
     boek_factuur,
     boeking_bij_factuur,
+    importeer_bankafschrift,
     keur_factuur_goed,
     kies_rekening,
+    koppel_transactie,
+    lees_banktransactie,
+    lees_banktransacties,
+    open_facturen,
     lees_document,
     lees_extractie_bij_document,
     lees_facturen,
@@ -381,6 +387,128 @@ def maak_app(
             aangifte=aangifte,
             vorig=vorig,
             volgend=volgend,
+        )
+
+    # --- bankafschriften en afletteren -----------------------------------
+
+    @app.get("/administratie/{administratie_id}/bank", response_class=HTMLResponse)
+    def bank(request: Request, administratie_id: int, melding: str = ""):
+        conn = verbinding()
+        try:
+            administratie = administratie_van(conn, administratie_id)
+            transacties = lees_banktransacties(conn, administratie_id)
+            facturen = open_facturen(conn, administratie_id)
+        finally:
+            conn.close()
+
+        # Het voorstel wordt hier uitgerekend en niet bewaard: het is een
+        # voorstel, geen besluit. Verandert er iets aan de facturen, dan
+        # klopt het voorstel de volgende keer vanzelf weer.
+        regels = []
+        for transactie in transacties:
+            # Alleen facturen die qua richting kunnen: geld eraf hoort bij
+            # een inkoopfactuur, geld erbij bij een verkoopfactuur. Ze toch
+            # in de lijst zetten zou de eigenaar een keuze laten maken die
+            # daarna alsnog wordt geweigerd.
+            eraf = str(transactie["bedrag"]).startswith("-")
+            koppelbaar = [
+                factuur for factuur in facturen
+                if factuur["richting"] == ("inkoop" if eraf else "verkoop")
+            ]
+            regels.append({
+                "transactie": transactie,
+                "koppelbaar": koppelbaar,
+                "voorstel": (
+                    zoek_voorstel(transactie, facturen)
+                    if transactie["status"] == "open" else None
+                ),
+            })
+
+        return toon(
+            request, "bank.html",
+            administratie_id=administratie_id,
+            administratie_naam=administratie[1],
+            regels=regels,
+            facturen=facturen,
+            melding=melding,
+            aantal_open=sum(1 for t in transacties if t["status"] == "open"),
+            aantal_voorstel=sum(
+                1 for r in regels
+                if r["voorstel"] is not None
+                and r["voorstel"].soort in ("exact", "waarschijnlijk")
+            ),
+        )
+
+    @app.post("/administratie/{administratie_id}/bank")
+    async def bank_import(request: Request, administratie_id: int, bestand: UploadFile):
+        inhoud = await bestand.read()
+        conn = verbinding()
+        try:
+            administratie_van(conn, administratie_id)
+            samenvatting = importeer_bankafschrift(
+                conn, administratie_id, bestand.filename or "afschrift",
+                inhoud, app.state.opslagmap,
+            )
+        finally:
+            conn.close()
+
+        if samenvatting["status"] != "gelezen":
+            return toon(
+                request, "fout.html",
+                titel="Dit afschrift is niet ingelezen",
+                bericht=" ".join(samenvatting["redenen"]),
+                terug=f"/administratie/{administratie_id}/bank",
+            )
+        melding = (
+            f"{samenvatting['nieuw']} nieuwe transacties ingelezen"
+            + (f", {samenvatting['al_bekend']} stonden er al"
+               if samenvatting["al_bekend"] else "")
+        )
+        if samenvatting["redenen"]:
+            melding += ". " + " ".join(samenvatting["redenen"])
+        return RedirectResponse(
+            f"/administratie/{administratie_id}/bank?melding={melding}",
+            status_code=303,
+        )
+
+    @app.post("/administratie/{administratie_id}/bank/{transactie_id}/koppel")
+    async def bank_koppel(
+        request: Request, administratie_id: int, transactie_id: int
+    ):
+        formulier = await request.form()
+        gekozen = str(formulier.get("factuur_id") or "").strip()
+        if not gekozen.isdigit():
+            return RedirectResponse(
+                f"/administratie/{administratie_id}/bank"
+                f"?melding=Kies eerst een factuur om aan te koppelen",
+                status_code=303,
+            )
+
+        conn = verbinding()
+        try:
+            hoort_bij_administratie(
+                conn, lees_banktransactie, transactie_id, administratie_id,
+                "banktransactie",
+            )
+            # Ook de factuur uit het formulier gaat langs de controle: een
+            # nummer in een verborgen veld is net zo goed te veranderen als
+            # een nummer in de adresbalk.
+            hoort_bij_administratie(
+                conn, lees_factuur, int(gekozen), administratie_id, "factuur"
+            )
+            boeking_id, redenen = koppel_transactie(
+                conn, transactie_id, int(gekozen)
+            )
+        finally:
+            conn.close()
+
+        melding = (
+            f"Gekoppeld en geboekt (boeking {boeking_id})"
+            if boeking_id is not None else redenen[0]
+        )
+        return RedirectResponse(
+            f"/administratie/{administratie_id}/bank?melding={melding}",
+            status_code=303,
         )
 
     # --- het originele document laten zien -------------------------------

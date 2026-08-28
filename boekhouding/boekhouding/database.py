@@ -12,6 +12,7 @@ Gouden regels die hier gelden:
 
 import json
 import sqlite3
+import tempfile
 from datetime import date, datetime, timezone
 from decimal import Decimal
 from pathlib import Path
@@ -222,6 +223,7 @@ def maak_tabellen(conn: sqlite3.Connection) -> None:
     _voeg_kolom_toe(conn, "facturen", "goedgekeurd_door", "TEXT")
 
     conn.commit()
+    _bank_tabellen(conn)
 
 
 def maak_administratie(
@@ -1057,3 +1059,336 @@ def maak_tegenboeking(
     return sla_boeking_op(
         conn, boeking["administratie_id"], voorstel, door=door
     )
+
+
+# --- bankafschriften en afletteren (module 7) ---------------------------
+
+def _bank_tabellen(conn: sqlite3.Connection) -> None:
+    """De tabellen van module 7; aangeroepen vanuit maak_tabellen."""
+    conn.executescript(
+        """
+        CREATE TABLE IF NOT EXISTS bankafschriften (
+            id               INTEGER PRIMARY KEY,
+            administratie_id INTEGER NOT NULL REFERENCES administraties(id),
+            document_id      INTEGER REFERENCES documenten(id),
+            bestandsnaam     TEXT NOT NULL,
+            formaat          TEXT NOT NULL
+                             CHECK (formaat IN ('mt940', 'camt053')),
+            rekening         TEXT,
+            aangemaakt_op    TEXT NOT NULL
+        );
+
+        CREATE TABLE IF NOT EXISTS banktransacties (
+            id               INTEGER PRIMARY KEY,
+            administratie_id INTEGER NOT NULL REFERENCES administraties(id),
+            afschrift_id     INTEGER NOT NULL REFERENCES bankafschriften(id),
+            volgnummer       INTEGER NOT NULL,
+            boekdatum        TEXT NOT NULL,
+            -- Ondertekend: negatief is eraf, positief is erbij. Als tekst
+            -- opgeslagen, net als elk ander bedrag, zodat er nooit een
+            -- float aan te pas komt.
+            bedrag           TEXT NOT NULL,
+            tegenrekening    TEXT,
+            tegenpartij      TEXT,
+            omschrijving     TEXT NOT NULL DEFAULT '',
+            betalingskenmerk TEXT,
+            bankreferentie   TEXT,
+            -- De vingerafdruk van de transactie. Hierop rust de
+            -- duplicaatherkenning: hetzelfde afschrift twee keer inlezen
+            -- levert dezelfde vingerafdrukken op en voegt dus niets toe.
+            kenmerk          TEXT NOT NULL,
+            status           TEXT NOT NULL DEFAULT 'open'
+                             CHECK (status IN ('open', 'gekoppeld')),
+            factuur_id       INTEGER REFERENCES facturen(id),
+            boeking_id       INTEGER REFERENCES boekingen(id),
+            gekoppeld_op     TEXT,
+            gekoppeld_door   TEXT,
+            aangemaakt_op    TEXT NOT NULL,
+            UNIQUE (administratie_id, kenmerk)
+        );
+
+        CREATE INDEX IF NOT EXISTS idx_banktransacties_status
+            ON banktransacties (administratie_id, status, boekdatum);
+        """
+    )
+    conn.commit()
+
+
+def importeer_bankafschrift(
+    conn: sqlite3.Connection,
+    administratie_id: int,
+    bestandsnaam: str,
+    inhoud: bytes,
+    opslagmap: str,
+    door: str = "eigenaar",
+) -> dict[str, Any]:
+    """Lees een bankafschrift in en bewaar de nieuwe transacties.
+
+    Geeft een samenvatting terug: hoeveel er nieuw zijn, hoeveel er al
+    stonden en welke regels zijn overgeslagen. Gooit nooit een
+    exception: een onleesbaar bestand is een reden, geen crash.
+
+    Hetzelfde afschrift twee keer inlezen voegt niets toe. Dat gaat niet
+    op de bestandsnaam maar op de inhoud van elke transactie, zodat ook
+    twee afschriften die elkaar overlappen geen dubbele regels opleveren.
+    """
+    from .bank import lees_bankbestand
+
+    gelezen = lees_bankbestand(inhoud, bestandsnaam)
+    samenvatting: dict[str, Any] = {
+        "status": gelezen.status,
+        "formaat": gelezen.formaat,
+        "afschrift_id": None,
+        "nieuw": 0,
+        "al_bekend": 0,
+        "redenen": list(gelezen.redenen),
+    }
+    if gelezen.status != "gelezen":
+        return samenvatting
+
+    # Het origineel wordt bewaard vóór het verwerken (bewaarplicht), net
+    # als bij een factuur. Lukt dat niet, dan gaat de import wel door:
+    # de transacties zelf zijn belangrijker dan het bronbestand, en het
+    # mislukken staat als reden in de samenvatting.
+    document_id = None
+    extensie = ".xml" if gelezen.formaat == "camt053" else ".sta"
+    with tempfile.TemporaryDirectory() as tijdelijke_map:
+        tijdelijk = Path(tijdelijke_map) / f"afschrift{extensie}"
+        tijdelijk.write_bytes(inhoud)
+        document = bewaar_document(
+            conn, administratie_id, str(tijdelijk), str(opslagmap)
+        )
+    if document.status == "review_nodig":
+        samenvatting["redenen"].append(
+            f"het originele afschrift kon niet worden bewaard: "
+            f"{'; '.join(document.redenen)}"
+        )
+    else:
+        document_id = document.document_id
+
+    tijd = _nu()
+    cursor = conn.execute(
+        """
+        INSERT INTO bankafschriften (
+            administratie_id, document_id, bestandsnaam, formaat,
+            rekening, aangemaakt_op
+        ) VALUES (?, ?, ?, ?, ?, ?)
+        """,
+        (
+            administratie_id, document_id, bestandsnaam, gelezen.formaat,
+            gelezen.rekening, tijd,
+        ),
+    )
+    afschrift_id = cursor.lastrowid
+    samenvatting["afschrift_id"] = afschrift_id
+
+    for transactie in gelezen.transacties:
+        kenmerk = transactie.kenmerk()
+        bestaat = conn.execute(
+            "SELECT id FROM banktransacties WHERE administratie_id = ? "
+            "AND kenmerk = ?",
+            (administratie_id, kenmerk),
+        ).fetchone()
+        if bestaat is not None:
+            samenvatting["al_bekend"] += 1
+            continue
+
+        regel = conn.execute(
+            """
+            INSERT INTO banktransacties (
+                administratie_id, afschrift_id, volgnummer, boekdatum,
+                bedrag, tegenrekening, tegenpartij, omschrijving,
+                betalingskenmerk, bankreferentie, kenmerk, aangemaakt_op
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                administratie_id, afschrift_id, transactie.volgnummer,
+                str(transactie.boekdatum), str(transactie.bedrag),
+                transactie.tegenrekening, transactie.tegenpartij,
+                transactie.omschrijving, transactie.betalingskenmerk,
+                transactie.bankreferentie, kenmerk, tijd,
+            ),
+        )
+        samenvatting["nieuw"] += 1
+        conn.execute(
+            """
+            INSERT INTO audit_log (
+                administratie_id, tabel, record_id, actie,
+                veld, oude_waarde, nieuwe_waarde, tijdstip
+            ) VALUES (?, 'banktransacties', ?, 'aangemaakt', NULL, NULL, ?, ?)
+            """,
+            (
+                administratie_id, regel.lastrowid,
+                json.dumps(
+                    {
+                        "boekdatum": str(transactie.boekdatum),
+                        "bedrag": str(transactie.bedrag),
+                        "tegenpartij": transactie.tegenpartij,
+                        "omschrijving": transactie.omschrijving,
+                        "afschrift": bestandsnaam,
+                    },
+                    ensure_ascii=False,
+                ),
+                tijd,
+            ),
+        )
+
+    conn.commit()
+    if samenvatting["nieuw"] == 0 and samenvatting["al_bekend"]:
+        samenvatting["redenen"].append(
+            f"alle {samenvatting['al_bekend']} transacties uit dit afschrift "
+            f"stonden er al; er is niets bijgekomen"
+        )
+    return samenvatting
+
+
+def lees_banktransacties(
+    conn: sqlite3.Connection, administratie_id: int
+) -> list[dict[str, Any]]:
+    """De banktransacties van een administratie, openstaande bovenaan."""
+    cursor = conn.execute(
+        """
+        SELECT * FROM banktransacties
+        WHERE administratie_id = ?
+        ORDER BY CASE WHEN status = 'open' THEN 0 ELSE 1 END,
+                 boekdatum DESC, id DESC
+        """,
+        (administratie_id,),
+    )
+    kolommen = [k[0] for k in cursor.description]
+    return [dict(zip(kolommen, rij)) for rij in cursor.fetchall()]
+
+
+def lees_banktransactie(
+    conn: sqlite3.Connection, transactie_id: int
+) -> dict[str, Any]:
+    cursor = conn.execute(
+        "SELECT * FROM banktransacties WHERE id = ?", (transactie_id,)
+    )
+    rij = cursor.fetchone()
+    if rij is None:
+        raise ValueError(f"banktransactie {transactie_id} bestaat niet")
+    kolommen = [k[0] for k in cursor.description]
+    return dict(zip(kolommen, rij))
+
+
+def _richting_van_boeking(conn: sqlite3.Connection, factuur_id: int) -> Optional[str]:
+    """Is dit een inkoop- of een verkoopfactuur?
+
+    Dat staat niet in de factuur maar in haar boeking: staat er
+    crediteuren in, dan is het inkoop; staat er debiteuren in, dan
+    verkoop. Zo hoeft er nergens iets geraden te worden.
+    """
+    from .rekeningschema import rekeningschema_voor_jaar
+
+    boeking = boeking_bij_factuur(conn, factuur_id)
+    if boeking is None:
+        return None
+    jaar = int(str(boeking["boekdatum"])[:4])
+    schema = rekeningschema_voor_jaar(jaar)
+    if schema is None:
+        return None
+    rekeningen = {regel["rekening"] for regel in boeking["regels"]}
+    if schema.standaard("crediteuren") in rekeningen:
+        return "inkoop"
+    if schema.standaard("debiteuren") in rekeningen:
+        return "verkoop"
+    return None
+
+
+def open_facturen(
+    conn: sqlite3.Connection, administratie_id: int
+) -> list[dict[str, Any]]:
+    """De facturen die nog op een betaling wachten.
+
+    Alleen geboekte facturen doen mee: zolang een factuur niet in het
+    grootboek staat, is er ook geen schuld of vordering om af te
+    letteren. Facturen die al aan een transactie hangen vallen af.
+    """
+    cursor = conn.execute(
+        """
+        SELECT f.* FROM facturen f
+        JOIN boekingen b ON b.factuur_id = f.id
+        WHERE f.administratie_id = ?
+          AND f.id NOT IN (
+              SELECT factuur_id FROM banktransacties
+              WHERE administratie_id = ? AND factuur_id IS NOT NULL
+          )
+        ORDER BY f.factuurdatum, f.id
+        """,
+        (administratie_id, administratie_id),
+    )
+    kolommen = [k[0] for k in cursor.description]
+    facturen = []
+    for rij in cursor.fetchall():
+        factuur = dict(zip(kolommen, rij))
+        factuur["review_redenen"] = json.loads(factuur["review_redenen"])
+        factuur["originele_data"] = json.loads(factuur["originele_data"])
+        factuur["richting"] = _richting_van_boeking(conn, factuur["id"])
+        facturen.append(factuur)
+    return facturen
+
+
+def koppel_transactie(
+    conn: sqlite3.Connection,
+    transactie_id: int,
+    factuur_id: int,
+    door: str = "eigenaar",
+) -> tuple[Optional[int], list[str]]:
+    """Koppel een banktransactie aan een factuur en boek de betaling.
+
+    Dit gebeurt alleen op bevestiging van een mens: een voorstel uit het
+    afletteren is nooit definitief. Geeft (boeking_id, redenen).
+    """
+    from .afletteren import stel_betaling_samen
+
+    transactie = lees_banktransactie(conn, transactie_id)
+    if transactie["status"] != "open":
+        return None, [
+            f"deze transactie is al gekoppeld aan factuur "
+            f"{transactie['factuur_id']}"
+        ]
+
+    factuur = lees_factuur(conn, factuur_id)
+    if factuur["administratie_id"] != transactie["administratie_id"]:
+        return None, ["deze factuur hoort bij een andere administratie"]
+
+    al_gekoppeld = conn.execute(
+        "SELECT id FROM banktransacties WHERE factuur_id = ? AND id != ?",
+        (factuur_id, transactie_id),
+    ).fetchone()
+    if al_gekoppeld is not None:
+        return None, [
+            f"factuur {factuur_id} hangt al aan banktransactie "
+            f"{al_gekoppeld[0]}"
+        ]
+
+    factuur["richting"] = _richting_van_boeking(conn, factuur_id)
+    voorstel = stel_betaling_samen(transactie, factuur)
+    boeking_id, redenen = sla_boeking_op(
+        conn, transactie["administratie_id"], voorstel, door=door
+    )
+    if boeking_id is None:
+        return None, redenen
+
+    tijd = _nu()
+    conn.execute(
+        """
+        UPDATE banktransacties
+        SET status = 'gekoppeld', factuur_id = ?, boeking_id = ?,
+            gekoppeld_op = ?, gekoppeld_door = ?
+        WHERE id = ?
+        """,
+        (factuur_id, boeking_id, tijd, door, transactie_id),
+    )
+    conn.execute(
+        """
+        INSERT INTO audit_log (
+            administratie_id, tabel, record_id, actie,
+            veld, oude_waarde, nieuwe_waarde, tijdstip
+        ) VALUES (?, 'banktransacties', ?, 'gewijzigd', 'factuur_id', NULL, ?, ?)
+        """,
+        (transactie["administratie_id"], transactie_id, str(factuur_id), tijd),
+    )
+    conn.commit()
+    return boeking_id, []

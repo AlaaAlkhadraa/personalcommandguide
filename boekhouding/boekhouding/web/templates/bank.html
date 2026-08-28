@@ -1,0 +1,124 @@
+{% extends "basis.html" %}
+{% block titel %}Bank — {{ administratie_naam }}{% endblock %}
+{% block kruimel %}<a href="/administratie/{{ administratie_id }}">&larr; Terug naar de facturen</a>{% endblock %}
+{% block kop %}Banktransacties{% endblock %}
+{% block inhoud %}
+
+{% if melding %}<div class="melding">{{ melding }}</div>{% endif %}
+
+<div class="telling">
+  <div>
+    <strong>{{ aantal_open }}</strong>
+    <span>{% if aantal_open == 1 %}transactie staat nog open{% else %}transacties staan nog open{% endif %}</span>
+  </div>
+  <div>
+    <strong>{{ aantal_voorstel }}</strong>
+    <span>met een voorstel</span>
+  </div>
+  <div>
+    <strong>{{ facturen|length }}</strong>
+    <span>facturen wachten op betaling</span>
+  </div>
+</div>
+
+<form class="kaart" method="post" enctype="multipart/form-data"
+      action="/administratie/{{ administratie_id }}/bank">
+  <div class="veld">
+    <label for="bestand">Afschrift inlezen (MT940 of CAMT.053)</label>
+    <input type="file" id="bestand" name="bestand" accept=".sta,.mt940,.txt,.xml" required>
+    <div class="onder" style="color:var(--zacht);font-size:14px">
+      Download bij je bank een MT940- of CAMT.053-bestand. Hetzelfde afschrift
+      twee keer inlezen voegt niets dubbel toe.
+    </div>
+  </div>
+  <div class="knoppen"><button type="submit">Inlezen</button></div>
+</form>
+
+{% if not regels %}
+  <p class="leeg">Nog geen banktransacties. Lees hierboven een afschrift in.</p>
+{% endif %}
+
+{% for regel in regels %}
+  {% set transactie = regel.transactie %}
+  {% set voorstel = regel.voorstel %}
+  {% set koppelbaar = regel.koppelbaar %}
+  <div class="kaart">
+    <div class="boven">
+      <span class="naam">{{ transactie.tegenpartij or "Onbekende tegenpartij" }}</span>
+      <span class="bedrag">{{ transactie.bedrag }}</span>
+    </div>
+    <div class="onder">
+      {{ transactie.boekdatum }}
+      {% if transactie.tegenrekening %} · {{ transactie.tegenrekening }}{% endif %}
+    </div>
+    {% if transactie.omschrijving %}
+      <div class="onder">{{ transactie.omschrijving }}</div>
+    {% endif %}
+
+    {% if transactie.status == 'gekoppeld' %}
+      <div class="melding" style="margin-top:12px;margin-bottom:0">
+        Gekoppeld aan factuur {{ transactie.factuur_id }} en geboekt
+        (boeking {{ transactie.boeking_id }}).
+      </div>
+    {% else %}
+      {% if voorstel.soort in ('exact', 'waarschijnlijk') %}
+        <div class="ubl-rij" style="margin-top:12px">
+          <div>
+            <div class="label">
+              Voorstel: {{ voorstel.leverancier }} · {{ voorstel.factuurnummer }}
+              {% if voorstel.zekerheid == 'hoog' %}
+                <span class="merk klaar">hoge zekerheid</span>
+              {% else %}
+                <span class="merk wacht">lage zekerheid</span>
+              {% endif %}
+            </div>
+            <div class="herkomst" style="font-family:inherit">{{ voorstel.uitleg }}</div>
+          </div>
+        </div>
+        <form method="post"
+              action="/administratie/{{ administratie_id }}/bank/{{ transactie.id }}/koppel">
+          <input type="hidden" name="factuur_id" value="{{ voorstel.factuur_id }}">
+          <div class="knoppen" style="margin-top:12px">
+            <button type="submit">Bevestigen en boeken</button>
+          </div>
+        </form>
+      {% elif voorstel.soort == 'handmatig' %}
+        <div class="waarschuwing" style="margin-top:12px">
+          {{ voorstel.uitleg }}
+        </div>
+      {% else %}
+        <div class="onder" style="color:var(--zacht);margin-top:12px">
+          {{ voorstel.uitleg }}
+        </div>
+      {% endif %}
+
+      {% if not koppelbaar %}
+        <div class="onder" style="color:var(--zacht);margin-top:12px">
+          Er staat geen {{ "inkoopfactuur" if transactie.bedrag.startswith("-") else "verkoopfactuur" }}
+          open die hierbij kan horen.
+        </div>
+      {% else %}
+        <form method="post"
+              action="/administratie/{{ administratie_id }}/bank/{{ transactie.id }}/koppel">
+          <div class="veld" style="margin-top:12px;margin-bottom:8px">
+            <label for="factuur-{{ transactie.id }}">Zelf koppelen</label>
+            <select id="factuur-{{ transactie.id }}" name="factuur_id">
+              <option value="">— kies een factuur —</option>
+              {% for factuur in koppelbaar %}
+                <option value="{{ factuur.id }}">
+                  {{ factuur.factuurdatum }} · {{ factuur.leverancier }} ·
+                  {{ factuur.factuurnummer }} · {{ factuur.bedrag_incl }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="knoppen">
+            <button type="submit" class="tweede">Koppelen en boeken</button>
+          </div>
+        </form>
+      {% endif %}
+    {% endif %}
+  </div>
+{% endfor %}
+
+{% endblock %}

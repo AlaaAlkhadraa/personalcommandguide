@@ -27,9 +27,12 @@ from pydantic import BaseModel
 BLOK = 1024 * 1024
 
 # Bestandssoorten die we bewaren. Een factuur komt binnen als PDF, als
-# foto/scan, of als e-factuur in XML; iets anders wordt niet gegokt
-# maar ter review gelegd.
-TOEGESTANE_EXTENSIES = (".pdf", ".jpg", ".jpeg", ".png", ".xml")
+# foto/scan, of als e-factuur in XML; een bankafschrift als MT940 (.sta,
+# .mt940 of gewoon .txt) of als CAMT.053 (.xml). Iets anders wordt niet
+# gegokt maar ter review gelegd.
+TOEGESTANE_EXTENSIES = (
+    ".pdf", ".jpg", ".jpeg", ".png", ".xml", ".sta", ".mt940", ".txt",
+)
 
 
 class TekstResultaat(BaseModel):

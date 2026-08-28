@@ -11,6 +11,7 @@ geboekt — elke fout leidt tot status `review_nodig` met een leesbare reden.
 - **Module 4** — UBL / e-facturen rechtstreeks uitlezen, zonder AI
 - **Module 5** — webinterface, fase 1: de reviewschermen van de eigenaar
 - **Module 6** — grootboek (dubbel boekhouden) en de btw-aangifte per kwartaal
+- **Module 7** — bankafschriften importeren en afletteren tegen de facturen
 
 ## Installeren en testen
 
@@ -756,6 +757,118 @@ knoppen erboven loop je terug en vooruit. Onderaan staat, altijd:
 > **Dit is een voorstel, geen aangifte.** Het indienen doet u zelf bij de
 > Belastingdienst; dit systeem verstuurt niets.
 
+## Module 7 — Bankafschriften en afletteren
+
+Geen AI. Een bankafschrift is een vast formaat en afletteren is regelwerk:
+staat het factuurnummer in de omschrijving en klopt het bedrag, dan is het een
+match. Meer zit er niet achter, en meer hoort er ook niet achter te zitten.
+
+### Twee formaten, dezelfde uitkomst
+
+`bank.py` leest allebei de formaten die Nederlandse banken leveren:
+
+- **MT940** — het oude SWIFT-formaat, platte tekst met `:20:`, `:61:` en
+  `:86:`-regels. ING, Rabobank en ABN AMRO gebruiken kleine varianten van de
+  omschrijvingsregel; de gestructureerde tags (`/IBAN/`, `/NAME/`, `/REMI/`,
+  `/EREF/`) worden herkend, en staan ze er niet, dan is de hele regel de
+  omschrijving en wordt er nog een IBAN in gezocht.
+- **CAMT.053** — de XML-opvolger, gelezen met dezelfde veilige parser als de
+  e-facturen van module 4: geen DTD, geen entiteiten, geen externe
+  verwijzingen, dezelfde grens van 20 MB. De versie achter de naamruimte
+  (.02, .04, .08) verschilt per bank, dus daar wordt op het begin vergeleken.
+
+Het formaat komt uit de inhoud, niet uit de bestandsnaam: een MT940 heet bij
+de ene bank `.sta` en bij de andere `.txt`. Er is een test die precies dat
+bewijst, en een test die aantoont dat hetzelfde afschrift in beide formaten
+dezelfde transacties oplevert.
+
+Bedragen zijn ondertekend: **negatief is eraf, positief is erbij**. Zo hoeft
+er nergens anders een debet/credit-vlaggetje meegesleept te worden.
+
+### Een kapotte regel breekt de import niet af
+
+Een afschrift van 200 regels is onbruikbaar als één rare regel het hele
+bestand tegenhoudt. Een regel die niet te lezen is wordt daarom overgeslagen
+met een reden erbij, en de rest wordt gewoon verwerkt. Is er helemaal niets
+te lezen, dan gaat het bestand als geheel naar review — bijvoorbeeld als
+iemand per ongeluk een e-mail uploadt.
+
+### Twee keer inlezen voegt niets toe
+
+Elke transactie krijgt een vingerafdruk: datum, bedrag, tegenrekening,
+tegenpartij, omschrijving, kenmerk en de referentie van de bank, samen
+gehasht. Die is uniek per administratie. Hetzelfde afschrift twee keer
+inlezen levert dus dezelfde vingerafdrukken op en voegt niets toe — en omdat
+het op de inhoud van de transactie gaat en niet op de bestandsnaam, geldt dat
+ook voor twee afschriften die elkaar overlappen, en zelfs voor hetzelfde
+afschrift in het andere formaat.
+
+### Afletteren: van streng naar los
+
+`afletteren.py` zoekt in deze volgorde, en stopt bij de eerste die past:
+
+| Wat er wordt gevonden | Uitkomst |
+|---|---|
+| factuurnummer in de omschrijving **én** bedrag klopt exact | voorstel, **hoge** zekerheid |
+| bedrag klopt exact **én** de tegenpartij lijkt op de leverancier | voorstel, **lage** zekerheid |
+| het lijkt een deelbetaling of verzamelbetaling | **geen** voorstel, wel uitleg |
+| niets gevonden | blijft open staan |
+
+Bij het zoeken naar een factuurnummer worden leestekens weggelaten, dus
+`EF-2026-0101`, `EF 2026 0101` en `ef20260101` zijn hetzelfde nummer. Een
+nummer korter dan vier tekens wordt niet opgezocht: "7" komt in bijna elke
+omschrijving voor, en dan koppel je de verkeerde factuur.
+
+Namen vergelijken gebeurt na het weglaten van rechtsvormen en leestekens, dus
+"KPN B.V." en "KPN" zijn dezelfde partij. Daarna telt een naam als gelijk
+wanneer alle woorden van de kortste in de langste voorkomen, of wanneer de
+namen als geheel genoeg op elkaar lijken. Dat laatste vangt "Bakkerij
+Korenaar" tegenover "Bakkerij de Korenaar" op.
+
+**De richting moet kloppen.** Geld eraf hoort bij een inkoopfactuur, geld
+erbij bij een verkoopfactuur. Of een factuur inkoop of verkoop is, staat niet
+in de factuur maar in haar boeking: staat er crediteuren in, dan is het
+inkoop. Ook de keuzelijst "zelf koppelen" toont daarom alleen facturen die
+qua richting kunnen — een keuze aanbieden die daarna wordt geweigerd is geen
+keuze.
+
+### Deelbetalingen en verzamelbetalingen worden nooit geraden
+
+Drie gevallen leveren met opzet **geen** voorstel op, alleen een uitleg:
+
+- er staan meerdere factuurnummers in de omschrijving (en er staat bij of ze
+  samen precies het bedrag zijn);
+- er is minder betaald dan de factuur — een termijn;
+- het bedrag is precies het totaal van meerdere openstaande facturen van
+  dezelfde partij.
+
+In alle drie de gevallen weet het systeem niet hoe het bedrag verdeeld moet
+worden, en gokken zou de verkeerde factuur op betaald zetten.
+
+### Bevestigen is boeken
+
+Een voorstel is nooit definitief. Pas als de eigenaar bevestigt (of zelf een
+factuur kiest) ontstaat de boeking, via dezelfde grootboekfuncties als module
+6 — met balanscontrole en audit trail:
+
+```
+betaling van een inkoopfactuur     ontvangst op een verkoopfactuur
+1600  Crediteuren   484,00 debet   1100  Bankrekening  2904,00 debet
+1100  Bankrekening        484,00   1300  Debiteuren          2904,00
+                          credit                             credit
+```
+
+Een factuur hangt aan hoogstens één transactie en een transactie aan
+hoogstens één factuur; een tweede poging wordt geweigerd met de reden erbij.
+
+### Testmateriaal
+
+`tests/genereer_banktestbestanden.py` maakt vier bestanden in
+`tests/testfacturen/bank/`: hetzelfde afschrift als MT940 en als CAMT.053,
+een MT940 met één onleesbare regel, en een bestand dat helemaal geen afschrift
+is. De bedragen sluiten aan op de UBL-testfacturen, zodat het afletteren op
+echt materiaal getest wordt.
+
 ## Testmateriaal: synthetische facturen
 
 Voor module 3 (AI-extractie) is materiaal nodig om op te oefenen. Het script
@@ -795,7 +908,7 @@ de stack blijft Python, SQLite, Pydantic en pytest.
 
 ### `tests/` — de bewijslast
 
-378 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
+442 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
 onzin-tekst, ontbrekende velden, verkeerde btw-percentages, ambigue
 bedragen, toekomst- en te oude datums, duplicaten, de audit trail bij
 aanmaken en wijzigen, en voor module 2: een PDF zonder tekstlaag, een
