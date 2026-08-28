@@ -242,3 +242,17 @@ zoekrondes.
 | Bij De Broers | Twente (Almelo e.o.) | Eigenaren Rob en Jack, gestart 2024, eigen site bijdebroers.nl | 2026-08-28 |
 | Eylin Multidiensten | Almere | KvK 91631556, sinds 2023, glazenwasser | 2026-08-28 |
 | Aircovoordeliger | Zwolle | Eenmanszaak, KvK 87035030, geen telefoon, website of reviews vindbaar | 2026-08-28 |
+
+Lane C, 28-08: negen groeifase-kandidaten met kloppend KvK-profiel in
+Limburgse dak-, schilder- en verhuistrades — geen enkele met een vindbaar
+e-mailadres, wel telefoon/WhatsApp of een contactformulier. Dit patroon kwam
+in Limburg vandaag opvallend vaker voor dan in Brabant of Zeeland.
+
+| Bedrijf | Plaats | Wat er wel is | Datum gecheckt |
+|---|---|---|---|
+| Mitch Dakwerken | Maastricht | KvK 85996211, opgericht 01-04-2022, eigen domein mitchdakwerken.nl, telefoon 06-48096805 | 2026-08-28 |
+| AC Dak & Bouwservice | Maastricht | KvK 83003924, opgericht 07-06-2021, eigen domein acdakenbouwservice.nl, telefoon/WhatsApp 06-38456389 | 2026-08-28 |
+| RK schilderwerken & afbouwbedrijf | Sittard | KvK 82712808, opgericht 14-05-2021, adres Dr. Nolenslaan 34 | 2026-08-28 |
+| Luctrans | Hunsel | KvK 82865906, opgericht 04-06-2021, verhuisbedrijf, adres Nuienplein 1 | 2026-08-28 |
+| S.Sangen Schilderwerken | Maastricht | KvK 85741612, adres Peter Huyssenslaan 63, telefoon 06-31992070. LET OP lookalike: J.S. Sangen Schilder- en Spuitwerken (KvK 14075487) is een andere, oudere zaak met wél een e-mail | 2026-08-28 |
+| In The Picture by Wesley (Wesley Kole) | Terneuzen | KvK 76306011, opgericht 14-11-2019 (net buiten groeifaseprofiel), eigen domein terneuzeninthepicture.nl, actieve Instagram/Facebook, zelfstandig uitgegeven fotoboek — geen e-mailadres op site of platforms | 2026-08-28 |
