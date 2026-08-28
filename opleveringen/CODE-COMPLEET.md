@@ -8416,6 +8416,29 @@ TE_VAAK = (
     "Te veel mislukte pogingen. Wacht een kwartier en probeer het opnieuw."
 )
 
+# Wat er op het inlogscherm kan komen te staan. In het adres staat alleen
+# een code (/inloggen?fout=te_vaak), nooit de zin zelf. Twee redenen:
+# een melding in het adres komt in serverlogs en in de geschiedenis van de
+# browser terecht, en vrije tekst uit een adres die op de pagina belandt is
+# de klassieke manier om er javascript in te krijgen. Met een vaste map
+# hangt dat niet af van één ontsnappingsinstelling in de sjablonen: er ís
+# geen tekst uit het adres die getoond kan worden.
+MELDINGEN: dict[str, tuple[str, str]] = {
+    "inloggegevens": ("fout", INLOG_MISLUKT),
+    "te_vaak": ("fout", TE_VAAK),
+    "uitgelogd": ("melding", "Je bent uitgelogd."),
+}
+
+# Een code die we niet kennen (verzonnen, verouderd, of geknoei in het
+# adres) toont deze. Nooit de ruwe waarde.
+STANDAARDMELDING = "inloggegevens"
+
+# Van de reden die probeer_inloggen teruggeeft naar de code in het adres.
+CODE_BIJ_REDEN = {
+    INLOG_MISLUKT: "inloggegevens",
+    TE_VAAK: "te_vaak",
+}
+
 
 class Gebruiker(BaseModel):
     """Wie er is ingelogd. Bevat nooit het wachtwoord of de hash."""
@@ -8822,7 +8845,13 @@ from ..database import (
     trek_sessie_in,
     zet_gebruiker,
 )
-from ..gebruikers import csrf_token, gelijk
+from ..gebruikers import (
+    CODE_BIJ_REDEN,
+    MELDINGEN,
+    STANDAARDMELDING,
+    csrf_token,
+    gelijk,
+)
 from ..rekeningschema import rekeningschema_voor_jaar
 from ..ubl import te_groot
 from ..verwerking import verwerk_upload
@@ -8892,6 +8921,21 @@ ADMINISTRATIE_IN_PAD = re.compile(r"^/administratie/(\d+)(?:/|$)")
 
 COOKIE = "sessie"
 COOKIE_CSRF = "aanmeldteken"
+
+
+def veilig_terug(pad: Optional[str]) -> str:
+    """Waar mag je na het inloggen heen? Alleen naar een pagina hier.
+
+    `terug` komt uit het adres en gaat na het inloggen in een redirect.
+    Zou daar een heel ander adres in mogen staan, dan is een link naar
+    /inloggen?terug=https://nep.example genoeg om iemand na een geslaagde
+    login op een nagemaakte site te laten belanden. Dus: het moet met één
+    schuine streep beginnen (een pad hier), en niet met twee (dat is een
+    adres op een andere site).
+    """
+    if not pad or not pad.startswith("/") or pad.startswith("//"):
+        return "/"
+    return pad
 
 
 class NaarInloggen(HTTPException):
@@ -9077,12 +9121,14 @@ def maak_app(
     # --- inloggen en uitloggen -------------------------------------------
 
     @app.get("/inloggen", response_class=HTMLResponse)
-    def inlogscherm(request: Request, terug: str = "/", melding: str = ""):
-        # Een teken in een cookie, hetzelfde teken in het formulier: zo kan
-        # een andere website dit formulier niet namens jou versturen.
+    def inlogscherm(request: Request, terug: str = "/", fout: str = ""):
+        # In het adres staat alleen een code; het sjabloon zoekt de zin er
+        # zelf bij in MELDINGEN. Wat hier binnenkomt wordt dus nooit
+        # getoond, hoe het er ook uitziet.
         teken = csrf_token()
         antwoord = toon(
-            request, "inloggen.html", csrf=teken, terug=terug, melding=melding,
+            request, "inloggen.html", csrf=teken, terug=veilig_terug(terug),
+            fout=fout, meldingen=MELDINGEN, standaardmelding=STANDAARDMELDING,
             gebruiker=None,
         )
         antwoord.set_cookie(
@@ -9106,11 +9152,10 @@ def maak_app(
             conn.close()
 
         if token is None:
-            return RedirectResponse(
-                f"/inloggen?melding={redenen[0]}", status_code=303
-            )
+            code = CODE_BIJ_REDEN.get(redenen[0], STANDAARDMELDING)
+            return RedirectResponse(f"/inloggen?fout={code}", status_code=303)
 
-        antwoord = RedirectResponse(terug or "/", status_code=303)
+        antwoord = RedirectResponse(veilig_terug(terug), status_code=303)
         # httponly: javascript komt er niet bij. samesite=lax: een andere
         # site krijgt de cookie niet mee bij een POST. secure hoort erbij
         # zodra dit achter https draait; lokaal op http zou de cookie dan
@@ -9130,8 +9175,7 @@ def maak_app(
                 trek_sessie_in(conn, token)
             finally:
                 conn.close()
-        antwoord = RedirectResponse("/inloggen?melding=Je bent uitgelogd.",
-                                    status_code=303)
+        antwoord = RedirectResponse("/inloggen?fout=uitgelogd", status_code=303)
         antwoord.delete_cookie(COOKIE, path="/")
         return antwoord
 
@@ -11478,7 +11522,13 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
 {% block kop %}Inloggen{% endblock %}
 {% block inhoud %}
 
-{% if melding %}<div class="waarschuwing">{{ melding }}</div>{% endif %}
+{# In het adres staat alleen een code. De zin komt uit deze vaste map;
+   een code die er niet in staat geeft de standaardmelding. De waarde uit
+   het adres komt dus nooit op de pagina terecht. #}
+{% if fout %}
+  {% set soort, zin = meldingen.get(fout) or meldingen[standaardmelding] %}
+  <div class="{{ 'waarschuwing' if soort == 'fout' else 'melding' }}">{{ zin }}</div>
+{% endif %}
 
 <form class="kaart" method="post" action="/inloggen">
   <input type="hidden" name="csrf" value="{{ csrf }}">
@@ -21230,7 +21280,7 @@ gebruikt.
 
 import time
 from datetime import timedelta
-from urllib.parse import unquote
+from urllib.parse import quote, unquote
 from pathlib import Path
 
 import pytest
@@ -21254,6 +21304,7 @@ from boekhouding import (
 )
 from boekhouding.gebruikers import (
     INLOG_MISLUKT,
+    MELDINGEN,
     MAX_PER_ACCOUNT,
     MAX_PER_IP,
     TE_VAAK,
@@ -21794,12 +21845,135 @@ def test_de_rem_werkt_ook_via_het_scherm(opzet):
 
     for _ in range(MAX_PER_ACCOUNT):
         antwoord = inlogpoging(vreemde, "eigenaar@test.nl", "verkeerd-1234")
-        assert INLOG_MISLUKT in unquote(antwoord.headers["location"])
+        assert antwoord.headers["location"] == "/inloggen?fout=inloggegevens"
+        assert INLOG_MISLUKT in vreemde.get("/inloggen?fout=inloggegevens").text
 
     # Nu ook met het goede wachtwoord niet meer.
     antwoord = inlogpoging(vreemde, "eigenaar@test.nl", TESTWACHTWOORD)
     assert "sessie" not in vreemde.cookies
-    assert TE_VAAK in unquote(antwoord.headers["location"])
+    assert antwoord.headers["location"] == "/inloggen?fout=te_vaak"
+    assert TE_VAAK in vreemde.get("/inloggen?fout=te_vaak").text
+
+
+# --- meldingen op het inlogscherm ---------------------------------------
+
+def test_de_melding_staat_als_code_in_het_adres(opzet):
+    """Geen zinnen in het adres: die belanden in logs en geschiedenis."""
+    app, _db, _eigenaar, _klant = opzet
+    vreemde = TestClient(app)
+
+    antwoord = inlogpoging(vreemde, "eigenaar@test.nl", "verkeerd-1234")
+    assert antwoord.headers["location"] == "/inloggen?fout=inloggegevens"
+
+    # De zin zelf komt pas op de pagina, niet in het adres.
+    pagina = vreemde.get("/inloggen?fout=inloggegevens").text
+    assert INLOG_MISLUKT in pagina
+
+
+def test_html_in_het_adres_komt_nooit_als_html_op_de_pagina(opzet):
+    app, _db, _eigenaar, _klant = opzet
+    vreemde = TestClient(app)
+
+    kwaad = "<script>alert(1)</script>"
+    pagina = vreemde.get(f"/inloggen?fout={quote(kwaad)}").text
+
+    # Niet als html, en ook niet ontsnapt: de waarde uit het adres wordt
+    # helemaal niet getoond. Alleen de standaardzin staat er.
+    assert "<script>" not in pagina
+    assert "alert(1)" not in pagina
+    assert "&lt;script&gt;" not in pagina
+    assert INLOG_MISLUKT in pagina
+
+
+def test_ook_zonder_de_ontsnappingsinstelling_blijft_het_veilig():
+    """De hele reden voor een code in plaats van vrije tekst.
+
+    Jinja ontsnapt html standaard, maar dat is één instelling die ooit
+    per ongeluk uit kan staan. Hier wordt het sjabloon met opzet zonder
+    ontsnapping gerenderd: er hoort dan nog steeds niets uit het adres op
+    de pagina te staan, want de zin komt uit de vaste map.
+    """
+    from jinja2 import Environment, FileSystemLoader
+
+    from boekhouding.web import app as webapp
+    from boekhouding.gebruikers import STANDAARDMELDING
+
+    omgeving = Environment(
+        loader=FileSystemLoader(
+            str(Path(webapp.__file__).parent / "templates")
+        ),
+        autoescape=False,
+    )
+    pagina = omgeving.get_template("inloggen.html").render(
+        csrf="x", terug="/", fout="<script>alert(1)</script>",
+        meldingen=MELDINGEN, standaardmelding=STANDAARDMELDING,
+        gebruiker=None,
+    )
+    assert "<script>alert(1)</script>" not in pagina
+    assert "alert(1)" not in pagina
+    assert INLOG_MISLUKT in pagina
+
+
+def test_een_onbekende_code_geeft_de_standaardzin(opzet):
+    app, _db, _eigenaar, _klant = opzet
+    vreemde = TestClient(app)
+
+    pagina = vreemde.get("/inloggen?fout=iets_wat_niet_bestaat").text
+    assert INLOG_MISLUKT in pagina
+    assert "iets_wat_niet_bestaat" not in pagina
+
+
+def test_zonder_code_staat_er_geen_melding(opzet):
+    app, _db, _eigenaar, _klant = opzet
+    pagina = TestClient(app).get("/inloggen").text
+    assert INLOG_MISLUKT not in pagina
+    assert 'class="waarschuwing"' not in pagina  # de css-regel telt niet mee
+
+
+def test_uitloggen_geeft_een_nette_melding_geen_waarschuwing(opzet):
+    _app, _db, eigenaar, _klant = opzet
+    antwoord = eigenaar.post("/uitloggen", follow_redirects=False)
+    assert antwoord.headers["location"] == "/inloggen?fout=uitgelogd"
+
+    pagina = eigenaar.get("/inloggen?fout=uitgelogd").text
+    assert "Je bent uitgelogd." in pagina
+    assert 'class="melding"' in pagina  # groen, geen rode waarschuwing
+
+
+def test_elke_code_in_de_map_geeft_een_zin(opzet):
+    """Nooit een code die op het scherm als lege regel eindigt."""
+    app, _db, _eigenaar, _klant = opzet
+    vreemde = TestClient(app)
+    for code, (_soort, zin) in MELDINGEN.items():
+        assert zin in vreemde.get(f"/inloggen?fout={code}").text, code
+
+
+def test_na_inloggen_ga_je_niet_naar_een_andere_website(opzet):
+    """`terug` komt uit het adres en gaat in een redirect: alleen hier."""
+    app, _db, _eigenaar, _klant = opzet
+
+    for elders in ("https://nep.example/inloggen", "//nep.example/",
+                   "javascript:alert(1)", ""):
+        vreemde = TestClient(app)
+        teken = vreemde.get("/inloggen").cookies["aanmeldteken"]
+        antwoord = vreemde.post(
+            "/inloggen",
+            data={"email": "eigenaar@test.nl", "wachtwoord": TESTWACHTWOORD,
+                  "csrf": teken, "terug": elders},
+            follow_redirects=False,
+        )
+        assert antwoord.headers["location"] == "/", elders
+
+    # Een pad hier blijft gewoon werken.
+    vreemde = TestClient(app)
+    teken = vreemde.get("/inloggen").cookies["aanmeldteken"]
+    antwoord = vreemde.post(
+        "/inloggen",
+        data={"email": "eigenaar@test.nl", "wachtwoord": TESTWACHTWOORD,
+              "csrf": teken, "terug": "/administratie/1/verkoop"},
+        follow_redirects=False,
+    )
+    assert antwoord.headers["location"] == "/administratie/1/verkoop"
 
 
 def test_na_inloggen_kom_je_op_de_pagina_die_je_wilde(opzet):

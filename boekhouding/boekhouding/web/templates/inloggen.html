@@ -3,7 +3,13 @@
 {% block kop %}Inloggen{% endblock %}
 {% block inhoud %}
 
-{% if melding %}<div class="waarschuwing">{{ melding }}</div>{% endif %}
+{# In het adres staat alleen een code. De zin komt uit deze vaste map;
+   een code die er niet in staat geeft de standaardmelding. De waarde uit
+   het adres komt dus nooit op de pagina terecht. #}
+{% if fout %}
+  {% set soort, zin = meldingen.get(fout) or meldingen[standaardmelding] %}
+  <div class="{{ 'waarschuwing' if soort == 'fout' else 'melding' }}">{{ zin }}</div>
+{% endif %}
 
 <form class="kaart" method="post" action="/inloggen">
   <input type="hidden" name="csrf" value="{{ csrf }}">

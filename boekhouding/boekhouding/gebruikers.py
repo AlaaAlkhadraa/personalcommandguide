@@ -53,6 +53,29 @@ TE_VAAK = (
     "Te veel mislukte pogingen. Wacht een kwartier en probeer het opnieuw."
 )
 
+# Wat er op het inlogscherm kan komen te staan. In het adres staat alleen
+# een code (/inloggen?fout=te_vaak), nooit de zin zelf. Twee redenen:
+# een melding in het adres komt in serverlogs en in de geschiedenis van de
+# browser terecht, en vrije tekst uit een adres die op de pagina belandt is
+# de klassieke manier om er javascript in te krijgen. Met een vaste map
+# hangt dat niet af van één ontsnappingsinstelling in de sjablonen: er ís
+# geen tekst uit het adres die getoond kan worden.
+MELDINGEN: dict[str, tuple[str, str]] = {
+    "inloggegevens": ("fout", INLOG_MISLUKT),
+    "te_vaak": ("fout", TE_VAAK),
+    "uitgelogd": ("melding", "Je bent uitgelogd."),
+}
+
+# Een code die we niet kennen (verzonnen, verouderd, of geknoei in het
+# adres) toont deze. Nooit de ruwe waarde.
+STANDAARDMELDING = "inloggegevens"
+
+# Van de reden die probeer_inloggen teruggeeft naar de code in het adres.
+CODE_BIJ_REDEN = {
+    INLOG_MISLUKT: "inloggegevens",
+    TE_VAAK: "te_vaak",
+}
+
 
 class Gebruiker(BaseModel):
     """Wie er is ingelogd. Bevat nooit het wachtwoord of de hash."""

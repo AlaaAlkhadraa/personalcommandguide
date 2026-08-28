@@ -64,7 +64,13 @@ from ..database import (
     trek_sessie_in,
     zet_gebruiker,
 )
-from ..gebruikers import csrf_token, gelijk
+from ..gebruikers import (
+    CODE_BIJ_REDEN,
+    MELDINGEN,
+    STANDAARDMELDING,
+    csrf_token,
+    gelijk,
+)
 from ..rekeningschema import rekeningschema_voor_jaar
 from ..ubl import te_groot
 from ..verwerking import verwerk_upload
@@ -134,6 +140,21 @@ ADMINISTRATIE_IN_PAD = re.compile(r"^/administratie/(\d+)(?:/|$)")
 
 COOKIE = "sessie"
 COOKIE_CSRF = "aanmeldteken"
+
+
+def veilig_terug(pad: Optional[str]) -> str:
+    """Waar mag je na het inloggen heen? Alleen naar een pagina hier.
+
+    `terug` komt uit het adres en gaat na het inloggen in een redirect.
+    Zou daar een heel ander adres in mogen staan, dan is een link naar
+    /inloggen?terug=https://nep.example genoeg om iemand na een geslaagde
+    login op een nagemaakte site te laten belanden. Dus: het moet met één
+    schuine streep beginnen (een pad hier), en niet met twee (dat is een
+    adres op een andere site).
+    """
+    if not pad or not pad.startswith("/") or pad.startswith("//"):
+        return "/"
+    return pad
 
 
 class NaarInloggen(HTTPException):
@@ -319,12 +340,14 @@ def maak_app(
     # --- inloggen en uitloggen -------------------------------------------
 
     @app.get("/inloggen", response_class=HTMLResponse)
-    def inlogscherm(request: Request, terug: str = "/", melding: str = ""):
-        # Een teken in een cookie, hetzelfde teken in het formulier: zo kan
-        # een andere website dit formulier niet namens jou versturen.
+    def inlogscherm(request: Request, terug: str = "/", fout: str = ""):
+        # In het adres staat alleen een code; het sjabloon zoekt de zin er
+        # zelf bij in MELDINGEN. Wat hier binnenkomt wordt dus nooit
+        # getoond, hoe het er ook uitziet.
         teken = csrf_token()
         antwoord = toon(
-            request, "inloggen.html", csrf=teken, terug=terug, melding=melding,
+            request, "inloggen.html", csrf=teken, terug=veilig_terug(terug),
+            fout=fout, meldingen=MELDINGEN, standaardmelding=STANDAARDMELDING,
             gebruiker=None,
         )
         antwoord.set_cookie(
@@ -348,11 +371,10 @@ def maak_app(
             conn.close()
 
         if token is None:
-            return RedirectResponse(
-                f"/inloggen?melding={redenen[0]}", status_code=303
-            )
+            code = CODE_BIJ_REDEN.get(redenen[0], STANDAARDMELDING)
+            return RedirectResponse(f"/inloggen?fout={code}", status_code=303)
 
-        antwoord = RedirectResponse(terug or "/", status_code=303)
+        antwoord = RedirectResponse(veilig_terug(terug), status_code=303)
         # httponly: javascript komt er niet bij. samesite=lax: een andere
         # site krijgt de cookie niet mee bij een POST. secure hoort erbij
         # zodra dit achter https draait; lokaal op http zou de cookie dan
@@ -372,8 +394,7 @@ def maak_app(
                 trek_sessie_in(conn, token)
             finally:
                 conn.close()
-        antwoord = RedirectResponse("/inloggen?melding=Je bent uitgelogd.",
-                                    status_code=303)
+        antwoord = RedirectResponse("/inloggen?fout=uitgelogd", status_code=303)
         antwoord.delete_cookie(COOKIE, path="/")
         return antwoord
 
