@@ -220,3 +220,16 @@ die deze dienst wél haalden (DS Storing & Installatie, 2Dental, Set Technyk)
 hadden alle drie een bevestigd `info@eigen-domein.nl`-adres in minstens twee
 onafhankelijke bronnen — dat bleek dit keer het onderscheidende verschil, niet
 de sector zelf.
+
+## Lane D, 28-08 (installateurs, Zuid-/Noord-Holland)
+
+Zelfde poort: groeifase op de KvK-datum, maar nergens een adres na drie
+zoekrondes.
+
+| Bedrijf | Plaats | Wat er wel is | Datum gecheckt |
+|---|---|---|---|
+| Sunbase solar systems | Gouda | Eenmanszaak, KvK 76856437, opgericht 09-01-2020. Geen telefoon, geen e-mailadres, geen eigen website gevonden | 2026-08-28 |
+| Zaanburg Koeltechniek | Zaandam | Sterkste profiel van de dag: KvK 84211903 (opgericht 21-10-2021), 4,9★/177 reviews Werkspot, 9,7 Trustoo, gedateerde review 18-06-2026. Alleen bereikbaar via Werkspot/Trustoo-leadformulieren, geen eigen domein of adres gevonden | 2026-08-28 |
+| Koelpartner | Haarlem | Eenmanszaak, KvK 82649847, opgericht 06-05-2021, eigen domein koelpartners.nl vermeld maar geen telefoon of e-mailadres vindbaar | 2026-08-28 |
+| RichComfort Airconditioning | Dordrecht | Eenmanszaak, KvK 78322618, opgericht 25-06-2020. Alleen gidsvermeldingen (airco-expres.nl e.d.), geen contactgegevens | 2026-08-28 |
+| Hejazi Airco | Gouda | Eenmanszaak, KvK 85339547, opgericht 10-02-2022. Geen telefoon, e-mailadres of website gevonden; nul reviews | 2026-08-28 |
