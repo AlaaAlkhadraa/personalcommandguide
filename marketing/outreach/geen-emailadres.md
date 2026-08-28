@@ -192,3 +192,31 @@ kunnen alle drie meteen geschreven worden.
 | Auto- en motorrijschool Erik Eisma | onbekend | Lane F 26-08. Beweerd adres `erik.lindacoaching@gmail.com` is van een coachingsbedrijf, niet van de rijschool. Eerst vaststellen | 2026-08-26 |
 | Motorrijschool Motori | Riel | Lane F 26-08. Alleen de standaardgok `info@motorrijschoolmotori.nl` op het eigen domein; geen onafhankelijke bevestiging mogelijk | 2026-08-26 |
 | Rijschool Rick | Schagen | Lane F 26-08. Alleen de standaardgok `info@rijschoolrick.nl`; heeft team- en tarievenpagina's, dus boekingssituatie eerst checken | 2026-08-26 |
+
+## Lane A, 28-08 (installateurs en schoonmaak/glazenwassers, Groningen/Friesland/Drenthe)
+
+Deze tien kwamen door de kwaliteitspoort — groeifase (KvK 2021-2023),
+aantoonbaar draaiend — maar publiceren nergens een adres. Per bedrijf drie
+zoekrondes: naam + plaats + "e-mail", naam + "gmail/hotmail/outlook", naam +
+eigenaarsnaam, plus gidsen (telefoonboek, drimble, oozo, mijnzzp, bottin).
+
+| Bedrijf | Plaats | Wat er wel is | Datum gecheckt |
+|---|---|---|---|
+| De Roos zonnepanelen en warmtepompen | Coevorden | KvK 91050855, opgericht 09-08-2023, 1 werknemer; alleen 06-29751043 | 2026-08-28 |
+| Rotgers Zonnepanelen | Winschoten | KvK 90325966, eenmanszaak; geen telefoon of e-mail vindbaar | 2026-08-28 |
+| G.E.M — Glasbewassing en meer | Hoogeveen | voorheen BBG Diensten (2018), hernoemd 2023, verhuisd naar Hoogeveen; eigen site glasbewassingenmeer.nl zonder zichtbaar e-mailadres | 2026-08-28 |
+| Kramer Airco Techniek | Hilaard | KvK-vermelding op airco-expres.nl, opgericht 06-01-2022; geen contactgegevens vindbaar | 2026-08-28 |
+| Van den Bos Bedrijfsdiensten | Gorredijk | KvK 88174824, glazenwasser sinds 2022; telefoonnummer afgeschermd in de gidsen | 2026-08-28 |
+| E. Land montage | Groningen-Stad | KvK 88064123, opgericht 03-11-2022, 1 werknemer | 2026-08-28 |
+| H.Pijl Dienstverlening | Moddergat/Niezijl | cv-ketelmonteur, gestart 25-04-2023, 1 werknemer, eenmanszaak | 2026-08-28 |
+| Effectief Klusbedrijf | Drachten | KvK 87434725, elektricien, eenmanszaak, gestart 29-08-2022 | 2026-08-28 |
+| Multiservice J. de Vries | Leeuwarden | eigen site multiservicejdevries.nl, alleen 06-24341474 | 2026-08-28 |
+| Installdrachten | Drachten-Azeven | Trustoo-score 9,1, elektricien; alleen via Trustoo-contactformulier | 2026-08-28 |
+
+Patroon van vandaag: bij verse eenmanszaken (2022-2023) in installatie- en
+glazenwassersbranche zit het adres bijna altijd achter een gok-domein of
+alleen op de KvK-registratie zelf, niet in de zoekresultaten. De drie kaarten
+die deze dienst wél haalden (DS Storing & Installatie, 2Dental, Set Technyk)
+hadden alle drie een bevestigd `info@eigen-domein.nl`-adres in minstens twee
+onafhankelijke bronnen — dat bleek dit keer het onderscheidende verschil, niet
+de sector zelf.
