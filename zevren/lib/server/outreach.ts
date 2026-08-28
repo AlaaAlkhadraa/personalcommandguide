@@ -55,10 +55,12 @@ const IG_RE = /instagram[^@\n]{0,60}@([a-z0-9._]{2,30})/i;
 const DIRECTORY_RE =
   /^(?:www\.)?(?:bottin|nicelocal|wheree|opendi|cylex|yelp|trustoo|telefoonboek|detelefoongids|goudengids|zoekbedrijf|kvk|maps\.google|google)\./i;
 // A meta value may wrap over several indented lines, so the value runs until
-// the next `- **key:**` or a blank line. `$` stays out of the lookahead: with
+// the next `- **key` or a blank line. `$` stays out of the lookahead: with
 // the /m flag it would match at the first line break and cut every wrapped
-// value off after one line.
-const META_RE = /^- \*\*(.+?):\*\*\s*([\s\S]+?)(?=\n- \*\*|\n\n|(?![\s\S]))/gm;
+// value off after one line. The separator between key and value drifts
+// between agent runs — `**Key:**` and `**Key** —` both appear in the wild —
+// so both are accepted rather than silently dropping a whole day's cards.
+const META_RE = /^- \*\*(.+?):?\*\*\s*(?:[—-]\s*)?([\s\S]+?)(?=\n- \*\*|\n\n|(?![\s\S]))/gm;
 const CODE_RE = /```\n([\s\S]*?)\n```/g;
 
 function squash(text: string): string {
