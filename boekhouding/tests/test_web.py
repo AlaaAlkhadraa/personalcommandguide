@@ -15,6 +15,7 @@ from boekhouding import (
     lees_audit_trail,
     lees_banktransacties,
     lees_facturen,
+    lees_verkoopfactuur,
     maak_verbinding,
 )
 from boekhouding.web import maak_app
@@ -904,5 +905,207 @@ def test_de_keuzelijst_toont_alleen_facturen_die_kunnen_kloppen(web, werkmap):
         f"/administratie/1/bank/{betaling['id']}/koppel"
     )[-1].split("</form>")[0]
 
-    assert 'value="1"' in formulier      # de inkoopfactuur mag
-    assert 'value="2"' not in formulier  # de verkoopfactuur niet
+    assert 'value="factuur:1"' in formulier      # de inkoopfactuur mag
+    assert 'value="factuur:2"' not in formulier  # de verkoopfactuur niet
+
+
+# --- verkoopfacturen (module 8) -----------------------------------------
+
+def zet_eigen_gegevens(web, administratie_id=1):
+    return web.post(
+        f"/administratie/{administratie_id}/instellingen",
+        data={
+            "naam": "Alkhadraa Advies", "adres": "Zonnebloemstraat 14",
+            "postcode": "3011 AB", "plaats": "Rotterdam",
+            "btw_id": "NL002233445B01", "kvk_nummer": "87654321",
+            "iban": "NL44RABO0123456789", "email": "post@alkhadraa.test",
+            "land": "Nederland",
+        },
+        follow_redirects=False,
+    )
+
+
+def voeg_klant_toe(web, naam="Van Dijk ICT-diensten", administratie_id=1):
+    return web.post(
+        f"/administratie/{administratie_id}/klanten",
+        data={
+            "naam": naam, "adres": "Keizersgracht 218", "postcode": "1016 DZ",
+            "plaats": "Amsterdam", "land": "Nederland", "kvk_nummer": "",
+            "btw_id": "", "email": "", "betalingstermijn": "30",
+        },
+        follow_redirects=False,
+    )
+
+
+def nieuw_concept(web, klant_id=1, datum="2026-07-14", administratie_id=1):
+    return web.post(
+        f"/administratie/{administratie_id}/verkoop",
+        data={"klant_id": str(klant_id), "factuurdatum": datum},
+        follow_redirects=False,
+    )
+
+
+def vul_regels(web, factuur_id=1, administratie_id=1):
+    return web.post(
+        f"/administratie/{administratie_id}/verkoop/{factuur_id}/opslaan",
+        data={
+            "factuurdatum": "2026-07-14",
+            "betalingstermijn": "30",
+            # Het formulier stuurt per veld een lijstje; de lege regel
+            # onderaan hoort te worden overgeslagen.
+            "omschrijving": ["Advies juli 2026", ""],
+            "aantal": ["7.5", ""],
+            "prijs_per_stuk": ["95.00", ""],
+            "btw_percentage": ["21", ""],
+        },
+        follow_redirects=False,
+    )
+
+
+def test_de_eigen_gegevens_zijn_in_te_vullen(web):
+    zet_eigen_gegevens(web)
+    pagina = web.get("/administratie/1/instellingen").text
+
+    assert "NL002233445B01" in pagina
+    assert "Zonnebloemstraat 14" in pagina
+
+
+def test_een_klant_toevoegen_en_terugzien(web):
+    voeg_klant_toe(web)
+    pagina = web.get("/administratie/1/klanten").text
+
+    assert "Van Dijk ICT-diensten" in pagina
+    assert "Keizersgracht 218" in pagina
+
+
+def test_een_klant_zonder_naam_wordt_geweigerd(web):
+    from urllib.parse import unquote
+
+    antwoord = web.post(
+        "/administratie/1/klanten", data={"naam": "  "}, follow_redirects=False
+    )
+    assert "zonder naam kan niet" in unquote(antwoord.headers["location"])
+
+
+def test_zonder_klant_kan_er_geen_factuur_gemaakt_worden(web):
+    pagina = web.get("/administratie/1/verkoop").text
+    assert "Voeg eerst een klant toe" in pagina
+
+
+def test_een_concept_maken_en_regels_invullen(web):
+    voeg_klant_toe(web)
+    antwoord = nieuw_concept(web)
+    assert antwoord.headers["location"] == "/administratie/1/verkoop/1"
+
+    vul_regels(web)
+    pagina = web.get("/administratie/1/verkoop/1").text
+    assert "Advies juli 2026" in pagina
+    assert "712.50" in pagina        # het uitgerekende regelbedrag
+    assert "862.13" in pagina        # totaal inclusief btw
+
+
+def test_lege_regels_worden_niet_opgeslagen(web, werkmap):
+    voeg_klant_toe(web)
+    nieuw_concept(web)
+    vul_regels(web)
+
+    conn = maak_verbinding(str(werkmap / "boekhouding.sqlite"))
+    factuur = lees_verkoopfactuur(conn, 1)
+    conn.close()
+    assert len(factuur["regels"]) == 1
+
+
+def test_definitief_maken_kan_niet_zonder_eigen_gegevens(web):
+    voeg_klant_toe(web)
+    nieuw_concept(web)
+    vul_regels(web)
+
+    pagina = web.get("/administratie/1/verkoop/1").text
+    assert "Dit ontbreekt nog" in pagina
+    assert "je btw-identificatienummer" in pagina
+    assert "disabled" in pagina.split("Definitief maken")[0][-200:]
+
+
+def test_definitief_maken_geeft_een_nummer_en_een_boeking(web, werkmap):
+    from urllib.parse import unquote
+
+    zet_eigen_gegevens(web)
+    voeg_klant_toe(web)
+    nieuw_concept(web)
+    vul_regels(web)
+
+    antwoord = web.post(
+        "/administratie/1/verkoop/1/definitief", follow_redirects=False
+    )
+    assert "2026-0001 is definitief en geboekt" in unquote(
+        antwoord.headers["location"]
+    )
+
+    conn = maak_verbinding(str(werkmap / "boekhouding.sqlite"))
+    factuur = lees_verkoopfactuur(conn, 1)
+    conn.close()
+    assert factuur["boeking_id"] is not None
+    assert factuur["document_id"] is not None
+
+
+def test_de_pdf_is_op_te_halen(web, werkmap):
+    zet_eigen_gegevens(web)
+    voeg_klant_toe(web)
+    nieuw_concept(web)
+    vul_regels(web)
+    web.post("/administratie/1/verkoop/1/definitief", follow_redirects=False)
+
+    conn = maak_verbinding(str(werkmap / "boekhouding.sqlite"))
+    document_id = lees_verkoopfactuur(conn, 1)["document_id"]
+    conn.close()
+
+    antwoord = web.get(f"/administratie/1/document/{document_id}")
+    assert antwoord.status_code == 200
+    assert antwoord.headers["content-type"] == "application/pdf"
+    assert antwoord.content.startswith(b"%PDF-")
+
+
+def test_een_definitieve_factuur_is_niet_meer_te_bewerken(web):
+    zet_eigen_gegevens(web)
+    voeg_klant_toe(web)
+    nieuw_concept(web)
+    vul_regels(web)
+    web.post("/administratie/1/verkoop/1/definitief", follow_redirects=False)
+
+    pagina = web.get("/administratie/1/verkoop/1").text
+    assert 'name="omschrijving"' not in pagina
+    assert "Concept weggooien" not in pagina
+    assert "Creditfactuur maken" in pagina
+
+
+def test_de_openstaande_post_staat_op_het_overzicht(web):
+    zet_eigen_gegevens(web)
+    voeg_klant_toe(web)
+    nieuw_concept(web)
+    vul_regels(web)
+    web.post("/administratie/1/verkoop/1/definitief", follow_redirects=False)
+
+    pagina = web.get("/administratie/1/verkoop").text
+    assert "Openstaand: 862.13" in pagina
+    assert "dagen over de vervaldatum" in pagina
+
+
+def test_een_factuur_van_een_ander_geeft_404(twee_administraties):
+    web = twee_administraties
+    web.post(
+        "/administratie/1/klanten", data={"naam": "Klant van A"},
+        follow_redirects=False,
+    )
+    web.post(
+        "/administratie/1/verkoop", data={"klant_id": "1",
+                                          "factuurdatum": "2026-07-14"},
+        follow_redirects=False,
+    )
+    assert web.get("/administratie/2/verkoop/1").status_code == 404
+    assert web.post(
+        "/administratie/2/verkoop/1/definitief", follow_redirects=False
+    ).status_code == 404
+    assert web.post(
+        "/administratie/2/klant/1", data={"plaats": "Utrecht"},
+        follow_redirects=False,
+    ).status_code == 404

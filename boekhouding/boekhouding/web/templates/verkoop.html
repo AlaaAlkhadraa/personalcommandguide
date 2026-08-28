@@ -1,0 +1,101 @@
+{% extends "basis.html" %}
+{% block titel %}Verkoopfacturen{% endblock %}
+{% block kruimel %}<a href="/administratie/{{ administratie_id }}">&larr; Terug naar de facturen</a>{% endblock %}
+{% block kop %}Verkoopfacturen{% endblock %}
+{% block inhoud %}
+
+{% if melding %}<div class="melding">{{ melding }}</div>{% endif %}
+
+<div class="telling">
+  <div>
+    <strong>{{ aantal_concept }}</strong>
+    <span>{% if aantal_concept == 1 %}concept{% else %}concepten{% endif %}</span>
+  </div>
+  <div>
+    <strong>{{ facturen|length - aantal_concept }}</strong>
+    <span>verstuurd en geboekt</span>
+  </div>
+  <div>
+    <strong>{{ klanten|length }}</strong>
+    <span>{% if klanten|length == 1 %}klant{% else %}klanten{% endif %}</span>
+  </div>
+</div>
+
+{% if posten %}
+  <div class="kaart">
+    <div class="ubl-groep">
+      <h3>Openstaand: {{ openstaand }}{% if te_laat %} · {{ te_laat }} te laat{% endif %}</h3>
+      {% for post in posten %}
+        <div class="ubl-rij {% if post.te_laat %}ontbreekt{% endif %}">
+          <div>
+            <div class="label">
+              <a href="/administratie/{{ administratie_id }}/verkoop/{{ post.id }}">
+                {{ post.factuurnummer }} · {{ post.klant_naam }}
+              </a>
+            </div>
+            <div class="herkomst" style="font-family:inherit">
+              {% if post.dagen_over is none %}vervaldatum onbekend
+              {% elif post.dagen_over > 0 %}{{ post.dagen_over }} dagen over de vervaldatum ({{ post.vervaldatum }})
+              {% elif post.dagen_over == 0 %}vervalt vandaag
+              {% else %}vervalt over {{ -post.dagen_over }} dagen ({{ post.vervaldatum }}){% endif %}
+            </div>
+          </div>
+          <div class="waarde">{{ post.bedrag_incl }}</div>
+        </div>
+      {% endfor %}
+    </div>
+    <p class="onder" style="color:var(--zacht);font-size:14px;margin-bottom:0">
+      Een factuur staat hier tot er een bijschrijving aan gekoppeld is. Dat
+      doe je op het <a href="/administratie/{{ administratie_id }}/bank">bankscherm</a>.
+    </p>
+  </div>
+{% endif %}
+
+<div class="knoppen" style="margin-bottom:16px">
+  <a class="knop tweede" href="/administratie/{{ administratie_id }}/klanten">Klanten</a>
+  <a class="knop tweede" href="/administratie/{{ administratie_id }}/instellingen">Eigen gegevens</a>
+</div>
+
+{% if klanten %}
+  <form class="kaart" method="post" action="/administratie/{{ administratie_id }}/verkoop">
+    <h3 style="margin:0 0 10px;font-size:17px">Nieuwe factuur</h3>
+    <div class="veld">
+      <label for="klant_id">Klant</label>
+      <select id="klant_id" name="klant_id">
+        {% for klant in klanten %}
+          <option value="{{ klant.id }}">{{ klant.naam }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="veld">
+      <label for="factuurdatum">Factuurdatum</label>
+      <input type="text" id="factuurdatum" name="factuurdatum" value="{{ vandaag }}">
+    </div>
+    <div class="knoppen"><button type="submit">Concept beginnen</button></div>
+  </form>
+{% else %}
+  <div class="waarschuwing">
+    Voeg eerst een klant toe; zonder klant kan er geen factuur gemaakt worden.
+  </div>
+{% endif %}
+
+{% for factuur in facturen %}
+  <a class="rij" href="/administratie/{{ administratie_id }}/verkoop/{{ factuur.id }}">
+    <div class="boven">
+      <span class="naam">{{ factuur.klant_naam or "Klant onbekend" }}</span>
+      {% if factuur.status == "concept" %}
+        <span class="merk wacht">Concept</span>
+      {% elif factuur.soort == "creditfactuur" %}
+        <span class="merk review">Creditfactuur {{ factuur.factuurnummer }}</span>
+      {% else %}
+        <span class="merk klaar">{{ factuur.factuurnummer }}</span>
+      {% endif %}
+    </div>
+    <div class="boven onder">
+      <span>{{ factuur.factuurdatum or "datum nog invullen" }}</span>
+      <span class="bedrag">{{ factuur.totalen.bedrag_incl }}</span>
+    </div>
+  </a>
+{% endfor %}
+
+{% endblock %}

@@ -8,6 +8,7 @@ over btw — dat zit allemaal in de modules eronder.
 
 import sqlite3
 from datetime import date
+from decimal import Decimal
 from pathlib import Path
 from typing import Any, Optional
 
@@ -25,10 +26,26 @@ from ..database import (
     importeer_bankafschrift,
     keur_factuur_goed,
     kies_rekening,
+    controleer_verkoopfactuur,
     koppel_transactie,
+    lees_administratie,
     lees_banktransactie,
     lees_banktransacties,
+    lees_klant,
+    lees_klanten,
+    lees_verkoopfactuur,
+    lees_verkoopfacturen,
+    maak_creditfactuur,
+    maak_definitief,
+    maak_klant,
+    maak_verkoopfactuur,
     open_facturen,
+    openstaande_posten,
+    verwijder_verkoopfactuur,
+    wijzig_administratie,
+    wijzig_klant,
+    wijzig_verkoopfactuur,
+    zet_verkoopregels,
     lees_document,
     lees_extractie_bij_document,
     lees_facturen,
@@ -38,6 +55,7 @@ from ..database import (
     maak_verbinding,
     wijzig_factuur,
 )
+from ..database import EIGEN_GEGEVENS, KLANT_VELDEN
 from ..rekeningschema import rekeningschema_voor_jaar
 from ..ubl import te_groot
 from ..verwerking import verwerk_upload
@@ -389,6 +407,289 @@ def maak_app(
             volgend=volgend,
         )
 
+    # --- eigen gegevens, klanten en verkoopfacturen -----------------------
+
+    @app.get(
+        "/administratie/{administratie_id}/instellingen",
+        response_class=HTMLResponse,
+    )
+    def instellingen(request: Request, administratie_id: int, melding: str = ""):
+        conn = verbinding()
+        try:
+            administratie_van(conn, administratie_id)
+            eigen = lees_administratie(conn, administratie_id)
+        finally:
+            conn.close()
+        return toon(
+            request, "instellingen.html",
+            administratie_id=administratie_id, eigen=eigen, melding=melding,
+            velden=("naam",) + EIGEN_GEGEVENS,
+        )
+
+    @app.post("/administratie/{administratie_id}/instellingen")
+    async def instellingen_opslaan(request: Request, administratie_id: int):
+        formulier = await request.form()
+        gegevens = {
+            veld: str(formulier[veld]).strip()
+            for veld in ("naam",) + EIGEN_GEGEVENS
+            if veld in formulier
+        }
+        conn = verbinding()
+        try:
+            administratie_van(conn, administratie_id)
+            wijzig_administratie(conn, administratie_id, gegevens)
+        finally:
+            conn.close()
+        return RedirectResponse(
+            f"/administratie/{administratie_id}/instellingen?melding=Opgeslagen",
+            status_code=303,
+        )
+
+    @app.get("/administratie/{administratie_id}/klanten", response_class=HTMLResponse)
+    def klanten(request: Request, administratie_id: int, melding: str = ""):
+        conn = verbinding()
+        try:
+            administratie_van(conn, administratie_id)
+            lijst = lees_klanten(conn, administratie_id)
+        finally:
+            conn.close()
+        return toon(
+            request, "klanten.html",
+            administratie_id=administratie_id, klanten=lijst,
+            velden=KLANT_VELDEN, melding=melding,
+        )
+
+    @app.post("/administratie/{administratie_id}/klanten")
+    async def klant_toevoegen(request: Request, administratie_id: int):
+        formulier = await request.form()
+        gegevens = {
+            veld: str(formulier.get(veld) or "").strip() for veld in KLANT_VELDEN
+        }
+        if not gegevens["naam"]:
+            return RedirectResponse(
+                f"/administratie/{administratie_id}/klanten"
+                f"?melding=Een klant zonder naam kan niet",
+                status_code=303,
+            )
+        conn = verbinding()
+        try:
+            administratie_van(conn, administratie_id)
+            maak_klant(conn, administratie_id, gegevens)
+        finally:
+            conn.close()
+        return RedirectResponse(
+            f"/administratie/{administratie_id}/klanten?melding=Klant toegevoegd",
+            status_code=303,
+        )
+
+    @app.post("/administratie/{administratie_id}/klant/{klant_id}")
+    async def klant_opslaan(request: Request, administratie_id: int, klant_id: int):
+        formulier = await request.form()
+        gegevens = {
+            veld: str(formulier[veld]).strip()
+            for veld in KLANT_VELDEN if veld in formulier
+        }
+        conn = verbinding()
+        try:
+            hoort_bij_administratie(
+                conn, lees_klant, klant_id, administratie_id, "klant"
+            )
+            wijzig_klant(conn, klant_id, gegevens)
+        finally:
+            conn.close()
+        return RedirectResponse(
+            f"/administratie/{administratie_id}/klanten?melding=Klant bijgewerkt",
+            status_code=303,
+        )
+
+    @app.get("/administratie/{administratie_id}/verkoop", response_class=HTMLResponse)
+    def verkoop(request: Request, administratie_id: int, melding: str = ""):
+        conn = verbinding()
+        try:
+            administratie = administratie_van(conn, administratie_id)
+            facturen = lees_verkoopfacturen(conn, administratie_id)
+            klanten_lijst = lees_klanten(conn, administratie_id)
+            posten = openstaande_posten(
+                conn, administratie_id, app.state.vandaag
+            )
+        finally:
+            conn.close()
+        return toon(
+            request, "verkoop.html",
+            administratie_id=administratie_id,
+            administratie_naam=administratie[1],
+            facturen=facturen, klanten=klanten_lijst, melding=melding,
+            posten=posten,
+            openstaand=sum((p["bedrag_incl"] for p in posten), Decimal("0.00")),
+            te_laat=sum(1 for p in posten if p["te_laat"]),
+            vandaag=str(app.state.vandaag or date.today()),
+            aantal_concept=sum(1 for f in facturen if f["status"] == "concept"),
+        )
+
+    @app.post("/administratie/{administratie_id}/verkoop")
+    async def verkoop_nieuw(request: Request, administratie_id: int):
+        formulier = await request.form()
+        klant = str(formulier.get("klant_id") or "").strip()
+        if not klant.isdigit():
+            return RedirectResponse(
+                f"/administratie/{administratie_id}/verkoop"
+                f"?melding=Kies eerst een klant",
+                status_code=303,
+            )
+        conn = verbinding()
+        try:
+            hoort_bij_administratie(
+                conn, lees_klant, int(klant), administratie_id, "klant"
+            )
+            factuur_id = maak_verkoopfactuur(
+                conn, administratie_id, int(klant),
+                str(formulier.get("factuurdatum") or "").strip() or None,
+            )
+        finally:
+            conn.close()
+        return RedirectResponse(
+            f"/administratie/{administratie_id}/verkoop/{factuur_id}",
+            status_code=303,
+        )
+
+    @app.get(
+        "/administratie/{administratie_id}/verkoop/{verkoopfactuur_id}",
+        response_class=HTMLResponse,
+    )
+    def verkoopfactuur(
+        request: Request, administratie_id: int, verkoopfactuur_id: int,
+        melding: str = "",
+    ):
+        conn = verbinding()
+        try:
+            factuur = hoort_bij_administratie(
+                conn, lees_verkoopfactuur, verkoopfactuur_id, administratie_id,
+                "verkoopfactuur",
+            )
+            klanten_lijst = lees_klanten(conn, administratie_id)
+            ontbreekt = (
+                controleer_verkoopfactuur(conn, verkoopfactuur_id)
+                if factuur["status"] == "concept" else []
+            )
+        finally:
+            conn.close()
+        return toon(
+            request, "verkoopfactuur.html",
+            administratie_id=administratie_id, factuur=factuur,
+            klanten=klanten_lijst, ontbreekt=ontbreekt, melding=melding,
+            # Drie lege regels erbij, zodat er altijd iets bij kan zonder
+            # dat er javascript aan te pas komt.
+            lege_regels=range(3),
+        )
+
+    @app.post("/administratie/{administratie_id}/verkoop/{verkoopfactuur_id}/opslaan")
+    async def verkoopfactuur_opslaan(
+        request: Request, administratie_id: int, verkoopfactuur_id: int
+    ):
+        formulier = await request.form()
+        conn = verbinding()
+        try:
+            hoort_bij_administratie(
+                conn, lees_verkoopfactuur, verkoopfactuur_id, administratie_id,
+                "verkoopfactuur",
+            )
+            kop = {
+                veld: str(formulier[veld]).strip()
+                for veld in ("factuurdatum", "betalingstermijn", "opmerking")
+                if veld in formulier
+            }
+            gelukt, redenen = wijzig_verkoopfactuur(conn, verkoopfactuur_id, kop)
+            if gelukt:
+                gelukt, redenen = zet_verkoopregels(
+                    conn, verkoopfactuur_id, _regels_uit_formulier(formulier)
+                )
+        finally:
+            conn.close()
+        melding = "Opgeslagen" if gelukt else redenen[0]
+        return RedirectResponse(
+            f"/administratie/{administratie_id}/verkoop/{verkoopfactuur_id}"
+            f"?melding={melding}",
+            status_code=303,
+        )
+
+    @app.post(
+        "/administratie/{administratie_id}/verkoop/{verkoopfactuur_id}/definitief"
+    )
+    def verkoopfactuur_definitief(
+        administratie_id: int, verkoopfactuur_id: int
+    ):
+        conn = verbinding()
+        try:
+            hoort_bij_administratie(
+                conn, lees_verkoopfactuur, verkoopfactuur_id, administratie_id,
+                "verkoopfactuur",
+            )
+            nummer, redenen = maak_definitief(
+                conn, verkoopfactuur_id, opslagmap=app.state.opslagmap
+            )
+        finally:
+            conn.close()
+        if nummer is None:
+            return RedirectResponse(
+                f"/administratie/{administratie_id}/verkoop/{verkoopfactuur_id}"
+                f"?melding={redenen[0]}",
+                status_code=303,
+            )
+        return RedirectResponse(
+            f"/administratie/{administratie_id}/verkoop/{verkoopfactuur_id}"
+            f"?melding=Factuur {nummer} is definitief en geboekt",
+            status_code=303,
+        )
+
+    @app.post(
+        "/administratie/{administratie_id}/verkoop/{verkoopfactuur_id}/verwijderen"
+    )
+    def verkoopfactuur_verwijderen(administratie_id: int, verkoopfactuur_id: int):
+        conn = verbinding()
+        try:
+            hoort_bij_administratie(
+                conn, lees_verkoopfactuur, verkoopfactuur_id, administratie_id,
+                "verkoopfactuur",
+            )
+            gelukt, redenen = verwijder_verkoopfactuur(conn, verkoopfactuur_id)
+        finally:
+            conn.close()
+        if not gelukt:
+            return RedirectResponse(
+                f"/administratie/{administratie_id}/verkoop/{verkoopfactuur_id}"
+                f"?melding={redenen[0]}",
+                status_code=303,
+            )
+        return RedirectResponse(
+            f"/administratie/{administratie_id}/verkoop?melding=Concept weggegooid",
+            status_code=303,
+        )
+
+    @app.post(
+        "/administratie/{administratie_id}/verkoop/{verkoopfactuur_id}/crediteren"
+    )
+    def verkoopfactuur_crediteren(administratie_id: int, verkoopfactuur_id: int):
+        conn = verbinding()
+        try:
+            hoort_bij_administratie(
+                conn, lees_verkoopfactuur, verkoopfactuur_id, administratie_id,
+                "verkoopfactuur",
+            )
+            nieuw_id, redenen = maak_creditfactuur(conn, verkoopfactuur_id)
+        finally:
+            conn.close()
+        if nieuw_id is None:
+            return RedirectResponse(
+                f"/administratie/{administratie_id}/verkoop/{verkoopfactuur_id}"
+                f"?melding={redenen[0]}",
+                status_code=303,
+            )
+        return RedirectResponse(
+            f"/administratie/{administratie_id}/verkoop/{nieuw_id}"
+            f"?melding=Creditfactuur klaargezet; controleer hem en maak hem definitief",
+            status_code=303,
+        )
+
     # --- bankafschriften en afletteren -----------------------------------
 
     @app.get("/administratie/{administratie_id}/bank", response_class=HTMLResponse)
@@ -476,8 +777,12 @@ def maak_app(
         request: Request, administratie_id: int, transactie_id: int
     ):
         formulier = await request.form()
-        gekozen = str(formulier.get("factuur_id") or "").strip()
-        if not gekozen.isdigit():
+        # De keuzelijst stuurt "soort:nummer", want één select kan maar
+        # één waarde versturen en we moeten weten of het een ontvangen of
+        # een eigen factuur is.
+        bron, _, gekozen = str(formulier.get("factuur_id") or "").strip().rpartition(":")
+        bron = bron or "factuur"
+        if not gekozen.isdigit() or bron not in ("factuur", "verkoopfactuur"):
             return RedirectResponse(
                 f"/administratie/{administratie_id}/bank"
                 f"?melding=Kies eerst een factuur om aan te koppelen",
@@ -494,10 +799,12 @@ def maak_app(
             # nummer in een verborgen veld is net zo goed te veranderen als
             # een nummer in de adresbalk.
             hoort_bij_administratie(
-                conn, lees_factuur, int(gekozen), administratie_id, "factuur"
+                conn,
+                lees_factuur if bron == "factuur" else lees_verkoopfactuur,
+                int(gekozen), administratie_id, bron,
             )
             boeking_id, redenen = koppel_transactie(
-                conn, transactie_id, int(gekozen)
+                conn, transactie_id, int(gekozen), bron=bron
             )
         finally:
             conn.close()
@@ -536,6 +843,36 @@ def maak_app(
         )
 
     return app
+
+
+def _regels_uit_formulier(formulier) -> list[dict[str, str]]:
+    """Haal de factuurregels uit het formulier.
+
+    Het formulier stuurt vier lijstjes van gelijke lengte (omschrijving,
+    aantal, prijs, btw). Een regel waarin niets is ingevuld wordt
+    overgeslagen, zodat de lege regels onderaan het scherm geen lege
+    regels op de factuur worden.
+    """
+    omschrijvingen = formulier.getlist("omschrijving")
+    aantallen = formulier.getlist("aantal")
+    prijzen = formulier.getlist("prijs_per_stuk")
+    percentages = formulier.getlist("btw_percentage")
+
+    regels = []
+    for nummer in range(len(omschrijvingen)):
+        gegeven = {
+            "omschrijving": str(omschrijvingen[nummer]).strip(),
+            "aantal": str(aantallen[nummer] if nummer < len(aantallen) else "").strip(),
+            "prijs_per_stuk": str(
+                prijzen[nummer] if nummer < len(prijzen) else ""
+            ).strip(),
+            "btw_percentage": str(
+                percentages[nummer] if nummer < len(percentages) else ""
+            ).strip(),
+        }
+        if any(gegeven[veld] for veld in ("omschrijving", "aantal", "prijs_per_stuk")):
+            regels.append(gegeven)
+    return regels
 
 
 def _kiesbare_rekeningen(factuur: dict) -> list[dict]:

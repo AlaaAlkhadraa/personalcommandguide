@@ -61,6 +61,9 @@ class Voorstel(BaseModel):
     soort: Literal["exact", "waarschijnlijk", "handmatig", "geen"]
     zekerheid: Optional[Literal["hoog", "laag"]] = None
     factuur_id: Optional[int] = None
+    # "factuur" (ontvangen) of "verkoopfactuur" (zelf verstuurd); het
+    # koppelen weet daarmee in welke tabel het moet kijken.
+    bron: str = "factuur"
     factuurnummer: Optional[str] = None
     leverancier: Optional[str] = None
     uitleg: str = ""
@@ -117,14 +120,34 @@ def _genoemd(tekst: str, factuur: dict[str, Any]) -> bool:
     return nummer in tekst
 
 
+def verwacht_negatief(factuur: dict[str, Any]) -> Optional[bool]:
+    """Hoort er bij deze factuur geld af of geld bij te komen?
+
+    Bij een inkoopfactuur betaal je: geld eraf. Bij een verkoopfactuur
+    ontvang je: geld erbij. Bij een creditnota is het precies andersom,
+    en dat is aan het teken van het factuurbedrag te zien.
+
+    None betekent: niet vast te stellen.
+    """
+    richting = factuur.get("richting")
+    if richting not in ("inkoop", "verkoop"):
+        return None
+    bedrag = _decimal(factuur.get("bedrag_incl"))
+    negatieve_factuur = bedrag is not None and bedrag < NUL
+    if richting == "inkoop":
+        return not negatieve_factuur
+    return negatieve_factuur
+
+
 def past_de_richting(
     bedrag: Decimal, factuur: dict[str, Any]
 ) -> Literal["past", "past_niet", "onbekend"]:
     """Past deze transactie qua richting bij deze factuur?
 
-    Geld eraf hoort bij een inkoopfactuur, geld erbij bij een verkoop.
-    De richting komt uit de boeking die bij de factuur hoort, niet uit
-    een gok: staat er crediteuren in, dan is het een inkoopfactuur.
+    Geld eraf hoort bij een inkoopfactuur, geld erbij bij een verkoop —
+    en bij een creditnota andersom. De richting komt uit de boeking die
+    bij de factuur hoort, niet uit een gok: staat er crediteuren in, dan
+    is het een inkoopfactuur.
 
     Drie uitkomsten, en "onbekend" is er met opzet een aparte van. Is er
     geen boeking of geen rekeningschema voor dat jaar, dan wéten we het
@@ -132,11 +155,10 @@ def past_de_richting(
     factuur blijft wel een kandidaat (misschien klopt het), maar het
     voorstel dat eruit komt krijgt nooit hoge zekerheid.
     """
-    richting = factuur.get("richting")
-    if richting not in ("inkoop", "verkoop"):
+    negatief = verwacht_negatief(factuur)
+    if negatief is None:
         return "onbekend"
-    past = (bedrag < NUL) if richting == "inkoop" else (bedrag > NUL)
-    return "past" if past else "past_niet"
+    return "past" if (bedrag < NUL) == negatief else "past_niet"
 
 
 def _bij_twijfel_verlagen(
@@ -209,6 +231,7 @@ def zoek_voorstel(
         factuurbedrag = abs(_decimal(factuur.get("bedrag_incl")) or NUL)
         gedeeld = {
             "factuur_id": factuur["id"],
+            "bron": factuur.get("bron") or "factuur",
             "factuurnummer": factuur.get("factuurnummer"),
             "leverancier": factuur.get("leverancier"),
         }
@@ -257,6 +280,7 @@ def zoek_voorstel(
             Voorstel(
                 soort="waarschijnlijk", zekerheid="laag",
                 factuur_id=factuur["id"],
+                bron=factuur.get("bron") or "factuur",
                 factuurnummer=factuur.get("factuurnummer"),
                 leverancier=factuur.get("leverancier"),
                 uitleg=(
@@ -356,15 +380,18 @@ def stel_betaling_samen(
         return weiger("deze transactie heeft geen boekdatum")
 
     richting = factuur.get("richting")
-    if richting not in ("inkoop", "verkoop"):
+    negatief = verwacht_negatief(factuur)
+    if negatief is None:
         return weiger(
             "van deze factuur is niet bekend of het inkoop of verkoop is; "
             "boek de factuur eerst"
         )
-    if (richting == "inkoop") != (bedrag < NUL):
+    if (bedrag < NUL) != negatief:
         return weiger(
-            f"de richting klopt niet: dit is een {'afschrijving' if bedrag < NUL else 'bijschrijving'} "
-            f"terwijl de factuur een {richting}factuur is"
+            f"de richting klopt niet: dit is een "
+            f"{'afschrijving' if bedrag < NUL else 'bijschrijving'} terwijl bij "
+            f"deze {richting}factuur geld "
+            f"{'eraf' if negatief else 'erbij'} hoort te komen"
         )
 
     if schema is None:

@@ -1,0 +1,44 @@
+{% extends "basis.html" %}
+{% block titel %}Klanten{% endblock %}
+{% block kruimel %}<a href="/administratie/{{ administratie_id }}">&larr; Terug naar de facturen</a>{% endblock %}
+{% block kop %}Klanten{% endblock %}
+{% block inhoud %}
+
+{% if melding %}<div class="melding">{{ melding }}</div>{% endif %}
+
+{% if not klanten %}
+  <p class="leeg">Nog geen klanten. Voeg er hieronder een toe.</p>
+{% endif %}
+
+{% for klant in klanten %}
+  <form class="kaart" method="post"
+        action="/administratie/{{ administratie_id }}/klant/{{ klant.id }}">
+    <h3 style="margin:0 0 10px;font-size:17px">{{ klant.naam }}</h3>
+    {% for veld in velden %}
+      <div class="veld">
+        <label for="{{ veld }}-{{ klant.id }}">{{ veld|replace("_", " ")|capitalize }}</label>
+        <input type="text" id="{{ veld }}-{{ klant.id }}" name="{{ veld }}"
+               value="{{ klant[veld] if klant[veld] is not none else "" }}"
+               {% if veld == "betalingstermijn" %}inputmode="numeric"{% endif %}>
+      </div>
+    {% endfor %}
+    <div class="knoppen">
+      <button type="submit" class="tweede">Bijwerken</button>
+    </div>
+  </form>
+{% endfor %}
+
+<form class="kaart" method="post" action="/administratie/{{ administratie_id }}/klanten">
+  <h3 style="margin:0 0 10px;font-size:17px">Nieuwe klant</h3>
+  {% for veld in velden %}
+    <div class="veld">
+      <label for="nieuw-{{ veld }}">{{ veld|replace("_", " ")|capitalize }}</label>
+      <input type="text" id="nieuw-{{ veld }}" name="{{ veld }}"
+             value="{% if veld == 'betalingstermijn' %}30{% elif veld == 'land' %}Nederland{% endif %}"
+             {% if veld == "betalingstermijn" %}inputmode="numeric"{% endif %}>
+    </div>
+  {% endfor %}
+  <div class="knoppen"><button type="submit">Klant toevoegen</button></div>
+</form>
+
+{% endblock %}

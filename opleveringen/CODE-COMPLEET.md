@@ -16,6 +16,7 @@ geboekt — elke fout leidt tot status `review_nodig` met een leesbare reden.
 - **Module 5** — webinterface, fase 1: de reviewschermen van de eigenaar
 - **Module 6** — grootboek (dubbel boekhouden) en de btw-aangifte per kwartaal
 - **Module 7** — bankafschriften importeren en afletteren tegen de facturen
+- **Module 8** — verkoopfacturen: klanten, factuur opstellen, PDF, openstaande posten
 
 ## Installeren en testen
 
@@ -889,6 +890,118 @@ een MT940 met één onleesbare regel, en een bestand dat helemaal geen afschrift
 is. De bedragen sluiten aan op de UBL-testfacturen, zodat het afletteren op
 echt materiaal getest wordt.
 
+## Module 8 — Verkoopfacturen
+
+Geen AI. Dit is invoer en rekenwerk: jij typt de regels, de code rekent uit en
+controleert of de factuur voldoet aan wat de Belastingdienst verplicht stelt.
+
+### Klanten en je eigen gegevens
+
+Per administratie een klantenlijst: naam, adres, KvK-nummer, btw-id, e-mail en
+een betalingstermijn (standaard 30 dagen). Je eigen bedrijfsgegevens staan bij
+de administratie zelf, want ze horen op elke factuur: naam, adres, btw-id, KvK
+en IBAN. Beide gaan langs de audit trail.
+
+### De bedragen komen uit de code
+
+Je vult per regel de omschrijving, het aantal, de prijs per stuk en het
+btw-tarief in. Het regelbedrag, de btw en de totalen worden berekend — daar is
+geen invoerveld voor. Zo kan er geen factuur de deur uit met een optelling die
+niet klopt.
+
+Twee keuzes die je terugziet in de cijfers:
+
+- **Afronden gaat bij een halve cent omhoog** (`ROUND_HALF_UP`), zoals op
+  papier. Python rondt standaard naar even, en dan klopt de factuur niet meer
+  met wat de klant zelf narekent.
+- **De btw wordt per tarief over het opgetelde bedrag berekend**, niet als som
+  van de afgeronde regelbedragen. Anders loopt er per regel een halve cent weg.
+
+### Een nummer pas bij het definitief maken
+
+Doorlopend per administratie per jaar: `2026-0001`, `2026-0002`, … Een concept
+heeft nog géén nummer, en dat is de hele reden: zou een concept al genummerd
+worden, dan ontstaat er een gat zodra je het weggooit — en juist naar gaten in
+de nummering wordt gekeken.
+
+### Wat er verplicht op moet
+
+Ontbreekt er iets, dan kan de factuur niet definitief worden en staat de lijst
+erbij: de factuurdatum, je eigen naam, adres en btw-identificatienummer, de
+naam en het adres van de klant, minstens één regel, en per regel een
+omschrijving, een aantal, een prijs en een geldig btw-tarief voor dat boekjaar.
+Het nummer en de bedragen komen van het systeem, dus die kunnen niet ontbreken.
+
+### Concept versus definitief
+
+| | Wijzigen | Weggooien | Nummer | Boeking |
+|---|---|---|---|---|
+| Concept | ja | ja | nee | nee |
+| Definitief | **nooit** | **nooit** | ja | ja |
+
+Definitief maken doet vier dingen tegelijk: het nummer toekennen, de klant- en
+eigen gegevens vastleggen zoals ze op dat moment zijn, de boeking maken, en de
+PDF genereren. Verhuist de klant later, dan verandert de verstuurde factuur
+niet mee — daar is een test voor.
+
+Een fout in een definitieve factuur zet je recht met een **creditfactuur**: die
+krijgt dezelfde regels met een negatief aantal en een verwijzing naar het
+origineel. Samen zijn ze per grootboekrekening nul.
+
+De boeking:
+
+```
+1300  Debiteuren                 943,72 debet
+8000  Omzet hoog tarief                  712,50 credit
+8010  Omzet laag tarief                   74,85 credit
+1510  Te betalen btw hoog                149,63 credit
+1511  Te betalen btw laag                  6,74 credit
+```
+
+Welke omzetrekening bij welk tarief hoort staat in het rekeningschema van dat
+boekjaar (`standaardrekeningen.omzet`), en is per regel te overrulen. Er wordt
+dus niets geraden.
+
+### De PDF
+
+`factuur_pdf.py` maakt de PDF met dezelfde schrijver als het testmateriaal —
+die is daarvoor van `tests/` naar het pakket verhuisd, zodat er één plek is
+waar de opmaak van een factuur wordt bepaald. Geen externe bibliotheek.
+
+De PDF gaat door de gewone documentopslag: onder de hash van de inhoud,
+alleen-lezen, nooit overschreven. Hij bevat geen tijdstempel, dus twee keer
+genereren geeft byte-voor-byte hetzelfde bestand en dus dezelfde hash.
+
+### De btw-aangifte — en een fout die dit blootlegde
+
+Verkoopfacturen tellen mee in rubriek 1a en 1b. Bij het nakijken daarvan kwam
+een echte fout boven water: de aangifte keek per boeking naar de btw-rekening
+en zette **alle** omzet van die boeking in één rubriek. Voor een inkoopfactuur
+klopte dat, want die heeft één tarief. Een verkoopfactuur kan er twee hebben —
+en dan belandde de hele omzet in 1a en viel de 9%-btw weg.
+
+De aangifte deelt de omzet nu in op de omzetrekening: 8000 hoort bij 21%, 8010
+bij 9%, en dat staat in het rekeningschema. Terugrekenen uit het btw-bedrag zou
+ook kunnen, maar dan gaat het bij de eerste afronding mis. Staat er omzet op
+een rekening die niet aan een tarief hangt terwijl er meerdere tarieven in de
+boeking zitten, dan wordt dat gemeld in plaats van ergens bij opgeteld.
+
+### Openstaande posten en afletteren
+
+Een definitieve verkoopfactuur staat open tot er een bijschrijving aan
+gekoppeld is. Het verkoopscherm toont het openstaande bedrag, per factuur
+hoeveel dagen die over de vervaldatum is, en telt hoeveel er te laat zijn.
+
+Het afletteren van module 7 kent nu twee soorten kandidaten: ontvangen facturen
+en eigen verkoopfacturen. Elke kandidaat draagt een `bron`, en de keuzelijst op
+het bankscherm laat alleen zien wat qua richting kan. Bevestigen boekt bank
+debet tegen debiteuren credit.
+
+Daarbij is de richtingcontrole scherper geworden: die kijkt nu naar het **teken
+van het factuurbedrag** in plaats van alleen naar inkoop of verkoop. Bij een
+creditfactuur gaat het geld namelijk de andere kant op, en dat werd eerder als
+"richting klopt niet" geweigerd.
+
 ## Testmateriaal: synthetische facturen
 
 Voor module 3 (AI-extractie) is materiaal nodig om op te oefenen. Het script
@@ -928,7 +1041,7 @@ de stack blijft Python, SQLite, Pydantic en pytest.
 
 ### `tests/` — de bewijslast
 
-450 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
+509 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
 onzin-tekst, ontbrekende velden, verkeerde btw-percentages, ambigue
 bedragen, toekomst- en te oude datums, duplicaten, de audit trail bij
 aanmaken en wijzigen, en voor module 2: een PDF zonder tekstlaag, een
@@ -1051,7 +1164,20 @@ from .afletteren import (
     namen_lijken_op_elkaar,
     past_de_richting,
     stel_betaling_samen,
+    verwacht_negatief,
     zoek_voorstel,
+)
+from .verkoop import (
+    STANDAARD_TERMIJN,
+    Regel,
+    Totalen,
+    afronden,
+    bereken_regel,
+    bereken_totalen,
+    controleer_verplicht,
+    stel_verkoopboeking_samen,
+    vervaldatum,
+    volgend_nummer,
 )
 from .routering import bestandssoort, routeer_document, zoek_ingebedde_efactuur
 from .omgeving import api_sleutel, sleutel_aanwezig
@@ -1082,6 +1208,22 @@ from .database import (
     lees_banktransactie,
     open_facturen,
     koppel_transactie,
+    lees_administratie,
+    wijzig_administratie,
+    maak_klant,
+    wijzig_klant,
+    lees_klant,
+    lees_klanten,
+    maak_verkoopfactuur,
+    wijzig_verkoopfactuur,
+    zet_verkoopregels,
+    verwijder_verkoopfactuur,
+    lees_verkoopfactuur,
+    lees_verkoopfacturen,
+    controleer_verkoopfactuur,
+    maak_definitief,
+    maak_creditfactuur,
+    openstaande_posten,
 )
 
 __all__ = [
@@ -1177,6 +1319,7 @@ __all__ = [
     "zoek_voorstel",
     "namen_lijken_op_elkaar",
     "past_de_richting",
+    "verwacht_negatief",
     "RICHTING_ONBEKEND",
     "stel_betaling_samen",
     "importeer_bankafschrift",
@@ -1184,6 +1327,32 @@ __all__ = [
     "lees_banktransactie",
     "open_facturen",
     "koppel_transactie",
+    "Regel",
+    "Totalen",
+    "afronden",
+    "bereken_regel",
+    "bereken_totalen",
+    "controleer_verplicht",
+    "vervaldatum",
+    "volgend_nummer",
+    "stel_verkoopboeking_samen",
+    "STANDAARD_TERMIJN",
+    "lees_administratie",
+    "wijzig_administratie",
+    "maak_klant",
+    "wijzig_klant",
+    "lees_klant",
+    "lees_klanten",
+    "maak_verkoopfactuur",
+    "wijzig_verkoopfactuur",
+    "zet_verkoopregels",
+    "verwijder_verkoopfactuur",
+    "lees_verkoopfactuur",
+    "lees_verkoopfacturen",
+    "controleer_verkoopfactuur",
+    "maak_definitief",
+    "maak_creditfactuur",
+    "openstaande_posten",
 ]
 ```
 
@@ -1535,6 +1704,19 @@ class Rekeningschema(BaseModel):
         waarde = self.standaardrekeningen.get(naam)
         return waarde if isinstance(waarde, str) else None
 
+    def omzet_voor(self, percentage: str) -> Optional[str]:
+        """Geef de omzetrekening bij dit btw-tarief, of None.
+
+        Staat het tarief niet in de config, dan is None het juiste
+        antwoord: dan wordt er geweigerd in plaats van op een
+        willekeurige omzetrekening geboekt.
+        """
+        tabel = self.standaardrekeningen.get("omzet")
+        if not isinstance(tabel, dict):
+            return None
+        waarde = tabel.get(percentage)
+        return waarde if isinstance(waarde, str) else None
+
     def btw_verschuldigd_voor(self, percentage: str) -> Optional[str]:
         """Geef de rekening voor af te dragen btw bij dit tarief, of None.
 
@@ -1778,6 +1960,198 @@ class DocumentResultaat(BaseModel):
     document_id: Optional[int] = None
     hash: Optional[str] = None
     opslagpad: Optional[str] = None
+```
+
+## `boekhouding/boekhouding/pdf_schrijver.py`
+
+```python
+"""Minimale PDF-schrijver voor factuurdocumenten.
+
+Wordt gebruikt voor twee dingen: de synthetische testfacturen in
+`tests/`, en de PDF van een echte verkoopfactuur (module 8). Eén
+schrijver voor allebei, zodat er maar één plek is waar de opmaak van een
+factuur wordt bepaald.
+
+Genoeg voor een echte factuurlay-out: tekst links en rechts uitgelijnd,
+in normaal of vet, plus horizontale lijnen. Geen afbeeldingen, geen
+meerdere pagina's, geen tijdstempel in het bestand — dat laatste zorgt
+ervoor dat twee keer genereren byte-voor-byte hetzelfde bestand geeft.
+
+Coördinaten gaan van linksboven, zoals je een factuur leest; intern
+wordt dat omgerekend naar het PDF-assenstelsel (linksonder).
+"""
+
+from pathlib import Path
+
+A4_BREEDTE = 595  # punten (72 dpi)
+A4_HOOGTE = 842
+
+# Tekenbreedtes van Helvetica in duizendsten van de lettergrootte.
+# Alleen nodig om bedragen netjes rechts uit te lijnen. Cijfers zijn in
+# Helvetica en Helvetica-Bold even breed (556), dus een vetgedrukt
+# totaal lijnt uit op dezelfde rechterkantlijn.
+_BREEDTES = {
+    " ": 278, "!": 278, '"': 355, "#": 556, "$": 556, "%": 889, "&": 667,
+    "'": 191, "(": 333, ")": 333, "*": 389, "+": 584, ",": 278, "-": 333,
+    ".": 278, "/": 278, ":": 278, ";": 278, "<": 584, "=": 584, ">": 584,
+    "?": 556, "@": 1015, "[": 278, "\\": 278, "]": 278, "^": 469, "_": 556,
+    "`": 333, "{": 334, "|": 260, "}": 334, "~": 584, "€": 556,
+    "A": 667, "B": 667, "C": 722, "D": 722, "E": 667, "F": 611, "G": 778,
+    "H": 722, "I": 278, "J": 500, "K": 667, "L": 556, "M": 833, "N": 722,
+    "O": 778, "P": 667, "Q": 778, "R": 722, "S": 667, "T": 611, "U": 722,
+    "V": 667, "W": 944, "X": 667, "Y": 667, "Z": 611,
+    "a": 556, "b": 556, "c": 500, "d": 556, "e": 556, "f": 278, "g": 556,
+    "h": 556, "i": 222, "j": 222, "k": 500, "l": 222, "m": 833, "n": 556,
+    "o": 556, "p": 556, "q": 556, "r": 333, "s": 500, "t": 278, "u": 556,
+    "v": 500, "w": 722, "x": 500, "y": 500, "z": 500,
+}
+_STANDAARDBREEDTE = 556
+
+
+def tekstbreedte(tekst: str, grootte: float) -> float:
+    """Breedte van een regel tekst in punten."""
+    duizendsten = sum(
+        _BREEDTES.get(teken, _STANDAARDBREEDTE)
+        if not teken.isdigit()
+        else 556
+        for teken in tekst
+    )
+    return duizendsten * grootte / 1000
+
+
+def _ontsnap(tekst: str) -> bytes:
+    """Zet tekst om naar de bytes die in een PDF-string mogen staan."""
+    ruw = tekst.replace("\\", r"\\").replace("(", r"\(").replace(")", r"\)")
+    # WinAnsiEncoding komt overeen met cp1252; onbekende tekens worden
+    # een vraagteken in plaats van een crash.
+    return ruw.encode("cp1252", errors="replace")
+
+
+class Pagina:
+    """Verzamelt de tekenopdrachten voor één pagina."""
+
+    def __init__(self, breedte: int = A4_BREEDTE, hoogte: int = A4_HOOGTE):
+        self.breedte = breedte
+        self.hoogte = hoogte
+        self._opdrachten: list[bytes] = []
+
+    def tekst(
+        self, x: float, y: float, tekst: str, grootte: float = 9, vet: bool = False
+    ) -> None:
+        """Zet tekst neer met de linkerkant op x, y punten vanaf linksboven."""
+        lettertype = b"/F2" if vet else b"/F1"
+        self._opdrachten.append(
+            b"BT " + lettertype + b" " + f"{grootte:g}".encode() + b" Tf "
+            + f"{x:g} {self.hoogte - y:g}".encode() + b" Td ("
+            + _ontsnap(tekst) + b") Tj ET"
+        )
+
+    def tekst_rechts(
+        self, x: float, y: float, tekst: str, grootte: float = 9, vet: bool = False
+    ) -> None:
+        """Zet tekst neer met de rechterkant op x — voor bedragen."""
+        self.tekst(x - tekstbreedte(tekst, grootte), y, tekst, grootte, vet)
+
+    def lijn(
+        self, x1: float, y1: float, x2: float, y2: float, dikte: float = 0.5,
+        grijs: float = 0.0,
+    ) -> None:
+        self._opdrachten.append(
+            f"{grijs:g} G {dikte:g} w {x1:g} {self.hoogte - y1:g} m "
+            f"{x2:g} {self.hoogte - y2:g} l S".encode()
+        )
+
+    def inhoudsstroom(self) -> bytes:
+        return b"\n".join(self._opdrachten)
+
+
+def _bouw_pdf(pagina: "Pagina", bijlage: tuple[str, bytes] | None) -> bytes:
+    """Zet de PDF-objecten in elkaar, eventueel met een ingebed bestand.
+
+    Een bijlage maakt hier een Factur-X/ZUGFeRD-achtige PDF van: dezelfde
+    factuur is dan zowel leesbaar voor een mens als machineleesbaar als
+    XML. De XML is dan de betrouwbaarste bron.
+    """
+    stroom = pagina.inhoudsstroom()
+    catalogus = b"<< /Type /Catalog /Pages 2 0 R"
+    if bijlage is not None:
+        catalogus += (
+            b" /Names << /EmbeddedFiles << /Names [(" + bijlage[0].encode()
+            + b") 7 0 R] >> >> /AF [7 0 R]"
+        )
+    catalogus += b" >>"
+
+    objecten = [
+        catalogus,
+        b"<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
+        b"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 "
+        + f"{pagina.breedte} {pagina.hoogte}".encode()
+        + b"] /Contents 4 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> >>",
+        b"<< /Length " + str(len(stroom)).encode() + b" >>\nstream\n"
+        + stroom + b"\nendstream",
+        b"<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica "
+        b"/Encoding /WinAnsiEncoding >>",
+        b"<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold "
+        b"/Encoding /WinAnsiEncoding >>",
+    ]
+
+    if bijlage is not None:
+        naam, gegevens = bijlage[0].encode(), bijlage[1]
+        objecten.append(
+            b"<< /Type /Filespec /F (" + naam + b") /UF (" + naam
+            + b") /AFRelationship /Data /Desc (Factuur als e-factuur)"
+            b" /EF << /F 8 0 R >> >>"
+        )
+        objecten.append(
+            b"<< /Type /EmbeddedFile /Subtype /text#2Fxml /Length "
+            + str(len(gegevens)).encode() + b" >>\nstream\n" + gegevens
+            + b"\nendstream"
+        )
+
+    uit = bytearray(b"%PDF-1.4\n")
+    posities = []
+    for nummer, obj in enumerate(objecten, start=1):
+        posities.append(len(uit))
+        uit += str(nummer).encode() + b" 0 obj\n" + obj + b"\nendobj\n"
+
+    start_xref = len(uit)
+    aantal = len(objecten) + 1
+    uit += b"xref\n0 " + str(aantal).encode() + b"\n0000000000 65535 f \n"
+    for positie in posities:
+        uit += f"{positie:010d} 00000 n \n".encode()
+    uit += (
+        b"trailer\n<< /Size " + str(aantal).encode() + b" /Root 1 0 R >>\n"
+        b"startxref\n" + str(start_xref).encode() + b"\n%%EOF\n"
+    )
+    return bytes(uit)
+
+
+def pdf_bytes(pagina: "Pagina") -> bytes:
+    """Geef de PDF als bytes, zonder hem naar schijf te schrijven.
+
+    Handig voor een factuur die eerst door de documentopslag gaat: die
+    berekent de hash over de inhoud en bepaalt zelf waar het bestand
+    komt te staan.
+    """
+    return _bouw_pdf(pagina, None)
+
+
+def schrijf_pdf(pagina: "Pagina", pad: str | Path) -> Path:
+    """Schrijf één pagina weg als PDF-bestand."""
+    pad = Path(pad)
+    pad.parent.mkdir(parents=True, exist_ok=True)
+    pad.write_bytes(_bouw_pdf(pagina, None))
+    return pad
+
+
+def schrijf_pdf_met_bijlage(
+    pagina: "Pagina", pad: str | Path, bijlage_naam: str, bijlage: bytes
+) -> Path:
+    """Schrijf een PDF met een ingebed bestand (Factur-X / ZUGFeRD)."""
+    pad = Path(pad)
+    pad.parent.mkdir(parents=True, exist_ok=True)
+    pad.write_bytes(_bouw_pdf(pagina, (bijlage_naam, bijlage)))
+    return pad
 ```
 
 ## `boekhouding/boekhouding/omgeving.py`
@@ -3293,6 +3667,7 @@ def maak_tabellen(conn: sqlite3.Connection) -> None:
 
     conn.commit()
     _bank_tabellen(conn)
+    _verkoop_tabellen(conn)
 
 
 def maak_administratie(
@@ -4169,6 +4544,7 @@ def _bank_tabellen(conn: sqlite3.Connection) -> None:
             status           TEXT NOT NULL DEFAULT 'open'
                              CHECK (status IN ('open', 'gekoppeld')),
             factuur_id       INTEGER REFERENCES facturen(id),
+            verkoopfactuur_id INTEGER REFERENCES verkoopfacturen(id),
             boeking_id       INTEGER REFERENCES boekingen(id),
             gekoppeld_op     TEXT,
             gekoppeld_door   TEXT,
@@ -4179,6 +4555,12 @@ def _bank_tabellen(conn: sqlite3.Connection) -> None:
         CREATE INDEX IF NOT EXISTS idx_banktransacties_status
             ON banktransacties (administratie_id, status, boekdatum);
         """
+    )
+    # Voor databases van vóór module 8: een bijschrijving kan ook bij een
+    # eigen verkoopfactuur horen.
+    _voeg_kolom_toe(
+        conn, "banktransacties", "verkoopfactuur_id",
+        "INTEGER REFERENCES verkoopfacturen(id)",
     )
     conn.commit()
 
@@ -4368,11 +4750,16 @@ def _richting_van_boeking(conn: sqlite3.Connection, factuur_id: int) -> Optional
 def open_facturen(
     conn: sqlite3.Connection, administratie_id: int
 ) -> list[dict[str, Any]]:
-    """De facturen die nog op een betaling wachten.
+    """Alles wat nog op een betaling wacht: inkoop én verkoop.
 
-    Alleen geboekte facturen doen mee: zolang een factuur niet in het
-    grootboek staat, is er ook geen schuld of vordering om af te
-    letteren. Facturen die al aan een transactie hangen vallen af.
+    Alleen geboekte facturen doen mee: zolang er niets in het grootboek
+    staat, is er ook geen schuld of vordering om af te letteren. Wat al
+    aan een banktransactie hangt valt af.
+
+    Elke regel heeft een `bron`: "factuur" voor een ontvangen factuur en
+    "verkoopfactuur" voor een eigen factuur. Daarmee weet het koppelen
+    later welke tabel het is; het afletteren zelf kijkt alleen naar
+    nummer, bedrag, naam en richting.
     """
     cursor = conn.execute(
         """
@@ -4394,8 +4781,80 @@ def open_facturen(
         factuur["review_redenen"] = json.loads(factuur["review_redenen"])
         factuur["originele_data"] = json.loads(factuur["originele_data"])
         factuur["richting"] = _richting_van_boeking(conn, factuur["id"])
+        factuur["bron"] = "factuur"
         facturen.append(factuur)
+
+    for verkoop in _openstaande_verkoopfacturen(conn, administratie_id):
+        facturen.append({
+            "id": verkoop["id"],
+            "bron": "verkoopfactuur",
+            "factuurnummer": verkoop["factuurnummer"],
+            # Voor het afletteren is de klant de tegenpartij; het veld
+            # heet leverancier omdat het afletteren niet hoeft te weten
+            # of het een klant of een leverancier is.
+            "leverancier": verkoop["klant_naam"],
+            "factuurdatum": verkoop["factuurdatum"],
+            "vervaldatum": verkoop["vervaldatum"],
+            "bedrag_incl": str(verkoop["totalen"].bedrag_incl),
+            "richting": "verkoop",
+        })
     return facturen
+
+
+def _openstaande_verkoopfacturen(
+    conn: sqlite3.Connection, administratie_id: int
+) -> list[dict[str, Any]]:
+    """De definitieve verkoopfacturen waar nog geen betaling bij hoort."""
+    cursor = conn.execute(
+        """
+        SELECT id FROM verkoopfacturen
+        WHERE administratie_id = ? AND status = 'definitief'
+          AND id NOT IN (
+              SELECT verkoopfactuur_id FROM banktransacties
+              WHERE administratie_id = ? AND verkoopfactuur_id IS NOT NULL
+          )
+        ORDER BY nummer_jaar, nummer_volg
+        """,
+        (administratie_id, administratie_id),
+    )
+    return [lees_verkoopfactuur(conn, rij[0]) for rij in cursor.fetchall()]
+
+
+def openstaande_posten(
+    conn: sqlite3.Connection,
+    administratie_id: int,
+    vandaag: Optional[date] = None,
+) -> list[dict[str, Any]]:
+    """Welke verkoopfacturen zijn nog niet betaald, en hoe lang al?
+
+    `dagen_over` is het aantal dagen na de vervaldatum; negatief betekent
+    dat de termijn nog loopt. Een factuur telt als betaald zodra er een
+    banktransactie aan hangt — dat gebeurt bij het afletteren van module
+    7, en dus pas als een mens de koppeling heeft bevestigd.
+    """
+    peildatum = vandaag or date.today()
+    posten = []
+    for factuur in _openstaande_verkoopfacturen(conn, administratie_id):
+        dagen_over = None
+        if factuur["vervaldatum"]:
+            try:
+                dagen_over = (
+                    peildatum - date.fromisoformat(factuur["vervaldatum"])
+                ).days
+            except ValueError:
+                dagen_over = None
+        posten.append({
+            "id": factuur["id"],
+            "factuurnummer": factuur["factuurnummer"],
+            "klant_naam": factuur["klant_naam"],
+            "factuurdatum": factuur["factuurdatum"],
+            "vervaldatum": factuur["vervaldatum"],
+            "bedrag_incl": factuur["totalen"].bedrag_incl,
+            "dagen_over": dagen_over,
+            "te_laat": dagen_over is not None and dagen_over > 0,
+        })
+    posten.sort(key=lambda post: (post["dagen_over"] is None, -(post["dagen_over"] or 0)))
+    return posten
 
 
 def koppel_transactie(
@@ -4403,27 +4862,52 @@ def koppel_transactie(
     transactie_id: int,
     factuur_id: int,
     door: str = "eigenaar",
+    bron: str = "factuur",
 ) -> tuple[Optional[int], list[str]]:
     """Koppel een banktransactie aan een factuur en boek de betaling.
+
+    `bron` zegt welke soort factuur het is: "factuur" voor een ontvangen
+    factuur, "verkoopfactuur" voor een eigen factuur. Beide kanten gaan
+    langs dezelfde controle en dezelfde boekingsfuncties.
 
     Dit gebeurt alleen op bevestiging van een mens: een voorstel uit het
     afletteren is nooit definitief. Geeft (boeking_id, redenen).
     """
     from .afletteren import stel_betaling_samen
 
+    if bron not in ("factuur", "verkoopfactuur"):
+        return None, [f"onbekende factuursoort '{bron}'"]
+
     transactie = lees_banktransactie(conn, transactie_id)
     if transactie["status"] != "open":
         return None, [
             f"deze transactie is al gekoppeld aan factuur "
-            f"{transactie['factuur_id']}"
+            f"{transactie['factuur_id'] or transactie['verkoopfactuur_id']}"
         ]
 
-    factuur = lees_factuur(conn, factuur_id)
+    kolom = "factuur_id" if bron == "factuur" else "verkoopfactuur_id"
+    if bron == "factuur":
+        factuur = lees_factuur(conn, factuur_id)
+        factuur["richting"] = _richting_van_boeking(conn, factuur_id)
+    else:
+        verkoop = lees_verkoopfactuur(conn, factuur_id)
+        if verkoop["status"] != "definitief":
+            return None, [
+                "een concept is nog geen factuur; maak hem eerst definitief"
+            ]
+        factuur = {
+            "id": verkoop["id"],
+            "factuurnummer": verkoop["factuurnummer"],
+            "administratie_id": verkoop["administratie_id"],
+            "bedrag_incl": str(verkoop["totalen"].bedrag_incl),
+            "richting": "verkoop",
+        }
+
     if factuur["administratie_id"] != transactie["administratie_id"]:
         return None, ["deze factuur hoort bij een andere administratie"]
 
     al_gekoppeld = conn.execute(
-        "SELECT id FROM banktransacties WHERE factuur_id = ? AND id != ?",
+        f"SELECT id FROM banktransacties WHERE {kolom} = ? AND id != ?",
         (factuur_id, transactie_id),
     ).fetchone()
     if al_gekoppeld is not None:
@@ -4432,7 +4916,6 @@ def koppel_transactie(
             f"{al_gekoppeld[0]}"
         ]
 
-    factuur["richting"] = _richting_van_boeking(conn, factuur_id)
     voorstel = stel_betaling_samen(transactie, factuur)
     boeking_id, redenen = sla_boeking_op(
         conn, transactie["administratie_id"], voorstel, door=door
@@ -4442,9 +4925,9 @@ def koppel_transactie(
 
     tijd = _nu()
     conn.execute(
-        """
+        f"""
         UPDATE banktransacties
-        SET status = 'gekoppeld', factuur_id = ?, boeking_id = ?,
+        SET status = 'gekoppeld', {kolom} = ?, boeking_id = ?,
             gekoppeld_op = ?, gekoppeld_door = ?
         WHERE id = ?
         """,
@@ -4455,12 +4938,696 @@ def koppel_transactie(
         INSERT INTO audit_log (
             administratie_id, tabel, record_id, actie,
             veld, oude_waarde, nieuwe_waarde, tijdstip
-        ) VALUES (?, 'banktransacties', ?, 'gewijzigd', 'factuur_id', NULL, ?, ?)
+        ) VALUES (?, 'banktransacties', ?, 'gewijzigd', ?, NULL, ?, ?)
         """,
-        (transactie["administratie_id"], transactie_id, str(factuur_id), tijd),
+        (transactie["administratie_id"], transactie_id, kolom,
+         str(factuur_id), tijd),
     )
     conn.commit()
     return boeking_id, []
+
+
+# --- klanten en verkoopfacturen (module 8) ------------------------------
+
+# De eigen bedrijfsgegevens. Ze horen op elke verkoopfactuur te staan,
+# dus ze staan bij de administratie en niet ergens in een configbestand.
+EIGEN_GEGEVENS = (
+    "adres", "postcode", "plaats", "land", "kvk_nummer", "btw_id",
+    "iban", "email",
+)
+
+KLANT_VELDEN = (
+    "naam", "adres", "postcode", "plaats", "land", "kvk_nummer",
+    "btw_id", "email", "betalingstermijn",
+)
+
+
+def _verkoop_tabellen(conn: sqlite3.Connection) -> None:
+    """De tabellen van module 8; aangeroepen vanuit maak_tabellen."""
+    for kolom in EIGEN_GEGEVENS:
+        _voeg_kolom_toe(conn, "administraties", kolom, "TEXT")
+
+    conn.executescript(
+        """
+        CREATE TABLE IF NOT EXISTS klanten (
+            id                INTEGER PRIMARY KEY,
+            administratie_id  INTEGER NOT NULL REFERENCES administraties(id),
+            naam              TEXT NOT NULL,
+            adres             TEXT,
+            postcode          TEXT,
+            plaats            TEXT,
+            land              TEXT NOT NULL DEFAULT 'Nederland',
+            kvk_nummer        TEXT,
+            btw_id            TEXT,
+            email             TEXT,
+            betalingstermijn  INTEGER NOT NULL DEFAULT 30,
+            aangemaakt_op     TEXT NOT NULL,
+            gewijzigd_op      TEXT NOT NULL
+        );
+
+        CREATE TABLE IF NOT EXISTS verkoopfacturen (
+            id                INTEGER PRIMARY KEY,
+            administratie_id  INTEGER NOT NULL REFERENCES administraties(id),
+            klant_id          INTEGER NOT NULL REFERENCES klanten(id),
+            status            TEXT NOT NULL DEFAULT 'concept'
+                              CHECK (status IN ('concept', 'definitief')),
+            soort             TEXT NOT NULL DEFAULT 'factuur'
+                              CHECK (soort IN ('factuur', 'creditfactuur')),
+            -- Blijft leeg zolang het een concept is: een nummer wordt pas
+            -- toegekend bij het definitief maken, anders ontstaat er een
+            -- gat zodra een concept wordt weggegooid.
+            factuurnummer     TEXT,
+            nummer_jaar       INTEGER,
+            nummer_volg       INTEGER,
+            factuurdatum      TEXT,
+            vervaldatum       TEXT,
+            betalingstermijn  INTEGER NOT NULL DEFAULT 30,
+            opmerking         TEXT,
+            corrigeert_id     INTEGER REFERENCES verkoopfacturen(id),
+            -- Wie de klant wás en wie jij wás op het moment van
+            -- definitief maken. Verhuist de klant later, dan verandert de
+            -- verstuurde factuur niet mee.
+            klant_gegevens    TEXT,
+            eigen_gegevens    TEXT,
+            boeking_id        INTEGER REFERENCES boekingen(id),
+            -- De PDF zoals hij de deur uit ging, in de gewone
+            -- documentopslag: onder zijn hash, alleen-lezen, 7 jaar.
+            document_id       INTEGER REFERENCES documenten(id),
+            definitief_op     TEXT,
+            definitief_door   TEXT,
+            aangemaakt_op     TEXT NOT NULL,
+            gewijzigd_op      TEXT NOT NULL,
+            UNIQUE (administratie_id, nummer_jaar, nummer_volg)
+        );
+
+        CREATE TABLE IF NOT EXISTS verkoopfactuurregels (
+            id                INTEGER PRIMARY KEY,
+            verkoopfactuur_id INTEGER NOT NULL REFERENCES verkoopfacturen(id),
+            administratie_id  INTEGER NOT NULL REFERENCES administraties(id),
+            volgnummer        INTEGER NOT NULL,
+            omschrijving      TEXT NOT NULL DEFAULT '',
+            -- Alle bedragen als tekst, nooit als float.
+            aantal            TEXT NOT NULL DEFAULT '0',
+            prijs_per_stuk    TEXT NOT NULL DEFAULT '0.00',
+            btw_percentage    TEXT NOT NULL DEFAULT '0',
+            rekening          TEXT,
+            bedrag_excl       TEXT NOT NULL DEFAULT '0.00',
+            btw_bedrag        TEXT NOT NULL DEFAULT '0.00'
+        );
+        """
+    )
+    _voeg_kolom_toe(
+        conn, "verkoopfacturen", "document_id", "INTEGER REFERENCES documenten(id)"
+    )
+    conn.commit()
+
+
+def lees_administratie(
+    conn: sqlite3.Connection, administratie_id: int
+) -> dict[str, Any]:
+    """Lees een administratie met de eigen bedrijfsgegevens erbij."""
+    cursor = conn.execute(
+        "SELECT * FROM administraties WHERE id = ?", (administratie_id,)
+    )
+    rij = cursor.fetchone()
+    if rij is None:
+        raise ValueError(f"administratie {administratie_id} bestaat niet")
+    kolommen = [k[0] for k in cursor.description]
+    return dict(zip(kolommen, rij))
+
+
+def wijzig_administratie(
+    conn: sqlite3.Connection, administratie_id: int, gegevens: dict[str, Any]
+) -> None:
+    """Werk de eigen bedrijfsgegevens bij, met audit trail."""
+    toegestaan = ("naam",) + EIGEN_GEGEVENS
+    onbekend = set(gegevens) - set(toegestaan)
+    if onbekend:
+        raise ValueError(f"onbekende velden: {', '.join(sorted(onbekend))}")
+
+    huidig = lees_administratie(conn, administratie_id)
+    tijd = _nu()
+    for veld, waarde in gegevens.items():
+        nieuw = _als_tekst(waarde)
+        if huidig.get(veld) == nieuw:
+            continue
+        conn.execute(
+            f"UPDATE administraties SET {veld} = ? WHERE id = ?",
+            (nieuw, administratie_id),
+        )
+        conn.execute(
+            """
+            INSERT INTO audit_log (
+                administratie_id, tabel, record_id, actie,
+                veld, oude_waarde, nieuwe_waarde, tijdstip
+            ) VALUES (?, 'administraties', ?, 'gewijzigd', ?, ?, ?, ?)
+            """,
+            (administratie_id, administratie_id, veld, huidig.get(veld), nieuw, tijd),
+        )
+    conn.commit()
+
+
+def maak_klant(
+    conn: sqlite3.Connection, administratie_id: int, gegevens: dict[str, Any]
+) -> int:
+    """Voeg een klant toe; geeft het id terug."""
+    from .verkoop import STANDAARD_TERMIJN
+
+    naam = str(gegevens.get("naam") or "").strip()
+    if not naam:
+        raise ValueError("een klant zonder naam bestaat niet")
+
+    tijd = _nu()
+    waarden = {veld: _als_tekst(gegevens.get(veld)) for veld in KLANT_VELDEN}
+    waarden["naam"] = naam
+    waarden["land"] = waarden["land"] or "Nederland"
+    waarden["betalingstermijn"] = (
+        waarden["betalingstermijn"] or str(STANDAARD_TERMIJN)
+    )
+    kolommen = ", ".join(KLANT_VELDEN)
+    vraagtekens = ", ".join("?" for _ in KLANT_VELDEN)
+    cursor = conn.execute(
+        f"INSERT INTO klanten (administratie_id, {kolommen}, "
+        f"aangemaakt_op, gewijzigd_op) VALUES (?, {vraagtekens}, ?, ?)",
+        (administratie_id, *[waarden[v] for v in KLANT_VELDEN], tijd, tijd),
+    )
+    klant_id = cursor.lastrowid
+    conn.execute(
+        """
+        INSERT INTO audit_log (
+            administratie_id, tabel, record_id, actie,
+            veld, oude_waarde, nieuwe_waarde, tijdstip
+        ) VALUES (?, 'klanten', ?, 'aangemaakt', NULL, NULL, ?, ?)
+        """,
+        (administratie_id, klant_id,
+         json.dumps(waarden, ensure_ascii=False), tijd),
+    )
+    conn.commit()
+    return klant_id
+
+
+def wijzig_klant(
+    conn: sqlite3.Connection, klant_id: int, gegevens: dict[str, Any]
+) -> None:
+    """Pas klantgegevens aan, met audit trail.
+
+    Dit raakt verstuurde facturen niet: die bewaren bij het definitief
+    maken een kopie van de klantgegevens zoals ze toen waren.
+    """
+    onbekend = set(gegevens) - set(KLANT_VELDEN)
+    if onbekend:
+        raise ValueError(f"onbekende klantvelden: {', '.join(sorted(onbekend))}")
+
+    huidig = lees_klant(conn, klant_id)
+    tijd = _nu()
+    for veld, waarde in gegevens.items():
+        nieuw = _als_tekst(waarde)
+        if str(huidig.get(veld) or "") == str(nieuw or ""):
+            continue
+        conn.execute(
+            f"UPDATE klanten SET {veld} = ?, gewijzigd_op = ? WHERE id = ?",
+            (nieuw, tijd, klant_id),
+        )
+        conn.execute(
+            """
+            INSERT INTO audit_log (
+                administratie_id, tabel, record_id, actie,
+                veld, oude_waarde, nieuwe_waarde, tijdstip
+            ) VALUES (?, 'klanten', ?, 'gewijzigd', ?, ?, ?, ?)
+            """,
+            (huidig["administratie_id"], klant_id, veld,
+             _als_tekst(huidig.get(veld)), nieuw, tijd),
+        )
+    conn.commit()
+
+
+def lees_klant(conn: sqlite3.Connection, klant_id: int) -> dict[str, Any]:
+    cursor = conn.execute("SELECT * FROM klanten WHERE id = ?", (klant_id,))
+    rij = cursor.fetchone()
+    if rij is None:
+        raise ValueError(f"klant {klant_id} bestaat niet")
+    kolommen = [k[0] for k in cursor.description]
+    return dict(zip(kolommen, rij))
+
+
+def lees_klanten(
+    conn: sqlite3.Connection, administratie_id: int
+) -> list[dict[str, Any]]:
+    cursor = conn.execute(
+        "SELECT * FROM klanten WHERE administratie_id = ? ORDER BY naam",
+        (administratie_id,),
+    )
+    kolommen = [k[0] for k in cursor.description]
+    return [dict(zip(kolommen, rij)) for rij in cursor.fetchall()]
+
+
+def maak_verkoopfactuur(
+    conn: sqlite3.Connection,
+    administratie_id: int,
+    klant_id: int,
+    factuurdatum: Optional[str] = None,
+) -> int:
+    """Begin een nieuw concept voor deze klant.
+
+    Er wordt hier bewust géén factuurnummer toegekend: dat gebeurt pas
+    bij het definitief maken, zodat een weggegooid concept geen gat in
+    de nummering achterlaat.
+    """
+    from .verkoop import STANDAARD_TERMIJN, vervaldatum
+
+    klant = lees_klant(conn, klant_id)
+    if klant["administratie_id"] != administratie_id:
+        raise ValueError("deze klant hoort bij een andere administratie")
+
+    termijn = int(klant["betalingstermijn"] or STANDAARD_TERMIJN)
+    verval = None
+    if factuurdatum:
+        try:
+            verval = str(vervaldatum(date.fromisoformat(factuurdatum), termijn))
+        except ValueError:
+            verval = None
+
+    tijd = _nu()
+    cursor = conn.execute(
+        """
+        INSERT INTO verkoopfacturen (
+            administratie_id, klant_id, status, soort, factuurdatum,
+            vervaldatum, betalingstermijn, aangemaakt_op, gewijzigd_op
+        ) VALUES (?, ?, 'concept', 'factuur', ?, ?, ?, ?, ?)
+        """,
+        (administratie_id, klant_id, factuurdatum, verval, termijn, tijd, tijd),
+    )
+    factuur_id = cursor.lastrowid
+    conn.execute(
+        """
+        INSERT INTO audit_log (
+            administratie_id, tabel, record_id, actie,
+            veld, oude_waarde, nieuwe_waarde, tijdstip
+        ) VALUES (?, 'verkoopfacturen', ?, 'aangemaakt', NULL, NULL, ?, ?)
+        """,
+        (administratie_id, factuur_id,
+         json.dumps({"klant_id": klant_id, "factuurdatum": factuurdatum},
+                    ensure_ascii=False), tijd),
+    )
+    conn.commit()
+    return factuur_id
+
+
+def _regels_van(
+    conn: sqlite3.Connection, verkoopfactuur_id: int
+) -> list[dict[str, Any]]:
+    cursor = conn.execute(
+        "SELECT * FROM verkoopfactuurregels WHERE verkoopfactuur_id = ? "
+        "ORDER BY volgnummer",
+        (verkoopfactuur_id,),
+    )
+    kolommen = [k[0] for k in cursor.description]
+    return [dict(zip(kolommen, rij)) for rij in cursor.fetchall()]
+
+
+def lees_verkoopfactuur(
+    conn: sqlite3.Connection, verkoopfactuur_id: int
+) -> dict[str, Any]:
+    """Lees een verkoopfactuur met haar regels en de uitgerekende totalen.
+
+    Bij een definitieve factuur komen de klant- en eigen gegevens uit de
+    kopie die bij het definitief maken is bewaard; bij een concept uit
+    de huidige gegevens, want die kunnen nog veranderen.
+    """
+    from .verkoop import bereken_regel, bereken_totalen
+
+    cursor = conn.execute(
+        "SELECT * FROM verkoopfacturen WHERE id = ?", (verkoopfactuur_id,)
+    )
+    rij = cursor.fetchone()
+    if rij is None:
+        raise ValueError(f"verkoopfactuur {verkoopfactuur_id} bestaat niet")
+    kolommen = [k[0] for k in cursor.description]
+    factuur = dict(zip(kolommen, rij))
+
+    factuur["regels"] = [
+        bereken_regel(regel, regel["volgnummer"])
+        for regel in _regels_van(conn, verkoopfactuur_id)
+    ]
+    factuur["totalen"] = bereken_totalen(factuur["regels"])
+
+    if factuur["status"] == "definitief":
+        factuur["klant"] = json.loads(factuur["klant_gegevens"] or "{}")
+        factuur["eigen"] = json.loads(factuur["eigen_gegevens"] or "{}")
+    else:
+        factuur["klant"] = lees_klant(conn, factuur["klant_id"])
+        factuur["eigen"] = lees_administratie(conn, factuur["administratie_id"])
+    factuur["klant_naam"] = factuur["klant"].get("naam")
+    return factuur
+
+
+def lees_verkoopfacturen(
+    conn: sqlite3.Connection, administratie_id: int
+) -> list[dict[str, Any]]:
+    """De verkoopfacturen, concepten bovenaan en daarna de nieuwste eerst."""
+    cursor = conn.execute(
+        """
+        SELECT id FROM verkoopfacturen
+        WHERE administratie_id = ?
+        ORDER BY CASE WHEN status = 'concept' THEN 0 ELSE 1 END,
+                 nummer_jaar DESC, nummer_volg DESC, id DESC
+        """,
+        (administratie_id,),
+    )
+    return [lees_verkoopfactuur(conn, rij[0]) for rij in cursor.fetchall()]
+
+
+def _alleen_concept(factuur: dict[str, Any]) -> Optional[str]:
+    if factuur["status"] != "concept":
+        return (
+            f"factuur {factuur['factuurnummer']} is definitief; een "
+            f"definitieve factuur wordt nooit gewijzigd of verwijderd. "
+            f"Maak een creditfactuur als er iets niet klopt"
+        )
+    return None
+
+
+def wijzig_verkoopfactuur(
+    conn: sqlite3.Connection, verkoopfactuur_id: int, gegevens: dict[str, Any]
+) -> tuple[bool, list[str]]:
+    """Pas een concept aan. Een definitieve factuur wordt geweigerd."""
+    from .verkoop import vervaldatum
+
+    toegestaan = ("klant_id", "factuurdatum", "betalingstermijn", "opmerking")
+    onbekend = set(gegevens) - set(toegestaan)
+    if onbekend:
+        raise ValueError(f"onbekende velden: {', '.join(sorted(onbekend))}")
+
+    factuur = lees_verkoopfactuur(conn, verkoopfactuur_id)
+    bezwaar = _alleen_concept(factuur)
+    if bezwaar:
+        return False, [bezwaar]
+
+    tijd = _nu()
+    for veld, waarde in gegevens.items():
+        nieuw = _als_tekst(waarde)
+        if str(factuur.get(veld) or "") == str(nieuw or ""):
+            continue
+        conn.execute(
+            f"UPDATE verkoopfacturen SET {veld} = ?, gewijzigd_op = ? WHERE id = ?",
+            (nieuw, tijd, verkoopfactuur_id),
+        )
+        conn.execute(
+            """
+            INSERT INTO audit_log (
+                administratie_id, tabel, record_id, actie,
+                veld, oude_waarde, nieuwe_waarde, tijdstip
+            ) VALUES (?, 'verkoopfacturen', ?, 'gewijzigd', ?, ?, ?, ?)
+            """,
+            (factuur["administratie_id"], verkoopfactuur_id, veld,
+             _als_tekst(factuur.get(veld)), nieuw, tijd),
+        )
+
+    # De vervaldatum volgt uit de factuurdatum en de termijn; die wordt
+    # dus nooit met de hand gezet.
+    ververst = lees_verkoopfactuur(conn, verkoopfactuur_id)
+    if ververst["factuurdatum"]:
+        try:
+            verval = str(vervaldatum(
+                date.fromisoformat(ververst["factuurdatum"]),
+                int(ververst["betalingstermijn"] or 30),
+            ))
+            conn.execute(
+                "UPDATE verkoopfacturen SET vervaldatum = ? WHERE id = ?",
+                (verval, verkoopfactuur_id),
+            )
+        except ValueError:
+            pass
+    conn.commit()
+    return True, []
+
+
+def zet_verkoopregels(
+    conn: sqlite3.Connection,
+    verkoopfactuur_id: int,
+    regels: list[dict[str, Any]],
+) -> tuple[bool, list[str]]:
+    """Vervang de regels van een concept door deze lijst.
+
+    De bedragen worden hier uitgerekend en niet overgenomen: wat de
+    aanroeper aan bedragen meestuurt wordt genegeerd (Gouden regel 2).
+    """
+    from .verkoop import bereken_regel
+
+    factuur = lees_verkoopfactuur(conn, verkoopfactuur_id)
+    bezwaar = _alleen_concept(factuur)
+    if bezwaar:
+        return False, [bezwaar]
+
+    tijd = _nu()
+    conn.execute(
+        "DELETE FROM verkoopfactuurregels WHERE verkoopfactuur_id = ?",
+        (verkoopfactuur_id,),
+    )
+    for volgnummer, gegeven in enumerate(regels, start=1):
+        regel = bereken_regel(gegeven, volgnummer)
+        conn.execute(
+            """
+            INSERT INTO verkoopfactuurregels (
+                verkoopfactuur_id, administratie_id, volgnummer, omschrijving,
+                aantal, prijs_per_stuk, btw_percentage, rekening,
+                bedrag_excl, btw_bedrag
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                verkoopfactuur_id, factuur["administratie_id"], volgnummer,
+                regel.omschrijving, str(regel.aantal), str(regel.prijs_per_stuk),
+                str(regel.btw_percentage), regel.rekening,
+                str(regel.bedrag_excl), str(regel.btw_bedrag),
+            ),
+        )
+    conn.execute(
+        """
+        INSERT INTO audit_log (
+            administratie_id, tabel, record_id, actie,
+            veld, oude_waarde, nieuwe_waarde, tijdstip
+        ) VALUES (?, 'verkoopfacturen', ?, 'gewijzigd', 'regels', ?, ?, ?)
+        """,
+        (
+            factuur["administratie_id"], verkoopfactuur_id,
+            json.dumps([r.model_dump(mode="json") for r in factuur["regels"]],
+                       ensure_ascii=False),
+            json.dumps(regels, ensure_ascii=False, default=str),
+            tijd,
+        ),
+    )
+    conn.commit()
+    return True, []
+
+
+def verwijder_verkoopfactuur(
+    conn: sqlite3.Connection, verkoopfactuur_id: int
+) -> tuple[bool, list[str]]:
+    """Gooi een concept weg. Een definitieve factuur blijft staan.
+
+    Er ontstaat geen gat in de nummering: een concept heeft nog geen
+    nummer.
+    """
+    factuur = lees_verkoopfactuur(conn, verkoopfactuur_id)
+    bezwaar = _alleen_concept(factuur)
+    if bezwaar:
+        return False, [bezwaar]
+
+    conn.execute(
+        "DELETE FROM verkoopfactuurregels WHERE verkoopfactuur_id = ?",
+        (verkoopfactuur_id,),
+    )
+    conn.execute("DELETE FROM verkoopfacturen WHERE id = ?", (verkoopfactuur_id,))
+    conn.execute(
+        """
+        INSERT INTO audit_log (
+            administratie_id, tabel, record_id, actie,
+            veld, oude_waarde, nieuwe_waarde, tijdstip
+        ) VALUES (?, 'verkoopfacturen', ?, 'gewijzigd', 'status', 'concept',
+                  'verwijderd', ?)
+        """,
+        (factuur["administratie_id"], verkoopfactuur_id, _nu()),
+    )
+    conn.commit()
+    return True, []
+
+
+def controleer_verkoopfactuur(
+    conn: sqlite3.Connection, verkoopfactuur_id: int
+) -> list[str]:
+    """Wat ontbreekt er nog voordat deze factuur definitief kan worden?"""
+    from .verkoop import controleer_verplicht
+
+    factuur = lees_verkoopfactuur(conn, verkoopfactuur_id)
+    return controleer_verplicht(
+        factuur, factuur["klant"], factuur["eigen"], factuur["regels"]
+    )
+
+
+def _bewaar_factuur_pdf(
+    conn: sqlite3.Connection, factuur: dict[str, Any], opslagmap: str
+) -> Optional[int]:
+    """Maak de PDF van deze factuur en zet hem in de documentopslag.
+
+    De PDF is deterministisch (geen tijdstempel erin), dus twee keer
+    genereren geeft hetzelfde bestand en dezelfde hash. Hij gaat door
+    dezelfde opslag als een ontvangen factuur: onder zijn hash,
+    alleen-lezen, en nooit overschreven.
+    """
+    from .factuur_pdf import maak_factuur_pdf
+
+    with tempfile.TemporaryDirectory() as tijdelijke_map:
+        tijdelijk = Path(tijdelijke_map) / "factuur.pdf"
+        tijdelijk.write_bytes(maak_factuur_pdf(factuur))
+        document = bewaar_document(
+            conn, factuur["administratie_id"], str(tijdelijk), opslagmap
+        )
+    return document.document_id
+
+
+def maak_definitief(
+    conn: sqlite3.Connection,
+    verkoopfactuur_id: int,
+    door: str = "eigenaar",
+    opslagmap: Optional[str] = None,
+) -> tuple[Optional[str], list[str]]:
+    """Ken een factuurnummer toe, bewaar de gegevens en boek de factuur.
+
+    Geeft (factuurnummer, redenen). Ontbreekt er een verplicht gegeven,
+    dan gebeurt er niets en staat de lijst met wat er mist in redenen.
+
+    Is er een opslagmap meegegeven, dan wordt de PDF gemaakt en bewaard
+    zoals hij de deur uit gaat.
+    """
+    from .verkoop import stel_verkoopboeking_samen, volgend_nummer
+
+    factuur = lees_verkoopfactuur(conn, verkoopfactuur_id)
+    if factuur["status"] == "definitief":
+        return None, [f"factuur {factuur['factuurnummer']} is al definitief"]
+
+    ontbreekt = controleer_verkoopfactuur(conn, verkoopfactuur_id)
+    if ontbreekt:
+        return None, ontbreekt
+
+    jaar = date.fromisoformat(factuur["factuurdatum"]).year
+    hoogste = conn.execute(
+        "SELECT max(nummer_volg) FROM verkoopfacturen "
+        "WHERE administratie_id = ? AND nummer_jaar = ?",
+        (factuur["administratie_id"], jaar),
+    ).fetchone()[0]
+    volgnummer, factuurnummer = volgend_nummer(jaar, hoogste)
+
+    tijd = _nu()
+    conn.execute(
+        """
+        UPDATE verkoopfacturen SET
+            status = 'definitief', factuurnummer = ?, nummer_jaar = ?,
+            nummer_volg = ?, klant_gegevens = ?, eigen_gegevens = ?,
+            definitief_op = ?, definitief_door = ?, gewijzigd_op = ?
+        WHERE id = ?
+        """,
+        (
+            factuurnummer, jaar, volgnummer,
+            json.dumps(factuur["klant"], ensure_ascii=False, default=str),
+            json.dumps(factuur["eigen"], ensure_ascii=False, default=str),
+            tijd, door, tijd, verkoopfactuur_id,
+        ),
+    )
+
+    voorstel = stel_verkoopboeking_samen(
+        {**factuur, "factuurnummer": factuurnummer}, factuur["regels"]
+    )
+    boeking_id, boekredenen = sla_boeking_op(
+        conn, factuur["administratie_id"], voorstel, door=door
+    )
+    if boeking_id is None:
+        # Zonder boeking geen definitieve factuur: anders staat er wel een
+        # nummer maar niets in het grootboek.
+        conn.rollback()
+        return None, boekredenen
+
+    conn.execute(
+        "UPDATE verkoopfacturen SET boeking_id = ? WHERE id = ?",
+        (boeking_id, verkoopfactuur_id),
+    )
+
+    if opslagmap is not None:
+        definitief = lees_verkoopfactuur(conn, verkoopfactuur_id)
+        if factuur.get("corrigeert_id"):
+            origineel = lees_verkoopfactuur(conn, factuur["corrigeert_id"])
+            definitief["corrigeert_nummer"] = origineel["factuurnummer"]
+        document_id = _bewaar_factuur_pdf(conn, definitief, opslagmap)
+        conn.execute(
+            "UPDATE verkoopfacturen SET document_id = ? WHERE id = ?",
+            (document_id, verkoopfactuur_id),
+        )
+    conn.execute(
+        """
+        INSERT INTO audit_log (
+            administratie_id, tabel, record_id, actie,
+            veld, oude_waarde, nieuwe_waarde, tijdstip
+        ) VALUES (?, 'verkoopfacturen', ?, 'gewijzigd', 'status', 'concept', ?, ?)
+        """,
+        (factuur["administratie_id"], verkoopfactuur_id,
+         f"definitief {factuurnummer}", tijd),
+    )
+    conn.commit()
+    return factuurnummer, []
+
+
+def maak_creditfactuur(
+    conn: sqlite3.Connection, verkoopfactuur_id: int
+) -> tuple[Optional[int], list[str]]:
+    """Maak een concept-creditfactuur bij een definitieve factuur.
+
+    Dezelfde regels met een negatief aantal, en een verwijzing naar het
+    origineel. Zo blijft de oorspronkelijke factuur staan zoals hij de
+    deur uit is gegaan, en heffen de twee elkaar op zodra de
+    creditfactuur definitief wordt.
+    """
+    factuur = lees_verkoopfactuur(conn, verkoopfactuur_id)
+    if factuur["status"] != "definitief":
+        return None, [
+            "een concept crediteer je niet; pas het aan of gooi het weg"
+        ]
+    if factuur["soort"] == "creditfactuur":
+        return None, ["een creditfactuur crediteer je niet nog een keer"]
+
+    bestaat = conn.execute(
+        "SELECT id FROM verkoopfacturen WHERE corrigeert_id = ?",
+        (verkoopfactuur_id,),
+    ).fetchone()
+    if bestaat is not None:
+        return None, [
+            f"factuur {factuur['factuurnummer']} is al gecrediteerd met "
+            f"factuur {bestaat[0]}"
+        ]
+
+    nieuw_id = maak_verkoopfactuur(
+        conn, factuur["administratie_id"], factuur["klant_id"],
+        factuur["factuurdatum"],
+    )
+    conn.execute(
+        "UPDATE verkoopfacturen SET soort = 'creditfactuur', corrigeert_id = ?, "
+        "opmerking = ? WHERE id = ?",
+        (
+            verkoopfactuur_id,
+            f"Creditering van factuur {factuur['factuurnummer']}",
+            nieuw_id,
+        ),
+    )
+    zet_verkoopregels(conn, nieuw_id, [
+        {
+            "omschrijving": regel.omschrijving,
+            "aantal": str(-regel.aantal),
+            "prijs_per_stuk": str(regel.prijs_per_stuk),
+            "btw_percentage": str(regel.btw_percentage),
+            "rekening": regel.rekening,
+        }
+        for regel in factuur["regels"]
+    ])
+    conn.commit()
+    return nieuw_id, []
 ```
 
 ## `boekhouding/boekhouding/grootboek.py`
@@ -4982,6 +6149,17 @@ def _tel_op(
     laag = schema.btw_verschuldigd_voor("9")
     voorbelasting = schema.standaard("btw_voorbelasting")
 
+    # Van omzetrekening naar btw-tarief. Een verkoopfactuur boekt de
+    # omzet per tarief op een eigen rekening, dus hiermee valt de
+    # grondslag ook uit elkaar te halen als er twee tarieven op één
+    # factuur staan. Terugrekenen uit het btw-bedrag zou dat ook kunnen,
+    # maar dan gaat het bij de eerste afronding mis.
+    tarief_van_rekening = {}
+    for tarief in ("21", "9"):
+        code = schema.omzet_voor(tarief)
+        if code is not None:
+            tarief_van_rekening[code] = tarief
+
     bedragen = {
         "1a_grondslag": NUL, "1a_btw": NUL,
         "1b_grondslag": NUL, "1b_btw": NUL,
@@ -4990,32 +6168,46 @@ def _tel_op(
     totaal_voorbelasting = NUL
 
     for boeking in boekingen:
-        btw_hoog = NUL
-        btw_laag = NUL
-        omzet = NUL
+        btw_per_tarief = {"21": NUL, "9": NUL}
+        omzet_per_rekening: dict[str, Decimal] = {}
         for regel in boeking["regels"]:
             debet, credit = _decimal(regel["debet"]), _decimal(regel["credit"])
             rekening = schema.zoek(regel["rekening"])
             if regel["rekening"] == hoog:
-                btw_hoog += credit - debet
+                btw_per_tarief["21"] += credit - debet
             elif regel["rekening"] == laag:
-                btw_laag += credit - debet
+                btw_per_tarief["9"] += credit - debet
             elif regel["rekening"] == voorbelasting:
                 totaal_voorbelasting += debet - credit
             elif rekening is not None and rekening.soort == "opbrengsten":
-                omzet += credit - debet
+                omzet_per_rekening[regel["rekening"]] = (
+                    omzet_per_rekening.get(regel["rekening"], NUL) + credit - debet
+                )
 
-        if btw_hoog != NUL:
-            bedragen["1a_btw"] += btw_hoog
-            bedragen["1a_grondslag"] += omzet
-        elif btw_laag != NUL:
-            bedragen["1b_btw"] += btw_laag
-            bedragen["1b_grondslag"] += omzet
-        elif omzet != NUL:
-            # Omzet zonder btw-regel: nultarief, vrijgesteld of verlegd.
-            # Daar horen eigen rubrieken bij (1e, 2a, 3a) en die zijn nog
-            # niet gebouwd; stilzwijgend weglaten mag niet.
-            bedragen["buiten_1a_1b"] += omzet
+        bedragen["1a_btw"] += btw_per_tarief["21"]
+        bedragen["1b_btw"] += btw_per_tarief["9"]
+
+        # Bij welk tarief hoort deze omzet? Eerst kijken naar de
+        # rekening; staat die niet in het schema als omzetrekening voor
+        # een tarief, dan mag hij bij het enige tarief van deze boeking —
+        # maar alleen als er ook echt één tarief is.
+        tarieven_in_boeking = [
+            tarief for tarief, bedrag in btw_per_tarief.items() if bedrag != NUL
+        ]
+        for code, omzet in omzet_per_rekening.items():
+            tarief = tarief_van_rekening.get(code)
+            if tarief is None and len(tarieven_in_boeking) == 1:
+                tarief = tarieven_in_boeking[0]
+            if tarief == "21":
+                bedragen["1a_grondslag"] += omzet
+            elif tarief == "9":
+                bedragen["1b_grondslag"] += omzet
+            else:
+                # Nultarief, vrijgesteld, verlegd — of omzet die op een
+                # rekening staat die niet aan een tarief hangt terwijl er
+                # meerdere tarieven in de boeking zitten. In beide
+                # gevallen: melden, nooit stilzwijgend ergens bij optellen.
+                bedragen["buiten_1a_1b"] += omzet
 
     return bedragen, totaal_voorbelasting
 
@@ -5991,6 +7183,9 @@ class Voorstel(BaseModel):
     soort: Literal["exact", "waarschijnlijk", "handmatig", "geen"]
     zekerheid: Optional[Literal["hoog", "laag"]] = None
     factuur_id: Optional[int] = None
+    # "factuur" (ontvangen) of "verkoopfactuur" (zelf verstuurd); het
+    # koppelen weet daarmee in welke tabel het moet kijken.
+    bron: str = "factuur"
     factuurnummer: Optional[str] = None
     leverancier: Optional[str] = None
     uitleg: str = ""
@@ -6047,14 +7242,34 @@ def _genoemd(tekst: str, factuur: dict[str, Any]) -> bool:
     return nummer in tekst
 
 
+def verwacht_negatief(factuur: dict[str, Any]) -> Optional[bool]:
+    """Hoort er bij deze factuur geld af of geld bij te komen?
+
+    Bij een inkoopfactuur betaal je: geld eraf. Bij een verkoopfactuur
+    ontvang je: geld erbij. Bij een creditnota is het precies andersom,
+    en dat is aan het teken van het factuurbedrag te zien.
+
+    None betekent: niet vast te stellen.
+    """
+    richting = factuur.get("richting")
+    if richting not in ("inkoop", "verkoop"):
+        return None
+    bedrag = _decimal(factuur.get("bedrag_incl"))
+    negatieve_factuur = bedrag is not None and bedrag < NUL
+    if richting == "inkoop":
+        return not negatieve_factuur
+    return negatieve_factuur
+
+
 def past_de_richting(
     bedrag: Decimal, factuur: dict[str, Any]
 ) -> Literal["past", "past_niet", "onbekend"]:
     """Past deze transactie qua richting bij deze factuur?
 
-    Geld eraf hoort bij een inkoopfactuur, geld erbij bij een verkoop.
-    De richting komt uit de boeking die bij de factuur hoort, niet uit
-    een gok: staat er crediteuren in, dan is het een inkoopfactuur.
+    Geld eraf hoort bij een inkoopfactuur, geld erbij bij een verkoop —
+    en bij een creditnota andersom. De richting komt uit de boeking die
+    bij de factuur hoort, niet uit een gok: staat er crediteuren in, dan
+    is het een inkoopfactuur.
 
     Drie uitkomsten, en "onbekend" is er met opzet een aparte van. Is er
     geen boeking of geen rekeningschema voor dat jaar, dan wéten we het
@@ -6062,11 +7277,10 @@ def past_de_richting(
     factuur blijft wel een kandidaat (misschien klopt het), maar het
     voorstel dat eruit komt krijgt nooit hoge zekerheid.
     """
-    richting = factuur.get("richting")
-    if richting not in ("inkoop", "verkoop"):
+    negatief = verwacht_negatief(factuur)
+    if negatief is None:
         return "onbekend"
-    past = (bedrag < NUL) if richting == "inkoop" else (bedrag > NUL)
-    return "past" if past else "past_niet"
+    return "past" if (bedrag < NUL) == negatief else "past_niet"
 
 
 def _bij_twijfel_verlagen(
@@ -6139,6 +7353,7 @@ def zoek_voorstel(
         factuurbedrag = abs(_decimal(factuur.get("bedrag_incl")) or NUL)
         gedeeld = {
             "factuur_id": factuur["id"],
+            "bron": factuur.get("bron") or "factuur",
             "factuurnummer": factuur.get("factuurnummer"),
             "leverancier": factuur.get("leverancier"),
         }
@@ -6187,6 +7402,7 @@ def zoek_voorstel(
             Voorstel(
                 soort="waarschijnlijk", zekerheid="laag",
                 factuur_id=factuur["id"],
+                bron=factuur.get("bron") or "factuur",
                 factuurnummer=factuur.get("factuurnummer"),
                 leverancier=factuur.get("leverancier"),
                 uitleg=(
@@ -6286,15 +7502,18 @@ def stel_betaling_samen(
         return weiger("deze transactie heeft geen boekdatum")
 
     richting = factuur.get("richting")
-    if richting not in ("inkoop", "verkoop"):
+    negatief = verwacht_negatief(factuur)
+    if negatief is None:
         return weiger(
             "van deze factuur is niet bekend of het inkoop of verkoop is; "
             "boek de factuur eerst"
         )
-    if (richting == "inkoop") != (bedrag < NUL):
+    if (bedrag < NUL) != negatief:
         return weiger(
-            f"de richting klopt niet: dit is een {'afschrijving' if bedrag < NUL else 'bijschrijving'} "
-            f"terwijl de factuur een {richting}factuur is"
+            f"de richting klopt niet: dit is een "
+            f"{'afschrijving' if bedrag < NUL else 'bijschrijving'} terwijl bij "
+            f"deze {richting}factuur geld "
+            f"{'eraf' if negatief else 'erbij'} hoort te komen"
         )
 
     if schema is None:
@@ -6353,6 +7572,531 @@ def stel_betaling_samen(
     )
 ```
 
+## `boekhouding/boekhouding/verkoop.py`
+
+```python
+"""Verkoopfacturen: zelf een factuur opstellen en definitief maken.
+
+Geen AI. Dit is invoer en rekenwerk: de eigenaar typt de regels, de code
+rekent uit en controleert of de factuur voldoet aan wat de
+Belastingdienst verplicht stelt.
+
+De regels die hier gelden:
+
+- **De bedragen worden nooit met de hand ingevoerd.** Je typt aantal en
+  prijs per stuk; het regelbedrag, de btw en de totalen komen uit de code
+  (Gouden regel 2). Zo kan er geen factuur de deur uit met een optelling
+  die niet klopt.
+- **Een nummer wordt pas toegekend bij het definitief maken.** Zou een
+  concept al een nummer krijgen, dan ontstaat er een gat zodra iemand dat
+  concept weggooit — en een gat in de nummering is precies waar de
+  Belastingdienst naar kijkt.
+- **Een definitieve factuur wordt nooit gewijzigd of verwijderd.** Een
+  fout gaat eruit met een creditfactuur die naar het origineel verwijst.
+  Een concept mag wél gewoon worden aangepast en weggegooid.
+- **Ontbreekt er een verplicht gegeven, dan wordt de factuur niet
+  definitief** — met de lijst erbij van wat er mist (Gouden regel 4).
+"""
+
+from datetime import date, timedelta
+from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
+from typing import Any, Literal, Optional
+
+from pydantic import BaseModel
+
+from .btw_config import btw_percentages_voor_jaar
+from .grootboek import Boekingsregel, BoekingVoorstel, controleer_balans
+from .rekeningschema import Rekeningschema, rekeningschema_voor_jaar
+
+NUL = Decimal("0.00")
+CENT = Decimal("0.01")
+
+# De standaard betalingstermijn van een nieuwe klant, in dagen.
+STANDAARD_TERMIJN = 30
+
+# Wat er op een verkoopfactuur moet staan volgens de Belastingdienst.
+# Deze lijst is de reden dat een factuur niet definitief kan worden als
+# er iets ontbreekt; de teksten komen op het scherm.
+EIGEN_VELDEN = {
+    "naam": "je eigen bedrijfsnaam",
+    "adres": "je eigen adres",
+    "plaats": "je eigen woonplaats",
+    "btw_id": "je btw-identificatienummer",
+}
+KLANT_VELDEN = {
+    "naam": "de naam van de klant",
+    "adres": "het adres van de klant",
+    "plaats": "de woonplaats van de klant",
+}
+
+
+def afronden(waarde: Decimal) -> Decimal:
+    """Rond af op hele centen, zoals op een factuur.
+
+    ROUND_HALF_UP: een halve cent gaat omhoog. Dat is wat mensen
+    verwachten en wat op papier staat; Python rondt standaard naar even,
+    en dan klopt de factuur niet met de handberekening van de klant.
+    """
+    return waarde.quantize(CENT, rounding=ROUND_HALF_UP)
+
+
+def _getal(waarde: Any) -> Optional[Decimal]:
+    if waarde is None or waarde == "":
+        return None
+    if isinstance(waarde, float):
+        # Een float is hier net zo verboden als bij een inkoopfactuur.
+        return None
+    try:
+        return Decimal(str(waarde).strip().replace(",", "."))
+    except InvalidOperation:
+        return None
+
+
+class Regel(BaseModel):
+    """Eén factuurregel, met de uitgerekende bedragen erbij."""
+
+    volgnummer: int = 0
+    omschrijving: str = ""
+    aantal: Decimal = NUL
+    prijs_per_stuk: Decimal = NUL
+    btw_percentage: Decimal = NUL
+    rekening: Optional[str] = None
+    bedrag_excl: Decimal = NUL
+    btw_bedrag: Decimal = NUL
+
+
+class Totalen(BaseModel):
+    """De totalen van een factuur, per btw-tarief uitgesplitst."""
+
+    bedrag_excl: Decimal = NUL
+    btw_bedrag: Decimal = NUL
+    bedrag_incl: Decimal = NUL
+    # {btw-percentage als tekst: (grondslag, btw)}
+    per_tarief: dict[str, tuple[Decimal, Decimal]] = {}
+
+
+def bereken_regel(gegeven: dict[str, Any], volgnummer: int = 0) -> Regel:
+    """Reken één regel door: aantal × prijs, en de btw daarover.
+
+    Ontbreekt of klopt er iets niet, dan blijft het bedrag nul. De
+    controle op wat er mist doet `controleer_verplicht`; hier wordt
+    alleen gerekend.
+    """
+    aantal = _getal(gegeven.get("aantal")) or NUL
+    prijs = _getal(gegeven.get("prijs_per_stuk")) or NUL
+    percentage = _getal(gegeven.get("btw_percentage")) or NUL
+
+    bedrag_excl = afronden(aantal * prijs)
+    return Regel(
+        volgnummer=volgnummer or int(gegeven.get("volgnummer") or 0),
+        omschrijving=str(gegeven.get("omschrijving") or "").strip(),
+        aantal=aantal,
+        prijs_per_stuk=prijs,
+        btw_percentage=percentage,
+        rekening=gegeven.get("rekening") or None,
+        bedrag_excl=bedrag_excl,
+        btw_bedrag=afronden(bedrag_excl * percentage / Decimal(100)),
+    )
+
+
+def bereken_totalen(regels: list[Regel]) -> Totalen:
+    """Tel de regels op, per btw-tarief.
+
+    De btw wordt per tarief berekend over het opgetelde bedrag, niet als
+    som van de afgeronde regelbedragen. Anders loopt er per regel een
+    halve cent weg en klopt het totaal op de factuur niet met wat de
+    klant zelf uitrekent.
+    """
+    per_tarief: dict[str, list[Decimal]] = {}
+    for regel in regels:
+        sleutel = str(regel.btw_percentage.normalize())
+        grondslag = per_tarief.setdefault(sleutel, [NUL, NUL])
+        grondslag[0] += regel.bedrag_excl
+
+    uitgesplitst: dict[str, tuple[Decimal, Decimal]] = {}
+    totaal_excl = NUL
+    totaal_btw = NUL
+    for sleutel, (grondslag, _) in sorted(per_tarief.items()):
+        btw = afronden(grondslag * Decimal(sleutel) / Decimal(100))
+        uitgesplitst[sleutel] = (grondslag, btw)
+        totaal_excl += grondslag
+        totaal_btw += btw
+
+    return Totalen(
+        bedrag_excl=totaal_excl,
+        btw_bedrag=totaal_btw,
+        bedrag_incl=totaal_excl + totaal_btw,
+        per_tarief=uitgesplitst,
+    )
+
+
+def vervaldatum(factuurdatum: date, betalingstermijn: int) -> date:
+    return factuurdatum + timedelta(days=max(0, int(betalingstermijn)))
+
+
+def controleer_verplicht(
+    factuur: dict[str, Any],
+    klant: Optional[dict[str, Any]],
+    eigen: Optional[dict[str, Any]],
+    regels: list[Regel],
+) -> list[str]:
+    """Wat ontbreekt er nog voordat deze factuur de deur uit kan?
+
+    Een lege lijst betekent: compleet. De volgorde is die van de factuur
+    zelf, zodat de lijst op het scherm meeleest met het formulier.
+    """
+    ontbreekt: list[str] = []
+
+    datum = factuur.get("factuurdatum")
+    if not datum:
+        ontbreekt.append("de factuurdatum")
+        boekjaar = None
+    else:
+        try:
+            boekjaar = date.fromisoformat(str(datum)).year
+        except ValueError:
+            ontbreekt.append(f"een geldige factuurdatum ('{datum}' kan niet)")
+            boekjaar = None
+
+    for veld, omschrijving in EIGEN_VELDEN.items():
+        if not (eigen or {}).get(veld):
+            ontbreekt.append(omschrijving)
+    for veld, omschrijving in KLANT_VELDEN.items():
+        if not (klant or {}).get(veld):
+            ontbreekt.append(omschrijving)
+
+    if not regels:
+        ontbreekt.append("minstens één factuurregel")
+
+    toegestaan = btw_percentages_voor_jaar(boekjaar) if boekjaar else None
+    for regel in regels:
+        nummer = regel.volgnummer
+        if not regel.omschrijving:
+            ontbreekt.append(f"een omschrijving bij regel {nummer}")
+        if regel.aantal == NUL:
+            ontbreekt.append(f"een aantal bij regel {nummer}")
+        if regel.prijs_per_stuk == NUL:
+            ontbreekt.append(f"een prijs bij regel {nummer}")
+        if toegestaan is not None and regel.btw_percentage not in toegestaan:
+            tarieven = ", ".join(str(p.normalize()) for p in sorted(toegestaan))
+            ontbreekt.append(
+                f"een geldig btw-tarief bij regel {nummer} "
+                f"({regel.btw_percentage.normalize()}% bestaat niet in "
+                f"{boekjaar}; het mag {tarieven})"
+            )
+        elif toegestaan is None and boekjaar is not None:
+            ontbreekt.append(
+                f"een btw-config voor {boekjaar} (config/btw_{boekjaar}.json)"
+            )
+            break
+
+    return ontbreekt
+
+
+def volgend_nummer(jaar: int, hoogste: Optional[int]) -> tuple[int, str]:
+    """Geef het volgende volgnummer en het factuurnummer voor dat jaar.
+
+    Doorlopend per jaar, zonder gaten: 2026-0001, 2026-0002, … Het
+    nummer wordt pas hier bepaald, op het moment van definitief maken.
+    """
+    volgnummer = (hoogste or 0) + 1
+    return volgnummer, f"{jaar}-{volgnummer:04d}"
+
+
+def stel_verkoopboeking_samen(
+    factuur: dict[str, Any],
+    regels: list[Regel],
+    schema: Optional[Rekeningschema] = None,
+) -> BoekingVoorstel:
+    """Maak de boeking bij een definitief gemaakte verkoopfactuur.
+
+        debiteuren        totaal incl.  debet
+        omzet                           credit  (per rekening)
+        te betalen btw                  credit  (per tarief)
+
+    Welke omzetrekening erbij hoort komt uit het rekeningschema van dat
+    boekjaar (`standaardrekeningen.omzet`, per btw-tarief) — of uit de
+    rekening die de eigenaar zelf bij een regel heeft gezet. Er wordt
+    dus niets geraden.
+    """
+    def weiger(*redenen: str) -> BoekingVoorstel:
+        return BoekingVoorstel(status="geweigerd", redenen=list(redenen))
+
+    datum = factuur.get("factuurdatum")
+    try:
+        boekdatum = date.fromisoformat(str(datum))
+    except (TypeError, ValueError):
+        return weiger(f"'{datum}' is geen geldige factuurdatum")
+
+    if schema is None:
+        schema = rekeningschema_voor_jaar(boekdatum.year)
+    if schema is None:
+        return weiger(
+            f"er is geen rekeningschema voor boekjaar {boekdatum.year}"
+        )
+    if not regels:
+        return weiger("een factuur zonder regels wordt niet geboekt")
+
+    debiteuren = schema.standaard("debiteuren")
+    totalen = bereken_totalen(regels)
+
+    boekingsregels = [Boekingsregel(
+        rekening=debiteuren,
+        omschrijving=schema.zoek(debiteuren).omschrijving,
+        debet=totalen.bedrag_incl,
+    )]
+
+    # De omzet per rekening, zodat twee tarieven op één factuur niet op
+    # één hoop belanden.
+    per_rekening: dict[str, Decimal] = {}
+    for regel in regels:
+        code = regel.rekening or schema.omzet_voor(
+            str(regel.btw_percentage.normalize())
+        )
+        if code is None or schema.zoek(code) is None:
+            return weiger(
+                f"voor btw-tarief {regel.btw_percentage.normalize()}% staat geen "
+                f"omzetrekening in het schema van {schema.jaar}; deze omzet "
+                f"wordt niet op een willekeurige rekening geboekt"
+            )
+        per_rekening[code] = per_rekening.get(code, NUL) + regel.bedrag_excl
+
+    for code, bedrag in sorted(per_rekening.items()):
+        boekingsregels.append(Boekingsregel(
+            rekening=code, omschrijving=schema.zoek(code).omschrijving,
+            credit=bedrag,
+        ))
+
+    for tarief, (_, btw) in sorted(totalen.per_tarief.items()):
+        if btw == NUL:
+            continue
+        code = schema.btw_verschuldigd_voor(tarief)
+        if code is None or schema.zoek(code) is None:
+            return weiger(
+                f"voor btw-tarief {tarief}% staat geen rekening voor af te "
+                f"dragen btw in het schema van {schema.jaar}"
+            )
+        boekingsregels.append(Boekingsregel(
+            rekening=code, omschrijving=schema.zoek(code).omschrijving,
+            credit=btw,
+        ))
+
+    redenen = controleer_balans(boekingsregels)
+    if redenen:
+        return weiger(*redenen)
+
+    soort = factuur.get("soort") or "factuur"
+    naam = (factuur.get("klant_naam") or "klant").strip()
+    return BoekingVoorstel(
+        status="gemaakt",
+        regels=boekingsregels,
+        boekdatum=boekdatum,
+        omschrijving=(
+            f"{'Creditfactuur' if soort == 'creditfactuur' else 'Verkoopfactuur'} "
+            f"{factuur.get('factuurnummer') or ''} {naam}".strip()
+        ),
+    )
+```
+
+## `boekhouding/boekhouding/factuur_pdf.py`
+
+```python
+"""De PDF van een verkoopfactuur.
+
+Dezelfde schrijver als het testmateriaal (`pdf_schrijver.py`), zodat er
+maar één plek is waar de opmaak van een factuur wordt bepaald. Geen
+externe bibliotheek, geen build-stap.
+
+Wat hier gebeurt is alleen opmaak: elk bedrag komt uit `bereken_totalen`
+en `bereken_regel`, en wordt hier niet opnieuw uitgerekend. Er staat dus
+nooit iets anders op de PDF dan in de boeking.
+
+De PDF is deterministisch: geen tijdstempel erin, dus twee keer
+genereren geeft byte-voor-byte hetzelfde bestand. Dat is precies wat de
+documentopslag nodig heeft, want die herkent een bestand aan zijn hash.
+"""
+
+from decimal import Decimal
+from typing import Any, Optional
+
+from .pdf_schrijver import Pagina, pdf_bytes
+
+# Kantlijnen in punten, vanaf linksboven.
+LINKS = 56
+RECHTS = 539
+BOVEN = 60
+
+# Waar de kolommen van de regeltabel beginnen en eindigen.
+KOLOM_AANTAL = 330
+KOLOM_PRIJS = 400
+KOLOM_BTW = 452
+KOLOM_BEDRAG = RECHTS
+
+
+def _euro(bedrag: Decimal) -> str:
+    """Een bedrag zoals het op een Nederlandse factuur staat: 1.234,56."""
+    teken = "-" if bedrag < 0 else ""
+    heel, _, centen = f"{abs(bedrag):.2f}".partition(".")
+    met_punten = ""
+    for plek, cijfer in enumerate(reversed(heel)):
+        if plek and plek % 3 == 0:
+            met_punten = "." + met_punten
+        met_punten = cijfer + met_punten
+    return f"{teken}{met_punten},{centen}"
+
+
+def _getal(waarde: Decimal) -> str:
+    """Een aantal zonder overbodige nullen: 7,5 in plaats van 7,50."""
+    tekst = str(waarde.normalize())
+    if "E" in tekst or "e" in tekst:  # heel grote of kleine getallen
+        tekst = f"{waarde:f}".rstrip("0").rstrip(".")
+    return tekst.replace(".", ",")
+
+
+def _adresregels(partij: dict[str, Any]) -> list[str]:
+    regels = [str(partij.get("naam") or "")]
+    if partij.get("adres"):
+        regels.append(str(partij["adres"]))
+    postcode_plaats = " ".join(
+        str(partij.get(veld)) for veld in ("postcode", "plaats") if partij.get(veld)
+    )
+    if postcode_plaats:
+        regels.append(postcode_plaats)
+    if partij.get("land") and str(partij["land"]).lower() != "nederland":
+        regels.append(str(partij["land"]))
+    return regels
+
+
+def maak_factuur_pdf(factuur: dict[str, Any]) -> bytes:
+    """Maak de PDF van een definitieve verkoopfactuur.
+
+    Verwacht het resultaat van `lees_verkoopfactuur`: met `klant`,
+    `eigen`, `regels` en `totalen` erin.
+    """
+    eigen = factuur.get("eigen") or {}
+    klant = factuur.get("klant") or {}
+    totalen = factuur["totalen"]
+    creditfactuur = factuur.get("soort") == "creditfactuur"
+
+    pagina = Pagina()
+    y = BOVEN
+
+    # --- kop: wie stuurt de factuur --------------------------------------
+    pagina.tekst(LINKS, y, str(eigen.get("naam") or ""), 15, vet=True)
+    pagina.tekst_rechts(
+        RECHTS, y, "CREDITFACTUUR" if creditfactuur else "FACTUUR", 15, vet=True
+    )
+    y += 20
+    for regel in _adresregels(eigen)[1:]:
+        pagina.tekst(LINKS, y, regel, 9)
+        y += 12
+
+    for label, veld in (
+        ("KvK", "kvk_nummer"), ("Btw-id", "btw_id"), ("IBAN", "iban"),
+        ("E-mail", "email"),
+    ):
+        if eigen.get(veld):
+            pagina.tekst(LINKS, y, f"{label} {eigen[veld]}", 9)
+            y += 12
+
+    # --- aan wie, en de kerngegevens rechts ------------------------------
+    y = max(y + 24, 150)
+    pagina.tekst(LINKS, y, "Aan", 9, vet=True)
+    kopregel = y
+    y += 14
+    for regel in _adresregels(klant):
+        pagina.tekst(LINKS, y, regel, 10)
+        y += 13
+    if klant.get("btw_id"):
+        pagina.tekst(LINKS, y, f"Btw-id {klant['btw_id']}", 9)
+        y += 13
+
+    rechts_y = kopregel
+    for label, waarde in (
+        ("Factuurnummer", factuur.get("factuurnummer") or "concept"),
+        ("Factuurdatum", factuur.get("factuurdatum") or ""),
+        ("Vervaldatum", factuur.get("vervaldatum") or ""),
+    ):
+        pagina.tekst(KOLOM_AANTAL, rechts_y, label, 9, vet=True)
+        pagina.tekst_rechts(RECHTS, rechts_y, str(waarde), 9)
+        rechts_y += 14
+    if factuur.get("corrigeert_nummer"):
+        pagina.tekst(KOLOM_AANTAL, rechts_y, "Crediteert", 9, vet=True)
+        pagina.tekst_rechts(RECHTS, rechts_y, str(factuur["corrigeert_nummer"]), 9)
+        rechts_y += 14
+
+    # --- de regels -------------------------------------------------------
+    y = max(y, rechts_y) + 26
+    pagina.tekst(LINKS, y, "Omschrijving", 9, vet=True)
+    pagina.tekst_rechts(KOLOM_AANTAL + 40, y, "Aantal", 9, vet=True)
+    pagina.tekst_rechts(KOLOM_PRIJS + 40, y, "Prijs", 9, vet=True)
+    pagina.tekst_rechts(KOLOM_BTW + 30, y, "Btw", 9, vet=True)
+    pagina.tekst_rechts(KOLOM_BEDRAG, y, "Bedrag", 9, vet=True)
+    y += 6
+    pagina.lijn(LINKS, y, RECHTS, y)
+    y += 16
+
+    for regel in factuur["regels"]:
+        pagina.tekst(LINKS, y, regel.omschrijving, 9)
+        pagina.tekst_rechts(KOLOM_AANTAL + 40, y, _getal(regel.aantal), 9)
+        pagina.tekst_rechts(KOLOM_PRIJS + 40, y, _euro(regel.prijs_per_stuk), 9)
+        pagina.tekst_rechts(
+            KOLOM_BTW + 30, y, f"{_getal(regel.btw_percentage)}%", 9
+        )
+        pagina.tekst_rechts(KOLOM_BEDRAG, y, _euro(regel.bedrag_excl), 9)
+        y += 15
+
+    y += 4
+    pagina.lijn(KOLOM_AANTAL, y, RECHTS, y)
+    y += 16
+
+    # --- totalen ---------------------------------------------------------
+    pagina.tekst(KOLOM_AANTAL, y, "Totaal excl. btw", 9)
+    pagina.tekst_rechts(KOLOM_BEDRAG, y, _euro(totalen.bedrag_excl), 9)
+    y += 14
+    for tarief, (grondslag, btw) in sorted(totalen.per_tarief.items()):
+        pagina.tekst(
+            KOLOM_AANTAL, y, f"Btw {tarief}% over {_euro(grondslag)}", 9
+        )
+        pagina.tekst_rechts(KOLOM_BEDRAG, y, _euro(btw), 9)
+        y += 14
+
+    y += 2
+    pagina.lijn(KOLOM_AANTAL, y, RECHTS, y)
+    y += 16
+    pagina.tekst(KOLOM_AANTAL, y, "Totaal incl. btw", 10, vet=True)
+    pagina.tekst_rechts(KOLOM_BEDRAG, y, _euro(totalen.bedrag_incl), 10, vet=True)
+    y += 30
+
+    # --- betaalgegevens --------------------------------------------------
+    if factuur.get("opmerking"):
+        pagina.tekst(LINKS, y, str(factuur["opmerking"]), 9)
+        y += 16
+
+    if creditfactuur:
+        pagina.tekst(
+            LINKS, y,
+            "Dit bedrag wordt met u verrekend of aan u terugbetaald.", 9,
+        )
+    else:
+        termijn = factuur.get("betalingstermijn") or 30
+        zin = f"Betaling binnen {termijn} dagen"
+        if factuur.get("vervaldatum"):
+            zin += f", uiterlijk {factuur['vervaldatum']}"
+        if eigen.get("iban"):
+            zin += f", op {eigen['iban']}"
+        pagina.tekst(LINKS, y, zin + ".", 9)
+        y += 14
+        if factuur.get("factuurnummer"):
+            pagina.tekst(
+                LINKS, y,
+                f"Vermeld bij de betaling het factuurnummer "
+                f"{factuur['factuurnummer']}.", 9,
+            )
+
+    return pdf_bytes(pagina)
+```
+
 ## `boekhouding/boekhouding/web/__init__.py`
 
 ```python
@@ -6384,6 +8128,7 @@ over btw — dat zit allemaal in de modules eronder.
 
 import sqlite3
 from datetime import date
+from decimal import Decimal
 from pathlib import Path
 from typing import Any, Optional
 
@@ -6401,10 +8146,26 @@ from ..database import (
     importeer_bankafschrift,
     keur_factuur_goed,
     kies_rekening,
+    controleer_verkoopfactuur,
     koppel_transactie,
+    lees_administratie,
     lees_banktransactie,
     lees_banktransacties,
+    lees_klant,
+    lees_klanten,
+    lees_verkoopfactuur,
+    lees_verkoopfacturen,
+    maak_creditfactuur,
+    maak_definitief,
+    maak_klant,
+    maak_verkoopfactuur,
     open_facturen,
+    openstaande_posten,
+    verwijder_verkoopfactuur,
+    wijzig_administratie,
+    wijzig_klant,
+    wijzig_verkoopfactuur,
+    zet_verkoopregels,
     lees_document,
     lees_extractie_bij_document,
     lees_facturen,
@@ -6414,6 +8175,7 @@ from ..database import (
     maak_verbinding,
     wijzig_factuur,
 )
+from ..database import EIGEN_GEGEVENS, KLANT_VELDEN
 from ..rekeningschema import rekeningschema_voor_jaar
 from ..ubl import te_groot
 from ..verwerking import verwerk_upload
@@ -6765,6 +8527,289 @@ def maak_app(
             volgend=volgend,
         )
 
+    # --- eigen gegevens, klanten en verkoopfacturen -----------------------
+
+    @app.get(
+        "/administratie/{administratie_id}/instellingen",
+        response_class=HTMLResponse,
+    )
+    def instellingen(request: Request, administratie_id: int, melding: str = ""):
+        conn = verbinding()
+        try:
+            administratie_van(conn, administratie_id)
+            eigen = lees_administratie(conn, administratie_id)
+        finally:
+            conn.close()
+        return toon(
+            request, "instellingen.html",
+            administratie_id=administratie_id, eigen=eigen, melding=melding,
+            velden=("naam",) + EIGEN_GEGEVENS,
+        )
+
+    @app.post("/administratie/{administratie_id}/instellingen")
+    async def instellingen_opslaan(request: Request, administratie_id: int):
+        formulier = await request.form()
+        gegevens = {
+            veld: str(formulier[veld]).strip()
+            for veld in ("naam",) + EIGEN_GEGEVENS
+            if veld in formulier
+        }
+        conn = verbinding()
+        try:
+            administratie_van(conn, administratie_id)
+            wijzig_administratie(conn, administratie_id, gegevens)
+        finally:
+            conn.close()
+        return RedirectResponse(
+            f"/administratie/{administratie_id}/instellingen?melding=Opgeslagen",
+            status_code=303,
+        )
+
+    @app.get("/administratie/{administratie_id}/klanten", response_class=HTMLResponse)
+    def klanten(request: Request, administratie_id: int, melding: str = ""):
+        conn = verbinding()
+        try:
+            administratie_van(conn, administratie_id)
+            lijst = lees_klanten(conn, administratie_id)
+        finally:
+            conn.close()
+        return toon(
+            request, "klanten.html",
+            administratie_id=administratie_id, klanten=lijst,
+            velden=KLANT_VELDEN, melding=melding,
+        )
+
+    @app.post("/administratie/{administratie_id}/klanten")
+    async def klant_toevoegen(request: Request, administratie_id: int):
+        formulier = await request.form()
+        gegevens = {
+            veld: str(formulier.get(veld) or "").strip() for veld in KLANT_VELDEN
+        }
+        if not gegevens["naam"]:
+            return RedirectResponse(
+                f"/administratie/{administratie_id}/klanten"
+                f"?melding=Een klant zonder naam kan niet",
+                status_code=303,
+            )
+        conn = verbinding()
+        try:
+            administratie_van(conn, administratie_id)
+            maak_klant(conn, administratie_id, gegevens)
+        finally:
+            conn.close()
+        return RedirectResponse(
+            f"/administratie/{administratie_id}/klanten?melding=Klant toegevoegd",
+            status_code=303,
+        )
+
+    @app.post("/administratie/{administratie_id}/klant/{klant_id}")
+    async def klant_opslaan(request: Request, administratie_id: int, klant_id: int):
+        formulier = await request.form()
+        gegevens = {
+            veld: str(formulier[veld]).strip()
+            for veld in KLANT_VELDEN if veld in formulier
+        }
+        conn = verbinding()
+        try:
+            hoort_bij_administratie(
+                conn, lees_klant, klant_id, administratie_id, "klant"
+            )
+            wijzig_klant(conn, klant_id, gegevens)
+        finally:
+            conn.close()
+        return RedirectResponse(
+            f"/administratie/{administratie_id}/klanten?melding=Klant bijgewerkt",
+            status_code=303,
+        )
+
+    @app.get("/administratie/{administratie_id}/verkoop", response_class=HTMLResponse)
+    def verkoop(request: Request, administratie_id: int, melding: str = ""):
+        conn = verbinding()
+        try:
+            administratie = administratie_van(conn, administratie_id)
+            facturen = lees_verkoopfacturen(conn, administratie_id)
+            klanten_lijst = lees_klanten(conn, administratie_id)
+            posten = openstaande_posten(
+                conn, administratie_id, app.state.vandaag
+            )
+        finally:
+            conn.close()
+        return toon(
+            request, "verkoop.html",
+            administratie_id=administratie_id,
+            administratie_naam=administratie[1],
+            facturen=facturen, klanten=klanten_lijst, melding=melding,
+            posten=posten,
+            openstaand=sum((p["bedrag_incl"] for p in posten), Decimal("0.00")),
+            te_laat=sum(1 for p in posten if p["te_laat"]),
+            vandaag=str(app.state.vandaag or date.today()),
+            aantal_concept=sum(1 for f in facturen if f["status"] == "concept"),
+        )
+
+    @app.post("/administratie/{administratie_id}/verkoop")
+    async def verkoop_nieuw(request: Request, administratie_id: int):
+        formulier = await request.form()
+        klant = str(formulier.get("klant_id") or "").strip()
+        if not klant.isdigit():
+            return RedirectResponse(
+                f"/administratie/{administratie_id}/verkoop"
+                f"?melding=Kies eerst een klant",
+                status_code=303,
+            )
+        conn = verbinding()
+        try:
+            hoort_bij_administratie(
+                conn, lees_klant, int(klant), administratie_id, "klant"
+            )
+            factuur_id = maak_verkoopfactuur(
+                conn, administratie_id, int(klant),
+                str(formulier.get("factuurdatum") or "").strip() or None,
+            )
+        finally:
+            conn.close()
+        return RedirectResponse(
+            f"/administratie/{administratie_id}/verkoop/{factuur_id}",
+            status_code=303,
+        )
+
+    @app.get(
+        "/administratie/{administratie_id}/verkoop/{verkoopfactuur_id}",
+        response_class=HTMLResponse,
+    )
+    def verkoopfactuur(
+        request: Request, administratie_id: int, verkoopfactuur_id: int,
+        melding: str = "",
+    ):
+        conn = verbinding()
+        try:
+            factuur = hoort_bij_administratie(
+                conn, lees_verkoopfactuur, verkoopfactuur_id, administratie_id,
+                "verkoopfactuur",
+            )
+            klanten_lijst = lees_klanten(conn, administratie_id)
+            ontbreekt = (
+                controleer_verkoopfactuur(conn, verkoopfactuur_id)
+                if factuur["status"] == "concept" else []
+            )
+        finally:
+            conn.close()
+        return toon(
+            request, "verkoopfactuur.html",
+            administratie_id=administratie_id, factuur=factuur,
+            klanten=klanten_lijst, ontbreekt=ontbreekt, melding=melding,
+            # Drie lege regels erbij, zodat er altijd iets bij kan zonder
+            # dat er javascript aan te pas komt.
+            lege_regels=range(3),
+        )
+
+    @app.post("/administratie/{administratie_id}/verkoop/{verkoopfactuur_id}/opslaan")
+    async def verkoopfactuur_opslaan(
+        request: Request, administratie_id: int, verkoopfactuur_id: int
+    ):
+        formulier = await request.form()
+        conn = verbinding()
+        try:
+            hoort_bij_administratie(
+                conn, lees_verkoopfactuur, verkoopfactuur_id, administratie_id,
+                "verkoopfactuur",
+            )
+            kop = {
+                veld: str(formulier[veld]).strip()
+                for veld in ("factuurdatum", "betalingstermijn", "opmerking")
+                if veld in formulier
+            }
+            gelukt, redenen = wijzig_verkoopfactuur(conn, verkoopfactuur_id, kop)
+            if gelukt:
+                gelukt, redenen = zet_verkoopregels(
+                    conn, verkoopfactuur_id, _regels_uit_formulier(formulier)
+                )
+        finally:
+            conn.close()
+        melding = "Opgeslagen" if gelukt else redenen[0]
+        return RedirectResponse(
+            f"/administratie/{administratie_id}/verkoop/{verkoopfactuur_id}"
+            f"?melding={melding}",
+            status_code=303,
+        )
+
+    @app.post(
+        "/administratie/{administratie_id}/verkoop/{verkoopfactuur_id}/definitief"
+    )
+    def verkoopfactuur_definitief(
+        administratie_id: int, verkoopfactuur_id: int
+    ):
+        conn = verbinding()
+        try:
+            hoort_bij_administratie(
+                conn, lees_verkoopfactuur, verkoopfactuur_id, administratie_id,
+                "verkoopfactuur",
+            )
+            nummer, redenen = maak_definitief(
+                conn, verkoopfactuur_id, opslagmap=app.state.opslagmap
+            )
+        finally:
+            conn.close()
+        if nummer is None:
+            return RedirectResponse(
+                f"/administratie/{administratie_id}/verkoop/{verkoopfactuur_id}"
+                f"?melding={redenen[0]}",
+                status_code=303,
+            )
+        return RedirectResponse(
+            f"/administratie/{administratie_id}/verkoop/{verkoopfactuur_id}"
+            f"?melding=Factuur {nummer} is definitief en geboekt",
+            status_code=303,
+        )
+
+    @app.post(
+        "/administratie/{administratie_id}/verkoop/{verkoopfactuur_id}/verwijderen"
+    )
+    def verkoopfactuur_verwijderen(administratie_id: int, verkoopfactuur_id: int):
+        conn = verbinding()
+        try:
+            hoort_bij_administratie(
+                conn, lees_verkoopfactuur, verkoopfactuur_id, administratie_id,
+                "verkoopfactuur",
+            )
+            gelukt, redenen = verwijder_verkoopfactuur(conn, verkoopfactuur_id)
+        finally:
+            conn.close()
+        if not gelukt:
+            return RedirectResponse(
+                f"/administratie/{administratie_id}/verkoop/{verkoopfactuur_id}"
+                f"?melding={redenen[0]}",
+                status_code=303,
+            )
+        return RedirectResponse(
+            f"/administratie/{administratie_id}/verkoop?melding=Concept weggegooid",
+            status_code=303,
+        )
+
+    @app.post(
+        "/administratie/{administratie_id}/verkoop/{verkoopfactuur_id}/crediteren"
+    )
+    def verkoopfactuur_crediteren(administratie_id: int, verkoopfactuur_id: int):
+        conn = verbinding()
+        try:
+            hoort_bij_administratie(
+                conn, lees_verkoopfactuur, verkoopfactuur_id, administratie_id,
+                "verkoopfactuur",
+            )
+            nieuw_id, redenen = maak_creditfactuur(conn, verkoopfactuur_id)
+        finally:
+            conn.close()
+        if nieuw_id is None:
+            return RedirectResponse(
+                f"/administratie/{administratie_id}/verkoop/{verkoopfactuur_id}"
+                f"?melding={redenen[0]}",
+                status_code=303,
+            )
+        return RedirectResponse(
+            f"/administratie/{administratie_id}/verkoop/{nieuw_id}"
+            f"?melding=Creditfactuur klaargezet; controleer hem en maak hem definitief",
+            status_code=303,
+        )
+
     # --- bankafschriften en afletteren -----------------------------------
 
     @app.get("/administratie/{administratie_id}/bank", response_class=HTMLResponse)
@@ -6852,8 +8897,12 @@ def maak_app(
         request: Request, administratie_id: int, transactie_id: int
     ):
         formulier = await request.form()
-        gekozen = str(formulier.get("factuur_id") or "").strip()
-        if not gekozen.isdigit():
+        # De keuzelijst stuurt "soort:nummer", want één select kan maar
+        # één waarde versturen en we moeten weten of het een ontvangen of
+        # een eigen factuur is.
+        bron, _, gekozen = str(formulier.get("factuur_id") or "").strip().rpartition(":")
+        bron = bron or "factuur"
+        if not gekozen.isdigit() or bron not in ("factuur", "verkoopfactuur"):
             return RedirectResponse(
                 f"/administratie/{administratie_id}/bank"
                 f"?melding=Kies eerst een factuur om aan te koppelen",
@@ -6870,10 +8919,12 @@ def maak_app(
             # nummer in een verborgen veld is net zo goed te veranderen als
             # een nummer in de adresbalk.
             hoort_bij_administratie(
-                conn, lees_factuur, int(gekozen), administratie_id, "factuur"
+                conn,
+                lees_factuur if bron == "factuur" else lees_verkoopfactuur,
+                int(gekozen), administratie_id, bron,
             )
             boeking_id, redenen = koppel_transactie(
-                conn, transactie_id, int(gekozen)
+                conn, transactie_id, int(gekozen), bron=bron
             )
         finally:
             conn.close()
@@ -6912,6 +8963,36 @@ def maak_app(
         )
 
     return app
+
+
+def _regels_uit_formulier(formulier) -> list[dict[str, str]]:
+    """Haal de factuurregels uit het formulier.
+
+    Het formulier stuurt vier lijstjes van gelijke lengte (omschrijving,
+    aantal, prijs, btw). Een regel waarin niets is ingevuld wordt
+    overgeslagen, zodat de lege regels onderaan het scherm geen lege
+    regels op de factuur worden.
+    """
+    omschrijvingen = formulier.getlist("omschrijving")
+    aantallen = formulier.getlist("aantal")
+    prijzen = formulier.getlist("prijs_per_stuk")
+    percentages = formulier.getlist("btw_percentage")
+
+    regels = []
+    for nummer in range(len(omschrijvingen)):
+        gegeven = {
+            "omschrijving": str(omschrijvingen[nummer]).strip(),
+            "aantal": str(aantallen[nummer] if nummer < len(aantallen) else "").strip(),
+            "prijs_per_stuk": str(
+                prijzen[nummer] if nummer < len(prijzen) else ""
+            ).strip(),
+            "btw_percentage": str(
+                percentages[nummer] if nummer < len(percentages) else ""
+            ).strip(),
+        }
+        if any(gegeven[veld] for veld in ("omschrijving", "aantal", "prijs_per_stuk")):
+            regels.append(gegeven)
+    return regels
 
 
 def _kiesbare_rekeningen(factuur: dict) -> list[dict]:
@@ -7491,6 +9572,19 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
   .kaart.signalen h3 { color: var(--wacht); }
   .kaart.signalen ul { margin: 8px 0 0; padding-left: 20px; }
   .kaart.signalen li { margin-bottom: 6px; }
+  /* Een factuurregel: op een telefoon onder elkaar, op een breed scherm
+     naast elkaar met het uitgerekende bedrag rechts. */
+  .regelblok {
+    display: grid; gap: 8px; padding: 12px 0;
+    border-top: 1px solid var(--lijn);
+  }
+  .regelbedrag {
+    font-variant-numeric: tabular-nums; font-weight: 600; text-align: right;
+    align-self: center;
+  }
+  @media (min-width: 720px) {
+    .regelblok { grid-template-columns: 3fr 1fr 1.3fr 1fr 1.1fr; align-items: center; }
+  }
   .knoppen { display: flex; gap: 10px; flex-wrap: wrap; }
   .knoppen button, .knoppen a.knop { flex: 1 1 160px; text-align: center; }
   .leeg { color: var(--zacht); text-align: center; padding: 40px 10px; }
@@ -7542,6 +9636,7 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
 
 <div class="knoppen" style="margin-bottom:16px">
   <a class="knop" href="/administratie/{{ administratie_id }}/upload">Factuur toevoegen</a>
+  <a class="knop tweede" href="/administratie/{{ administratie_id }}/verkoop">Verkoop</a>
   <a class="knop tweede" href="/administratie/{{ administratie_id }}/bank">Bank</a>
   <a class="knop tweede" href="/administratie/{{ administratie_id }}/btw">Btw-aangifte</a>
 </div>
@@ -8017,7 +10112,8 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
         </div>
         <form method="post"
               action="/administratie/{{ administratie_id }}/bank/{{ transactie.id }}/koppel">
-          <input type="hidden" name="factuur_id" value="{{ voorstel.factuur_id }}">
+          <input type="hidden" name="factuur_id"
+                 value="{{ voorstel.bron }}:{{ voorstel.factuur_id }}">
           <div class="knoppen" style="margin-top:12px">
             <button type="submit">Bevestigen en boeken</button>
           </div>
@@ -8045,9 +10141,10 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
             <select id="factuur-{{ transactie.id }}" name="factuur_id">
               <option value="">— kies een factuur —</option>
               {% for factuur in koppelbaar %}
-                <option value="{{ factuur.id }}">
+                <option value="{{ factuur.bron }}:{{ factuur.id }}">
                   {{ factuur.factuurdatum }} · {{ factuur.leverancier }} ·
                   {{ factuur.factuurnummer }} · {{ factuur.bedrag_incl }}
+                  {%- if factuur.bron == "verkoopfactuur" %} (eigen factuur){% endif %}
                 </option>
               {% endfor %}
             </select>
@@ -8060,6 +10157,405 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
     {% endif %}
   </div>
 {% endfor %}
+
+{% endblock %}
+```
+
+## `boekhouding/boekhouding/web/templates/verkoop.html`
+
+```html
+{% extends "basis.html" %}
+{% block titel %}Verkoopfacturen{% endblock %}
+{% block kruimel %}<a href="/administratie/{{ administratie_id }}">&larr; Terug naar de facturen</a>{% endblock %}
+{% block kop %}Verkoopfacturen{% endblock %}
+{% block inhoud %}
+
+{% if melding %}<div class="melding">{{ melding }}</div>{% endif %}
+
+<div class="telling">
+  <div>
+    <strong>{{ aantal_concept }}</strong>
+    <span>{% if aantal_concept == 1 %}concept{% else %}concepten{% endif %}</span>
+  </div>
+  <div>
+    <strong>{{ facturen|length - aantal_concept }}</strong>
+    <span>verstuurd en geboekt</span>
+  </div>
+  <div>
+    <strong>{{ klanten|length }}</strong>
+    <span>{% if klanten|length == 1 %}klant{% else %}klanten{% endif %}</span>
+  </div>
+</div>
+
+{% if posten %}
+  <div class="kaart">
+    <div class="ubl-groep">
+      <h3>Openstaand: {{ openstaand }}{% if te_laat %} · {{ te_laat }} te laat{% endif %}</h3>
+      {% for post in posten %}
+        <div class="ubl-rij {% if post.te_laat %}ontbreekt{% endif %}">
+          <div>
+            <div class="label">
+              <a href="/administratie/{{ administratie_id }}/verkoop/{{ post.id }}">
+                {{ post.factuurnummer }} · {{ post.klant_naam }}
+              </a>
+            </div>
+            <div class="herkomst" style="font-family:inherit">
+              {% if post.dagen_over is none %}vervaldatum onbekend
+              {% elif post.dagen_over > 0 %}{{ post.dagen_over }} dagen over de vervaldatum ({{ post.vervaldatum }})
+              {% elif post.dagen_over == 0 %}vervalt vandaag
+              {% else %}vervalt over {{ -post.dagen_over }} dagen ({{ post.vervaldatum }}){% endif %}
+            </div>
+          </div>
+          <div class="waarde">{{ post.bedrag_incl }}</div>
+        </div>
+      {% endfor %}
+    </div>
+    <p class="onder" style="color:var(--zacht);font-size:14px;margin-bottom:0">
+      Een factuur staat hier tot er een bijschrijving aan gekoppeld is. Dat
+      doe je op het <a href="/administratie/{{ administratie_id }}/bank">bankscherm</a>.
+    </p>
+  </div>
+{% endif %}
+
+<div class="knoppen" style="margin-bottom:16px">
+  <a class="knop tweede" href="/administratie/{{ administratie_id }}/klanten">Klanten</a>
+  <a class="knop tweede" href="/administratie/{{ administratie_id }}/instellingen">Eigen gegevens</a>
+</div>
+
+{% if klanten %}
+  <form class="kaart" method="post" action="/administratie/{{ administratie_id }}/verkoop">
+    <h3 style="margin:0 0 10px;font-size:17px">Nieuwe factuur</h3>
+    <div class="veld">
+      <label for="klant_id">Klant</label>
+      <select id="klant_id" name="klant_id">
+        {% for klant in klanten %}
+          <option value="{{ klant.id }}">{{ klant.naam }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="veld">
+      <label for="factuurdatum">Factuurdatum</label>
+      <input type="text" id="factuurdatum" name="factuurdatum" value="{{ vandaag }}">
+    </div>
+    <div class="knoppen"><button type="submit">Concept beginnen</button></div>
+  </form>
+{% else %}
+  <div class="waarschuwing">
+    Voeg eerst een klant toe; zonder klant kan er geen factuur gemaakt worden.
+  </div>
+{% endif %}
+
+{% for factuur in facturen %}
+  <a class="rij" href="/administratie/{{ administratie_id }}/verkoop/{{ factuur.id }}">
+    <div class="boven">
+      <span class="naam">{{ factuur.klant_naam or "Klant onbekend" }}</span>
+      {% if factuur.status == "concept" %}
+        <span class="merk wacht">Concept</span>
+      {% elif factuur.soort == "creditfactuur" %}
+        <span class="merk review">Creditfactuur {{ factuur.factuurnummer }}</span>
+      {% else %}
+        <span class="merk klaar">{{ factuur.factuurnummer }}</span>
+      {% endif %}
+    </div>
+    <div class="boven onder">
+      <span>{{ factuur.factuurdatum or "datum nog invullen" }}</span>
+      <span class="bedrag">{{ factuur.totalen.bedrag_incl }}</span>
+    </div>
+  </a>
+{% endfor %}
+
+{% endblock %}
+```
+
+## `boekhouding/boekhouding/web/templates/verkoopfactuur.html`
+
+```html
+{% extends "basis.html" %}
+{% block titel %}{{ factuur.factuurnummer or "Concept" }}{% endblock %}
+{% block kruimel %}<a href="/administratie/{{ administratie_id }}/verkoop">&larr; Terug naar de verkoopfacturen</a>{% endblock %}
+{% block kop %}
+  {% if factuur.status == "concept" %}Concept voor {{ factuur.klant.naam }}
+  {% else %}{{ factuur.factuurnummer }} · {{ factuur.klant.naam }}{% endif %}
+{% endblock %}
+{% block inhoud %}
+
+{% if melding %}<div class="melding">{{ melding }}</div>{% endif %}
+
+{% if ontbreekt %}
+  <div class="waarschuwing">
+    <strong>Dit ontbreekt nog voordat de factuur definitief kan:</strong>
+    <ul>{% for punt in ontbreekt %}<li>{{ punt }}</li>{% endfor %}</ul>
+  </div>
+{% endif %}
+
+{% if factuur.status == "definitief" %}
+  <div class="kaart">
+    <div class="ubl-groep">
+      <h3>Verstuurd op {{ factuur.definitief_op[:10] }}</h3>
+      <div class="ubl-rij">
+        <div><div class="label">Factuurnummer</div></div>
+        <div class="waarde">{{ factuur.factuurnummer }}</div>
+      </div>
+      <div class="ubl-rij">
+        <div><div class="label">Factuurdatum</div></div>
+        <div class="waarde">{{ factuur.factuurdatum }}</div>
+      </div>
+      <div class="ubl-rij">
+        <div>
+          <div class="label">Vervaldatum</div>
+          <div class="herkomst">{{ factuur.betalingstermijn }} dagen</div>
+        </div>
+        <div class="waarde">{{ factuur.vervaldatum }}</div>
+      </div>
+      {% if factuur.boeking_id %}
+        <div class="ubl-rij">
+          <div><div class="label">Geboekt</div></div>
+          <div class="waarde">boeking {{ factuur.boeking_id }}</div>
+        </div>
+      {% endif %}
+      {% if factuur.corrigeert_id %}
+        <div class="ubl-rij">
+          <div><div class="label">Crediteert</div></div>
+          <div class="waarde">
+            <a href="/administratie/{{ administratie_id }}/verkoop/{{ factuur.corrigeert_id }}">factuur {{ factuur.corrigeert_id }}</a>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="ubl-groep">
+      <h3>Van</h3>
+      <div class="ubl-rij">
+        <div>
+          <div class="label">{{ factuur.eigen.naam }}</div>
+          <div class="herkomst" style="font-family:inherit">
+            {{ factuur.eigen.adres }}, {{ factuur.eigen.postcode or "" }}
+            {{ factuur.eigen.plaats }} · btw-id {{ factuur.eigen.btw_id }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ubl-groep">
+      <h3>Aan</h3>
+      <div class="ubl-rij">
+        <div>
+          <div class="label">{{ factuur.klant.naam }}</div>
+          <div class="herkomst" style="font-family:inherit">
+            {{ factuur.klant.adres }}, {{ factuur.klant.postcode or "" }}
+            {{ factuur.klant.plaats }}
+            {% if factuur.klant.btw_id %} · btw-id {{ factuur.klant.btw_id }}{% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ubl-groep">
+      <h3>Regels</h3>
+      {% for regel in factuur.regels %}
+        <div class="ubl-rij">
+          <div>
+            <div class="label">{{ regel.omschrijving }}</div>
+            <div class="herkomst">
+              {{ regel.aantal }} × {{ regel.prijs_per_stuk }} · btw {{ regel.btw_percentage }}%
+            </div>
+          </div>
+          <div class="waarde">{{ regel.bedrag_excl }}</div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  {% if factuur.document_id %}
+    <div class="knoppen" style="margin-bottom:14px">
+      <a class="knop tweede"
+         href="/administratie/{{ administratie_id }}/document/{{ factuur.document_id }}">
+        Factuur als PDF
+      </a>
+    </div>
+  {% endif %}
+{% else %}
+  <form class="kaart" method="post"
+        action="/administratie/{{ administratie_id }}/verkoop/{{ factuur.id }}/opslaan">
+    <div class="veld">
+      <label for="factuurdatum">Factuurdatum</label>
+      <input type="text" id="factuurdatum" name="factuurdatum"
+             value="{{ factuur.factuurdatum or "" }}">
+    </div>
+    <div class="veld">
+      <label for="betalingstermijn">Betalingstermijn (dagen)</label>
+      <input type="text" id="betalingstermijn" name="betalingstermijn"
+             inputmode="numeric" value="{{ factuur.betalingstermijn }}">
+    </div>
+
+    <h3 style="margin:18px 0 8px;font-size:15px">Regels</h3>
+    <p class="onder" style="color:var(--zacht);font-size:14px;margin-top:0">
+      Vul aantal en prijs per stuk in; het regelbedrag en de btw rekent het
+      systeem uit. Een lege regel wordt overgeslagen.
+    </p>
+
+    {% for regel in factuur.regels %}
+      <div class="regelblok">
+        <input type="text" name="omschrijving" value="{{ regel.omschrijving }}" placeholder="Omschrijving">
+        <input type="text" name="aantal" value="{{ regel.aantal }}" inputmode="decimal" placeholder="Aantal">
+        <input type="text" name="prijs_per_stuk" value="{{ regel.prijs_per_stuk }}" inputmode="decimal" placeholder="Prijs">
+        <input type="text" name="btw_percentage" value="{{ regel.btw_percentage }}" inputmode="decimal" placeholder="Btw %">
+        <div class="regelbedrag">{{ regel.bedrag_excl }}</div>
+      </div>
+    {% endfor %}
+    {% for _ in lege_regels %}
+      <div class="regelblok">
+        <input type="text" name="omschrijving" value="" placeholder="Omschrijving">
+        <input type="text" name="aantal" value="" inputmode="decimal" placeholder="Aantal">
+        <input type="text" name="prijs_per_stuk" value="" inputmode="decimal" placeholder="Prijs">
+        <input type="text" name="btw_percentage" value="" inputmode="decimal" placeholder="Btw %">
+        <div class="regelbedrag"></div>
+      </div>
+    {% endfor %}
+
+    <div class="knoppen" style="margin-top:14px">
+      <button type="submit" class="tweede">Opslaan</button>
+    </div>
+  </form>
+{% endif %}
+
+<div class="kaart">
+  <div class="ubl-groep">
+    <h3>Totalen</h3>
+    {% for tarief, bedragen in factuur.totalen.per_tarief.items() %}
+      <div class="ubl-rij">
+        <div>
+          <div class="label">Btw {{ tarief }}%</div>
+          <div class="herkomst">over {{ bedragen[0] }}</div>
+        </div>
+        <div class="waarde">{{ bedragen[1] }}</div>
+      </div>
+    {% endfor %}
+    <div class="ubl-rij">
+      <div><div class="label">Totaal excl. btw</div></div>
+      <div class="waarde">{{ factuur.totalen.bedrag_excl }}</div>
+    </div>
+    <div class="ubl-rij">
+      <div><div class="label">Totaal incl. btw</div></div>
+      <div class="waarde">{{ factuur.totalen.bedrag_incl }}</div>
+    </div>
+  </div>
+</div>
+
+{% if factuur.status == "concept" %}
+  <form class="kaart" method="post"
+        action="/administratie/{{ administratie_id }}/verkoop/{{ factuur.id }}/definitief">
+    <div class="knoppen">
+      <button type="submit" {% if ontbreekt %}disabled{% endif %}>Definitief maken en boeken</button>
+    </div>
+    <p class="onder" style="color:var(--zacht);font-size:14px;margin-bottom:0">
+      Hierna krijgt de factuur een nummer en kan hij niet meer worden gewijzigd
+      of weggegooid. Een fout zet je daarna recht met een creditfactuur.
+    </p>
+  </form>
+
+  <form class="kaart" method="post"
+        action="/administratie/{{ administratie_id }}/verkoop/{{ factuur.id }}/verwijderen">
+    <div class="knoppen">
+      <button type="submit" class="tweede">Concept weggooien</button>
+    </div>
+    <p class="onder" style="color:var(--zacht);font-size:14px;margin-bottom:0">
+      Een concept heeft nog geen nummer, dus dit laat geen gat in de nummering achter.
+    </p>
+  </form>
+{% elif factuur.soort != "creditfactuur" %}
+  <form class="kaart" method="post"
+        action="/administratie/{{ administratie_id }}/verkoop/{{ factuur.id }}/crediteren">
+    <div class="knoppen">
+      <button type="submit" class="tweede">Creditfactuur maken</button>
+    </div>
+    <p class="onder" style="color:var(--zacht);font-size:14px;margin-bottom:0">
+      Dit zet een concept klaar met dezelfde regels negatief, met een verwijzing
+      naar deze factuur. De factuur zelf blijft staan zoals hij de deur uit is gegaan.
+    </p>
+  </form>
+{% endif %}
+
+{% endblock %}
+```
+
+## `boekhouding/boekhouding/web/templates/klanten.html`
+
+```html
+{% extends "basis.html" %}
+{% block titel %}Klanten{% endblock %}
+{% block kruimel %}<a href="/administratie/{{ administratie_id }}">&larr; Terug naar de facturen</a>{% endblock %}
+{% block kop %}Klanten{% endblock %}
+{% block inhoud %}
+
+{% if melding %}<div class="melding">{{ melding }}</div>{% endif %}
+
+{% if not klanten %}
+  <p class="leeg">Nog geen klanten. Voeg er hieronder een toe.</p>
+{% endif %}
+
+{% for klant in klanten %}
+  <form class="kaart" method="post"
+        action="/administratie/{{ administratie_id }}/klant/{{ klant.id }}">
+    <h3 style="margin:0 0 10px;font-size:17px">{{ klant.naam }}</h3>
+    {% for veld in velden %}
+      <div class="veld">
+        <label for="{{ veld }}-{{ klant.id }}">{{ veld|replace("_", " ")|capitalize }}</label>
+        <input type="text" id="{{ veld }}-{{ klant.id }}" name="{{ veld }}"
+               value="{{ klant[veld] if klant[veld] is not none else "" }}"
+               {% if veld == "betalingstermijn" %}inputmode="numeric"{% endif %}>
+      </div>
+    {% endfor %}
+    <div class="knoppen">
+      <button type="submit" class="tweede">Bijwerken</button>
+    </div>
+  </form>
+{% endfor %}
+
+<form class="kaart" method="post" action="/administratie/{{ administratie_id }}/klanten">
+  <h3 style="margin:0 0 10px;font-size:17px">Nieuwe klant</h3>
+  {% for veld in velden %}
+    <div class="veld">
+      <label for="nieuw-{{ veld }}">{{ veld|replace("_", " ")|capitalize }}</label>
+      <input type="text" id="nieuw-{{ veld }}" name="{{ veld }}"
+             value="{% if veld == 'betalingstermijn' %}30{% elif veld == 'land' %}Nederland{% endif %}"
+             {% if veld == "betalingstermijn" %}inputmode="numeric"{% endif %}>
+    </div>
+  {% endfor %}
+  <div class="knoppen"><button type="submit">Klant toevoegen</button></div>
+</form>
+
+{% endblock %}
+```
+
+## `boekhouding/boekhouding/web/templates/instellingen.html`
+
+```html
+{% extends "basis.html" %}
+{% block titel %}Eigen gegevens{% endblock %}
+{% block kruimel %}<a href="/administratie/{{ administratie_id }}">&larr; Terug naar de facturen</a>{% endblock %}
+{% block kop %}Eigen gegevens{% endblock %}
+{% block inhoud %}
+
+{% if melding %}<div class="melding">{{ melding }}</div>{% endif %}
+
+<p class="onder" style="color:var(--zacht)">
+  Deze gegevens komen op elke verkoopfactuur te staan. De Belastingdienst
+  verplicht je naam, je adres en je btw-identificatienummer; zonder die drie
+  kan een factuur niet definitief worden.
+</p>
+
+<form class="kaart" method="post"
+      action="/administratie/{{ administratie_id }}/instellingen">
+  {% for veld in velden %}
+    <div class="veld">
+      <label for="{{ veld }}">{{ veld|replace("_", " ")|capitalize }}</label>
+      <input type="text" id="{{ veld }}" name="{{ veld }}"
+             value="{{ eigen[veld] or "" }}">
+    </div>
+  {% endfor %}
+  <div class="knoppen"><button type="submit">Opslaan</button></div>
+</form>
 
 {% endblock %}
 ```
@@ -8117,7 +10613,12 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
       "21": "1510",
       "9": "1511"
     },
-    "bank": "1100"
+    "bank": "1100",
+    "omzet": {
+      "21": "8000",
+      "9": "8010",
+      "0": "8020"
+    }
   },
   "rekeningen": [
     {
@@ -8354,7 +10855,12 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
       "21": "1510",
       "9": "1511"
     },
-    "bank": "1100"
+    "bank": "1100",
+    "omzet": {
+      "21": "8000",
+      "9": "8010",
+      "0": "8020"
+    }
   },
   "rekeningen": [
     {
@@ -8591,7 +11097,12 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
       "21": "1510",
       "9": "1511"
     },
-    "bank": "1100"
+    "bank": "1100",
+    "omzet": {
+      "21": "8000",
+      "9": "8010",
+      "0": "8020"
+    }
   },
   "rekeningen": [
     {
@@ -8922,9 +11433,10 @@ hij goedgekeurd en geboekt. Dat is normaal handwerk van de eigenaar; hier
 gebeurt het zodat er iets te zien is.
 
 En met `--bank` wordt er ook een bankafschrift ingelezen (MT940), zodat
-het aflettersscherm gevuld is:
+het aflettersscherm gevuld is. `--verkoop` zet je eigen bedrijfsgegevens,
+een klant en twee verkoopfacturen klaar:
 
-    python scripts/vul_testdata.py --met-pdf --boek --bank
+    python scripts/vul_testdata.py --met-pdf --boek --bank --verkoop
 """
 
 import sys
@@ -8936,6 +11448,11 @@ sys.path.insert(0, str(BASIS))
 from boekhouding import (  # noqa: E402
     boek_factuur,
     importeer_bankafschrift,
+    maak_definitief,
+    maak_klant,
+    maak_verkoopfactuur,
+    wijzig_administratie,
+    zet_verkoopregels,
     keur_factuur_goed,
     kies_rekening,
     lees_facturen,
@@ -8971,6 +11488,7 @@ def main() -> int:
     met_pdf = "--met-pdf" in sys.argv
     boeken = "--boek" in sys.argv
     met_bank = "--bank" in sys.argv
+    met_verkoop = "--verkoop" in sys.argv
     bestanden = BESTANDEN + (["06-factuur-x.pdf"] if met_pdf else [])
 
     GEGEVENS.mkdir(exist_ok=True)
@@ -9017,6 +11535,41 @@ def main() -> int:
         )
         for reden in samenvatting["redenen"]:
             print(f"       {reden[:88]}")
+
+    if met_verkoop:
+        wijzig_administratie(conn, administratie_id, {
+            "naam": "Alkhadraa Advies",
+            "adres": "Zonnebloemstraat 14", "postcode": "3011 AB",
+            "plaats": "Rotterdam", "btw_id": "NL002233445B01",
+            "kvk_nummer": "87654321", "iban": "NL44RABO0123456789",
+            "email": "post@alkhadraa.test",
+        })
+        klant_id = maak_klant(conn, administratie_id, {
+            "naam": "Van Dijk ICT-diensten", "adres": "Keizersgracht 218",
+            "postcode": "1016 DZ", "plaats": "Amsterdam",
+            "btw_id": "NL110353601B43", "email": "administratie@vandijk.test",
+        })
+        print()
+        for datum, regels in (
+            ("2026-07-08", [
+                ("Advies juli 2026", "7.5", "95.00", "21"),
+                ("Vakliteratuur", "3", "24.95", "9"),
+            ]),
+            ("2026-08-12", [("Onderhoud augustus", "1", "2400.00", "21")]),
+        ):
+            factuur_id = maak_verkoopfactuur(
+                conn, administratie_id, klant_id, datum
+            )
+            zet_verkoopregels(conn, factuur_id, [
+                {"omschrijving": o, "aantal": a, "prijs_per_stuk": p,
+                 "btw_percentage": b}
+                for o, a, p, b in regels
+            ])
+            nummer, redenen = maak_definitief(
+                conn, factuur_id, opslagmap=str(GEGEVENS / "opslag")
+            )
+            print(f"  verkoopfactuur {nummer or 'niet definitief'}"
+                  f"{' — ' + redenen[0] if redenen else ''}")
 
     facturen = lees_facturen(conn, administratie_id)
     conn.close()
@@ -9067,6 +11620,7 @@ BRONBESTANDEN = [
     "boekhouding/validatie.py",
     "boekhouding/rekeningschema.py",
     "boekhouding/documenten.py",
+    "boekhouding/pdf_schrijver.py",
     "boekhouding/omgeving.py",
     "boekhouding/ubl.py",
     "boekhouding/routering.py",
@@ -9078,6 +11632,8 @@ BRONBESTANDEN = [
     "boekhouding/volledigheid.py",
     "boekhouding/bank.py",
     "boekhouding/afletteren.py",
+    "boekhouding/verkoop.py",
+    "boekhouding/factuur_pdf.py",
     "boekhouding/web/__init__.py",
     "boekhouding/web/app.py",
     "boekhouding/web/ubl_weergave.py",
@@ -9087,6 +11643,10 @@ BRONBESTANDEN = [
     "boekhouding/web/templates/review.html",
     "boekhouding/web/templates/btw.html",
     "boekhouding/web/templates/bank.html",
+    "boekhouding/web/templates/verkoop.html",
+    "boekhouding/web/templates/verkoopfactuur.html",
+    "boekhouding/web/templates/klanten.html",
+    "boekhouding/web/templates/instellingen.html",
     "boekhouding/web/templates/fout.html",
     "boekhouding/config/btw_2024.json",
     "boekhouding/config/btw_2025.json",
@@ -9103,7 +11663,6 @@ BRONBESTANDEN = [
     "tests/genereer_ubl_testbestanden.py",
     "tests/genereer_banktestbestanden.py",
     "tests/testmateriaal/__init__.py",
-    "tests/testmateriaal/pdf_schrijver.py",
     "tests/testmateriaal/bitmapfont.py",
     "tests/testmateriaal/jpeg_schrijver.py",
     "tests/conftest.py",
@@ -9121,6 +11680,7 @@ BRONBESTANDEN = [
     "tests/test_volledigheid.py",
     "tests/test_bank.py",
     "tests/test_afletteren.py",
+    "tests/test_verkoop.py",
     "tests/test_web.py",
     "pytest.ini",
     "requirements.txt",
@@ -9648,7 +12208,7 @@ from typing import Optional
 sys.path.insert(0, str(Path(__file__).parent))
 
 from testmateriaal.jpeg_schrijver import Bitmap, schrijf_jpeg
-from testmateriaal.pdf_schrijver import Pagina, schrijf_pdf
+from boekhouding.pdf_schrijver import Pagina, schrijf_pdf
 
 SEED = 20260827
 DOELMAP = Path(__file__).parent / "testfacturen"
@@ -10169,7 +12729,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 
-from testmateriaal.pdf_schrijver import Pagina, schrijf_pdf_met_bijlage
+from boekhouding.pdf_schrijver import Pagina, schrijf_pdf_met_bijlage
 
 DOELMAP = Path(__file__).parent / "testfacturen" / "ubl"
 
@@ -10624,183 +13184,6 @@ Pydantic, pytest) en testmateriaal genereren is geen reden om daarvan af
 te wijken. De PDF- en JPEG-schrijvers hier zijn klein en doen precies
 wat er voor factuurdocumenten nodig is, niet meer.
 """
-```
-
-## `boekhouding/tests/testmateriaal/pdf_schrijver.py`
-
-```python
-"""Minimale PDF-schrijver voor factuurdocumenten.
-
-Genoeg voor een echte factuurlay-out: tekst links en rechts uitgelijnd,
-in normaal of vet, plus horizontale lijnen. Geen afbeeldingen, geen
-meerdere pagina's, geen tijdstempel in het bestand — dat laatste zorgt
-ervoor dat twee keer genereren byte-voor-byte hetzelfde bestand geeft.
-
-Coördinaten gaan van linksboven, zoals je een factuur leest; intern
-wordt dat omgerekend naar het PDF-assenstelsel (linksonder).
-"""
-
-from pathlib import Path
-
-A4_BREEDTE = 595  # punten (72 dpi)
-A4_HOOGTE = 842
-
-# Tekenbreedtes van Helvetica in duizendsten van de lettergrootte.
-# Alleen nodig om bedragen netjes rechts uit te lijnen. Cijfers zijn in
-# Helvetica en Helvetica-Bold even breed (556), dus een vetgedrukt
-# totaal lijnt uit op dezelfde rechterkantlijn.
-_BREEDTES = {
-    " ": 278, "!": 278, '"': 355, "#": 556, "$": 556, "%": 889, "&": 667,
-    "'": 191, "(": 333, ")": 333, "*": 389, "+": 584, ",": 278, "-": 333,
-    ".": 278, "/": 278, ":": 278, ";": 278, "<": 584, "=": 584, ">": 584,
-    "?": 556, "@": 1015, "[": 278, "\\": 278, "]": 278, "^": 469, "_": 556,
-    "`": 333, "{": 334, "|": 260, "}": 334, "~": 584, "€": 556,
-    "A": 667, "B": 667, "C": 722, "D": 722, "E": 667, "F": 611, "G": 778,
-    "H": 722, "I": 278, "J": 500, "K": 667, "L": 556, "M": 833, "N": 722,
-    "O": 778, "P": 667, "Q": 778, "R": 722, "S": 667, "T": 611, "U": 722,
-    "V": 667, "W": 944, "X": 667, "Y": 667, "Z": 611,
-    "a": 556, "b": 556, "c": 500, "d": 556, "e": 556, "f": 278, "g": 556,
-    "h": 556, "i": 222, "j": 222, "k": 500, "l": 222, "m": 833, "n": 556,
-    "o": 556, "p": 556, "q": 556, "r": 333, "s": 500, "t": 278, "u": 556,
-    "v": 500, "w": 722, "x": 500, "y": 500, "z": 500,
-}
-_STANDAARDBREEDTE = 556
-
-
-def tekstbreedte(tekst: str, grootte: float) -> float:
-    """Breedte van een regel tekst in punten."""
-    duizendsten = sum(
-        _BREEDTES.get(teken, _STANDAARDBREEDTE)
-        if not teken.isdigit()
-        else 556
-        for teken in tekst
-    )
-    return duizendsten * grootte / 1000
-
-
-def _ontsnap(tekst: str) -> bytes:
-    """Zet tekst om naar de bytes die in een PDF-string mogen staan."""
-    ruw = tekst.replace("\\", r"\\").replace("(", r"\(").replace(")", r"\)")
-    # WinAnsiEncoding komt overeen met cp1252; onbekende tekens worden
-    # een vraagteken in plaats van een crash.
-    return ruw.encode("cp1252", errors="replace")
-
-
-class Pagina:
-    """Verzamelt de tekenopdrachten voor één pagina."""
-
-    def __init__(self, breedte: int = A4_BREEDTE, hoogte: int = A4_HOOGTE):
-        self.breedte = breedte
-        self.hoogte = hoogte
-        self._opdrachten: list[bytes] = []
-
-    def tekst(
-        self, x: float, y: float, tekst: str, grootte: float = 9, vet: bool = False
-    ) -> None:
-        """Zet tekst neer met de linkerkant op x, y punten vanaf linksboven."""
-        lettertype = b"/F2" if vet else b"/F1"
-        self._opdrachten.append(
-            b"BT " + lettertype + b" " + f"{grootte:g}".encode() + b" Tf "
-            + f"{x:g} {self.hoogte - y:g}".encode() + b" Td ("
-            + _ontsnap(tekst) + b") Tj ET"
-        )
-
-    def tekst_rechts(
-        self, x: float, y: float, tekst: str, grootte: float = 9, vet: bool = False
-    ) -> None:
-        """Zet tekst neer met de rechterkant op x — voor bedragen."""
-        self.tekst(x - tekstbreedte(tekst, grootte), y, tekst, grootte, vet)
-
-    def lijn(
-        self, x1: float, y1: float, x2: float, y2: float, dikte: float = 0.5,
-        grijs: float = 0.0,
-    ) -> None:
-        self._opdrachten.append(
-            f"{grijs:g} G {dikte:g} w {x1:g} {self.hoogte - y1:g} m "
-            f"{x2:g} {self.hoogte - y2:g} l S".encode()
-        )
-
-    def inhoudsstroom(self) -> bytes:
-        return b"\n".join(self._opdrachten)
-
-
-def _bouw_pdf(pagina: "Pagina", bijlage: tuple[str, bytes] | None) -> bytes:
-    """Zet de PDF-objecten in elkaar, eventueel met een ingebed bestand.
-
-    Een bijlage maakt hier een Factur-X/ZUGFeRD-achtige PDF van: dezelfde
-    factuur is dan zowel leesbaar voor een mens als machineleesbaar als
-    XML. De XML is dan de betrouwbaarste bron.
-    """
-    stroom = pagina.inhoudsstroom()
-    catalogus = b"<< /Type /Catalog /Pages 2 0 R"
-    if bijlage is not None:
-        catalogus += (
-            b" /Names << /EmbeddedFiles << /Names [(" + bijlage[0].encode()
-            + b") 7 0 R] >> >> /AF [7 0 R]"
-        )
-    catalogus += b" >>"
-
-    objecten = [
-        catalogus,
-        b"<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
-        b"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 "
-        + f"{pagina.breedte} {pagina.hoogte}".encode()
-        + b"] /Contents 4 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> >>",
-        b"<< /Length " + str(len(stroom)).encode() + b" >>\nstream\n"
-        + stroom + b"\nendstream",
-        b"<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica "
-        b"/Encoding /WinAnsiEncoding >>",
-        b"<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold "
-        b"/Encoding /WinAnsiEncoding >>",
-    ]
-
-    if bijlage is not None:
-        naam, gegevens = bijlage[0].encode(), bijlage[1]
-        objecten.append(
-            b"<< /Type /Filespec /F (" + naam + b") /UF (" + naam
-            + b") /AFRelationship /Data /Desc (Factuur als e-factuur)"
-            b" /EF << /F 8 0 R >> >>"
-        )
-        objecten.append(
-            b"<< /Type /EmbeddedFile /Subtype /text#2Fxml /Length "
-            + str(len(gegevens)).encode() + b" >>\nstream\n" + gegevens
-            + b"\nendstream"
-        )
-
-    uit = bytearray(b"%PDF-1.4\n")
-    posities = []
-    for nummer, obj in enumerate(objecten, start=1):
-        posities.append(len(uit))
-        uit += str(nummer).encode() + b" 0 obj\n" + obj + b"\nendobj\n"
-
-    start_xref = len(uit)
-    aantal = len(objecten) + 1
-    uit += b"xref\n0 " + str(aantal).encode() + b"\n0000000000 65535 f \n"
-    for positie in posities:
-        uit += f"{positie:010d} 00000 n \n".encode()
-    uit += (
-        b"trailer\n<< /Size " + str(aantal).encode() + b" /Root 1 0 R >>\n"
-        b"startxref\n" + str(start_xref).encode() + b"\n%%EOF\n"
-    )
-    return bytes(uit)
-
-
-def schrijf_pdf(pagina: "Pagina", pad: str | Path) -> Path:
-    """Schrijf één pagina weg als PDF-bestand."""
-    pad = Path(pad)
-    pad.parent.mkdir(parents=True, exist_ok=True)
-    pad.write_bytes(_bouw_pdf(pagina, None))
-    return pad
-
-
-def schrijf_pdf_met_bijlage(
-    pagina: "Pagina", pad: str | Path, bijlage_naam: str, bijlage: bytes
-) -> Path:
-    """Schrijf een PDF met een ingebed bestand (Factur-X / ZUGFeRD)."""
-    pad = Path(pad)
-    pad.parent.mkdir(parents=True, exist_ok=True)
-    pad.write_bytes(_bouw_pdf(pagina, (bijlage_naam, bijlage)))
-    return pad
 ```
 
 ## `boekhouding/tests/testmateriaal/bitmapfont.py`
@@ -15748,6 +18131,659 @@ def test_koppelen_blijft_geweigerd_bij_een_onbekende_richting(conn, opslag):
     assert "boek de factuur eerst" in redenen[0]
 ```
 
+## `boekhouding/tests/test_verkoop.py`
+
+```python
+"""Tests voor verkoopfacturen (module 8).
+
+De kern: de bedragen komen uit de code, de nummering heeft geen gaten,
+en een definitieve factuur staat vast.
+"""
+
+from datetime import date
+from decimal import Decimal
+
+import pytest
+
+from boekhouding import (
+    afronden,
+    bereken_regel,
+    bereken_totalen,
+    bereken_aangifte,
+    controleer_verkoopfactuur,
+    importeer_bankafschrift,
+    koppel_transactie,
+    lees_audit_trail,
+    lees_banktransacties,
+    lees_boeking,
+    lees_document,
+    lees_klant,
+    lees_verkoopfactuur,
+    lees_verkoopfacturen,
+    maak_administratie,
+    maak_creditfactuur,
+    maak_definitief,
+    maak_klant,
+    maak_tabellen,
+    maak_verbinding,
+    maak_verkoopfactuur,
+    open_facturen,
+    openstaande_posten,
+    verwijder_verkoopfactuur,
+    vervaldatum,
+    wijzig_administratie,
+    wijzig_klant,
+    wijzig_verkoopfactuur,
+    zet_verkoopregels,
+)
+from boekhouding.factuur_pdf import maak_factuur_pdf
+
+VANDAAG = date(2026, 12, 31)
+
+
+@pytest.fixture
+def opslag(tmp_path):
+    return str(tmp_path / "opslag")
+
+
+@pytest.fixture
+def conn(tmp_path):
+    verbinding = maak_verbinding(str(tmp_path / "boekhouding.sqlite"))
+    maak_tabellen(verbinding)
+    maak_administratie(verbinding, "Alkhadraa Advies")
+    # De eigen gegevens horen op elke factuur; zonder deze drie kan een
+    # factuur niet definitief worden.
+    wijzig_administratie(verbinding, 1, {
+        "adres": "Zonnebloemstraat 14", "postcode": "3011 AB",
+        "plaats": "Rotterdam", "btw_id": "NL002233445B01",
+        "kvk_nummer": "87654321", "iban": "NL44RABO0123456789",
+    })
+    yield verbinding
+    verbinding.close()
+
+
+def klant(conn, naam="Van Dijk ICT-diensten"):
+    return maak_klant(conn, 1, {
+        "naam": naam, "adres": "Keizersgracht 218", "postcode": "1016 DZ",
+        "plaats": "Amsterdam", "email": "post@vandijk.test",
+    })
+
+
+REGELS = [
+    {"omschrijving": "Advies juli 2026", "aantal": "7.5",
+     "prijs_per_stuk": "95.00", "btw_percentage": "21"},
+    {"omschrijving": "Vakliteratuur", "aantal": "3",
+     "prijs_per_stuk": "24.95", "btw_percentage": "9"},
+]
+
+
+def concept(conn, klant_id=None, datum="2026-07-14", regels=None):
+    factuur_id = maak_verkoopfactuur(
+        conn, 1, klant_id or klant(conn), datum
+    )
+    zet_verkoopregels(conn, factuur_id, REGELS if regels is None else regels)
+    return factuur_id
+
+
+# --- klanten ------------------------------------------------------------
+
+def test_een_klant_krijgt_standaard_dertig_dagen(conn):
+    klant_id = maak_klant(conn, 1, {"naam": "Van Dijk"})
+
+    assert lees_klant(conn, klant_id)["betalingstermijn"] == 30
+
+
+def test_een_klant_zonder_naam_bestaat_niet(conn):
+    with pytest.raises(ValueError, match="zonder naam"):
+        maak_klant(conn, 1, {"naam": "   "})
+
+
+def test_klantgegevens_wijzigen_komt_in_de_audit_trail(conn):
+    klant_id = klant(conn)
+    wijzig_klant(conn, klant_id, {"plaats": "Utrecht"})
+
+    trail = lees_audit_trail(conn, klant_id, tabel="klanten")
+    wijziging = [r for r in trail if r["veld"] == "plaats"][0]
+    assert (wijziging["oude_waarde"], wijziging["nieuwe_waarde"]) == (
+        "Amsterdam", "Utrecht"
+    )
+
+
+# --- rekenen ------------------------------------------------------------
+
+def test_het_regelbedrag_komt_uit_aantal_maal_prijs():
+    regel = bereken_regel(
+        {"omschrijving": "Advies", "aantal": "7.5", "prijs_per_stuk": "95.00",
+         "btw_percentage": "21"}, 1,
+    )
+
+    assert regel.bedrag_excl == Decimal("712.50")
+    assert regel.btw_bedrag == Decimal("149.63")
+
+
+def test_afronden_gaat_bij_een_halve_cent_omhoog():
+    """Zoals op papier; Python rondt standaard naar even."""
+    assert afronden(Decimal("0.125")) == Decimal("0.13")
+    assert afronden(Decimal("0.135")) == Decimal("0.14")
+
+
+def test_de_btw_wordt_per_tarief_over_het_totaal_berekend():
+    """Niet als som van afgeronde regels: dan loopt er per regel iets weg."""
+    regels = [
+        bereken_regel({"aantal": "3", "prijs_per_stuk": "0.35",
+                       "btw_percentage": "21", "omschrijving": "a"}, 1),
+        bereken_regel({"aantal": "3", "prijs_per_stuk": "0.35",
+                       "btw_percentage": "21", "omschrijving": "b"}, 2),
+    ]
+    totalen = bereken_totalen(regels)
+
+    # 2 × 1,05 = 2,10 en 21% daarvan is 0,441 → 0,44.
+    assert totalen.bedrag_excl == Decimal("2.10")
+    assert totalen.btw_bedrag == Decimal("0.44")
+    assert totalen.bedrag_incl == Decimal("2.54")
+
+
+def test_btw_over_meerdere_regels_met_verschillende_tarieven(conn):
+    factuur_id = concept(conn)
+    totalen = lees_verkoopfactuur(conn, factuur_id)["totalen"]
+
+    assert totalen.per_tarief["21"] == (Decimal("712.50"), Decimal("149.63"))
+    assert totalen.per_tarief["9"] == (Decimal("74.85"), Decimal("6.74"))
+    assert totalen.bedrag_excl == Decimal("787.35")
+    assert totalen.bedrag_incl == Decimal("943.72")
+
+
+def test_een_float_wordt_niet_als_bedrag_geaccepteerd():
+    """Net als bij een inkoopfactuur: geen float in de bedragen."""
+    regel = bereken_regel(
+        {"omschrijving": "a", "aantal": 2, "prijs_per_stuk": 9.95,
+         "btw_percentage": "21"}, 1,
+    )
+    assert regel.bedrag_excl == Decimal("0.00")
+
+
+def test_de_vervaldatum_volgt_uit_de_termijn():
+    assert vervaldatum(date(2026, 7, 14), 30) == date(2026, 8, 13)
+
+
+def test_de_vervaldatum_staat_ook_op_de_factuur(conn):
+    factuur_id = concept(conn)
+
+    assert lees_verkoopfactuur(conn, factuur_id)["vervaldatum"] == "2026-08-13"
+
+
+def test_een_andere_termijn_verschuift_de_vervaldatum(conn):
+    factuur_id = concept(conn)
+    wijzig_verkoopfactuur(conn, factuur_id, {"betalingstermijn": "14"})
+
+    assert lees_verkoopfactuur(conn, factuur_id)["vervaldatum"] == "2026-07-28"
+
+
+# --- verplichte gegevens ------------------------------------------------
+
+def test_zonder_eigen_gegevens_kan_een_factuur_niet_definitief(tmp_path):
+    verbinding = maak_verbinding(str(tmp_path / "leeg.sqlite"))
+    maak_tabellen(verbinding)
+    maak_administratie(verbinding, "Zaak zonder gegevens")
+    klant_id = maak_klant(verbinding, 1, {
+        "naam": "Van Dijk", "adres": "Keizersgracht 218", "plaats": "Amsterdam"
+    })
+    factuur_id = maak_verkoopfactuur(verbinding, 1, klant_id, "2026-07-14")
+    zet_verkoopregels(verbinding, factuur_id, REGELS)
+
+    ontbreekt = controleer_verkoopfactuur(verbinding, factuur_id)
+    assert "je eigen adres" in ontbreekt
+    assert "je btw-identificatienummer" in ontbreekt
+
+    nummer, redenen = maak_definitief(verbinding, factuur_id)
+    assert nummer is None
+    assert redenen == ontbreekt
+    verbinding.close()
+
+
+def test_zonder_klantadres_kan_het_ook_niet(conn):
+    klant_id = maak_klant(conn, 1, {"naam": "Van Dijk"})
+    factuur_id = concept(conn, klant_id)
+
+    ontbreekt = controleer_verkoopfactuur(conn, factuur_id)
+    assert "het adres van de klant" in ontbreekt
+    assert "de woonplaats van de klant" in ontbreekt
+
+
+def test_zonder_regels_kan_het_niet(conn):
+    factuur_id = maak_verkoopfactuur(conn, 1, klant(conn), "2026-07-14")
+
+    assert "minstens één factuurregel" in controleer_verkoopfactuur(conn, factuur_id)
+
+
+def test_zonder_factuurdatum_kan_het_niet(conn):
+    factuur_id = concept(conn, datum=None)
+
+    assert "de factuurdatum" in controleer_verkoopfactuur(conn, factuur_id)
+
+
+def test_een_regel_zonder_omschrijving_of_prijs_wordt_genoemd(conn):
+    factuur_id = concept(conn, regels=[
+        {"omschrijving": "", "aantal": "1", "prijs_per_stuk": "0",
+         "btw_percentage": "21"},
+    ])
+    ontbreekt = controleer_verkoopfactuur(conn, factuur_id)
+
+    assert "een omschrijving bij regel 1" in ontbreekt
+    assert "een prijs bij regel 1" in ontbreekt
+
+
+def test_een_btw_tarief_dat_niet_bestaat_wordt_geweigerd(conn):
+    factuur_id = concept(conn, regels=[
+        {"omschrijving": "Advies", "aantal": "1", "prijs_per_stuk": "100",
+         "btw_percentage": "13"},
+    ])
+    ontbreekt = controleer_verkoopfactuur(conn, factuur_id)
+
+    assert any("13% bestaat niet in 2026" in punt for punt in ontbreekt)
+
+
+def test_een_complete_factuur_heeft_niets_openstaan(conn):
+    assert controleer_verkoopfactuur(conn, concept(conn)) == []
+
+
+# --- nummering ----------------------------------------------------------
+
+def test_de_nummering_loopt_door_per_jaar(conn, opslag):
+    klant_id = klant(conn)
+    nummers = []
+    for _ in range(3):
+        nummers.append(
+            maak_definitief(conn, concept(conn, klant_id), opslagmap=opslag)[0]
+        )
+
+    assert nummers == ["2026-0001", "2026-0002", "2026-0003"]
+
+
+def test_elk_jaar_begint_de_nummering_opnieuw(conn, opslag):
+    klant_id = klant(conn)
+    eerste = maak_definitief(
+        conn, concept(conn, klant_id, "2025-12-30"), opslagmap=opslag
+    )[0]
+    tweede = maak_definitief(
+        conn, concept(conn, klant_id, "2026-01-05"), opslagmap=opslag
+    )[0]
+
+    assert eerste == "2025-0001"
+    assert tweede == "2026-0001"
+
+
+def test_een_jaar_zonder_config_wordt_geweigerd(conn, opslag):
+    """Er is geen btw-config voor 2027, en dat wordt gezegd in plaats van
+    de tarieven van vorig jaar te gebruiken."""
+    factuur_id = concept(conn, klant(conn), "2027-01-05")
+
+    ontbreekt = controleer_verkoopfactuur(conn, factuur_id)
+    assert any("btw_2027.json" in punt for punt in ontbreekt)
+    assert maak_definitief(conn, factuur_id, opslagmap=opslag)[0] is None
+
+
+def test_een_concept_heeft_nog_geen_nummer(conn):
+    assert lees_verkoopfactuur(conn, concept(conn))["factuurnummer"] is None
+
+
+def test_een_weggegooid_concept_laat_geen_gat_achter(conn, opslag):
+    """De reden dat een nummer pas bij het definitief maken wordt gegeven."""
+    klant_id = klant(conn)
+    eerste = maak_definitief(
+        conn, concept(conn, klant_id), opslagmap=opslag
+    )[0]
+
+    weg = concept(conn, klant_id)
+    assert verwijder_verkoopfactuur(conn, weg) == (True, [])
+
+    derde = maak_definitief(conn, concept(conn, klant_id), opslagmap=opslag)[0]
+    assert (eerste, derde) == ("2026-0001", "2026-0002")
+
+
+def test_de_nummers_van_een_jaar_hebben_geen_gaten(conn, opslag):
+    klant_id = klant(conn)
+    for _ in range(5):
+        factuur_id = concept(conn, klant_id)
+        if factuur_id % 2 == 0:          # gooi er een paar tussenuit
+            verwijder_verkoopfactuur(conn, factuur_id)
+        else:
+            maak_definitief(conn, factuur_id, opslagmap=opslag)
+
+    nummers = sorted(
+        f["nummer_volg"] for f in lees_verkoopfacturen(conn, 1)
+        if f["status"] == "definitief"
+    )
+    assert nummers == list(range(1, len(nummers) + 1))
+
+
+# --- concept versus definitief ------------------------------------------
+
+def test_een_concept_mag_worden_gewijzigd(conn):
+    factuur_id = concept(conn)
+
+    gelukt, redenen = zet_verkoopregels(conn, factuur_id, [
+        {"omschrijving": "Iets anders", "aantal": "1",
+         "prijs_per_stuk": "50.00", "btw_percentage": "21"},
+    ])
+    assert (gelukt, redenen) == (True, [])
+    assert len(lees_verkoopfactuur(conn, factuur_id)["regels"]) == 1
+
+
+def test_een_definitieve_factuur_wordt_niet_gewijzigd(conn, opslag):
+    factuur_id = concept(conn)
+    maak_definitief(conn, factuur_id, opslagmap=opslag)
+
+    gelukt, redenen = zet_verkoopregels(conn, factuur_id, [])
+    assert gelukt is False
+    assert "nooit gewijzigd of verwijderd" in redenen[0]
+    assert len(lees_verkoopfactuur(conn, factuur_id)["regels"]) == 2
+
+
+def test_een_definitieve_factuur_wordt_niet_verwijderd(conn, opslag):
+    factuur_id = concept(conn)
+    maak_definitief(conn, factuur_id, opslagmap=opslag)
+
+    gelukt, redenen = verwijder_verkoopfactuur(conn, factuur_id)
+    assert gelukt is False
+    assert "creditfactuur" in redenen[0]
+    assert lees_verkoopfactuur(conn, factuur_id)["status"] == "definitief"
+
+
+def test_twee_keer_definitief_maken_gebeurt_niet(conn, opslag):
+    factuur_id = concept(conn)
+    maak_definitief(conn, factuur_id, opslagmap=opslag)
+
+    nummer, redenen = maak_definitief(conn, factuur_id, opslagmap=opslag)
+    assert nummer is None
+    assert "al definitief" in redenen[0]
+
+
+def test_de_klantgegevens_worden_vastgelegd(conn, opslag):
+    """Verhuist de klant later, dan verandert de verstuurde factuur niet."""
+    klant_id = klant(conn)
+    factuur_id = concept(conn, klant_id)
+    maak_definitief(conn, factuur_id, opslagmap=opslag)
+
+    wijzig_klant(conn, klant_id, {"adres": "Nieuwe Gracht 1", "plaats": "Utrecht"})
+
+    factuur = lees_verkoopfactuur(conn, factuur_id)
+    assert factuur["klant"]["adres"] == "Keizersgracht 218"
+    assert factuur["klant"]["plaats"] == "Amsterdam"
+
+
+# --- de boeking ---------------------------------------------------------
+
+def test_definitief_maken_levert_de_boeking_op(conn, opslag):
+    factuur_id = concept(conn)
+    maak_definitief(conn, factuur_id, opslagmap=opslag)
+
+    factuur = lees_verkoopfactuur(conn, factuur_id)
+    boeking = lees_boeking(conn, factuur["boeking_id"])
+    assert [(r["rekening"], r["debet"], r["credit"]) for r in boeking["regels"]] == [
+        ("1300", "943.72", "0.00"),     # debiteuren
+        ("8000", "0.00", "712.50"),     # omzet hoog
+        ("8010", "0.00", "74.85"),      # omzet laag
+        ("1510", "0.00", "149.63"),     # btw hoog
+        ("1511", "0.00", "6.74"),       # btw laag
+    ]
+
+
+def test_de_boeking_is_in_balans(conn, opslag):
+    factuur_id = concept(conn)
+    maak_definitief(conn, factuur_id, opslagmap=opslag)
+    boeking = lees_boeking(conn, lees_verkoopfactuur(conn, factuur_id)["boeking_id"])
+
+    debet = sum(Decimal(r["debet"]) for r in boeking["regels"])
+    credit = sum(Decimal(r["credit"]) for r in boeking["regels"])
+    assert debet == credit == Decimal("943.72")
+
+
+# --- creditfactuur ------------------------------------------------------
+
+def test_een_creditfactuur_spiegelt_de_regels(conn, opslag):
+    factuur_id = concept(conn)
+    maak_definitief(conn, factuur_id, opslagmap=opslag)
+
+    credit_id, redenen = maak_creditfactuur(conn, factuur_id)
+    assert redenen == []
+
+    credit = lees_verkoopfactuur(conn, credit_id)
+    assert credit["status"] == "concept"
+    assert credit["soort"] == "creditfactuur"
+    assert credit["corrigeert_id"] == factuur_id
+    assert credit["totalen"].bedrag_incl == Decimal("-943.72")
+
+
+def test_de_creditfactuur_krijgt_het_volgende_nummer(conn, opslag):
+    factuur_id = concept(conn)
+    maak_definitief(conn, factuur_id, opslagmap=opslag)
+    credit_id, _ = maak_creditfactuur(conn, factuur_id)
+
+    nummer, redenen = maak_definitief(conn, credit_id, opslagmap=opslag)
+    assert (nummer, redenen) == ("2026-0002", [])
+
+
+def test_origineel_en_creditfactuur_zijn_samen_nul(conn, opslag):
+    factuur_id = concept(conn)
+    maak_definitief(conn, factuur_id, opslagmap=opslag)
+    credit_id, _ = maak_creditfactuur(conn, factuur_id)
+    maak_definitief(conn, credit_id, opslagmap=opslag)
+
+    saldo: dict[str, Decimal] = {}
+    for factuur in (factuur_id, credit_id):
+        boeking = lees_boeking(
+            conn, lees_verkoopfactuur(conn, factuur)["boeking_id"]
+        )
+        for regel in boeking["regels"]:
+            saldo[regel["rekening"]] = saldo.get(regel["rekening"], Decimal("0")) + (
+                Decimal(regel["debet"]) - Decimal(regel["credit"])
+            )
+    assert set(saldo.values()) == {Decimal("0.00")}
+
+
+def test_een_concept_crediteer_je_niet(conn):
+    credit_id, redenen = maak_creditfactuur(conn, concept(conn))
+
+    assert credit_id is None
+    assert "concept crediteer je niet" in redenen[0]
+
+
+def test_twee_keer_crediteren_gebeurt_niet(conn, opslag):
+    factuur_id = concept(conn)
+    maak_definitief(conn, factuur_id, opslagmap=opslag)
+    maak_creditfactuur(conn, factuur_id)
+
+    tweede, redenen = maak_creditfactuur(conn, factuur_id)
+    assert tweede is None
+    assert "al gecrediteerd" in redenen[0]
+
+
+# --- de PDF -------------------------------------------------------------
+
+def test_de_pdf_gaat_door_de_documentopslag(conn, opslag):
+    from pathlib import Path
+
+    factuur_id = concept(conn)
+    maak_definitief(conn, factuur_id, opslagmap=opslag)
+
+    factuur = lees_verkoopfactuur(conn, factuur_id)
+    assert factuur["document_id"] is not None
+
+    document = lees_document(conn, factuur["document_id"])
+    bewaard = Path(document["opslagpad"])
+    assert bewaard.is_file()
+    assert bewaard.read_bytes().startswith(b"%PDF-")
+    # De naam is de hash van de inhoud, net als bij een ontvangen factuur.
+    assert bewaard.stem == document["hash"]
+
+
+def test_alles_wat_verplicht_is_staat_op_de_pdf(conn, opslag):
+    from pypdf import PdfReader
+    from io import BytesIO
+
+    factuur_id = concept(conn)
+    maak_definitief(conn, factuur_id, opslagmap=opslag)
+    pdf = maak_factuur_pdf(lees_verkoopfactuur(conn, factuur_id))
+    tekst = PdfReader(BytesIO(pdf)).pages[0].extract_text()
+
+    for verplicht in (
+        "2026-0001",                 # uniek nummer
+        "2026-07-14",                # factuurdatum
+        "Alkhadraa Advies",          # naam van de ondernemer
+        "Zonnebloemstraat 14",       # adres van de ondernemer
+        "NL002233445B01",            # btw-identificatienummer
+        "Van Dijk ICT-diensten",     # naam van de klant
+        "Keizersgracht 218",         # adres van de klant
+        "Advies juli 2026",          # omschrijving
+        "787,35",                    # bedrag exclusief btw
+        "21%",                       # btw-tarief
+        "149,63",                    # btw-bedrag
+        "943,72",                    # totaal
+    ):
+        assert verplicht in tekst, verplicht
+
+
+def test_de_pdf_is_twee_keer_hetzelfde(conn, opslag):
+    """Geen tijdstempel erin, dus dezelfde inhoud geeft dezelfde hash."""
+    factuur_id = concept(conn)
+    maak_definitief(conn, factuur_id, opslagmap=opslag)
+    factuur = lees_verkoopfactuur(conn, factuur_id)
+
+    assert maak_factuur_pdf(factuur) == maak_factuur_pdf(factuur)
+
+
+def test_op_een_creditfactuur_staat_dat_het_er_een_is(conn, opslag):
+    from pypdf import PdfReader
+    from io import BytesIO
+
+    factuur_id = concept(conn)
+    maak_definitief(conn, factuur_id, opslagmap=opslag)
+    credit_id, _ = maak_creditfactuur(conn, factuur_id)
+    maak_definitief(conn, credit_id, opslagmap=opslag)
+
+    pdf = maak_factuur_pdf(lees_verkoopfactuur(conn, credit_id))
+    tekst = PdfReader(BytesIO(pdf)).pages[0].extract_text()
+    assert "CREDITFACTUUR" in tekst
+    assert "-943,72" in tekst
+
+
+# --- btw-aangifte -------------------------------------------------------
+
+def test_een_verkoopfactuur_telt_mee_in_1a_en_1b(conn, opslag):
+    """Twee tarieven op één factuur horen ook in twee rubrieken."""
+    maak_definitief(conn, concept(conn), opslagmap=opslag)
+
+    aangifte = bereken_aangifte(conn, 1, 2026, 3)
+    rubriek_1a, rubriek_1b = aangifte.rubrieken
+
+    assert (rubriek_1a.grondslag, rubriek_1a.btw) == (
+        Decimal("712.50"), Decimal("149.63")
+    )
+    assert (rubriek_1b.grondslag, rubriek_1b.btw) == (
+        Decimal("74.85"), Decimal("6.74")
+    )
+    assert aangifte.verschuldigd == Decimal("156.37")
+    assert aangifte.waarschuwingen == []
+
+
+def test_een_creditfactuur_haalt_de_btw_er_weer_af(conn, opslag):
+    factuur_id = concept(conn)
+    maak_definitief(conn, factuur_id, opslagmap=opslag)
+    credit_id, _ = maak_creditfactuur(conn, factuur_id)
+    maak_definitief(conn, credit_id, opslagmap=opslag)
+
+    aangifte = bereken_aangifte(conn, 1, 2026, 3)
+    assert aangifte.verschuldigd == Decimal("0.00")
+    assert aangifte.rubrieken[0].grondslag == Decimal("0.00")
+
+
+# --- openstaande posten en afletteren -----------------------------------
+
+def test_een_definitieve_factuur_staat_open(conn, opslag):
+    maak_definitief(conn, concept(conn), opslagmap=opslag)
+
+    posten = openstaande_posten(conn, 1, date(2026, 8, 20))
+    assert len(posten) == 1
+    assert posten[0]["factuurnummer"] == "2026-0001"
+    assert posten[0]["bedrag_incl"] == Decimal("943.72")
+    assert posten[0]["dagen_over"] == 7          # verviel op 13 augustus
+    assert posten[0]["te_laat"] is True
+
+
+def test_binnen_de_termijn_is_een_factuur_niet_te_laat(conn, opslag):
+    maak_definitief(conn, concept(conn), opslagmap=opslag)
+
+    post = openstaande_posten(conn, 1, date(2026, 8, 1))[0]
+    assert post["dagen_over"] == -12
+    assert post["te_laat"] is False
+
+
+def test_een_concept_staat_niet_open(conn):
+    concept(conn)
+
+    assert openstaande_posten(conn, 1, VANDAAG) == []
+
+
+def test_een_verkoopfactuur_wordt_via_de_bank_afgeletterd(conn, opslag):
+    """De hele keten: factuur maken, geld ontvangen, koppelen, geboekt."""
+    from pathlib import Path
+
+    klant_id = klant(conn, "Alkhadraa Advies")
+    factuur_id = concept(conn, klant_id, regels=[
+        {"omschrijving": "Advies juli", "aantal": "1",
+         "prijs_per_stuk": "2400.00", "btw_percentage": "21"},
+    ])
+    nummer, _ = maak_definitief(conn, factuur_id, opslagmap=opslag)
+    assert nummer == "2026-0001"
+
+    afschrift = (
+        Path(__file__).parent / "testfacturen" / "bank" / "01-mt940-ing.sta"
+    ).read_bytes()
+    importeer_bankafschrift(conn, 1, "juli.sta", afschrift, opslag)
+    ontvangst = [
+        t for t in lees_banktransacties(conn, 1) if t["bedrag"] == "2904.00"
+    ][0]
+
+    # Het afletteren ziet de eigen factuur als kandidaat.
+    kandidaten = [
+        f for f in open_facturen(conn, 1) if f["bron"] == "verkoopfactuur"
+    ]
+    assert [f["factuurnummer"] for f in kandidaten] == ["2026-0001"]
+
+    boeking_id, redenen = koppel_transactie(
+        conn, ontvangst["id"], factuur_id, bron="verkoopfactuur"
+    )
+    assert redenen == []
+    boeking = lees_boeking(conn, boeking_id)
+    assert [(r["rekening"], r["debet"], r["credit"]) for r in boeking["regels"]] == [
+        ("1100", "2904.00", "0.00"),   # bank erbij
+        ("1300", "0.00", "2904.00"),   # debiteuren eraf
+    ]
+
+    # En daarmee staat hij niet meer open.
+    assert openstaande_posten(conn, 1, VANDAAG) == []
+
+
+def test_een_concept_kan_niet_worden_afgeletterd(conn, opslag):
+    from pathlib import Path
+
+    factuur_id = concept(conn)
+    afschrift = (
+        Path(__file__).parent / "testfacturen" / "bank" / "01-mt940-ing.sta"
+    ).read_bytes()
+    importeer_bankafschrift(conn, 1, "juli.sta", afschrift, opslag)
+    ontvangst = [
+        t for t in lees_banktransacties(conn, 1) if t["bedrag"] == "2904.00"
+    ][0]
+
+    boeking_id, redenen = koppel_transactie(
+        conn, ontvangst["id"], factuur_id, bron="verkoopfactuur"
+    )
+    assert boeking_id is None
+    assert "eerst definitief" in redenen[0]
+```
+
 ## `boekhouding/tests/test_web.py`
 
 ```python
@@ -15768,6 +18804,7 @@ from boekhouding import (
     lees_audit_trail,
     lees_banktransacties,
     lees_facturen,
+    lees_verkoopfactuur,
     maak_verbinding,
 )
 from boekhouding.web import maak_app
@@ -16657,8 +19694,210 @@ def test_de_keuzelijst_toont_alleen_facturen_die_kunnen_kloppen(web, werkmap):
         f"/administratie/1/bank/{betaling['id']}/koppel"
     )[-1].split("</form>")[0]
 
-    assert 'value="1"' in formulier      # de inkoopfactuur mag
-    assert 'value="2"' not in formulier  # de verkoopfactuur niet
+    assert 'value="factuur:1"' in formulier      # de inkoopfactuur mag
+    assert 'value="factuur:2"' not in formulier  # de verkoopfactuur niet
+
+
+# --- verkoopfacturen (module 8) -----------------------------------------
+
+def zet_eigen_gegevens(web, administratie_id=1):
+    return web.post(
+        f"/administratie/{administratie_id}/instellingen",
+        data={
+            "naam": "Alkhadraa Advies", "adres": "Zonnebloemstraat 14",
+            "postcode": "3011 AB", "plaats": "Rotterdam",
+            "btw_id": "NL002233445B01", "kvk_nummer": "87654321",
+            "iban": "NL44RABO0123456789", "email": "post@alkhadraa.test",
+            "land": "Nederland",
+        },
+        follow_redirects=False,
+    )
+
+
+def voeg_klant_toe(web, naam="Van Dijk ICT-diensten", administratie_id=1):
+    return web.post(
+        f"/administratie/{administratie_id}/klanten",
+        data={
+            "naam": naam, "adres": "Keizersgracht 218", "postcode": "1016 DZ",
+            "plaats": "Amsterdam", "land": "Nederland", "kvk_nummer": "",
+            "btw_id": "", "email": "", "betalingstermijn": "30",
+        },
+        follow_redirects=False,
+    )
+
+
+def nieuw_concept(web, klant_id=1, datum="2026-07-14", administratie_id=1):
+    return web.post(
+        f"/administratie/{administratie_id}/verkoop",
+        data={"klant_id": str(klant_id), "factuurdatum": datum},
+        follow_redirects=False,
+    )
+
+
+def vul_regels(web, factuur_id=1, administratie_id=1):
+    return web.post(
+        f"/administratie/{administratie_id}/verkoop/{factuur_id}/opslaan",
+        data={
+            "factuurdatum": "2026-07-14",
+            "betalingstermijn": "30",
+            # Het formulier stuurt per veld een lijstje; de lege regel
+            # onderaan hoort te worden overgeslagen.
+            "omschrijving": ["Advies juli 2026", ""],
+            "aantal": ["7.5", ""],
+            "prijs_per_stuk": ["95.00", ""],
+            "btw_percentage": ["21", ""],
+        },
+        follow_redirects=False,
+    )
+
+
+def test_de_eigen_gegevens_zijn_in_te_vullen(web):
+    zet_eigen_gegevens(web)
+    pagina = web.get("/administratie/1/instellingen").text
+
+    assert "NL002233445B01" in pagina
+    assert "Zonnebloemstraat 14" in pagina
+
+
+def test_een_klant_toevoegen_en_terugzien(web):
+    voeg_klant_toe(web)
+    pagina = web.get("/administratie/1/klanten").text
+
+    assert "Van Dijk ICT-diensten" in pagina
+    assert "Keizersgracht 218" in pagina
+
+
+def test_een_klant_zonder_naam_wordt_geweigerd(web):
+    from urllib.parse import unquote
+
+    antwoord = web.post(
+        "/administratie/1/klanten", data={"naam": "  "}, follow_redirects=False
+    )
+    assert "zonder naam kan niet" in unquote(antwoord.headers["location"])
+
+
+def test_zonder_klant_kan_er_geen_factuur_gemaakt_worden(web):
+    pagina = web.get("/administratie/1/verkoop").text
+    assert "Voeg eerst een klant toe" in pagina
+
+
+def test_een_concept_maken_en_regels_invullen(web):
+    voeg_klant_toe(web)
+    antwoord = nieuw_concept(web)
+    assert antwoord.headers["location"] == "/administratie/1/verkoop/1"
+
+    vul_regels(web)
+    pagina = web.get("/administratie/1/verkoop/1").text
+    assert "Advies juli 2026" in pagina
+    assert "712.50" in pagina        # het uitgerekende regelbedrag
+    assert "862.13" in pagina        # totaal inclusief btw
+
+
+def test_lege_regels_worden_niet_opgeslagen(web, werkmap):
+    voeg_klant_toe(web)
+    nieuw_concept(web)
+    vul_regels(web)
+
+    conn = maak_verbinding(str(werkmap / "boekhouding.sqlite"))
+    factuur = lees_verkoopfactuur(conn, 1)
+    conn.close()
+    assert len(factuur["regels"]) == 1
+
+
+def test_definitief_maken_kan_niet_zonder_eigen_gegevens(web):
+    voeg_klant_toe(web)
+    nieuw_concept(web)
+    vul_regels(web)
+
+    pagina = web.get("/administratie/1/verkoop/1").text
+    assert "Dit ontbreekt nog" in pagina
+    assert "je btw-identificatienummer" in pagina
+    assert "disabled" in pagina.split("Definitief maken")[0][-200:]
+
+
+def test_definitief_maken_geeft_een_nummer_en_een_boeking(web, werkmap):
+    from urllib.parse import unquote
+
+    zet_eigen_gegevens(web)
+    voeg_klant_toe(web)
+    nieuw_concept(web)
+    vul_regels(web)
+
+    antwoord = web.post(
+        "/administratie/1/verkoop/1/definitief", follow_redirects=False
+    )
+    assert "2026-0001 is definitief en geboekt" in unquote(
+        antwoord.headers["location"]
+    )
+
+    conn = maak_verbinding(str(werkmap / "boekhouding.sqlite"))
+    factuur = lees_verkoopfactuur(conn, 1)
+    conn.close()
+    assert factuur["boeking_id"] is not None
+    assert factuur["document_id"] is not None
+
+
+def test_de_pdf_is_op_te_halen(web, werkmap):
+    zet_eigen_gegevens(web)
+    voeg_klant_toe(web)
+    nieuw_concept(web)
+    vul_regels(web)
+    web.post("/administratie/1/verkoop/1/definitief", follow_redirects=False)
+
+    conn = maak_verbinding(str(werkmap / "boekhouding.sqlite"))
+    document_id = lees_verkoopfactuur(conn, 1)["document_id"]
+    conn.close()
+
+    antwoord = web.get(f"/administratie/1/document/{document_id}")
+    assert antwoord.status_code == 200
+    assert antwoord.headers["content-type"] == "application/pdf"
+    assert antwoord.content.startswith(b"%PDF-")
+
+
+def test_een_definitieve_factuur_is_niet_meer_te_bewerken(web):
+    zet_eigen_gegevens(web)
+    voeg_klant_toe(web)
+    nieuw_concept(web)
+    vul_regels(web)
+    web.post("/administratie/1/verkoop/1/definitief", follow_redirects=False)
+
+    pagina = web.get("/administratie/1/verkoop/1").text
+    assert 'name="omschrijving"' not in pagina
+    assert "Concept weggooien" not in pagina
+    assert "Creditfactuur maken" in pagina
+
+
+def test_de_openstaande_post_staat_op_het_overzicht(web):
+    zet_eigen_gegevens(web)
+    voeg_klant_toe(web)
+    nieuw_concept(web)
+    vul_regels(web)
+    web.post("/administratie/1/verkoop/1/definitief", follow_redirects=False)
+
+    pagina = web.get("/administratie/1/verkoop").text
+    assert "Openstaand: 862.13" in pagina
+    assert "dagen over de vervaldatum" in pagina
+
+
+def test_een_factuur_van_een_ander_geeft_404(twee_administraties):
+    web = twee_administraties
+    web.post(
+        "/administratie/1/klanten", data={"naam": "Klant van A"},
+        follow_redirects=False,
+    )
+    web.post(
+        "/administratie/1/verkoop", data={"klant_id": "1",
+                                          "factuurdatum": "2026-07-14"},
+        follow_redirects=False,
+    )
+    assert web.get("/administratie/2/verkoop/1").status_code == 404
+    assert web.post(
+        "/administratie/2/verkoop/1/definitief", follow_redirects=False
+    ).status_code == 404
+    assert web.post(
+        "/administratie/2/klant/1", data={"plaats": "Utrecht"},
+        follow_redirects=False,
+    ).status_code == 404
 ```
 
 ## `boekhouding/pytest.ini`

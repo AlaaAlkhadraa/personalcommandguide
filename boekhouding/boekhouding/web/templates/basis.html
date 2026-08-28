@@ -125,6 +125,19 @@
   .kaart.signalen h3 { color: var(--wacht); }
   .kaart.signalen ul { margin: 8px 0 0; padding-left: 20px; }
   .kaart.signalen li { margin-bottom: 6px; }
+  /* Een factuurregel: op een telefoon onder elkaar, op een breed scherm
+     naast elkaar met het uitgerekende bedrag rechts. */
+  .regelblok {
+    display: grid; gap: 8px; padding: 12px 0;
+    border-top: 1px solid var(--lijn);
+  }
+  .regelbedrag {
+    font-variant-numeric: tabular-nums; font-weight: 600; text-align: right;
+    align-self: center;
+  }
+  @media (min-width: 720px) {
+    .regelblok { grid-template-columns: 3fr 1fr 1.3fr 1fr 1.1fr; align-items: center; }
+  }
   .knoppen { display: flex; gap: 10px; flex-wrap: wrap; }
   .knoppen button, .knoppen a.knop { flex: 1 1 160px; text-align: center; }
   .leeg { color: var(--zacht); text-align: center; padding: 40px 10px; }

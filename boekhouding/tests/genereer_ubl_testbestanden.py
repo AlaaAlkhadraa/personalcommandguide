@@ -19,7 +19,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 
-from testmateriaal.pdf_schrijver import Pagina, schrijf_pdf_met_bijlage
+from boekhouding.pdf_schrijver import Pagina, schrijf_pdf_met_bijlage
 
 DOELMAP = Path(__file__).parent / "testfacturen" / "ubl"
 

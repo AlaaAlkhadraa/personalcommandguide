@@ -1,0 +1,207 @@
+{% extends "basis.html" %}
+{% block titel %}{{ factuur.factuurnummer or "Concept" }}{% endblock %}
+{% block kruimel %}<a href="/administratie/{{ administratie_id }}/verkoop">&larr; Terug naar de verkoopfacturen</a>{% endblock %}
+{% block kop %}
+  {% if factuur.status == "concept" %}Concept voor {{ factuur.klant.naam }}
+  {% else %}{{ factuur.factuurnummer }} · {{ factuur.klant.naam }}{% endif %}
+{% endblock %}
+{% block inhoud %}
+
+{% if melding %}<div class="melding">{{ melding }}</div>{% endif %}
+
+{% if ontbreekt %}
+  <div class="waarschuwing">
+    <strong>Dit ontbreekt nog voordat de factuur definitief kan:</strong>
+    <ul>{% for punt in ontbreekt %}<li>{{ punt }}</li>{% endfor %}</ul>
+  </div>
+{% endif %}
+
+{% if factuur.status == "definitief" %}
+  <div class="kaart">
+    <div class="ubl-groep">
+      <h3>Verstuurd op {{ factuur.definitief_op[:10] }}</h3>
+      <div class="ubl-rij">
+        <div><div class="label">Factuurnummer</div></div>
+        <div class="waarde">{{ factuur.factuurnummer }}</div>
+      </div>
+      <div class="ubl-rij">
+        <div><div class="label">Factuurdatum</div></div>
+        <div class="waarde">{{ factuur.factuurdatum }}</div>
+      </div>
+      <div class="ubl-rij">
+        <div>
+          <div class="label">Vervaldatum</div>
+          <div class="herkomst">{{ factuur.betalingstermijn }} dagen</div>
+        </div>
+        <div class="waarde">{{ factuur.vervaldatum }}</div>
+      </div>
+      {% if factuur.boeking_id %}
+        <div class="ubl-rij">
+          <div><div class="label">Geboekt</div></div>
+          <div class="waarde">boeking {{ factuur.boeking_id }}</div>
+        </div>
+      {% endif %}
+      {% if factuur.corrigeert_id %}
+        <div class="ubl-rij">
+          <div><div class="label">Crediteert</div></div>
+          <div class="waarde">
+            <a href="/administratie/{{ administratie_id }}/verkoop/{{ factuur.corrigeert_id }}">factuur {{ factuur.corrigeert_id }}</a>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="ubl-groep">
+      <h3>Van</h3>
+      <div class="ubl-rij">
+        <div>
+          <div class="label">{{ factuur.eigen.naam }}</div>
+          <div class="herkomst" style="font-family:inherit">
+            {{ factuur.eigen.adres }}, {{ factuur.eigen.postcode or "" }}
+            {{ factuur.eigen.plaats }} · btw-id {{ factuur.eigen.btw_id }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ubl-groep">
+      <h3>Aan</h3>
+      <div class="ubl-rij">
+        <div>
+          <div class="label">{{ factuur.klant.naam }}</div>
+          <div class="herkomst" style="font-family:inherit">
+            {{ factuur.klant.adres }}, {{ factuur.klant.postcode or "" }}
+            {{ factuur.klant.plaats }}
+            {% if factuur.klant.btw_id %} · btw-id {{ factuur.klant.btw_id }}{% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ubl-groep">
+      <h3>Regels</h3>
+      {% for regel in factuur.regels %}
+        <div class="ubl-rij">
+          <div>
+            <div class="label">{{ regel.omschrijving }}</div>
+            <div class="herkomst">
+              {{ regel.aantal }} × {{ regel.prijs_per_stuk }} · btw {{ regel.btw_percentage }}%
+            </div>
+          </div>
+          <div class="waarde">{{ regel.bedrag_excl }}</div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  {% if factuur.document_id %}
+    <div class="knoppen" style="margin-bottom:14px">
+      <a class="knop tweede"
+         href="/administratie/{{ administratie_id }}/document/{{ factuur.document_id }}">
+        Factuur als PDF
+      </a>
+    </div>
+  {% endif %}
+{% else %}
+  <form class="kaart" method="post"
+        action="/administratie/{{ administratie_id }}/verkoop/{{ factuur.id }}/opslaan">
+    <div class="veld">
+      <label for="factuurdatum">Factuurdatum</label>
+      <input type="text" id="factuurdatum" name="factuurdatum"
+             value="{{ factuur.factuurdatum or "" }}">
+    </div>
+    <div class="veld">
+      <label for="betalingstermijn">Betalingstermijn (dagen)</label>
+      <input type="text" id="betalingstermijn" name="betalingstermijn"
+             inputmode="numeric" value="{{ factuur.betalingstermijn }}">
+    </div>
+
+    <h3 style="margin:18px 0 8px;font-size:15px">Regels</h3>
+    <p class="onder" style="color:var(--zacht);font-size:14px;margin-top:0">
+      Vul aantal en prijs per stuk in; het regelbedrag en de btw rekent het
+      systeem uit. Een lege regel wordt overgeslagen.
+    </p>
+
+    {% for regel in factuur.regels %}
+      <div class="regelblok">
+        <input type="text" name="omschrijving" value="{{ regel.omschrijving }}" placeholder="Omschrijving">
+        <input type="text" name="aantal" value="{{ regel.aantal }}" inputmode="decimal" placeholder="Aantal">
+        <input type="text" name="prijs_per_stuk" value="{{ regel.prijs_per_stuk }}" inputmode="decimal" placeholder="Prijs">
+        <input type="text" name="btw_percentage" value="{{ regel.btw_percentage }}" inputmode="decimal" placeholder="Btw %">
+        <div class="regelbedrag">{{ regel.bedrag_excl }}</div>
+      </div>
+    {% endfor %}
+    {% for _ in lege_regels %}
+      <div class="regelblok">
+        <input type="text" name="omschrijving" value="" placeholder="Omschrijving">
+        <input type="text" name="aantal" value="" inputmode="decimal" placeholder="Aantal">
+        <input type="text" name="prijs_per_stuk" value="" inputmode="decimal" placeholder="Prijs">
+        <input type="text" name="btw_percentage" value="" inputmode="decimal" placeholder="Btw %">
+        <div class="regelbedrag"></div>
+      </div>
+    {% endfor %}
+
+    <div class="knoppen" style="margin-top:14px">
+      <button type="submit" class="tweede">Opslaan</button>
+    </div>
+  </form>
+{% endif %}
+
+<div class="kaart">
+  <div class="ubl-groep">
+    <h3>Totalen</h3>
+    {% for tarief, bedragen in factuur.totalen.per_tarief.items() %}
+      <div class="ubl-rij">
+        <div>
+          <div class="label">Btw {{ tarief }}%</div>
+          <div class="herkomst">over {{ bedragen[0] }}</div>
+        </div>
+        <div class="waarde">{{ bedragen[1] }}</div>
+      </div>
+    {% endfor %}
+    <div class="ubl-rij">
+      <div><div class="label">Totaal excl. btw</div></div>
+      <div class="waarde">{{ factuur.totalen.bedrag_excl }}</div>
+    </div>
+    <div class="ubl-rij">
+      <div><div class="label">Totaal incl. btw</div></div>
+      <div class="waarde">{{ factuur.totalen.bedrag_incl }}</div>
+    </div>
+  </div>
+</div>
+
+{% if factuur.status == "concept" %}
+  <form class="kaart" method="post"
+        action="/administratie/{{ administratie_id }}/verkoop/{{ factuur.id }}/definitief">
+    <div class="knoppen">
+      <button type="submit" {% if ontbreekt %}disabled{% endif %}>Definitief maken en boeken</button>
+    </div>
+    <p class="onder" style="color:var(--zacht);font-size:14px;margin-bottom:0">
+      Hierna krijgt de factuur een nummer en kan hij niet meer worden gewijzigd
+      of weggegooid. Een fout zet je daarna recht met een creditfactuur.
+    </p>
+  </form>
+
+  <form class="kaart" method="post"
+        action="/administratie/{{ administratie_id }}/verkoop/{{ factuur.id }}/verwijderen">
+    <div class="knoppen">
+      <button type="submit" class="tweede">Concept weggooien</button>
+    </div>
+    <p class="onder" style="color:var(--zacht);font-size:14px;margin-bottom:0">
+      Een concept heeft nog geen nummer, dus dit laat geen gat in de nummering achter.
+    </p>
+  </form>
+{% elif factuur.soort != "creditfactuur" %}
+  <form class="kaart" method="post"
+        action="/administratie/{{ administratie_id }}/verkoop/{{ factuur.id }}/crediteren">
+    <div class="knoppen">
+      <button type="submit" class="tweede">Creditfactuur maken</button>
+    </div>
+    <p class="onder" style="color:var(--zacht);font-size:14px;margin-bottom:0">
+      Dit zet een concept klaar met dezelfde regels negatief, met een verwijzing
+      naar deze factuur. De factuur zelf blijft staan zoals hij de deur uit is gegaan.
+    </p>
+  </form>
+{% endif %}
+
+{% endblock %}

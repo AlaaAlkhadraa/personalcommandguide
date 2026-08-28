@@ -24,9 +24,10 @@ hij goedgekeurd en geboekt. Dat is normaal handwerk van de eigenaar; hier
 gebeurt het zodat er iets te zien is.
 
 En met `--bank` wordt er ook een bankafschrift ingelezen (MT940), zodat
-het aflettersscherm gevuld is:
+het aflettersscherm gevuld is. `--verkoop` zet je eigen bedrijfsgegevens,
+een klant en twee verkoopfacturen klaar:
 
-    python scripts/vul_testdata.py --met-pdf --boek --bank
+    python scripts/vul_testdata.py --met-pdf --boek --bank --verkoop
 """
 
 import sys
@@ -38,6 +39,11 @@ sys.path.insert(0, str(BASIS))
 from boekhouding import (  # noqa: E402
     boek_factuur,
     importeer_bankafschrift,
+    maak_definitief,
+    maak_klant,
+    maak_verkoopfactuur,
+    wijzig_administratie,
+    zet_verkoopregels,
     keur_factuur_goed,
     kies_rekening,
     lees_facturen,
@@ -73,6 +79,7 @@ def main() -> int:
     met_pdf = "--met-pdf" in sys.argv
     boeken = "--boek" in sys.argv
     met_bank = "--bank" in sys.argv
+    met_verkoop = "--verkoop" in sys.argv
     bestanden = BESTANDEN + (["06-factuur-x.pdf"] if met_pdf else [])
 
     GEGEVENS.mkdir(exist_ok=True)
@@ -119,6 +126,41 @@ def main() -> int:
         )
         for reden in samenvatting["redenen"]:
             print(f"       {reden[:88]}")
+
+    if met_verkoop:
+        wijzig_administratie(conn, administratie_id, {
+            "naam": "Alkhadraa Advies",
+            "adres": "Zonnebloemstraat 14", "postcode": "3011 AB",
+            "plaats": "Rotterdam", "btw_id": "NL002233445B01",
+            "kvk_nummer": "87654321", "iban": "NL44RABO0123456789",
+            "email": "post@alkhadraa.test",
+        })
+        klant_id = maak_klant(conn, administratie_id, {
+            "naam": "Van Dijk ICT-diensten", "adres": "Keizersgracht 218",
+            "postcode": "1016 DZ", "plaats": "Amsterdam",
+            "btw_id": "NL110353601B43", "email": "administratie@vandijk.test",
+        })
+        print()
+        for datum, regels in (
+            ("2026-07-08", [
+                ("Advies juli 2026", "7.5", "95.00", "21"),
+                ("Vakliteratuur", "3", "24.95", "9"),
+            ]),
+            ("2026-08-12", [("Onderhoud augustus", "1", "2400.00", "21")]),
+        ):
+            factuur_id = maak_verkoopfactuur(
+                conn, administratie_id, klant_id, datum
+            )
+            zet_verkoopregels(conn, factuur_id, [
+                {"omschrijving": o, "aantal": a, "prijs_per_stuk": p,
+                 "btw_percentage": b}
+                for o, a, p, b in regels
+            ])
+            nummer, redenen = maak_definitief(
+                conn, factuur_id, opslagmap=str(GEGEVENS / "opslag")
+            )
+            print(f"  verkoopfactuur {nummer or 'niet definitief'}"
+                  f"{' — ' + redenen[0] if redenen else ''}")
 
     facturen = lees_facturen(conn, administratie_id)
     conn.close()

@@ -65,6 +65,19 @@ class Rekeningschema(BaseModel):
         waarde = self.standaardrekeningen.get(naam)
         return waarde if isinstance(waarde, str) else None
 
+    def omzet_voor(self, percentage: str) -> Optional[str]:
+        """Geef de omzetrekening bij dit btw-tarief, of None.
+
+        Staat het tarief niet in de config, dan is None het juiste
+        antwoord: dan wordt er geweigerd in plaats van op een
+        willekeurige omzetrekening geboekt.
+        """
+        tabel = self.standaardrekeningen.get("omzet")
+        if not isinstance(tabel, dict):
+            return None
+        waarde = tabel.get(percentage)
+        return waarde if isinstance(waarde, str) else None
+
     def btw_verschuldigd_voor(self, percentage: str) -> Optional[str]:
         """Geef de rekening voor af te dragen btw bij dit tarief, of None.
 

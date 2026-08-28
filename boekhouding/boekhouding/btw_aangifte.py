@@ -211,6 +211,17 @@ def _tel_op(
     laag = schema.btw_verschuldigd_voor("9")
     voorbelasting = schema.standaard("btw_voorbelasting")
 
+    # Van omzetrekening naar btw-tarief. Een verkoopfactuur boekt de
+    # omzet per tarief op een eigen rekening, dus hiermee valt de
+    # grondslag ook uit elkaar te halen als er twee tarieven op één
+    # factuur staan. Terugrekenen uit het btw-bedrag zou dat ook kunnen,
+    # maar dan gaat het bij de eerste afronding mis.
+    tarief_van_rekening = {}
+    for tarief in ("21", "9"):
+        code = schema.omzet_voor(tarief)
+        if code is not None:
+            tarief_van_rekening[code] = tarief
+
     bedragen = {
         "1a_grondslag": NUL, "1a_btw": NUL,
         "1b_grondslag": NUL, "1b_btw": NUL,
@@ -219,32 +230,46 @@ def _tel_op(
     totaal_voorbelasting = NUL
 
     for boeking in boekingen:
-        btw_hoog = NUL
-        btw_laag = NUL
-        omzet = NUL
+        btw_per_tarief = {"21": NUL, "9": NUL}
+        omzet_per_rekening: dict[str, Decimal] = {}
         for regel in boeking["regels"]:
             debet, credit = _decimal(regel["debet"]), _decimal(regel["credit"])
             rekening = schema.zoek(regel["rekening"])
             if regel["rekening"] == hoog:
-                btw_hoog += credit - debet
+                btw_per_tarief["21"] += credit - debet
             elif regel["rekening"] == laag:
-                btw_laag += credit - debet
+                btw_per_tarief["9"] += credit - debet
             elif regel["rekening"] == voorbelasting:
                 totaal_voorbelasting += debet - credit
             elif rekening is not None and rekening.soort == "opbrengsten":
-                omzet += credit - debet
+                omzet_per_rekening[regel["rekening"]] = (
+                    omzet_per_rekening.get(regel["rekening"], NUL) + credit - debet
+                )
 
-        if btw_hoog != NUL:
-            bedragen["1a_btw"] += btw_hoog
-            bedragen["1a_grondslag"] += omzet
-        elif btw_laag != NUL:
-            bedragen["1b_btw"] += btw_laag
-            bedragen["1b_grondslag"] += omzet
-        elif omzet != NUL:
-            # Omzet zonder btw-regel: nultarief, vrijgesteld of verlegd.
-            # Daar horen eigen rubrieken bij (1e, 2a, 3a) en die zijn nog
-            # niet gebouwd; stilzwijgend weglaten mag niet.
-            bedragen["buiten_1a_1b"] += omzet
+        bedragen["1a_btw"] += btw_per_tarief["21"]
+        bedragen["1b_btw"] += btw_per_tarief["9"]
+
+        # Bij welk tarief hoort deze omzet? Eerst kijken naar de
+        # rekening; staat die niet in het schema als omzetrekening voor
+        # een tarief, dan mag hij bij het enige tarief van deze boeking —
+        # maar alleen als er ook echt één tarief is.
+        tarieven_in_boeking = [
+            tarief for tarief, bedrag in btw_per_tarief.items() if bedrag != NUL
+        ]
+        for code, omzet in omzet_per_rekening.items():
+            tarief = tarief_van_rekening.get(code)
+            if tarief is None and len(tarieven_in_boeking) == 1:
+                tarief = tarieven_in_boeking[0]
+            if tarief == "21":
+                bedragen["1a_grondslag"] += omzet
+            elif tarief == "9":
+                bedragen["1b_grondslag"] += omzet
+            else:
+                # Nultarief, vrijgesteld, verlegd — of omzet die op een
+                # rekening staat die niet aan een tarief hangt terwijl er
+                # meerdere tarieven in de boeking zitten. In beide
+                # gevallen: melden, nooit stilzwijgend ergens bij optellen.
+                bedragen["buiten_1a_1b"] += omzet
 
     return bedragen, totaal_voorbelasting
 

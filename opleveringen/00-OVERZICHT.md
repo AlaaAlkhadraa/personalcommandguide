@@ -28,6 +28,7 @@ Branch: `claude/nl-accounting-invoice-module-f2vzr3`
 | `16-volledigheidscontroles.md` | Signalen over wat er níét is aangeleverd: waarschuwen, nooit blokkeren |
 | `17-module7-bank-afletteren.md` | Module 7: MT940 en CAMT.053 inlezen en afletteren tegen de facturen |
 | `18-fix-module7-richting.md` | Fix: een onbekende richting geeft nooit hoge zekerheid |
+| `19-module8-verkoopfacturen.md` | Module 8: klanten, verkoopfacturen, PDF, openstaande posten |
 | `CODE-COMPLEET.md` | de volledige actuele code, uitleg en tests |
 | `testfacturen-overzicht.json` | grondwaarheid bij de 10 testfacturen |
 | `schermen/` | schermafbeeldingen van de draaiende webinterface |
@@ -35,7 +36,7 @@ Branch: `claude/nl-accounting-invoice-module-f2vzr3`
 
 ## Waar het nu staat
 
-- **450 pytest-tests, allemaal groen.** De testsuite doet nooit een echte
+- **509 pytest-tests, allemaal groen.** De testsuite doet nooit een echte
   API-aanroep.
 - **Module 1** — schema met Decimal-bedragen, alle rekencontroles, datum- en
   duplicaatcheck. Elke fout wordt `review_nodig` met reden, nooit een
@@ -80,6 +81,13 @@ Branch: `claude/nl-accounting-invoice-module-f2vzr3`
   (crediteuren tegen bank, of andersom bij ontvangst). Is niet vast te stellen
   of een factuur inkoop of verkoop is, dan blijft hij kandidaat maar krijgt het
   voorstel nooit hoge zekerheid.
+- **Module 8** — verkoopfacturen. Klanten en je eigen gegevens, regels waarvan
+  de bedragen uit de code komen, nummering per jaar zonder gaten (een nummer
+  pas bij het definitief maken), de verplichte gegevens van de Belastingdienst,
+  en een definitieve factuur die nooit meer verandert — corrigeren gaat met een
+  creditfactuur. Definitief maken levert het nummer, de boeking en de PDF op.
+  Openstaande posten laten zien wat nog niet betaald is en hoeveel dagen te
+  laat.
 - **Volledigheidssignalen** — blokkeren kan alleen op facturen die er zijn. Een
   factuur die nooit is aangeleverd staat nergens, en dan klopt de aangifte
   ogenschijnlijk gewoon. Daarom drie controles die het patroon bekijken: een
@@ -108,21 +116,24 @@ Branch: `claude/nl-accounting-invoice-module-f2vzr3`
    gebouwd; het schema kent alleen 21, 9 en 0.
 5. **DOCX, XLSX en CSV** staan in de routeringssectie van CLAUDE.md maar
    worden nog als onbekende soort afgewezen.
-6. **Een banktransactie zonder factuur blijft open staan.** Bankkosten, een
+6. **Een verkoopfactuur versturen doet het systeem niet.** De PDF staat klaar
+   en is te downloaden; e-mailen en herinneringen sturen zit er niet in.
+7. **Zelf een e-factuur (UBL) opstellen kan niet.** Inlezen wel.
+8. **Een banktransactie zonder factuur blijft open staan.** Bankkosten, een
    privé-opname of een abonnement zonder factuur kunnen nog niet rechtstreeks
    op een grootboekrekening worden geboekt.
-7. **Ontkoppelen kan niet.** Een verkeerde koppeling zet je recht met een
+9. **Ontkoppelen kan niet.** Een verkeerde koppeling zet je recht met een
    tegenboeking; de koppeling zelf blijft staan.
-8. **Deelbetalingen splitsen kan niet.** Je kunt de transactie met de hand aan
+10. **Deelbetalingen splitsen kan niet.** Je kunt de transactie met de hand aan
    één factuur koppelen, maar het restant blijft onzichtbaar.
-9. **De RGS-codes zijn niet geverifieerd.** Ze zijn met de hand samengesteld
+11. **De RGS-codes zijn niet geverifieerd.** Ze zijn met de hand samengesteld
    en niet vergeleken met de officiële RGS-lijst. Het systeem boekt op het
    veld `code` (4100, 8000, 1600); `rgs_code` is alleen een verwijzing.
    Controleer die kolom voordat je er een export op baseert.
-10. **Btw-rubriek 1e, 2a en 3a zijn er niet.** Omzet met 0%, vrijgesteld of
+12. **Btw-rubriek 1e, 2a en 3a zijn er niet.** Omzet met 0%, vrijgesteld of
    verlegd wordt wél gemeld op het aangiftescherm, maar niet in een rubriek
    gezet.
-11. **Bedragen worden niet afgerond naar hele euro's.** De Belastingdienst
+13. **Bedragen worden niet afgerond naar hele euro's.** De Belastingdienst
    vraagt hele euro's in de aangifte; het voorstel toont centen.
-12. **Administratietype uitbreiden vereist een migratie** — SQLite kan een
+14. **Administratietype uitbreiden vereist een migratie** — SQLite kan een
    CHECK-constraint niet aanpassen met `ALTER TABLE`.

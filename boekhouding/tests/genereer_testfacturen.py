@@ -29,7 +29,7 @@ from typing import Optional
 sys.path.insert(0, str(Path(__file__).parent))
 
 from testmateriaal.jpeg_schrijver import Bitmap, schrijf_jpeg
-from testmateriaal.pdf_schrijver import Pagina, schrijf_pdf
+from boekhouding.pdf_schrijver import Pagina, schrijf_pdf
 
 SEED = 20260827
 DOELMAP = Path(__file__).parent / "testfacturen"

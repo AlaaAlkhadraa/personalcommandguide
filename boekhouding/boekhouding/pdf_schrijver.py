@@ -1,5 +1,10 @@
 """Minimale PDF-schrijver voor factuurdocumenten.
 
+Wordt gebruikt voor twee dingen: de synthetische testfacturen in
+`tests/`, en de PDF van een echte verkoopfactuur (module 8). Eén
+schrijver voor allebei, zodat er maar één plek is waar de opmaak van een
+factuur wordt bepaald.
+
 Genoeg voor een echte factuurlay-out: tekst links en rechts uitgelijnd,
 in normaal of vet, plus horizontale lijnen. Geen afbeeldingen, geen
 meerdere pagina's, geen tijdstempel in het bestand — dat laatste zorgt
@@ -152,6 +157,16 @@ def _bouw_pdf(pagina: "Pagina", bijlage: tuple[str, bytes] | None) -> bytes:
         b"startxref\n" + str(start_xref).encode() + b"\n%%EOF\n"
     )
     return bytes(uit)
+
+
+def pdf_bytes(pagina: "Pagina") -> bytes:
+    """Geef de PDF als bytes, zonder hem naar schijf te schrijven.
+
+    Handig voor een factuur die eerst door de documentopslag gaat: die
+    berekent de hash over de inhoud en bepaalt zelf waar het bestand
+    komt te staan.
+    """
+    return _bouw_pdf(pagina, None)
 
 
 def schrijf_pdf(pagina: "Pagina", pad: str | Path) -> Path:

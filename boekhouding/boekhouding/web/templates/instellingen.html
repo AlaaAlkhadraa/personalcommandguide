@@ -1,0 +1,27 @@
+{% extends "basis.html" %}
+{% block titel %}Eigen gegevens{% endblock %}
+{% block kruimel %}<a href="/administratie/{{ administratie_id }}">&larr; Terug naar de facturen</a>{% endblock %}
+{% block kop %}Eigen gegevens{% endblock %}
+{% block inhoud %}
+
+{% if melding %}<div class="melding">{{ melding }}</div>{% endif %}
+
+<p class="onder" style="color:var(--zacht)">
+  Deze gegevens komen op elke verkoopfactuur te staan. De Belastingdienst
+  verplicht je naam, je adres en je btw-identificatienummer; zonder die drie
+  kan een factuur niet definitief worden.
+</p>
+
+<form class="kaart" method="post"
+      action="/administratie/{{ administratie_id }}/instellingen">
+  {% for veld in velden %}
+    <div class="veld">
+      <label for="{{ veld }}">{{ veld|replace("_", " ")|capitalize }}</label>
+      <input type="text" id="{{ veld }}" name="{{ veld }}"
+             value="{{ eigen[veld] or "" }}">
+    </div>
+  {% endfor %}
+  <div class="knoppen"><button type="submit">Opslaan</button></div>
+</form>
+
+{% endblock %}

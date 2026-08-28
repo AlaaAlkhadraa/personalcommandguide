@@ -224,6 +224,7 @@ def maak_tabellen(conn: sqlite3.Connection) -> None:
 
     conn.commit()
     _bank_tabellen(conn)
+    _verkoop_tabellen(conn)
 
 
 def maak_administratie(
@@ -1100,6 +1101,7 @@ def _bank_tabellen(conn: sqlite3.Connection) -> None:
             status           TEXT NOT NULL DEFAULT 'open'
                              CHECK (status IN ('open', 'gekoppeld')),
             factuur_id       INTEGER REFERENCES facturen(id),
+            verkoopfactuur_id INTEGER REFERENCES verkoopfacturen(id),
             boeking_id       INTEGER REFERENCES boekingen(id),
             gekoppeld_op     TEXT,
             gekoppeld_door   TEXT,
@@ -1110,6 +1112,12 @@ def _bank_tabellen(conn: sqlite3.Connection) -> None:
         CREATE INDEX IF NOT EXISTS idx_banktransacties_status
             ON banktransacties (administratie_id, status, boekdatum);
         """
+    )
+    # Voor databases van vóór module 8: een bijschrijving kan ook bij een
+    # eigen verkoopfactuur horen.
+    _voeg_kolom_toe(
+        conn, "banktransacties", "verkoopfactuur_id",
+        "INTEGER REFERENCES verkoopfacturen(id)",
     )
     conn.commit()
 
@@ -1299,11 +1307,16 @@ def _richting_van_boeking(conn: sqlite3.Connection, factuur_id: int) -> Optional
 def open_facturen(
     conn: sqlite3.Connection, administratie_id: int
 ) -> list[dict[str, Any]]:
-    """De facturen die nog op een betaling wachten.
+    """Alles wat nog op een betaling wacht: inkoop én verkoop.
 
-    Alleen geboekte facturen doen mee: zolang een factuur niet in het
-    grootboek staat, is er ook geen schuld of vordering om af te
-    letteren. Facturen die al aan een transactie hangen vallen af.
+    Alleen geboekte facturen doen mee: zolang er niets in het grootboek
+    staat, is er ook geen schuld of vordering om af te letteren. Wat al
+    aan een banktransactie hangt valt af.
+
+    Elke regel heeft een `bron`: "factuur" voor een ontvangen factuur en
+    "verkoopfactuur" voor een eigen factuur. Daarmee weet het koppelen
+    later welke tabel het is; het afletteren zelf kijkt alleen naar
+    nummer, bedrag, naam en richting.
     """
     cursor = conn.execute(
         """
@@ -1325,8 +1338,80 @@ def open_facturen(
         factuur["review_redenen"] = json.loads(factuur["review_redenen"])
         factuur["originele_data"] = json.loads(factuur["originele_data"])
         factuur["richting"] = _richting_van_boeking(conn, factuur["id"])
+        factuur["bron"] = "factuur"
         facturen.append(factuur)
+
+    for verkoop in _openstaande_verkoopfacturen(conn, administratie_id):
+        facturen.append({
+            "id": verkoop["id"],
+            "bron": "verkoopfactuur",
+            "factuurnummer": verkoop["factuurnummer"],
+            # Voor het afletteren is de klant de tegenpartij; het veld
+            # heet leverancier omdat het afletteren niet hoeft te weten
+            # of het een klant of een leverancier is.
+            "leverancier": verkoop["klant_naam"],
+            "factuurdatum": verkoop["factuurdatum"],
+            "vervaldatum": verkoop["vervaldatum"],
+            "bedrag_incl": str(verkoop["totalen"].bedrag_incl),
+            "richting": "verkoop",
+        })
     return facturen
+
+
+def _openstaande_verkoopfacturen(
+    conn: sqlite3.Connection, administratie_id: int
+) -> list[dict[str, Any]]:
+    """De definitieve verkoopfacturen waar nog geen betaling bij hoort."""
+    cursor = conn.execute(
+        """
+        SELECT id FROM verkoopfacturen
+        WHERE administratie_id = ? AND status = 'definitief'
+          AND id NOT IN (
+              SELECT verkoopfactuur_id FROM banktransacties
+              WHERE administratie_id = ? AND verkoopfactuur_id IS NOT NULL
+          )
+        ORDER BY nummer_jaar, nummer_volg
+        """,
+        (administratie_id, administratie_id),
+    )
+    return [lees_verkoopfactuur(conn, rij[0]) for rij in cursor.fetchall()]
+
+
+def openstaande_posten(
+    conn: sqlite3.Connection,
+    administratie_id: int,
+    vandaag: Optional[date] = None,
+) -> list[dict[str, Any]]:
+    """Welke verkoopfacturen zijn nog niet betaald, en hoe lang al?
+
+    `dagen_over` is het aantal dagen na de vervaldatum; negatief betekent
+    dat de termijn nog loopt. Een factuur telt als betaald zodra er een
+    banktransactie aan hangt — dat gebeurt bij het afletteren van module
+    7, en dus pas als een mens de koppeling heeft bevestigd.
+    """
+    peildatum = vandaag or date.today()
+    posten = []
+    for factuur in _openstaande_verkoopfacturen(conn, administratie_id):
+        dagen_over = None
+        if factuur["vervaldatum"]:
+            try:
+                dagen_over = (
+                    peildatum - date.fromisoformat(factuur["vervaldatum"])
+                ).days
+            except ValueError:
+                dagen_over = None
+        posten.append({
+            "id": factuur["id"],
+            "factuurnummer": factuur["factuurnummer"],
+            "klant_naam": factuur["klant_naam"],
+            "factuurdatum": factuur["factuurdatum"],
+            "vervaldatum": factuur["vervaldatum"],
+            "bedrag_incl": factuur["totalen"].bedrag_incl,
+            "dagen_over": dagen_over,
+            "te_laat": dagen_over is not None and dagen_over > 0,
+        })
+    posten.sort(key=lambda post: (post["dagen_over"] is None, -(post["dagen_over"] or 0)))
+    return posten
 
 
 def koppel_transactie(
@@ -1334,27 +1419,52 @@ def koppel_transactie(
     transactie_id: int,
     factuur_id: int,
     door: str = "eigenaar",
+    bron: str = "factuur",
 ) -> tuple[Optional[int], list[str]]:
     """Koppel een banktransactie aan een factuur en boek de betaling.
+
+    `bron` zegt welke soort factuur het is: "factuur" voor een ontvangen
+    factuur, "verkoopfactuur" voor een eigen factuur. Beide kanten gaan
+    langs dezelfde controle en dezelfde boekingsfuncties.
 
     Dit gebeurt alleen op bevestiging van een mens: een voorstel uit het
     afletteren is nooit definitief. Geeft (boeking_id, redenen).
     """
     from .afletteren import stel_betaling_samen
 
+    if bron not in ("factuur", "verkoopfactuur"):
+        return None, [f"onbekende factuursoort '{bron}'"]
+
     transactie = lees_banktransactie(conn, transactie_id)
     if transactie["status"] != "open":
         return None, [
             f"deze transactie is al gekoppeld aan factuur "
-            f"{transactie['factuur_id']}"
+            f"{transactie['factuur_id'] or transactie['verkoopfactuur_id']}"
         ]
 
-    factuur = lees_factuur(conn, factuur_id)
+    kolom = "factuur_id" if bron == "factuur" else "verkoopfactuur_id"
+    if bron == "factuur":
+        factuur = lees_factuur(conn, factuur_id)
+        factuur["richting"] = _richting_van_boeking(conn, factuur_id)
+    else:
+        verkoop = lees_verkoopfactuur(conn, factuur_id)
+        if verkoop["status"] != "definitief":
+            return None, [
+                "een concept is nog geen factuur; maak hem eerst definitief"
+            ]
+        factuur = {
+            "id": verkoop["id"],
+            "factuurnummer": verkoop["factuurnummer"],
+            "administratie_id": verkoop["administratie_id"],
+            "bedrag_incl": str(verkoop["totalen"].bedrag_incl),
+            "richting": "verkoop",
+        }
+
     if factuur["administratie_id"] != transactie["administratie_id"]:
         return None, ["deze factuur hoort bij een andere administratie"]
 
     al_gekoppeld = conn.execute(
-        "SELECT id FROM banktransacties WHERE factuur_id = ? AND id != ?",
+        f"SELECT id FROM banktransacties WHERE {kolom} = ? AND id != ?",
         (factuur_id, transactie_id),
     ).fetchone()
     if al_gekoppeld is not None:
@@ -1363,7 +1473,6 @@ def koppel_transactie(
             f"{al_gekoppeld[0]}"
         ]
 
-    factuur["richting"] = _richting_van_boeking(conn, factuur_id)
     voorstel = stel_betaling_samen(transactie, factuur)
     boeking_id, redenen = sla_boeking_op(
         conn, transactie["administratie_id"], voorstel, door=door
@@ -1373,9 +1482,9 @@ def koppel_transactie(
 
     tijd = _nu()
     conn.execute(
-        """
+        f"""
         UPDATE banktransacties
-        SET status = 'gekoppeld', factuur_id = ?, boeking_id = ?,
+        SET status = 'gekoppeld', {kolom} = ?, boeking_id = ?,
             gekoppeld_op = ?, gekoppeld_door = ?
         WHERE id = ?
         """,
@@ -1386,9 +1495,693 @@ def koppel_transactie(
         INSERT INTO audit_log (
             administratie_id, tabel, record_id, actie,
             veld, oude_waarde, nieuwe_waarde, tijdstip
-        ) VALUES (?, 'banktransacties', ?, 'gewijzigd', 'factuur_id', NULL, ?, ?)
+        ) VALUES (?, 'banktransacties', ?, 'gewijzigd', ?, NULL, ?, ?)
         """,
-        (transactie["administratie_id"], transactie_id, str(factuur_id), tijd),
+        (transactie["administratie_id"], transactie_id, kolom,
+         str(factuur_id), tijd),
     )
     conn.commit()
     return boeking_id, []
+
+
+# --- klanten en verkoopfacturen (module 8) ------------------------------
+
+# De eigen bedrijfsgegevens. Ze horen op elke verkoopfactuur te staan,
+# dus ze staan bij de administratie en niet ergens in een configbestand.
+EIGEN_GEGEVENS = (
+    "adres", "postcode", "plaats", "land", "kvk_nummer", "btw_id",
+    "iban", "email",
+)
+
+KLANT_VELDEN = (
+    "naam", "adres", "postcode", "plaats", "land", "kvk_nummer",
+    "btw_id", "email", "betalingstermijn",
+)
+
+
+def _verkoop_tabellen(conn: sqlite3.Connection) -> None:
+    """De tabellen van module 8; aangeroepen vanuit maak_tabellen."""
+    for kolom in EIGEN_GEGEVENS:
+        _voeg_kolom_toe(conn, "administraties", kolom, "TEXT")
+
+    conn.executescript(
+        """
+        CREATE TABLE IF NOT EXISTS klanten (
+            id                INTEGER PRIMARY KEY,
+            administratie_id  INTEGER NOT NULL REFERENCES administraties(id),
+            naam              TEXT NOT NULL,
+            adres             TEXT,
+            postcode          TEXT,
+            plaats            TEXT,
+            land              TEXT NOT NULL DEFAULT 'Nederland',
+            kvk_nummer        TEXT,
+            btw_id            TEXT,
+            email             TEXT,
+            betalingstermijn  INTEGER NOT NULL DEFAULT 30,
+            aangemaakt_op     TEXT NOT NULL,
+            gewijzigd_op      TEXT NOT NULL
+        );
+
+        CREATE TABLE IF NOT EXISTS verkoopfacturen (
+            id                INTEGER PRIMARY KEY,
+            administratie_id  INTEGER NOT NULL REFERENCES administraties(id),
+            klant_id          INTEGER NOT NULL REFERENCES klanten(id),
+            status            TEXT NOT NULL DEFAULT 'concept'
+                              CHECK (status IN ('concept', 'definitief')),
+            soort             TEXT NOT NULL DEFAULT 'factuur'
+                              CHECK (soort IN ('factuur', 'creditfactuur')),
+            -- Blijft leeg zolang het een concept is: een nummer wordt pas
+            -- toegekend bij het definitief maken, anders ontstaat er een
+            -- gat zodra een concept wordt weggegooid.
+            factuurnummer     TEXT,
+            nummer_jaar       INTEGER,
+            nummer_volg       INTEGER,
+            factuurdatum      TEXT,
+            vervaldatum       TEXT,
+            betalingstermijn  INTEGER NOT NULL DEFAULT 30,
+            opmerking         TEXT,
+            corrigeert_id     INTEGER REFERENCES verkoopfacturen(id),
+            -- Wie de klant wás en wie jij wás op het moment van
+            -- definitief maken. Verhuist de klant later, dan verandert de
+            -- verstuurde factuur niet mee.
+            klant_gegevens    TEXT,
+            eigen_gegevens    TEXT,
+            boeking_id        INTEGER REFERENCES boekingen(id),
+            -- De PDF zoals hij de deur uit ging, in de gewone
+            -- documentopslag: onder zijn hash, alleen-lezen, 7 jaar.
+            document_id       INTEGER REFERENCES documenten(id),
+            definitief_op     TEXT,
+            definitief_door   TEXT,
+            aangemaakt_op     TEXT NOT NULL,
+            gewijzigd_op      TEXT NOT NULL,
+            UNIQUE (administratie_id, nummer_jaar, nummer_volg)
+        );
+
+        CREATE TABLE IF NOT EXISTS verkoopfactuurregels (
+            id                INTEGER PRIMARY KEY,
+            verkoopfactuur_id INTEGER NOT NULL REFERENCES verkoopfacturen(id),
+            administratie_id  INTEGER NOT NULL REFERENCES administraties(id),
+            volgnummer        INTEGER NOT NULL,
+            omschrijving      TEXT NOT NULL DEFAULT '',
+            -- Alle bedragen als tekst, nooit als float.
+            aantal            TEXT NOT NULL DEFAULT '0',
+            prijs_per_stuk    TEXT NOT NULL DEFAULT '0.00',
+            btw_percentage    TEXT NOT NULL DEFAULT '0',
+            rekening          TEXT,
+            bedrag_excl       TEXT NOT NULL DEFAULT '0.00',
+            btw_bedrag        TEXT NOT NULL DEFAULT '0.00'
+        );
+        """
+    )
+    _voeg_kolom_toe(
+        conn, "verkoopfacturen", "document_id", "INTEGER REFERENCES documenten(id)"
+    )
+    conn.commit()
+
+
+def lees_administratie(
+    conn: sqlite3.Connection, administratie_id: int
+) -> dict[str, Any]:
+    """Lees een administratie met de eigen bedrijfsgegevens erbij."""
+    cursor = conn.execute(
+        "SELECT * FROM administraties WHERE id = ?", (administratie_id,)
+    )
+    rij = cursor.fetchone()
+    if rij is None:
+        raise ValueError(f"administratie {administratie_id} bestaat niet")
+    kolommen = [k[0] for k in cursor.description]
+    return dict(zip(kolommen, rij))
+
+
+def wijzig_administratie(
+    conn: sqlite3.Connection, administratie_id: int, gegevens: dict[str, Any]
+) -> None:
+    """Werk de eigen bedrijfsgegevens bij, met audit trail."""
+    toegestaan = ("naam",) + EIGEN_GEGEVENS
+    onbekend = set(gegevens) - set(toegestaan)
+    if onbekend:
+        raise ValueError(f"onbekende velden: {', '.join(sorted(onbekend))}")
+
+    huidig = lees_administratie(conn, administratie_id)
+    tijd = _nu()
+    for veld, waarde in gegevens.items():
+        nieuw = _als_tekst(waarde)
+        if huidig.get(veld) == nieuw:
+            continue
+        conn.execute(
+            f"UPDATE administraties SET {veld} = ? WHERE id = ?",
+            (nieuw, administratie_id),
+        )
+        conn.execute(
+            """
+            INSERT INTO audit_log (
+                administratie_id, tabel, record_id, actie,
+                veld, oude_waarde, nieuwe_waarde, tijdstip
+            ) VALUES (?, 'administraties', ?, 'gewijzigd', ?, ?, ?, ?)
+            """,
+            (administratie_id, administratie_id, veld, huidig.get(veld), nieuw, tijd),
+        )
+    conn.commit()
+
+
+def maak_klant(
+    conn: sqlite3.Connection, administratie_id: int, gegevens: dict[str, Any]
+) -> int:
+    """Voeg een klant toe; geeft het id terug."""
+    from .verkoop import STANDAARD_TERMIJN
+
+    naam = str(gegevens.get("naam") or "").strip()
+    if not naam:
+        raise ValueError("een klant zonder naam bestaat niet")
+
+    tijd = _nu()
+    waarden = {veld: _als_tekst(gegevens.get(veld)) for veld in KLANT_VELDEN}
+    waarden["naam"] = naam
+    waarden["land"] = waarden["land"] or "Nederland"
+    waarden["betalingstermijn"] = (
+        waarden["betalingstermijn"] or str(STANDAARD_TERMIJN)
+    )
+    kolommen = ", ".join(KLANT_VELDEN)
+    vraagtekens = ", ".join("?" for _ in KLANT_VELDEN)
+    cursor = conn.execute(
+        f"INSERT INTO klanten (administratie_id, {kolommen}, "
+        f"aangemaakt_op, gewijzigd_op) VALUES (?, {vraagtekens}, ?, ?)",
+        (administratie_id, *[waarden[v] for v in KLANT_VELDEN], tijd, tijd),
+    )
+    klant_id = cursor.lastrowid
+    conn.execute(
+        """
+        INSERT INTO audit_log (
+            administratie_id, tabel, record_id, actie,
+            veld, oude_waarde, nieuwe_waarde, tijdstip
+        ) VALUES (?, 'klanten', ?, 'aangemaakt', NULL, NULL, ?, ?)
+        """,
+        (administratie_id, klant_id,
+         json.dumps(waarden, ensure_ascii=False), tijd),
+    )
+    conn.commit()
+    return klant_id
+
+
+def wijzig_klant(
+    conn: sqlite3.Connection, klant_id: int, gegevens: dict[str, Any]
+) -> None:
+    """Pas klantgegevens aan, met audit trail.
+
+    Dit raakt verstuurde facturen niet: die bewaren bij het definitief
+    maken een kopie van de klantgegevens zoals ze toen waren.
+    """
+    onbekend = set(gegevens) - set(KLANT_VELDEN)
+    if onbekend:
+        raise ValueError(f"onbekende klantvelden: {', '.join(sorted(onbekend))}")
+
+    huidig = lees_klant(conn, klant_id)
+    tijd = _nu()
+    for veld, waarde in gegevens.items():
+        nieuw = _als_tekst(waarde)
+        if str(huidig.get(veld) or "") == str(nieuw or ""):
+            continue
+        conn.execute(
+            f"UPDATE klanten SET {veld} = ?, gewijzigd_op = ? WHERE id = ?",
+            (nieuw, tijd, klant_id),
+        )
+        conn.execute(
+            """
+            INSERT INTO audit_log (
+                administratie_id, tabel, record_id, actie,
+                veld, oude_waarde, nieuwe_waarde, tijdstip
+            ) VALUES (?, 'klanten', ?, 'gewijzigd', ?, ?, ?, ?)
+            """,
+            (huidig["administratie_id"], klant_id, veld,
+             _als_tekst(huidig.get(veld)), nieuw, tijd),
+        )
+    conn.commit()
+
+
+def lees_klant(conn: sqlite3.Connection, klant_id: int) -> dict[str, Any]:
+    cursor = conn.execute("SELECT * FROM klanten WHERE id = ?", (klant_id,))
+    rij = cursor.fetchone()
+    if rij is None:
+        raise ValueError(f"klant {klant_id} bestaat niet")
+    kolommen = [k[0] for k in cursor.description]
+    return dict(zip(kolommen, rij))
+
+
+def lees_klanten(
+    conn: sqlite3.Connection, administratie_id: int
+) -> list[dict[str, Any]]:
+    cursor = conn.execute(
+        "SELECT * FROM klanten WHERE administratie_id = ? ORDER BY naam",
+        (administratie_id,),
+    )
+    kolommen = [k[0] for k in cursor.description]
+    return [dict(zip(kolommen, rij)) for rij in cursor.fetchall()]
+
+
+def maak_verkoopfactuur(
+    conn: sqlite3.Connection,
+    administratie_id: int,
+    klant_id: int,
+    factuurdatum: Optional[str] = None,
+) -> int:
+    """Begin een nieuw concept voor deze klant.
+
+    Er wordt hier bewust géén factuurnummer toegekend: dat gebeurt pas
+    bij het definitief maken, zodat een weggegooid concept geen gat in
+    de nummering achterlaat.
+    """
+    from .verkoop import STANDAARD_TERMIJN, vervaldatum
+
+    klant = lees_klant(conn, klant_id)
+    if klant["administratie_id"] != administratie_id:
+        raise ValueError("deze klant hoort bij een andere administratie")
+
+    termijn = int(klant["betalingstermijn"] or STANDAARD_TERMIJN)
+    verval = None
+    if factuurdatum:
+        try:
+            verval = str(vervaldatum(date.fromisoformat(factuurdatum), termijn))
+        except ValueError:
+            verval = None
+
+    tijd = _nu()
+    cursor = conn.execute(
+        """
+        INSERT INTO verkoopfacturen (
+            administratie_id, klant_id, status, soort, factuurdatum,
+            vervaldatum, betalingstermijn, aangemaakt_op, gewijzigd_op
+        ) VALUES (?, ?, 'concept', 'factuur', ?, ?, ?, ?, ?)
+        """,
+        (administratie_id, klant_id, factuurdatum, verval, termijn, tijd, tijd),
+    )
+    factuur_id = cursor.lastrowid
+    conn.execute(
+        """
+        INSERT INTO audit_log (
+            administratie_id, tabel, record_id, actie,
+            veld, oude_waarde, nieuwe_waarde, tijdstip
+        ) VALUES (?, 'verkoopfacturen', ?, 'aangemaakt', NULL, NULL, ?, ?)
+        """,
+        (administratie_id, factuur_id,
+         json.dumps({"klant_id": klant_id, "factuurdatum": factuurdatum},
+                    ensure_ascii=False), tijd),
+    )
+    conn.commit()
+    return factuur_id
+
+
+def _regels_van(
+    conn: sqlite3.Connection, verkoopfactuur_id: int
+) -> list[dict[str, Any]]:
+    cursor = conn.execute(
+        "SELECT * FROM verkoopfactuurregels WHERE verkoopfactuur_id = ? "
+        "ORDER BY volgnummer",
+        (verkoopfactuur_id,),
+    )
+    kolommen = [k[0] for k in cursor.description]
+    return [dict(zip(kolommen, rij)) for rij in cursor.fetchall()]
+
+
+def lees_verkoopfactuur(
+    conn: sqlite3.Connection, verkoopfactuur_id: int
+) -> dict[str, Any]:
+    """Lees een verkoopfactuur met haar regels en de uitgerekende totalen.
+
+    Bij een definitieve factuur komen de klant- en eigen gegevens uit de
+    kopie die bij het definitief maken is bewaard; bij een concept uit
+    de huidige gegevens, want die kunnen nog veranderen.
+    """
+    from .verkoop import bereken_regel, bereken_totalen
+
+    cursor = conn.execute(
+        "SELECT * FROM verkoopfacturen WHERE id = ?", (verkoopfactuur_id,)
+    )
+    rij = cursor.fetchone()
+    if rij is None:
+        raise ValueError(f"verkoopfactuur {verkoopfactuur_id} bestaat niet")
+    kolommen = [k[0] for k in cursor.description]
+    factuur = dict(zip(kolommen, rij))
+
+    factuur["regels"] = [
+        bereken_regel(regel, regel["volgnummer"])
+        for regel in _regels_van(conn, verkoopfactuur_id)
+    ]
+    factuur["totalen"] = bereken_totalen(factuur["regels"])
+
+    if factuur["status"] == "definitief":
+        factuur["klant"] = json.loads(factuur["klant_gegevens"] or "{}")
+        factuur["eigen"] = json.loads(factuur["eigen_gegevens"] or "{}")
+    else:
+        factuur["klant"] = lees_klant(conn, factuur["klant_id"])
+        factuur["eigen"] = lees_administratie(conn, factuur["administratie_id"])
+    factuur["klant_naam"] = factuur["klant"].get("naam")
+    return factuur
+
+
+def lees_verkoopfacturen(
+    conn: sqlite3.Connection, administratie_id: int
+) -> list[dict[str, Any]]:
+    """De verkoopfacturen, concepten bovenaan en daarna de nieuwste eerst."""
+    cursor = conn.execute(
+        """
+        SELECT id FROM verkoopfacturen
+        WHERE administratie_id = ?
+        ORDER BY CASE WHEN status = 'concept' THEN 0 ELSE 1 END,
+                 nummer_jaar DESC, nummer_volg DESC, id DESC
+        """,
+        (administratie_id,),
+    )
+    return [lees_verkoopfactuur(conn, rij[0]) for rij in cursor.fetchall()]
+
+
+def _alleen_concept(factuur: dict[str, Any]) -> Optional[str]:
+    if factuur["status"] != "concept":
+        return (
+            f"factuur {factuur['factuurnummer']} is definitief; een "
+            f"definitieve factuur wordt nooit gewijzigd of verwijderd. "
+            f"Maak een creditfactuur als er iets niet klopt"
+        )
+    return None
+
+
+def wijzig_verkoopfactuur(
+    conn: sqlite3.Connection, verkoopfactuur_id: int, gegevens: dict[str, Any]
+) -> tuple[bool, list[str]]:
+    """Pas een concept aan. Een definitieve factuur wordt geweigerd."""
+    from .verkoop import vervaldatum
+
+    toegestaan = ("klant_id", "factuurdatum", "betalingstermijn", "opmerking")
+    onbekend = set(gegevens) - set(toegestaan)
+    if onbekend:
+        raise ValueError(f"onbekende velden: {', '.join(sorted(onbekend))}")
+
+    factuur = lees_verkoopfactuur(conn, verkoopfactuur_id)
+    bezwaar = _alleen_concept(factuur)
+    if bezwaar:
+        return False, [bezwaar]
+
+    tijd = _nu()
+    for veld, waarde in gegevens.items():
+        nieuw = _als_tekst(waarde)
+        if str(factuur.get(veld) or "") == str(nieuw or ""):
+            continue
+        conn.execute(
+            f"UPDATE verkoopfacturen SET {veld} = ?, gewijzigd_op = ? WHERE id = ?",
+            (nieuw, tijd, verkoopfactuur_id),
+        )
+        conn.execute(
+            """
+            INSERT INTO audit_log (
+                administratie_id, tabel, record_id, actie,
+                veld, oude_waarde, nieuwe_waarde, tijdstip
+            ) VALUES (?, 'verkoopfacturen', ?, 'gewijzigd', ?, ?, ?, ?)
+            """,
+            (factuur["administratie_id"], verkoopfactuur_id, veld,
+             _als_tekst(factuur.get(veld)), nieuw, tijd),
+        )
+
+    # De vervaldatum volgt uit de factuurdatum en de termijn; die wordt
+    # dus nooit met de hand gezet.
+    ververst = lees_verkoopfactuur(conn, verkoopfactuur_id)
+    if ververst["factuurdatum"]:
+        try:
+            verval = str(vervaldatum(
+                date.fromisoformat(ververst["factuurdatum"]),
+                int(ververst["betalingstermijn"] or 30),
+            ))
+            conn.execute(
+                "UPDATE verkoopfacturen SET vervaldatum = ? WHERE id = ?",
+                (verval, verkoopfactuur_id),
+            )
+        except ValueError:
+            pass
+    conn.commit()
+    return True, []
+
+
+def zet_verkoopregels(
+    conn: sqlite3.Connection,
+    verkoopfactuur_id: int,
+    regels: list[dict[str, Any]],
+) -> tuple[bool, list[str]]:
+    """Vervang de regels van een concept door deze lijst.
+
+    De bedragen worden hier uitgerekend en niet overgenomen: wat de
+    aanroeper aan bedragen meestuurt wordt genegeerd (Gouden regel 2).
+    """
+    from .verkoop import bereken_regel
+
+    factuur = lees_verkoopfactuur(conn, verkoopfactuur_id)
+    bezwaar = _alleen_concept(factuur)
+    if bezwaar:
+        return False, [bezwaar]
+
+    tijd = _nu()
+    conn.execute(
+        "DELETE FROM verkoopfactuurregels WHERE verkoopfactuur_id = ?",
+        (verkoopfactuur_id,),
+    )
+    for volgnummer, gegeven in enumerate(regels, start=1):
+        regel = bereken_regel(gegeven, volgnummer)
+        conn.execute(
+            """
+            INSERT INTO verkoopfactuurregels (
+                verkoopfactuur_id, administratie_id, volgnummer, omschrijving,
+                aantal, prijs_per_stuk, btw_percentage, rekening,
+                bedrag_excl, btw_bedrag
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                verkoopfactuur_id, factuur["administratie_id"], volgnummer,
+                regel.omschrijving, str(regel.aantal), str(regel.prijs_per_stuk),
+                str(regel.btw_percentage), regel.rekening,
+                str(regel.bedrag_excl), str(regel.btw_bedrag),
+            ),
+        )
+    conn.execute(
+        """
+        INSERT INTO audit_log (
+            administratie_id, tabel, record_id, actie,
+            veld, oude_waarde, nieuwe_waarde, tijdstip
+        ) VALUES (?, 'verkoopfacturen', ?, 'gewijzigd', 'regels', ?, ?, ?)
+        """,
+        (
+            factuur["administratie_id"], verkoopfactuur_id,
+            json.dumps([r.model_dump(mode="json") for r in factuur["regels"]],
+                       ensure_ascii=False),
+            json.dumps(regels, ensure_ascii=False, default=str),
+            tijd,
+        ),
+    )
+    conn.commit()
+    return True, []
+
+
+def verwijder_verkoopfactuur(
+    conn: sqlite3.Connection, verkoopfactuur_id: int
+) -> tuple[bool, list[str]]:
+    """Gooi een concept weg. Een definitieve factuur blijft staan.
+
+    Er ontstaat geen gat in de nummering: een concept heeft nog geen
+    nummer.
+    """
+    factuur = lees_verkoopfactuur(conn, verkoopfactuur_id)
+    bezwaar = _alleen_concept(factuur)
+    if bezwaar:
+        return False, [bezwaar]
+
+    conn.execute(
+        "DELETE FROM verkoopfactuurregels WHERE verkoopfactuur_id = ?",
+        (verkoopfactuur_id,),
+    )
+    conn.execute("DELETE FROM verkoopfacturen WHERE id = ?", (verkoopfactuur_id,))
+    conn.execute(
+        """
+        INSERT INTO audit_log (
+            administratie_id, tabel, record_id, actie,
+            veld, oude_waarde, nieuwe_waarde, tijdstip
+        ) VALUES (?, 'verkoopfacturen', ?, 'gewijzigd', 'status', 'concept',
+                  'verwijderd', ?)
+        """,
+        (factuur["administratie_id"], verkoopfactuur_id, _nu()),
+    )
+    conn.commit()
+    return True, []
+
+
+def controleer_verkoopfactuur(
+    conn: sqlite3.Connection, verkoopfactuur_id: int
+) -> list[str]:
+    """Wat ontbreekt er nog voordat deze factuur definitief kan worden?"""
+    from .verkoop import controleer_verplicht
+
+    factuur = lees_verkoopfactuur(conn, verkoopfactuur_id)
+    return controleer_verplicht(
+        factuur, factuur["klant"], factuur["eigen"], factuur["regels"]
+    )
+
+
+def _bewaar_factuur_pdf(
+    conn: sqlite3.Connection, factuur: dict[str, Any], opslagmap: str
+) -> Optional[int]:
+    """Maak de PDF van deze factuur en zet hem in de documentopslag.
+
+    De PDF is deterministisch (geen tijdstempel erin), dus twee keer
+    genereren geeft hetzelfde bestand en dezelfde hash. Hij gaat door
+    dezelfde opslag als een ontvangen factuur: onder zijn hash,
+    alleen-lezen, en nooit overschreven.
+    """
+    from .factuur_pdf import maak_factuur_pdf
+
+    with tempfile.TemporaryDirectory() as tijdelijke_map:
+        tijdelijk = Path(tijdelijke_map) / "factuur.pdf"
+        tijdelijk.write_bytes(maak_factuur_pdf(factuur))
+        document = bewaar_document(
+            conn, factuur["administratie_id"], str(tijdelijk), opslagmap
+        )
+    return document.document_id
+
+
+def maak_definitief(
+    conn: sqlite3.Connection,
+    verkoopfactuur_id: int,
+    door: str = "eigenaar",
+    opslagmap: Optional[str] = None,
+) -> tuple[Optional[str], list[str]]:
+    """Ken een factuurnummer toe, bewaar de gegevens en boek de factuur.
+
+    Geeft (factuurnummer, redenen). Ontbreekt er een verplicht gegeven,
+    dan gebeurt er niets en staat de lijst met wat er mist in redenen.
+
+    Is er een opslagmap meegegeven, dan wordt de PDF gemaakt en bewaard
+    zoals hij de deur uit gaat.
+    """
+    from .verkoop import stel_verkoopboeking_samen, volgend_nummer
+
+    factuur = lees_verkoopfactuur(conn, verkoopfactuur_id)
+    if factuur["status"] == "definitief":
+        return None, [f"factuur {factuur['factuurnummer']} is al definitief"]
+
+    ontbreekt = controleer_verkoopfactuur(conn, verkoopfactuur_id)
+    if ontbreekt:
+        return None, ontbreekt
+
+    jaar = date.fromisoformat(factuur["factuurdatum"]).year
+    hoogste = conn.execute(
+        "SELECT max(nummer_volg) FROM verkoopfacturen "
+        "WHERE administratie_id = ? AND nummer_jaar = ?",
+        (factuur["administratie_id"], jaar),
+    ).fetchone()[0]
+    volgnummer, factuurnummer = volgend_nummer(jaar, hoogste)
+
+    tijd = _nu()
+    conn.execute(
+        """
+        UPDATE verkoopfacturen SET
+            status = 'definitief', factuurnummer = ?, nummer_jaar = ?,
+            nummer_volg = ?, klant_gegevens = ?, eigen_gegevens = ?,
+            definitief_op = ?, definitief_door = ?, gewijzigd_op = ?
+        WHERE id = ?
+        """,
+        (
+            factuurnummer, jaar, volgnummer,
+            json.dumps(factuur["klant"], ensure_ascii=False, default=str),
+            json.dumps(factuur["eigen"], ensure_ascii=False, default=str),
+            tijd, door, tijd, verkoopfactuur_id,
+        ),
+    )
+
+    voorstel = stel_verkoopboeking_samen(
+        {**factuur, "factuurnummer": factuurnummer}, factuur["regels"]
+    )
+    boeking_id, boekredenen = sla_boeking_op(
+        conn, factuur["administratie_id"], voorstel, door=door
+    )
+    if boeking_id is None:
+        # Zonder boeking geen definitieve factuur: anders staat er wel een
+        # nummer maar niets in het grootboek.
+        conn.rollback()
+        return None, boekredenen
+
+    conn.execute(
+        "UPDATE verkoopfacturen SET boeking_id = ? WHERE id = ?",
+        (boeking_id, verkoopfactuur_id),
+    )
+
+    if opslagmap is not None:
+        definitief = lees_verkoopfactuur(conn, verkoopfactuur_id)
+        if factuur.get("corrigeert_id"):
+            origineel = lees_verkoopfactuur(conn, factuur["corrigeert_id"])
+            definitief["corrigeert_nummer"] = origineel["factuurnummer"]
+        document_id = _bewaar_factuur_pdf(conn, definitief, opslagmap)
+        conn.execute(
+            "UPDATE verkoopfacturen SET document_id = ? WHERE id = ?",
+            (document_id, verkoopfactuur_id),
+        )
+    conn.execute(
+        """
+        INSERT INTO audit_log (
+            administratie_id, tabel, record_id, actie,
+            veld, oude_waarde, nieuwe_waarde, tijdstip
+        ) VALUES (?, 'verkoopfacturen', ?, 'gewijzigd', 'status', 'concept', ?, ?)
+        """,
+        (factuur["administratie_id"], verkoopfactuur_id,
+         f"definitief {factuurnummer}", tijd),
+    )
+    conn.commit()
+    return factuurnummer, []
+
+
+def maak_creditfactuur(
+    conn: sqlite3.Connection, verkoopfactuur_id: int
+) -> tuple[Optional[int], list[str]]:
+    """Maak een concept-creditfactuur bij een definitieve factuur.
+
+    Dezelfde regels met een negatief aantal, en een verwijzing naar het
+    origineel. Zo blijft de oorspronkelijke factuur staan zoals hij de
+    deur uit is gegaan, en heffen de twee elkaar op zodra de
+    creditfactuur definitief wordt.
+    """
+    factuur = lees_verkoopfactuur(conn, verkoopfactuur_id)
+    if factuur["status"] != "definitief":
+        return None, [
+            "een concept crediteer je niet; pas het aan of gooi het weg"
+        ]
+    if factuur["soort"] == "creditfactuur":
+        return None, ["een creditfactuur crediteer je niet nog een keer"]
+
+    bestaat = conn.execute(
+        "SELECT id FROM verkoopfacturen WHERE corrigeert_id = ?",
+        (verkoopfactuur_id,),
+    ).fetchone()
+    if bestaat is not None:
+        return None, [
+            f"factuur {factuur['factuurnummer']} is al gecrediteerd met "
+            f"factuur {bestaat[0]}"
+        ]
+
+    nieuw_id = maak_verkoopfactuur(
+        conn, factuur["administratie_id"], factuur["klant_id"],
+        factuur["factuurdatum"],
+    )
+    conn.execute(
+        "UPDATE verkoopfacturen SET soort = 'creditfactuur', corrigeert_id = ?, "
+        "opmerking = ? WHERE id = ?",
+        (
+            verkoopfactuur_id,
+            f"Creditering van factuur {factuur['factuurnummer']}",
+            nieuw_id,
+        ),
+    )
+    zet_verkoopregels(conn, nieuw_id, [
+        {
+            "omschrijving": regel.omschrijving,
+            "aantal": str(-regel.aantal),
+            "prijs_per_stuk": str(regel.prijs_per_stuk),
+            "btw_percentage": str(regel.btw_percentage),
+            "rekening": regel.rekening,
+        }
+        for regel in factuur["regels"]
+    ])
+    conn.commit()
+    return nieuw_id, []

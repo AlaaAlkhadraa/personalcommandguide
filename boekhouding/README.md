@@ -12,6 +12,7 @@ geboekt — elke fout leidt tot status `review_nodig` met een leesbare reden.
 - **Module 5** — webinterface, fase 1: de reviewschermen van de eigenaar
 - **Module 6** — grootboek (dubbel boekhouden) en de btw-aangifte per kwartaal
 - **Module 7** — bankafschriften importeren en afletteren tegen de facturen
+- **Module 8** — verkoopfacturen: klanten, factuur opstellen, PDF, openstaande posten
 
 ## Installeren en testen
 
@@ -885,6 +886,118 @@ een MT940 met één onleesbare regel, en een bestand dat helemaal geen afschrift
 is. De bedragen sluiten aan op de UBL-testfacturen, zodat het afletteren op
 echt materiaal getest wordt.
 
+## Module 8 — Verkoopfacturen
+
+Geen AI. Dit is invoer en rekenwerk: jij typt de regels, de code rekent uit en
+controleert of de factuur voldoet aan wat de Belastingdienst verplicht stelt.
+
+### Klanten en je eigen gegevens
+
+Per administratie een klantenlijst: naam, adres, KvK-nummer, btw-id, e-mail en
+een betalingstermijn (standaard 30 dagen). Je eigen bedrijfsgegevens staan bij
+de administratie zelf, want ze horen op elke factuur: naam, adres, btw-id, KvK
+en IBAN. Beide gaan langs de audit trail.
+
+### De bedragen komen uit de code
+
+Je vult per regel de omschrijving, het aantal, de prijs per stuk en het
+btw-tarief in. Het regelbedrag, de btw en de totalen worden berekend — daar is
+geen invoerveld voor. Zo kan er geen factuur de deur uit met een optelling die
+niet klopt.
+
+Twee keuzes die je terugziet in de cijfers:
+
+- **Afronden gaat bij een halve cent omhoog** (`ROUND_HALF_UP`), zoals op
+  papier. Python rondt standaard naar even, en dan klopt de factuur niet meer
+  met wat de klant zelf narekent.
+- **De btw wordt per tarief over het opgetelde bedrag berekend**, niet als som
+  van de afgeronde regelbedragen. Anders loopt er per regel een halve cent weg.
+
+### Een nummer pas bij het definitief maken
+
+Doorlopend per administratie per jaar: `2026-0001`, `2026-0002`, … Een concept
+heeft nog géén nummer, en dat is de hele reden: zou een concept al genummerd
+worden, dan ontstaat er een gat zodra je het weggooit — en juist naar gaten in
+de nummering wordt gekeken.
+
+### Wat er verplicht op moet
+
+Ontbreekt er iets, dan kan de factuur niet definitief worden en staat de lijst
+erbij: de factuurdatum, je eigen naam, adres en btw-identificatienummer, de
+naam en het adres van de klant, minstens één regel, en per regel een
+omschrijving, een aantal, een prijs en een geldig btw-tarief voor dat boekjaar.
+Het nummer en de bedragen komen van het systeem, dus die kunnen niet ontbreken.
+
+### Concept versus definitief
+
+| | Wijzigen | Weggooien | Nummer | Boeking |
+|---|---|---|---|---|
+| Concept | ja | ja | nee | nee |
+| Definitief | **nooit** | **nooit** | ja | ja |
+
+Definitief maken doet vier dingen tegelijk: het nummer toekennen, de klant- en
+eigen gegevens vastleggen zoals ze op dat moment zijn, de boeking maken, en de
+PDF genereren. Verhuist de klant later, dan verandert de verstuurde factuur
+niet mee — daar is een test voor.
+
+Een fout in een definitieve factuur zet je recht met een **creditfactuur**: die
+krijgt dezelfde regels met een negatief aantal en een verwijzing naar het
+origineel. Samen zijn ze per grootboekrekening nul.
+
+De boeking:
+
+```
+1300  Debiteuren                 943,72 debet
+8000  Omzet hoog tarief                  712,50 credit
+8010  Omzet laag tarief                   74,85 credit
+1510  Te betalen btw hoog                149,63 credit
+1511  Te betalen btw laag                  6,74 credit
+```
+
+Welke omzetrekening bij welk tarief hoort staat in het rekeningschema van dat
+boekjaar (`standaardrekeningen.omzet`), en is per regel te overrulen. Er wordt
+dus niets geraden.
+
+### De PDF
+
+`factuur_pdf.py` maakt de PDF met dezelfde schrijver als het testmateriaal —
+die is daarvoor van `tests/` naar het pakket verhuisd, zodat er één plek is
+waar de opmaak van een factuur wordt bepaald. Geen externe bibliotheek.
+
+De PDF gaat door de gewone documentopslag: onder de hash van de inhoud,
+alleen-lezen, nooit overschreven. Hij bevat geen tijdstempel, dus twee keer
+genereren geeft byte-voor-byte hetzelfde bestand en dus dezelfde hash.
+
+### De btw-aangifte — en een fout die dit blootlegde
+
+Verkoopfacturen tellen mee in rubriek 1a en 1b. Bij het nakijken daarvan kwam
+een echte fout boven water: de aangifte keek per boeking naar de btw-rekening
+en zette **alle** omzet van die boeking in één rubriek. Voor een inkoopfactuur
+klopte dat, want die heeft één tarief. Een verkoopfactuur kan er twee hebben —
+en dan belandde de hele omzet in 1a en viel de 9%-btw weg.
+
+De aangifte deelt de omzet nu in op de omzetrekening: 8000 hoort bij 21%, 8010
+bij 9%, en dat staat in het rekeningschema. Terugrekenen uit het btw-bedrag zou
+ook kunnen, maar dan gaat het bij de eerste afronding mis. Staat er omzet op
+een rekening die niet aan een tarief hangt terwijl er meerdere tarieven in de
+boeking zitten, dan wordt dat gemeld in plaats van ergens bij opgeteld.
+
+### Openstaande posten en afletteren
+
+Een definitieve verkoopfactuur staat open tot er een bijschrijving aan
+gekoppeld is. Het verkoopscherm toont het openstaande bedrag, per factuur
+hoeveel dagen die over de vervaldatum is, en telt hoeveel er te laat zijn.
+
+Het afletteren van module 7 kent nu twee soorten kandidaten: ontvangen facturen
+en eigen verkoopfacturen. Elke kandidaat draagt een `bron`, en de keuzelijst op
+het bankscherm laat alleen zien wat qua richting kan. Bevestigen boekt bank
+debet tegen debiteuren credit.
+
+Daarbij is de richtingcontrole scherper geworden: die kijkt nu naar het **teken
+van het factuurbedrag** in plaats van alleen naar inkoop of verkoop. Bij een
+creditfactuur gaat het geld namelijk de andere kant op, en dat werd eerder als
+"richting klopt niet" geweigerd.
+
 ## Testmateriaal: synthetische facturen
 
 Voor module 3 (AI-extractie) is materiaal nodig om op te oefenen. Het script
@@ -924,7 +1037,7 @@ de stack blijft Python, SQLite, Pydantic en pytest.
 
 ### `tests/` — de bewijslast
 
-450 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
+509 pytest-tests, één of meer per controle, inclusief foute inputs: floats,
 onzin-tekst, ontbrekende velden, verkeerde btw-percentages, ambigue
 bedragen, toekomst- en te oude datums, duplicaten, de audit trail bij
 aanmaken en wijzigen, en voor module 2: een PDF zonder tekstlaag, een
