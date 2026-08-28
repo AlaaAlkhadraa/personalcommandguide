@@ -1,6 +1,6 @@
 # Product Marketing Context — ZEVREN
 
-**Document version:** 1.3 · 2026-08-28
+**Document version:** 1.4 · 2026-08-28
 Elke marketingskill in `.claude/skills/` leest dit document eerst.
 Feiten hier zijn bindend; een skill-advies dat ermee botst, verliest.
 
@@ -100,6 +100,27 @@ demo's zijn concepten en worden nooit als echte klanten gepresenteerd.
 
 ## Changelog
 
+- 1.4 (2026-08-28, Azzouz): dezelfde dag, twee lanes verder, dezelfde regel
+  opnieuw. In lane B en C stond "werk dat u/je zelf kunt aanklikken" in negen van
+  de tien berichten, ondanks de mechanische controle die 1.3 vanochtend
+  voorschreef. Daarnaast beloofden zeven van de tien een formulier waarin de
+  klant een foto uploadt ("een foto van de plek/het dak/de ruimte/de schade") —
+  de tweede verboden formulering, die tot vandaag nooit eerder in bulk opdook.
+  Beide zaten in de SLOTALINEA en de OPLOSSINGSALINEA, die van kaart naar kaart
+  worden overgenomen zonder opnieuw gelezen te worden. Voor Sam: de controle is
+  geen herlezing maar een zoekopdracht in de eigen tekst op `aanklikken` en
+  `een foto van`, per bestand, vóór het pushen. Wat de slotalinea wél mag zeggen
+  bij offertevormig werk: `zevren.nl/concept-bouwer`, waar de bezoeker stijl en
+  kleuren kiest en direct een voorbeeld van zijn eigen homepage ziet — volledig
+  door de site gedekt.
+  Verder kostte de poort "kan deze klant het al?" vandaag opnieuw twee kaarten,
+  nu buiten de boekingssector: Saartje Timmermans Fotografie kreeg een
+  contactformulier en een prijs aangeboden die allebei al op haar site staan, en
+  Photos by Jill kreeg openbare prijzen aangeboden terwijl zij een eigen
+  tarievenpagina voert. De poort is dus breder dan boeken alleen: **voordat het
+  bericht het lek benoemt, moet vaststaan dat het lek bestaat** — één zoekopdracht
+  op het eigen domein (`"domein.nl" prijzen contact`) haalde bij beide de
+  weerlegging boven.
 - 1.3 (2026-08-28, Azzouz): de verboden formulering "werk dat u zelf kunt
   aanklikken" (verboden sinds 1.1) dook vandaag opnieuw op — in alle vijf
   berichten van lane D (installateurs, Zuid-/Noord-Holland), geschreven
