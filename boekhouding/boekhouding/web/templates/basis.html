@@ -25,6 +25,18 @@
   }
   header a { color: var(--zacht); text-decoration: none; font-size: 15px; }
   header h1 { margin: 4px 0 0; font-size: 19px; }
+  /* Wie er is ingelogd, met de uitlogknop ernaast. Klein en grijs: het
+     hoort erbij, maar het is niet waar het scherm over gaat. */
+  header .wie {
+    margin: 4px 0 0; color: var(--zacht); font-size: 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  header .wie form { margin: 0; }
+  header .wie button {
+    background: none; border: none; color: var(--zacht); padding: 0;
+    min-height: 0; font-size: 14px; font-weight: 400;
+    text-decoration: underline;
+  }
   main { padding: 16px; max-width: 1100px; margin: 0 auto; }
   a.knop, button {
     display: inline-block; padding: 13px 18px; border-radius: 8px;
@@ -62,7 +74,8 @@
   .rij .onder { color: var(--zacht); font-size: 14px; margin-top: 4px; }
   .rij .bedrag { font-variant-numeric: tabular-nums; font-weight: 600; }
   label { display: block; font-size: 14px; color: var(--zacht); margin-bottom: 4px; }
-  input[type=text], input[type=file], select {
+  input[type=text], input[type=password], input[type=email],
+  input[type=file], select {
     width: 100%; padding: 12px; font-size: 16px; border-radius: 8px;
     border: 1px solid var(--lijn); background: var(--vel);
   }
@@ -158,6 +171,15 @@
 <header>
   {% block kruimel %}{% endblock %}
   <h1>{% block kop %}Boekhouding{% endblock %}</h1>
+  {% if gebruiker %}
+  <div class="wie">
+    <span>{{ gebruiker.naam }}{% if gebruiker.rol != "eigenaar" %} (klant){% endif %}</span>
+    <form method="post" action="/uitloggen">
+      <input type="hidden" name="csrf" value="{{ csrf }}">
+      <button type="submit">Uitloggen</button>
+    </form>
+  </div>
+  {% endif %}
 </header>
 <main>{% block inhoud %}{% endblock %}</main>
 </body>

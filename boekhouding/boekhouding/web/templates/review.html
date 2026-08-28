@@ -104,6 +104,7 @@
 
   <div>
     <form class="kaart" method="post" action="/administratie/{{ administratie_id }}/factuur/{{ factuur.id }}/opslaan">
+      <input type="hidden" name="csrf" value="{{ csrf }}">
       {% for veld in velden %}
         <div class="veld {% if veld.zekerheid == 'laag' %}laag{% endif %}">
           <label for="{{ veld.naam }}">
@@ -115,7 +116,8 @@
             {% endif %}
           </label>
           <input type="text" id="{{ veld.naam }}" name="{{ veld.naam }}"
-                 value="{{ veld.waarde }}" inputmode="{% if 'bedrag' in veld.naam or 'percentage' in veld.naam %}decimal{% else %}text{% endif %}">
+                 value="{{ veld.waarde }}" {% if not eigenaar %}readonly{% endif %}
+                 inputmode="{% if 'bedrag' in veld.naam or 'percentage' in veld.naam %}decimal{% else %}text{% endif %}">
           {% if veld.reden %}
             <div class="onder" style="color:#b4381f">{{ veld.reden }}</div>
           {% endif %}
@@ -132,7 +134,7 @@
             gewijzigd.
           </div>
         {% elif rekeningen %}
-          <select id="rekening" name="rekening">
+          <select id="rekening" name="rekening" {% if not eigenaar %}disabled{% endif %}>
             <option value="">— nog niet gekozen —</option>
             {% for rekening in rekeningen %}
               <option value="{{ rekening.code }}"
@@ -155,9 +157,16 @@
         {% endif %}
       </div>
 
+      {% if eigenaar %}
       <div class="knoppen">
         <button type="submit" class="tweede">Opslaan en later beoordelen</button>
       </div>
+      {% else %}
+      <p class="onder" style="color:var(--zacht);font-size:14px;margin-bottom:0">
+        Dit is wat er uit je factuur is gelezen. Klopt er iets niet, zeg het
+        dan tegen je boekhouder; hij past het aan en keurt de factuur goed.
+      </p>
+      {% endif %}
     </form>
 
     {% if boeking %}
@@ -184,7 +193,9 @@
       </div>
     {% endif %}
 
+  {% if eigenaar %}
     <form class="kaart" method="post" action="/administratie/{{ administratie_id }}/factuur/{{ factuur.id }}/goedkeuren">
+      <input type="hidden" name="csrf" value="{{ csrf }}">
       <div class="knoppen">
         <button type="submit" {% if not mag_goedkeuren %}disabled{% endif %}>
           {% if factuur.goedgekeurd_op %}Al goedgekeurd{% else %}Goedkeuren{% endif %}
@@ -197,6 +208,14 @@
         </p>
       {% endif %}
     </form>
+  {% else %}
+    <div class="kaart">
+      <p class="onder" style="color:#5c5c5c;font-size:14px;margin:0">
+        {% if factuur.goedgekeurd_op %}Deze factuur is goedgekeurd.
+        {% else %}Deze factuur wacht op goedkeuring door de boekhouder.{% endif %}
+      </p>
+    </div>
+  {% endif %}
 
     {% if extractie %}
       <div class="kaart">

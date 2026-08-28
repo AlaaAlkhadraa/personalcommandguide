@@ -23,6 +23,7 @@
 
 <form class="kaart" method="post" enctype="multipart/form-data"
       action="/administratie/{{ administratie_id }}/bank">
+      <input type="hidden" name="csrf" value="{{ csrf }}">
   <div class="veld">
     <label for="bestand">Afschrift inlezen (MT940 of CAMT.053)</label>
     <input type="file" id="bestand" name="bestand" accept=".sta,.mt940,.txt,.xml" required>
@@ -77,6 +78,7 @@
         </div>
         <form method="post"
               action="/administratie/{{ administratie_id }}/bank/{{ transactie.id }}/koppel">
+              <input type="hidden" name="csrf" value="{{ csrf }}">
           <input type="hidden" name="factuur_id"
                  value="{{ voorstel.bron }}:{{ voorstel.factuur_id }}">
           <div class="knoppen" style="margin-top:12px">
@@ -101,6 +103,7 @@
       {% else %}
         <form method="post"
               action="/administratie/{{ administratie_id }}/bank/{{ transactie.id }}/koppel">
+              <input type="hidden" name="csrf" value="{{ csrf }}">
           <div class="veld" style="margin-top:12px;margin-bottom:8px">
             <label for="factuur-{{ transactie.id }}">Zelf koppelen</label>
             <select id="factuur-{{ transactie.id }}" name="factuur_id">

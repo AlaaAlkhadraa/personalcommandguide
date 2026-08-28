@@ -1091,6 +1091,9 @@ Module 2: PDF-tekstextractie en veilige bewaring van originelen.
 Module 3: AI-extractie van factuurgegevens (voorstel, geen boeking).
 Module 4: UBL / e-facturen rechtstreeks uitlezen (zonder AI).
 Module 6: grootboek (dubbel boekhouden) en btw-aangifte per kwartaal.
+Module 7: bankafschriften importeren en afletteren.
+Module 8: verkoopfacturen (uitgaande facturen).
+Module 9: gebruikersaccounts, rollen en toegang.
 
 AI stelt voor, code valideert, mens beslist (Gouden regel 1).
 """
@@ -1238,6 +1241,25 @@ from .database import (
     maak_definitief,
     maak_creditfactuur,
     openstaande_posten,
+    maak_gebruiker,
+    lees_gebruiker,
+    lees_gebruikers,
+    koppel_administratie,
+    te_veel_pogingen,
+    probeer_inloggen,
+    lees_sessie,
+    trek_sessie_in,
+    lees_toegang_log,
+    zet_gebruiker,
+    huidige_gebruiker,
+)
+from .gebruikers import (
+    ROLLEN,
+    Gebruiker,
+    controleer_wachtwoord,
+    csrf_token,
+    hash_wachtwoord,
+    normaliseer_email,
 )
 
 __all__ = [
@@ -1367,6 +1389,23 @@ __all__ = [
     "maak_definitief",
     "maak_creditfactuur",
     "openstaande_posten",
+    "ROLLEN",
+    "Gebruiker",
+    "maak_gebruiker",
+    "lees_gebruiker",
+    "lees_gebruikers",
+    "koppel_administratie",
+    "te_veel_pogingen",
+    "probeer_inloggen",
+    "lees_sessie",
+    "trek_sessie_in",
+    "lees_toegang_log",
+    "zet_gebruiker",
+    "huidige_gebruiker",
+    "controleer_wachtwoord",
+    "csrf_token",
+    "hash_wachtwoord",
+    "normaliseer_email",
 ]
 ```
 
@@ -3470,10 +3509,13 @@ Gouden regels die hier gelden:
 import json
 import sqlite3
 import tempfile
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from decimal import Decimal
 from pathlib import Path
-from typing import Any, Optional
+from typing import TYPE_CHECKING, Any, Optional
+
+if TYPE_CHECKING:  # alleen voor de typeaanduidingen; geen kringverwijzing
+    from .gebruikers import Gebruiker
 
 from .validatie import valideer_factuur
 from .models import ValidatieResultaat
@@ -3513,6 +3555,18 @@ def _als_tekst(waarde: Any) -> Optional[str]:
     return json.dumps(waarde, ensure_ascii=False, default=str)
 
 
+class Verbinding(sqlite3.Connection):
+    """Een gewone sqlite-verbinding met één extra: wie eraan werkt.
+
+    Een kale sqlite3.Connection laat niet toe dat je er zelf iets op
+    zet. Deze subklasse wel, en daar hangt zet_gebruiker de naam aan
+    van degene die is ingelogd, zodat elke audit-regel die via deze
+    verbinding wordt geschreven de echte gebruiker krijgt.
+    """
+
+    gebruiker: Optional[str] = None
+
+
 def maak_verbinding(pad: str) -> sqlite3.Connection:
     """Open de databaseverbinding en zet foreign keys aan.
 
@@ -3521,7 +3575,7 @@ def maak_verbinding(pad: str) -> sqlite3.Connection:
     worden opgeslagen. Gebruik daarom altijd deze functie in plaats
     van sqlite3.connect rechtstreeks.
     """
-    conn = sqlite3.connect(pad)
+    conn = sqlite3.connect(pad, factory=Verbinding)
     conn.execute("PRAGMA foreign_keys = ON")
     return conn
 
@@ -3541,6 +3595,62 @@ def _voeg_kolom_toe(
         return False
     conn.execute(f"ALTER TABLE {tabel} ADD COLUMN {kolom} {definitie}")
     return True
+
+
+def zet_gebruiker(conn: sqlite3.Connection, door: Optional[str]) -> None:
+    """Leg vast wie er via deze verbinding werkt.
+
+    De webinterface roept dit aan zodra bekend is wie er is ingelogd.
+    Elke audit-regel die daarna via deze verbinding wordt geschreven,
+    krijgt die naam — zonder dat elke functie er een parameter voor
+    hoeft te hebben.
+    """
+    if isinstance(conn, Verbinding):
+        conn.gebruiker = door or None
+
+
+def huidige_gebruiker(conn: sqlite3.Connection) -> str:
+    """Wie werkt er via deze verbinding? 'systeem' als niemand het zei."""
+    return getattr(conn, "gebruiker", None) or "systeem"
+
+
+def _audit(
+    conn: sqlite3.Connection,
+    administratie_id: int,
+    tabel: str,
+    record_id: int,
+    actie: str,
+    veld: Optional[str] = None,
+    oude_waarde: Any = None,
+    nieuwe_waarde: Any = None,
+    door: Optional[str] = None,
+    tijdstip: Optional[str] = None,
+) -> None:
+    """Schrijf één regel in de audit trail.
+
+    Alle audit-regels lopen hierlangs, zodat er maar één plek is waar de
+    kolommen worden ingevuld — en zodat "wie deed het" nooit vergeten kan
+    worden.
+
+    Wie dat is, hoeft niet door twintig functies heen te worden
+    doorgegeven. De webinterface zet het één keer op de verbinding
+    (`zet_gebruiker`), en een verbinding is precies één verzoek van
+    precies één gebruiker. Staat er niets, dan komt er "systeem" te
+    staan: dat is eerlijker dan een naam verzinnen.
+    """
+    conn.execute(
+        """
+        INSERT INTO audit_log (
+            administratie_id, tabel, record_id, actie,
+            veld, oude_waarde, nieuwe_waarde, door, tijdstip
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            administratie_id, tabel, record_id, actie, veld,
+            _als_tekst(oude_waarde), _als_tekst(nieuwe_waarde),
+            door or huidige_gebruiker(conn), tijdstip or _nu(),
+        ),
+    )
 
 
 def maak_tabellen(conn: sqlite3.Connection) -> None:
@@ -3649,6 +3759,10 @@ def maak_tabellen(conn: sqlite3.Connection) -> None:
             veld             TEXT,
             oude_waarde      TEXT,
             nieuwe_waarde    TEXT,
+            -- Wie de handeling deed. 'systeem' als er geen mens aan te
+            -- pas kwam (een import bijvoorbeeld); anders het e-mailadres
+            -- van de ingelogde gebruiker.
+            door             TEXT NOT NULL DEFAULT 'systeem',
             tijdstip         TEXT NOT NULL
         );
         """
@@ -3678,10 +3792,12 @@ def maak_tabellen(conn: sqlite3.Connection) -> None:
     _voeg_kolom_toe(conn, "facturen", "rekening", "TEXT")
     _voeg_kolom_toe(conn, "facturen", "goedgekeurd_op", "TEXT")
     _voeg_kolom_toe(conn, "facturen", "goedgekeurd_door", "TEXT")
+    _voeg_kolom_toe(conn, "audit_log", "door", "TEXT NOT NULL DEFAULT 'systeem'")
 
     conn.commit()
     _bank_tabellen(conn)
     _verkoop_tabellen(conn)
+    _toegang_tabellen(conn)
 
 
 def maak_administratie(
@@ -3793,28 +3909,22 @@ def sla_factuur_op(
     factuur_id = cursor.lastrowid
 
     for veld, waarde in velden.items():
-        conn.execute(
-            """
-            INSERT INTO audit_log (
-                administratie_id, tabel, record_id, actie,
-                veld, oude_waarde, nieuwe_waarde, tijdstip
-            ) VALUES (?, 'facturen', ?, 'aangemaakt', ?, NULL, ?, ?)
-            """,
-            (administratie_id, factuur_id, veld, waarde, tijd),
+        _audit(
+            conn, administratie_id, 'facturen', factuur_id, 'aangemaakt',
+            veld=veld,
+            nieuwe_waarde=waarde,
+            tijdstip=tijd,
         )
 
     # De koppeling naar het originele document is ook data en krijgt
     # dus een eigen auditregel — alleen als er echt een document is,
     # zodat een factuur zonder bron geen lege regel oplevert.
     if document_id is not None:
-        conn.execute(
-            """
-            INSERT INTO audit_log (
-                administratie_id, tabel, record_id, actie,
-                veld, oude_waarde, nieuwe_waarde, tijdstip
-            ) VALUES (?, 'facturen', ?, 'aangemaakt', 'document_id', NULL, ?, ?)
-            """,
-            (administratie_id, factuur_id, str(document_id), tijd),
+        _audit(
+            conn, administratie_id, 'facturen', factuur_id, 'aangemaakt',
+            veld='document_id',
+            nieuwe_waarde=str(document_id),
+            tijdstip=tijd,
         )
 
     conn.commit()
@@ -3850,14 +3960,12 @@ def wijzig_factuur(
     nieuwe_velden = {v: huidig[v] for v in FACTUUR_VELDEN}
     for veld, nieuwe_waarde in wijzigingen.items():
         nieuwe_tekst = _als_tekst(nieuwe_waarde)
-        conn.execute(
-            """
-            INSERT INTO audit_log (
-                administratie_id, tabel, record_id, actie,
-                veld, oude_waarde, nieuwe_waarde, tijdstip
-            ) VALUES (?, 'facturen', ?, 'gewijzigd', ?, ?, ?, ?)
-            """,
-            (huidig["administratie_id"], factuur_id, veld, huidig[veld], nieuwe_tekst, tijd),
+        _audit(
+            conn, huidig["administratie_id"], 'facturen', factuur_id, 'gewijzigd',
+            veld=veld,
+            oude_waarde=huidig[veld],
+            nieuwe_waarde=nieuwe_tekst,
+            tijdstip=tijd,
         )
         nieuwe_velden[veld] = nieuwe_tekst
 
@@ -4043,14 +4151,11 @@ def bewaar_document(
         ("originele_bestandsnaam", bron.name),
         ("opslagpad", str(doel)),
     ):
-        conn.execute(
-            """
-            INSERT INTO audit_log (
-                administratie_id, tabel, record_id, actie,
-                veld, oude_waarde, nieuwe_waarde, tijdstip
-            ) VALUES (?, 'documenten', ?, 'aangemaakt', ?, NULL, ?, ?)
-            """,
-            (administratie_id, document_id, veld, waarde, tijd),
+        _audit(
+            conn, administratie_id, 'documenten', document_id, 'aangemaakt',
+            veld=veld,
+            nieuwe_waarde=waarde,
+            tijdstip=tijd,
         )
     conn.commit()
 
@@ -4115,14 +4220,11 @@ def sla_extractie_op(
         ("status", resultaat.status),
         ("document_id", None if document_id is None else str(document_id)),
     ):
-        conn.execute(
-            """
-            INSERT INTO audit_log (
-                administratie_id, tabel, record_id, actie,
-                veld, oude_waarde, nieuwe_waarde, tijdstip
-            ) VALUES (?, 'extracties', ?, 'aangemaakt', ?, NULL, ?, ?)
-            """,
-            (administratie_id, extractie_id, veld, waarde, tijd),
+        _audit(
+            conn, administratie_id, 'extracties', extractie_id, 'aangemaakt',
+            veld=veld,
+            nieuwe_waarde=waarde,
+            tijdstip=tijd,
         )
     conn.commit()
     return extractie_id
@@ -4202,14 +4304,11 @@ def keur_factuur_goed(
         (tijd, door, tijd, factuur_id),
     )
     for veld, waarde in (("goedgekeurd_op", tijd), ("goedgekeurd_door", door)):
-        conn.execute(
-            """
-            INSERT INTO audit_log (
-                administratie_id, tabel, record_id, actie,
-                veld, oude_waarde, nieuwe_waarde, tijdstip
-            ) VALUES (?, 'facturen', ?, 'gewijzigd', ?, NULL, ?, ?)
-            """,
-            (factuur["administratie_id"], factuur_id, veld, waarde, tijd),
+        _audit(
+            conn, factuur["administratie_id"], 'facturen', factuur_id, 'gewijzigd',
+            veld=veld,
+            nieuwe_waarde=waarde,
+            tijdstip=tijd,
         )
     conn.commit()
     return True, []
@@ -4294,14 +4393,12 @@ def kies_rekening(
         "UPDATE facturen SET rekening = ?, gewijzigd_op = ? WHERE id = ?",
         (code, tijd, factuur_id),
     )
-    conn.execute(
-        """
-        INSERT INTO audit_log (
-            administratie_id, tabel, record_id, actie,
-            veld, oude_waarde, nieuwe_waarde, tijdstip
-        ) VALUES (?, 'facturen', ?, 'gewijzigd', 'rekening', ?, ?, ?)
-        """,
-        (factuur["administratie_id"], factuur_id, factuur["rekening"], code, tijd),
+    _audit(
+        conn, factuur["administratie_id"], 'facturen', factuur_id, 'gewijzigd',
+        veld='rekening',
+        oude_waarde=factuur["rekening"],
+        nieuwe_waarde=code,
+        tijdstip=tijd,
     )
     conn.commit()
     return True, []
@@ -4375,16 +4472,9 @@ def sla_boeking_op(
             ),
         )
 
-    conn.execute(
-        """
-        INSERT INTO audit_log (
-            administratie_id, tabel, record_id, actie,
-            veld, oude_waarde, nieuwe_waarde, tijdstip
-        ) VALUES (?, 'boekingen', ?, 'aangemaakt', NULL, NULL, ?, ?)
-        """,
-        (
-            administratie_id, boeking_id,
-            json.dumps(
+    _audit(
+        conn, administratie_id, 'boekingen', boeking_id, 'aangemaakt',
+        nieuwe_waarde=json.dumps(
                 {
                     "boekdatum": str(voorstel.boekdatum),
                     "omschrijving": voorstel.omschrijving,
@@ -4401,8 +4491,8 @@ def sla_boeking_op(
                 },
                 ensure_ascii=False,
             ),
-            tijd,
-        ),
+        tijdstip=tijd,
+        door=door,
     )
     conn.commit()
     return boeking_id, []
@@ -4675,16 +4765,9 @@ def importeer_bankafschrift(
             ),
         )
         samenvatting["nieuw"] += 1
-        conn.execute(
-            """
-            INSERT INTO audit_log (
-                administratie_id, tabel, record_id, actie,
-                veld, oude_waarde, nieuwe_waarde, tijdstip
-            ) VALUES (?, 'banktransacties', ?, 'aangemaakt', NULL, NULL, ?, ?)
-            """,
-            (
-                administratie_id, regel.lastrowid,
-                json.dumps(
+        _audit(
+            conn, administratie_id, 'banktransacties', regel.lastrowid, 'aangemaakt',
+            nieuwe_waarde=json.dumps(
                     {
                         "boekdatum": str(transactie.boekdatum),
                         "bedrag": str(transactie.bedrag),
@@ -4694,8 +4777,8 @@ def importeer_bankafschrift(
                     },
                     ensure_ascii=False,
                 ),
-                tijd,
-            ),
+            tijdstip=tijd,
+            door=door,
         )
 
     conn.commit()
@@ -4947,15 +5030,12 @@ def koppel_transactie(
         """,
         (factuur_id, boeking_id, tijd, door, transactie_id),
     )
-    conn.execute(
-        """
-        INSERT INTO audit_log (
-            administratie_id, tabel, record_id, actie,
-            veld, oude_waarde, nieuwe_waarde, tijdstip
-        ) VALUES (?, 'banktransacties', ?, 'gewijzigd', ?, NULL, ?, ?)
-        """,
-        (transactie["administratie_id"], transactie_id, kolom,
-         str(factuur_id), tijd),
+    _audit(
+        conn, transactie["administratie_id"], 'banktransacties', transactie_id, 'gewijzigd',
+        veld=kolom,
+        nieuwe_waarde=str(factuur_id),
+        tijdstip=tijd,
+        door=door,
     )
     conn.commit()
     return boeking_id, []
@@ -5101,14 +5181,12 @@ def wijzig_administratie(
             f"UPDATE administraties SET {veld} = ? WHERE id = ?",
             (nieuw, administratie_id),
         )
-        conn.execute(
-            """
-            INSERT INTO audit_log (
-                administratie_id, tabel, record_id, actie,
-                veld, oude_waarde, nieuwe_waarde, tijdstip
-            ) VALUES (?, 'administraties', ?, 'gewijzigd', ?, ?, ?, ?)
-            """,
-            (administratie_id, administratie_id, veld, huidig.get(veld), nieuw, tijd),
+        _audit(
+            conn, administratie_id, 'administraties', administratie_id, 'gewijzigd',
+            veld=veld,
+            oude_waarde=huidig.get(veld),
+            nieuwe_waarde=nieuw,
+            tijdstip=tijd,
         )
     conn.commit()
 
@@ -5138,15 +5216,10 @@ def maak_klant(
         (administratie_id, *[waarden[v] for v in KLANT_VELDEN], tijd, tijd),
     )
     klant_id = cursor.lastrowid
-    conn.execute(
-        """
-        INSERT INTO audit_log (
-            administratie_id, tabel, record_id, actie,
-            veld, oude_waarde, nieuwe_waarde, tijdstip
-        ) VALUES (?, 'klanten', ?, 'aangemaakt', NULL, NULL, ?, ?)
-        """,
-        (administratie_id, klant_id,
-         json.dumps(waarden, ensure_ascii=False), tijd),
+    _audit(
+        conn, administratie_id, 'klanten', klant_id, 'aangemaakt',
+        nieuwe_waarde=json.dumps(waarden, ensure_ascii=False),
+        tijdstip=tijd,
     )
     conn.commit()
     return klant_id
@@ -5174,15 +5247,12 @@ def wijzig_klant(
             f"UPDATE klanten SET {veld} = ?, gewijzigd_op = ? WHERE id = ?",
             (nieuw, tijd, klant_id),
         )
-        conn.execute(
-            """
-            INSERT INTO audit_log (
-                administratie_id, tabel, record_id, actie,
-                veld, oude_waarde, nieuwe_waarde, tijdstip
-            ) VALUES (?, 'klanten', ?, 'gewijzigd', ?, ?, ?, ?)
-            """,
-            (huidig["administratie_id"], klant_id, veld,
-             _als_tekst(huidig.get(veld)), nieuw, tijd),
+        _audit(
+            conn, huidig["administratie_id"], 'klanten', klant_id, 'gewijzigd',
+            veld=veld,
+            oude_waarde=_als_tekst(huidig.get(veld)),
+            nieuwe_waarde=nieuw,
+            tijdstip=tijd,
         )
     conn.commit()
 
@@ -5244,16 +5314,11 @@ def maak_verkoopfactuur(
         (administratie_id, klant_id, factuurdatum, verval, termijn, tijd, tijd),
     )
     factuur_id = cursor.lastrowid
-    conn.execute(
-        """
-        INSERT INTO audit_log (
-            administratie_id, tabel, record_id, actie,
-            veld, oude_waarde, nieuwe_waarde, tijdstip
-        ) VALUES (?, 'verkoopfacturen', ?, 'aangemaakt', NULL, NULL, ?, ?)
-        """,
-        (administratie_id, factuur_id,
-         json.dumps({"klant_id": klant_id, "factuurdatum": factuurdatum},
-                    ensure_ascii=False), tijd),
+    _audit(
+        conn, administratie_id, 'verkoopfacturen', factuur_id, 'aangemaakt',
+        nieuwe_waarde=json.dumps({"klant_id": klant_id, "factuurdatum": factuurdatum},
+                    ensure_ascii=False),
+        tijdstip=tijd,
     )
     conn.commit()
     return factuur_id
@@ -5358,15 +5423,12 @@ def wijzig_verkoopfactuur(
             f"UPDATE verkoopfacturen SET {veld} = ?, gewijzigd_op = ? WHERE id = ?",
             (nieuw, tijd, verkoopfactuur_id),
         )
-        conn.execute(
-            """
-            INSERT INTO audit_log (
-                administratie_id, tabel, record_id, actie,
-                veld, oude_waarde, nieuwe_waarde, tijdstip
-            ) VALUES (?, 'verkoopfacturen', ?, 'gewijzigd', ?, ?, ?, ?)
-            """,
-            (factuur["administratie_id"], verkoopfactuur_id, veld,
-             _als_tekst(factuur.get(veld)), nieuw, tijd),
+        _audit(
+            conn, factuur["administratie_id"], 'verkoopfacturen', verkoopfactuur_id, 'gewijzigd',
+            veld=veld,
+            oude_waarde=_als_tekst(factuur.get(veld)),
+            nieuwe_waarde=nieuw,
+            tijdstip=tijd,
         )
 
     # De vervaldatum volgt uit de factuurdatum en de termijn; die wordt
@@ -5427,20 +5489,13 @@ def zet_verkoopregels(
                 str(regel.bedrag_excl), str(regel.btw_bedrag),
             ),
         )
-    conn.execute(
-        """
-        INSERT INTO audit_log (
-            administratie_id, tabel, record_id, actie,
-            veld, oude_waarde, nieuwe_waarde, tijdstip
-        ) VALUES (?, 'verkoopfacturen', ?, 'gewijzigd', 'regels', ?, ?, ?)
-        """,
-        (
-            factuur["administratie_id"], verkoopfactuur_id,
-            json.dumps([r.model_dump(mode="json") for r in factuur["regels"]],
+    _audit(
+        conn, factuur["administratie_id"], 'verkoopfacturen', verkoopfactuur_id, 'gewijzigd',
+        veld='regels',
+        oude_waarde=json.dumps([r.model_dump(mode="json") for r in factuur["regels"]],
                        ensure_ascii=False),
-            json.dumps(regels, ensure_ascii=False, default=str),
-            tijd,
-        ),
+        nieuwe_waarde=json.dumps(regels, ensure_ascii=False, default=str),
+        tijdstip=tijd,
     )
     conn.commit()
     return True, []
@@ -5464,15 +5519,12 @@ def verwijder_verkoopfactuur(
         (verkoopfactuur_id,),
     )
     conn.execute("DELETE FROM verkoopfacturen WHERE id = ?", (verkoopfactuur_id,))
-    conn.execute(
-        """
-        INSERT INTO audit_log (
-            administratie_id, tabel, record_id, actie,
-            veld, oude_waarde, nieuwe_waarde, tijdstip
-        ) VALUES (?, 'verkoopfacturen', ?, 'gewijzigd', 'status', 'concept',
-                  'verwijderd', ?)
-        """,
-        (factuur["administratie_id"], verkoopfactuur_id, _nu()),
+    _audit(
+        conn, factuur["administratie_id"], 'verkoopfacturen', verkoopfactuur_id, 'gewijzigd',
+        veld='status',
+        oude_waarde='concept',
+        nieuwe_waarde='verwijderd',
+        tijdstip=_nu(),
     )
     conn.commit()
     return True, []
@@ -5608,15 +5660,13 @@ def maak_definitief(
             "UPDATE verkoopfacturen SET document_id = ? WHERE id = ?",
             (document_id, verkoopfactuur_id),
         )
-    conn.execute(
-        """
-        INSERT INTO audit_log (
-            administratie_id, tabel, record_id, actie,
-            veld, oude_waarde, nieuwe_waarde, tijdstip
-        ) VALUES (?, 'verkoopfacturen', ?, 'gewijzigd', 'status', 'concept', ?, ?)
-        """,
-        (factuur["administratie_id"], verkoopfactuur_id,
-         f"definitief {factuurnummer}", tijd),
+    _audit(
+        conn, factuur["administratie_id"], 'verkoopfacturen', verkoopfactuur_id, 'gewijzigd',
+        veld='status',
+        oude_waarde='concept',
+        nieuwe_waarde=f"definitief {factuurnummer}",
+        tijdstip=tijd,
+        door=door,
     )
     conn.commit()
     return factuurnummer, []
@@ -5675,6 +5725,369 @@ def maak_creditfactuur(
     ])
     conn.commit()
     return nieuw_id, []
+
+
+# --- gebruikers, sessies en toegang (module 9) --------------------------
+
+def _toegang_tabellen(conn: sqlite3.Connection) -> None:
+    """De tabellen van module 9; aangeroepen vanuit maak_tabellen."""
+    conn.executescript(
+        """
+        CREATE TABLE IF NOT EXISTS gebruikers (
+            id               INTEGER PRIMARY KEY,
+            email            TEXT NOT NULL UNIQUE,
+            naam             TEXT NOT NULL,
+            -- Alleen de bcrypt-hash. Het wachtwoord zelf staat nergens.
+            wachtwoord_hash  TEXT NOT NULL,
+            rol              TEXT NOT NULL
+                             CHECK (rol IN ('eigenaar', 'klant')),
+            actief           INTEGER NOT NULL DEFAULT 1,
+            aangemaakt_op    TEXT NOT NULL,
+            gewijzigd_op     TEXT NOT NULL
+        );
+
+        -- Welke klant bij welke administratie mag. De eigenaar staat hier
+        -- niet in: die mag overal bij.
+        CREATE TABLE IF NOT EXISTS gebruiker_administraties (
+            gebruiker_id     INTEGER NOT NULL REFERENCES gebruikers(id),
+            administratie_id INTEGER NOT NULL REFERENCES administraties(id),
+            aangemaakt_op    TEXT NOT NULL,
+            PRIMARY KEY (gebruiker_id, administratie_id)
+        );
+
+        CREATE TABLE IF NOT EXISTS sessies (
+            id               INTEGER PRIMARY KEY,
+            -- De hash van het sessietoken, niet het token zelf: wie de
+            -- database leest kan er niet mee inloggen.
+            token_hash       TEXT NOT NULL UNIQUE,
+            gebruiker_id     INTEGER NOT NULL REFERENCES gebruikers(id),
+            csrf_token       TEXT NOT NULL,
+            ip               TEXT,
+            aangemaakt_op    TEXT NOT NULL,
+            verloopt_op      TEXT NOT NULL,
+            ingetrokken_op   TEXT
+        );
+
+        -- Elke inlogpoging, gelukt of niet. Hierop rust de rem, en het is
+        -- meteen de audit trail van het inloggen zelf: de audit_log gaat
+        -- over een administratie, en een mislukte poging hoort bij geen
+        -- enkele administratie.
+        CREATE TABLE IF NOT EXISTS toegang_log (
+            id               INTEGER PRIMARY KEY,
+            soort            TEXT NOT NULL,
+            email            TEXT,
+            gebruiker_id     INTEGER REFERENCES gebruikers(id),
+            ip               TEXT,
+            gelukt           INTEGER NOT NULL DEFAULT 0,
+            tijdstip         TEXT NOT NULL
+        );
+
+        CREATE INDEX IF NOT EXISTS idx_toegang_log_email
+            ON toegang_log (email, tijdstip);
+        CREATE INDEX IF NOT EXISTS idx_toegang_log_ip
+            ON toegang_log (ip, tijdstip);
+        """
+    )
+    conn.commit()
+
+
+def _gebruiker_van_rij(
+    conn: sqlite3.Connection, rij: dict[str, Any]
+) -> "Gebruiker":
+    from .gebruikers import Gebruiker
+
+    administraties = [
+        r[0] for r in conn.execute(
+            "SELECT administratie_id FROM gebruiker_administraties "
+            "WHERE gebruiker_id = ? ORDER BY administratie_id",
+            (rij["id"],),
+        )
+    ]
+    return Gebruiker(
+        id=rij["id"], email=rij["email"], naam=rij["naam"], rol=rij["rol"],
+        actief=bool(rij["actief"]), administraties=administraties,
+    )
+
+
+def maak_gebruiker(
+    conn: sqlite3.Connection,
+    email: str,
+    naam: str,
+    wachtwoord: str,
+    rol: str = "klant",
+    administraties: Optional[list[int]] = None,
+    door: str = "systeem",
+) -> int:
+    """Maak een gebruiker aan; geeft het id terug.
+
+    Het wachtwoord wordt hier meteen gehasht en verder nergens bewaard —
+    ook niet in de audit trail. Daar staat alleen dát er een gebruiker
+    is aangemaakt, met welk e-mailadres en welke rol.
+    """
+    from .gebruikers import ROLLEN, hash_wachtwoord, normaliseer_email
+
+    if rol not in ROLLEN:
+        raise ValueError(f"onbekende rol '{rol}'; kies uit {', '.join(ROLLEN)}")
+    adres = normaliseer_email(email)
+    if not adres or "@" not in adres:
+        raise ValueError(f"'{email}' is geen e-mailadres")
+    if not (naam or "").strip():
+        raise ValueError("een gebruiker zonder naam bestaat niet")
+
+    tijd = _nu()
+    cursor = conn.execute(
+        """
+        INSERT INTO gebruikers (
+            email, naam, wachtwoord_hash, rol, actief, aangemaakt_op, gewijzigd_op
+        ) VALUES (?, ?, ?, ?, 1, ?, ?)
+        """,
+        (adres, naam.strip(), hash_wachtwoord(wachtwoord), rol, tijd, tijd),
+    )
+    gebruiker_id = cursor.lastrowid
+
+    for administratie_id in administraties or []:
+        conn.execute(
+            "INSERT OR IGNORE INTO gebruiker_administraties "
+            "(gebruiker_id, administratie_id, aangemaakt_op) VALUES (?, ?, ?)",
+            (gebruiker_id, administratie_id, tijd),
+        )
+        _audit(
+            conn, administratie_id, "gebruikers", gebruiker_id, "aangemaakt",
+            nieuwe_waarde=json.dumps(
+                {"email": adres, "naam": naam.strip(), "rol": rol},
+                ensure_ascii=False,
+            ),
+            door=door, tijdstip=tijd,
+        )
+
+    conn.execute(
+        "INSERT INTO toegang_log (soort, email, gebruiker_id, gelukt, tijdstip) "
+        "VALUES ('gebruiker_aangemaakt', ?, ?, 1, ?)",
+        (adres, gebruiker_id, tijd),
+    )
+    conn.commit()
+    return gebruiker_id
+
+
+def lees_gebruiker(
+    conn: sqlite3.Connection, gebruiker_id: int
+) -> Optional["Gebruiker"]:
+    cursor = conn.execute("SELECT * FROM gebruikers WHERE id = ?", (gebruiker_id,))
+    rij = cursor.fetchone()
+    if rij is None:
+        return None
+    kolommen = [k[0] for k in cursor.description]
+    return _gebruiker_van_rij(conn, dict(zip(kolommen, rij)))
+
+
+def lees_gebruikers(conn: sqlite3.Connection) -> list["Gebruiker"]:
+    cursor = conn.execute("SELECT * FROM gebruikers ORDER BY rol, email")
+    kolommen = [k[0] for k in cursor.description]
+    return [
+        _gebruiker_van_rij(conn, dict(zip(kolommen, rij)))
+        for rij in cursor.fetchall()
+    ]
+
+
+def koppel_administratie(
+    conn: sqlite3.Connection,
+    gebruiker_id: int,
+    administratie_id: int,
+    door: str = "systeem",
+) -> None:
+    """Geef een klant toegang tot een administratie."""
+    tijd = _nu()
+    conn.execute(
+        "INSERT OR IGNORE INTO gebruiker_administraties "
+        "(gebruiker_id, administratie_id, aangemaakt_op) VALUES (?, ?, ?)",
+        (gebruiker_id, administratie_id, tijd),
+    )
+    _audit(
+        conn, administratie_id, "gebruiker_administraties", gebruiker_id,
+        "aangemaakt", veld="toegang", nieuwe_waarde=str(administratie_id),
+        door=door, tijdstip=tijd,
+    )
+    conn.commit()
+
+
+def _tel_pogingen(
+    conn: sqlite3.Connection, kolom: str, waarde: str, vanaf: str
+) -> int:
+    rij = conn.execute(
+        f"SELECT count(*) FROM toegang_log WHERE soort = 'inlog' AND gelukt = 0 "
+        f"AND {kolom} = ? AND tijdstip >= ?",
+        (waarde, vanaf),
+    ).fetchone()
+    return rij[0]
+
+
+def _log_poging(
+    conn: sqlite3.Connection,
+    email: str,
+    ip: Optional[str],
+    gelukt: bool,
+    gebruiker_id: Optional[int] = None,
+    soort: str = "inlog",
+) -> None:
+    conn.execute(
+        "INSERT INTO toegang_log (soort, email, gebruiker_id, ip, gelukt, tijdstip) "
+        "VALUES (?, ?, ?, ?, ?, ?)",
+        (soort, email, gebruiker_id, ip, 1 if gelukt else 0, _nu()),
+    )
+    conn.commit()
+
+
+def te_veel_pogingen(
+    conn: sqlite3.Connection, email: str, ip: Optional[str]
+) -> bool:
+    """Zit dit account of dit IP-adres aan de rem?
+
+    Geteld wordt per account én per IP-adres. Per account, want anders
+    kan iemand rustig wachtwoorden proberen op één adres. Per IP, want
+    anders probeert iemand één wachtwoord op duizend adressen.
+    """
+    from .gebruikers import (
+        MAX_PER_ACCOUNT, MAX_PER_IP, VENSTER_MINUTEN, normaliseer_email, nu,
+    )
+
+    vanaf = (nu() - timedelta(minutes=VENSTER_MINUTEN)).isoformat(timespec="seconds")
+    if _tel_pogingen(conn, "email", normaliseer_email(email), vanaf) >= MAX_PER_ACCOUNT:
+        return True
+    if ip and _tel_pogingen(conn, "ip", ip, vanaf) >= MAX_PER_IP:
+        return True
+    return False
+
+
+def probeer_inloggen(
+    conn: sqlite3.Connection,
+    email: str,
+    wachtwoord: str,
+    ip: Optional[str] = None,
+) -> tuple[Optional[str], list[str]]:
+    """Log in en geef (sessietoken, redenen).
+
+    Bij elke mislukking dezelfde melding en hetzelfde werk: ook als het
+    e-mailadres niet bestaat wordt er een wachtwoord gecontroleerd, tegen
+    een vaste onbruikbare hash. Zou dat niet gebeuren, dan is een
+    bestaand account te herkennen aan hoe lang het antwoord duurt.
+    """
+    from .gebruikers import (
+        INLOG_MISLUKT, TE_VAAK, controleer_wachtwoord, csrf_token, hash_token,
+        hash_wachtwoord, nieuw_token, normaliseer_email, verlooptijd,
+    )
+
+    adres = normaliseer_email(email)
+    if te_veel_pogingen(conn, adres, ip):
+        _log_poging(conn, adres, ip, False, soort="inlog_geblokkeerd")
+        return None, [TE_VAAK]
+
+    cursor = conn.execute("SELECT * FROM gebruikers WHERE email = ?", (adres,))
+    rij = cursor.fetchone()
+    gegevens = None
+    if rij is not None:
+        gegevens = dict(zip([k[0] for k in cursor.description], rij))
+
+    # Altijd hetzelfde rekenwerk, ook bij een onbekend adres.
+    hash_waarde = gegevens["wachtwoord_hash"] if gegevens else _LEGE_HASH()
+    klopt = controleer_wachtwoord(wachtwoord, hash_waarde)
+
+    if gegevens is None or not klopt or not gegevens["actief"]:
+        _log_poging(
+            conn, adres, ip, False,
+            gebruiker_id=gegevens["id"] if gegevens else None,
+        )
+        return None, [INLOG_MISLUKT]
+
+    token = nieuw_token()
+    tijd = _nu()
+    conn.execute(
+        """
+        INSERT INTO sessies (
+            token_hash, gebruiker_id, csrf_token, ip, aangemaakt_op, verloopt_op
+        ) VALUES (?, ?, ?, ?, ?, ?)
+        """,
+        (
+            hash_token(token), gegevens["id"], csrf_token(), ip, tijd,
+            verlooptijd().isoformat(timespec="seconds"),
+        ),
+    )
+    _log_poging(conn, adres, ip, True, gebruiker_id=gegevens["id"])
+    conn.commit()
+    return token, []
+
+
+_LEGE_HASH_WAARDE: Optional[str] = None
+
+
+def _LEGE_HASH() -> str:
+    """Een hash die nooit klopt, om ook bij een onbekend adres te rekenen.
+
+    Hij wordt één keer gemaakt en daarna hergebruikt; hem elke keer
+    opnieuw maken zou juist tijd kosten en het verschil weer zichtbaar
+    maken.
+    """
+    global _LEGE_HASH_WAARDE
+    if _LEGE_HASH_WAARDE is None:
+        from .gebruikers import hash_wachtwoord
+
+        _LEGE_HASH_WAARDE = hash_wachtwoord("dit-wachtwoord-bestaat-niet")
+    return _LEGE_HASH_WAARDE
+
+
+def lees_sessie(
+    conn: sqlite3.Connection, token: Optional[str]
+) -> Optional[dict[str, Any]]:
+    """Zoek de sessie bij dit token, als hij nog geldig is."""
+    from .gebruikers import hash_token, is_verlopen
+
+    if not token:
+        return None
+    cursor = conn.execute(
+        "SELECT * FROM sessies WHERE token_hash = ?", (hash_token(token),)
+    )
+    rij = cursor.fetchone()
+    if rij is None:
+        return None
+    sessie = dict(zip([k[0] for k in cursor.description], rij))
+    if sessie["ingetrokken_op"] or is_verlopen(sessie["verloopt_op"]):
+        return None
+
+    gebruiker = lees_gebruiker(conn, sessie["gebruiker_id"])
+    if gebruiker is None or not gebruiker.actief:
+        return None
+    sessie["gebruiker"] = gebruiker
+    return sessie
+
+
+def trek_sessie_in(
+    conn: sqlite3.Connection, token: str, reden: str = "uitgelogd"
+) -> None:
+    """Beëindig een sessie. Uitloggen doet dit, en de eigenaar kan het ook."""
+    from .gebruikers import hash_token
+
+    tijd = _nu()
+    cursor = conn.execute(
+        "UPDATE sessies SET ingetrokken_op = ? WHERE token_hash = ? "
+        "AND ingetrokken_op IS NULL",
+        (tijd, hash_token(token)),
+    )
+    if cursor.rowcount:
+        conn.execute(
+            "INSERT INTO toegang_log (soort, gelukt, tijdstip) VALUES (?, 1, ?)",
+            (reden, tijd),
+        )
+    conn.commit()
+
+
+def lees_toegang_log(
+    conn: sqlite3.Connection, limiet: int = 100
+) -> list[dict[str, Any]]:
+    """De laatste inlogpogingen en sessiegebeurtenissen, nieuwste eerst."""
+    cursor = conn.execute(
+        "SELECT * FROM toegang_log ORDER BY id DESC LIMIT ?", (limiet,)
+    )
+    kolommen = [k[0] for k in cursor.description]
+    return [dict(zip(kolommen, rij)) for rij in cursor.fetchall()]
 ```
 
 ## `boekhouding/boekhouding/grootboek.py`
@@ -7945,6 +8358,184 @@ def stel_verkoopboeking_samen(
     )
 ```
 
+## `boekhouding/boekhouding/gebruikers.py`
+
+```python
+"""Gebruikers, wachtwoorden en sessies.
+
+Twee rollen: de **eigenaar** ziet en beheert alle administraties, een
+**klant** uitsluitend de zijne. Wat een klant nooit mag — goedkeuren en
+iets definitief maken — staat niet hier maar in één centrale controle in
+de webinterface; hier staat alleen wie iemand is.
+
+Wat hier geldt:
+
+- **Een wachtwoord wordt nooit bewaard, alleen een hash.** Met bcrypt,
+  dat met opzet traag is: wie de database steelt, kan er niet even een
+  woordenboek doorheen halen. De hash gaat nergens heen: niet naar een
+  logregel, niet naar een scherm, niet naar de audit trail.
+- **Bij inloggen zegt het systeem nooit wat er mis was.** Een onbekend
+  e-mailadres en een fout wachtwoord geven dezelfde melding en kosten
+  even veel tijd. Anders kun je met een lijst e-mailadressen uitzoeken
+  wie er klant is.
+- **Een sessie verloopt en is in te trekken.** In de database staat
+  alleen een hash van het sessietoken, om dezelfde reden als bij een
+  wachtwoord: wie de database leest, kan er niet mee inloggen.
+"""
+
+import hashlib
+import os
+import secrets
+from datetime import datetime, timedelta, timezone
+from typing import Literal, Optional
+
+from pydantic import BaseModel
+
+ROLLEN = ("eigenaar", "klant")
+
+# Hoe zwaar bcrypt mag rekenen. Twaalf rondes is ongeveer een kwart
+# seconde: te traag om te raden, snel genoeg om op in te loggen. In de
+# tests wordt dit omlaag gezet, want daar draaien er honderden achter
+# elkaar — nooit in productie verlagen.
+RONDES = int(os.environ.get("BOEKHOUDING_BCRYPT_RONDES", "12"))
+
+# Hoe lang een sessie geldig is zonder opnieuw in te loggen.
+SESSIE_UREN = 12
+
+# De rem op mislukte inlogpogingen: binnen dit venster mag een account
+# vijf keer misgaan en een IP-adres twintig keer. Daarna wordt er niet
+# eens meer naar het wachtwoord gekeken.
+VENSTER_MINUTEN = 15
+MAX_PER_ACCOUNT = 5
+MAX_PER_IP = 20
+
+# Eén melding voor alle gevallen: onbekend adres, fout wachtwoord,
+# geblokkeerd account. Wie hem leest weet niet welke van de drie het is.
+INLOG_MISLUKT = "E-mailadres of wachtwoord klopt niet."
+TE_VAAK = (
+    "Te veel mislukte pogingen. Wacht een kwartier en probeer het opnieuw."
+)
+
+
+class Gebruiker(BaseModel):
+    """Wie er is ingelogd. Bevat nooit het wachtwoord of de hash."""
+
+    id: int
+    email: str
+    naam: str
+    rol: Literal["eigenaar", "klant"]
+    actief: bool = True
+    # Bij een klant: de administraties waar hij bij mag. Bij de eigenaar
+    # blijft dit leeg — die mag overal bij.
+    administraties: list[int] = []
+
+    def is_eigenaar(self) -> bool:
+        return self.rol == "eigenaar"
+
+    def mag_bij(self, administratie_id: int) -> bool:
+        """Mag deze gebruiker bij deze administratie?
+
+        De eigenaar mag overal bij. Een klant alleen bij de
+        administraties die aan hem gekoppeld zijn.
+        """
+        if not self.actief:
+            return False
+        if self.is_eigenaar():
+            return True
+        return administratie_id in self.administraties
+
+
+def normaliseer_email(email: str) -> str:
+    """Een e-mailadres is niet hoofdlettergevoelig; sla het eenvormig op."""
+    return (email or "").strip().lower()
+
+
+def _voorbereid(wachtwoord: str) -> bytes:
+    """Maak het wachtwoord klaar voor bcrypt.
+
+    Bcrypt kijkt maar naar de eerste 72 bytes en weigert langere invoer.
+    Door er eerst een sha256 overheen te halen past elk wachtwoord, hoe
+    lang ook, en telt het hele wachtwoord mee.
+    """
+    return hashlib.sha256((wachtwoord or "").encode("utf-8")).digest()
+
+
+def hash_wachtwoord(wachtwoord: str) -> str:
+    """Maak de hash die in de database komt te staan."""
+    import bcrypt
+
+    if not wachtwoord or len(wachtwoord) < 10:
+        raise ValueError(
+            "een wachtwoord van minder dan 10 tekens is te makkelijk te raden"
+        )
+    return bcrypt.hashpw(_voorbereid(wachtwoord), bcrypt.gensalt(RONDES)).decode()
+
+
+def controleer_wachtwoord(wachtwoord: str, hash_waarde: Optional[str]) -> bool:
+    """Klopt dit wachtwoord bij deze hash?
+
+    Geeft ook netjes False bij een ontbrekende of kapotte hash, zodat een
+    account zonder wachtwoord niet per ongeluk toegang geeft.
+    """
+    import bcrypt
+
+    if not hash_waarde:
+        return False
+    try:
+        return bcrypt.checkpw(_voorbereid(wachtwoord), hash_waarde.encode())
+    except (ValueError, TypeError):
+        return False
+
+
+def nieuw_token() -> str:
+    """Een sessietoken: 32 willekeurige bytes, als tekst."""
+    return secrets.token_urlsafe(32)
+
+
+def hash_token(token: str) -> str:
+    """De vorm waarin een sessietoken in de database staat.
+
+    Een sessietoken is een sleutel: wie hem heeft, is binnen. Daarom
+    staat in de database alleen een hash, net als bij een wachtwoord.
+    Snel hashen mag hier wel — een token van 32 willekeurige bytes valt
+    niet te raden, dus traag maken heeft geen zin.
+    """
+    return hashlib.sha256(token.encode("utf-8")).hexdigest()
+
+
+def nu() -> datetime:
+    return datetime.now(timezone.utc)
+
+
+def verlooptijd(uren: int = SESSIE_UREN) -> datetime:
+    return nu() + timedelta(hours=uren)
+
+
+def is_verlopen(verloopt_op: Optional[str], peil: Optional[datetime] = None) -> bool:
+    """Is deze sessie over de houdbaarheidsdatum?"""
+    if not verloopt_op:
+        return True
+    try:
+        grens = datetime.fromisoformat(verloopt_op)
+    except ValueError:
+        return True
+    if grens.tzinfo is None:
+        grens = grens.replace(tzinfo=timezone.utc)
+    return (peil or nu()) >= grens
+
+
+def csrf_token() -> str:
+    """Een token tegen kwaadaardige formulieren van een andere site."""
+    return secrets.token_urlsafe(24)
+
+
+def gelijk(links: Optional[str], rechts: Optional[str]) -> bool:
+    """Vergelijk twee tokens zonder te verraden waar ze gaan verschillen."""
+    if not links or not rechts:
+        return False
+    return secrets.compare_digest(links, rechts)
+```
+
 ## `boekhouding/boekhouding/factuur_pdf.py`
 
 ```python
@@ -8173,13 +8764,15 @@ geven. Er wordt hier niet gerekend, niet gevalideerd en niets bepaald
 over btw — dat zit allemaal in de modules eronder.
 """
 
+import contextvars
+import re
 import sqlite3
 from datetime import date
 from decimal import Decimal
 from pathlib import Path
 from typing import Any, Optional
 
-from fastapi import FastAPI, HTTPException, Request, UploadFile
+from fastapi import Depends, FastAPI, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
@@ -8223,6 +8816,13 @@ from ..database import (
     wijzig_factuur,
 )
 from ..database import EIGEN_GEGEVENS, KLANT_VELDEN
+from ..database import (
+    lees_sessie,
+    probeer_inloggen,
+    trek_sessie_in,
+    zet_gebruiker,
+)
+from ..gebruikers import csrf_token, gelijk
 from ..rekeningschema import rekeningschema_voor_jaar
 from ..ubl import te_groot
 from ..verwerking import verwerk_upload
@@ -8249,6 +8849,58 @@ MEDIATYPEN = {
     ".png": "image/png",
     ".xml": "application/xml",
 }
+
+
+# Wie er via dit verzoek werkt. Een contextvariabele hoort bij precies
+# één verzoek, dus elke databaseverbinding die daarbinnen wordt geopend
+# krijgt automatisch de juiste naam in de audit trail — zonder dat er
+# door twintig functies een parameter heen hoeft.
+HUIDIGE_GEBRUIKER: contextvars.ContextVar[Optional[str]] = contextvars.ContextVar(
+    "huidige_gebruiker", default=None
+)
+
+# Paden waar je zonder inloggen bij mag. Meer dan dit is er niet: er is
+# geen registratiepagina en geen "wachtwoord vergeten" — de eigenaar maakt
+# de accounts aan.
+OPEN_PADEN = ("/inloggen",)
+
+# Wat alleen de eigenaar mag. Een klant levert aan en kijkt mee; hij keurt
+# niets goed, maakt niets definitief en doet geen aangifte. De controle
+# staat hier, op één plek, en niet in de routes zelf.
+#
+# Het zijn stukjes van het pad, geen hele paden: zo valt ook
+# /administratie/1/btw/2026/3 en /administratie/1/bank/7/koppel eronder,
+# zonder dat elke variant apart moet worden opgeschreven.
+ALLEEN_EIGENAAR = frozenset({
+    "goedkeuren",    # een factuur goedkeuren
+    "definitief",    # een verkoopfactuur definitief maken
+    "crediteren",    # een definitieve factuur crediteren
+    "koppel",        # een banktransactie koppelen: dat is een boeking
+    "bank",          # bankafschriften inlezen en afletteren
+    "btw",           # de btw-aangifte
+})
+
+# Eén uitzondering die niet met een stukje pad te vangen is: het
+# reviewformulier van een inkoopfactuur opslaan hoort bij de eigenaar,
+# terwijl "opslaan" bij een verkoopfactuur juist iets is wat de klant mag
+# (hij mag een concept opstellen).
+ALLEEN_EIGENAAR_PADEN = (
+    re.compile(r"^/administratie/\d+/factuur/\d+/opslaan$"),
+)
+
+ADMINISTRATIE_IN_PAD = re.compile(r"^/administratie/(\d+)(?:/|$)")
+
+COOKIE = "sessie"
+COOKIE_CSRF = "aanmeldteken"
+
+
+class NaarInloggen(HTTPException):
+    """Niet ingelogd: stuur de bezoeker naar het inlogscherm."""
+
+    def __init__(self, terug: str = "/"):
+        super().__init__(
+            status_code=303, headers={"Location": f"/inloggen?terug={terug}"}
+        )
 
 
 class NietGevonden(HTTPException):
@@ -8305,7 +8957,67 @@ def maak_app(
     ai_client en vandaag zijn er om te kunnen testen zonder echte
     API-aanroepen en zonder afhankelijk te zijn van de klok.
     """
-    app = FastAPI(title="Boekhouding — review")
+    async def bewaak(request: Request) -> None:
+        """De enige toegangscontrole. Elke route loopt hierlangs.
+
+        Vier dingen, in deze volgorde:
+
+        1. **Ben je ingelogd?** Zo niet, dan naar het inlogscherm. Er is
+           geen pagina die zonder sessie iets van de administratie laat
+           zien.
+        2. **Klopt het formulier?** Bij elk POST-verzoek moet het
+           csrf-teken van deze sessie meekomen. Zonder dat teken kan een
+           andere website jouw browser niet namens jou iets laten
+           versturen.
+        3. **Mag je bij deze administratie?** De eigenaar mag overal bij,
+           een klant alleen bij de zijne. Zo niet: 404, nooit 403 — een
+           403 zou verklappen dat de administratie bestaat.
+        4. **Mag je dit doen?** Goedkeuren, definitief maken, crediteren
+           en koppelen zijn van de eigenaar. Ook hier 404.
+
+        Dat het hier staat en niet in de routes is het hele punt: een
+        nieuwe route kan de controle niet vergeten.
+        """
+        pad = request.url.path
+        if pad in OPEN_PADEN:
+            if request.method == "POST":
+                formulier = await request.form()
+                if not gelijk(
+                    str(formulier.get("csrf") or ""),
+                    request.cookies.get(COOKIE_CSRF),
+                ):
+                    raise NaarInloggen("/")
+            return
+
+        conn = maak_verbinding(app.state.db_pad)
+        try:
+            sessie = lees_sessie(conn, request.cookies.get(COOKIE))
+        finally:
+            conn.close()
+        if sessie is None:
+            raise NaarInloggen(pad)
+
+        gebruiker = sessie["gebruiker"]
+        request.state.gebruiker = gebruiker
+        request.state.csrf = sessie["csrf_token"]
+        HUIDIGE_GEBRUIKER.set(gebruiker.email)
+
+        if request.method == "POST":
+            formulier = await request.form()
+            if not gelijk(str(formulier.get("csrf") or ""), sessie["csrf_token"]):
+                raise NietGevonden("formulier")
+
+        treffer = ADMINISTRATIE_IN_PAD.match(pad)
+        if treffer and not gebruiker.mag_bij(int(treffer.group(1))):
+            raise NietGevonden("administratie")
+
+        if not gebruiker.is_eigenaar() and (
+            ALLEEN_EIGENAAR & set(pad.split("/"))
+            or any(patroon.match(pad) for patroon in ALLEEN_EIGENAAR_PADEN)
+        ):
+            raise NietGevonden("handeling")
+
+    app = FastAPI(title="Boekhouding — review", dependencies=[Depends(bewaak)])
     app.state.db_pad = db_pad
     app.state.opslagmap = opslagmap
     app.state.ai_client = ai_client
@@ -8320,9 +9032,23 @@ def maak_app(
     start.close()
 
     def verbinding() -> sqlite3.Connection:
-        return maak_verbinding(app.state.db_pad)
+        conn = maak_verbinding(app.state.db_pad)
+        # Wie er werkt staat in de contextvariabele van dit verzoek; elke
+        # audit-regel die zo meteen wordt geschreven krijgt die naam.
+        zet_gebruiker(conn, HUIDIGE_GEBRUIKER.get())
+        return conn
 
     def toon(request: Request, sjabloon: str, **gegevens) -> HTMLResponse:
+        # Elk sjabloon krijgt het csrf-teken en wie er is ingelogd, zodat
+        # een formulier het niet kan vergeten en een scherm knoppen kan
+        # verbergen die deze gebruiker toch niet mag.
+        gegevens.setdefault("csrf", getattr(request.state, "csrf", ""))
+        wie = getattr(request.state, "gebruiker", None)
+        gegevens.setdefault("gebruiker", wie)
+        # Knoppen die deze gebruiker toch niet mag, worden niet getoond.
+        # Dat is beleefdheid, geen beveiliging: de echte controle staat in
+        # bewaak() en geeft 404, ook als iemand het adres zelf intikt.
+        gegevens.setdefault("eigenaar", bool(wie) and wie.is_eigenaar())
         return SJABLONEN.TemplateResponse(
             request=request, name=sjabloon, context=gegevens
         )
@@ -8348,14 +9074,86 @@ def maak_app(
             raise NietGevonden("administratie")
         return rij
 
+    # --- inloggen en uitloggen -------------------------------------------
+
+    @app.get("/inloggen", response_class=HTMLResponse)
+    def inlogscherm(request: Request, terug: str = "/", melding: str = ""):
+        # Een teken in een cookie, hetzelfde teken in het formulier: zo kan
+        # een andere website dit formulier niet namens jou versturen.
+        teken = csrf_token()
+        antwoord = toon(
+            request, "inloggen.html", csrf=teken, terug=terug, melding=melding,
+            gebruiker=None,
+        )
+        antwoord.set_cookie(
+            COOKIE_CSRF, teken, httponly=True, samesite="lax", max_age=900
+        )
+        return antwoord
+
+    @app.post("/inloggen")
+    async def inloggen(request: Request):
+        formulier = await request.form()
+        terug = str(formulier.get("terug") or "/")
+        conn = maak_verbinding(app.state.db_pad)
+        try:
+            token, redenen = probeer_inloggen(
+                conn,
+                str(formulier.get("email") or ""),
+                str(formulier.get("wachtwoord") or ""),
+                request.client.host if request.client else None,
+            )
+        finally:
+            conn.close()
+
+        if token is None:
+            return RedirectResponse(
+                f"/inloggen?melding={redenen[0]}", status_code=303
+            )
+
+        antwoord = RedirectResponse(terug or "/", status_code=303)
+        # httponly: javascript komt er niet bij. samesite=lax: een andere
+        # site krijgt de cookie niet mee bij een POST. secure hoort erbij
+        # zodra dit achter https draait; lokaal op http zou de cookie dan
+        # nooit worden gezet.
+        antwoord.set_cookie(
+            COOKIE, token, httponly=True, samesite="lax", path="/"
+        )
+        antwoord.delete_cookie(COOKIE_CSRF)
+        return antwoord
+
+    @app.post("/uitloggen")
+    def uitloggen(request: Request):
+        token = request.cookies.get(COOKIE)
+        if token:
+            conn = verbinding()
+            try:
+                trek_sessie_in(conn, token)
+            finally:
+                conn.close()
+        antwoord = RedirectResponse("/inloggen?melding=Je bent uitgelogd.",
+                                    status_code=303)
+        antwoord.delete_cookie(COOKIE, path="/")
+        return antwoord
+
     # --- overzicht ------------------------------------------------------
 
     @app.get("/", response_class=HTMLResponse)
-    def start_pagina():
+    def start_pagina(request: Request):
+        gebruiker = request.state.gebruiker
         conn = verbinding()
-        eerste = conn.execute("SELECT id FROM administraties ORDER BY id").fetchone()
-        conn.close()
-        return RedirectResponse(f"/administratie/{eerste[0]}", status_code=303)
+        try:
+            rijen = [
+                rij[0] for rij in
+                conn.execute("SELECT id FROM administraties ORDER BY id")
+            ]
+        finally:
+            conn.close()
+        toegestaan = [nummer for nummer in rijen if gebruiker.mag_bij(nummer)]
+        if not toegestaan:
+            raise NietGevonden("administratie")
+        return RedirectResponse(
+            f"/administratie/{toegestaan[0]}", status_code=303
+        )
 
     @app.get("/administratie/{administratie_id}", response_class=HTMLResponse)
     def overzicht(request: Request, administratie_id: int):
@@ -9519,6 +10317,18 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
   }
   header a { color: var(--zacht); text-decoration: none; font-size: 15px; }
   header h1 { margin: 4px 0 0; font-size: 19px; }
+  /* Wie er is ingelogd, met de uitlogknop ernaast. Klein en grijs: het
+     hoort erbij, maar het is niet waar het scherm over gaat. */
+  header .wie {
+    margin: 4px 0 0; color: var(--zacht); font-size: 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  header .wie form { margin: 0; }
+  header .wie button {
+    background: none; border: none; color: var(--zacht); padding: 0;
+    min-height: 0; font-size: 14px; font-weight: 400;
+    text-decoration: underline;
+  }
   main { padding: 16px; max-width: 1100px; margin: 0 auto; }
   a.knop, button {
     display: inline-block; padding: 13px 18px; border-radius: 8px;
@@ -9556,7 +10366,8 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
   .rij .onder { color: var(--zacht); font-size: 14px; margin-top: 4px; }
   .rij .bedrag { font-variant-numeric: tabular-nums; font-weight: 600; }
   label { display: block; font-size: 14px; color: var(--zacht); margin-bottom: 4px; }
-  input[type=text], input[type=file], select {
+  input[type=text], input[type=password], input[type=email],
+  input[type=file], select {
     width: 100%; padding: 12px; font-size: 16px; border-radius: 8px;
     border: 1px solid var(--lijn); background: var(--vel);
   }
@@ -9652,6 +10463,15 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
 <header>
   {% block kruimel %}{% endblock %}
   <h1>{% block kop %}Boekhouding{% endblock %}</h1>
+  {% if gebruiker %}
+  <div class="wie">
+    <span>{{ gebruiker.naam }}{% if gebruiker.rol != "eigenaar" %} (klant){% endif %}</span>
+    <form method="post" action="/uitloggen">
+      <input type="hidden" name="csrf" value="{{ csrf }}">
+      <button type="submit">Uitloggen</button>
+    </form>
+  </div>
+  {% endif %}
 </header>
 <main>{% block inhoud %}{% endblock %}</main>
 </body>
@@ -9684,8 +10504,10 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
 <div class="knoppen" style="margin-bottom:16px">
   <a class="knop" href="/administratie/{{ administratie_id }}/upload">Factuur toevoegen</a>
   <a class="knop tweede" href="/administratie/{{ administratie_id }}/verkoop">Verkoop</a>
-  <a class="knop tweede" href="/administratie/{{ administratie_id }}/bank">Bank</a>
-  <a class="knop tweede" href="/administratie/{{ administratie_id }}/btw">Btw-aangifte</a>
+  {% if eigenaar %}
+    <a class="knop tweede" href="/administratie/{{ administratie_id }}/bank">Bank</a>
+    <a class="knop tweede" href="/administratie/{{ administratie_id }}/btw">Btw-aangifte</a>
+  {% endif %}
 </div>
 
 {% if not facturen %}
@@ -9728,6 +10550,7 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
 
 <form class="kaart" method="post" enctype="multipart/form-data"
       action="/administratie/{{ administratie_id }}/upload">
+      <input type="hidden" name="csrf" value="{{ csrf }}">
   <div class="veld">
     <label for="bestand">Kies een bestand of maak een foto</label>
     <input type="file" id="bestand" name="bestand" required
@@ -9853,6 +10676,7 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
 
   <div>
     <form class="kaart" method="post" action="/administratie/{{ administratie_id }}/factuur/{{ factuur.id }}/opslaan">
+      <input type="hidden" name="csrf" value="{{ csrf }}">
       {% for veld in velden %}
         <div class="veld {% if veld.zekerheid == 'laag' %}laag{% endif %}">
           <label for="{{ veld.naam }}">
@@ -9864,7 +10688,8 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
             {% endif %}
           </label>
           <input type="text" id="{{ veld.naam }}" name="{{ veld.naam }}"
-                 value="{{ veld.waarde }}" inputmode="{% if 'bedrag' in veld.naam or 'percentage' in veld.naam %}decimal{% else %}text{% endif %}">
+                 value="{{ veld.waarde }}" {% if not eigenaar %}readonly{% endif %}
+                 inputmode="{% if 'bedrag' in veld.naam or 'percentage' in veld.naam %}decimal{% else %}text{% endif %}">
           {% if veld.reden %}
             <div class="onder" style="color:#b4381f">{{ veld.reden }}</div>
           {% endif %}
@@ -9881,7 +10706,7 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
             gewijzigd.
           </div>
         {% elif rekeningen %}
-          <select id="rekening" name="rekening">
+          <select id="rekening" name="rekening" {% if not eigenaar %}disabled{% endif %}>
             <option value="">— nog niet gekozen —</option>
             {% for rekening in rekeningen %}
               <option value="{{ rekening.code }}"
@@ -9904,9 +10729,16 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
         {% endif %}
       </div>
 
+      {% if eigenaar %}
       <div class="knoppen">
         <button type="submit" class="tweede">Opslaan en later beoordelen</button>
       </div>
+      {% else %}
+      <p class="onder" style="color:var(--zacht);font-size:14px;margin-bottom:0">
+        Dit is wat er uit je factuur is gelezen. Klopt er iets niet, zeg het
+        dan tegen je boekhouder; hij past het aan en keurt de factuur goed.
+      </p>
+      {% endif %}
     </form>
 
     {% if boeking %}
@@ -9933,7 +10765,9 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
       </div>
     {% endif %}
 
+  {% if eigenaar %}
     <form class="kaart" method="post" action="/administratie/{{ administratie_id }}/factuur/{{ factuur.id }}/goedkeuren">
+      <input type="hidden" name="csrf" value="{{ csrf }}">
       <div class="knoppen">
         <button type="submit" {% if not mag_goedkeuren %}disabled{% endif %}>
           {% if factuur.goedgekeurd_op %}Al goedgekeurd{% else %}Goedkeuren{% endif %}
@@ -9946,6 +10780,14 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
         </p>
       {% endif %}
     </form>
+  {% else %}
+    <div class="kaart">
+      <p class="onder" style="color:#5c5c5c;font-size:14px;margin:0">
+        {% if factuur.goedgekeurd_op %}Deze factuur is goedgekeurd.
+        {% else %}Deze factuur wacht op goedkeuring door de boekhouder.{% endif %}
+      </p>
+    </div>
+  {% endif %}
 
     {% if extractie %}
       <div class="kaart">
@@ -10105,6 +10947,7 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
 
 <form class="kaart" method="post" enctype="multipart/form-data"
       action="/administratie/{{ administratie_id }}/bank">
+      <input type="hidden" name="csrf" value="{{ csrf }}">
   <div class="veld">
     <label for="bestand">Afschrift inlezen (MT940 of CAMT.053)</label>
     <input type="file" id="bestand" name="bestand" accept=".sta,.mt940,.txt,.xml" required>
@@ -10159,6 +11002,7 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
         </div>
         <form method="post"
               action="/administratie/{{ administratie_id }}/bank/{{ transactie.id }}/koppel">
+              <input type="hidden" name="csrf" value="{{ csrf }}">
           <input type="hidden" name="factuur_id"
                  value="{{ voorstel.bron }}:{{ voorstel.factuur_id }}">
           <div class="knoppen" style="margin-top:12px">
@@ -10183,6 +11027,7 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
       {% else %}
         <form method="post"
               action="/administratie/{{ administratie_id }}/bank/{{ transactie.id }}/koppel">
+              <input type="hidden" name="csrf" value="{{ csrf }}">
           <div class="veld" style="margin-top:12px;margin-bottom:8px">
             <label for="factuur-{{ transactie.id }}">Zelf koppelen</label>
             <select id="factuur-{{ transactie.id }}" name="factuur_id">
@@ -10258,8 +11103,9 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
       {% endfor %}
     </div>
     <p class="onder" style="color:var(--zacht);font-size:14px;margin-bottom:0">
-      Een factuur staat hier tot er een bijschrijving aan gekoppeld is. Dat
-      doe je op het <a href="/administratie/{{ administratie_id }}/bank">bankscherm</a>.
+      Een factuur staat hier tot er een bijschrijving aan gekoppeld is.
+      {% if eigenaar %}Dat doe je op het
+      <a href="/administratie/{{ administratie_id }}/bank">bankscherm</a>.{% endif %}
     </p>
   </div>
 {% endif %}
@@ -10271,6 +11117,7 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
 
 {% if klanten %}
   <form class="kaart" method="post" action="/administratie/{{ administratie_id }}/verkoop">
+    <input type="hidden" name="csrf" value="{{ csrf }}">
     <h3 style="margin:0 0 10px;font-size:17px">Nieuwe factuur</h3>
     <div class="veld">
       <label for="klant_id">Klant</label>
@@ -10424,6 +11271,7 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
 {% else %}
   <form class="kaart" method="post"
         action="/administratie/{{ administratie_id }}/verkoop/{{ factuur.id }}/opslaan">
+        <input type="hidden" name="csrf" value="{{ csrf }}">
     <div class="veld">
       <label for="factuurdatum">Factuurdatum</label>
       <input type="text" id="factuurdatum" name="factuurdatum"
@@ -10490,8 +11338,10 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
 </div>
 
 {% if factuur.status == "concept" %}
+  {% if eigenaar %}
   <form class="kaart" method="post"
         action="/administratie/{{ administratie_id }}/verkoop/{{ factuur.id }}/definitief">
+        <input type="hidden" name="csrf" value="{{ csrf }}">
     <div class="knoppen">
       <button type="submit" {% if ontbreekt %}disabled{% endif %}>Definitief maken en boeken</button>
     </div>
@@ -10500,9 +11350,18 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
       of weggegooid. Een fout zet je daarna recht met een creditfactuur.
     </p>
   </form>
+  {% else %}
+  <div class="kaart">
+    <p class="onder" style="color:var(--zacht);font-size:14px;margin:0">
+      Dit is een concept. De boekhouder maakt hem definitief; dan pas krijgt
+      hij een nummer en gaat hij de boekhouding in.
+    </p>
+  </div>
+  {% endif %}
 
   <form class="kaart" method="post"
         action="/administratie/{{ administratie_id }}/verkoop/{{ factuur.id }}/verwijderen">
+        <input type="hidden" name="csrf" value="{{ csrf }}">
     <div class="knoppen">
       <button type="submit" class="tweede">Concept weggooien</button>
     </div>
@@ -10510,9 +11369,10 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
       Een concept heeft nog geen nummer, dus dit laat geen gat in de nummering achter.
     </p>
   </form>
-{% elif factuur.soort != "creditfactuur" %}
+{% elif factuur.soort != "creditfactuur" and eigenaar %}
   <form class="kaart" method="post"
         action="/administratie/{{ administratie_id }}/verkoop/{{ factuur.id }}/crediteren">
+        <input type="hidden" name="csrf" value="{{ csrf }}">
     <div class="knoppen">
       <button type="submit" class="tweede">Creditfactuur maken</button>
     </div>
@@ -10544,6 +11404,7 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
 {% for klant in klanten %}
   <form class="kaart" method="post"
         action="/administratie/{{ administratie_id }}/klant/{{ klant.id }}">
+        <input type="hidden" name="csrf" value="{{ csrf }}">
     <h3 style="margin:0 0 10px;font-size:17px">{{ klant.naam }}</h3>
     {% for veld in velden %}
       <div class="veld">
@@ -10560,6 +11421,7 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
 {% endfor %}
 
 <form class="kaart" method="post" action="/administratie/{{ administratie_id }}/klanten">
+  <input type="hidden" name="csrf" value="{{ csrf }}">
   <h3 style="margin:0 0 10px;font-size:17px">Nieuwe klant</h3>
   {% for veld in velden %}
     <div class="veld">
@@ -10594,6 +11456,7 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
 
 <form class="kaart" method="post"
       action="/administratie/{{ administratie_id }}/instellingen">
+      <input type="hidden" name="csrf" value="{{ csrf }}">
   {% for veld in velden %}
     <div class="veld">
       <label for="{{ veld }}">{{ veld|replace("_", " ")|capitalize }}</label>
@@ -10603,6 +11466,40 @@ def leesbare_ubl(inhoud: bytes) -> Weergave:
   {% endfor %}
   <div class="knoppen"><button type="submit">Opslaan</button></div>
 </form>
+
+{% endblock %}
+```
+
+## `boekhouding/boekhouding/web/templates/inloggen.html`
+
+```html
+{% extends "basis.html" %}
+{% block titel %}Inloggen{% endblock %}
+{% block kop %}Inloggen{% endblock %}
+{% block inhoud %}
+
+{% if melding %}<div class="waarschuwing">{{ melding }}</div>{% endif %}
+
+<form class="kaart" method="post" action="/inloggen">
+  <input type="hidden" name="csrf" value="{{ csrf }}">
+  <input type="hidden" name="terug" value="{{ terug }}">
+  <div class="veld">
+    <label for="email">E-mailadres</label>
+    <input type="text" id="email" name="email" inputmode="email"
+           autocomplete="username" autofocus>
+  </div>
+  <div class="veld">
+    <label for="wachtwoord">Wachtwoord</label>
+    <input type="password" id="wachtwoord" name="wachtwoord"
+           autocomplete="current-password">
+  </div>
+  <div class="knoppen"><button type="submit">Inloggen</button></div>
+</form>
+
+<p class="onder" style="color:var(--zacht);font-size:14px">
+  Nog geen account? Je krijgt er een van de eigenaar. Er is met opzet geen
+  registratiepagina.
+</p>
 
 {% endblock %}
 ```
@@ -11387,9 +12284,13 @@ Wil je hem ook op je telefoon openen (zelfde wifi), start hem dan zo:
     python scripts/start_webinterface.py --netwerk
 
 Dan luistert hij op alle netwerkkaarten en print hij het adres dat je op
-je telefoon intypt. Fase 1 heeft geen login: iedereen op hetzelfde wifi
-kan er dan bij. Doe dit dus alleen op je eigen netwerk, nooit op wifi van
-een café of een hotel.
+je telefoon intypt. Inloggen is verplicht, dus wie het adres kent komt
+er nog niet in — maar doe dit toch alleen op je eigen netwerk, niet op de
+wifi van een café of een hotel.
+
+Nog geen account? Maak er eerst een:
+
+    python scripts/maak_eigenaar.py --email jij@example.nl --naam "Jouw naam"
 """
 
 import socket
@@ -11401,6 +12302,7 @@ sys.path.insert(0, str(BASIS))
 
 import uvicorn  # noqa: E402
 
+from boekhouding import maak_verbinding  # noqa: E402
 from boekhouding.web import maak_app  # noqa: E402
 
 GEGEVENS = BASIS / "gegevens"
@@ -11430,6 +12332,19 @@ def main() -> int:
 
     GEGEVENS.mkdir(exist_ok=True)
     app = maak_app(str(GEGEVENS / "boekhouding.sqlite"), str(GEGEVENS / "opslag"))
+    # Zonder account kom je nergens binnen; zeg dat meteen in plaats van
+    # de gebruiker naar een inlogscherm te sturen waar niets werkt.
+    conn = maak_verbinding(str(GEGEVENS / "boekhouding.sqlite"))
+    try:
+        accounts = conn.execute("SELECT count(*) FROM gebruikers").fetchone()[0]
+    finally:
+        conn.close()
+    if accounts == 0:
+        print("Er is nog geen account. Maak er eerst een:\n")
+        print('  python scripts/maak_eigenaar.py --email jij@example.nl '
+              '--naam "Jouw naam"\n')
+        return 1
+
     print(f"Database  : {GEGEVENS / 'boekhouding.sqlite'}")
     print(f"Originelen: {GEGEVENS / 'opslag'}")
     print(f"\nOp deze computer : http://127.0.0.1:{POORT}")
@@ -11439,7 +12354,7 @@ def main() -> int:
             print(f"Op je telefoon   : http://{ip}:{POORT}   (zelfde wifi)")
         else:
             print("Op je telefoon   : geen netwerkadres gevonden, zit je op wifi?")
-        print("\nLet op: geen login. Alleen doen op je eigen netwerk.")
+        print("\nLet op: alleen doen op je eigen netwerk.")
     else:
         print("Op je telefoon   : niet bereikbaar. Start met --netwerk als je dat wilt.")
     print("\nStoppen met Ctrl-C.\n")
@@ -11619,12 +12534,149 @@ def main() -> int:
                   f"{' — ' + redenen[0] if redenen else ''}")
 
     facturen = lees_facturen(conn, administratie_id)
+    accounts = conn.execute("SELECT count(*) FROM gebruikers").fetchone()[0]
     conn.close()
 
     review = sum(1 for f in facturen if f["status"] == "review_nodig")
     print(f"\n{len(facturen)} facturen in de administratie, {review} wachten op je.")
+    if accounts == 0:
+        print("\nEr is nog geen account om mee in te loggen. Maak er een:")
+        print('  python scripts/maak_eigenaar.py --email jij@example.nl '
+              '--naam "Jouw naam"')
     print("Start nu de server:  python scripts/start_webinterface.py")
     return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+```
+
+## `boekhouding/scripts/maak_eigenaar.py`
+
+```python
+#!/usr/bin/env python3
+"""Maak het eerste account aan (de eigenaar), of later een klantaccount.
+
+    python scripts/maak_eigenaar.py --email alaa@example.nl --naam "Alaa"
+
+Het wachtwoord wordt gevraagd zodra het script draait; je typt het twee
+keer en je ziet het niet in beeld. Het komt dus niet in je
+terminalgeschiedenis, niet in een bestand en niet in de audit trail —
+alleen de hash gaat de database in.
+
+Een klantaccount maak je zo, met de administratie(s) waar hij bij mag:
+
+    python scripts/maak_eigenaar.py --email klant@example.nl \
+        --naam "Jan Jansen" --rol klant --administratie 1
+
+Er is met opzet geen registratiepagina in de webinterface: accounts
+ontstaan alleen hier, met de hand.
+"""
+
+import argparse
+import getpass
+import sys
+from pathlib import Path
+
+BASIS = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(BASIS))
+
+from boekhouding import (  # noqa: E402
+    lees_gebruikers,
+    maak_administratie,
+    maak_gebruiker,
+    maak_tabellen,
+    maak_verbinding,
+)
+from boekhouding.gebruikers import normaliseer_email  # noqa: E402
+
+GEGEVENS = BASIS / "gegevens"
+
+
+def vraag_wachtwoord() -> str | None:
+    """Vraag het wachtwoord twee keer; geef None als het niet klopt."""
+    eerste = getpass.getpass("Wachtwoord (minstens 10 tekens): ")
+    if len(eerste) < 10:
+        print("Te kort: minstens 10 tekens.")
+        return None
+    tweede = getpass.getpass("Nog een keer: ")
+    if eerste != tweede:
+        print("De twee wachtwoorden zijn niet hetzelfde.")
+        return None
+    return eerste
+
+
+def main(argv: list[str] | None = None) -> int:
+    ontleder = argparse.ArgumentParser(description=__doc__)
+    ontleder.add_argument("--email", required=True)
+    ontleder.add_argument("--naam", required=True)
+    ontleder.add_argument("--rol", default="eigenaar", choices=("eigenaar", "klant"))
+    ontleder.add_argument(
+        "--administratie", type=int, action="append", default=[],
+        help="administratie-id waar deze klant bij mag (mag meerdere keren)",
+    )
+    ontleder.add_argument(
+        "--db", default=str(GEGEVENS / "boekhouding.sqlite"),
+        help="pad naar de database",
+    )
+    keuzes = ontleder.parse_args(argv)
+
+    if keuzes.rol == "klant" and not keuzes.administratie:
+        print("Een klant zonder administratie kan nergens bij. "
+              "Geef minstens één --administratie mee.")
+        return 1
+
+    Path(keuzes.db).parent.mkdir(parents=True, exist_ok=True)
+    conn = maak_verbinding(keuzes.db)
+    try:
+        maak_tabellen(conn)
+        adres = normaliseer_email(keuzes.email)
+        bestaat = conn.execute(
+            "SELECT 1 FROM gebruikers WHERE email = ?", (adres,)
+        ).fetchone()
+        if bestaat:
+            print(f"Er is al een account met {adres}.")
+            return 1
+
+        # Zonder administratie kan zelfs de eigenaar nergens heen; is de
+        # database nog leeg, dan zetten we er meteen een neer.
+        aantal = conn.execute("SELECT count(*) FROM administraties").fetchone()[0]
+        if aantal == 0:
+            maak_administratie(conn, "Mijn eenmanszaak")
+            print("Er was nog geen administratie; 'Mijn eenmanszaak' aangemaakt.")
+
+        for administratie_id in keuzes.administratie:
+            aanwezig = conn.execute(
+                "SELECT 1 FROM administraties WHERE id = ?", (administratie_id,)
+            ).fetchone()
+            if not aanwezig:
+                print(f"Administratie {administratie_id} bestaat niet.")
+                return 1
+
+        wachtwoord = vraag_wachtwoord()
+        if wachtwoord is None:
+            return 1
+
+        maak_gebruiker(
+            conn, adres, keuzes.naam, wachtwoord, rol=keuzes.rol,
+            administraties=keuzes.administratie or None,
+            door="script maak_eigenaar",
+        )
+        # Het wachtwoord staat alleen nog in deze variabele; verder is er
+        # niets van bewaard, ook niet hieronder in de melding.
+        print(f"\nAccount aangemaakt: {adres} ({keuzes.rol}).")
+        if keuzes.rol == "klant":
+            print("Toegang tot administratie(s): "
+                  + ", ".join(str(i) for i in keuzes.administratie))
+        print("\nAlle accounts nu:")
+        for gebruiker in lees_gebruikers(conn):
+            waar = (", administratie " + ", ".join(str(i) for i in gebruiker.administraties)
+                    if gebruiker.administraties else "")
+            print(f"  {gebruiker.email}  ({gebruiker.rol}{waar})")
+        print("\nInloggen kan op http://127.0.0.1:8000/inloggen")
+        return 0
+    finally:
+        conn.close()
 
 
 if __name__ == "__main__":
@@ -11680,6 +12732,7 @@ BRONBESTANDEN = [
     "boekhouding/bank.py",
     "boekhouding/afletteren.py",
     "boekhouding/verkoop.py",
+    "boekhouding/gebruikers.py",
     "boekhouding/factuur_pdf.py",
     "boekhouding/web/__init__.py",
     "boekhouding/web/app.py",
@@ -11694,6 +12747,7 @@ BRONBESTANDEN = [
     "boekhouding/web/templates/verkoopfactuur.html",
     "boekhouding/web/templates/klanten.html",
     "boekhouding/web/templates/instellingen.html",
+    "boekhouding/web/templates/inloggen.html",
     "boekhouding/web/templates/fout.html",
     "boekhouding/config/btw_2024.json",
     "boekhouding/config/btw_2025.json",
@@ -11703,6 +12757,7 @@ BRONBESTANDEN = [
     "boekhouding/config/rekeningen_2026.json",
     "scripts/start_webinterface.py",
     "scripts/vul_testdata.py",
+    "scripts/maak_eigenaar.py",
     "scripts/maak_oplevering.py",
     "scripts/handmatige_api_proef.py",
     "scripts/eval_extractie.py",
@@ -11729,6 +12784,7 @@ BRONBESTANDEN = [
     "tests/test_afletteren.py",
     "tests/test_verkoop.py",
     "tests/test_web.py",
+    "tests/test_toegang.py",
     "pytest.ini",
     "requirements.txt",
     ".gitignore",
@@ -13618,11 +14674,31 @@ def schrijf_jpeg(bitmap: Bitmap, pad: str | Path, dpi: int = 100) -> Path:
 ## `boekhouding/tests/conftest.py`
 
 ```python
-from datetime import date
+import os
+import re
 
-import pytest
+# Bcrypt is met opzet traag: dat is precies waarom het goed is tegen
+# wachtwoorden raden. Voor de tests zetten we het aantal rondes zo laag
+# mogelijk, anders duurt de suite minuten. Dit staat bovenaan omdat de
+# module de waarde bij het importeren leest.
+os.environ.setdefault("BOEKHOUDING_BCRYPT_RONDES", "4")
 
-from boekhouding import maak_verbinding, maak_tabellen, maak_administratie
+from datetime import date  # noqa: E402
+
+import pytest  # noqa: E402
+from fastapi.testclient import TestClient  # noqa: E402
+
+from boekhouding import (  # noqa: E402
+    maak_verbinding,
+    maak_tabellen,
+    maak_administratie,
+    maak_gebruiker,
+)
+from boekhouding.database import lees_sessie  # noqa: E402
+
+# Het wachtwoord dat elke testgebruiker krijgt. Tien tekens, want korter
+# accepteert hash_wachtwoord niet.
+TESTWACHTWOORD = "geheim-1234"
 
 # Vaste peildatum zodat de tests niet afhangen van de echte klok.
 VANDAAG = date(2026, 8, 26)
@@ -13699,6 +14775,74 @@ def conn():
 @pytest.fixture
 def administratie_id(conn):
     return maak_administratie(conn, "Testzaak", "eenmanszaak")
+
+
+# --- ingelogd testen ----------------------------------------------------
+
+class IngelogdeClient(TestClient):
+    """Een TestClient die het csrf-teken bij elk formulier meestuurt.
+
+    In de browser zit dat teken in een verborgen veld dat het sjabloon
+    invult; een test post rechtstreeks en zou het elke keer zelf moeten
+    meegeven. Dat gebeurt hier één keer, zodat de tests over boekhouden
+    blijven gaan en niet over formuliertechniek.
+    """
+
+    csrf = ""
+
+    def post(self, url, **rest):
+        if self.csrf:
+            gegevens = rest.get("data")
+            if gegevens is None:
+                gegevens = {}
+            elif isinstance(gegevens, dict):
+                gegevens = dict(gegevens)
+            else:  # een lijst met paren
+                gegevens = list(gegevens)
+            if isinstance(gegevens, dict):
+                gegevens.setdefault("csrf", self.csrf)
+            else:
+                gegevens.append(("csrf", self.csrf))
+            rest["data"] = gegevens
+        return super().post(url, **rest)
+
+
+def log_in(client, db_pad, email, wachtwoord=TESTWACHTWOORD):
+    """Log deze client in en onthoud het csrf-teken van de sessie."""
+    pagina = client.get("/inloggen")
+    teken = re.search(r'name="csrf" value="([^"]+)"', pagina.text).group(1)
+    antwoord = client.post(
+        "/inloggen",
+        data={"email": email, "wachtwoord": wachtwoord, "csrf": teken},
+        follow_redirects=False,
+    )
+    assert antwoord.status_code == 303, "inloggen mislukt in de test-opzet"
+    conn = maak_verbinding(str(db_pad))
+    try:
+        sessie = lees_sessie(conn, client.cookies.get("sessie"))
+    finally:
+        conn.close()
+    assert sessie is not None, "geen sessie na inloggen"
+    client.csrf = sessie["csrf_token"]
+    return client
+
+
+def maak_ingelogde_client(app, db_pad, email, rol="eigenaar",
+                          administraties=None, naam=None):
+    """Maak een gebruiker aan (als die er nog niet is) en log hem in."""
+    conn = maak_verbinding(str(db_pad))
+    try:
+        bestaat = conn.execute(
+            "SELECT 1 FROM gebruikers WHERE email = ?", (email.lower(),)
+        ).fetchone()
+        if bestaat is None:
+            maak_gebruiker(
+                conn, email, naam or email.split("@")[0], TESTWACHTWOORD,
+                rol=rol, administraties=administraties,
+            )
+    finally:
+        conn.close()
+    return log_in(IngelogdeClient(app), db_pad, email)
 ```
 
 ## `boekhouding/tests/test_schema.py`
@@ -18974,7 +20118,7 @@ from boekhouding import (
     maak_verbinding,
 )
 from boekhouding.web import maak_app
-from conftest import maak_pdf
+from conftest import maak_ingelogde_client, maak_pdf
 from test_ai_extractie import NageaapteClient, NageaapteRespons, goede_extractie, veld
 
 VANDAAG = date(2026, 8, 27)
@@ -18994,13 +20138,19 @@ def werkmap(tmp_path):
 
 @pytest.fixture
 def app_en_client(werkmap):
-    """Een app met een nagemaakte AI-client die altijd hetzelfde teruggeeft."""
+    """Een app met een nagemaakte AI-client die altijd hetzelfde teruggeeft.
+
+    De client is ingelogd als eigenaar: sinds module 9 komt niemand
+    zonder sessie ergens binnen. Wat een klant wel en niet mag staat in
+    test_toegang.py.
+    """
     ai = client_met(goede_extractie())
+    db_pad = werkmap / "boekhouding.sqlite"
     app = maak_app(
-        str(werkmap / "boekhouding.sqlite"), str(werkmap / "opslag"),
-        ai_client=ai, vandaag=VANDAAG,
+        str(db_pad), str(werkmap / "opslag"), ai_client=ai, vandaag=VANDAAG,
     )
-    return app, TestClient(app), ai
+    web = maak_ingelogde_client(app, db_pad, "eigenaar@test.nl", rol="eigenaar")
+    return app, web, ai
 
 
 @pytest.fixture
@@ -19165,7 +20315,7 @@ def test_lage_zekerheid_wordt_gemarkeerd(werkmap):
         str(werkmap / "db.sqlite"), str(werkmap / "opslag"),
         ai_client=client_met(onzeker), vandaag=VANDAAG,
     )
-    web = TestClient(app)
+    web = maak_ingelogde_client(app, werkmap / "db.sqlite", "eigenaar@test.nl")
     upload(web, maak_pdf("Factuur 2026-0412"), "factuur.pdf")
 
     pagina = web.get("/administratie/1/factuur/1").text
@@ -19293,7 +20443,7 @@ def test_zonder_api_sleutel_valt_de_upload_niet_om(werkmap, monkeypatch):
         str(werkmap / "db.sqlite"), str(werkmap / "opslag"),
         ai_client=None, vandaag=VANDAAG,
     )
-    web = TestClient(app)
+    web = maak_ingelogde_client(app, werkmap / "db.sqlite", "eigenaar@test.nl")
     antwoord = upload(web, maak_pdf("Factuur 2026-0412"), "factuur.pdf")
 
     assert antwoord.status_code == 303  # er is wél een factuur aangemaakt
@@ -19318,7 +20468,7 @@ def twee_administraties(werkmap):
         str(db), str(werkmap / "opslag"),
         ai_client=client_met(goede_extractie()), vandaag=VANDAAG,
     )
-    web = TestClient(app)
+    web = maak_ingelogde_client(app, db, "eigenaar@test.nl")
 
     conn = maak_verbinding(str(db))
     maak_tabellen(conn)
@@ -19454,7 +20604,7 @@ def test_ook_bij_de_ai_route_geen_dubbele_redenen(werkmap):
         str(werkmap / "db.sqlite"), str(werkmap / "opslag"),
         ai_client=client_met(onzeker), vandaag=VANDAAG,
     )
-    web = TestClient(app)
+    web = maak_ingelogde_client(app, werkmap / "db.sqlite", "eigenaar@test.nl")
     upload(web, maak_pdf("Factuur 2026-0412"), "factuur.pdf")
 
     pagina = web.get("/administratie/1/factuur/1").text
@@ -20066,6 +21216,664 @@ def test_een_factuur_van_een_ander_geeft_404(twee_administraties):
     ).status_code == 404
 ```
 
+## `boekhouding/tests/test_toegang.py`
+
+```python
+"""Tests voor module 9: accounts, rollen en toegang.
+
+Twee soorten tests staan hier door elkaar, en dat is met opzet: de
+onderste laag (wachtwoorden, sessies, de rem op mislukte pogingen) en de
+webinterface (wie waar wel en niet binnenkomt). Ze horen bij elkaar,
+want een goed bewaakte functie helpt niet als de route eromheen hem niet
+gebruikt.
+"""
+
+import time
+from datetime import timedelta
+from urllib.parse import unquote
+from pathlib import Path
+
+import pytest
+from fastapi.testclient import TestClient
+
+from boekhouding import (
+    Gebruiker,
+    controleer_wachtwoord,
+    hash_wachtwoord,
+    lees_audit_trail,
+    lees_factuur,
+    lees_gebruiker,
+    lees_sessie,
+    lees_toegang_log,
+    lees_verkoopfacturen,
+    maak_administratie,
+    maak_gebruiker,
+    maak_verbinding,
+    probeer_inloggen,
+    trek_sessie_in,
+)
+from boekhouding.gebruikers import (
+    INLOG_MISLUKT,
+    MAX_PER_ACCOUNT,
+    MAX_PER_IP,
+    TE_VAAK,
+    nu,
+)
+from boekhouding.web import maak_app
+from conftest import TESTWACHTWOORD, VANDAAG, maak_ingelogde_client
+
+UBLMAP = Path(__file__).parent / "testfacturen" / "ubl"
+GOEDE_UBL = UBLMAP / "01-standaard-21procent.xml"
+
+
+# --- wachtwoorden -------------------------------------------------------
+
+def test_het_wachtwoord_is_nergens_terug_te_lezen(conn, administratie_id):
+    maak_gebruiker(conn, "eig@test.nl", "Eigenaar", "geheim-1234",
+                   rol="eigenaar")
+
+    opgeslagen = conn.execute(
+        "SELECT wachtwoord_hash FROM gebruikers"
+    ).fetchone()[0]
+    assert "geheim-1234" not in opgeslagen
+    assert opgeslagen.startswith("$2")  # bcrypt
+
+    # Ook niet in de audit trail of het toegangslogboek.
+    alles = str(conn.execute("SELECT * FROM audit_log").fetchall()) + str(
+        lees_toegang_log(conn)
+    )
+    assert "geheim-1234" not in alles
+
+
+def test_dezelfde_hash_hoort_bij_dezelfde_gebruiker_niet_bij_dezelfde_tekst():
+    """Twee keer hetzelfde wachtwoord geeft twee verschillende hashes."""
+    een = hash_wachtwoord("geheim-1234")
+    twee = hash_wachtwoord("geheim-1234")
+    assert een != twee
+    assert controleer_wachtwoord("geheim-1234", een)
+    assert controleer_wachtwoord("geheim-1234", twee)
+    assert not controleer_wachtwoord("geheim-12345", een)
+
+
+def test_een_kort_wachtwoord_wordt_geweigerd():
+    with pytest.raises(ValueError, match="te makkelijk te raden"):
+        hash_wachtwoord("kort")
+
+
+def test_een_kapotte_of_ontbrekende_hash_geeft_gewoon_false():
+    assert not controleer_wachtwoord("geheim-1234", None)
+    assert not controleer_wachtwoord("geheim-1234", "geen echte hash")
+
+
+# --- inloggen: dezelfde melding, hetzelfde werk --------------------------
+
+def test_onbekend_adres_en_fout_wachtwoord_geven_dezelfde_melding(conn):
+    maak_gebruiker(conn, "eig@test.nl", "Eigenaar", TESTWACHTWOORD,
+                   rol="eigenaar")
+
+    onbekend = probeer_inloggen(conn, "niemand@test.nl", TESTWACHTWOORD)
+    fout = probeer_inloggen(conn, "eig@test.nl", "verkeerd-1234")
+
+    assert onbekend == (None, [INLOG_MISLUKT])
+    assert fout == (None, [INLOG_MISLUKT])
+
+
+def test_ook_bij_een_onbekend_adres_wordt_er_gerekend(conn, monkeypatch):
+    """Anders verraadt de duur of een account bestaat.
+
+    Geteld wordt hoe vaak de wachtwoordcontrole wordt aangeroepen: bij
+    een onbekend adres hoort dat één keer te zijn, tegen een vaste
+    onbruikbare hash, precies zoals bij een bestaand adres.
+    """
+    from boekhouding import gebruikers
+
+    tellingen = []
+    echt = gebruikers.controleer_wachtwoord
+
+    def tellend(wachtwoord, hash_waarde):
+        tellingen.append(hash_waarde)
+        return echt(wachtwoord, hash_waarde)
+
+    monkeypatch.setattr(gebruikers, "controleer_wachtwoord", tellend)
+    maak_gebruiker(conn, "eig@test.nl", "Eigenaar", TESTWACHTWOORD,
+                   rol="eigenaar")
+
+    probeer_inloggen(conn, "niemand@test.nl", TESTWACHTWOORD)
+    assert len(tellingen) == 1
+    assert tellingen[0].startswith("$2")
+
+
+def test_de_twee_mislukkingen_duren_ongeveer_even_lang(conn):
+    """Grofmazig, want een testmachine is nooit stil — maar een
+    onbekend adres mag niet meteen terugkomen terwijl een bestaand
+    adres eerst een hash controleert."""
+    maak_gebruiker(conn, "eig@test.nl", "Eigenaar", TESTWACHTWOORD,
+                   rol="eigenaar")
+
+    def duur(email):
+        metingen = []
+        for _ in range(5):
+            conn.execute("DELETE FROM toegang_log")
+            start = time.perf_counter()
+            probeer_inloggen(conn, email, "verkeerd-1234")
+            metingen.append(time.perf_counter() - start)
+        return sorted(metingen)[2]
+
+    bestaand = duur("eig@test.nl")
+    onbekend = duur("niemand@test.nl")
+    assert onbekend > bestaand * 0.5
+
+
+def test_inloggen_lukt_ongeacht_hoofdletters(conn):
+    maak_gebruiker(conn, "eig@test.nl", "Eigenaar", TESTWACHTWOORD,
+                   rol="eigenaar")
+    token, redenen = probeer_inloggen(conn, "  Eig@Test.NL ", TESTWACHTWOORD)
+    assert token and redenen == []
+
+
+def test_een_inactief_account_komt_er_niet_in(conn):
+    gebruiker_id = maak_gebruiker(conn, "weg@test.nl", "Weg", TESTWACHTWOORD)
+    conn.execute("UPDATE gebruikers SET actief = 0 WHERE id = ?", (gebruiker_id,))
+    conn.commit()
+    assert probeer_inloggen(conn, "weg@test.nl", TESTWACHTWOORD) == (
+        None, [INLOG_MISLUKT]
+    )
+
+
+# --- de rem op mislukte pogingen ----------------------------------------
+
+def test_de_rem_slaat_aan_per_account(conn):
+    maak_gebruiker(conn, "eig@test.nl", "Eigenaar", TESTWACHTWOORD,
+                   rol="eigenaar")
+
+    for _ in range(MAX_PER_ACCOUNT):
+        assert probeer_inloggen(conn, "eig@test.nl", "verkeerd-1234", "1.1.1.1") == (
+            None, [INLOG_MISLUKT]
+        )
+
+    # Zelfs met het júíste wachtwoord komt hij er nu niet in.
+    token, redenen = probeer_inloggen(conn, "eig@test.nl", TESTWACHTWOORD, "1.1.1.1")
+    assert token is None
+    assert redenen == [TE_VAAK]
+
+    # Een ander account op hetzelfde IP kan nog wel.
+    maak_gebruiker(conn, "twee@test.nl", "Twee", TESTWACHTWOORD)
+    token, redenen = probeer_inloggen(conn, "twee@test.nl", TESTWACHTWOORD, "1.1.1.1")
+    assert token and redenen == []
+
+
+def test_de_rem_slaat_ook_aan_per_ip(conn):
+    """Eén wachtwoord op honderd adressen proberen moet ook stoppen."""
+    maak_gebruiker(conn, "eig@test.nl", "Eigenaar", TESTWACHTWOORD,
+                   rol="eigenaar")
+
+    for nummer in range(MAX_PER_IP):
+        probeer_inloggen(conn, f"gok{nummer}@test.nl", "verkeerd-1234", "9.9.9.9")
+
+    assert probeer_inloggen(conn, "eig@test.nl", TESTWACHTWOORD, "9.9.9.9") == (
+        None, [TE_VAAK]
+    )
+    # Vanaf een ander IP-adres kan hetzelfde account gewoon inloggen.
+    token, redenen = probeer_inloggen(conn, "eig@test.nl", TESTWACHTWOORD, "8.8.8.8")
+    assert token and redenen == []
+
+
+def test_oude_mislukkingen_tellen_niet_meer_mee(conn):
+    maak_gebruiker(conn, "eig@test.nl", "Eigenaar", TESTWACHTWOORD,
+                   rol="eigenaar")
+    for _ in range(MAX_PER_ACCOUNT):
+        probeer_inloggen(conn, "eig@test.nl", "verkeerd-1234", "1.1.1.1")
+
+    # Zet de pogingen een uur terug: het venster is een kwartier.
+    lang_geleden = (nu() - timedelta(hours=1)).isoformat(timespec="seconds")
+    conn.execute("UPDATE toegang_log SET tijdstip = ?", (lang_geleden,))
+    conn.commit()
+
+    token, redenen = probeer_inloggen(conn, "eig@test.nl", TESTWACHTWOORD, "1.1.1.1")
+    assert token and redenen == []
+
+
+# --- sessies ------------------------------------------------------------
+
+def test_een_sessie_kan_worden_ingetrokken(conn):
+    maak_gebruiker(conn, "eig@test.nl", "Eigenaar", TESTWACHTWOORD,
+                   rol="eigenaar")
+    token, _ = probeer_inloggen(conn, "eig@test.nl", TESTWACHTWOORD)
+
+    assert lees_sessie(conn, token) is not None
+    trek_sessie_in(conn, token)
+    assert lees_sessie(conn, token) is None
+
+
+def test_een_verlopen_sessie_telt_niet_meer(conn):
+    maak_gebruiker(conn, "eig@test.nl", "Eigenaar", TESTWACHTWOORD,
+                   rol="eigenaar")
+    token, _ = probeer_inloggen(conn, "eig@test.nl", TESTWACHTWOORD)
+
+    verleden = (nu() - timedelta(minutes=1)).isoformat(timespec="seconds")
+    conn.execute("UPDATE sessies SET verloopt_op = ?", (verleden,))
+    conn.commit()
+
+    assert lees_sessie(conn, token) is None
+
+
+def test_het_token_zelf_staat_niet_in_de_database(conn):
+    maak_gebruiker(conn, "eig@test.nl", "Eigenaar", TESTWACHTWOORD,
+                   rol="eigenaar")
+    token, _ = probeer_inloggen(conn, "eig@test.nl", TESTWACHTWOORD)
+
+    opgeslagen = conn.execute("SELECT token_hash FROM sessies").fetchone()[0]
+    assert token not in opgeslagen
+    assert lees_sessie(conn, "iets-anders") is None
+
+
+# --- rollen -------------------------------------------------------------
+
+def test_de_eigenaar_mag_overal_bij_de_klant_alleen_bij_de_zijne():
+    eigenaar = Gebruiker(id=1, email="e@x.nl", naam="E", rol="eigenaar")
+    klant = Gebruiker(id=2, email="k@x.nl", naam="K", rol="klant",
+                      administraties=[2])
+
+    assert eigenaar.is_eigenaar() and eigenaar.mag_bij(1) and eigenaar.mag_bij(99)
+    assert not klant.is_eigenaar()
+    assert klant.mag_bij(2)
+    assert not klant.mag_bij(1)
+
+
+def test_een_onbekende_rol_wordt_geweigerd(conn):
+    with pytest.raises(ValueError, match="onbekende rol"):
+        maak_gebruiker(conn, "x@test.nl", "X", TESTWACHTWOORD, rol="beheerder")
+
+
+# --- de webinterface ----------------------------------------------------
+
+@pytest.fixture
+def opzet(tmp_path):
+    """Twee administraties, een eigenaar en een klant die alleen bij 2 mag."""
+    db = tmp_path / "boekhouding.sqlite"
+    app = maak_app(str(db), str(tmp_path / "opslag"), ai_client=None,
+                   vandaag=VANDAAG)
+
+    conn = maak_verbinding(str(db))
+    if conn.execute("SELECT count(*) FROM administraties").fetchone()[0] < 2:
+        maak_administratie(conn, "Zaak van de klant")
+    conn.close()
+
+    eigenaar = maak_ingelogde_client(app, db, "eigenaar@test.nl", rol="eigenaar")
+    klant = maak_ingelogde_client(app, db, "klant@test.nl", rol="klant",
+                                  administraties=[2], naam="Klant Twee")
+    return app, db, eigenaar, klant
+
+
+def upload_ubl(web, administratie_id=1, naam="factuur.xml"):
+    return web.post(
+        f"/administratie/{administratie_id}/upload",
+        files={"bestand": (naam, GOEDE_UBL.read_bytes(), "application/xml")},
+        follow_redirects=False,
+    )
+
+
+def test_uitgelogde_bezoeker_komt_nergens_binnen(opzet):
+    app, _db, _eigenaar, _klant = opzet
+    vreemde = TestClient(app)
+
+    for pad in ("/", "/administratie/1", "/administratie/1/upload",
+                "/administratie/1/factuur/1", "/administratie/1/btw",
+                "/administratie/1/bank", "/administratie/1/verkoop"):
+        antwoord = vreemde.get(pad, follow_redirects=False)
+        assert antwoord.status_code == 303, pad
+        assert antwoord.headers["location"].startswith("/inloggen"), pad
+
+    # Ook posten kan hij niet: hij belandt op het inlogscherm en de
+    # factuur wordt niet goedgekeurd.
+    antwoord = vreemde.post("/administratie/1/factuur/1/goedkeuren",
+                            follow_redirects=False)
+    assert antwoord.status_code == 303
+    assert antwoord.headers["location"].startswith("/inloggen")
+
+
+def test_het_inlogscherm_is_wel_open(opzet):
+    app, _db, _eigenaar, _klant = opzet
+    pagina = TestClient(app).get("/inloggen")
+    assert pagina.status_code == 200
+    assert "Wachtwoord" in pagina.text
+    # Geen zelfregistratie: er is geen weg om zelf een account te maken.
+    assert "registreren" not in pagina.text.lower()
+
+
+def test_uitloggen_maakt_de_sessie_ongeldig(opzet):
+    _app, _db, eigenaar, _klant = opzet
+    assert eigenaar.get("/administratie/1").status_code == 200
+
+    antwoord = eigenaar.post("/uitloggen", follow_redirects=False)
+    assert antwoord.status_code == 303
+
+    daarna = eigenaar.get("/administratie/1", follow_redirects=False)
+    assert daarna.status_code == 303
+    assert daarna.headers["location"].startswith("/inloggen")
+
+
+def test_een_verlopen_sessie_komt_er_niet_meer_in(opzet):
+    _app, db, eigenaar, _klant = opzet
+    assert eigenaar.get("/administratie/1").status_code == 200
+
+    conn = maak_verbinding(str(db))
+    verleden = (nu() - timedelta(minutes=1)).isoformat(timespec="seconds")
+    conn.execute("UPDATE sessies SET verloopt_op = ?", (verleden,))
+    conn.commit()
+    conn.close()
+
+    antwoord = eigenaar.get("/administratie/1", follow_redirects=False)
+    assert antwoord.status_code == 303
+    assert antwoord.headers["location"].startswith("/inloggen")
+
+
+def test_een_klant_komt_niet_bij_een_andere_administratie(opzet):
+    _app, _db, eigenaar, klant = opzet
+    upload_ubl(eigenaar, 1)
+
+    # De administratie zelf: 404, niet 403.
+    antwoord = klant.get("/administratie/1", follow_redirects=False)
+    assert antwoord.status_code == 404
+    assert "403" not in antwoord.text
+
+    # En ook geen enkel scherm eronder.
+    for pad in ("/administratie/1/factuur/1", "/administratie/1/upload",
+                "/administratie/1/verkoop", "/administratie/1/klanten"):
+        assert klant.get(pad, follow_redirects=False).status_code == 404, pad
+
+
+def test_de_klant_ziet_niets_van_de_andere_administratie_in_het_antwoord(opzet):
+    _app, _db, eigenaar, klant = opzet
+    upload_ubl(eigenaar, 1)
+
+    pagina = klant.get("/administratie/1/factuur/1", follow_redirects=False)
+    assert pagina.status_code == 404
+    # Geen leveranciersnaam, geen bedrag: het antwoord is voor een factuur
+    # die niet bestaat gelijk aan dat voor een factuur van een ander.
+    assert "Bakker" not in pagina.text
+    onbekend = klant.get("/administratie/2/factuur/999", follow_redirects=False)
+    assert onbekend.status_code == 404
+    assert onbekend.text == pagina.text
+
+
+def test_een_klant_kan_niet_goedkeuren(opzet):
+    _app, db, eigenaar, klant = opzet
+    # Een factuur in de administratie van de klant zelf.
+    upload_ubl(eigenaar, 2)
+
+    antwoord = klant.post("/administratie/2/factuur/1/goedkeuren",
+                          follow_redirects=False)
+    assert antwoord.status_code == 404
+
+    conn = maak_verbinding(str(db))
+    factuur = lees_factuur(conn, 1)
+    conn.close()
+    assert factuur["goedgekeurd_op"] is None
+    assert factuur["status"] != "goedgekeurd"
+
+
+def test_een_klant_kan_de_gelezen_bedragen_niet_wijzigen(opzet):
+    """Aanleveren en meekijken mag; de cijfers bijstellen niet."""
+    _app, db, eigenaar, klant = opzet
+    upload_ubl(eigenaar, 2)
+
+    antwoord = klant.post("/administratie/2/factuur/1/opslaan",
+                          data={"bedrag_incl": "1.00"}, follow_redirects=False)
+    assert antwoord.status_code == 404
+
+    conn = maak_verbinding(str(db))
+    factuur = lees_factuur(conn, 1)
+    conn.close()
+    assert factuur["bedrag_incl"] != "1.00"
+
+    # In het scherm zijn de velden alleen-lezen en is er geen opslaanknop.
+    pagina = klant.get("/administratie/2/factuur/1").text
+    assert "readonly" in pagina
+    assert "Opslaan en later beoordelen" not in pagina
+
+
+def test_de_knop_om_goed_te_keuren_staat_er_niet_eens(opzet):
+    _app, _db, eigenaar, klant = opzet
+    upload_ubl(eigenaar, 2)
+
+    pagina = klant.get("/administratie/2/factuur/1").text
+    assert "Goedkeuren" not in pagina
+    assert "wacht op goedkeuring door de boekhouder" in pagina
+
+
+def test_een_klant_kan_niets_definitief_maken(opzet):
+    _app, db, eigenaar, klant = opzet
+    conn = maak_verbinding(str(db))
+    from boekhouding import maak_klant, maak_verkoopfactuur, zet_verkoopregels
+
+    klant_id = maak_klant(conn, 2, {"naam": "Afnemer", "adres": "Straat 1",
+                                    "postcode": "1234 AB", "plaats": "Delft"})
+    factuur_id = maak_verkoopfactuur(conn, 2, klant_id, "2026-08-01")
+    zet_verkoopregels(conn, factuur_id, [
+        {"omschrijving": "Werk", "aantal": "1", "stukprijs": "100.00",
+         "btw_percentage": "21"},
+    ])
+    conn.close()
+
+    antwoord = klant.post(f"/administratie/2/verkoop/{factuur_id}/definitief",
+                          follow_redirects=False)
+    assert antwoord.status_code == 404
+
+    conn = maak_verbinding(str(db))
+    facturen = lees_verkoopfacturen(conn, 2)
+    conn.close()
+    assert facturen[0]["status"] == "concept"
+    assert facturen[0]["factuurnummer"] is None
+
+
+def test_de_klant_komt_niet_bij_de_bank_en_de_aangifte(opzet):
+    _app, _db, _eigenaar, klant = opzet
+    for pad in ("/administratie/2/bank", "/administratie/2/btw",
+                "/administratie/2/btw/2026/3"):
+        assert klant.get(pad, follow_redirects=False).status_code == 404, pad
+
+    overzicht = klant.get("/administratie/2").text
+    assert "Btw-aangifte" not in overzicht
+    assert ">Bank<" not in overzicht
+
+
+def test_wat_een_klant_wel_mag(opzet):
+    """Aanleveren, meekijken en een concept-verkoopfactuur opstellen."""
+    _app, db, _eigenaar, klant = opzet
+
+    assert upload_ubl(klant, 2).status_code == 303
+    overzicht = klant.get("/administratie/2").text
+    assert "Factuur toevoegen" in overzicht
+
+    # De eigen factuur en de status ervan zijn te zien.
+    detail = klant.get("/administratie/2/factuur/1")
+    assert detail.status_code == 200
+
+    # En hij kan een concept-verkoopfactuur klaarzetten.
+    conn = maak_verbinding(str(db))
+    from boekhouding import maak_klant
+
+    klant_id = maak_klant(conn, 2, {"naam": "Afnemer", "adres": "Straat 1",
+                                    "postcode": "1234 AB", "plaats": "Delft"})
+    conn.close()
+    antwoord = klant.post("/administratie/2/verkoop",
+                          data={"klant_id": str(klant_id),
+                                "factuurdatum": "2026-08-01"},
+                          follow_redirects=False)
+    assert antwoord.status_code == 303
+
+    conn = maak_verbinding(str(db))
+    facturen = lees_verkoopfacturen(conn, 2)
+    conn.close()
+    assert len(facturen) == 1 and facturen[0]["status"] == "concept"
+
+
+# --- csrf ---------------------------------------------------------------
+
+def test_zonder_csrf_teken_gebeurt_er_niets(opzet):
+    _app, db, eigenaar, _klant = opzet
+    upload_ubl(eigenaar, 1)
+
+    # Rechtstreeks posten zonder het teken: dat is precies wat een andere
+    # website zou doen met de cookie van de browser.
+    rauw = TestClient(eigenaar.app)
+    rauw.cookies.update(eigenaar.cookies)
+    antwoord = rauw.post("/administratie/1/factuur/1/goedkeuren",
+                         follow_redirects=False)
+    assert antwoord.status_code == 404
+
+    conn = maak_verbinding(str(db))
+    factuur = lees_factuur(conn, 1)
+    conn.close()
+    assert factuur["goedgekeurd_op"] is None
+
+
+def test_een_verkeerd_csrf_teken_telt_ook_niet(opzet):
+    _app, db, eigenaar, _klant = opzet
+    upload_ubl(eigenaar, 1)
+
+    rauw = TestClient(eigenaar.app)
+    rauw.cookies.update(eigenaar.cookies)
+    antwoord = rauw.post("/administratie/1/factuur/1/goedkeuren",
+                         data={"csrf": "het-teken-van-iemand-anders"},
+                         follow_redirects=False)
+    assert antwoord.status_code == 404
+
+    conn = maak_verbinding(str(db))
+    assert lees_factuur(conn, 1)["goedgekeurd_op"] is None
+    conn.close()
+
+
+def test_elk_formulier_heeft_het_teken(opzet):
+    _app, _db, eigenaar, _klant = opzet
+    upload_ubl(eigenaar, 1)
+
+    for pad in ("/administratie/1", "/administratie/1/upload",
+                "/administratie/1/factuur/1", "/administratie/1/verkoop",
+                "/administratie/1/klanten", "/administratie/1/bank",
+                "/administratie/1/instellingen"):
+        pagina = eigenaar.get(pad).text
+        assert pagina.count("<form") == pagina.count('name="csrf"'), pad
+
+
+def test_ook_het_inlogformulier_heeft_een_teken(opzet):
+    app, _db, _eigenaar, _klant = opzet
+    vreemde = TestClient(app)
+    pagina = vreemde.get("/inloggen")
+    assert 'name="csrf"' in pagina.text
+    assert "aanmeldteken" in pagina.cookies
+
+    # Zonder dat teken wordt er niet ingelogd, ook niet met het juiste
+    # wachtwoord.
+    schoon = TestClient(app)
+    antwoord = schoon.post(
+        "/inloggen",
+        data={"email": "eigenaar@test.nl", "wachtwoord": TESTWACHTWOORD},
+        follow_redirects=False,
+    )
+    assert antwoord.status_code == 303
+    assert antwoord.headers["location"].startswith("/inloggen")
+    assert "sessie" not in schoon.cookies
+
+
+# --- inloggen via het scherm --------------------------------------------
+
+def inlogpoging(client, email, wachtwoord):
+    teken = client.get("/inloggen").cookies["aanmeldteken"]
+    return client.post(
+        "/inloggen",
+        data={"email": email, "wachtwoord": wachtwoord, "csrf": teken},
+        follow_redirects=False,
+    )
+
+
+def test_de_rem_werkt_ook_via_het_scherm(opzet):
+    app, _db, _eigenaar, _klant = opzet
+    vreemde = TestClient(app)
+
+    for _ in range(MAX_PER_ACCOUNT):
+        antwoord = inlogpoging(vreemde, "eigenaar@test.nl", "verkeerd-1234")
+        assert INLOG_MISLUKT in unquote(antwoord.headers["location"])
+
+    # Nu ook met het goede wachtwoord niet meer.
+    antwoord = inlogpoging(vreemde, "eigenaar@test.nl", TESTWACHTWOORD)
+    assert "sessie" not in vreemde.cookies
+    assert TE_VAAK in unquote(antwoord.headers["location"])
+
+
+def test_na_inloggen_kom_je_op_de_pagina_die_je_wilde(opzet):
+    app, _db, _eigenaar, _klant = opzet
+    vreemde = TestClient(app)
+
+    geweigerd = vreemde.get("/administratie/1/verkoop", follow_redirects=False)
+    terug = geweigerd.headers["location"].split("terug=")[1]
+
+    teken = vreemde.get("/inloggen").cookies["aanmeldteken"]
+    antwoord = vreemde.post(
+        "/inloggen",
+        data={"email": "eigenaar@test.nl", "wachtwoord": TESTWACHTWOORD,
+              "csrf": teken, "terug": terug},
+        follow_redirects=False,
+    )
+    assert antwoord.headers["location"] == "/administratie/1/verkoop"
+
+
+def test_de_klant_belandt_op_zijn_eigen_administratie(opzet):
+    _app, _db, _eigenaar, klant = opzet
+    antwoord = klant.get("/", follow_redirects=False)
+    assert antwoord.status_code == 303
+    assert antwoord.headers["location"] == "/administratie/2"
+
+
+# --- audit trail --------------------------------------------------------
+
+def test_de_audit_trail_noemt_de_echte_gebruiker(opzet):
+    _app, db, eigenaar, klant = opzet
+    upload_ubl(klant, 2)
+    eigenaar.post("/administratie/2/factuur/1/opslaan",
+                  data={"rekening": "4100"}, follow_redirects=False)
+
+    conn = maak_verbinding(str(db))
+    regels = lees_audit_trail(conn, 1)  # de audit trail van factuur 1
+    conn.close()
+
+    wie = {regel["door"] for regel in regels}
+    assert "klant@test.nl" in wie
+    assert "eigenaar@test.nl" in wie
+    assert "eigenaar" not in wie  # de oude vaste waarde
+
+
+def test_elke_inlogpoging_wordt_vastgelegd(opzet):
+    app, db, _eigenaar, _klant = opzet
+    vreemde = TestClient(app)
+    inlogpoging(vreemde, "eigenaar@test.nl", "verkeerd-1234")
+    inlogpoging(vreemde, "eigenaar@test.nl", TESTWACHTWOORD)
+
+    conn = maak_verbinding(str(db))
+    regels = lees_toegang_log(conn)
+    conn.close()
+
+    pogingen = [r for r in regels if r["soort"] == "inlog"]
+    assert any(r["gelukt"] == 0 and r["email"] == "eigenaar@test.nl"
+               for r in pogingen)
+    assert any(r["gelukt"] == 1 and r["email"] == "eigenaar@test.nl"
+               for r in pogingen)
+    assert all(r["tijdstip"] for r in pogingen)
+    # Het wachtwoord staat er nergens in.
+    assert TESTWACHTWOORD not in str(regels)
+
+
+def test_uitloggen_staat_ook_in_het_logboek(opzet):
+    _app, db, eigenaar, _klant = opzet
+    eigenaar.post("/uitloggen", follow_redirects=False)
+
+    conn = maak_verbinding(str(db))
+    soorten = [regel["soort"] for regel in lees_toegang_log(conn)]
+    conn.close()
+    assert "uitgelogd" in soorten
+```
+
 ## `boekhouding/pytest.ini`
 
 ```ini
@@ -20091,6 +21899,10 @@ jinja2>=3.1
 python-multipart>=0.0.9
 uvicorn>=0.30
 httpx>=0.27   # alleen voor de tests: FastAPI TestClient gebruikt hem
+
+# Wachtwoorden (module 9). Bcrypt is met opzet traag, zodat wachtwoorden
+# raden niet loont.
+bcrypt>=4
 ```
 
 ## `boekhouding/.gitignore`

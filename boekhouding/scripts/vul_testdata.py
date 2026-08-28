@@ -163,10 +163,15 @@ def main() -> int:
                   f"{' — ' + redenen[0] if redenen else ''}")
 
     facturen = lees_facturen(conn, administratie_id)
+    accounts = conn.execute("SELECT count(*) FROM gebruikers").fetchone()[0]
     conn.close()
 
     review = sum(1 for f in facturen if f["status"] == "review_nodig")
     print(f"\n{len(facturen)} facturen in de administratie, {review} wachten op je.")
+    if accounts == 0:
+        print("\nEr is nog geen account om mee in te loggen. Maak er een:")
+        print('  python scripts/maak_eigenaar.py --email jij@example.nl '
+              '--naam "Jouw naam"')
     print("Start nu de server:  python scripts/start_webinterface.py")
     return 0
 

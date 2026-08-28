@@ -13,10 +13,13 @@ Gouden regels die hier gelden:
 import json
 import sqlite3
 import tempfile
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from decimal import Decimal
 from pathlib import Path
-from typing import Any, Optional
+from typing import TYPE_CHECKING, Any, Optional
+
+if TYPE_CHECKING:  # alleen voor de typeaanduidingen; geen kringverwijzing
+    from .gebruikers import Gebruiker
 
 from .validatie import valideer_factuur
 from .models import ValidatieResultaat
@@ -56,6 +59,18 @@ def _als_tekst(waarde: Any) -> Optional[str]:
     return json.dumps(waarde, ensure_ascii=False, default=str)
 
 
+class Verbinding(sqlite3.Connection):
+    """Een gewone sqlite-verbinding met één extra: wie eraan werkt.
+
+    Een kale sqlite3.Connection laat niet toe dat je er zelf iets op
+    zet. Deze subklasse wel, en daar hangt zet_gebruiker de naam aan
+    van degene die is ingelogd, zodat elke audit-regel die via deze
+    verbinding wordt geschreven de echte gebruiker krijgt.
+    """
+
+    gebruiker: Optional[str] = None
+
+
 def maak_verbinding(pad: str) -> sqlite3.Connection:
     """Open de databaseverbinding en zet foreign keys aan.
 
@@ -64,7 +79,7 @@ def maak_verbinding(pad: str) -> sqlite3.Connection:
     worden opgeslagen. Gebruik daarom altijd deze functie in plaats
     van sqlite3.connect rechtstreeks.
     """
-    conn = sqlite3.connect(pad)
+    conn = sqlite3.connect(pad, factory=Verbinding)
     conn.execute("PRAGMA foreign_keys = ON")
     return conn
 
@@ -84,6 +99,62 @@ def _voeg_kolom_toe(
         return False
     conn.execute(f"ALTER TABLE {tabel} ADD COLUMN {kolom} {definitie}")
     return True
+
+
+def zet_gebruiker(conn: sqlite3.Connection, door: Optional[str]) -> None:
+    """Leg vast wie er via deze verbinding werkt.
+
+    De webinterface roept dit aan zodra bekend is wie er is ingelogd.
+    Elke audit-regel die daarna via deze verbinding wordt geschreven,
+    krijgt die naam — zonder dat elke functie er een parameter voor
+    hoeft te hebben.
+    """
+    if isinstance(conn, Verbinding):
+        conn.gebruiker = door or None
+
+
+def huidige_gebruiker(conn: sqlite3.Connection) -> str:
+    """Wie werkt er via deze verbinding? 'systeem' als niemand het zei."""
+    return getattr(conn, "gebruiker", None) or "systeem"
+
+
+def _audit(
+    conn: sqlite3.Connection,
+    administratie_id: int,
+    tabel: str,
+    record_id: int,
+    actie: str,
+    veld: Optional[str] = None,
+    oude_waarde: Any = None,
+    nieuwe_waarde: Any = None,
+    door: Optional[str] = None,
+    tijdstip: Optional[str] = None,
+) -> None:
+    """Schrijf één regel in de audit trail.
+
+    Alle audit-regels lopen hierlangs, zodat er maar één plek is waar de
+    kolommen worden ingevuld — en zodat "wie deed het" nooit vergeten kan
+    worden.
+
+    Wie dat is, hoeft niet door twintig functies heen te worden
+    doorgegeven. De webinterface zet het één keer op de verbinding
+    (`zet_gebruiker`), en een verbinding is precies één verzoek van
+    precies één gebruiker. Staat er niets, dan komt er "systeem" te
+    staan: dat is eerlijker dan een naam verzinnen.
+    """
+    conn.execute(
+        """
+        INSERT INTO audit_log (
+            administratie_id, tabel, record_id, actie,
+            veld, oude_waarde, nieuwe_waarde, door, tijdstip
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            administratie_id, tabel, record_id, actie, veld,
+            _als_tekst(oude_waarde), _als_tekst(nieuwe_waarde),
+            door or huidige_gebruiker(conn), tijdstip or _nu(),
+        ),
+    )
 
 
 def maak_tabellen(conn: sqlite3.Connection) -> None:
@@ -192,6 +263,10 @@ def maak_tabellen(conn: sqlite3.Connection) -> None:
             veld             TEXT,
             oude_waarde      TEXT,
             nieuwe_waarde    TEXT,
+            -- Wie de handeling deed. 'systeem' als er geen mens aan te
+            -- pas kwam (een import bijvoorbeeld); anders het e-mailadres
+            -- van de ingelogde gebruiker.
+            door             TEXT NOT NULL DEFAULT 'systeem',
             tijdstip         TEXT NOT NULL
         );
         """
@@ -221,10 +296,12 @@ def maak_tabellen(conn: sqlite3.Connection) -> None:
     _voeg_kolom_toe(conn, "facturen", "rekening", "TEXT")
     _voeg_kolom_toe(conn, "facturen", "goedgekeurd_op", "TEXT")
     _voeg_kolom_toe(conn, "facturen", "goedgekeurd_door", "TEXT")
+    _voeg_kolom_toe(conn, "audit_log", "door", "TEXT NOT NULL DEFAULT 'systeem'")
 
     conn.commit()
     _bank_tabellen(conn)
     _verkoop_tabellen(conn)
+    _toegang_tabellen(conn)
 
 
 def maak_administratie(
@@ -336,28 +413,22 @@ def sla_factuur_op(
     factuur_id = cursor.lastrowid
 
     for veld, waarde in velden.items():
-        conn.execute(
-            """
-            INSERT INTO audit_log (
-                administratie_id, tabel, record_id, actie,
-                veld, oude_waarde, nieuwe_waarde, tijdstip
-            ) VALUES (?, 'facturen', ?, 'aangemaakt', ?, NULL, ?, ?)
-            """,
-            (administratie_id, factuur_id, veld, waarde, tijd),
+        _audit(
+            conn, administratie_id, 'facturen', factuur_id, 'aangemaakt',
+            veld=veld,
+            nieuwe_waarde=waarde,
+            tijdstip=tijd,
         )
 
     # De koppeling naar het originele document is ook data en krijgt
     # dus een eigen auditregel — alleen als er echt een document is,
     # zodat een factuur zonder bron geen lege regel oplevert.
     if document_id is not None:
-        conn.execute(
-            """
-            INSERT INTO audit_log (
-                administratie_id, tabel, record_id, actie,
-                veld, oude_waarde, nieuwe_waarde, tijdstip
-            ) VALUES (?, 'facturen', ?, 'aangemaakt', 'document_id', NULL, ?, ?)
-            """,
-            (administratie_id, factuur_id, str(document_id), tijd),
+        _audit(
+            conn, administratie_id, 'facturen', factuur_id, 'aangemaakt',
+            veld='document_id',
+            nieuwe_waarde=str(document_id),
+            tijdstip=tijd,
         )
 
     conn.commit()
@@ -393,14 +464,12 @@ def wijzig_factuur(
     nieuwe_velden = {v: huidig[v] for v in FACTUUR_VELDEN}
     for veld, nieuwe_waarde in wijzigingen.items():
         nieuwe_tekst = _als_tekst(nieuwe_waarde)
-        conn.execute(
-            """
-            INSERT INTO audit_log (
-                administratie_id, tabel, record_id, actie,
-                veld, oude_waarde, nieuwe_waarde, tijdstip
-            ) VALUES (?, 'facturen', ?, 'gewijzigd', ?, ?, ?, ?)
-            """,
-            (huidig["administratie_id"], factuur_id, veld, huidig[veld], nieuwe_tekst, tijd),
+        _audit(
+            conn, huidig["administratie_id"], 'facturen', factuur_id, 'gewijzigd',
+            veld=veld,
+            oude_waarde=huidig[veld],
+            nieuwe_waarde=nieuwe_tekst,
+            tijdstip=tijd,
         )
         nieuwe_velden[veld] = nieuwe_tekst
 
@@ -586,14 +655,11 @@ def bewaar_document(
         ("originele_bestandsnaam", bron.name),
         ("opslagpad", str(doel)),
     ):
-        conn.execute(
-            """
-            INSERT INTO audit_log (
-                administratie_id, tabel, record_id, actie,
-                veld, oude_waarde, nieuwe_waarde, tijdstip
-            ) VALUES (?, 'documenten', ?, 'aangemaakt', ?, NULL, ?, ?)
-            """,
-            (administratie_id, document_id, veld, waarde, tijd),
+        _audit(
+            conn, administratie_id, 'documenten', document_id, 'aangemaakt',
+            veld=veld,
+            nieuwe_waarde=waarde,
+            tijdstip=tijd,
         )
     conn.commit()
 
@@ -658,14 +724,11 @@ def sla_extractie_op(
         ("status", resultaat.status),
         ("document_id", None if document_id is None else str(document_id)),
     ):
-        conn.execute(
-            """
-            INSERT INTO audit_log (
-                administratie_id, tabel, record_id, actie,
-                veld, oude_waarde, nieuwe_waarde, tijdstip
-            ) VALUES (?, 'extracties', ?, 'aangemaakt', ?, NULL, ?, ?)
-            """,
-            (administratie_id, extractie_id, veld, waarde, tijd),
+        _audit(
+            conn, administratie_id, 'extracties', extractie_id, 'aangemaakt',
+            veld=veld,
+            nieuwe_waarde=waarde,
+            tijdstip=tijd,
         )
     conn.commit()
     return extractie_id
@@ -745,14 +808,11 @@ def keur_factuur_goed(
         (tijd, door, tijd, factuur_id),
     )
     for veld, waarde in (("goedgekeurd_op", tijd), ("goedgekeurd_door", door)):
-        conn.execute(
-            """
-            INSERT INTO audit_log (
-                administratie_id, tabel, record_id, actie,
-                veld, oude_waarde, nieuwe_waarde, tijdstip
-            ) VALUES (?, 'facturen', ?, 'gewijzigd', ?, NULL, ?, ?)
-            """,
-            (factuur["administratie_id"], factuur_id, veld, waarde, tijd),
+        _audit(
+            conn, factuur["administratie_id"], 'facturen', factuur_id, 'gewijzigd',
+            veld=veld,
+            nieuwe_waarde=waarde,
+            tijdstip=tijd,
         )
     conn.commit()
     return True, []
@@ -837,14 +897,12 @@ def kies_rekening(
         "UPDATE facturen SET rekening = ?, gewijzigd_op = ? WHERE id = ?",
         (code, tijd, factuur_id),
     )
-    conn.execute(
-        """
-        INSERT INTO audit_log (
-            administratie_id, tabel, record_id, actie,
-            veld, oude_waarde, nieuwe_waarde, tijdstip
-        ) VALUES (?, 'facturen', ?, 'gewijzigd', 'rekening', ?, ?, ?)
-        """,
-        (factuur["administratie_id"], factuur_id, factuur["rekening"], code, tijd),
+    _audit(
+        conn, factuur["administratie_id"], 'facturen', factuur_id, 'gewijzigd',
+        veld='rekening',
+        oude_waarde=factuur["rekening"],
+        nieuwe_waarde=code,
+        tijdstip=tijd,
     )
     conn.commit()
     return True, []
@@ -918,16 +976,9 @@ def sla_boeking_op(
             ),
         )
 
-    conn.execute(
-        """
-        INSERT INTO audit_log (
-            administratie_id, tabel, record_id, actie,
-            veld, oude_waarde, nieuwe_waarde, tijdstip
-        ) VALUES (?, 'boekingen', ?, 'aangemaakt', NULL, NULL, ?, ?)
-        """,
-        (
-            administratie_id, boeking_id,
-            json.dumps(
+    _audit(
+        conn, administratie_id, 'boekingen', boeking_id, 'aangemaakt',
+        nieuwe_waarde=json.dumps(
                 {
                     "boekdatum": str(voorstel.boekdatum),
                     "omschrijving": voorstel.omschrijving,
@@ -944,8 +995,8 @@ def sla_boeking_op(
                 },
                 ensure_ascii=False,
             ),
-            tijd,
-        ),
+        tijdstip=tijd,
+        door=door,
     )
     conn.commit()
     return boeking_id, []
@@ -1218,16 +1269,9 @@ def importeer_bankafschrift(
             ),
         )
         samenvatting["nieuw"] += 1
-        conn.execute(
-            """
-            INSERT INTO audit_log (
-                administratie_id, tabel, record_id, actie,
-                veld, oude_waarde, nieuwe_waarde, tijdstip
-            ) VALUES (?, 'banktransacties', ?, 'aangemaakt', NULL, NULL, ?, ?)
-            """,
-            (
-                administratie_id, regel.lastrowid,
-                json.dumps(
+        _audit(
+            conn, administratie_id, 'banktransacties', regel.lastrowid, 'aangemaakt',
+            nieuwe_waarde=json.dumps(
                     {
                         "boekdatum": str(transactie.boekdatum),
                         "bedrag": str(transactie.bedrag),
@@ -1237,8 +1281,8 @@ def importeer_bankafschrift(
                     },
                     ensure_ascii=False,
                 ),
-                tijd,
-            ),
+            tijdstip=tijd,
+            door=door,
         )
 
     conn.commit()
@@ -1490,15 +1534,12 @@ def koppel_transactie(
         """,
         (factuur_id, boeking_id, tijd, door, transactie_id),
     )
-    conn.execute(
-        """
-        INSERT INTO audit_log (
-            administratie_id, tabel, record_id, actie,
-            veld, oude_waarde, nieuwe_waarde, tijdstip
-        ) VALUES (?, 'banktransacties', ?, 'gewijzigd', ?, NULL, ?, ?)
-        """,
-        (transactie["administratie_id"], transactie_id, kolom,
-         str(factuur_id), tijd),
+    _audit(
+        conn, transactie["administratie_id"], 'banktransacties', transactie_id, 'gewijzigd',
+        veld=kolom,
+        nieuwe_waarde=str(factuur_id),
+        tijdstip=tijd,
+        door=door,
     )
     conn.commit()
     return boeking_id, []
@@ -1644,14 +1685,12 @@ def wijzig_administratie(
             f"UPDATE administraties SET {veld} = ? WHERE id = ?",
             (nieuw, administratie_id),
         )
-        conn.execute(
-            """
-            INSERT INTO audit_log (
-                administratie_id, tabel, record_id, actie,
-                veld, oude_waarde, nieuwe_waarde, tijdstip
-            ) VALUES (?, 'administraties', ?, 'gewijzigd', ?, ?, ?, ?)
-            """,
-            (administratie_id, administratie_id, veld, huidig.get(veld), nieuw, tijd),
+        _audit(
+            conn, administratie_id, 'administraties', administratie_id, 'gewijzigd',
+            veld=veld,
+            oude_waarde=huidig.get(veld),
+            nieuwe_waarde=nieuw,
+            tijdstip=tijd,
         )
     conn.commit()
 
@@ -1681,15 +1720,10 @@ def maak_klant(
         (administratie_id, *[waarden[v] for v in KLANT_VELDEN], tijd, tijd),
     )
     klant_id = cursor.lastrowid
-    conn.execute(
-        """
-        INSERT INTO audit_log (
-            administratie_id, tabel, record_id, actie,
-            veld, oude_waarde, nieuwe_waarde, tijdstip
-        ) VALUES (?, 'klanten', ?, 'aangemaakt', NULL, NULL, ?, ?)
-        """,
-        (administratie_id, klant_id,
-         json.dumps(waarden, ensure_ascii=False), tijd),
+    _audit(
+        conn, administratie_id, 'klanten', klant_id, 'aangemaakt',
+        nieuwe_waarde=json.dumps(waarden, ensure_ascii=False),
+        tijdstip=tijd,
     )
     conn.commit()
     return klant_id
@@ -1717,15 +1751,12 @@ def wijzig_klant(
             f"UPDATE klanten SET {veld} = ?, gewijzigd_op = ? WHERE id = ?",
             (nieuw, tijd, klant_id),
         )
-        conn.execute(
-            """
-            INSERT INTO audit_log (
-                administratie_id, tabel, record_id, actie,
-                veld, oude_waarde, nieuwe_waarde, tijdstip
-            ) VALUES (?, 'klanten', ?, 'gewijzigd', ?, ?, ?, ?)
-            """,
-            (huidig["administratie_id"], klant_id, veld,
-             _als_tekst(huidig.get(veld)), nieuw, tijd),
+        _audit(
+            conn, huidig["administratie_id"], 'klanten', klant_id, 'gewijzigd',
+            veld=veld,
+            oude_waarde=_als_tekst(huidig.get(veld)),
+            nieuwe_waarde=nieuw,
+            tijdstip=tijd,
         )
     conn.commit()
 
@@ -1787,16 +1818,11 @@ def maak_verkoopfactuur(
         (administratie_id, klant_id, factuurdatum, verval, termijn, tijd, tijd),
     )
     factuur_id = cursor.lastrowid
-    conn.execute(
-        """
-        INSERT INTO audit_log (
-            administratie_id, tabel, record_id, actie,
-            veld, oude_waarde, nieuwe_waarde, tijdstip
-        ) VALUES (?, 'verkoopfacturen', ?, 'aangemaakt', NULL, NULL, ?, ?)
-        """,
-        (administratie_id, factuur_id,
-         json.dumps({"klant_id": klant_id, "factuurdatum": factuurdatum},
-                    ensure_ascii=False), tijd),
+    _audit(
+        conn, administratie_id, 'verkoopfacturen', factuur_id, 'aangemaakt',
+        nieuwe_waarde=json.dumps({"klant_id": klant_id, "factuurdatum": factuurdatum},
+                    ensure_ascii=False),
+        tijdstip=tijd,
     )
     conn.commit()
     return factuur_id
@@ -1901,15 +1927,12 @@ def wijzig_verkoopfactuur(
             f"UPDATE verkoopfacturen SET {veld} = ?, gewijzigd_op = ? WHERE id = ?",
             (nieuw, tijd, verkoopfactuur_id),
         )
-        conn.execute(
-            """
-            INSERT INTO audit_log (
-                administratie_id, tabel, record_id, actie,
-                veld, oude_waarde, nieuwe_waarde, tijdstip
-            ) VALUES (?, 'verkoopfacturen', ?, 'gewijzigd', ?, ?, ?, ?)
-            """,
-            (factuur["administratie_id"], verkoopfactuur_id, veld,
-             _als_tekst(factuur.get(veld)), nieuw, tijd),
+        _audit(
+            conn, factuur["administratie_id"], 'verkoopfacturen', verkoopfactuur_id, 'gewijzigd',
+            veld=veld,
+            oude_waarde=_als_tekst(factuur.get(veld)),
+            nieuwe_waarde=nieuw,
+            tijdstip=tijd,
         )
 
     # De vervaldatum volgt uit de factuurdatum en de termijn; die wordt
@@ -1970,20 +1993,13 @@ def zet_verkoopregels(
                 str(regel.bedrag_excl), str(regel.btw_bedrag),
             ),
         )
-    conn.execute(
-        """
-        INSERT INTO audit_log (
-            administratie_id, tabel, record_id, actie,
-            veld, oude_waarde, nieuwe_waarde, tijdstip
-        ) VALUES (?, 'verkoopfacturen', ?, 'gewijzigd', 'regels', ?, ?, ?)
-        """,
-        (
-            factuur["administratie_id"], verkoopfactuur_id,
-            json.dumps([r.model_dump(mode="json") for r in factuur["regels"]],
+    _audit(
+        conn, factuur["administratie_id"], 'verkoopfacturen', verkoopfactuur_id, 'gewijzigd',
+        veld='regels',
+        oude_waarde=json.dumps([r.model_dump(mode="json") for r in factuur["regels"]],
                        ensure_ascii=False),
-            json.dumps(regels, ensure_ascii=False, default=str),
-            tijd,
-        ),
+        nieuwe_waarde=json.dumps(regels, ensure_ascii=False, default=str),
+        tijdstip=tijd,
     )
     conn.commit()
     return True, []
@@ -2007,15 +2023,12 @@ def verwijder_verkoopfactuur(
         (verkoopfactuur_id,),
     )
     conn.execute("DELETE FROM verkoopfacturen WHERE id = ?", (verkoopfactuur_id,))
-    conn.execute(
-        """
-        INSERT INTO audit_log (
-            administratie_id, tabel, record_id, actie,
-            veld, oude_waarde, nieuwe_waarde, tijdstip
-        ) VALUES (?, 'verkoopfacturen', ?, 'gewijzigd', 'status', 'concept',
-                  'verwijderd', ?)
-        """,
-        (factuur["administratie_id"], verkoopfactuur_id, _nu()),
+    _audit(
+        conn, factuur["administratie_id"], 'verkoopfacturen', verkoopfactuur_id, 'gewijzigd',
+        veld='status',
+        oude_waarde='concept',
+        nieuwe_waarde='verwijderd',
+        tijdstip=_nu(),
     )
     conn.commit()
     return True, []
@@ -2151,15 +2164,13 @@ def maak_definitief(
             "UPDATE verkoopfacturen SET document_id = ? WHERE id = ?",
             (document_id, verkoopfactuur_id),
         )
-    conn.execute(
-        """
-        INSERT INTO audit_log (
-            administratie_id, tabel, record_id, actie,
-            veld, oude_waarde, nieuwe_waarde, tijdstip
-        ) VALUES (?, 'verkoopfacturen', ?, 'gewijzigd', 'status', 'concept', ?, ?)
-        """,
-        (factuur["administratie_id"], verkoopfactuur_id,
-         f"definitief {factuurnummer}", tijd),
+    _audit(
+        conn, factuur["administratie_id"], 'verkoopfacturen', verkoopfactuur_id, 'gewijzigd',
+        veld='status',
+        oude_waarde='concept',
+        nieuwe_waarde=f"definitief {factuurnummer}",
+        tijdstip=tijd,
+        door=door,
     )
     conn.commit()
     return factuurnummer, []
@@ -2218,3 +2229,366 @@ def maak_creditfactuur(
     ])
     conn.commit()
     return nieuw_id, []
+
+
+# --- gebruikers, sessies en toegang (module 9) --------------------------
+
+def _toegang_tabellen(conn: sqlite3.Connection) -> None:
+    """De tabellen van module 9; aangeroepen vanuit maak_tabellen."""
+    conn.executescript(
+        """
+        CREATE TABLE IF NOT EXISTS gebruikers (
+            id               INTEGER PRIMARY KEY,
+            email            TEXT NOT NULL UNIQUE,
+            naam             TEXT NOT NULL,
+            -- Alleen de bcrypt-hash. Het wachtwoord zelf staat nergens.
+            wachtwoord_hash  TEXT NOT NULL,
+            rol              TEXT NOT NULL
+                             CHECK (rol IN ('eigenaar', 'klant')),
+            actief           INTEGER NOT NULL DEFAULT 1,
+            aangemaakt_op    TEXT NOT NULL,
+            gewijzigd_op     TEXT NOT NULL
+        );
+
+        -- Welke klant bij welke administratie mag. De eigenaar staat hier
+        -- niet in: die mag overal bij.
+        CREATE TABLE IF NOT EXISTS gebruiker_administraties (
+            gebruiker_id     INTEGER NOT NULL REFERENCES gebruikers(id),
+            administratie_id INTEGER NOT NULL REFERENCES administraties(id),
+            aangemaakt_op    TEXT NOT NULL,
+            PRIMARY KEY (gebruiker_id, administratie_id)
+        );
+
+        CREATE TABLE IF NOT EXISTS sessies (
+            id               INTEGER PRIMARY KEY,
+            -- De hash van het sessietoken, niet het token zelf: wie de
+            -- database leest kan er niet mee inloggen.
+            token_hash       TEXT NOT NULL UNIQUE,
+            gebruiker_id     INTEGER NOT NULL REFERENCES gebruikers(id),
+            csrf_token       TEXT NOT NULL,
+            ip               TEXT,
+            aangemaakt_op    TEXT NOT NULL,
+            verloopt_op      TEXT NOT NULL,
+            ingetrokken_op   TEXT
+        );
+
+        -- Elke inlogpoging, gelukt of niet. Hierop rust de rem, en het is
+        -- meteen de audit trail van het inloggen zelf: de audit_log gaat
+        -- over een administratie, en een mislukte poging hoort bij geen
+        -- enkele administratie.
+        CREATE TABLE IF NOT EXISTS toegang_log (
+            id               INTEGER PRIMARY KEY,
+            soort            TEXT NOT NULL,
+            email            TEXT,
+            gebruiker_id     INTEGER REFERENCES gebruikers(id),
+            ip               TEXT,
+            gelukt           INTEGER NOT NULL DEFAULT 0,
+            tijdstip         TEXT NOT NULL
+        );
+
+        CREATE INDEX IF NOT EXISTS idx_toegang_log_email
+            ON toegang_log (email, tijdstip);
+        CREATE INDEX IF NOT EXISTS idx_toegang_log_ip
+            ON toegang_log (ip, tijdstip);
+        """
+    )
+    conn.commit()
+
+
+def _gebruiker_van_rij(
+    conn: sqlite3.Connection, rij: dict[str, Any]
+) -> "Gebruiker":
+    from .gebruikers import Gebruiker
+
+    administraties = [
+        r[0] for r in conn.execute(
+            "SELECT administratie_id FROM gebruiker_administraties "
+            "WHERE gebruiker_id = ? ORDER BY administratie_id",
+            (rij["id"],),
+        )
+    ]
+    return Gebruiker(
+        id=rij["id"], email=rij["email"], naam=rij["naam"], rol=rij["rol"],
+        actief=bool(rij["actief"]), administraties=administraties,
+    )
+
+
+def maak_gebruiker(
+    conn: sqlite3.Connection,
+    email: str,
+    naam: str,
+    wachtwoord: str,
+    rol: str = "klant",
+    administraties: Optional[list[int]] = None,
+    door: str = "systeem",
+) -> int:
+    """Maak een gebruiker aan; geeft het id terug.
+
+    Het wachtwoord wordt hier meteen gehasht en verder nergens bewaard —
+    ook niet in de audit trail. Daar staat alleen dát er een gebruiker
+    is aangemaakt, met welk e-mailadres en welke rol.
+    """
+    from .gebruikers import ROLLEN, hash_wachtwoord, normaliseer_email
+
+    if rol not in ROLLEN:
+        raise ValueError(f"onbekende rol '{rol}'; kies uit {', '.join(ROLLEN)}")
+    adres = normaliseer_email(email)
+    if not adres or "@" not in adres:
+        raise ValueError(f"'{email}' is geen e-mailadres")
+    if not (naam or "").strip():
+        raise ValueError("een gebruiker zonder naam bestaat niet")
+
+    tijd = _nu()
+    cursor = conn.execute(
+        """
+        INSERT INTO gebruikers (
+            email, naam, wachtwoord_hash, rol, actief, aangemaakt_op, gewijzigd_op
+        ) VALUES (?, ?, ?, ?, 1, ?, ?)
+        """,
+        (adres, naam.strip(), hash_wachtwoord(wachtwoord), rol, tijd, tijd),
+    )
+    gebruiker_id = cursor.lastrowid
+
+    for administratie_id in administraties or []:
+        conn.execute(
+            "INSERT OR IGNORE INTO gebruiker_administraties "
+            "(gebruiker_id, administratie_id, aangemaakt_op) VALUES (?, ?, ?)",
+            (gebruiker_id, administratie_id, tijd),
+        )
+        _audit(
+            conn, administratie_id, "gebruikers", gebruiker_id, "aangemaakt",
+            nieuwe_waarde=json.dumps(
+                {"email": adres, "naam": naam.strip(), "rol": rol},
+                ensure_ascii=False,
+            ),
+            door=door, tijdstip=tijd,
+        )
+
+    conn.execute(
+        "INSERT INTO toegang_log (soort, email, gebruiker_id, gelukt, tijdstip) "
+        "VALUES ('gebruiker_aangemaakt', ?, ?, 1, ?)",
+        (adres, gebruiker_id, tijd),
+    )
+    conn.commit()
+    return gebruiker_id
+
+
+def lees_gebruiker(
+    conn: sqlite3.Connection, gebruiker_id: int
+) -> Optional["Gebruiker"]:
+    cursor = conn.execute("SELECT * FROM gebruikers WHERE id = ?", (gebruiker_id,))
+    rij = cursor.fetchone()
+    if rij is None:
+        return None
+    kolommen = [k[0] for k in cursor.description]
+    return _gebruiker_van_rij(conn, dict(zip(kolommen, rij)))
+
+
+def lees_gebruikers(conn: sqlite3.Connection) -> list["Gebruiker"]:
+    cursor = conn.execute("SELECT * FROM gebruikers ORDER BY rol, email")
+    kolommen = [k[0] for k in cursor.description]
+    return [
+        _gebruiker_van_rij(conn, dict(zip(kolommen, rij)))
+        for rij in cursor.fetchall()
+    ]
+
+
+def koppel_administratie(
+    conn: sqlite3.Connection,
+    gebruiker_id: int,
+    administratie_id: int,
+    door: str = "systeem",
+) -> None:
+    """Geef een klant toegang tot een administratie."""
+    tijd = _nu()
+    conn.execute(
+        "INSERT OR IGNORE INTO gebruiker_administraties "
+        "(gebruiker_id, administratie_id, aangemaakt_op) VALUES (?, ?, ?)",
+        (gebruiker_id, administratie_id, tijd),
+    )
+    _audit(
+        conn, administratie_id, "gebruiker_administraties", gebruiker_id,
+        "aangemaakt", veld="toegang", nieuwe_waarde=str(administratie_id),
+        door=door, tijdstip=tijd,
+    )
+    conn.commit()
+
+
+def _tel_pogingen(
+    conn: sqlite3.Connection, kolom: str, waarde: str, vanaf: str
+) -> int:
+    rij = conn.execute(
+        f"SELECT count(*) FROM toegang_log WHERE soort = 'inlog' AND gelukt = 0 "
+        f"AND {kolom} = ? AND tijdstip >= ?",
+        (waarde, vanaf),
+    ).fetchone()
+    return rij[0]
+
+
+def _log_poging(
+    conn: sqlite3.Connection,
+    email: str,
+    ip: Optional[str],
+    gelukt: bool,
+    gebruiker_id: Optional[int] = None,
+    soort: str = "inlog",
+) -> None:
+    conn.execute(
+        "INSERT INTO toegang_log (soort, email, gebruiker_id, ip, gelukt, tijdstip) "
+        "VALUES (?, ?, ?, ?, ?, ?)",
+        (soort, email, gebruiker_id, ip, 1 if gelukt else 0, _nu()),
+    )
+    conn.commit()
+
+
+def te_veel_pogingen(
+    conn: sqlite3.Connection, email: str, ip: Optional[str]
+) -> bool:
+    """Zit dit account of dit IP-adres aan de rem?
+
+    Geteld wordt per account én per IP-adres. Per account, want anders
+    kan iemand rustig wachtwoorden proberen op één adres. Per IP, want
+    anders probeert iemand één wachtwoord op duizend adressen.
+    """
+    from .gebruikers import (
+        MAX_PER_ACCOUNT, MAX_PER_IP, VENSTER_MINUTEN, normaliseer_email, nu,
+    )
+
+    vanaf = (nu() - timedelta(minutes=VENSTER_MINUTEN)).isoformat(timespec="seconds")
+    if _tel_pogingen(conn, "email", normaliseer_email(email), vanaf) >= MAX_PER_ACCOUNT:
+        return True
+    if ip and _tel_pogingen(conn, "ip", ip, vanaf) >= MAX_PER_IP:
+        return True
+    return False
+
+
+def probeer_inloggen(
+    conn: sqlite3.Connection,
+    email: str,
+    wachtwoord: str,
+    ip: Optional[str] = None,
+) -> tuple[Optional[str], list[str]]:
+    """Log in en geef (sessietoken, redenen).
+
+    Bij elke mislukking dezelfde melding en hetzelfde werk: ook als het
+    e-mailadres niet bestaat wordt er een wachtwoord gecontroleerd, tegen
+    een vaste onbruikbare hash. Zou dat niet gebeuren, dan is een
+    bestaand account te herkennen aan hoe lang het antwoord duurt.
+    """
+    from .gebruikers import (
+        INLOG_MISLUKT, TE_VAAK, controleer_wachtwoord, csrf_token, hash_token,
+        hash_wachtwoord, nieuw_token, normaliseer_email, verlooptijd,
+    )
+
+    adres = normaliseer_email(email)
+    if te_veel_pogingen(conn, adres, ip):
+        _log_poging(conn, adres, ip, False, soort="inlog_geblokkeerd")
+        return None, [TE_VAAK]
+
+    cursor = conn.execute("SELECT * FROM gebruikers WHERE email = ?", (adres,))
+    rij = cursor.fetchone()
+    gegevens = None
+    if rij is not None:
+        gegevens = dict(zip([k[0] for k in cursor.description], rij))
+
+    # Altijd hetzelfde rekenwerk, ook bij een onbekend adres.
+    hash_waarde = gegevens["wachtwoord_hash"] if gegevens else _LEGE_HASH()
+    klopt = controleer_wachtwoord(wachtwoord, hash_waarde)
+
+    if gegevens is None or not klopt or not gegevens["actief"]:
+        _log_poging(
+            conn, adres, ip, False,
+            gebruiker_id=gegevens["id"] if gegevens else None,
+        )
+        return None, [INLOG_MISLUKT]
+
+    token = nieuw_token()
+    tijd = _nu()
+    conn.execute(
+        """
+        INSERT INTO sessies (
+            token_hash, gebruiker_id, csrf_token, ip, aangemaakt_op, verloopt_op
+        ) VALUES (?, ?, ?, ?, ?, ?)
+        """,
+        (
+            hash_token(token), gegevens["id"], csrf_token(), ip, tijd,
+            verlooptijd().isoformat(timespec="seconds"),
+        ),
+    )
+    _log_poging(conn, adres, ip, True, gebruiker_id=gegevens["id"])
+    conn.commit()
+    return token, []
+
+
+_LEGE_HASH_WAARDE: Optional[str] = None
+
+
+def _LEGE_HASH() -> str:
+    """Een hash die nooit klopt, om ook bij een onbekend adres te rekenen.
+
+    Hij wordt één keer gemaakt en daarna hergebruikt; hem elke keer
+    opnieuw maken zou juist tijd kosten en het verschil weer zichtbaar
+    maken.
+    """
+    global _LEGE_HASH_WAARDE
+    if _LEGE_HASH_WAARDE is None:
+        from .gebruikers import hash_wachtwoord
+
+        _LEGE_HASH_WAARDE = hash_wachtwoord("dit-wachtwoord-bestaat-niet")
+    return _LEGE_HASH_WAARDE
+
+
+def lees_sessie(
+    conn: sqlite3.Connection, token: Optional[str]
+) -> Optional[dict[str, Any]]:
+    """Zoek de sessie bij dit token, als hij nog geldig is."""
+    from .gebruikers import hash_token, is_verlopen
+
+    if not token:
+        return None
+    cursor = conn.execute(
+        "SELECT * FROM sessies WHERE token_hash = ?", (hash_token(token),)
+    )
+    rij = cursor.fetchone()
+    if rij is None:
+        return None
+    sessie = dict(zip([k[0] for k in cursor.description], rij))
+    if sessie["ingetrokken_op"] or is_verlopen(sessie["verloopt_op"]):
+        return None
+
+    gebruiker = lees_gebruiker(conn, sessie["gebruiker_id"])
+    if gebruiker is None or not gebruiker.actief:
+        return None
+    sessie["gebruiker"] = gebruiker
+    return sessie
+
+
+def trek_sessie_in(
+    conn: sqlite3.Connection, token: str, reden: str = "uitgelogd"
+) -> None:
+    """Beëindig een sessie. Uitloggen doet dit, en de eigenaar kan het ook."""
+    from .gebruikers import hash_token
+
+    tijd = _nu()
+    cursor = conn.execute(
+        "UPDATE sessies SET ingetrokken_op = ? WHERE token_hash = ? "
+        "AND ingetrokken_op IS NULL",
+        (tijd, hash_token(token)),
+    )
+    if cursor.rowcount:
+        conn.execute(
+            "INSERT INTO toegang_log (soort, gelukt, tijdstip) VALUES (?, 1, ?)",
+            (reden, tijd),
+        )
+    conn.commit()
+
+
+def lees_toegang_log(
+    conn: sqlite3.Connection, limiet: int = 100
+) -> list[dict[str, Any]]:
+    """De laatste inlogpogingen en sessiegebeurtenissen, nieuwste eerst."""
+    cursor = conn.execute(
+        "SELECT * FROM toegang_log ORDER BY id DESC LIMIT ?", (limiet,)
+    )
+    kolommen = [k[0] for k in cursor.description]
+    return [dict(zip(kolommen, rij)) for rij in cursor.fetchall()]

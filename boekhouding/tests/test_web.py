@@ -19,7 +19,7 @@ from boekhouding import (
     maak_verbinding,
 )
 from boekhouding.web import maak_app
-from conftest import maak_pdf
+from conftest import maak_ingelogde_client, maak_pdf
 from test_ai_extractie import NageaapteClient, NageaapteRespons, goede_extractie, veld
 
 VANDAAG = date(2026, 8, 27)
@@ -39,13 +39,19 @@ def werkmap(tmp_path):
 
 @pytest.fixture
 def app_en_client(werkmap):
-    """Een app met een nagemaakte AI-client die altijd hetzelfde teruggeeft."""
+    """Een app met een nagemaakte AI-client die altijd hetzelfde teruggeeft.
+
+    De client is ingelogd als eigenaar: sinds module 9 komt niemand
+    zonder sessie ergens binnen. Wat een klant wel en niet mag staat in
+    test_toegang.py.
+    """
     ai = client_met(goede_extractie())
+    db_pad = werkmap / "boekhouding.sqlite"
     app = maak_app(
-        str(werkmap / "boekhouding.sqlite"), str(werkmap / "opslag"),
-        ai_client=ai, vandaag=VANDAAG,
+        str(db_pad), str(werkmap / "opslag"), ai_client=ai, vandaag=VANDAAG,
     )
-    return app, TestClient(app), ai
+    web = maak_ingelogde_client(app, db_pad, "eigenaar@test.nl", rol="eigenaar")
+    return app, web, ai
 
 
 @pytest.fixture
@@ -210,7 +216,7 @@ def test_lage_zekerheid_wordt_gemarkeerd(werkmap):
         str(werkmap / "db.sqlite"), str(werkmap / "opslag"),
         ai_client=client_met(onzeker), vandaag=VANDAAG,
     )
-    web = TestClient(app)
+    web = maak_ingelogde_client(app, werkmap / "db.sqlite", "eigenaar@test.nl")
     upload(web, maak_pdf("Factuur 2026-0412"), "factuur.pdf")
 
     pagina = web.get("/administratie/1/factuur/1").text
@@ -338,7 +344,7 @@ def test_zonder_api_sleutel_valt_de_upload_niet_om(werkmap, monkeypatch):
         str(werkmap / "db.sqlite"), str(werkmap / "opslag"),
         ai_client=None, vandaag=VANDAAG,
     )
-    web = TestClient(app)
+    web = maak_ingelogde_client(app, werkmap / "db.sqlite", "eigenaar@test.nl")
     antwoord = upload(web, maak_pdf("Factuur 2026-0412"), "factuur.pdf")
 
     assert antwoord.status_code == 303  # er is wél een factuur aangemaakt
@@ -363,7 +369,7 @@ def twee_administraties(werkmap):
         str(db), str(werkmap / "opslag"),
         ai_client=client_met(goede_extractie()), vandaag=VANDAAG,
     )
-    web = TestClient(app)
+    web = maak_ingelogde_client(app, db, "eigenaar@test.nl")
 
     conn = maak_verbinding(str(db))
     maak_tabellen(conn)
@@ -499,7 +505,7 @@ def test_ook_bij_de_ai_route_geen_dubbele_redenen(werkmap):
         str(werkmap / "db.sqlite"), str(werkmap / "opslag"),
         ai_client=client_met(onzeker), vandaag=VANDAAG,
     )
-    web = TestClient(app)
+    web = maak_ingelogde_client(app, werkmap / "db.sqlite", "eigenaar@test.nl")
     upload(web, maak_pdf("Factuur 2026-0412"), "factuur.pdf")
 
     pagina = web.get("/administratie/1/factuur/1").text

@@ -45,8 +45,9 @@
       {% endfor %}
     </div>
     <p class="onder" style="color:var(--zacht);font-size:14px;margin-bottom:0">
-      Een factuur staat hier tot er een bijschrijving aan gekoppeld is. Dat
-      doe je op het <a href="/administratie/{{ administratie_id }}/bank">bankscherm</a>.
+      Een factuur staat hier tot er een bijschrijving aan gekoppeld is.
+      {% if eigenaar %}Dat doe je op het
+      <a href="/administratie/{{ administratie_id }}/bank">bankscherm</a>.{% endif %}
     </p>
   </div>
 {% endif %}
@@ -58,6 +59,7 @@
 
 {% if klanten %}
   <form class="kaart" method="post" action="/administratie/{{ administratie_id }}/verkoop">
+    <input type="hidden" name="csrf" value="{{ csrf }}">
     <h3 style="margin:0 0 10px;font-size:17px">Nieuwe factuur</h3>
     <div class="veld">
       <label for="klant_id">Klant</label>

@@ -6,13 +6,15 @@ geven. Er wordt hier niet gerekend, niet gevalideerd en niets bepaald
 over btw — dat zit allemaal in de modules eronder.
 """
 
+import contextvars
+import re
 import sqlite3
 from datetime import date
 from decimal import Decimal
 from pathlib import Path
 from typing import Any, Optional
 
-from fastapi import FastAPI, HTTPException, Request, UploadFile
+from fastapi import Depends, FastAPI, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
@@ -56,6 +58,13 @@ from ..database import (
     wijzig_factuur,
 )
 from ..database import EIGEN_GEGEVENS, KLANT_VELDEN
+from ..database import (
+    lees_sessie,
+    probeer_inloggen,
+    trek_sessie_in,
+    zet_gebruiker,
+)
+from ..gebruikers import csrf_token, gelijk
 from ..rekeningschema import rekeningschema_voor_jaar
 from ..ubl import te_groot
 from ..verwerking import verwerk_upload
@@ -82,6 +91,58 @@ MEDIATYPEN = {
     ".png": "image/png",
     ".xml": "application/xml",
 }
+
+
+# Wie er via dit verzoek werkt. Een contextvariabele hoort bij precies
+# één verzoek, dus elke databaseverbinding die daarbinnen wordt geopend
+# krijgt automatisch de juiste naam in de audit trail — zonder dat er
+# door twintig functies een parameter heen hoeft.
+HUIDIGE_GEBRUIKER: contextvars.ContextVar[Optional[str]] = contextvars.ContextVar(
+    "huidige_gebruiker", default=None
+)
+
+# Paden waar je zonder inloggen bij mag. Meer dan dit is er niet: er is
+# geen registratiepagina en geen "wachtwoord vergeten" — de eigenaar maakt
+# de accounts aan.
+OPEN_PADEN = ("/inloggen",)
+
+# Wat alleen de eigenaar mag. Een klant levert aan en kijkt mee; hij keurt
+# niets goed, maakt niets definitief en doet geen aangifte. De controle
+# staat hier, op één plek, en niet in de routes zelf.
+#
+# Het zijn stukjes van het pad, geen hele paden: zo valt ook
+# /administratie/1/btw/2026/3 en /administratie/1/bank/7/koppel eronder,
+# zonder dat elke variant apart moet worden opgeschreven.
+ALLEEN_EIGENAAR = frozenset({
+    "goedkeuren",    # een factuur goedkeuren
+    "definitief",    # een verkoopfactuur definitief maken
+    "crediteren",    # een definitieve factuur crediteren
+    "koppel",        # een banktransactie koppelen: dat is een boeking
+    "bank",          # bankafschriften inlezen en afletteren
+    "btw",           # de btw-aangifte
+})
+
+# Eén uitzondering die niet met een stukje pad te vangen is: het
+# reviewformulier van een inkoopfactuur opslaan hoort bij de eigenaar,
+# terwijl "opslaan" bij een verkoopfactuur juist iets is wat de klant mag
+# (hij mag een concept opstellen).
+ALLEEN_EIGENAAR_PADEN = (
+    re.compile(r"^/administratie/\d+/factuur/\d+/opslaan$"),
+)
+
+ADMINISTRATIE_IN_PAD = re.compile(r"^/administratie/(\d+)(?:/|$)")
+
+COOKIE = "sessie"
+COOKIE_CSRF = "aanmeldteken"
+
+
+class NaarInloggen(HTTPException):
+    """Niet ingelogd: stuur de bezoeker naar het inlogscherm."""
+
+    def __init__(self, terug: str = "/"):
+        super().__init__(
+            status_code=303, headers={"Location": f"/inloggen?terug={terug}"}
+        )
 
 
 class NietGevonden(HTTPException):
@@ -138,7 +199,67 @@ def maak_app(
     ai_client en vandaag zijn er om te kunnen testen zonder echte
     API-aanroepen en zonder afhankelijk te zijn van de klok.
     """
-    app = FastAPI(title="Boekhouding — review")
+    async def bewaak(request: Request) -> None:
+        """De enige toegangscontrole. Elke route loopt hierlangs.
+
+        Vier dingen, in deze volgorde:
+
+        1. **Ben je ingelogd?** Zo niet, dan naar het inlogscherm. Er is
+           geen pagina die zonder sessie iets van de administratie laat
+           zien.
+        2. **Klopt het formulier?** Bij elk POST-verzoek moet het
+           csrf-teken van deze sessie meekomen. Zonder dat teken kan een
+           andere website jouw browser niet namens jou iets laten
+           versturen.
+        3. **Mag je bij deze administratie?** De eigenaar mag overal bij,
+           een klant alleen bij de zijne. Zo niet: 404, nooit 403 — een
+           403 zou verklappen dat de administratie bestaat.
+        4. **Mag je dit doen?** Goedkeuren, definitief maken, crediteren
+           en koppelen zijn van de eigenaar. Ook hier 404.
+
+        Dat het hier staat en niet in de routes is het hele punt: een
+        nieuwe route kan de controle niet vergeten.
+        """
+        pad = request.url.path
+        if pad in OPEN_PADEN:
+            if request.method == "POST":
+                formulier = await request.form()
+                if not gelijk(
+                    str(formulier.get("csrf") or ""),
+                    request.cookies.get(COOKIE_CSRF),
+                ):
+                    raise NaarInloggen("/")
+            return
+
+        conn = maak_verbinding(app.state.db_pad)
+        try:
+            sessie = lees_sessie(conn, request.cookies.get(COOKIE))
+        finally:
+            conn.close()
+        if sessie is None:
+            raise NaarInloggen(pad)
+
+        gebruiker = sessie["gebruiker"]
+        request.state.gebruiker = gebruiker
+        request.state.csrf = sessie["csrf_token"]
+        HUIDIGE_GEBRUIKER.set(gebruiker.email)
+
+        if request.method == "POST":
+            formulier = await request.form()
+            if not gelijk(str(formulier.get("csrf") or ""), sessie["csrf_token"]):
+                raise NietGevonden("formulier")
+
+        treffer = ADMINISTRATIE_IN_PAD.match(pad)
+        if treffer and not gebruiker.mag_bij(int(treffer.group(1))):
+            raise NietGevonden("administratie")
+
+        if not gebruiker.is_eigenaar() and (
+            ALLEEN_EIGENAAR & set(pad.split("/"))
+            or any(patroon.match(pad) for patroon in ALLEEN_EIGENAAR_PADEN)
+        ):
+            raise NietGevonden("handeling")
+
+    app = FastAPI(title="Boekhouding — review", dependencies=[Depends(bewaak)])
     app.state.db_pad = db_pad
     app.state.opslagmap = opslagmap
     app.state.ai_client = ai_client
@@ -153,9 +274,23 @@ def maak_app(
     start.close()
 
     def verbinding() -> sqlite3.Connection:
-        return maak_verbinding(app.state.db_pad)
+        conn = maak_verbinding(app.state.db_pad)
+        # Wie er werkt staat in de contextvariabele van dit verzoek; elke
+        # audit-regel die zo meteen wordt geschreven krijgt die naam.
+        zet_gebruiker(conn, HUIDIGE_GEBRUIKER.get())
+        return conn
 
     def toon(request: Request, sjabloon: str, **gegevens) -> HTMLResponse:
+        # Elk sjabloon krijgt het csrf-teken en wie er is ingelogd, zodat
+        # een formulier het niet kan vergeten en een scherm knoppen kan
+        # verbergen die deze gebruiker toch niet mag.
+        gegevens.setdefault("csrf", getattr(request.state, "csrf", ""))
+        wie = getattr(request.state, "gebruiker", None)
+        gegevens.setdefault("gebruiker", wie)
+        # Knoppen die deze gebruiker toch niet mag, worden niet getoond.
+        # Dat is beleefdheid, geen beveiliging: de echte controle staat in
+        # bewaak() en geeft 404, ook als iemand het adres zelf intikt.
+        gegevens.setdefault("eigenaar", bool(wie) and wie.is_eigenaar())
         return SJABLONEN.TemplateResponse(
             request=request, name=sjabloon, context=gegevens
         )
@@ -181,14 +316,86 @@ def maak_app(
             raise NietGevonden("administratie")
         return rij
 
+    # --- inloggen en uitloggen -------------------------------------------
+
+    @app.get("/inloggen", response_class=HTMLResponse)
+    def inlogscherm(request: Request, terug: str = "/", melding: str = ""):
+        # Een teken in een cookie, hetzelfde teken in het formulier: zo kan
+        # een andere website dit formulier niet namens jou versturen.
+        teken = csrf_token()
+        antwoord = toon(
+            request, "inloggen.html", csrf=teken, terug=terug, melding=melding,
+            gebruiker=None,
+        )
+        antwoord.set_cookie(
+            COOKIE_CSRF, teken, httponly=True, samesite="lax", max_age=900
+        )
+        return antwoord
+
+    @app.post("/inloggen")
+    async def inloggen(request: Request):
+        formulier = await request.form()
+        terug = str(formulier.get("terug") or "/")
+        conn = maak_verbinding(app.state.db_pad)
+        try:
+            token, redenen = probeer_inloggen(
+                conn,
+                str(formulier.get("email") or ""),
+                str(formulier.get("wachtwoord") or ""),
+                request.client.host if request.client else None,
+            )
+        finally:
+            conn.close()
+
+        if token is None:
+            return RedirectResponse(
+                f"/inloggen?melding={redenen[0]}", status_code=303
+            )
+
+        antwoord = RedirectResponse(terug or "/", status_code=303)
+        # httponly: javascript komt er niet bij. samesite=lax: een andere
+        # site krijgt de cookie niet mee bij een POST. secure hoort erbij
+        # zodra dit achter https draait; lokaal op http zou de cookie dan
+        # nooit worden gezet.
+        antwoord.set_cookie(
+            COOKIE, token, httponly=True, samesite="lax", path="/"
+        )
+        antwoord.delete_cookie(COOKIE_CSRF)
+        return antwoord
+
+    @app.post("/uitloggen")
+    def uitloggen(request: Request):
+        token = request.cookies.get(COOKIE)
+        if token:
+            conn = verbinding()
+            try:
+                trek_sessie_in(conn, token)
+            finally:
+                conn.close()
+        antwoord = RedirectResponse("/inloggen?melding=Je bent uitgelogd.",
+                                    status_code=303)
+        antwoord.delete_cookie(COOKIE, path="/")
+        return antwoord
+
     # --- overzicht ------------------------------------------------------
 
     @app.get("/", response_class=HTMLResponse)
-    def start_pagina():
+    def start_pagina(request: Request):
+        gebruiker = request.state.gebruiker
         conn = verbinding()
-        eerste = conn.execute("SELECT id FROM administraties ORDER BY id").fetchone()
-        conn.close()
-        return RedirectResponse(f"/administratie/{eerste[0]}", status_code=303)
+        try:
+            rijen = [
+                rij[0] for rij in
+                conn.execute("SELECT id FROM administraties ORDER BY id")
+            ]
+        finally:
+            conn.close()
+        toegestaan = [nummer for nummer in rijen if gebruiker.mag_bij(nummer)]
+        if not toegestaan:
+            raise NietGevonden("administratie")
+        return RedirectResponse(
+            f"/administratie/{toegestaan[0]}", status_code=303
+        )
 
     @app.get("/administratie/{administratie_id}", response_class=HTMLResponse)
     def overzicht(request: Request, administratie_id: int):

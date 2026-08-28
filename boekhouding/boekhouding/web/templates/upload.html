@@ -6,6 +6,7 @@
 
 <form class="kaart" method="post" enctype="multipart/form-data"
       action="/administratie/{{ administratie_id }}/upload">
+      <input type="hidden" name="csrf" value="{{ csrf }}">
   <div class="veld">
     <label for="bestand">Kies een bestand of maak een foto</label>
     <input type="file" id="bestand" name="bestand" required

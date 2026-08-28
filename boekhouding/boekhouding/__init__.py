@@ -5,6 +5,9 @@ Module 2: PDF-tekstextractie en veilige bewaring van originelen.
 Module 3: AI-extractie van factuurgegevens (voorstel, geen boeking).
 Module 4: UBL / e-facturen rechtstreeks uitlezen (zonder AI).
 Module 6: grootboek (dubbel boekhouden) en btw-aangifte per kwartaal.
+Module 7: bankafschriften importeren en afletteren.
+Module 8: verkoopfacturen (uitgaande facturen).
+Module 9: gebruikersaccounts, rollen en toegang.
 
 AI stelt voor, code valideert, mens beslist (Gouden regel 1).
 """
@@ -152,6 +155,25 @@ from .database import (
     maak_definitief,
     maak_creditfactuur,
     openstaande_posten,
+    maak_gebruiker,
+    lees_gebruiker,
+    lees_gebruikers,
+    koppel_administratie,
+    te_veel_pogingen,
+    probeer_inloggen,
+    lees_sessie,
+    trek_sessie_in,
+    lees_toegang_log,
+    zet_gebruiker,
+    huidige_gebruiker,
+)
+from .gebruikers import (
+    ROLLEN,
+    Gebruiker,
+    controleer_wachtwoord,
+    csrf_token,
+    hash_wachtwoord,
+    normaliseer_email,
 )
 
 __all__ = [
@@ -281,4 +303,21 @@ __all__ = [
     "maak_definitief",
     "maak_creditfactuur",
     "openstaande_posten",
+    "ROLLEN",
+    "Gebruiker",
+    "maak_gebruiker",
+    "lees_gebruiker",
+    "lees_gebruikers",
+    "koppel_administratie",
+    "te_veel_pogingen",
+    "probeer_inloggen",
+    "lees_sessie",
+    "trek_sessie_in",
+    "lees_toegang_log",
+    "zet_gebruiker",
+    "huidige_gebruiker",
+    "controleer_wachtwoord",
+    "csrf_token",
+    "hash_wachtwoord",
+    "normaliseer_email",
 ]

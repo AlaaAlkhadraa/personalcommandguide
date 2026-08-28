@@ -1,8 +1,28 @@
-from datetime import date
+import os
+import re
 
-import pytest
+# Bcrypt is met opzet traag: dat is precies waarom het goed is tegen
+# wachtwoorden raden. Voor de tests zetten we het aantal rondes zo laag
+# mogelijk, anders duurt de suite minuten. Dit staat bovenaan omdat de
+# module de waarde bij het importeren leest.
+os.environ.setdefault("BOEKHOUDING_BCRYPT_RONDES", "4")
 
-from boekhouding import maak_verbinding, maak_tabellen, maak_administratie
+from datetime import date  # noqa: E402
+
+import pytest  # noqa: E402
+from fastapi.testclient import TestClient  # noqa: E402
+
+from boekhouding import (  # noqa: E402
+    maak_verbinding,
+    maak_tabellen,
+    maak_administratie,
+    maak_gebruiker,
+)
+from boekhouding.database import lees_sessie  # noqa: E402
+
+# Het wachtwoord dat elke testgebruiker krijgt. Tien tekens, want korter
+# accepteert hash_wachtwoord niet.
+TESTWACHTWOORD = "geheim-1234"
 
 # Vaste peildatum zodat de tests niet afhangen van de echte klok.
 VANDAAG = date(2026, 8, 26)
@@ -79,3 +99,71 @@ def conn():
 @pytest.fixture
 def administratie_id(conn):
     return maak_administratie(conn, "Testzaak", "eenmanszaak")
+
+
+# --- ingelogd testen ----------------------------------------------------
+
+class IngelogdeClient(TestClient):
+    """Een TestClient die het csrf-teken bij elk formulier meestuurt.
+
+    In de browser zit dat teken in een verborgen veld dat het sjabloon
+    invult; een test post rechtstreeks en zou het elke keer zelf moeten
+    meegeven. Dat gebeurt hier één keer, zodat de tests over boekhouden
+    blijven gaan en niet over formuliertechniek.
+    """
+
+    csrf = ""
+
+    def post(self, url, **rest):
+        if self.csrf:
+            gegevens = rest.get("data")
+            if gegevens is None:
+                gegevens = {}
+            elif isinstance(gegevens, dict):
+                gegevens = dict(gegevens)
+            else:  # een lijst met paren
+                gegevens = list(gegevens)
+            if isinstance(gegevens, dict):
+                gegevens.setdefault("csrf", self.csrf)
+            else:
+                gegevens.append(("csrf", self.csrf))
+            rest["data"] = gegevens
+        return super().post(url, **rest)
+
+
+def log_in(client, db_pad, email, wachtwoord=TESTWACHTWOORD):
+    """Log deze client in en onthoud het csrf-teken van de sessie."""
+    pagina = client.get("/inloggen")
+    teken = re.search(r'name="csrf" value="([^"]+)"', pagina.text).group(1)
+    antwoord = client.post(
+        "/inloggen",
+        data={"email": email, "wachtwoord": wachtwoord, "csrf": teken},
+        follow_redirects=False,
+    )
+    assert antwoord.status_code == 303, "inloggen mislukt in de test-opzet"
+    conn = maak_verbinding(str(db_pad))
+    try:
+        sessie = lees_sessie(conn, client.cookies.get("sessie"))
+    finally:
+        conn.close()
+    assert sessie is not None, "geen sessie na inloggen"
+    client.csrf = sessie["csrf_token"]
+    return client
+
+
+def maak_ingelogde_client(app, db_pad, email, rol="eigenaar",
+                          administraties=None, naam=None):
+    """Maak een gebruiker aan (als die er nog niet is) en log hem in."""
+    conn = maak_verbinding(str(db_pad))
+    try:
+        bestaat = conn.execute(
+            "SELECT 1 FROM gebruikers WHERE email = ?", (email.lower(),)
+        ).fetchone()
+        if bestaat is None:
+            maak_gebruiker(
+                conn, email, naam or email.split("@")[0], TESTWACHTWOORD,
+                rol=rol, administraties=administraties,
+            )
+    finally:
+        conn.close()
+    return log_in(IngelogdeClient(app), db_pad, email)

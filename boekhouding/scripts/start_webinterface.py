@@ -10,9 +10,13 @@ Wil je hem ook op je telefoon openen (zelfde wifi), start hem dan zo:
     python scripts/start_webinterface.py --netwerk
 
 Dan luistert hij op alle netwerkkaarten en print hij het adres dat je op
-je telefoon intypt. Fase 1 heeft geen login: iedereen op hetzelfde wifi
-kan er dan bij. Doe dit dus alleen op je eigen netwerk, nooit op wifi van
-een café of een hotel.
+je telefoon intypt. Inloggen is verplicht, dus wie het adres kent komt
+er nog niet in — maar doe dit toch alleen op je eigen netwerk, niet op de
+wifi van een café of een hotel.
+
+Nog geen account? Maak er eerst een:
+
+    python scripts/maak_eigenaar.py --email jij@example.nl --naam "Jouw naam"
 """
 
 import socket
@@ -24,6 +28,7 @@ sys.path.insert(0, str(BASIS))
 
 import uvicorn  # noqa: E402
 
+from boekhouding import maak_verbinding  # noqa: E402
 from boekhouding.web import maak_app  # noqa: E402
 
 GEGEVENS = BASIS / "gegevens"
@@ -53,6 +58,19 @@ def main() -> int:
 
     GEGEVENS.mkdir(exist_ok=True)
     app = maak_app(str(GEGEVENS / "boekhouding.sqlite"), str(GEGEVENS / "opslag"))
+    # Zonder account kom je nergens binnen; zeg dat meteen in plaats van
+    # de gebruiker naar een inlogscherm te sturen waar niets werkt.
+    conn = maak_verbinding(str(GEGEVENS / "boekhouding.sqlite"))
+    try:
+        accounts = conn.execute("SELECT count(*) FROM gebruikers").fetchone()[0]
+    finally:
+        conn.close()
+    if accounts == 0:
+        print("Er is nog geen account. Maak er eerst een:\n")
+        print('  python scripts/maak_eigenaar.py --email jij@example.nl '
+              '--naam "Jouw naam"\n')
+        return 1
+
     print(f"Database  : {GEGEVENS / 'boekhouding.sqlite'}")
     print(f"Originelen: {GEGEVENS / 'opslag'}")
     print(f"\nOp deze computer : http://127.0.0.1:{POORT}")
@@ -62,7 +80,7 @@ def main() -> int:
             print(f"Op je telefoon   : http://{ip}:{POORT}   (zelfde wifi)")
         else:
             print("Op je telefoon   : geen netwerkadres gevonden, zit je op wifi?")
-        print("\nLet op: geen login. Alleen doen op je eigen netwerk.")
+        print("\nLet op: alleen doen op je eigen netwerk.")
     else:
         print("Op je telefoon   : niet bereikbaar. Start met --netwerk als je dat wilt.")
     print("\nStoppen met Ctrl-C.\n")

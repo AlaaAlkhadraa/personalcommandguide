@@ -13,6 +13,7 @@
 {% for klant in klanten %}
   <form class="kaart" method="post"
         action="/administratie/{{ administratie_id }}/klant/{{ klant.id }}">
+        <input type="hidden" name="csrf" value="{{ csrf }}">
     <h3 style="margin:0 0 10px;font-size:17px">{{ klant.naam }}</h3>
     {% for veld in velden %}
       <div class="veld">
@@ -29,6 +30,7 @@
 {% endfor %}
 
 <form class="kaart" method="post" action="/administratie/{{ administratie_id }}/klanten">
+  <input type="hidden" name="csrf" value="{{ csrf }}">
   <h3 style="margin:0 0 10px;font-size:17px">Nieuwe klant</h3>
   {% for veld in velden %}
     <div class="veld">

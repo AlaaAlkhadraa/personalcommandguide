@@ -30,6 +30,7 @@ Branch: `claude/nl-accounting-invoice-module-f2vzr3`
 | `18-fix-module7-richting.md` | Fix: een onbekende richting geeft nooit hoge zekerheid |
 | `19-module8-verkoopfacturen.md` | Module 8: klanten, verkoopfacturen, PDF, openstaande posten |
 | `20-fix-module8-nummering.md` | Fix: twee tegelijk kunnen niet hetzelfde factuurnummer krijgen |
+| `21-module9-toegang.md` | Module 9: inloggen, rollen (eigenaar en klant), csrf en de audit trail per gebruiker |
 | `CODE-COMPLEET.md` | de volledige actuele code, uitleg en tests |
 | `testfacturen-overzicht.json` | grondwaarheid bij de 10 testfacturen |
 | `schermen/` | schermafbeeldingen van de draaiende webinterface |
@@ -37,7 +38,7 @@ Branch: `claude/nl-accounting-invoice-module-f2vzr3`
 
 ## Waar het nu staat
 
-- **513 pytest-tests, allemaal groen.** De testsuite doet nooit een echte
+- **551 pytest-tests, allemaal groen.** De testsuite doet nooit een echte
   API-aanroep.
 - **Module 1** — schema met Decimal-bedragen, alle rekencontroles, datum- en
   duplicaatcheck. Elke fout wordt `review_nodig` met reden, nooit een
@@ -53,8 +54,8 @@ Branch: `claude/nl-accounting-invoice-module-f2vzr3`
   staan als XML in het bestand, dus niets te raden en gratis. Routering kijkt
   naar de werkelijke inhoud, een PDF met ingebedde e-factuur gaat langs het
   XML-pad, en XML wordt veilig gelezen (geen DTD, dus geen XXE).
-- **Module 5** — webinterface (FastAPI + Jinja2, mobiel-eerst, lokaal, geen
-  login): overzicht met review bovenaan, uploaden met camera, en het
+- **Module 5** — webinterface (FastAPI + Jinja2, mobiel-eerst, lokaal; sinds
+  module 9 met inloggen): overzicht met review bovenaan, uploaden met camera, en het
   reviewscherm met het origineel links en de bewerkbare velden rechts.
   Goedkeuren kan alleen zonder openstaande punten. Alle adressen hangen
   onder een administratie en worden op eigenaarschap gecontroleerd (404,
@@ -90,6 +91,18 @@ Branch: `claude/nl-accounting-invoice-module-f2vzr3`
   Openstaande posten laten zien wat nog niet betaald is en hoeveel dagen te
   laat. Het nummer wordt toegekend binnen een schrijfslot, met een unieke index
   eronder, zodat twee gelijktijdige aanroepen niet hetzelfde nummer krijgen.
+- **Module 9** — accounts en toegang. Inloggen is verplicht; wachtwoorden staan
+  alleen als bcrypt-hash in de database en sessies lopen via een httponly
+  samesite-cookie die verloopt en in te trekken is. Een fout wachtwoord en een
+  onbekend e-mailadres geven dezelfde melding en duren even lang, en na vijf
+  mislukte pogingen per account (twintig per IP) gaat de rem erop. De
+  toegangscontrole staat op één plek waar elk verzoek langsgaat, niet in de
+  routes: geen toegang is 404, nooit 403. Een klant levert aan en kijkt mee bij
+  zijn eigen administratie; goedkeuren, definitief maken, crediteren, koppelen,
+  de bank en de aangifte zijn van de eigenaar. Alle formulieren hebben
+  csrf-bescherming en de audit trail noemt vanaf nu de echte gebruiker in
+  plaats van de vaste waarde "eigenaar". Accounts maak je met
+  `scripts/maak_eigenaar.py`; er is geen registratiepagina.
 - **Volledigheidssignalen** — blokkeren kan alleen op facturen die er zijn. Een
   factuur die nooit is aangeleverd staat nergens, en dan klopt de aangifte
   ogenschijnlijk gewoon. Daarom drie controles die het patroon bekijken: een
@@ -139,3 +152,8 @@ Branch: `claude/nl-accounting-invoice-module-f2vzr3`
    vraagt hele euro's in de aangifte; het voorstel toont centen.
 14. **Administratietype uitbreiden vereist een migratie** — SQLite kan een
    CHECK-constraint niet aanpassen met `ALTER TABLE`.
+15. **Geen scherm om accounts te beheren.** Aanmaken, wachtwoord wijzigen en
+   blokkeren gaan via `scripts/maak_eigenaar.py` en de database. Er is ook geen
+   "wachtwoord vergeten" en geen tweestapsverificatie.
+16. **`secure` op de sessiecookie staat uit.** Dat moet aan zodra dit achter
+   https draait; lokaal op http zou de cookie dan nooit worden gezet.
