@@ -258,3 +258,14 @@ in Limburg vandaag opvallend vaker voor dan in Brabant of Zeeland.
 | In The Picture by Wesley (Wesley Kole) | Terneuzen | KvK 76306011, opgericht 14-11-2019 (net buiten groeifaseprofiel), eigen domein terneuzeninthepicture.nl, actieve Instagram/Facebook, zelfstandig uitgegeven fotoboek — geen e-mailadres op site of platforms | 2026-08-28 |
 | SSD Stukadoor | Dordrecht | KvK 87931915, opgericht 21-10-2022, eenmanszaak, 1 werkzame persoon, Burgemeester de Raadtsingel 261 (3311 JH). Telefoonnummer staat wel in de gidsvermeldingen; website noch e-mailadres publiek bekend volgens meerdere bronnen. Het sterkste profiel van lane D 29-08 — jonge zaak zonder vindbare site, precies het primaire doelwit — en alleen op het adres gestrand | 2026-08-29 |
 | Diamant Dakbedekkingen | Zaandam | KvK 76535193, opgericht 29-11-2019, eenmanszaak van Misha Bos, Hogendijk 166A (1506 AM), eigen domein diamantdakbedekkingen.nl, Top Score 2026 op Dakdekkersgids, Werkspot-profiel met reviews, Facebookpagina. Geen e-mailadres publiek vermeld | 2026-08-29 |
+| K&M Daktechniek Bouw & Onderhoud | Almelo | kmdaktechniek.nl, Facebook, Werkspot, Marktplaats; adres overal gemaskeerd | 2026-08-29 |
+| Kooymans Dakdekkers | Apeldoorn | kooymansdakdekkers.nl + 085-nummer | 2026-08-29 |
+| Dakdekker Enschede | Enschede | alleen KvK-vermelding, Reggestraat 30 | 2026-08-29 |
+| PB Daktechniek | Holten | pbdaktechniek.nl + 06-14863250 | 2026-08-29 |
+| PP dak & installatietechniek | Vriezenveen e.o. | alleen gidsvermeldingen, KvK 90205685 | 2026-08-29 |
+| Bart de stukadoor | Zwolle | bartdestukadoor.nl + 06-34562928 | 2026-08-29 |
+| Kama Stukadoors | Dronten | kama-stukadoors.nl (contactformulier) + 06-34601786 | 2026-08-29 |
+| Stukadoors bedrijf strak en glad | Lelystad | stukadoorstrakenglad.nl + 06-12889380 | 2026-08-29 |
+| Schilderservice Jim | Steenwijkerland e.o. | alleen gidsvermelding schilder-nu.nl | 2026-08-29 |
+| ROH Schilderwerken | De Lutte | gidsvermelding + 06-22357440 | 2026-08-29 |
+| Stuc & Go | Arnhem | stucengo.nl + 06-29387104 | 2026-08-29 |
