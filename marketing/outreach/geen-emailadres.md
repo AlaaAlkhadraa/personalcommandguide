@@ -270,7 +270,7 @@ in Limburg vandaag opvallend vaker voor dan in Brabant of Zeeland.
 | ROH Schilderwerken | De Lutte | gidsvermelding + 06-22357440 | 2026-08-29 |
 | Stuc & Go | Arnhem | stucengo.nl + 06-29387104 | 2026-08-29 |
 
-Lane A, 29-08: acht groeifase-kandidaten in Groningen, Friesland en Drenthe met
+Lane A, 29-08: elf groeifase-kandidaten in Groningen, Friesland en Drenthe met
 kloppende KvK-datum en aantoonbare activiteit — geen enkele met een vindbaar
 e-mailadres, wel telefoon, WhatsApp of een contactformulier. Het patroon dat
 lane C op 28-08 in Limburg zag, geldt in het noorden nog sterker: de
@@ -291,3 +291,6 @@ gmail/hotmail, naam + eigenaarsnaam of gidsvermelding).
 | RH dakwerk | Doetinchem | rhdakwerk.nl, Trustoo 9,5 + Top Score 2026, 085-nummer; adres achter tonen-knop | 2026-08-29 |
 | Plattel Dakbedekkingen | Zwolle/Kampen | platteldakbedekkingen.nl + 038-3037718, wheree "Updated March 2026" | 2026-08-29 |
 | Lageman Dak & Zink werk | Lelystad | lagemandakenzinkwerk.nl + 06-14773701 | 2026-08-29 |
+| Zomer dakbedekking | Hollandscheveld | KvK 91590655, opgericht 05-10-2023, eigenaar Stefan Zomer, dakdekker sinds 2008, eigen domein zomerdakbedekking.nl, lid ondernemersvereniging Hollandscheveld. Gidspagina meldt expliciet: geen telefoon, geen e-mail, nog geen beoordelingen | 2026-08-29 |
+| R. Wierda Bouwservice | Zuidlaren | KvK 86428365, opgericht 18-05-2022, 1 werkzame persoon, Eikenlaan 37. Geen website, geen telefoon, geen e-mail in de registers | 2026-08-29 |
+| Dakcentrum Wolvega B.V. | Dieverbrug | KvK 90573773, opgericht 22-06-2023, Het Vossenland 4. Geen contactgegevens in de registers. LET OP lookalike: Dakcentrum Wolvega V.O.F. (KvK 89044215, Wolvega, opgericht 30-01-2023) is een andere inschrijving met wél een telefoonnummer | 2026-08-29 |
