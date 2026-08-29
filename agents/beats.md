@@ -146,3 +146,53 @@ blik op een pagina die alleen een browser kan openen, iets wat noch Sam
 noch Azzouz in deze omgeving kan. Dat is het eerste dat de owner zelf kan
 oplossen als hij tijd heeft: een AANGEHOUDEN-kaart met "één controle van
 een minuut" opent hij, checkt de genoemde datum, en verstuurt.
+
+## 29 augustus
+
+**Dagresultaat: 9 kaarten geschreven (lanes A+B), 2 goedgekeurd — lanes C
+en D leverden allebei bewust nul, met de langste en meest onderbouwde
+verslagen tot nu toe.** Dat is geen mislukte dag: het is de dag waarop
+twee onafhankelijke lanes, in vier regio's, hetzelfde structurele patroon
+vonden vanuit compleet verschillende sectoren. Vier dingen voor morgen.
+
+**De verboden-formuleringencontrole werkt nu aantoonbaar.** Na twee dagen
+met "aanklikken" of "een foto van" in negen van de tien berichten, stond
+geen van beide zinnen vandaag nog in enig bestand. De mechanische
+grep-vóór-het-pushen uit changelog 1.3/1.4 heeft het probleem opgelost.
+
+**Nieuwe regel: de boekingsplatform-poort is niet meer sectorgebonden.**
+Tot nu toe stond hij op naam van salons en dierenzaken (Treatwell, Fresha,
+Salonized, DoggyDoggy). Lane C vond hem vandaag bij een personal trainer
+en een tattoo-studio — twee sectoren die er niets mee te maken hebben.
+Voor elke agenda- of offertevormige kaart, in welke branche dan ook: één
+zoekopdracht op `"<bedrijfsnaam>" fresha` / `treatwell` / `salonized`
+vóór het schrijven, tien seconden die twee dagen al vijf kaarten kostten.
+
+**Het lek moet bewezen worden, niet beweerd.** Azzouz: twee van de drie
+afkeuringen van vandaag droegen een owner-check die de lane zelf correct
+had opgeschreven ("kijk of er al een projectenpagina is") maar niet zelf
+had uitgevoerd. De werkende controle is niet "welke pagina's staan
+geïndexeerd" maar één gerichte zoekopdracht die de weerlegging zoekt:
+`"domein.nl" + het gebrek dat je wilt benoemen`. Beide afkeuringen van
+vandaag waren met die ene zoekopdracht te voorkomen geweest.
+
+**Maneges, zang-/muziekdocenten en tandtechniek zijn geen verse sectoren
+meer, ze zijn levenswerksectoren.** Vier lanes vonden vandaag in die drie
+sectoren, in vier regio's, alleen bedrijven van 12 tot 59+ jaar oud —
+ambacht waar men blijft zitten, net als kledingherstel op 26-08. Van de
+lijst af. Lane C's keramiek- en bloemenateliers horen in dezelfde familie.
+
+**De echte bindende beperking is niet sectorrotatie maar bedrijfsleeftijd
+tegenover e-mailbereikbaarheid, en dat is een vraag voor de owner, niet
+voor een lane.** Lane D (bouw, Randstad) en lane C (administratiekantoren,
+Limburg/Brabant) vonden onafhankelijk hetzelfde: een eenmanszaak van één
+tot twee jaar oud — precies het primaire doelwit uit de staande order van
+24-08 — publiceert vrijwel nooit een e-mailadres; tegen de tijd dat ze dat
+wel doen, zijn ze vaak al te gevestigd voor het groeifaseprofiel. Twee
+staande orders staan hier dus tegenover elkaar, en geen enkele lane kan
+dat zelf oplossen. Twee diensten op rij hebben een telefoonlijst
+achtergelaten van jonge, op-profiel bedrijven zonder vindbaar adres
+(vandaag: Stassen Administraties Maastricht, Administratiekantoor Jelles
+Heerlen, Administratie-Consulent De RekenKamer Waspik — SSD Stukadoor
+Dordrecht van gisteren staat er ook nog). Of de owner die zelf wil bellen
+in plaats van mailen, is zijn beslissing.
