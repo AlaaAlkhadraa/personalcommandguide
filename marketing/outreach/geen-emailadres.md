@@ -269,3 +269,22 @@ in Limburg vandaag opvallend vaker voor dan in Brabant of Zeeland.
 | Schilderservice Jim | Steenwijkerland e.o. | alleen gidsvermelding schilder-nu.nl | 2026-08-29 |
 | ROH Schilderwerken | De Lutte | gidsvermelding + 06-22357440 | 2026-08-29 |
 | Stuc & Go | Arnhem | stucengo.nl + 06-29387104 | 2026-08-29 |
+
+Lane A, 29-08: acht groeifase-kandidaten in Groningen, Friesland en Drenthe met
+kloppende KvK-datum en aantoonbare activiteit — geen enkele met een vindbaar
+e-mailadres, wel telefoon, WhatsApp of een contactformulier. Het patroon dat
+lane C op 28-08 in Limburg zag, geldt in het noorden nog sterker: de
+bouw- en onderhoudstrades adverteren hier vrijwel uitsluitend met een 06-nummer.
+Per bedrijf drie zoekopdrachten uitgevoerd (naam + plaats + "e-mail", naam +
+gmail/hotmail, naam + eigenaarsnaam of gidsvermelding).
+
+| Bedrijf | Plaats | Wat er wel is | Datum gecheckt |
+|---|---|---|---|
+| B.T. Stukwerken | Emmer-Compascuum | KvK 82091218, opgericht 11-03-2021, adres Koppelwijk OZ 12, telefoon 06-30372980, Facebook-pagina btstukadoors | 2026-08-29 |
+| Afbouwservice Sead B.V. | Assen | KvK 82905681, opgericht 26-05-2021, adres Donaustraat 111, telefoon 06-36340266; gidsvermelding zegt expliciet "geen e-mailadres bekend" | 2026-08-29 |
+| MD Dakbedekkingen | Kerkenveld | KvK 86144057, opgericht 15-04-2022, eigen domein mddakbedekkingen.nl met alleen een contactformulier, telefoon 06-48254913 | 2026-08-29 |
+| Roman Schildersbedrijf | Emmen | KvK 88631338, opgericht 01-01-2023, eenmanszaak, Werkspot-profiel met 5,0, telefoon 06-57442120, afgeschermde Facebook-pagina. Sterkste gemiste kans van de dag: geen website, jong, aantoonbaar lopend — alleen geen adres | 2026-08-29 |
+| Dakman Renovaties & Onderhoud | Groningen | KvK 87982315, opgericht 17-10-2022, 9,8 uit 71 reviews, eigen domein dakmanrenovatiesonderhoud.nl, telefoon 06-16520927 | 2026-08-29 |
+| Wind daktechniek | Vledder | KvK 85411558, opgericht 01-02-2022, eigen domein winddaktechniek.nl, telefoon 06-41845393 | 2026-08-29 |
+| Solargroep Drenthe B.V. | Ter Apel (Gn) | KvK 86415867, actief sinds 2022, 9,0 uit 9 reviews, eigen domein solargroepdrenthe.nl | 2026-08-29 |
+| DDS Vakschilder | Groningen | KvK 75590301, opgericht 22-08-2019 (net buiten het venster van 1-6 jaar), geen website, telefoon 06-20504337, Facebook-pagina | 2026-08-29 |
