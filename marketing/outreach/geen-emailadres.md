@@ -288,3 +288,6 @@ gmail/hotmail, naam + eigenaarsnaam of gidsvermelding).
 | Wind daktechniek | Vledder | KvK 85411558, opgericht 01-02-2022, eigen domein winddaktechniek.nl, telefoon 06-41845393 | 2026-08-29 |
 | Solargroep Drenthe B.V. | Ter Apel (Gn) | KvK 86415867, actief sinds 2022, 9,0 uit 9 reviews, eigen domein solargroepdrenthe.nl | 2026-08-29 |
 | DDS Vakschilder | Groningen | KvK 75590301, opgericht 22-08-2019 (net buiten het venster van 1-6 jaar), geen website, telefoon 06-20504337, Facebook-pagina | 2026-08-29 |
+| RH dakwerk | Doetinchem | rhdakwerk.nl, Trustoo 9,5 + Top Score 2026, 085-nummer; adres achter tonen-knop | 2026-08-29 |
+| Plattel Dakbedekkingen | Zwolle/Kampen | platteldakbedekkingen.nl + 038-3037718, wheree "Updated March 2026" | 2026-08-29 |
+| Lageman Dak & Zink werk | Lelystad | lagemandakenzinkwerk.nl + 06-14773701 | 2026-08-29 |
