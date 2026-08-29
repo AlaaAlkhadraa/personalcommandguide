@@ -294,3 +294,6 @@ gmail/hotmail, naam + eigenaarsnaam of gidsvermelding).
 | Zomer dakbedekking | Hollandscheveld | KvK 91590655, opgericht 05-10-2023, eigenaar Stefan Zomer, dakdekker sinds 2008, eigen domein zomerdakbedekking.nl, lid ondernemersvereniging Hollandscheveld. Gidspagina meldt expliciet: geen telefoon, geen e-mail, nog geen beoordelingen | 2026-08-29 |
 | R. Wierda Bouwservice | Zuidlaren | KvK 86428365, opgericht 18-05-2022, 1 werkzame persoon, Eikenlaan 37. Geen website, geen telefoon, geen e-mail in de registers | 2026-08-29 |
 | Dakcentrum Wolvega B.V. | Dieverbrug | KvK 90573773, opgericht 22-06-2023, Het Vossenland 4. Geen contactgegevens in de registers. LET OP lookalike: Dakcentrum Wolvega V.O.F. (KvK 89044215, Wolvega, opgericht 30-01-2023) is een andere inschrijving met wél een telefoonnummer | 2026-08-29 |
+| Stassen Administraties | Maastricht | KvK 91383080, opgericht 01-09-2023, eenmanszaak, 1 werkzaam persoon. Registers melden uitdrukkelijk geen telefoon, e-mail of website | 2026-08-29 |
+| Administratiekantoor Jelles | Heerlen | KvK 90920716, gestart 01-05-2023, Op De Nobel 100, 1 werkzaam persoon. Geen e-mail of telefoon vindbaar | 2026-08-29 |
+| Administratie-Consulent De RekenKamer | Waspik | KvK 91275954, opgericht 10-08-2023, Benedenkerkstraat 2, 1 werkzaam persoon. Geen e-mail na drie zoekopdrachten | 2026-08-29 |
