@@ -357,3 +357,18 @@ Ook gecorrigeerd: A. Sukhraj Bestratingen kreeg vanochtend van lane C nog
 |---|---|---|---|
 | A. Sukhraj Bestratingen | Goes | KvK 83488871 (06-08-2021), eenmanszaak 1 werknemer. **Nieuw 30-08 (lane F): adres Robert Schumanlaan 56, 4463 BG Goes.** Nog geen e-mailadres, geen reviews | 2026-08-30 |
 | Mussa Kapper | Breda | KvK 80855628, eenmanszaak 1 werkzaam persoon, Haagdijk 75. LET OP: dit bedrijf heeft juist WEL een bevestigd adres (mussamahammed74@gmail.com, Stagemarkt) en staat hier alleen als bellijst-kandidaat, omdat poort (a) open bleef: geen enkele leesbare datum in drie zoekrondes. Sterkste bellijst-kandidaat van deze dienst | 2026-08-30 |
+## 30 augustus 2026 — lane G (Overijssel, Gelderland, Flevoland, extra dienst)
+
+Per bedrijf drie zoekopdrachten (naam + plaats + "e-mail", naam +
+gmail/hotmail, naam + eigenaarsnaam of gidsvermelding), plus waar mogelijk
+de Stagemarkt-registerpagina. Zie bevinding 1 in `2026-08-30-g.md`: het
+leerbedrijvenregister loste het adresprobleem voor negentien andere
+bedrijven wél op, dus deze vijf zijn de rest die overblijft, niet de regel.
+
+| Bedrijf | Plaats | Wat er wel is | Datum gecheckt |
+|---|---|---|---|
+| Emza Schoonmaak | Apeldoorn | Trustoo 9,2 en top-10 in Apeldoorn; volgens het profiel één jaar actief met 4 medewerkers en 3 jaar ervaring; eigenaar Emran; e-mail en telefoon zijn door de eigenaar geverifieerd maar staan alleen achter het platform. Sterkste groeisignaal van de dienst | 2026-08-30 |
+| Outdoor Cleaning Apeldoorn | Apeldoorn | KvK 85681245 (2022), BTW NL863705765B01, eigen domein outdoorcleaningapeldoorn.nl, Trustoo 8,2, 06-19437253, gevelreiniging en glasbewassing. Drie zoekopdrachten, geen adres | 2026-08-30 |
+| Barbershop 150 | Enschede | KvK 86691643 (2022), eenmanszaak, Hengelosestraat 150, 06-82701529, alleen Instagram en Facebook, geen eigen site. LET OP: boekt al via Belliata, dus ook mét adres geen prospect | 2026-08-30 |
+| Ali's Kapsalon | Harderwijk | Erkend leerbedrijf op Stagemarkt; de registerpagina kwam bij twee zoekopdrachten wel boven maar zonder het contactblok | 2026-08-30 |
+| Kapsalon Maureen | Enschede | Laaressingel 195, 053-4325145, contactpersoon Maureen Eggert. Registerpagina toont naam, adres en telefoon maar geen e-mailadres — de enige van zes Enschedese salons in het register zonder | 2026-08-30 |
