@@ -196,3 +196,69 @@ achtergelaten van jonge, op-profiel bedrijven zonder vindbaar adres
 Heerlen, Administratie-Consulent De RekenKamer Waspik — SSD Stukadoor
 Dordrecht van gisteren staat er ook nog). Of de owner die zelf wil bellen
 in plaats van mailen, is zijn beslissing.
+
+## 30 augustus
+
+**Dagresultaat: 8 kaarten geschreven over zeven lanes (A-G), 5 goedgekeurd.
+Zeven lanes — vier vaste plus drie bijspawns om de dagnorm te halen — en
+de opbrengst steeg niet mee.** Azzouz vandaag, letterlijk: "extra lanes
+verhogen de opbrengst niet meer; ze bevestigen alleen sneller dezelfde
+muur." Dit is de derde dag op rij dat onafhankelijke lanes hetzelfde
+structurele patroon vinden, nu vanuit vijf richtingen tegelijk.
+
+**De muur heeft een naam: jong genoeg én bereikbaar komt in dit segment
+nauwelijks samen.** Lane G haalde 19 openbare adressen uit één register,
+lane E 9 — het adresprobleem is dus wél op te lossen — maar dezelfde bron
+selecteert per definitie op gevestigd zijn. Van lane G's 19 haalden er 6
+de leeftijdspoort, en van die 6 boekten er 5 al online. Azzouz legt drie
+uitwegen op tafel voor de owner (geen ervan is een lane-beslissing): (1)
+het leeftijdsvenster oprekken van 1-6 naar 8-10 jaar, (2) de opgebouwde
+bellijst van jonge, alleen-telefonisch-bereikbare bedrijven laten bellen
+door de owner zelf, of (3) dertig loslaten als dagnorm en op kwaliteit
+sturen — vijf verzendklare kaarten waar de owner blind op kan drukken
+zijn meer waard dan dertig die hij zelf moet nalopen. Tot die knoop
+doorgehakt is: niet soepeler keuren.
+
+**Tattoo-studio's en dansscholen/yogastudio's gaan bij maneges op de
+permanent-gesloten lijst.** Lane A vond vandaag 6 van de 6 noordelijke
+tattoo-studio's al op een eigen boekingssysteem of Fresha, en dansscholen/
+yogastudio's bleken net als vorige week 12 tot 24 jaar oud.
+
+**Fitness/personal training is deze week verzadigd, niet gesloten.** De
+poort sluit ongeveer twee op de drie (Fresha/Momoyoga), maar de sector zelf
+werkt nog — hij staat alleen al ver over de sectorcap van drie per zeven
+dagen in de ledger na vandaag (13 regels), dus geen enkele lane zet hem
+deze week nog in.
+
+**Nieuwe adresbron: `erkend leerbedrijf <sector> <stad> e-mail
+contactpersoon site:stagemarkt.nl`.** Levert in één zoekopdracht adres,
+contactpersoon, e-mail én vaak een gedateerd registerfeit — niet alleen
+voor sportscholen, voor elke sector die als leerbedrijf erkend kan worden.
+Los van bovenstaande muur (het register selecteert op gevestigd zijn) is
+dit de beste eerste zoekopdracht voor lanes die op de e-mailregel
+vastlopen.
+
+**Twee formatteringsbugs gevonden en gefixt, allebei hetzelfde patroon:
+een lane schreef een geldige kaart in een vorm die de parser niet kende,
+en de kaart zou stil van het bord zijn verdwenen, ook na goedkeuring.**
+`CARD_RE` in `zevren/lib/server/outreach.ts` kende alleen `## N. Naam`,
+niet `## Kaart N — Naam`; nu geaccepteerd. Losstaand daarvan gebruikte
+diezelfde kaart metadataregels zonder het opsommingsstreepje
+(`**Key** — waarde` in plaats van `- **Key:** waarde`) — dat was geen
+nieuwe scheidingsteken-variant (die accepteert `META_RE` al sinds de
+fix van 28-08) maar het ontbreken van het streepje zelf. Azzouz heeft dat
+mechanisch gecorrigeerd in de brondag-file, niet de inhoud. **Les voor
+briefings: vermeld de exacte kopvorm `## N. Naam — Plaats` en de exacte
+metadatavorm `- **Key:** waarde` expliciet, in plaats van aan te nemen dat
+die vanzelfsprekend is.**
+
+**Restdefect, bewust niet gefixt: bevindingskoppen op `### `-niveau
+genummerd 1-5 botsen met CARD_RE's kaartgrens-zoekpatroon als de lane zijn
+bevindingen op `## `-niveau nummert in plaats van op `### `-niveau.**
+Lane G deed het goed (bevindingen op `## 1.` t/m `## 5.`, sluit de
+kaartsectie netjes af); lane F's bevindingen op `### 1.` t/m `### 5.`
+lieten de laatste kaart doorlopen tot het einde van het bestand, met vijf
+bevindingsregels als overtollige, onschadelijke metavelden op de kaart.
+Azzouz noemt dit terecht een Sam-conventie, geen parserwijziging: **nummer
+bevindingssecties nooit op `## `-niveau met hetzelfde cijferpatroon als
+kaarten.**
