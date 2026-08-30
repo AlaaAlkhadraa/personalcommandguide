@@ -44,7 +44,11 @@ export interface OutreachBoardData {
 const OUTREACH_DIR = path.join(process.cwd(), "..", "marketing", "outreach");
 const REPORTS_DIR = path.join(process.cwd(), "..", "marketing", "reports");
 
-const CARD_RE = /\n## (\d+)\. (.+?)\n([\s\S]*?)(?=\n## \d+\. |$)/g;
+// The card number is usually "## N. Name", but one agent run wrote
+// "## Kaart N — Name" instead — accept the optional "Kaart" word and any of
+// ".", "-", "—" as the separator so that variant isn't silently dropped too.
+const CARD_RE =
+  /\n## (?:Kaart\s+)?(\d+)\s*[.—-]\s*(.+?)\n([\s\S]*?)(?=\n## (?:Kaart\s+)?\d+\s*[.—-]|$)/g;
 // A domain-looking token in the card's metadata: `x.wixsite.com/y`,
 // trimsalonwof.nl, https://... — the first hit becomes the contact link.
 const URL_RE = /(?:https?:\/\/)?((?:[a-z0-9-]+\.)+[a-z]{2,}(?:\/[\w\-./]*)?)/gi;
