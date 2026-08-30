@@ -324,3 +324,4 @@ is precies het bedrijf dat geen mailbox publiceert.
 | Meulblok Bestratingen | Goes | KvK 83376429, opgericht 22-07-2021, Van Karnebeekstraat 3, 1 werknemer. Gidspagina meldt uitdrukkelijk: geen contactgegevens bekend, nog geen reviews | 2026-08-30 |
 | A. Sukhraj Bestratingen | Goes | KvK 83488871, opgericht 06-08-2021, eenmanszaak, 1 werknemer, telefoonboekvermelding zonder contactgegevens | 2026-08-30 |
 | Mekojan Logistics | Bergen op Zoom | Rijsselbergen 30, telefoon 06-34566534, presenteert zich als "snelgroeiend koeriersbedrijf"; wel een sterk groeisignaal, geen e-mailadres | 2026-08-30 |
+| Autobedrijf De Zaan | Zaandam | Facebook-pagina + Marktplaats, 4,6 uit 30 op 123Auto, BOVAG+RDW, geen eigen domein; KvK 83157905 (opgericht 01-07-2021), Paltrokstraat 18, 2-4 medewerkers | 2026-08-30 |

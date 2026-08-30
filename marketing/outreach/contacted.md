@@ -512,3 +512,33 @@ search could not prove them alive, not that closure was confirmed.
 | Meulblok Bestratingen | Goes | geparkeerd | 2026-08-30 lane C: KvK 83376429, opgericht 22-07-2021, Van Karnebeekstraat 3, 1 werknemer. Gidspagina meldt uitdrukkelijk geen contactgegevens bekend en nog geen reviews. Zie geen-emailadres.md. Nooit benaderd |
 | A. Sukhraj Bestratingen | Goes | geparkeerd | 2026-08-30 lane C: KvK 83488871, opgericht 06-08-2021, eenmanszaak, 1 werknemer. Geen contactgegevens, geen reviews. Zie geen-emailadres.md. Nooit benaderd |
 | Mekojan Logistics | Bergen op Zoom | geparkeerd | 2026-08-30 lane C: Rijsselbergen 30, telefoon 06-34566534, presenteert zich als "snelgroeiend koeriersbedrijf" - maar geen e-mailadres vindbaar. Zie geen-emailadres.md. Nooit benaderd |
+| Garage Eiland | Rotterdam | drafted | 2026-08-30 lane D; KvK 84633387 (VOF), Thorbeckestraat 20 Noordereiland; e-mail garageeiland@hotmail.com bevestigd via SBB-registerpagina; erkend leerbedrijf 01-03-2024; 4,9 uit 89 reviews; geen eigen domein na 3 zoekopdrachten; afspraken alleen telefonisch. 549. CHECK: exacte oprichtingsdatum (84-reeks wijst op 2021/2022) |
+| M.K. Tweewielers | Badhoevedorp | drafted | 2026-08-30 lane D; KvK 88741036 (2023-reeks), Pa Verkuijllaan 39; e-mail mohammed200435@gmail.com bevestigd via SBB-registerpagina; 4,7 uit 52; enige webpagina is mk-tweewielers.business.site (gratis Google-pagina); geen boekingsplatform. 299 |
+| Autobedrijf De Zaan | Zaandam | geparkeerd | 2026-08-30 lane D; KvK 83157905, opgericht 01-07-2021, 2-4 medewerkers, 4,6 uit 30 op 123Auto, BOVAG+RDW, geen eigen domein - profiel volledig op maat, maar drie zoekopdrachten leverden geen openbaar e-mailadres. Staat in geen-emailadres.md |
+| GMM-Automotive | Dordrecht | not fit - lek bestaat niet | 2026-08-30 lane D; KvK 84921234 (2022), 5,0 uit 30+, erkend 03-10-2022, e-mail goksalmazlum@hotmail.com - maar eigen domein gmmautomotive.nl gevonden, dus de geen-website-invalshoek is onwaar |
+| Wereld Auto | Rotterdam | not fit - te lang gevestigd | 2026-08-30 lane D; KvK 24407191, reeks van ver voor 2010; e-mail anush_txa@hotmail.com wel bevestigd |
+| Autobedrijf Vleutensevaart | Utrecht | not fit - te lang gevestigd | 2026-08-30 lane D; KvK 64839095, opgericht 01-01-2016; eigen site met contactpagina, info@autobedrijfvleutensevaart.nl |
+| ENA Autotechniek B.V. | Amsterdam | not fit - adres draagt andere bedrijfsnaam | 2026-08-30 lane D; KvK 68719523, opgericht 09-05-2017; enige adres info@autoschadejarmuiden.nl |
+| ED Autoschade | Dordrecht | not fit - te lang gevestigd | 2026-08-30 lane D; KvK 71418679, 13-04-2018; edwin98@live.nl bevestigd via SBB. Zusterinschrijving Ed Automotive KvK 95026479 (2024) op hetzelfde adres |
+| Autobedrijf West Sloterdijk | Amsterdam | not fit - te lang gevestigd | 2026-08-30 lane D; KvK 54383978, opgericht 22-04-2003; autopech14@hotmail.com bevestigd, erkend 05-02-2026 |
+| Garage Nieuw West | Amsterdam | not fit - eigen domein | 2026-08-30 lane D; garagenieuwwest.nl (valt alleen over http op) |
+| Jamil Garage | Den Haag | not fit - te lang gevestigd + geen e-mail | 2026-08-30 lane D; KvK 27274533, opgericht 08-02-2005, eenmanszaak 1 persoon |
+| Autobedrijf Viljoen | Den Haag | not fit - te lang gevestigd | 2026-08-30 lane D; opgericht 1987; eigen domein autobedrijfviljoen.nl; halil.kilic@hotmail.nl is de praktijkopleider |
+| Autobedrijf Nouri | Purmerend | not fit - te lang gevestigd | 2026-08-30 lane D; KvK 51239930, reeks 2010/2011; 4,8 uit 54 op 123Auto |
+| Autobedrijf Ibis | Zaandam | not fit - te lang gevestigd | 2026-08-30 lane D; KvK 59735783, gestart 2014; eigen domein autobedrijfibis.nl |
+| Autobedrijf Oostzijde | Zaandam | not fit - te lang gevestigd | 2026-08-30 lane D; KvK 66023289, opgericht 01-05-2016; eigen domein + info@autobedrijfoostzijde.nl |
+| Autobedrijf Zaans | Zaandam | not fit - eigen domein | 2026-08-30 lane D; KvK 81483902; autobedrijfzaans.nl |
+| TOP GARAGE DEN HAAG | Den Haag | aangehouden - leeftijd | 2026-08-30 lane D; KvK 66593034 (2016-reeks, ~10 jaar), top.garage@hotmail.com bevestigd via SBB, geen eigen domein. Alles schoon behalve het leeftijdsvenster - owner-oordeel |
+| ML De Gaarde Autobedrijf | Den Haag | aangehouden - leeftijd | 2026-08-30 lane D; KvK 69747164 (2017/2018), mldegaarde@hotmail.com bevestigd via SBB; site staat overal als http://mldegaarde.nl zonder https-resultaat (signaalklasse 4) |
+| Scootermotive | Rotterdam | not fit - te groot | 2026-08-30 lane D; eigen domein, ~50.000 klanten, 180 reviews |
+| Rijken Tweewielers | Amsterdam | not fit - te lang gevestigd | 2026-08-30 lane D; eigen domein + legacy chello.nl-pagina |
+| Dat Tweewielers | Zoetermeer | not fit - te lang gevestigd | 2026-08-30 lane D; KvK 70442738, 01-01-2018; eigen domein dat-tweewielers.nl |
+| Toon Beentjes Tweewielers | Heemskerk | not fit - te lang gevestigd | 2026-08-30 lane D; gevestigd sinds 1919 |
+| Scooter Arena | Amsterdam | not fit - eigen domein | 2026-08-30 lane D; scooterarena.nl + info@scooterarena.nl |
+| Barbershop Huso | Rotterdam | not fit - boekt al online | 2026-08-30 lane D; barbershophuso.nl + Fresha + Knipklok; barbershophuso@hotmail.com bevestigd |
+| Tjer's Barbershop | Rotterdam | not fit - boekt al online | 2026-08-30 lane D; tjersbarbershop.nl + Fresha; opgericht 2016 |
+| Maat Kappers Hesseplaats | Rotterdam | not fit - boekt al online | 2026-08-30 lane D; maatkappers.nl + Fresha; filiaal van een keten |
+| Kapsalon TND | Amsterdam | not fit - boekt al online | 2026-08-30 lane D; kapsalontnd.nl + Fresha; vier vestigingen, te groot |
+| Jihane Kapsalon 2 | Amsterdam | not fit - boekt al online | 2026-08-30 lane D; jihanekapsalon.nl met eigen online agenda + Fresha; KvK 34175001, 15+ jaar |
+| Kapsalon Ufuk | Amsterdam | not fit - boekt al online | 2026-08-30 lane D; Fresha; KvK 34177482, oude reeks |
+| Osman / Ossy Kapsalon | Amsterdam | not fit - boekt al online | 2026-08-30 lane D; ossykapsalon.nl + Fresha; KvK 73159298, 15+ jaar ervaring |
