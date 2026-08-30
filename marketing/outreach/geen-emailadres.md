@@ -297,3 +297,12 @@ gmail/hotmail, naam + eigenaarsnaam of gidsvermelding).
 | Stassen Administraties | Maastricht | KvK 91383080, opgericht 01-09-2023, eenmanszaak, 1 werkzaam persoon. Registers melden uitdrukkelijk geen telefoon, e-mail of website | 2026-08-29 |
 | Administratiekantoor Jelles | Heerlen | KvK 90920716, gestart 01-05-2023, Op De Nobel 100, 1 werkzaam persoon. Geen e-mail of telefoon vindbaar | 2026-08-29 |
 | Administratie-Consulent De RekenKamer | Waspik | KvK 91275954, opgericht 10-08-2023, Benedenkerkstraat 2, 1 werkzaam persoon. Geen e-mail na drie zoekopdrachten | 2026-08-29 |
+| Studio Tempel | Hoogeveen | personal-trainingstudio van Aljan en Annely Tempel; juni 2026 nieuwe studio aan de Koedijk geopend door wethouder Klok (Regionieuws Hoogeveen), 5,0 op Google, kennismaking via de site. Twee domeinen: studiotempel.com en studiotempel.nl. Sterkste gemiste kans van vandaag: jong genoeg, aantoonbaar groeiend, alleen geen adres | 2026-08-30 |
+| The Pitch Personal Training | Groningen | KvK 90313224 (2023-reeks), Protonstraat 6F, gratis intake, eigen studio sinds 2020 en doorontwikkeld in 2022, thepitch-pt.nl met contactpagina zonder zichtbaar adres | 2026-08-30 |
+| Urban Edge Personal Training | Groningen | Duinkerkerstraat 40, urbanedgept.nl, vrijblijvende intake met nulmeting in de studio; geen adres en geen KvK-datum vindbaar | 2026-08-30 |
+| NEXT Personal Gym | Groningen / Zuidhorn | Oosterstraat 29-1 (Groningen) en Jellemaweg 28 (Zuidhorn), nextpersonalgym.nl; geen adres en geen oprichtingsdatum vindbaar | 2026-08-30 |
+| Evan Verhuizing | Assen | KvK 84415762, opgericht 18-11-2021, eenmanszaak 1 persoon, Smetanalaan; verhuis-gids meldt expliciet dat geen contactgegevens bekend zijn | 2026-08-30 |
+| Loulou Logistic | Assen | KvK 80699154, opgericht 05-11-2020, eenmanszaak 1 persoon, Geulstraat; geen telefoon en geen e-mail bekend | 2026-08-30 |
+| Glendance | Assen | Nijverheidsweg 16, dans-, zang- en acteerlessen, glendance.nl, telefoon 06-15167356; geen adres en geen KvK-datum vindbaar | 2026-08-30 |
+| SGreen Printing B.V. | Groningen | KvK 86606131, opgericht 2022, Wasaweg 16b, duurzame textieldrukkerij op waterbasis, sgreenprinting.nl met offerteroute maar zonder zichtbaar adres | 2026-08-30 |
+| Inked by Sabine | Hoogeveen | Van Echtenstraat 6 (in Sportpaleis), eigen shop sinds september 2021, alleen 06-18903089 — en bovendien een Fresha-pagina, dus hoe dan ook geen prospect | 2026-08-30 |
