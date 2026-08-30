@@ -234,7 +234,7 @@ zoekrondes.
 | RichComfort Airconditioning | Dordrecht | Eenmanszaak, KvK 78322618, opgericht 25-06-2020. Alleen gidsvermeldingen (airco-expres.nl e.d.), geen contactgegevens | 2026-08-28 |
 | Hejazi Airco | Gouda | Eenmanszaak, KvK 85339547, opgericht 10-02-2022. Geen telefoon, e-mailadres of website gevonden; nul reviews | 2026-08-28 |
 | K.D Airco's | Ede | Eenmanszaak, KvK 85743534, opgericht 01-03-2022 | 2026-08-28 |
-| Brummel airconditioning | Apeldoorn | Eenmanszaak, KvK 85452548, opgericht 17-02-2022, eigenaar Lars Brummel, eigen site + Facebookpagina | 2026-08-28 |
+| ~~Brummel airconditioning~~ | Apeldoorn | GECORRIGEERD 30-08 door Azzouz: dit adres bestaat wel. info@brummelairconditioning.nl komt bij gerichte zoekactie naast dit bedrijf boven, met Spoorbrugweg 3 en 06-37170756 in hetzelfde blok. De parkering van 28-08 was onjuist; de zaak staat nu in contacted.md als `lead - poort open` (afgekeurd op het levensteken, niet op het adres). Niet opnieuw als adresloos jagen | 2026-08-28, gecorrigeerd 2026-08-30 |
 | Voltvisie | Harderwijk/Nunspeet | Eenmanszaak, KvK 82838763, opgericht 03-05-2021 | 2026-08-28 |
 | KW Zonnepanelen | Doetinchem | Eenmanszaak, KvK 88385809, opgericht 05-12-2022, Ruyslaan 27, alleen telefoon 06-19940739 | 2026-08-28 |
 | EW Solar Techniek | Nijmegen | Eenmanszaak, KvK 83563296, opgericht 01-08-2021 | 2026-08-28 |

@@ -1,6 +1,6 @@
 # Product Marketing Context — ZEVREN
 
-**Document version:** 1.4 · 2026-08-28
+**Document version:** 1.5 · 2026-08-30
 Elke marketingskill in `.claude/skills/` leest dit document eerst.
 Feiten hier zijn bindend; een skill-advies dat ermee botst, verliest.
 
@@ -67,6 +67,31 @@ Zoek naast de eigen site altijd op de platforms die dit segment gebruikt
 eigen afsprakenplanner of klantenportaal. Een mail die een ondernemer
 vertelt dat zij mist wat zij al betaalt, verbrandt het adres.
 
+## Een open poort is een bevinding, geen kaart
+
+Een kaart mag nooit op het bord komen met een poort die de agent zelf niet
+dicht kreeg en een controleopdracht voor de owner erbij ("kijk even of er na
+augustus 2025 nog een bericht staat"). Dat draait de rolverdeling om: de owner
+betaalt om tijd te besparen, en een bord waar hij zelf nog tabbladen bij open
+moet trekken kost tijd. Wie de poort niet dicht krijgt, zet het bedrijf onder
+de sectorbevindingen met de exacte pagina erbij en met ledgerstatus
+`lead - poort open` — niet in de kaartenstroom.
+
+Dat geldt het scherpst voor poort (a), het gedateerde teken van leven. Wat
+telt is een gedateerd spoor van het bedrijf zelf binnen twaalf maanden: een
+review met leesbare datum, een gedateerde post, eigen sitecontent die naar het
+lopende of komende seizoen verwijst, een programmaboek van een derde partij.
+Wat NIET telt: een gemiddelde score zonder datum, een registerinschrijving of
+erkenningsdatum die ouder is dan twaalf maanden, en het jaartal in de titel van
+een gidsenpagina ("Top 25 installateurs [2026]") — dat is de verversingsstempel
+van de gids, niet een levensteken van het bedrijf.
+
+Omgekeerd is `geen-emailadres.md` geen eindstation. Een lane die daar een sterk
+profiel ziet staan, mag het adres opnieuw jagen: op 30-08 leverde dat bij
+Brummel Airconditioning een bruikbaar adres op waar twee dagen eerder "niets"
+stond. Corrigeer die regel dan ook, anders kost dezelfde zaak elke volgende
+lane opnieuw tijd.
+
 ## Welke bron een e-mailadres draagt
 
 Niet elk openbaar adres is even hard, en het verschil zit in de vorm van de
@@ -100,6 +125,22 @@ demo's zijn concepten en worden nooit als echte klanten gepresenteerd.
 
 ## Changelog
 
+- 1.5 (2026-08-30, Azzouz): sectie "Een open poort is een bevinding, geen kaart"
+  toegevoegd. In lanes A en B van vandaag droegen twee van de vier kaarten een
+  poort die de agent zelf niet kon sluiten — beide keren poort (a) — met de
+  controle doorgeschoven naar de owner. Beide zijn afgekeurd (Brummel
+  Airconditioning: geen gedateerd spoor na aug 2025; Aircogenie: jongste spoor
+  sep 2024). De uren die in die twee berichten gingen zitten, waren beter naar
+  een extra lane gegaan: eerst de poort, dan de copy. Bij die sectie staat nu
+  ook wat wél en niet als gedateerd levensteken telt, omdat drie verschillende
+  soorten niet-bewijs vandaag als bewijs werden aangeboden (een gemiddelde
+  zonder datum, een erkenningsdatum van 22 maanden oud, en het jaartal in een
+  gidsentitel). Verder vastgelegd dat `geen-emailadres.md` corrigeerbaar is:
+  lane B draaide de parkering van Brummel terecht om met één gerichte
+  zoekactie. Tot slot voor Sam, uit kaart B1: een bewering over de zaak van de
+  prospect ("de eerste proefles is bij jou gratis") hoort met bron in de
+  kaartvelden, niet pas in de derde alinea van het bericht — deze bleek waar,
+  maar dat was toeval en geen verdienste van de kaart.
 - 1.4 (2026-08-28, Azzouz): dezelfde dag, twee lanes verder, dezelfde regel
   opnieuw. In lane B en C stond "werk dat u/je zelf kunt aanklikken" in negen van
   de tien berichten, ondanks de mechanische controle die 1.3 vanochtend
