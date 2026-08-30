@@ -325,3 +325,19 @@ is precies het bedrijf dat geen mailbox publiceert.
 | A. Sukhraj Bestratingen | Goes | KvK 83488871, opgericht 06-08-2021, eenmanszaak, 1 werknemer, telefoonboekvermelding zonder contactgegevens | 2026-08-30 |
 | Mekojan Logistics | Bergen op Zoom | Rijsselbergen 30, telefoon 06-34566534, presenteert zich als "snelgroeiend koeriersbedrijf"; wel een sterk groeisignaal, geen e-mailadres | 2026-08-30 |
 | Autobedrijf De Zaan | Zaandam | Facebook-pagina + Marktplaats, 4,6 uit 30 op 123Auto, BOVAG+RDW, geen eigen domein; KvK 83157905 (opgericht 01-07-2021), Paltrokstraat 18, 2-4 medewerkers | 2026-08-30 |
+| Rubi Installatietechniek | Ens | KvK 90599233, opgericht 03-07-2023, eenmanszaak 1 werkzaam persoon, G.J. Gillotstraat 10, eigenaar Ruben Beens, eigen domein rubi-installatietechniek.nl, erkend leerbedrijf op Stagemarkt, gidsreview "zeer betrouwbare jonge man". Sterkste geparkeerde profiel van vandaag; drie zoekopdrachten, ook op de Stagemarkt-profielpagina, gaven geen adres | 2026-08-30 |
+| Nu Verhuist | Lelystad | KvK 91199379, opgericht 01-09-2023, VOF met 2 werkzame personen, Archipel 25. Gidsvermelding meldt letterlijk "geen contactgegevens bekend" en nog geen beoordelingen | 2026-08-30 |
+| Fast Fix Solar | Harderwijk | KvK 88862526, opgericht 01-01-2023, eenmanszaak. Geen e-mail, geen telefoon, geen reviews vindbaar | 2026-08-30 |
+| BlueMoon Dynamics | Almere/Lelystad | KvK-inschrijving 27-02-2023, eenmanszaak 1 werkzaam persoon, eigen domein bluemoon-dynamics.nl, alleen 06-51633865 | 2026-08-30 |
+| Polar Energy Solutions B.V. | Oene | KvK 91017955, opgericht 03-08-2023, 2 werkzame personen, eigen domein polarenergysolutions.nl, werkgebied Apeldoorn/Zwolle/Deventer. Geen e-mailadres | 2026-08-30 |
+| Tak Techniek B.V. | Harderwijk | KvK-inschrijving 27-03-2023, 2 werkzame personen, eigen domein taktechniek.nl. LET OP: de site meldt zichzelf als "in onderhoud" — dat is op zichzelf een lek, maar er is geen adres om het aan te schrijven | 2026-08-30 |
+| Beter Stroom | Brummen | Gestart 01-01-2023, VOF 2 werkzame personen, Saturnusweg 4, 9,8 uit 48 beoordelingen, eigen domein beterstroom.nl met contactpagina. Alleen 085-4004455 | 2026-08-30 |
+| Koeltechniek Twente | Hengelo | KvK 88014525, opgericht 26-10-2022, eenmanszaak 1 werkzaam persoon. Gidsvermelding meldt uitdrukkelijk: geen telefoon, geen e-mail, geen website, geen beoordelingen | 2026-08-30 |
+| AircoMeister | Zeewolde | KvK 88360709, opgericht 01-12-2022, eenmanszaak 1 werkzaam persoon. Geen e-mail en nog geen beoordelingen | 2026-08-30 |
+| Gelderse airco techniek | Arnhem | KvK 87848147, opgericht 01-10-2022, eenmanszaak 1 werkzaam persoon, De Overmaat 106. Registers melden: geen telefoon, geen e-mail, geen website bekend | 2026-08-30 |
+| Koel Klimaatservice | Arnhem | KvK 80732917, opgericht 05-11-2020, eenmanszaak 1 werkzaam persoon, Presikhaaf II. Geen contactgegevens in de registers | 2026-08-30 |
+| Spoed Ontruiming Service | Arnhem | Gestart 13-01-2022, eenmanszaak 1 werkzaam persoon, 24/7 bereikbaar volgens de gidsvermelding. Geen e-mailadres | 2026-08-30 |
+| Solved Verhuizingen | Arnhem | Gestart 01-06-2022, 2 werkzame personen, KvK-geverifieerd op verhuis-gids.nl. Geen e-mailadres en geen reviews | 2026-08-30 |
+| S.I.R ontruimingen | Nijmegen | Gestart 01-03-2022, vermelding op woningontruiming-gids.nl. Geen e-mailadres | 2026-08-30 |
+| Verduurzaming Door Vos | Zutphen | Gestart 12-06-2024, 1 werkzaam persoon, zonnepanelen. Geen e-mail, geen KvK-nummer en geen reviews in de zoekresultaten | 2026-08-30 |
+| AircoWarmtepompKopen | Zwolle | Gestart 09-01-2023, eenmanszaak 1 werkzaam persoon. Geen e-mailadres | 2026-08-30 |
