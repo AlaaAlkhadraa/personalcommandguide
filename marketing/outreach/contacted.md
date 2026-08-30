@@ -581,3 +581,35 @@ search could not prove them alive, not that closure was confirmed.
 | S.I.R ontruimingen | Nijmegen | not fit - geen e-mailadres | 2026-08-30 lane B: gestart 01-03-2022, vermelding op woningontruiming-gids.nl. Zie geen-emailadres.md |
 | Verduurzaming Door Vos | Zutphen | not fit - geen e-mailadres | 2026-08-30 lane B: gestart 12-06-2024, 1 werkzaam persoon, zonnepanelen. Zie geen-emailadres.md |
 | AircoWarmtepompKopen | Zwolle | not fit - geen e-mailadres | 2026-08-30 lane B: gestart 09-01-2023, eenmanszaak 1 werkzaam persoon. Zie geen-emailadres.md |
+| David Hansen Interieur | Utrecht | not fit - te oud | 2026-08-30 lane E: KvK 56604513, opgericht 01-09-2012 (14 jaar), Vlampijpstraat 80, e-mail mail.davidhansen@gmail.com via stagemarkt |
+| Studio Hamerhaai | Haarlem | not fit - lek bestaat niet | 2026-08-30 lane E: in groei (eigen vacaturepagina voor een meubelmaker), maar eigen site studiohamerhaai.nl toont het werk al |
+| Issa Vloeren B.V. | Alkmaar | not fit - te oud | 2026-08-30 lane E: KvK 62524798, opgericht 2015, Edisonweg 1C, e-mail info@issavloeren.nl, eigen domein |
+| Leven in Stijl Meubelmakerij | Alkmaar | not fit - te oud | 2026-08-30 lane E: opgericht 2007 door Christian Mollee, Edisonweg 5, eigen site leveninstijl.nl met showroom |
+| ROMS interieur en displaymakers | Haarlem | aangehouden - leeftijd | 2026-08-30 lane E: ENIG DOSSIER MET AANTOONBAAR LEK. Waarderveldweg 97, e-mail info@roms.nl bevestigd, site draait op verouderd CMS (roms.nl/createsite/basis/createsitemap.asp), vermelding voert nog een fax. BTW 8104.77.014 wijst op ruim voor 2008 - leeftijdspoort niet te sluiten |
+| M. v.d. Bos Woningstoffeerder | Voorschoten | not fit - te oud | 2026-08-30 lane E: KvK 28113538 (reeks van voor 2008), Industrieweg 108, e-mail mvdbos.nl@gmail.com bevestigd via stagemarkt en Werkspot |
+| Elegant Renovatie | Utrecht | not fit - te oud | 2026-08-30 lane E: KvK 30242022, opgericht 09-06-2008, Werner Helmichstraat 83, eenmanszaak 1 persoon, eigen site elegantrenovatie.nl |
+| Versani B.V. | Alkmaar | not fit - te oud | 2026-08-30 lane E: Pettemerstraat 18, CBW-erkend, eigen tekst meldt ruim twintig jaar; e-mail administratie@versani.nl |
+| Rezende Klus&Onderhoudsbedrijf | Haarlem | not fit - te oud | 2026-08-30 lane E: KvK 65348877, opgericht 16-02-2016; tweede inschrijving 78003776 voor de badkamertak. Geen e-mailadres vindbaar |
+| Klusbedrijf Apenstaartje | Amsterdam | not fit - lek bestaat niet | 2026-08-30 lane E: Trustoo 8,6, eigen site klusbedrijfapenstaartje.nl met offerteaanvraag en dienstenpagina's |
+| Autoschadehuis Leiden | Leiden | not fit - te oud + keten | 2026-08-30 lane E: KvK 28038939, opgericht 21-09-1978, Rooseveltstraat 12a, e-mail leiden@autoschadehuis.nl; meerdere vestigingen |
+| Van Veen Autoschade B.V. | Leiden | not fit - te oud + formule | 2026-08-30 lane E: KvK 28053448, gestart 1991, Kenauweg 2, ASN Autoschade-formule |
+| Postma Motoren | Haarlem | not fit - te oud | 2026-08-30 lane E: KvK 34046534 (oude reeks), Veenpolderstraat 41, eigen site postmamotoren.nl, vermelding voert nog een faxnummer |
+| Mark Hoveniers | Leiden | not fit - te oud | 2026-08-30 lane E: KvK 64837858 (2016-reeks), Mussenplaats 22; sector hovenier bovendien over de 3x/7-dagen-cap |
+| Adsit | Alkmaar | not fit - buiten profiel | 2026-08-30 lane E: online-marketingbureau van Dean Zonneveld, Havinghastraat 24, erkend leerbedrijf 16-07-2025, dean.zonneveld@gmail.com. Collega-aanbieder, geen prospect |
+| La Souris Alkmaar B.V. | Alkmaar | not fit - formulevestiging | 2026-08-30 lane E: scooterketen, erkend 20-10-2025, alkmaar@lasourisscooters.nl |
+| Oz Selam Floorcenter | Amsterdam | not fit - geen levensteken | 2026-08-30 lane E: erkenning parketteur/woningstoffeerder 22-07-2019, ouder dan twaalf maanden en dus geen gedateerd levensteken |
+| Kiky Lash | Den Haag | not fit - boekt al online | 2026-08-30 lane E: staat op kiky-lash-2.salonized.com |
+| Lash & Brow Base | Den Haag | not fit - boekt al online | 2026-08-30 lane E: Van Diemenstraat sinds 2022, loopt via Treatwell |
+| KSP-Verhuur | Haarlem/Alkmaar | not fit - boekt al online | 2026-08-30 lane E: springkussenverhuur, eigen domein ksp.nl met eigen boekingsstroom |
+| Reemark Attractieverhuur | Noord-Holland | not fit - boekt al online | 2026-08-30 lane E: eigen domein reemark.nl met online bestelling |
+| Party Expert Attractieverhuur | Alkmaar e.o. | not fit - boekt al online | 2026-08-30 lane E: eigen domein partyexpert.nl |
+| MH-Partyverhuur | Alkmaar | not fit - boekt al online | 2026-08-30 lane E: eigen domein mh-partyverhuur.nl |
+| Mondzorg Kieskeurig | Alkmaar/Heiloo | not fit - boekt al online | 2026-08-30 lane E: laat online inschrijven, tandarts + mondhygienist onder een dak |
+| DroomHout | Utrecht | lead - niet gekwalificeerd | 2026-08-30 lane E: e-mail mentrop@droomhout.nl (stagemarkt, Jacques Mentrop), Nieuwe Houtenseweg 25. Adres geverifieerd, leeftijd/levensteken/lek nog open - zie 2026-08-30-e.md |
+| Dirk Oosterink | Utrecht | lead - niet gekwalificeerd | 2026-08-30 lane E: e-mail info@dirkoosterink.com (stagemarkt), Vlampijpstraat 80. Adres geverifieerd, rest open |
+| Meubelmassief & Kalander | Utrecht | lead - niet gekwalificeerd | 2026-08-30 lane E: e-mail ilse@meubelmassief.nl (stagemarkt). Adres geverifieerd, rest open |
+| Beukers Interieurmakers B.V. | Heerhugowaard | lead - niet gekwalificeerd | 2026-08-30 lane E: e-mail info@interieur-makers.nl (stagemarkt). Adres geverifieerd, rest open |
+| EFFECT Stand- & Interieurbouw | Lisse | lead - niet gekwalificeerd | 2026-08-30 lane E: e-mail info@effectinterieurbouw.nl (stagemarkt). Adres geverifieerd, rest open |
+| Nova Parket | onbekend | lead - niet gekwalificeerd | 2026-08-30 lane E: e-mail info@novaparket.nl (stagemarkt, Mehmet Gozek). Adres geverifieerd, rest open |
+| Blitz Interieur | onbekend | lead - niet gekwalificeerd | 2026-08-30 lane E: e-mail info@blitzinterieur.nl (stagemarkt, Chris Koelewijn). Adres geverifieerd, rest open |
+| J.H. Hollander | Zaandam | lead - niet gekwalificeerd | 2026-08-30 lane E: e-mail info@hollandervloeren.nl (stagemarkt, Percy Hollander). Adres geverifieerd, rest open |
