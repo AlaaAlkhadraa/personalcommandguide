@@ -306,3 +306,21 @@ gmail/hotmail, naam + eigenaarsnaam of gidsvermelding).
 | Glendance | Assen | Nijverheidsweg 16, dans-, zang- en acteerlessen, glendance.nl, telefoon 06-15167356; geen adres en geen KvK-datum vindbaar | 2026-08-30 |
 | SGreen Printing B.V. | Groningen | KvK 86606131, opgericht 2022, Wasaweg 16b, duurzame textieldrukkerij op waterbasis, sgreenprinting.nl met offerteroute maar zonder zichtbaar adres | 2026-08-30 |
 | Inked by Sabine | Hoogeveen | Van Echtenstraat 6 (in Sportpaleis), eigen shop sinds september 2021, alleen 06-18903089 — en bovendien een Fresha-pagina, dus hoe dan ook geen prospect | 2026-08-30 |
+
+## 30 augustus 2026 — lane C (Limburg, Noord-Brabant, Zeeland)
+
+Derde dienst op rij die op deze muur eindigt. Per bedrijf drie zoekopdrachten
+uitgevoerd (naam + plaats + "e-mail", naam + gmail/hotmail, naam + eigenaarsnaam
+of gidsvermelding). Alle zes zijn op profiel bruikbaar en alleen telefonisch
+bereikbaar. Zie bevinding 1 in `2026-08-30-c.md`: dit is geen sectoreigenschap
+maar de keerzijde van de bewijsbaarheidspoort — een bedrijf zonder eigen website
+is precies het bedrijf dat geen mailbox publiceert.
+
+| Bedrijf | Plaats | Wat er wel is | Datum gecheckt |
+|---|---|---|---|
+| DONN-SERVICE | Zeeland | KvK 90943635, opgericht 26-07-2023, eenmanszaak, 1 werknemer | 2026-08-30 |
+| Stefan Heijboer Services | Vlissingen | KvK 88243796, actief sinds 21-11-2022, 1 werknemer, Westerzicht. LET OP lookalike-adres: een tweede vermelding zet hetzelfde KvK-nummer op Doggersbank 22 in Emmeloord | 2026-08-30 |
+| Martijn van der Heijde | Zeeland | KvK 88591182, opgericht 01-01-2023, eenmanszaak | 2026-08-30 |
+| Meulblok Bestratingen | Goes | KvK 83376429, opgericht 22-07-2021, Van Karnebeekstraat 3, 1 werknemer. Gidspagina meldt uitdrukkelijk: geen contactgegevens bekend, nog geen reviews | 2026-08-30 |
+| A. Sukhraj Bestratingen | Goes | KvK 83488871, opgericht 06-08-2021, eenmanszaak, 1 werknemer, telefoonboekvermelding zonder contactgegevens | 2026-08-30 |
+| Mekojan Logistics | Bergen op Zoom | Rijsselbergen 30, telefoon 06-34566534, presenteert zich als "snelgroeiend koeriersbedrijf"; wel een sterk groeisignaal, geen e-mailadres | 2026-08-30 |
