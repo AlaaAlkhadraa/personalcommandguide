@@ -19,7 +19,7 @@ Zoekopdrachten uitgevoerd per bedrijf: naam + plaats + "e-mail", naam +
 | BeautyyCloud | Hansweert | wixsite (Iris van der Zande) | 2026-08-25 |
 | YDC Nails | onbekend | wixsite, thuisstudio sinds 2020 | 2026-08-25 |
 | Kapsalon Hairwijnen | Herwijnen | Facebook + 0418-581794 | 2026-08-25 |
-| Kapsalon Fresh | Venlo | Google-sitespagina + 06-87788453 | 2026-08-25 |
+| Kapsalon Fresh | Venlo | Google-sitespagina (`sites.google.com/view/kapsalonfreshvenlo`) + 06-87788453. Herjacht 30-08 (lane F): nieuw telefoonnummer 06-84310980 en adres Roermondsestraat 36; levende Instagram, TikTok en YouTube. GEEN SBB-erkenning, dus de registerroute naar het adres is hier dicht | 2026-08-25, herjaagd 2026-08-30 |
 | Rijschool Roman | Rijswijk | itheorie-vermelding, KvK 80268188 | 2026-08-25 |
 | Autorijschool Metalsa | Rotterdam | webnode-site met contactformulier | 2026-08-25 |
 | Radek Klusbedrijf | Heeswijk-Dinther | Werkspot-profiel, KvK 86684299 (2022) | 2026-08-25 |
@@ -28,11 +28,11 @@ Zoekopdrachten uitgevoerd per bedrijf: naam + plaats + "e-mail", naam +
 | Timmerbedrijf Kevin Driessen | Oegstgeest | gidsvermelding, KvK 81579632 (2021) | 2026-08-25 |
 | Mark Koomen bestratingen | Lutjewinkel | gidsvermelding, KvK 85334774 (2022) | 2026-08-25 |
 | Lorenzo Tuinaanleg en Bestratingen | Bovenkarspel | gidsvermelding, KvK 81650108 (2021) | 2026-08-25 |
-| Dayan stukadoorsbedrijf | Maastricht | Facebook + 06-47283971, KvK 86220381 (2022) | 2026-08-25 |
-| Allround Klusbedrijf Haowa | Maastricht | 06-39127866, KvK 85569658 (2022) | 2026-08-25 |
-| Ron's Klusservice | Sittard | gidsvermelding, KvK 87014726 (2022) | 2026-08-25 |
+| ~~Dayan stukadoorsbedrijf~~ | Maastricht | **OPGELOST 30-08 (lane F): e-mail gevonden — dayan-stukadoor@outlook.com**, op de eenbedrijfspagina van stukadoorgids.nl en bevestigd op Drimble. Staat nu als kaart in `2026-08-30-f.md`. Oorspronkelijke notitie: Facebook + 06-47283971, KvK 86220381 (2022) | 2026-08-25, omgedraaid 2026-08-30 |
+| Allround Klusbedrijf Haowa | Maastricht | 06-39127866, KvK 85569658. Herjacht 30-08 (lane F): nog steeds geen adres, wel nieuw — opgericht 03-03-2022, Tempelstraat 7, Trustoo-score 8,1, top 10 aannemers Maastricht e.o. | 2026-08-25, herjaagd 2026-08-30 |
+| Ron's Klusservice | Sittard | gidsvermelding, KvK 87014726. Herjacht 30-08 (lane F): de gidspagina meldt uitdrukkelijk géén e-mail, géén telefoon en nul reviews. Zwakste van de geparkeerde Limburgse klussers | 2026-08-25, herjaagd 2026-08-30 |
 | Onderhoudsbedrijf Triomf | Ridderkerk | gidsvermelding, KvK 83107975 (2021) | 2026-08-25 |
-| Hoveniersbedrijf Tuinbaar | Zeeland/West-Brabant | ZeelandNet-prikbordadvertentie + 06-48857669 | 2026-08-25 |
+| Hoveniersbedrijf Tuinbaar | Zeeland/West-Brabant | **CORRECTIE 30-08 (lane F): voert inmiddels een eigen domein `tuinbaar.nl` en stuurt uitdrukkelijk op WhatsApp** — het lek is daarmee niet langer bewijsbaar en de notitie hieronder beschrijft de situatie niet meer. Oorspronkelijk: ZeelandNet-prikbordadvertentie + 06-48857669 | 2026-08-25, gecorrigeerd 2026-08-30 |
 | Munster Detailing | Graft-de-Rijp | eigen site + Instagram, FB-pagina uit 2024-reeks | 2026-08-25 |
 | stuc-direct | Best | 06-43564646, KvK 81294182 (2021) | 2026-08-25 |
 | MM Klussenbedrijf | Dordrecht | gidsvermelding, KvK 85175986 (2022) | 2026-08-25 |
@@ -54,7 +54,7 @@ Zoekopdrachten uitgevoerd per bedrijf: naam + plaats + "e-mail", naam +
 | Honden Vrienden Zeeland | Zeeland | eigen domein hondenvriendenzeeland.nl met cursusaanbod, geen adres op de site | 2026-08-26 |
 | Fit Dog Limburg | Limburg | eigen domein fitdoglimburg.nl, gecertificeerd dierosteopaat, "wie ben ik"-pagina | 2026-08-26 |
 | Hondencoach Hélène (Hélène Heijs-van der Vlist) | Overloon | hondengedragscoach.com, Holthesedijk 8, werkgebied Land van Cuijk / Deurne / Noord-Limburg | 2026-08-26 |
-| Dierfysiotherapie praktijk Limburg (Mariola Wams) | Geleen / Brunssum | alleen een Facebookpagina, behandeladres Heugerstraat 4a Brunssum | 2026-08-26 |
+| Dierfysiotherapie praktijk Limburg (Mariola Wams) | Geleen / Brunssum | **CORRECTIE 30-08 (lane F): voert inmiddels een eigen domein `dierfysiolimburg.nl`**, dus niet langer "alleen een Facebookpagina". Behandeladressen: Heugerstraat 4a Brunssum én Nieuwe Markt 43 Schinnen. Nog steeds geen e-mailadres | 2026-08-26, gecorrigeerd 2026-08-30 |
 | Parisa Naaiatelier | Den Hoorn / Delft | eigen domein parisanaaiatelier.nl met contactformulier, 06-14805833; KvK 85794384 (2022) — sterkste profiel van lane D | 2026-08-26 |
 | De Gouden Kroon Kledingreparatie | Utrecht | Nachtegaalstraat 76, 030-2691962, erkend leerbedrijf; KvK 87811278 (2022) | 2026-08-26 |
 | Pat's Pets | Alkmaar | eigen site patspets.nl, 06-12139797, eigenaar Patrick; Facebookpagina-ID 61561151813181 (2024-reeks) | 2026-08-26 |
@@ -341,3 +341,19 @@ is precies het bedrijf dat geen mailbox publiceert.
 | S.I.R ontruimingen | Nijmegen | Gestart 01-03-2022, vermelding op woningontruiming-gids.nl. Geen e-mailadres | 2026-08-30 |
 | Verduurzaming Door Vos | Zutphen | Gestart 12-06-2024, 1 werkzaam persoon, zonnepanelen. Geen e-mail, geen KvK-nummer en geen reviews in de zoekresultaten | 2026-08-30 |
 | AircoWarmtepompKopen | Zwolle | Gestart 09-01-2023, eenmanszaak 1 werkzaam persoon. Geen e-mailadres | 2026-08-30 |
+
+## 30 augustus 2026 — lane F (extra dienst, Limburg/Noord-Brabant/Zeeland)
+
+Deze dienst voegde één naam toe en draaide er één om. De omgedraaide is
+Dayan stukadoorsbedrijf hierboven: een gidspagina met één bedrijf per pagina gaf
+in één zoekopdracht het adres dat op 25-08 na drie rondes niet te vinden was. Dat
+is de route die PM 1.5 openzet, en het is de reden dat dit bestand geen
+eindstation is maar de beste namenlijst die we hebben.
+
+Ook gecorrigeerd: A. Sukhraj Bestratingen kreeg vanochtend van lane C nog
+"telefoonboekvermelding zonder contactgegevens" mee; er is nu wel een adres.
+
+| Bedrijf | Plaats | Wat er wel is | Datum |
+|---|---|---|---|
+| A. Sukhraj Bestratingen | Goes | KvK 83488871 (06-08-2021), eenmanszaak 1 werknemer. **Nieuw 30-08 (lane F): adres Robert Schumanlaan 56, 4463 BG Goes.** Nog geen e-mailadres, geen reviews | 2026-08-30 |
+| Mussa Kapper | Breda | KvK 80855628, eenmanszaak 1 werkzaam persoon, Haagdijk 75. LET OP: dit bedrijf heeft juist WEL een bevestigd adres (mussamahammed74@gmail.com, Stagemarkt) en staat hier alleen als bellijst-kandidaat, omdat poort (a) open bleef: geen enkele leesbare datum in drie zoekrondes. Sterkste bellijst-kandidaat van deze dienst | 2026-08-30 |
