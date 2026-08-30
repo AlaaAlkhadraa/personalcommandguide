@@ -114,6 +114,35 @@ Een adres dat alleen een persoonsnaam draagt (`kocak_k@hotmail.com`) haalt de
 poort wél, mits het op de registerpagina van precies dát bedrijf staat. Een
 adres dat de naam van een ánder bedrijf draagt, haalt hem nooit.
 
+Een tweede bron telt pas mee als hij het ADRES draagt, niet als hij het
+bedrijf draagt. Op 30-08 schreef lane F het adres van Dayan Stukadoorsbedrijf
+op als "twee onafhankelijke bronnen"; de tweede bron gaf KvK-nummer,
+oprichtingsdatum, adres en telefoon terug en juist géén e-mailadres. Eén harde
+eenbedrijfspagina is genoeg om de poort te halen — maar noteer dan één bron,
+want een opgeblazen zekerheid is precies de plek waar de volgende lane niet
+meer nakijkt.
+
+## Twee regels die geen poort zijn
+
+Niet elke regel in `agents/` is een verificatiepoort, en ze als poort
+gebruiken kost goede kaarten.
+
+- **De sectorcap (`agents/beats.md`, niet meer dan drie in zeven dagen) is een
+  jáágregel.** De grond staat er letterlijk bij: een uitgeputte sector levert
+  "de kaarten die Azzouz afkeurt". Een bedrijf dat uit `geen-emailadres.md`
+  wordt teruggehaald met een profiel dat al stond, is per definitie geen verse
+  sectorjacht en valt er dus buiten. Op 30-08 kwam de enige goedgekeurde kaart
+  van drie extra lanes uit een sector met twaalf ledgerrijen. Meld de
+  overschrijding wel altijd op de kaart, zoals lane F deed — het oordeel is aan
+  de verificatie, niet aan de lane.
+- **De leeftijdsrand loopt op bouwjaar en "grofweg" hoort erbij.** Op 30-08
+  hanteerden twee lanes 2019 tegengesteld: lane F wees een zaak mede af met
+  "2019-reeks, zeven jaar", lane G noemde hetzelfde bouwjaar "midden in de
+  groeifase". De regel: zeven jaar is de rand en op zichzelf geen afwijzing —
+  zeven jaar plus een tweede open poort is dat wel. Een zaak van zeven jaar die
+  een leerling aanneemt en met vier komma zeven uit veertig scoort, is
+  aantoonbaar in beweging; dat is wat het venster wil vangen.
+
 ## Kanalen en bewijs
 
 Outreach per e-mail, persoonlijk verzonden door de eigenaar (agents
@@ -125,6 +154,14 @@ demo's zijn concepten en worden nooit als echte klanten gepresenteerd.
 
 ## Changelog
 
+- 1.6 (2026-08-30, Azzouz, avonddienst): sectie "Twee regels die geen poort
+  zijn" toegevoegd. De drie extra lanes van vandaag (E, F, G) leverden samen
+  twee kaarten, en bij allebei botste de verificatie op een regel die als poort
+  werd gelezen terwijl hij dat niet is: de sectorcap uit `agents/beats.md` en de
+  leeftijdsrand van "grofweg 1 tot 6 jaar". Twee lanes hanteerden 2019
+  tegengesteld op dezelfde dag, wat betekent dat de regel niet scherp genoeg
+  opgeschreven stond. Daarnaast bij "Welke bron een e-mailadres draagt"
+  vastgelegd dat een tweede bron pas meetelt als hij het adres zelf draagt.
 - 1.5 (2026-08-30, Azzouz): sectie "Een open poort is een bevinding, geen kaart"
   toegevoegd. In lanes A en B van vandaag droegen twee van de vier kaarten een
   poort die de agent zelf niet kon sluiten — beide keren poort (a) — met de
