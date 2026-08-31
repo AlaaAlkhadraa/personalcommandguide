@@ -13,7 +13,7 @@ import { PricingSection } from "@/components/services/PricingSection";
 import { RevealGroup } from "@/components/ui/RevealGroup";
 import { SERVICES } from "@/lib/constants";
 import { IMAGES } from "@/lib/assets";
-import { buildMetadata } from "@/lib/seo";
+import { breadcrumbJsonLd, buildMetadata } from "@/lib/seo";
 import { getLocale } from "@/lib/i18n/get-locale";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 
@@ -62,6 +62,10 @@ export default async function ServicesPage() {
   return (
     <>
       <JsonLd data={pricingJsonLd} nonce={nonce} />
+      <JsonLd
+        data={breadcrumbJsonLd(dict.nav.home, [{ name: dict.nav.services, path: "/services" }])}
+        nonce={nonce}
+      />
       <PageHero eyebrow={s.eyebrow} title={s.title} description={s.subtitle} />
       <RevealGroup>
       <section className="py-20">

@@ -120,6 +120,15 @@ const organizationJsonLd = {
   sameAs: [SITE_CONFIG.social.linkedin],
   areaServed: "Worldwide",
   priceRange: "€€",
+  contactPoint: {
+    "@type": "ContactPoint",
+    contactType: "sales",
+    email: SITE_CONFIG.email,
+    telephone: SITE_CONFIG.phone,
+    availableLanguage: ["nl", "en", "de", "fr", "es", "ar"],
+  },
+  // The languages the site itself is served in.
+  knowsLanguage: ["nl", "en", "de", "fr", "es", "ar"],
   hasOfferCatalog: {
     "@type": "OfferCatalog",
     name: "Services",

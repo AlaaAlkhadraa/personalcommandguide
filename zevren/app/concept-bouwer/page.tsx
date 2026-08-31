@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { PageHero } from "@/components/ui/PageHero";
 import { Container } from "@/components/ui/Container";
 import { ConceptBouwer } from "@/components/concept/ConceptBouwer";
-import { buildMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { breadcrumbJsonLd, buildMetadata } from "@/lib/seo";
 import { getLocale } from "@/lib/i18n/get-locale";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -16,9 +18,16 @@ export async function generateMetadata(): Promise<Metadata> {
   });
 }
 
-export default function ConceptBouwerPage() {
+export default async function ConceptBouwerPage() {
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
+
   return (
     <>
+      {/* The page itself is Dutch-only, so the crumb names are too. */}
+      <JsonLd
+        data={breadcrumbJsonLd("Home", [{ name: "Concept-bouwer", path: "/concept-bouwer" }])}
+        nonce={nonce}
+      />
       <PageHero
         eyebrow="Concept-bouwer"
         title="Bouw je eigen website-concept"

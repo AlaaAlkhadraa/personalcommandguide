@@ -7,7 +7,7 @@ import { Container } from "@/components/ui/Container";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { PageHero } from "@/components/ui/PageHero";
 import { RevealGroup } from "@/components/ui/RevealGroup";
-import { buildMetadata } from "@/lib/seo";
+import { breadcrumbJsonLd, buildMetadata } from "@/lib/seo";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { getLocale } from "@/lib/i18n/get-locale";
 
@@ -46,6 +46,10 @@ export default async function InsightsPage() {
   return (
     <>
       <JsonLd data={listJsonLd} nonce={nonce} />
+      <JsonLd
+        data={breadcrumbJsonLd(dict.nav.home, [{ name: t.eyebrow, path: "/insights" }])}
+        nonce={nonce}
+      />
       <PageHero eyebrow={t.eyebrow} title={t.title} description={t.subtitle} />
       <RevealGroup>
         <section className="py-14 sm:py-20">

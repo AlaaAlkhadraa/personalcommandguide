@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { PageHero } from "@/components/ui/PageHero";
 import { Container } from "@/components/ui/Container";
 import { ContactForm } from "@/components/contact/ContactForm";
 import { SITE_CONFIG } from "@/lib/constants";
-import { buildMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { breadcrumbJsonLd, buildMetadata } from "@/lib/seo";
 import { getLocale } from "@/lib/i18n/get-locale";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 
@@ -20,10 +22,16 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function ContactPage() {
   const locale = await getLocale();
-  const { contact: c } = getDictionary(locale);
+  const dict = getDictionary(locale);
+  const c = dict.contact;
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
 
   return (
     <>
+      <JsonLd
+        data={breadcrumbJsonLd(dict.nav.home, [{ name: dict.nav.contact, path: "/contact" }])}
+        nonce={nonce}
+      />
       <PageHero eyebrow={c.eyebrow} title={c.title} description={c.subtitle} />
       <section className="py-20">
         <Container className="grid gap-16 lg:grid-cols-[1fr_1.3fr]">

@@ -26,7 +26,7 @@ const nl: Dictionary = {
     ctaTitle: "Liever laten bouwen dan erover lezen?",
     ctaBody: "Vertel over je project en we komen terug met een helder plan en een vaste prijs.",
     ctaButton: "Start een project",
-    metaTitle: "Insights",
+    metaTitle: "Insights: kosten, snelheid en SEO van websites",
     metaDescription: "Gewone antwoorden over websites: kosten, snelheid, SEO en webshops, zonder jargon geschreven door ZEVREN.",
   },
   footer: {
@@ -251,23 +251,23 @@ const nl: Dictionary = {
       description: "Websites, webshops en webapplicaties op maat. Prijzen staan gewoon online, vanaf 299 euro. Klik zelf door werkende demo's op zevren.nl.",
     },
     services: {
-      title: "Diensten en prijzen",
+      title: "Webdesign diensten en prijzen",
       description: "Webdesign, webshops, webapplicaties, meertalige sites en onderhoud. Vier pakketten met openbare prijzen, vanaf 299 euro.",
     },
     projects: {
-      title: "Projecten",
+      title: "Projecten en werkende demo's",
       description: "Interactieve concepten die je zelf kunt gebruiken: een boekingssysteem, een garageplanner, een complete webshop met checkout en een klantportaal.",
     },
     about: {
-      title: "Over ons",
+      title: "Over ons: webstudio in Maastricht",
       description: "ZEVREN is een onafhankelijke webstudio in Maastricht. Je werkt rechtstreeks met de persoon die je website bouwt. Lees hoe wij werken.",
     },
     process: {
-      title: "Werkwijze",
+      title: "Werkwijze: van gesprek tot livegang",
       description: "Van het eerste gesprek via ontwerp en ontwikkeling tot de lancering: wat er in elke stap van een ZEVREN-project gebeurt, en wat wij van jou nodig hebben.",
     },
     contact: {
-      title: "Contact",
+      title: "Contact: start je websiteproject",
       description: "Vertel ons over je website, webshop of webapplicatie. Stuur het formulier en je krijgt een eerlijk antwoord over wat je project nodig heeft.",
     },
   },

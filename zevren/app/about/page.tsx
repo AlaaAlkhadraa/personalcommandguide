@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import Image from "next/image";
 
 import { PageHero } from "@/components/ui/PageHero";
@@ -7,7 +8,8 @@ import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { RevealGroup } from "@/components/ui/RevealGroup";
 import { IMAGES } from "@/lib/assets";
-import { buildMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { breadcrumbJsonLd, buildMetadata } from "@/lib/seo";
 import { getLocale } from "@/lib/i18n/get-locale";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 
@@ -24,11 +26,17 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function AboutPage() {
   const locale = await getLocale();
-  const { about: a } = getDictionary(locale);
+  const dict = getDictionary(locale);
+  const a = dict.about;
   const backdrop = IMAGES["atmos-wave"];
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
 
   return (
     <>
+      <JsonLd
+        data={breadcrumbJsonLd(dict.nav.home, [{ name: dict.nav.about, path: "/about" }])}
+        nonce={nonce}
+      />
       <PageHero eyebrow={a.eyebrow} title={a.title} description={a.subtitle} />
       <RevealGroup>
       <section className="relative overflow-hidden py-20">

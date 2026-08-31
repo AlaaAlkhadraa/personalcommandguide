@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { PageHero } from "@/components/ui/PageHero";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { ProjectCard } from "@/components/projects/ProjectCard";
 import { RevealGroup } from "@/components/ui/RevealGroup";
 import { WORK_ITEMS } from "@/lib/constants";
-import { buildMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { breadcrumbJsonLd, buildMetadata } from "@/lib/seo";
 import { getLocale } from "@/lib/i18n/get-locale";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 
@@ -25,8 +27,14 @@ export default async function ProjectsPage() {
   const dict = getDictionary(locale);
   const w = dict.work;
 
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
+
   return (
     <>
+      <JsonLd
+        data={breadcrumbJsonLd(dict.nav.home, [{ name: dict.nav.projects, path: "/projects" }])}
+        nonce={nonce}
+      />
       <PageHero eyebrow={w.eyebrow} title={w.title} description={w.subtitle} />
       <RevealGroup>
       <section className="py-20">

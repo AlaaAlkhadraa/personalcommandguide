@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { PageHero } from "@/components/ui/PageHero";
 import { FAQ } from "@/components/home/FAQ";
 import { Process } from "@/components/home/Process";
 import { RevealGroup } from "@/components/ui/RevealGroup";
-import { buildMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { breadcrumbJsonLd, buildMetadata } from "@/lib/seo";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { getLocale } from "@/lib/i18n/get-locale";
 
@@ -24,8 +26,14 @@ export default async function ProcessPage() {
   const locale = await getLocale();
   const dict = getDictionary(locale);
 
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
+
   return (
     <>
+      <JsonLd
+        data={breadcrumbJsonLd(dict.nav.home, [{ name: dict.nav.process, path: "/process" }])}
+        nonce={nonce}
+      />
       <PageHero
         eyebrow={dict.home.process.eyebrow}
         title={dict.home.process.title}

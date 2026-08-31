@@ -16,18 +16,17 @@ const routes = [
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date();
-
+  // No lastModified on the static routes: stamping the build date claimed
+  // "everything changed" on every deploy, which teaches a crawler to ignore
+  // the field. The articles carry their real publication dates instead.
   const staticRoutes = routes.map((route) => ({
     url: `${SITE_CONFIG.url}${route.path}`,
-    lastModified,
     changeFrequency: route.changeFrequency,
     priority: route.priority,
   }));
 
   const workRoutes = WORK_ITEMS.map((item) => ({
     url: `${SITE_CONFIG.url}/projects/${item.slug}`,
-    lastModified,
     changeFrequency: "monthly" as const,
     priority: 0.6,
   }));

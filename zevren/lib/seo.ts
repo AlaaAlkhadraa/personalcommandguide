@@ -21,6 +21,30 @@ interface BuildMetadataOptions {
   locale?: Locale;
 }
 
+/**
+ * Breadcrumb JSON-LD for a page. Home is always the first crumb; the rest
+ * follow in the order given. Google shows these as the path under a search
+ * result instead of the bare URL.
+ */
+export function breadcrumbJsonLd(
+  homeName: string,
+  items: Array<{ name: string; path: string }>
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: homeName, item: SITE_CONFIG.url },
+      ...items.map((item, index) => ({
+        "@type": "ListItem",
+        position: index + 2,
+        name: item.name,
+        item: `${SITE_CONFIG.url}${item.path}`,
+      })),
+    ],
+  };
+}
+
 export function buildMetadata({
   title,
   description,
