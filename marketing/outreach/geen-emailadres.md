@@ -250,7 +250,7 @@ in Limburg vandaag opvallend vaker voor dan in Brabant of Zeeland.
 
 | Bedrijf | Plaats | Wat er wel is | Datum gecheckt |
 |---|---|---|---|
-| Mitch Dakwerken | Maastricht | KvK 85996211, opgericht 01-04-2022, eigen domein mitchdakwerken.nl, telefoon 06-48096805 | 2026-08-28 |
+| ~~Mitch Dakwerken~~ | Maastricht | **OPGELOST 31-08 (lane C): e-mail gevonden — mitchdakwerken@hotmail.com**, op de eenbedrijfspagina van dakdekkersgids.nl en bevestigd op Telefoonboek.nl. Staat als bevinding in `2026-08-31-c.md`, nog geen kaart: poort (a) bleef na vijf zoekronden open. LET OP: de gids voert hem op twee adressen met hetzelfde KvK-nummer (Dampstraat 49 Maastricht en Oude Zeepweg 12 Gronsveld). Oorspronkelijke notitie: KvK 85996211, opgericht 01-04-2022, eigen domein mitchdakwerken.nl, telefoon 06-48096805 | 2026-08-28, omgedraaid 2026-08-31 |
 | AC Dak & Bouwservice | Maastricht | KvK 83003924, opgericht 07-06-2021, eigen domein acdakenbouwservice.nl, telefoon/WhatsApp 06-38456389 | 2026-08-28 |
 | RK schilderwerken & afbouwbedrijf | Sittard | KvK 82712808, opgericht 14-05-2021, adres Dr. Nolenslaan 34 | 2026-08-28 |
 | Luctrans | Hunsel | KvK 82865906, opgericht 04-06-2021, verhuisbedrijf, adres Nuienplein 1 | 2026-08-28 |
@@ -411,3 +411,27 @@ opnieuw tijd aan:
 - **Roman Schildersbedrijf (29-08)** — BLIJFT GEPARKEERD, nu harder onderbouwd:
   telefoonboek.nl meldt uitdrukkelijk dat er geen e-mailadres bekend is, naast
   06-57442120 en Zuidlaarderbrink 296. Sterkste bellijstkandidaat van het noorden.
+## 31 augustus 2026 — lane C (Limburg, Noord-Brabant, Zeeland)
+
+Vijftien verse sectoren getoetst; vier bedrijven vielen binnen het
+groeifasevenster en geen van vier had een vindbaar e-mailadres. Dat is dezelfde
+muur als op 29 en 30 augustus, nu vanuit sectoren die nog nooit waren
+aangeraakt. Alle C-regio-namen die hierboven al stonden zijn opnieuw gejaagd:
+Mitch Dakwerken is omgedraaid, Hennessy's Barbershop is om een andere reden van
+de lijst (staat op Fresha, boekingspoort dicht), de rest bevestigd onbereikbaar.
+
+| Bedrijf | Plaats | Wat er wel is | Datum |
+|---|---|---|---|
+| Veenstra Ongediertebestrijding | Hulsberg (Beekdaelen) | KvK-inschrijving okt 2023 door Stijn Veenstra (KAD-gecertificeerd), Raadhuisstraat 104, eigen domein veenstra-ongedierte.nl met openbare prijs €70, Facebookpagina uit 2023, telefoon 06-42661654. Sterkste groeifaseprofiel van de dienst | 2026-08-31 |
+| AlgiService | Heerlen | Opgericht 01-01-2024, Trustoo 8,4, top 10 tegelzetters Heerlen. Noch e-mail noch telefoon in drie zoekronden | 2026-08-31 |
+| Dakwerk & klusbedrijf MB | Heerlen | KvK 92746217 (2024-reeks), eigen domein dakklus-mb.nl; dakdekkersgids.nl meldt uitdrukkelijk geen e-mailadres | 2026-08-31 |
+| @lex Dienstverlening | Kerkrade | KvK 88691454 (2023), eenmanszaak | 2026-08-31 |
+| Zwemschool Netty | Schinveld / Sittard | SBB-erkend leerbedrijf, drie locaties; alleen 06-13152826 (telefoon en WhatsApp) | 2026-08-31 |
+
+**Herjacht zonder resultaat (tweede of derde ronde):** Allround Klusbedrijf Haowa
+(Maastricht), AC Dak & Bouwservice (Maastricht — de gids meldt uitdrukkelijk geen
+e-mailadres), Van Balkom Klussen (Udenhout — register meldt geen e-mail én geen
+telefoon), Meulblok Bestratingen (Goes — geen e-mail, geen telefoon, geen
+website), Hondenservice Zeeland (Vlissingen — alleen WhatsApp/SMS 06-20837270 en
+een contactformulier), Hondenschool Arly (Vlissingen), Kapsalon Fresh (Venlo),
+Mekojan Logistics (Bergen op Zoom).
