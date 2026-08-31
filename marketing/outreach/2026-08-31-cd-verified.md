@@ -258,8 +258,9 @@ identiek. Woordtelling geteld, niet geschat: 178 zonder handtekening.
 **Dagnorm.** Eén goedgekeurde kaart uit deze twee lanes, op een norm van dertig
 over alle lanes. Lanes A en B leverden vandaag volgens `2026-08-31-ab-verified.md`
 allebei nul, door het tweede verificatiekind gecontroleerd en verdiend bevonden;
-de dag komt daarmee op één goedgekeurde kaart over vier lanes. Dat getal wordt vandaag niet gehaald en ik heb het niet gehaald
-door soepeler te keuren — conform de order. Voor de vierde dag op rij melden
+de dag komt daarmee op één goedgekeurde kaart over vier lanes. De norm wordt
+vandaag dus niet gehaald, en ik heb hem niet gehaald door soepeler te keuren —
+conform de order. Voor de vierde dag op rij melden
 onafhankelijke lanes dezelfde muur; het weekrapport van 30-08 legt drie uitwegen
 voor waarvan er twee jouw beslissing zijn. Zolang die knoop niet door is, blijft
 de opbrengst van vier lanes structureel onder de norm liggen.
