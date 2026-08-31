@@ -682,7 +682,8 @@ def test_na_inloggen_ga_je_niet_naar_een_andere_website(opzet):
     app, _db, _eigenaar, _klant = opzet
 
     for elders in ("https://nep.example/inloggen", "//nep.example/",
-                   "javascript:alert(1)", ""):
+                   "javascript:alert(1)", "/<script>alert(1)</script>",
+                   "/administratie/1?melding=<b>hoi</b>", ""):
         vreemde = TestClient(app)
         teken = vreemde.get("/inloggen").cookies["aanmeldteken"]
         antwoord = vreemde.post(
@@ -720,6 +721,17 @@ def test_na_inloggen_kom_je_op_de_pagina_die_je_wilde(opzet):
         follow_redirects=False,
     )
     assert antwoord.headers["location"] == "/administratie/1/verkoop"
+
+
+def test_het_inlogscherm_toont_geen_tekst_uit_het_adres(opzet):
+    """`terug` komt op de pagina in een verborgen veld: alleen een pad."""
+    app, _db, _eigenaar, _klant = opzet
+    pagina = TestClient(app).get(
+        "/inloggen?terug=" + quote("/<script>alert(1)</script>")
+    ).text
+
+    assert "alert(1)" not in pagina
+    assert 'name="terug" value="/"' in pagina
 
 
 def test_de_klant_belandt_op_zijn_eigen_administratie(opzet):

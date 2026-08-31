@@ -164,6 +164,8 @@ from .database import (
     lees_sessie,
     trek_sessie_in,
     lees_toegang_log,
+    zet_melding,
+    haal_melding,
     zet_gebruiker,
     huidige_gebruiker,
 )
@@ -314,6 +316,8 @@ __all__ = [
     "lees_sessie",
     "trek_sessie_in",
     "lees_toegang_log",
+    "zet_melding",
+    "haal_melding",
     "zet_gebruiker",
     "huidige_gebruiker",
     "controleer_wachtwoord",

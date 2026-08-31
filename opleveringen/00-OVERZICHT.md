@@ -32,6 +32,7 @@ Branch: `claude/nl-accounting-invoice-module-f2vzr3`
 | `20-fix-module8-nummering.md` | Fix: twee tegelijk kunnen niet hetzelfde factuurnummer krijgen |
 | `21-module9-toegang.md` | Module 9: inloggen, rollen (eigenaar en klant), csrf en de audit trail per gebruiker |
 | `22-fix-module9-meldingcode.md` | Fix: een code in het adres in plaats van vrije tekst, en geen omleiding naar een andere site |
+| `23-fix-meldingen-in-de-sessie.md` | Fix: alle meldingen via de sessie; nergens nog tekst in een adres |
 | `CODE-COMPLEET.md` | de volledige actuele code, uitleg en tests |
 | `testfacturen-overzicht.json` | grondwaarheid bij de 10 testfacturen |
 | `schermen/` | schermafbeeldingen van de draaiende webinterface |
@@ -39,7 +40,7 @@ Branch: `claude/nl-accounting-invoice-module-f2vzr3`
 
 ## Waar het nu staat
 
-- **560 pytest-tests, allemaal groen.** De testsuite doet nooit een echte
+- **572 pytest-tests, allemaal groen.** De testsuite doet nooit een echte
   API-aanroep.
 - **Module 1** — schema met Decimal-bedragen, alle rekencontroles, datum- en
   duplicaatcheck. Elke fout wordt `review_nodig` met reden, nooit een
@@ -106,9 +107,12 @@ Branch: `claude/nl-accounting-invoice-module-f2vzr3`
   `scripts/maak_eigenaar.py`; er is geen registratiepagina. In het adres van
   het inlogscherm staat alleen een code (`?fout=te_vaak`), nooit de zin zelf:
   die komt uit een vaste map, dus er gaat geen tekst uit de adresbalk naar de
-  pagina — ook niet als Jinja's ontsnapping ooit uit zou staan. Na het
-  inloggen wordt alleen naar een pagina hier doorverwezen, nooit naar een
-  ander adres.
+  pagina — ook niet als Jinja's ontsnapping ooit uit zou staan. Meldingen na
+  een handeling ("Opgeslagen", "Factuur 2026-0003 is definitief") hangen aan
+  de sessie in plaats van aan het adres, worden op één plek in het
+  basissjabloon getoond (rood bij een fout, groen bij een bevestiging) en zijn
+  na één keer lezen weg. Na het inloggen wordt alleen naar een pagina hier
+  doorverwezen, nooit naar een ander adres.
 - **Volledigheidssignalen** — blokkeren kan alleen op facturen die er zijn. Een
   factuur die nooit is aangeleverd staat nergens, en dan klopt de aangifte
   ogenschijnlijk gewoon. Daarom drie controles die het patroon bekijken: een

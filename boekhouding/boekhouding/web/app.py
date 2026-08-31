@@ -59,10 +59,12 @@ from ..database import (
 )
 from ..database import EIGEN_GEGEVENS, KLANT_VELDEN
 from ..database import (
+    haal_melding,
     lees_sessie,
     probeer_inloggen,
     trek_sessie_in,
     zet_gebruiker,
+    zet_melding,
 )
 from ..gebruikers import (
     CODE_BIJ_REDEN,
@@ -107,6 +109,13 @@ HUIDIGE_GEBRUIKER: contextvars.ContextVar[Optional[str]] = contextvars.ContextVa
     "huidige_gebruiker", default=None
 )
 
+# Het sessietoken van dit verzoek. Daaraan hangt de melding die na een
+# handeling op het volgende scherm hoort te staan ("Opgeslagen"): die
+# blijft op de server en gaat niet als tekst mee in het adres.
+HUIDIGE_SESSIE: contextvars.ContextVar[Optional[str]] = contextvars.ContextVar(
+    "huidige_sessie", default=None
+)
+
 # Paden waar je zonder inloggen bij mag. Meer dan dit is er niet: er is
 # geen registratiepagina en geen "wachtwoord vergeten" — de eigenaar maakt
 # de accounts aan.
@@ -142,17 +151,30 @@ COOKIE = "sessie"
 COOKIE_CSRF = "aanmeldteken"
 
 
+# Hoe een pad eruit hoort te zien waar we na het inloggen heen gaan. Eén
+# schuine streep aan het begin (een pad hier, geen andere site), en verder
+# alleen tekens die in onze eigen adressen voorkomen.
+VEILIG_PAD = re.compile(r"^/[A-Za-z0-9/_.-]*$")
+
+
 def veilig_terug(pad: Optional[str]) -> str:
     """Waar mag je na het inloggen heen? Alleen naar een pagina hier.
 
-    `terug` komt uit het adres en gaat na het inloggen in een redirect.
-    Zou daar een heel ander adres in mogen staan, dan is een link naar
-    /inloggen?terug=https://nep.example genoeg om iemand na een geslaagde
-    login op een nagemaakte site te laten belanden. Dus: het moet met één
-    schuine streep beginnen (een pad hier), en niet met twee (dat is een
-    adres op een andere site).
+    `terug` komt uit het adres, gaat na het inloggen in een redirect en
+    staat ondertussen in een verborgen veld op het inlogscherm. Dat is
+    twee keer reden om er streng in te zijn:
+
+    - zou er een heel ander adres in mogen staan, dan is een link naar
+      /inloggen?terug=https://nep.example genoeg om iemand na een
+      geslaagde login op een nagemaakte site te laten belanden;
+    - en alles wat hier doorkomt, komt op de pagina te staan. Door alleen
+      gewone padtekens toe te laten kan daar geen tekst van iemand anders
+      tussen zitten — net als bij de meldingen hangt dat dan niet af van
+      één ontsnappingsinstelling.
+
+    Alles wat daar niet aan voldoet wordt gewoon de startpagina.
     """
-    if not pad or not pad.startswith("/") or pad.startswith("//"):
+    if not pad or pad.startswith("//") or not VEILIG_PAD.match(pad):
         return "/"
     return pad
 
@@ -264,6 +286,7 @@ def maak_app(
         request.state.gebruiker = gebruiker
         request.state.csrf = sessie["csrf_token"]
         HUIDIGE_GEBRUIKER.set(gebruiker.email)
+        HUIDIGE_SESSIE.set(request.cookies.get(COOKIE))
 
         if request.method == "POST":
             formulier = await request.form()
@@ -301,7 +324,37 @@ def maak_app(
         zet_gebruiker(conn, HUIDIGE_GEBRUIKER.get())
         return conn
 
+    def naar(pad: str, tekst: str = "", soort: str = "melding") -> RedirectResponse:
+        """Ga naar een scherm, met eventueel een melding erbij.
+
+        De melding gaat niet mee in het adres maar wordt bij de sessie
+        bewaard; het volgende scherm haalt hem daar op. Zo staat er geen
+        vrije tekst in de adresbalk — die zou in serverlogs en in de
+        geschiedenis van de browser belanden, en tekst uit een adres die
+        op de pagina komt is de klassieke manier om er javascript in te
+        krijgen.
+        """
+        if tekst:
+            conn = verbinding()
+            try:
+                zet_melding(conn, HUIDIGE_SESSIE.get(), tekst, soort)
+            finally:
+                conn.close()
+        return RedirectResponse(pad, status_code=303)
+
     def toon(request: Request, sjabloon: str, **gegevens) -> HTMLResponse:
+        # De melding van de vorige handeling staat bij de sessie. Hem
+        # lezen wist hem meteen, zodat hij niet opnieuw verschijnt als je
+        # de pagina ververst.
+        if "melding" not in gegevens:
+            conn = verbinding()
+            try:
+                bewaard = haal_melding(conn, HUIDIGE_SESSIE.get())
+            finally:
+                conn.close()
+            gegevens["melding"] = bewaard[0] if bewaard else ""
+            gegevens["melding_soort"] = bewaard[1] if bewaard else "melding"
+
         # Elk sjabloon krijgt het csrf-teken en wie er is ingelogd, zodat
         # een formulier het niet kan vergeten en een scherm knoppen kan
         # verbergen die deze gebruiker toch niet mag.
@@ -487,7 +540,7 @@ def maak_app(
         response_class=HTMLResponse,
     )
     def review(
-        request: Request, administratie_id: int, factuur_id: int, melding: str = ""
+        request: Request, administratie_id: int, factuur_id: int
     ):
         conn = verbinding()
         try:
@@ -518,7 +571,6 @@ def maak_app(
             ubl=_ubl_weergave(registratie),
             rekeningen=_kiesbare_rekeningen(factuur),
             boeking=boeking,
-            melding=melding,
             mag_goedkeuren=(
                 factuur["status"] == "gevalideerd"
                 and factuur["goedgekeurd_op"] is None
@@ -544,19 +596,18 @@ def maak_app(
             # De grootboekrekening staat los van de factuurvelden: die
             # wordt niet uit het document gelezen maar door de eigenaar
             # gekozen, en gaat langs het rekeningschema van dat jaar.
-            melding = "Opgeslagen"
+            melding, soort = "Opgeslagen", "melding"
             if "rekening" in formulier:
                 gelukt, redenen = kies_rekening(
                     conn, factuur_id, str(formulier["rekening"])
                 )
                 if not gelukt:
-                    melding = redenen[0]
+                    melding, soort = redenen[0], "fout"
         finally:
             conn.close()
-        return RedirectResponse(
-            f"/administratie/{administratie_id}/factuur/{factuur_id}"
-            f"?melding={melding}",
-            status_code=303,
+        return naar(
+            f"/administratie/{administratie_id}/factuur/{factuur_id}",
+            melding, soort,
         )
 
     @app.post("/administratie/{administratie_id}/factuur/{factuur_id}/goedkeuren")
@@ -571,10 +622,9 @@ def maak_app(
             conn.close()
 
         if not gelukt:
-            return RedirectResponse(
-                f"/administratie/{administratie_id}/factuur/{factuur_id}"
-                f"?melding={redenen[0]}",
-                status_code=303,
+            return naar(
+                f"/administratie/{administratie_id}/factuur/{factuur_id}",
+                redenen[0], "fout",
             )
 
         # Goedgekeurd, dus mag hij het grootboek in. Lukt dat niet — meestal
@@ -588,12 +638,11 @@ def maak_app(
         finally:
             conn.close()
         if boeking_id is None:
-            return RedirectResponse(
-                f"/administratie/{administratie_id}/factuur/{factuur_id}"
-                f"?melding=Goedgekeurd, maar nog niet geboekt: {boekredenen[0]}",
-                status_code=303,
+            return naar(
+                f"/administratie/{administratie_id}/factuur/{factuur_id}",
+                f"Goedgekeurd, maar nog niet geboekt: {boekredenen[0]}", "fout",
             )
-        return RedirectResponse(f"/administratie/{administratie_id}", status_code=303)
+        return naar(f"/administratie/{administratie_id}")
 
     # --- btw-aangifte per kwartaal ---------------------------------------
 
@@ -641,7 +690,7 @@ def maak_app(
         "/administratie/{administratie_id}/instellingen",
         response_class=HTMLResponse,
     )
-    def instellingen(request: Request, administratie_id: int, melding: str = ""):
+    def instellingen(request: Request, administratie_id: int):
         conn = verbinding()
         try:
             administratie_van(conn, administratie_id)
@@ -650,7 +699,7 @@ def maak_app(
             conn.close()
         return toon(
             request, "instellingen.html",
-            administratie_id=administratie_id, eigen=eigen, melding=melding,
+            administratie_id=administratie_id, eigen=eigen,
             velden=("naam",) + EIGEN_GEGEVENS,
         )
 
@@ -668,13 +717,12 @@ def maak_app(
             wijzig_administratie(conn, administratie_id, gegevens)
         finally:
             conn.close()
-        return RedirectResponse(
-            f"/administratie/{administratie_id}/instellingen?melding=Opgeslagen",
-            status_code=303,
+        return naar(
+            f"/administratie/{administratie_id}/instellingen", "Opgeslagen"
         )
 
     @app.get("/administratie/{administratie_id}/klanten", response_class=HTMLResponse)
-    def klanten(request: Request, administratie_id: int, melding: str = ""):
+    def klanten(request: Request, administratie_id: int):
         conn = verbinding()
         try:
             administratie_van(conn, administratie_id)
@@ -684,7 +732,7 @@ def maak_app(
         return toon(
             request, "klanten.html",
             administratie_id=administratie_id, klanten=lijst,
-            velden=KLANT_VELDEN, melding=melding,
+            velden=KLANT_VELDEN,
         )
 
     @app.post("/administratie/{administratie_id}/klanten")
@@ -694,10 +742,9 @@ def maak_app(
             veld: str(formulier.get(veld) or "").strip() for veld in KLANT_VELDEN
         }
         if not gegevens["naam"]:
-            return RedirectResponse(
-                f"/administratie/{administratie_id}/klanten"
-                f"?melding=Een klant zonder naam kan niet",
-                status_code=303,
+            return naar(
+                f"/administratie/{administratie_id}/klanten",
+                "Een klant zonder naam kan niet", "fout",
             )
         conn = verbinding()
         try:
@@ -705,9 +752,8 @@ def maak_app(
             maak_klant(conn, administratie_id, gegevens)
         finally:
             conn.close()
-        return RedirectResponse(
-            f"/administratie/{administratie_id}/klanten?melding=Klant toegevoegd",
-            status_code=303,
+        return naar(
+            f"/administratie/{administratie_id}/klanten", "Klant toegevoegd"
         )
 
     @app.post("/administratie/{administratie_id}/klant/{klant_id}")
@@ -725,13 +771,12 @@ def maak_app(
             wijzig_klant(conn, klant_id, gegevens)
         finally:
             conn.close()
-        return RedirectResponse(
-            f"/administratie/{administratie_id}/klanten?melding=Klant bijgewerkt",
-            status_code=303,
+        return naar(
+            f"/administratie/{administratie_id}/klanten", "Klant bijgewerkt"
         )
 
     @app.get("/administratie/{administratie_id}/verkoop", response_class=HTMLResponse)
-    def verkoop(request: Request, administratie_id: int, melding: str = ""):
+    def verkoop(request: Request, administratie_id: int):
         conn = verbinding()
         try:
             administratie = administratie_van(conn, administratie_id)
@@ -746,7 +791,7 @@ def maak_app(
             request, "verkoop.html",
             administratie_id=administratie_id,
             administratie_naam=administratie[1],
-            facturen=facturen, klanten=klanten_lijst, melding=melding,
+            facturen=facturen, klanten=klanten_lijst,
             posten=posten,
             openstaand=sum((p["bedrag_incl"] for p in posten), Decimal("0.00")),
             te_laat=sum(1 for p in posten if p["te_laat"]),
@@ -759,10 +804,9 @@ def maak_app(
         formulier = await request.form()
         klant = str(formulier.get("klant_id") or "").strip()
         if not klant.isdigit():
-            return RedirectResponse(
-                f"/administratie/{administratie_id}/verkoop"
-                f"?melding=Kies eerst een klant",
-                status_code=303,
+            return naar(
+                f"/administratie/{administratie_id}/verkoop",
+                "Kies eerst een klant", "fout",
             )
         conn = verbinding()
         try:
@@ -775,18 +819,14 @@ def maak_app(
             )
         finally:
             conn.close()
-        return RedirectResponse(
-            f"/administratie/{administratie_id}/verkoop/{factuur_id}",
-            status_code=303,
-        )
+        return naar(f"/administratie/{administratie_id}/verkoop/{factuur_id}")
 
     @app.get(
         "/administratie/{administratie_id}/verkoop/{verkoopfactuur_id}",
         response_class=HTMLResponse,
     )
     def verkoopfactuur(
-        request: Request, administratie_id: int, verkoopfactuur_id: int,
-        melding: str = "",
+        request: Request, administratie_id: int, verkoopfactuur_id: int
     ):
         conn = verbinding()
         try:
@@ -804,7 +844,7 @@ def maak_app(
         return toon(
             request, "verkoopfactuur.html",
             administratie_id=administratie_id, factuur=factuur,
-            klanten=klanten_lijst, ontbreekt=ontbreekt, melding=melding,
+            klanten=klanten_lijst, ontbreekt=ontbreekt,
             # Drie lege regels erbij, zodat er altijd iets bij kan zonder
             # dat er javascript aan te pas komt.
             lege_regels=range(3),
@@ -833,11 +873,10 @@ def maak_app(
                 )
         finally:
             conn.close()
-        melding = "Opgeslagen" if gelukt else redenen[0]
-        return RedirectResponse(
-            f"/administratie/{administratie_id}/verkoop/{verkoopfactuur_id}"
-            f"?melding={melding}",
-            status_code=303,
+        return naar(
+            f"/administratie/{administratie_id}/verkoop/{verkoopfactuur_id}",
+            "Opgeslagen" if gelukt else redenen[0],
+            "melding" if gelukt else "fout",
         )
 
     @app.post(
@@ -858,15 +897,13 @@ def maak_app(
         finally:
             conn.close()
         if nummer is None:
-            return RedirectResponse(
-                f"/administratie/{administratie_id}/verkoop/{verkoopfactuur_id}"
-                f"?melding={redenen[0]}",
-                status_code=303,
+            return naar(
+                f"/administratie/{administratie_id}/verkoop/{verkoopfactuur_id}",
+                redenen[0], "fout",
             )
-        return RedirectResponse(
-            f"/administratie/{administratie_id}/verkoop/{verkoopfactuur_id}"
-            f"?melding=Factuur {nummer} is definitief en geboekt",
-            status_code=303,
+        return naar(
+            f"/administratie/{administratie_id}/verkoop/{verkoopfactuur_id}",
+            f"Factuur {nummer} is definitief en geboekt",
         )
 
     @app.post(
@@ -883,14 +920,12 @@ def maak_app(
         finally:
             conn.close()
         if not gelukt:
-            return RedirectResponse(
-                f"/administratie/{administratie_id}/verkoop/{verkoopfactuur_id}"
-                f"?melding={redenen[0]}",
-                status_code=303,
+            return naar(
+                f"/administratie/{administratie_id}/verkoop/{verkoopfactuur_id}",
+                redenen[0], "fout",
             )
-        return RedirectResponse(
-            f"/administratie/{administratie_id}/verkoop?melding=Concept weggegooid",
-            status_code=303,
+        return naar(
+            f"/administratie/{administratie_id}/verkoop", "Concept weggegooid"
         )
 
     @app.post(
@@ -907,21 +942,19 @@ def maak_app(
         finally:
             conn.close()
         if nieuw_id is None:
-            return RedirectResponse(
-                f"/administratie/{administratie_id}/verkoop/{verkoopfactuur_id}"
-                f"?melding={redenen[0]}",
-                status_code=303,
+            return naar(
+                f"/administratie/{administratie_id}/verkoop/{verkoopfactuur_id}",
+                redenen[0], "fout",
             )
-        return RedirectResponse(
-            f"/administratie/{administratie_id}/verkoop/{nieuw_id}"
-            f"?melding=Creditfactuur klaargezet; controleer hem en maak hem definitief",
-            status_code=303,
+        return naar(
+            f"/administratie/{administratie_id}/verkoop/{nieuw_id}",
+            "Creditfactuur klaargezet; controleer hem en maak hem definitief",
         )
 
     # --- bankafschriften en afletteren -----------------------------------
 
     @app.get("/administratie/{administratie_id}/bank", response_class=HTMLResponse)
-    def bank(request: Request, administratie_id: int, melding: str = ""):
+    def bank(request: Request, administratie_id: int):
         conn = verbinding()
         try:
             administratie = administratie_van(conn, administratie_id)
@@ -959,7 +992,6 @@ def maak_app(
             administratie_naam=administratie[1],
             regels=regels,
             facturen=facturen,
-            melding=melding,
             aantal_open=sum(1 for t in transacties if t["status"] == "open"),
             aantal_voorstel=sum(
                 1 for r in regels
@@ -995,10 +1027,7 @@ def maak_app(
         )
         if samenvatting["redenen"]:
             melding += ". " + " ".join(samenvatting["redenen"])
-        return RedirectResponse(
-            f"/administratie/{administratie_id}/bank?melding={melding}",
-            status_code=303,
-        )
+        return naar(f"/administratie/{administratie_id}/bank", melding)
 
     @app.post("/administratie/{administratie_id}/bank/{transactie_id}/koppel")
     async def bank_koppel(
@@ -1011,10 +1040,9 @@ def maak_app(
         bron, _, gekozen = str(formulier.get("factuur_id") or "").strip().rpartition(":")
         bron = bron or "factuur"
         if not gekozen.isdigit() or bron not in ("factuur", "verkoopfactuur"):
-            return RedirectResponse(
-                f"/administratie/{administratie_id}/bank"
-                f"?melding=Kies eerst een factuur om aan te koppelen",
-                status_code=303,
+            return naar(
+                f"/administratie/{administratie_id}/bank",
+                "Kies eerst een factuur om aan te koppelen", "fout",
             )
 
         conn = verbinding()
@@ -1037,13 +1065,11 @@ def maak_app(
         finally:
             conn.close()
 
-        melding = (
+        return naar(
+            f"/administratie/{administratie_id}/bank",
             f"Gekoppeld en geboekt (boeking {boeking_id})"
-            if boeking_id is not None else redenen[0]
-        )
-        return RedirectResponse(
-            f"/administratie/{administratie_id}/bank?melding={melding}",
-            status_code=303,
+            if boeking_id is not None else redenen[0],
+            "melding" if boeking_id is not None else "fout",
         )
 
     # --- het originele document laten zien -------------------------------

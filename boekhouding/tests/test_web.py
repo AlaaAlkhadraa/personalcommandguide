@@ -295,6 +295,16 @@ def test_goedkeuren_kan_niet_bij_openstaande_punten(web, werkmap):
     conn.close()
 
 
+def melding_na(web, antwoord):
+    """De pagina waar je na een handeling belandt, met de melding erop.
+
+    Sinds de meldingen niet meer in het adres staan (ze hangen aan de
+    sessie) is dit de plek om ze te controleren.
+    """
+    assert antwoord.status_code == 303, antwoord.status_code
+    return web.get(antwoord.headers["location"]).text
+
+
 def kies_rekening_via_scherm(web, factuur_id=1, code="4100", administratie_id=1):
     """Kies de grootboekrekening zoals het reviewscherm dat doet.
 
@@ -328,13 +338,11 @@ def test_goedkeuren_lukt_als_alles_klopt(web, werkmap):
 
 
 def test_twee_keer_goedkeuren_gebeurt_niet(web):
-    from urllib.parse import unquote
-
     upload(web, UBLMAP / "01-standaard-21procent.xml", "goed.xml")
     kies_rekening_via_scherm(web)
     web.post("/administratie/1/factuur/1/goedkeuren", follow_redirects=False)
     antwoord = web.post("/administratie/1/factuur/1/goedkeuren", follow_redirects=False)
-    assert "al goedgekeurd" in unquote(antwoord.headers["location"])
+    assert "al goedgekeurd" in melding_na(web, antwoord)
 
 
 def test_zonder_api_sleutel_valt_de_upload_niet_om(werkmap, monkeypatch):
@@ -606,12 +614,10 @@ def test_een_gekozen_rekening_blijft_staan(web):
 
 
 def test_een_rekening_die_niet_bestaat_wordt_geweigerd(web):
-    from urllib.parse import unquote
-
     upload(web, UBLMAP / "01-standaard-21procent.xml", "goed.xml")
     antwoord = kies_rekening_via_scherm(web, code="9999")
 
-    assert "staat niet in het schema" in unquote(antwoord.headers["location"])
+    assert "staat niet in het schema" in melding_na(web, antwoord)
 
 
 def test_goedkeuren_maakt_meteen_de_boeking(web, werkmap):
@@ -629,12 +635,10 @@ def test_goedkeuren_maakt_meteen_de_boeking(web, werkmap):
 
 
 def test_goedkeuren_zonder_rekening_zegt_dat_er_niet_geboekt_is(web):
-    from urllib.parse import unquote
-
     upload(web, UBLMAP / "01-standaard-21procent.xml", "goed.xml")
     antwoord = web.post("/administratie/1/factuur/1/goedkeuren", follow_redirects=False)
 
-    melding = unquote(antwoord.headers["location"])
+    melding = melding_na(web, antwoord)
     assert "nog niet geboekt" in melding
     assert "geen grootboekrekening gekozen" in melding
     assert "niet in het grootboek" in web.get("/administratie/1/factuur/1").text
@@ -775,11 +779,9 @@ def test_het_bankscherm_is_leeg_tot_je_een_afschrift_inleest(web):
 
 
 def test_een_afschrift_inlezen_zet_de_transacties_op_het_scherm(web):
-    from urllib.parse import unquote
-
     antwoord = lees_afschrift_in(web)
     assert antwoord.status_code == 303
-    assert "4 nieuwe transacties" in unquote(antwoord.headers["location"])
+    assert "4 nieuwe transacties" in melding_na(web, antwoord)
 
     pagina = web.get("/administratie/1/bank").text
     assert "Van Dijk ICT-diensten" in pagina
@@ -788,12 +790,10 @@ def test_een_afschrift_inlezen_zet_de_transacties_op_het_scherm(web):
 
 
 def test_hetzelfde_afschrift_twee_keer_zegt_dat_er_niets_bij_komt(web):
-    from urllib.parse import unquote
-
     lees_afschrift_in(web)
     antwoord = lees_afschrift_in(web)
 
-    melding = unquote(antwoord.headers["location"])
+    melding = melding_na(web, antwoord)
     assert "0 nieuwe transacties" in melding
     assert "4 stonden er al" in melding
 
@@ -820,8 +820,6 @@ def test_het_scherm_toont_het_voorstel_met_de_zekerheid(web):
 
 
 def test_bevestigen_koppelt_en_boekt(web, werkmap):
-    from urllib.parse import unquote
-
     geboekte_factuur_via_scherm(web)
     lees_afschrift_in(web)
 
@@ -835,15 +833,13 @@ def test_bevestigen_koppelt_en_boekt(web, werkmap):
         f"/administratie/1/bank/{betaling['id']}/koppel",
         data={"factuur_id": "1"}, follow_redirects=False,
     )
-    assert "Gekoppeld en geboekt" in unquote(antwoord.headers["location"])
+    assert "Gekoppeld en geboekt" in melding_na(web, antwoord)
 
     pagina = web.get("/administratie/1/bank").text
     assert "Gekoppeld aan factuur 1" in pagina
 
 
 def test_koppelen_zonder_factuur_te_kiezen_zegt_dat(web, werkmap):
-    from urllib.parse import unquote
-
     lees_afschrift_in(web)
     conn = maak_verbinding(str(werkmap / "boekhouding.sqlite"))
     eerste = lees_banktransacties(conn, 1)[0]
@@ -853,7 +849,7 @@ def test_koppelen_zonder_factuur_te_kiezen_zegt_dat(web, werkmap):
         f"/administratie/1/bank/{eerste['id']}/koppel",
         data={"factuur_id": ""}, follow_redirects=False,
     )
-    assert "Kies eerst een factuur" in unquote(antwoord.headers["location"])
+    assert "Kies eerst een factuur" in melding_na(web, antwoord)
 
 
 def test_een_transactie_van_een_ander_koppelen_geeft_404(twee_administraties, werkmap):
@@ -985,12 +981,10 @@ def test_een_klant_toevoegen_en_terugzien(web):
 
 
 def test_een_klant_zonder_naam_wordt_geweigerd(web):
-    from urllib.parse import unquote
-
     antwoord = web.post(
         "/administratie/1/klanten", data={"naam": "  "}, follow_redirects=False
     )
-    assert "zonder naam kan niet" in unquote(antwoord.headers["location"])
+    assert "zonder naam kan niet" in melding_na(web, antwoord)
 
 
 def test_zonder_klant_kan_er_geen_factuur_gemaakt_worden(web):
@@ -1033,8 +1027,6 @@ def test_definitief_maken_kan_niet_zonder_eigen_gegevens(web):
 
 
 def test_definitief_maken_geeft_een_nummer_en_een_boeking(web, werkmap):
-    from urllib.parse import unquote
-
     zet_eigen_gegevens(web)
     voeg_klant_toe(web)
     nieuw_concept(web)
@@ -1043,9 +1035,7 @@ def test_definitief_maken_geeft_een_nummer_en_een_boeking(web, werkmap):
     antwoord = web.post(
         "/administratie/1/verkoop/1/definitief", follow_redirects=False
     )
-    assert "2026-0001 is definitief en geboekt" in unquote(
-        antwoord.headers["location"]
-    )
+    assert "2026-0001 is definitief en geboekt" in melding_na(web, antwoord)
 
     conn = maak_verbinding(str(werkmap / "boekhouding.sqlite"))
     factuur = lees_verkoopfactuur(conn, 1)

@@ -97,6 +97,7 @@ BRONBESTANDEN = [
     "tests/test_verkoop.py",
     "tests/test_web.py",
     "tests/test_toegang.py",
+    "tests/test_meldingen.py",
     "pytest.ini",
     "requirements.txt",
     ".gitignore",

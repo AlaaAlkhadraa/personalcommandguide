@@ -181,6 +181,15 @@
   </div>
   {% endif %}
 </header>
-<main>{% block inhoud %}{% endblock %}</main>
+<main>
+{# De melding na een handeling staat hier, op één plek: zo kan geen enkel
+   scherm hem vergeten en staat hij overal op dezelfde hoogte. Hij komt uit
+   de sessie, niet uit het adres, en is rood bij een fout en groen als het
+   gelukt is. #}
+{% if melding %}
+  <div class="{{ 'waarschuwing' if melding_soort == 'fout' else 'melding' }}">{{ melding }}</div>
+{% endif %}
+{% block inhoud %}{% endblock %}
+</main>
 </body>
 </html>

@@ -2292,6 +2292,12 @@ def _toegang_tabellen(conn: sqlite3.Connection) -> None:
             ON toegang_log (ip, tijdstip);
         """
     )
+    # De melding na een handeling ("Opgeslagen", "Factuur 2026-0003 is
+    # definitief") hangt aan de sessie en niet aan het adres. Zo komt hij
+    # niet in serverlogs en niet in de geschiedenis van de browser, en
+    # gaat er geen tekst via de adresbalk naar het scherm.
+    _voeg_kolom_toe(conn, "sessies", "melding", "TEXT")
+    _voeg_kolom_toe(conn, "sessies", "melding_soort", "TEXT")
     conn.commit()
 
 
@@ -2581,6 +2587,66 @@ def trek_sessie_in(
             (reden, tijd),
         )
     conn.commit()
+
+
+MELDING_SOORTEN = ("melding", "fout")
+
+
+def zet_melding(
+    conn: sqlite3.Connection,
+    token: Optional[str],
+    tekst: str,
+    soort: str = "melding",
+) -> None:
+    """Bewaar één melding bij deze sessie, voor het volgende scherm.
+
+    Dit is de vervanger van `?melding=…` in het adres. De tekst blijft
+    op de server; de browser krijgt alleen een adres zonder tekst. Er is
+    ruimte voor één melding per sessie: je doet één handeling en ziet
+    daarna één antwoord.
+    """
+    from .gebruikers import hash_token
+
+    if not token or not tekst:
+        return
+    if soort not in MELDING_SOORTEN:
+        raise ValueError(
+            f"onbekende soort melding '{soort}'; kies uit "
+            f"{', '.join(MELDING_SOORTEN)}"
+        )
+    conn.execute(
+        "UPDATE sessies SET melding = ?, melding_soort = ? WHERE token_hash = ?",
+        (tekst, soort, hash_token(token)),
+    )
+    conn.commit()
+
+
+def haal_melding(
+    conn: sqlite3.Connection, token: Optional[str]
+) -> Optional[tuple[str, str]]:
+    """Lees de melding van deze sessie en wis hem meteen.
+
+    Wissen hoort bij lezen: anders blijft dezelfde melding staan als je
+    daarna nog een keer op ververs drukt.
+    """
+    from .gebruikers import hash_token
+
+    if not token:
+        return None
+    sleutel = hash_token(token)
+    rij = conn.execute(
+        "SELECT melding, melding_soort FROM sessies WHERE token_hash = ?",
+        (sleutel,),
+    ).fetchone()
+    if rij is None or not rij[0]:
+        return None
+    conn.execute(
+        "UPDATE sessies SET melding = NULL, melding_soort = NULL "
+        "WHERE token_hash = ?",
+        (sleutel,),
+    )
+    conn.commit()
+    return rij[0], rij[1] or "melding"
 
 
 def lees_toegang_log(

@@ -4,8 +4,6 @@
 {% block kop %}{{ factuur.leverancier or "Factuur nakijken" }}{% endblock %}
 {% block inhoud %}
 
-{% if melding %}<div class="melding">{{ melding }}</div>{% endif %}
-
 {% if factuur.review_redenen %}
   <div class="waarschuwing">
     <strong>Dit moet nog nagekeken worden:</strong>
