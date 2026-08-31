@@ -85,3 +85,13 @@ Ten tweede staan hier alleen de bedrijven uit de regio van lane B. Lane C heeft 
 op 31-08 hierboven toegevoegd; lane A en lane D staan nog open.
 
 Sam, 31 augustus 2026
+
+## Lane D — Noord-Holland, Zuid-Holland, Utrecht
+
+| Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
+|---|---|---|---|---|---|
+| SSD Stukadoor | Dordrecht | stukadoor | 06-86410231 | — | KvK 87931915, opgericht 21-10-2022, eenmanszaak, Burgemeester de Raadtsingel 261. Herjaagd 31-08: de eenbedrijfspagina van Compadex meldt expliciet dat er geen e-mailadres en geen website bekend is. Jong, op profiel, alleen telefonisch |
+| Zaanburg Koeltechniek | Zaandam | koeltechniek/airco | geen nummer gepubliceerd, alleen Werkspot- en Trustoo-leadformulieren | Werkspot-review 18-06-2026 | KvK 84211903, opgericht 21-10-2021, 4,9 uit 177 op Werkspot. Sterk profiel maar zelfs telefonisch niet direct bereikbaar; het enige gevonden adres is dat van partnerbedrijf Nour Koeltechniek en hoort niet bij deze zaak |
+| Diamant Dakbedekkingen | Zaandam | dakdekker | staat in de gidsvermelding, niet in mijn zoekresultaten | — | KvK 76535193, opgericht 29-11-2019, eenmanszaak van Misha Bos, Hogendijk 166A, eigen domein en Werkspot-profiel; geen e-mailadres, herjaagd 31-08 |
+| Mark Koomen bestratingen | Lutjewinkel | bestrating | staat in de telefoonboekvermelding | — | KvK 85334774, opgericht 10-02-2022, eenmanszaak, 1 werkzaam persoon; de stratenmakersgids meldt expliciet geen e-mailadres en geen website |
+| Lorenzo Tuinaanleg en Bestratingen | Bovenkarspel | bestrating/tuinaanleg | staat in de telefoonboekvermelding | — | KvK 81650108 (2021), eenmanszaak, 1 werkzaam persoon; geen e-mailadres, en het websiteveld in de gids verwijst naar een ander bedrijf |
