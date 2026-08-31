@@ -330,7 +330,7 @@ is precies het bedrijf dat geen mailbox publiceert.
 | Fast Fix Solar | Harderwijk | KvK 88862526, opgericht 01-01-2023, eenmanszaak. Geen e-mail, geen telefoon, geen reviews vindbaar | 2026-08-30 |
 | BlueMoon Dynamics | Almere/Lelystad | KvK-inschrijving 27-02-2023, eenmanszaak 1 werkzaam persoon, eigen domein bluemoon-dynamics.nl, alleen 06-51633865 | 2026-08-30 |
 | Polar Energy Solutions B.V. | Oene | KvK 91017955, opgericht 03-08-2023, 2 werkzame personen, eigen domein polarenergysolutions.nl, werkgebied Apeldoorn/Zwolle/Deventer. Geen e-mailadres | 2026-08-30 |
-| Tak Techniek B.V. | Harderwijk | KvK-inschrijving 27-03-2023, 2 werkzame personen, eigen domein taktechniek.nl. LET OP: de site meldt zichzelf als "in onderhoud" — dat is op zichzelf een lek, maar er is geen adres om het aan te schrijven | 2026-08-30 |
+| ~~Tak Techniek B.V.~~ | Stroe (gem. Barneveld), niet Harderwijk | **OPGELOST 31-08 (lane B): e-mail gevonden — Info@taktechniek.nl**, op de eenbedrijfspagina van goudengids.nl, in hetzelfde blok als Malenveld 8 en 06-31918240. Ook de plaats klopte niet: de vestiging staat in Stroe. Staat nu in contacted.md als `lead - poort open` — alles dicht behalve een gedateerd levensteken binnen twaalf maanden (4,8 uit 22 Google-beoordelingen zonder leesbare datum). Oorspronkelijke notitie: KvK 89718771, 27-03-2023, 2 werkzame personen, eigen domein taktechniek.nl dat zichzelf als in onderhoud meldt. Niet opnieuw als adresloos jagen | 2026-08-30, omgedraaid 2026-08-31 |
 | Beter Stroom | Brummen | Gestart 01-01-2023, VOF 2 werkzame personen, Saturnusweg 4, 9,8 uit 48 beoordelingen, eigen domein beterstroom.nl met contactpagina. Alleen 085-4004455 | 2026-08-30 |
 | Koeltechniek Twente | Hengelo | KvK 88014525, opgericht 26-10-2022, eenmanszaak 1 werkzaam persoon. Gidsvermelding meldt uitdrukkelijk: geen telefoon, geen e-mail, geen website, geen beoordelingen | 2026-08-30 |
 | AircoMeister | Zeewolde | KvK 88360709, opgericht 01-12-2022, eenmanszaak 1 werkzaam persoon. Geen e-mail en nog geen beoordelingen | 2026-08-30 |
@@ -435,3 +435,23 @@ telefoon), Meulblok Bestratingen (Goes — geen e-mail, geen telefoon, geen
 website), Hondenservice Zeeland (Vlissingen — alleen WhatsApp/SMS 06-20837270 en
 een contactformulier), Hondenschool Arly (Vlissingen), Kapsalon Fresh (Venlo),
 Mekojan Logistics (Bergen op Zoom).
+
+## 31 augustus 2026 — lane B (Overijssel, Gelderland, Flevoland)
+
+Jonge bedrijven (2023-2024) die de leeftijdspoort halen maar nergens een
+e-mailadres publiceren, plus twee correcties. Gevonden via de vakgidsen die
+de oprichtingsdatum publiceren; diezelfde gidsen tonen het e-mailadres alleen
+achter een klik.
+
+| Bedrijf | Plaats | Wat er wel is | Datum gecheckt |
+|---|---|---|---|
+| Daniël de Graaf installatietechniek | Kampen | KvK 91176085, opgericht 01-09-2023, eenmanszaak, Werkspot-profiel, staat op elektriciensgids.nl; drie zoekvormen (naam+plaats+e-mail, naam+gmail/hotmail/outlook, naam+eigenaar) zonder adres | 2026-08-31 |
+| Rutger Brouwer installatietechniek | Hengelo (OV) | KvK 90958020, opgericht 31-07-2023, eenmanszaak 1 werkzaam persoon, Breemarsweg 210, Werkspot- en LinkedIn-profiel; geen e-mailadres | 2026-08-31 |
+| HULS | Zwolle | elektricien, opgericht 03-07-2023 volgens de eenbedrijfspagina van elektriciensgids.nl; die gids toont e-mailadressen alleen achter een klik | 2026-08-31 |
+| Planet Services | Haaksbergen | elektricien, opgericht 29-09-2023 (elektriciensgids.nl); geen adres in de zoekresultaten | 2026-08-31 |
+| Ideal Airco | Zwartsluis | elektricien/airco, opgericht 08-03-2023 (elektriciensgids.nl); geen adres in de zoekresultaten | 2026-08-31 |
+| WH Energy Systems | Ootmarsum | elektricien, opgericht 01-06-2023 (elektriciensgids.nl); geen adres in de zoekresultaten | 2026-08-31 |
+| I.F.F. Tegelzetter | Zwolle | KvK 74547984 (2019-reeks), Palestrinalaan 343, 1 werkzaam persoon, Trustoo-score 8,1; leeftijd op de rand van het venster en geen e-mailadres | 2026-08-31 |
+| Thomas Timmerman | Zwolle | KvK 88788482 (2023-reeks), eenmanszaak; de enige jonge zaak van negen onderzochte timmerbedrijven in Zwolle, alleen geen adres | 2026-08-31 |
+| RS. Plinten & Tegelzetter | Almere | Werkspot-profiel met beoordelingen uit februari 2026 — het gedateerde levensteken staat dus vast, wat in deze sector zeldzaam is; geen KvK-datum en geen e-mailadres vindbaar | 2026-08-31 |
+| Verduurzaming Door Vos | Doetinchem (niet Zutphen) | CORRECTIE 31-08 op de plaats: Schermhorst 42, Doetinchem. Gestart 12-06-2024, 1 werkzaam persoon, eigen site verduurzamingdoorvos.nl, Instagram en Werkspot; nog steeds geen e-mailadres | 2026-08-30, gecorrigeerd 2026-08-31 |
