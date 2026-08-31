@@ -1,6 +1,6 @@
 # Product Marketing Context — ZEVREN
 
-**Document version:** 1.9 · 2026-08-31
+**Document version:** 1.10 · 2026-08-31
 Elke marketingskill in `.claude/skills/` leest dit document eerst.
 Feiten hier zijn bindend; een skill-advies dat ermee botst, verliest.
 
@@ -195,6 +195,22 @@ gebruiken kost goede kaarten.
   een leerling aanneemt en met vier komma zeven uit veertig scoort, is
   aantoonbaar in beweging; dat is wat het venster wil vangen.
 
+## De kopvorm van een bevinding — één keer vastgelegd
+
+Lane C vroeg op 31-08 terecht om een knoop, want de orders spraken elkaar tegen:
+de directives schrijven `### 1.` t/m `### 5.` voor, terwijl `agents/beats.md`
+van 30-08 vastlegt dat een genummerde bevindingskop bij lane F de laatste kaart
+liet doorlopen tot het einde van het bestand. De regel is vanaf nu:
+
+- **Kaarten:** `## N. Naam — Plaats` — genummerd, op `## `-niveau.
+- **Bevindingen en alle andere secties:** een `## `-kop ZONDER nummer, in de
+  vorm `## Bevinding — <onderwerp>`.
+- **De samenvattingstabel:** onder een eigen ongenummerde `## `-kop, helemaal
+  achteraan het bestand.
+
+Zo kan geen enkele bevindingskop het kaartpatroon nabootsen, ongeacht welk
+niveau de parser leest. Lane C koos deze vorm 31-08 uit zichzelf en had gelijk.
+
 ## Kanalen en bewijs
 
 Outreach per e-mail, persoonlijk verzonden door de eigenaar (agents
@@ -287,6 +303,21 @@ wil houden.
 
 ## Changelog
 
+- 1.10 (2026-08-31, Azzouz, verificatie lanes C+D): twee dingen. (1) De kopvorm
+  van bevindingen vastgelegd na een expliciete vraag van lane C — ongenummerde
+  `## `-koppen, zodat ze nooit met `## N. Naam — Plaats` kunnen botsen; de
+  directives en `beats.md` schreven tot vandaag iets anders voor dan elkaar. (2)
+  Bij "een open poort is een bevinding" hoort een scherpere formulering die
+  vandaag een kaart bijna kostte: **"ik heb niets gevonden" is geen bewijs van
+  afwezigheid wanneer je van die bron sowieso niets kunt vinden.** Lane C sloot
+  de boekingspoort bij Hondentrimsalon Yuka af met "geen boekingspagina
+  geïndexeerd", terwijl van dat domein geen enkele pagina geïndexeerd is, en
+  schoof de controle als Owner check door naar de owner. Dezelfde lane-agent
+  paste de juiste redenering diezelfde dag in lane D wél toe (Uw Bouw Nederland).
+  De kaart is uiteindelijk goedgekeurd omdat de verificatie de poort zelf sloot
+  met een controleerbaar feit — het domein heeft geen A-record, dus er is geen
+  site en dus geen boekingsknop — en dat is de vorm die telt: een positief
+  vaststelbaar feit, niet een leeg zoekresultaat.
 - 1.9 (2026-08-31, Azzouz, verificatie lanes A en B): drie dingen uit twee
   nuldiensten. (1) Sectie "Een erkenningsdatum is een levensteken, nooit een
   leeftijdsbewijs" toegevoegd — de Stagemarkt-route die ik zelf op 30-08 als
