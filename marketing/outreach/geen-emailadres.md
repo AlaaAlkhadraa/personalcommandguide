@@ -372,3 +372,42 @@ bedrijven wél op, dus deze vijf zijn de rest die overblijft, niet de regel.
 | Barbershop 150 | Enschede | KvK 86691643 (2022), eenmanszaak, Hengelosestraat 150, 06-82701529, alleen Instagram en Facebook, geen eigen site. LET OP: boekt al via Belliata, dus ook mét adres geen prospect | 2026-08-30 |
 | Ali's Kapsalon | Harderwijk | Erkend leerbedrijf op Stagemarkt; de registerpagina kwam bij twee zoekopdrachten wel boven maar zonder het contactblok | 2026-08-30 |
 | Kapsalon Maureen | Enschede | Laaressingel 195, 053-4325145, contactpersoon Maureen Eggert. Registerpagina toont naam, adres en telefoon maar geen e-mailadres — de enige van zes Enschedese salons in het register zonder | 2026-08-30 |
+
+## Lane A, 31-08 (timmerbedrijven en kozijnmontage, Groningen/Friesland/Drenthe)
+
+Zes bedrijven die élke poort haalden behalve de e-mailpoort: jong (2020-2023),
+eenmanszaak, en met een lek dat POSITIEF vastligt op een eenbedrijfs-registerpagina
+("Er is geen website van dit bedrijf bekend") in plaats van afgeleid uit afwezigheid.
+Per bedrijf drie zoekopdrachten (naam + plaats + "e-mail", naam + gmail/hotmail/outlook,
+naam + eigenaarsnaam of telefoon) plus telefoonboek, Oozo, Drimble, TransFirm, NorthData
+en Compadex. Bij vijf van de zes meldt de registerpagina uitdrukkelijk dat er geen
+e-mail én geen telefoon bekend is — dat is geen zoekfout maar de vaststelling dat deze
+bedrijven niets gepubliceerd hebben. Gevonden via de nieuwe stadsindex-techniek op de
+*-nu.nl-gidsen, die per bedrijf de oprichtingsdatum noemt.
+
+| Bedrijf | Plaats | Wat er wel is | Datum gecheckt |
+|---|---|---|---|
+| Timmerbedrijf Pollard | Sappemeer | KvK 91027659, opgericht 07-08-2023, eenmanszaak 1 persoon, Noorderstraat 309. Registers: geen website, geen telefoon, geen e-mail | 2026-08-31 |
+| Absoluut Timmerwerken | Groningen-Stad | KvK 89983645, opgericht 24-04-2023, eenmanszaak. Geen website, geen contactgegevens in de registers | 2026-08-31 |
+| Albros Timmerwerken | Emmen | KvK 88008703, opgericht 01-11-2022, eenmanszaak 1 persoon, Magelhaenstraat 5 (Bargermeer). Meubelmakerij + kozijnen. Registers: geen telefoon, geen e-mail, geen website | 2026-08-31 |
+| Timmerwerken van Houten | Assen | KvK 88001806, opgericht 01-10-2022, eenmanszaak. Geen website, geen contactgegevens gevonden | 2026-08-31 |
+| KmK Montage | Eastermar | KvK 85113263, opgericht februari 2022, 1 persoon, It Heechsân 1. Kunststof/aluminium kozijnen, gevelbekleding, dakgoten, veranda's. Werkspot-profiel + Facebookpagina (6155-reeks, dus 2023), geen eigen domein. STERKSTE PROFIEL van de zes; het adres staat vermoedelijk op die Facebookpagina, die alleen een browser kan openen | 2026-08-31 |
+| Op eigen Hout — timmerwerken | Groningen-Stad | KvK 80259138, opgericht 17-09-2020, eenmanszaak 1 persoon, Joachim Altinghstraat 29a. Registers: geen telefoon, geen e-mail, geen website | 2026-08-31 |
+| Bouma Timmerwerken en Renovatie | Leeuwarden | KvK 81578237, opgericht 21-01-2021, eenmanszaak. Op profiel qua leeftijd, maar voert eigen domein bouma-timmerwerk.nl én de gids meldt dat geen e-mailadres bekend is — twee poorten open, dus ook met adres geen kaart | 2026-08-31 |
+
+**Correcties op eerdere parkeringen (lane A, 31-08).** Drie van de vier herjaagde
+noordelijke profielen blijken bij hercontrole helemaal geen prospect meer te zijn. Ze
+horen niet langer op deze lijst als gemiste kans, anders kost elke volgende lane er
+opnieuw tijd aan:
+
+- **Dakman Renovaties & Onderhoud (29-08)** — VERVALT. Voert dakmanrenovatiesonderhoud.nl
+  met eigen pagina's voor diensten, offerte én dakinspectie. Het lek bestaat niet.
+- **Hondenschool Midden Drenthe (26-08)** — VERVALT. Voert
+  hondenschoolmiddendrenthe.nl met eigen contact- en over-mij-pagina's.
+- **Studio Tempel (30-08)** — BLIJFT GEPARKEERD, parkering bevestigd. De twee adressen
+  die bovenkomen (info@aljantempel.nl, info@annelytempel.nl) horen bij de persoonlijke
+  merken van de eigenaren, niet bij Studio Tempel, en komen uit een samengevatte pagina
+  — de bronvorm die PM 1.2 onbruikbaar noemt. Niet als adres van de zaak noteren.
+- **Roman Schildersbedrijf (29-08)** — BLIJFT GEPARKEERD, nu harder onderbouwd:
+  telefoonboek.nl meldt uitdrukkelijk dat er geen e-mailadres bekend is, naast
+  06-57442120 en Zuidlaarderbrink 296. Sterkste bellijstkandidaat van het noorden.
