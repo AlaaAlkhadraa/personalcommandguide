@@ -109,7 +109,7 @@ export function HeroEnvironment() {
 
       {/* Vignette, then a left wash that guarantees the headline has ground
           under it whatever the imagery behind happens to be doing. */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_66%_48%,transparent_28%,rgba(5,8,22,0.6)_82%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_66%_48%,transparent_28%,rgba(11,21,48,0.6)_82%)]" />
       <div className="absolute inset-y-0 start-0 w-full bg-gradient-to-r from-navy via-navy/85 to-transparent lg:w-[52%] lg:via-navy/60" />
       <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-navy to-transparent" />
     </div>

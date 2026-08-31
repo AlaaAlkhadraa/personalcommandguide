@@ -10,14 +10,17 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        navy: "#050816",
-        surface: "#0F172A",
+        // Lifted from the original near-black (#050816/#0F172A/#94A3B8) at
+        // the owner's request: the page keeps its deep-blue brand but reads
+        // brighter, with more white in the text and the card surfaces.
+        navy: "#0B1530",
+        surface: "#172448",
         primary: {
           DEFAULT: "#2563EB",
           light: "#60A5FA",
         },
         accent: "#60A5FA",
-        muted: "#94A3B8",
+        muted: "#A9B7CF",
       },
       fontFamily: {
         logo: ["var(--font-orbitron)"],
@@ -31,13 +34,13 @@ const config: Config = {
       },
       backgroundImage: {
         "grid-glow":
-          "radial-gradient(circle at 50% 0%, rgba(37,99,235,0.18), transparent 60%)",
+          "radial-gradient(circle at 50% 0%, rgba(96,165,250,0.22), transparent 60%)",
         "hero-glow":
-          "radial-gradient(circle at 20% 20%, rgba(96,165,250,0.15), transparent 45%), radial-gradient(circle at 80% 0%, rgba(37,99,235,0.2), transparent 50%)",
+          "radial-gradient(circle at 20% 20%, rgba(96,165,250,0.2), transparent 45%), radial-gradient(circle at 80% 0%, rgba(37,99,235,0.24), transparent 50%)",
       },
       boxShadow: {
         glow: "0 0 40px rgba(37, 99, 235, 0.25)",
-        card: "0 10px 40px -12px rgba(0, 0, 0, 0.6)",
+        card: "0 10px 40px -12px rgba(4, 10, 34, 0.45)",
       },
       animation: {
         "fade-up": "fadeUp 0.7s ease-out both",

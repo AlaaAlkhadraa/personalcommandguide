@@ -18,7 +18,7 @@ export default async function TwitterImage() {
           justifyContent: "center",
           alignItems: "flex-start",
           padding: "80px",
-          backgroundColor: "#050816",
+          backgroundColor: "#0B1530",
           backgroundImage:
             "radial-gradient(circle at 15% 15%, rgba(96,165,250,0.28), transparent 45%), radial-gradient(circle at 85% 0%, rgba(37,99,235,0.35), transparent 55%)",
         }}

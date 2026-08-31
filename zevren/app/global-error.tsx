@@ -15,7 +15,7 @@ export default function GlobalError({
 
   return (
     <html lang="en">
-      <body className="flex min-h-screen items-center justify-center bg-[#050816] px-6 text-center font-sans text-white">
+      <body className="flex min-h-screen items-center justify-center bg-[#0B1530] px-6 text-center font-sans text-white">
         <div className="flex flex-col items-center gap-6">
           <span className="text-6xl font-semibold text-[#60A5FA]/70">
             Oops
