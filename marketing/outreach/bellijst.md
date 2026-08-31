@@ -59,6 +59,9 @@ e-mailadres gevonden is (en zet de zaak dan op het bord of in de ledger).
 | Stassen Administraties | Maastricht | administratiekantoor | geen | — | KvK 91383080 (01-09-2023). Registers melden uitdrukkelijk geen telefoon, e-mail of website |
 | Administratiekantoor Jelles | Heerlen | administratiekantoor | geen | — | KvK 90920716 (01-05-2023), Op De Nobel 100 |
 | Administratie-Consulent De RekenKamer | Waspik | administratiekantoor | geen | — | Geen adres (lane C, 29-08) |
+| Hondentrimsalon Spaubeek | Spaubeek (Beekdaelen) | hondentrimsalon | — | — | Opgericht 2023 door Karin Mol, eigen domein, levende Facebook én Instagram. Profiel op maat; geen e-mailadres in twee zoekronden |
+| Trimsalon Mylo | Hoogerheide (Woensdrecht) | hondentrimsalon | — | **februari 2026** — artikel zuidwestupdate.nl over de start van de salon | Eigenaar Alissa Glerum. Poort (a) is hier juist dicht; het adres ontbreekt, en met acht maanden zit ze onder de ondergrens van het profiel. Belkandidaat voor over een half jaar |
+| Haarstudio Weert | Weert | kapsalon | 0495-537058 / 06-16712476 | — | Nieuwe salon geopend in 2024, Hoogstraat 14A. Geen e-mailadres. Check eerst Salonkee: Weert-kappers staan er opvallend vaak op |
 
 **Lane C, 31-08 — één regel eraf.** Mitch Dakwerken (Maastricht) stond op deze
 lijst thuis te horen en hoort er nu niet meer op: het adres
