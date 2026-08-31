@@ -460,3 +460,10 @@ e-mailadres stranden, staan voortaan óók gebundeld in
 `marketing/outreach/bellijst.md`, zodat de owner één tabel heeft in plaats van
 verspreide sectorbevindingen. Dit bestand blijft de plek waar de volledige
 notitie en de herjachtgeschiedenis per bedrijf staan.
+
+Lane D, 31-08: één zaak die op leeftijd, sector en vorm precies op profiel zit
+en alleen op het adres strandt.
+
+| Bedrijf | Plaats | Wat er wel is | Datum gecheckt |
+|---|---|---|---|
+| Trimsalon De Harige Vrienden | Maassluis | Gestart juni 2023, Zwarte Zee 34, eigen domein trimsalondeharigevrienden.nl met contact-, diensten-, tarieven- en voorwaardenpagina; contact loopt uitsluitend via een formulier. Drie zoekrondes zonder e-mailadres en zonder telefoonnummer in de zoekresultaten, dus ook niet belklaar | 2026-08-31 |
