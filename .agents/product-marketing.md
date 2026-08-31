@@ -1,6 +1,6 @@
 # Product Marketing Context — ZEVREN
 
-**Document version:** 1.8 · 2026-08-31
+**Document version:** 1.9 · 2026-08-31
 Elke marketingskill in `.claude/skills/` leest dit document eerst.
 Feiten hier zijn bindend; een skill-advies dat ermee botst, verliest.
 
@@ -204,8 +204,106 @@ kentekencheck, webshops, boekhouderportaal, rijschoolplatform
 (zevren.nl/demo/al-andalos, ongelist). Nog geen klantcases —
 demo's zijn concepten en worden nooit als echte klanten gepresenteerd.
 
+## Een erkenningsdatum is een levensteken, nooit een leeftijdsbewijs
+
+De Stagemarkt-route (`erkend leerbedrijf <sector> <stad> e-mail contactpersoon
+site:stagemarkt.nl`) is sinds 30-08 de aanbevolen eerste zoekopdracht als je
+op het e-mailadres vastloopt. Er zit één valstrik in en twee lanes zijn er
+inmiddels ingelopen, dus hij hoort hier:
+
+**De datum "erkend leerbedrijf sinds ‹datum›" zegt wanneer het bedrijf zich
+als leerbedrijf liet erkennen, niet wanneer het bedrijf begon.** Beide zijn
+een daad van het bedrijf, dus voor poort (a) telt zo'n erkenning binnen twaalf
+maanden gewoon mee. Voor de leeftijdspoort telt hij niet.
+
+Drie bevestigingen in twee dagen: Mimi Kappers (erkend 03-12-2025, KvK uit de
+oude Limburgse reeks, lane F 30-08), Timmerbedrijf Postma Assen (erkend
+09-11-2020, KvK 04062165, gestart in 2000 — zesentwintig jaar) en
+G. Zijlstra Leeuwarden (erkend leerbedrijf, KvK 01101404, opgericht 2003).
+Alle drie zagen er op de registerpagina uit als een jonge zaak op profiel.
+
+**De regel:** haal bij elke erkenningsdatum het KvK-nummer erbij. De oude
+provinciale reeksen (01, 02, 04, 05, 08, 09, 10, 11, 17, 27, 30, 32) zijn van
+vóór 2008 en verraden de leeftijd in één blik.
+
+Twee bronnen die het omgekeerde probleem oplossen en die dezelfde dag door
+twee lanes onafhankelijk zijn gevonden (lane A in het noorden, lane B in het
+oosten): de vakgidsen van het `-nu.nl`- en `-gids.nl`-type publiceren per
+bedrijf de **oprichtingsdatum**, en hun stadsindexpagina's geven een hele stad
+in één zoekopdracht (`site:timmerman-nu.nl <stad> <sector>` of
+`<gids> "opgericht op" 2022 OR 2023 <provincie> <sector>`). Ze melden ook
+uitdrukkelijk wat er níet is. **Volgorde die daaruit volgt:** gids voor de
+leeftijd → register of Werkspot/Trustoo voor het gedateerde levensteken →
+eenbedrijfspagina van goudengids of detelefoongids voor het adres. Nooit
+andersom: een adresjacht op een zaak van veertien jaar is weggegooide tijd.
+
+## Een dag zonder kaarten is geen dag zonder skills
+
+Op 31-08 leverden twee lanes een nuldienst en meldden beide `cold-email` en
+`marketing-psychology` als niet ingezet, met als reden dat er geen tekst was
+om ze op toe te passen. Dat is juist en het haalt poort (h): een skillslog dat
+toepassing claimt op berichten die niet bestaan, is precies de holle log die
+de poort moet vangen.
+
+Maar er ligt op zo'n dag wél werk voor twee andere skills uit Sams set, en
+beide lanes hebben zich er met de hand naartoe geredeneerd zonder ze aan te
+roepen:
+
+- **`customer-research`** voor de vraag welke segmenten deze pijn werkelijk
+  voelen en waar ze zich verzamelen. Elke sectorruimte-analyse is deze vraag.
+- **`competitor-profiling`** voor de vraag wie er in deze sector al wél
+  boekbaar is. Elke "de hele sector boekt al online"-bevinding is deze vraag.
+
+**De regel:** op een dienst zonder kaarten verschuift het skillgebruik van de
+schrijfskills naar de onderzoeksskills. De tabel meldt dan die twee, met wat
+ze aan de bevindingen veranderd hebben, en meldt cold-email en
+marketing-psychology eerlijk als niet van toepassing.
+
+## Sectoren: gesloten, afgewaardeerd, of in de wacht
+
+Drie categorieën, en het verschil is belangrijk genoeg om hier te staan,
+omdat een lane die ze verwart een deur dichttimmert die de owner nog open
+wil houden.
+
+- **Permanent gesloten** — bewezen over meerdere lanes en niet met een ander
+  bericht op te lossen: rijscholen, maneges en paardentrainers, zang- en
+  muziekdocenten, tandtechniek, kledingherstel en naaiateliers, keramiek- en
+  bloemenateliers, tattoo-studio's, dansscholen en yogastudio's, escaperooms.
+- **Afgewaardeerd** — niet dicht, maar verwacht hier één jonge zaak op de
+  tien, dus zet er nooit een hele dienst op: tegelzetters, metselaars,
+  timmerbedrijven (lane A en lane B kwamen hier op 31-08 onafhankelijk en in
+  verschillende provincies op uit, samen achttien bedrijven waarvan er twee
+  binnen het venster vielen), schoorsteenvegers.
+- **In de wacht bij beslissing 3** — de groep die al via een platform boekt:
+  salons op Fresha/Treatwell/Salonized, en sinds 31-08 óók B&B's en
+  verblijfsrecreatie op booking.com, natuurhuisje en bedandbreakfast.nl. Lane
+  A adviseerde die tweede groep permanent te sluiten; dat is afgewezen. Het
+  huidige bericht past er inderdaad niet op — wie een B&B vertelt dat hij
+  online boeken mist, verbrandt het adres — maar het platform zelf is een lek
+  in geld (commissie per boeking, gastrelatie op hún pagina en niet op zijn
+  naam), en dát is precies beslissing 3 die bij de owner ligt. Zolang die
+  open staat: niet inzetten, niet sluiten. Eén antwoord opent of sluit beide
+  groepen tegelijk.
+
 ## Changelog
 
+- 1.9 (2026-08-31, Azzouz, verificatie lanes A en B): drie dingen uit twee
+  nuldiensten. (1) Sectie "Een erkenningsdatum is een levensteken, nooit een
+  leeftijdsbewijs" toegevoegd — de Stagemarkt-route die ik zelf op 30-08 als
+  eerste zoekopdracht aanbeval, leverde in twee dagen drie bedrijven op die er
+  jong uitzagen en 20 tot 26 jaar bleken; lane A stelde daarmee mijn eigen
+  advies bij, en de vakgidstechniek die het oplost is dezelfde dag door lane A
+  en lane B onafhankelijk in twee regio's gevonden. (2) Sectie "Een dag zonder
+  kaarten is geen dag zonder skills" — beide lanes meldden cold-email en
+  marketing-psychology terecht als niet ingezet (poort h gehaald), maar lieten
+  customer-research en competitor-profiling liggen terwijl hun hele dienst uit
+  die twee vragen bestond. (3) Sectie "Sectoren: gesloten, afgewaardeerd, of in
+  de wacht" — lane A's advies om B&B's permanent te sluiten is afgewezen en
+  omgezet in een wachtstand bij beslissing 3, samen met de Fresha-groep: het
+  huidige bericht past er niet op, maar de commissie van het platform is een
+  lek in geld en dat is nu juist de vraag die bij de owner ligt. Een lane mag
+  een sector afwaarderen; permanent sluiten wat een openstaande
+  ownerbeslissing kan heropenen, mag ze niet.
 - 1.8 (2026-08-31, Azzouz, weekcyclus 30-08): de sectorcap gerepareerd. Bij de
   weekreview bleek dat de lanes hem toepassen op elke ledgerrij in plaats van op
   kaarten. Met 584 nieuwe rijen in zeven dagen sluit dat elke bewezen sector —

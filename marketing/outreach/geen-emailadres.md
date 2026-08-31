@@ -43,7 +43,7 @@ Zoekopdrachten uitgevoerd per bedrijf: naam + plaats + "e-mail", naam +
 | Salon Your Beautiful Skin | Groningen | eigen domein salonyourbeautifulskin.nl; Joyce, diploma 2019, salon sinds april 2021 in Reitdiephaven; 06-21323624 | 2026-08-25 |
 | Pure Nipali | Westerlee | eigen domein purenipali.com; Nienke Wiersema, salon sinds 2021; telefoonnummer in de gids afgeschermd | 2026-08-25 |
 | Hondencoach Drenthe | Stieltjeskanaal | eigen site + doggo-vermelding; Kim Mulder, verhuisd naar Stieltjeskanaal in 2021, 1-op-1 lessen aan huis | 2026-08-26 |
-| Hondenschool Midden Drenthe | Beilen | eigen site + Facebook (750 volgers) + Instagram; Saskia van Nimwegen eigenaar sinds april 2021, Dierenwelzijnskeurmerk sinds 01-01-2023, lest op het terrein van het Drents Dierentehuis | 2026-08-26 |
+| ~~Hondenschool Midden Drenthe~~ | Beilen | **VERVALT 31-08 (lane A): geen prospect meer.** Voert hondenschoolmiddendrenthe.nl met eigen contact- en over-mij-pagina's; het lek bestaat niet. Oorspronkelijke notitie: eigen site + Facebook (750 volgers) + Instagram; Saskia van Nimwegen eigenaar sinds april 2021, Dierenwelzijnskeurmerk sinds 01-01-2023, lest op het terrein van het Drents Dierentehuis | 2026-08-26, vervallen 2026-08-31 |
 | Hondenschool Zuidlaren | Zuidlaren | eigen site met cursuspagina's, SPPD-erkend, 06-13600142; Hazelaarpad 1 | 2026-08-26 |
 | Bar Biga | Heerenveen | eigen site barbiga.nl + Instagram @bar.biga; KvK 88394530 (2023), pizzafoodtruck van Nick en Saar, boekbaar via FoodtruckBooking | 2026-08-26 |
 | Jouster Uitlaatservice | Joure | eigen site jousteruitlaatservice.nl; KvK 93375425 (2024), Tamara van der Zalm | 2026-08-26 |
@@ -284,7 +284,7 @@ gmail/hotmail, naam + eigenaarsnaam of gidsvermelding).
 | Afbouwservice Sead B.V. | Assen | KvK 82905681, opgericht 26-05-2021, adres Donaustraat 111, telefoon 06-36340266; gidsvermelding zegt expliciet "geen e-mailadres bekend" | 2026-08-29 |
 | MD Dakbedekkingen | Kerkenveld | KvK 86144057, opgericht 15-04-2022, eigen domein mddakbedekkingen.nl met alleen een contactformulier, telefoon 06-48254913 | 2026-08-29 |
 | Roman Schildersbedrijf | Emmen | KvK 88631338, opgericht 01-01-2023, eenmanszaak, Werkspot-profiel met 5,0, telefoon 06-57442120, afgeschermde Facebook-pagina. Sterkste gemiste kans van de dag: geen website, jong, aantoonbaar lopend — alleen geen adres | 2026-08-29 |
-| Dakman Renovaties & Onderhoud | Groningen | KvK 87982315, opgericht 17-10-2022, 9,8 uit 71 reviews, eigen domein dakmanrenovatiesonderhoud.nl, telefoon 06-16520927 | 2026-08-29 |
+| ~~Dakman Renovaties & Onderhoud~~ | Groningen | **VERVALT 31-08 (lane A): geen prospect meer.** Voert dakmanrenovatiesonderhoud.nl met eigen pagina's voor diensten, offerte en dakinspectie; het lek bestaat niet. Oorspronkelijke notitie: KvK 87982315, opgericht 17-10-2022, 9,8 uit 71 reviews, telefoon 06-16520927 | 2026-08-29, vervallen 2026-08-31 |
 | Wind daktechniek | Vledder | KvK 85411558, opgericht 01-02-2022, eigen domein winddaktechniek.nl, telefoon 06-41845393 | 2026-08-29 |
 | Solargroep Drenthe B.V. | Ter Apel (Gn) | KvK 86415867, actief sinds 2022, 9,0 uit 9 reviews, eigen domein solargroepdrenthe.nl | 2026-08-29 |
 | DDS Vakschilder | Groningen | KvK 75590301, opgericht 22-08-2019 (net buiten het venster van 1-6 jaar), geen website, telefoon 06-20504337, Facebook-pagina | 2026-08-29 |
@@ -394,6 +394,12 @@ bedrijven niets gepubliceerd hebben. Gevonden via de nieuwe stadsindex-techniek 
 | KmK Montage | Eastermar | KvK 85113263, opgericht februari 2022, 1 persoon, It Heechsân 1. Kunststof/aluminium kozijnen, gevelbekleding, dakgoten, veranda's. Werkspot-profiel + Facebookpagina (6155-reeks, dus 2023), geen eigen domein. STERKSTE PROFIEL van de zes; het adres staat vermoedelijk op die Facebookpagina, die alleen een browser kan openen | 2026-08-31 |
 | Op eigen Hout — timmerwerken | Groningen-Stad | KvK 80259138, opgericht 17-09-2020, eenmanszaak 1 persoon, Joachim Altinghstraat 29a. Registers: geen telefoon, geen e-mail, geen website | 2026-08-31 |
 | Bouma Timmerwerken en Renovatie | Leeuwarden | KvK 81578237, opgericht 21-01-2021, eenmanszaak. Op profiel qua leeftijd, maar voert eigen domein bouma-timmerwerk.nl én de gids meldt dat geen e-mailadres bekend is — twee poorten open, dus ook met adres geen kaart | 2026-08-31 |
+
+**Doorgevoerd in de tabellen door Azzouz, 31-08:** de twee VERVALT-regels
+hieronder stonden alleen in dit prozablok en bleven levend in de tabellen
+hierboven staan, waar de volgende lane ze van boven naar beneden opnieuw zou
+jagen. Ze zijn nu in de regel zelf doorgestreept, in het formaat dat lane B
+diezelfde dag bij Tak Techniek gebruikte.
 
 **Correcties op eerdere parkeringen (lane A, 31-08).** Drie van de vier herjaagde
 noordelijke profielen blijken bij hercontrole helemaal geen prospect meer te zijn. Ze

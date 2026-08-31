@@ -95,3 +95,33 @@ Sam, 31 augustus 2026
 | Diamant Dakbedekkingen | Zaandam | dakdekker | staat in de gidsvermelding, niet in mijn zoekresultaten | — | KvK 76535193, opgericht 29-11-2019, eenmanszaak van Misha Bos, Hogendijk 166A, eigen domein en Werkspot-profiel; geen e-mailadres, herjaagd 31-08 |
 | Mark Koomen bestratingen | Lutjewinkel | bestrating | staat in de telefoonboekvermelding | — | KvK 85334774, opgericht 10-02-2022, eenmanszaak, 1 werkzaam persoon; de stratenmakersgids meldt expliciet geen e-mailadres en geen website |
 | Lorenzo Tuinaanleg en Bestratingen | Bovenkarspel | bestrating/tuinaanleg | staat in de telefoonboekvermelding | — | KvK 81650108 (2021), eenmanszaak, 1 werkzaam persoon; geen e-mailadres, en het websiteveld in de gids verwijst naar een ander bedrijf |
+
+## Lane A — Groningen, Friesland, Drenthe
+
+Toegevoegd door Azzouz op 31-08 uit `marketing/outreach/2026-08-31-a.md`. Lane A
+committeerde om 04:57, voordat dit bestand om 05:11 bestond, en kon er dus zelf
+niet in schrijven.
+
+**Lees deze zes anders dan de rest van de lijst.** Lane A presenteert ze als
+bellijst, maar zegt in hetzelfde bestand dat bij vijf van de zes de
+registerpagina uitdrukkelijk meldt dat er géén e-mailadres én géén
+telefoonnummer bekend is. Er valt hier dus vrijwel niets te bellen: wat er wel
+is, is een straatadres en een KvK-datum. Dit is een langsrijlijst, geen
+bellijst. De telefoonkolom blijft leeg waar er geen nummer is — dat is
+eerlijker dan hem weglaten.
+
+| Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
+|---|---|---|---|---|---|
+| Timmerbedrijf Pollard | Sappemeer (gem. Midden-Groningen) | timmerbedrijf | geen — register meldt uitdrukkelijk geen telefoon | — | KvK 91027659, opgericht 07-08-2023, Noorderstraat 309, 9611 AH. Lek positief vastgelegd ("geen website bekend", timmerman-nu.nl + TransFirm); geen e-mailadres in drie zoekronden |
+| Absoluut Timmerwerken | Groningen-Stad | timmerbedrijf | geen | — | KvK 89983645, opgericht 24-04-2023. Lek positief vastgelegd ("geen website bekend", timmerman-nu.nl); geen adres, geen straatadres gevonden |
+| Albros Timmerwerken | Emmen | timmerbedrijf | geen — register meldt uitdrukkelijk geen telefoon | — | KvK 88008703, opgericht 01-11-2022, Magelhaenstraat 5, 7825 VL (Bargermeer). Lek positief vastgelegd (timmerman-nu.nl + Oozo + TransFirm) |
+| Timmerwerken van Houten | Assen | timmerbedrijf | geen | — | KvK 88001806, opgericht 01-10-2022. Lek positief vastgelegd (timmerman-nu.nl); geen straatadres gevonden |
+| KmK Montage | Eastermar (Tytsjerksteradiel) | kozijnmontage/timmerwerk | geen nummer in de zoekresultaten; loopt via Werkspot en Facebook | — | KvK 85113263, februari 2022, It Heechsân 1, 9261 XG. Kunststof- en aluminiumkozijnen, gevelbekleding, dakgoten, veranda's. Geen eigen domein, wél een levend Werkspot-profiel en een Facebookpagina. **Sterkste profiel van de zes**; lane A vermoedt het adres op die Facebookpagina, die in deze omgeving niet te openen is |
+| Op eigen Hout — timmerwerken | Groningen-Stad | timmerbedrijf | geen | — | KvK 80259138, opgericht 17-09-2020, Joachim Altinghstraat 29a. Lek positief vastgelegd (timmerman-nu.nl + Oozo) |
+
+**Zevende naam uit dezelfde regio, wél belbaar:** Roman Schildersbedrijf, Emmen
+(schilder, 06-57442120, Zuidlaarderbrink 296, KvK 88631338, opgericht
+01-01-2023). Staat geparkeerd in `geen-emailadres.md`; telefoonboek.nl meldt
+uitdrukkelijk dat er geen e-mailadres bekend is. Lane A noemt hem de sterkste
+belkandidaat van het noorden en op deze lijst is hij dat ook — hij is de enige
+noordelijke regel met een nummer erbij.
