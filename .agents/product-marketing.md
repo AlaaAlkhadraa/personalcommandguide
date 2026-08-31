@@ -1,6 +1,6 @@
 # Product Marketing Context — ZEVREN
 
-**Document version:** 1.5 · 2026-08-30
+**Document version:** 1.7 · 2026-08-31
 Elke marketingskill in `.claude/skills/` leest dit document eerst.
 Feiten hier zijn bindend; een skill-advies dat ermee botst, verliest.
 
@@ -12,8 +12,9 @@ demo's als bewijs en prijzen die openbaar op de site staan.
 
 Pakketten (eenmalig, actuele prijzen; doorgestreepte adviesprijzen op
 de site): Starter 299 · Business met boekingssysteem 549 · Webshop 899
-· Maatwerk webapplicatie 1.349. Add-ons: extra pagina 79, extra taal
-150. Optioneel onderhoudsabonnement 49,99/maand (hosting, domein,
+· Maatwerk webapplicatie 1.349. Add-ons: extra pagina 79, drie extra talen samen
+150 (NIET 150 per taal — `ADD_ONS.language` is 150 en de dictionaries
+zeggen in alle zes talen "3 talen" / "Je site in drie extra talen"). Optioneel onderhoudsabonnement 49,99/maand (hosting, domein,
 updates, kleine wijzigingen); bij opzegging neemt de klant domein en
 bestanden gratis mee.
 
@@ -92,6 +93,43 @@ Brummel Airconditioning een bruikbaar adres op waar twee dagen eerder "niets"
 stond. Corrigeer die regel dan ook, anders kost dezelfde zaak elke volgende
 lane opnieuw tijd.
 
+## Wiens daad draagt de datum — poort (a) beslist
+
+Sams voorstel van 22 augustus (inbox) vraagt of de geen-website-groep een
+gedateerde gidsvermelding als levensteken mag gebruiken. Zijn diagnose klopt
+en is deze week vier dagen op rij bevestigd: de datumeis selecteert precies
+de groep weg die de Maps-order wil raken, want een eigen site is nu juist wat
+een gedateerd spoor achterlaat. Het voorstel gaat niettemin maar half door,
+en de scheidslijn is niet "eigen bron versus derde partij" maar deze:
+
+**Registreert het gedateerde feit een DAAD VAN HET BEDRIJF, of een daad van
+de uitgever?** Alleen het eerste is een levensteken.
+
+- **Telt (ook zonder eigen website):** een KvK-mutatie met datum
+  (adreswijziging, handelsnaam, SBI, nieuwe vestiging) · een gedateerde
+  gemeentelijke of GGD-vergunning, -inspectie of -rapport · een SBB-erkenning
+  of -verlenging binnen twaalf maanden · een vacature met plaatsingsdatum ·
+  een review met leesbare datum · een gedateerde eigen post · een programma-
+  of roosterboek van een derde waarin het bedrijf zelf optreedt. In alle
+  gevallen heeft iemand iets gedáán: iets ingeschreven, iets geïnspecteerd,
+  iemand aangenomen, ergens gestaan.
+- **Telt niet:** "Updated ‹maand› ‹jaar›" op Yelp, wheree, oozo of drimble ·
+  het jaartal in een gidsentitel ("Top 25 installateurs [2026]") · een
+  gemiddelde score zonder datum · een registerinschrijving of erkenningsdatum
+  ouder dan twaalf maanden. Dat is de huishouding van de uitgever. Een gids
+  die zijn pagina ververst, bewijst dat de gids leeft.
+
+Voor Sam betekent dit dat de geen-website-groep wél door de poort kán, maar
+via het register en het vergunningenspoor, niet via de gidsenstempel. De
+eerste zoekopdracht bij een bedrijf zonder site is daarom
+`"<bedrijfsnaam>" <plaats> kvk mutatie` of `"<bedrijfsnaam>" GGD OF vergunning
+OF inspectie`, niet een gidsenzoekopdracht.
+
+**Wees eerlijk over wat dit niet oplost.** Dit verruimt de bereikbaarheid, niet
+de leeftijdsmuur van 30-08: registers en vergunningenlijsten selecteren op
+gevestigd zijn, precies zoals Stagemarkt dat doet. Verwacht hier meer kaarten
+uit de geen-website-groep, geen oplossing voor jong-én-bereikbaar.
+
 ## Welke bron een e-mailadres draagt
 
 Niet elk openbaar adres is even hard, en het verschil zit in de vorm van de
@@ -154,6 +192,19 @@ demo's zijn concepten en worden nooit als echte klanten gepresenteerd.
 
 ## Changelog
 
+- 1.7 (2026-08-31, Azzouz, weekcyclus 30-08): drie dingen. (1) De add-on-regel
+  stond fout: "extra taal 150" suggereert 150 per taal, terwijl `ADD_ONS.language`
+  in `zevren/lib/offer.ts` 150 is voor DRIE extra talen en de dictionaries dat in
+  alle zes talen zo zeggen. John vond het zelf op 29-08 en meldde het in plaats van
+  het stil te laten staan; de fout stond ook tweemaal in zijn eigen kopieerklare
+  post van 28-08, die daarmee een claim droeg die de site niet waarmaakt. (2)
+  Sectie "Wiens daad draagt de datum" toegevoegd, die Sams inboxnotitie van 22-08
+  afhandelt: het onderscheid is niet eigen-bron-versus-derde maar daad-van-het-
+  bedrijf versus daad-van-de-uitgever. KvK-mutaties, GGD- en gemeentevergunningen
+  en vacatures tellen dus wél voor de geen-website-groep; "Updated ‹maand› ‹jaar›"
+  op een gids telt niet — dat is de verversingsstempel die 1.5 al afwees, nu met
+  de reden erbij zodat hij niet terugkeert. (3) Kopregel stond nog op 1.5 terwijl
+  de changelog al op 1.6 stond; rechtgezet.
 - 1.6 (2026-08-30, Azzouz, avonddienst): sectie "Twee regels die geen poort
   zijn" toegevoegd. De drie extra lanes van vandaag (E, F, G) leverden samen
   twee kaarten, en bij allebei botste de verificatie op een regel die als poort

@@ -9,6 +9,35 @@ next article about webshops", "pause articles for two weeks".
 
 ## New
 
+(leeg)
+
+## Processed
+
+### Afgehandeld 2026-08-31 (weekcyclus 30-08) — Azzouz
+
+**Oordeel: half toegewezen, en de helft die afvalt is de helft die niet
+werkt.** Sams diagnose klopt en is deze week onafhankelijk bevestigd: de
+datumeis selecteert stelselmatig de groep weg die de Maps-order wil raken.
+Maar het onderscheid dat hij voorstelt (eigen bron versus derde partij) is
+niet het onderscheid dat telt. Dat is: registreert het gedateerde feit een
+daad van het BEDRIJF, of een daad van de UITGEVER?
+
+- **Toegewezen:** KvK-mutaties, gemeentelijke en GGD-vergunningen,
+  inspecties en rapporten, SBB-erkenningen binnen twaalf maanden, vacatures
+  met plaatsingsdatum. Alle vijf leggen een handeling vast. Deze openen de
+  geen-website-groep, precies zoals Sam vroeg.
+- **Afgewezen:** de gidsenstempel "Updated ‹maand› ‹jaar›" op Yelp, wheree,
+  oozo of drimble. Dat bewijst dat de gids leeft, niet het bedrijf.
+  `.agents/product-marketing.md` 1.5 wees die vorm op 30-08 al af; nu staat
+  de reden erbij zodat hij niet terugkeert.
+
+Vastgelegd in `.agents/product-marketing.md` 1.7, sectie "Wiens daad draagt
+de datum". Sam krijgt de bijbehorende zoekopdrachten in de directives van
+deze week. De notitie heeft negen dagen gelegen doordat de cyclus van 30-08
+vastliep voor hij begon; dat is mijn verlies, niet dat van Sam.
+
+---
+
 **Van Sam, 22 augustus — de twee staande orders botsen in de praktijk.**
 
 De order van 21 aug zegt: jaag op de Maps-pool (bedrijven zonder website
@@ -32,7 +61,3 @@ gedateerd bewijs van een derde partij, alleen niet van het bedrijf zelf.
 Zonder die verruiming blijven de dagbestanden dun, of vullen ze zich met
 prospects die al een site hebben. Details en het volledige lijstje
 afvallers staan in `marketing/outreach/2026-08-22.md`.
-
-## Processed
-
-(none yet)
