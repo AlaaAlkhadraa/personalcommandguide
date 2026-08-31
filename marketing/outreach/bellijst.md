@@ -37,6 +37,35 @@ e-mailadres gevonden is (en zet de zaak dan op het bord of in de ledger).
 | Lageman Dak & Zinkwerk | Lelystad | dakdekker | 06-14773701 | — | eigen domein, geen adres |
 | Plattel Dakbedekkingen | Zwolle/Kampen | dakdekker | 038-3037718 | wheree "Updated March 2026" — telt NIET als levensteken (PM 1.7: dat is de daad van de uitgever) | eigen domein, geen adres |
 
+## Lane C — Limburg, Noord-Brabant, Zeeland
+
+| Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
+|---|---|---|---|---|---|
+| Veenstra Ongediertebestrijding | Hulsberg (Beekdaelen) | ongediertebestrijding | 06-42661654 | — (KvK-inschrijving okt 2023 en Facebookpagina uit 2023 zijn ouder dan twaalf maanden) | Sterkste groeifaseprofiel van de dienst: eigen domein, openbare prijs €70, KAD-certificering, eigenaar Stijn Veenstra. Drie zoekronden zonder adres |
+| AlgiService | Heerlen | tegelzetter/stukadoor | — | — | Opgericht 01-01-2024, Trustoo 8,4, top 10 tegelzetters Heerlen. Noch e-mail noch telefoon vindbaar; enige contactweg is het offerteformulier van Trustoo zelf |
+| Dakwerk & klusbedrijf MB | Heerlen | dakdekker | — | — | KvK 92746217 (2024-reeks), eigen domein dakklus-mb.nl; dakdekkersgids.nl meldt uitdrukkelijk geen e-mailadres |
+| @lex Dienstverlening | Kerkrade | dakdekker | — | — | KvK 88691454 (2023), eenmanszaak |
+| Allround Klusbedrijf Haowa | Maastricht | klusbedrijf | 06-39127866 | — | Opgericht 03-03-2022, Trustoo 8,1, top 10 aannemers Maastricht e.o. Derde herjacht (25-08, 30-08, 31-08), nog steeds geen adres |
+| Mekojan Logistics | Bergen op Zoom | koeriersdienst | 06-34566534 | — | Rijsselbergen 30, presenteert zich als "snelgroeiend koeriersbedrijf" |
+| Hondenservice Zeeland | Vlissingen | hondenuitlaat/dagopvang | 06-20837270 | — | Begin 2023 opgericht door Martijn en Ferdi, winkel aan de Walstraat, omheind speelveld. Stuurt uitdrukkelijk op WhatsApp/SMS en een contactformulier |
+| Kapsalon Fresh | Venlo | kapsalon | 06-84310980 | — | Levende Instagram, TikTok en YouTube; Roermondsestraat 36, open tot 19:00 en ook op zondag. Google-sitespagina, geen SBB-erkenning dus de registerroute is dicht. Derde herjacht |
+| Van Balkom Klussen | Udenhout | klusbedrijf | geen | — | KvK 85790966 (24-03-2022). Register meldt uitdrukkelijk geen e-mail én geen telefoon |
+| Meulblok Bestratingen | Goes | bestrating | geen | — | KvK 83376429 (22-07-2021), Van Karnebeekstraat 3. Geen e-mail, geen telefoon, geen website bekend |
+| A. Sukhraj Bestratingen | Goes | bestrating | geen | — | KvK 83488871 (06-08-2021), Robert Schumanlaan 56. Geen contactgegevens, geen reviews |
+| Stefan Heijboer Services | Vlissingen | dienstverlening | geen | — | KvK 88243796, actief sinds 21-11-2022. LET OP lookalike: een tweede vermelding zet hetzelfde KvK-nummer in Emmeloord |
+| DONN-SERVICE | Zeeland | dienstverlening | geen | — | KvK 90943635 (26-07-2023) |
+| Martijn van der Heijde | Zeeland | dienstverlening | geen | — | KvK 88591182 (01-01-2023) |
+| Mussa Kapper | Breda | kapsalon | geen | — | Omgekeerd geval: het e-mailadres is juist WEL bevestigd (mussamahammed74@gmail.com, Stagemarkt, Haagdijk 75), maar poort (a) bleef na drie ronden open. Staat hier omdat er niets anders mee te doen is, niet omdat het adres ontbreekt |
+| Stassen Administraties | Maastricht | administratiekantoor | geen | — | KvK 91383080 (01-09-2023). Registers melden uitdrukkelijk geen telefoon, e-mail of website |
+| Administratiekantoor Jelles | Heerlen | administratiekantoor | geen | — | KvK 90920716 (01-05-2023), Op De Nobel 100 |
+| Administratie-Consulent De RekenKamer | Waspik | administratiekantoor | geen | — | Geen adres (lane C, 29-08) |
+
+**Lane C, 31-08 — één regel eraf.** Mitch Dakwerken (Maastricht) stond op deze
+lijst thuis te horen en hoort er nu niet meer op: het adres
+`mitchdakwerken@hotmail.com` is alsnog gevonden. Hij staat in de ledger als
+`lead - poort open`, want alleen poort (a) is er nog open. Dat is de beweging die
+deze lijst hoort te maken.
+
 ## Wat deze lijst nog niet is
 
 Twee dingen ontbreken en het is eerlijker om ze te noemen dan ze te verbergen.
@@ -49,8 +78,7 @@ ingeschreven zijn. De nieuwe bewijsroute uit de directives (KvK-mutatie,
 gemeentelijke of GGD-stukken, SBB-erkenning, gedateerde vacature) is precies
 de route die deze kolom kan vullen; dat is werk voor de volgende diensten.
 
-Ten tweede staan hier alleen de bedrijven uit de regio van lane B. De andere
-lanes hebben vergelijkbare namen in hun dagbestanden staan — lane C noemt er
-deze week acht, lane A zes — die horen hier in dezelfde tabel te komen.
+Ten tweede staan hier alleen de bedrijven uit de regio van lane B. Lane C heeft zijn regio
+op 31-08 hierboven toegevoegd; lane A en lane D staan nog open.
 
 Sam, 31 augustus 2026

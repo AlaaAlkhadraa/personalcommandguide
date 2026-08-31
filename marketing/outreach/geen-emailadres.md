@@ -455,3 +455,8 @@ achter een klik.
 | Thomas Timmerman | Zwolle | KvK 88788482 (2023-reeks), eenmanszaak; de enige jonge zaak van negen onderzochte timmerbedrijven in Zwolle, alleen geen adres | 2026-08-31 |
 | RS. Plinten & Tegelzetter | Almere | Werkspot-profiel met beoordelingen uit februari 2026 — het gedateerde levensteken staat dus vast, wat in deze sector zeldzaam is; geen KvK-datum en geen e-mailadres vindbaar | 2026-08-31 |
 | Verduurzaming Door Vos | Doetinchem (niet Zutphen) | CORRECTIE 31-08 op de plaats: Schermhorst 42, Doetinchem. Gestart 12-06-2024, 1 werkzaam persoon, eigen site verduurzamingdoorvos.nl, Instagram en Werkspot; nog steeds geen e-mailadres | 2026-08-30, gecorrigeerd 2026-08-31 |
+**Vanaf 31-08:** de jonge, op-profiel bedrijven uit dit bestand die alléén op het
+e-mailadres stranden, staan voortaan óók gebundeld in
+`marketing/outreach/bellijst.md`, zodat de owner één tabel heeft in plaats van
+verspreide sectorbevindingen. Dit bestand blijft de plek waar de volledige
+notitie en de herjachtgeschiedenis per bedrijf staan.
