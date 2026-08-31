@@ -8,14 +8,17 @@ import type { Dictionary } from "@/lib/i18n/dictionary-type";
  * A one-off build and a recurring plan answer different questions, so this
  * sits apart from the four cards rather than becoming a fifth: nobody should
  * read 49.99 as an alternative to buying a website.
+ *
+ * Deliberately the one dark card inside the white pricing band: the care
+ * plan is the anchor offer, and the navy block is what the eye lands on.
  */
 export function SubscriptionCard({ dict }: { dict: Dictionary["offer"]["subscription"] }) {
   return (
     <div
       data-reveal
-      className="rounded-2xl bg-gradient-to-b from-accent/30 via-white/10 to-transparent p-px"
+      className="rounded-2xl bg-gradient-to-b from-primary/40 via-slate-200 to-transparent p-px"
     >
-      <div className="grid gap-6 rounded-[calc(1rem-1px)] bg-navy/90 p-6 sm:p-8 lg:grid-cols-[1fr_1.1fr] lg:items-center lg:gap-12">
+      <div className="grid gap-6 rounded-[calc(1rem-1px)] bg-navy p-6 sm:p-8 lg:grid-cols-[1fr_1.1fr] lg:items-center lg:gap-12">
         <div className="flex flex-col gap-3">
           <span className="w-fit rounded-full border border-accent/30 bg-accent/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-accent">
             {dict.eyebrow}

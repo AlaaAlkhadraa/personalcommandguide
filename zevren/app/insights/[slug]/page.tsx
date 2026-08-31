@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: PageProps) {
 function Block({ block }: { block: ArticleBlock }) {
   if (block.type === "h2") {
     return (
-      <h2 className="pt-4 font-heading text-2xl font-bold leading-snug text-white">
+      <h2 className="pt-4 font-heading text-2xl font-bold leading-snug text-navy">
         {block.text}
       </h2>
     );
@@ -40,10 +40,10 @@ function Block({ block }: { block: ArticleBlock }) {
     return (
       <ul className="flex flex-col gap-3">
         {(block.items ?? []).map((item) => (
-          <li key={item} className="flex items-start gap-3 text-base leading-relaxed text-muted">
+          <li key={item} className="flex items-start gap-3 text-base leading-relaxed text-slate-700">
             <svg
               viewBox="0 0 20 20"
-              className="mt-1.5 h-4 w-4 shrink-0 text-accent"
+              className="mt-1.5 h-4 w-4 shrink-0 text-primary"
               fill="none"
               stroke="currentColor"
               strokeWidth={2}
@@ -57,7 +57,7 @@ function Block({ block }: { block: ArticleBlock }) {
       </ul>
     );
   }
-  return <p className="text-base leading-relaxed text-muted">{block.text}</p>;
+  return <p className="text-base leading-relaxed text-slate-700">{block.text}</p>;
 }
 
 export default async function ArticlePage({ params }: PageProps) {
@@ -155,7 +155,9 @@ export default async function ArticlePage({ params }: PageProps) {
         </Container>
       </section>
 
-      <article className="py-14 sm:py-20" dir={isEnglishFallback ? "ltr" : undefined}>
+      {/* The reading surface is white on purpose: long-form text is easiest
+          read as ink on paper, and the dark bands above and below frame it. */}
+      <article className="bg-white py-14 sm:py-20" dir={isEnglishFallback ? "ltr" : undefined}>
         <Container className="flex max-w-3xl flex-col gap-6 text-start">
           {content.blocks.map((block, blockIndex) => (
             <Block key={blockIndex} block={block} />

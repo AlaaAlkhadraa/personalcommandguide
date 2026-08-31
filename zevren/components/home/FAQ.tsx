@@ -7,30 +7,34 @@ interface FAQProps {
   homeDict: Dictionary["home"]["faq"];
 }
 
+/**
+ * The questions band, white like the pricing band: answers to objections read
+ * best as plain ink on paper, and the dark sections around it keep the rhythm.
+ */
 export function FAQ({ dict, homeDict }: FAQProps) {
   return (
-    <section className="py-14 sm:py-24">
+    <section className="border-y border-slate-200 bg-white py-14 sm:py-24">
       <Container className="flex flex-col gap-12">
         <div data-reveal>
-          <SectionHeading eyebrow={homeDict.eyebrow} title={homeDict.title} />
+          <SectionHeading light eyebrow={homeDict.eyebrow} title={homeDict.title} />
         </div>
         <div data-reveal-stagger className="mx-auto flex w-full max-w-3xl flex-col gap-3">
           {dict.items.map((item) => (
             <details
               key={item.question}
               data-reveal-item
-              className="group rounded-xl border border-white/10 bg-surface/50 px-6 py-4 open:border-primary/40"
+              className="group rounded-xl border border-slate-200 bg-slate-50 px-6 py-4 open:border-primary/40 open:bg-white"
             >
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-medium text-white marker:content-none">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-medium text-navy marker:content-none">
                 {item.question}
                 <span
                   aria-hidden="true"
-                  className="shrink-0 text-xl text-accent transition-transform duration-200 group-open:rotate-45"
+                  className="shrink-0 text-xl text-primary transition-transform duration-200 group-open:rotate-45"
                 >
                   +
                 </span>
               </summary>
-              <p className="pt-3 text-sm leading-relaxed text-muted">{item.answer}</p>
+              <p className="pt-3 text-sm leading-relaxed text-slate-600">{item.answer}</p>
             </details>
           ))}
         </div>
