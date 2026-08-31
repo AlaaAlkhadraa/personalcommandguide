@@ -743,3 +743,37 @@ search could not prove them alive, not that closure was confirmed.
 | Trimsalon Conny | Zwolle | not fit - te oud | 2026-08-31 lane B: KvK 08217141 (reeks van voor 2008), Arendshorstlaan 19, contactpersoon Conny Vos, e-mail trimsalonconny@gmail.com, eigen site met tarievenpagina. Nooit benaderd |
 | Hondentrimsalon Anneloes | Zeewolde | not fit - te oud | 2026-08-31 lane B: KvK 32047411 (reeks van voor 2008), Baardmeesweg 25, 2-5 werkzame personen, eigen site hondenpensionanneloes.nl. Nooit benaderd |
 | Hondenkapsalon Wieke | Emmeloord | geparkeerd - bellijst | 2026-08-31 lane B: Capellastraat 26, 06-47070682, eigen site hondenkapsalonwieke.nl, 7,6 uit 1 beoordeling. Geen e-mailadres; staat in bellijst.md |
+| Huiswerkbegeleiding Amersfoort | Amersfoort | lead - poort open | 2026-08-31 lane D; KvK 87668831 (2022-reeks), eigenaar Daphne Beekman-Hardeman, Zielhorsterweg 83 (3813 ZX), begeleiding dagelijks 13:00-18:00, eigen "Werken bij"-pagina; E-MAIL: info@huiswerkbegeleidingamersfoort.nl (eigen contactpagina, ook 06-44695626). LEK BEWEZEN: aanmelden loopt via een gratis intake per telefoon of mail, geen zelf te kiezen tijdslot, geen boekingsmodule, geen platformprofiel. POORT (a) OPEN: geen gedateerd spoor binnen 12 maanden vindbaar; te sluiten met één blik op huiswerkbegeleidingamersfoort.nl |
+| Uw Bouw Nederland B.V. | Dordrecht | lead - poort open | 2026-08-31 lane D; KvK 80822878, opgericht 05-11-2020, Zirkoon 232 / Van Almondestraat 1; E-MAIL: info@uwbouw.nl (eigen domein + SBB-registerpagina die ook het adres draagt), erkend leerbedrijf 100723915 met openstaande leerplaats tegelzetter, 1 Werkspot-review met een 10. TWEE POORTEN OPEN: geen gedateerd levensteken, en het lek is niet bewezen — weerleggingszoekopdracht op "uwbouw.nl" projecten/referenties gaf geen enkele eigen pagina, wat afwezigheid in de index is en geen afwezigheid van een projectenpagina |
+| Bacio Amersfoort | Amersfoort | not fit - boekt al online | 2026-08-31 lane D; KvK 95116729 (2025), Lieve Vrouwestraat 17, erkend leerbedrijf 26-09-2025; e-mail bericht@bacioamersfoort.nl en factuur@bacioamersfoort.nl. Reserveren via een widget op de eigen reserveerpagina |
+| Strandpaviljoen Reuring | Hoorn | not fit - boekt al online | 2026-08-31 lane D; Badhuisweg 1, vijf eigenaren, info@reuringhoorn.nl. Online reserveren tot 15 personen via eigen reserveerpagina |
+| Polonio bar & bistro | Alkmaar | not fit - boekt al online | 2026-08-31 lane D; eigenaar/kok José Polonio, erkend leerbedrijf, polonio.nl. Reserveren via de eigen site |
+| Bistro 't Kannetje | Amersfoort | not fit - te lang gevestigd | 2026-08-31 lane D; Lieve Vrouwestraat 11, erkend leerbedrijf 11-06-2026, e-mail reservering@hetkannetje.nl en personeel@hetkannetje.nl; bestaat 25+ jaar |
+| M&K et Dunyasi | Dordrecht | not fit - te lang gevestigd | 2026-08-31 lane D; KvK 51654911, opgericht 14-12-2009, Bosboom-Toussaintstraat 25, erkend leerbedrijf 05-01-2026, e-mail mk-etdunyasi@hotmail.com (SBB) |
+| De Mink Montage (DMM) | Vlaardingen | not fit - te lang gevestigd | 2026-08-31 lane D; KvK 68644590, opgericht 01-05-2017, Sperwerlaan 183, e-mail deminkmontage@hotmail.com (SBB) |
+| UNNIQUE reclame en belettering | Amstelveen/Cruquius | not fit - te lang gevestigd | 2026-08-31 lane D; opgericht 09-12-2016, Crommelinbaan 63A, e-mail info@unnique.nl |
+| E&B Reclame Belettering | Amstelveen | not fit - buiten profiel | 2026-08-31 lane D; SBB-registerpagina met info@ebdesign.nl en vast 0297-nummer, gevestigde zaak zonder groeifasesignaal |
+| Greazy Customs B.V. | Capelle aan den IJssel | not fit - lek niet te bewijzen | 2026-08-31 lane D; KvK 74679848 (2019-reeks), B.V. met 085-nummer, info@greazycustoms.com, volledige eigen site met dienstenpagina's |
+| Novum Wraps | Spijkenisse | not fit - geen e-mailadres | 2026-08-31 lane D; eigenaar Daniel van der Stelt, novumwraps.nl; geen adres en geen KvK-datum gevonden |
+| Anysign Reclame | Zaanstad | not fit - geen e-mailadres | 2026-08-31 lane D; alleen gidsvermelding belettering-info.nl, geen adres of KvK-datum |
+| Letterplex | Nieuwegein | not fit - te lang gevestigd | 2026-08-31 lane D; familiebedrijf sinds 1976 |
+| ABA-Reklame | Utrecht | not fit - te lang gevestigd | 2026-08-31 lane D; opgericht 1992 |
+| SVK Tegelwerken B.V. | Alkmaar | not fit - te lang gevestigd | 2026-08-31 lane D; erkend leerbedrijf sinds 20-03-2009 |
+| Tegelwerken J.J. Lagerweij B.V. | Haarlem | not fit - onvoldoende bewijs | 2026-08-31 lane D; erkend leerbedrijf 07-08-2023, dus geen gedateerd levensteken binnen 12 maanden; geen KvK-datum gevonden |
+| Kowalski Tegelwerken | Gouda | not fit - te lang gevestigd | 2026-08-31 lane D; KvK 71061894 (2018-reeks), Vlamingstraat 18 |
+| Stichting Haagbouw | Rotterdam | not fit - buiten profiel | 2026-08-31 lane D; opleidingsstichting, info@haagbouw.nl |
+| BSO Kidsplay & Talent B.V. | Zaandam | not fit - buiten profiel | 2026-08-31 lane D; opgericht 2025 en geopend februari 2026 (Instagram-aankondiging), erkend leerbedrijf 16-06-2026, info@bsokidsplay.nl, Rozengracht 81C. Starter, onder het groeifasevenster; bovendien geen agenda- of offertevormig lek |
+| Shamna Supermarkt | Zaandam | not fit - buiten profiel | 2026-08-31 lane D; erkend leerbedrijf 22-04-2026, abdulmajeedasaad@gmail.com; supermarkt heeft geen boekings- of portfoliovorm |
+| Beter Leven Thuiszorg B.V. | Nieuwegein | not fit - buiten profiel | 2026-08-31 lane D; erkend leerbedrijf 01-04-2026, info@beterleventz.nl, Weverstede 15; thuiszorg heeft geen boekings- of portfoliovorm |
+| mas factory b.v. | Gouda | not fit - buiten profiel | 2026-08-31 lane D; erkend leerbedrijf 21-05-2026, contact@makelaarshome.nl; makelaardij |
+| CLOU Zoetermeer | Zoetermeer | not fit - te groot | 2026-08-31 lane D; opgericht 2020, twee locaties, 50+ begeleiders, 175 leerlingen per week; info@clou-zoetermeer.nl |
+| Quadraat Zoetermeer | Zoetermeer | not fit - onvoldoende bewijs | 2026-08-31 lane D; da Costastraat 6a, info@quadraat-zoetermeer.nl; zusterlocatie Quadraat Leiden, geen KvK-datum of gedateerd spoor vindbaar |
+| Huiswerkbegeleiding Zoetermeer | Zoetermeer | not fit - onvoldoende bewijs | 2026-08-31 lane D; info@huiswerkbegeleidingzoetermeer.nl; geen KvK-datum en geen gedateerd levensteken vindbaar |
+| Huiswerkbegeleiding Schuilenburg | Amersfoort | not fit - buiten profiel | 2026-08-31 lane D; hwbschuilenburg@outlook.com, Zwaluwenstraat 1; valt onder Maatschappelijk & Educatief Centrum De Parel |
+| Haarlemse Huiswerkschool | Haarlem | not fit - geen e-mailadres | 2026-08-31 lane D; alleen 023-3020239, geen adres of KvK-datum gevonden |
+| Instituut HIP Utrecht-Oost | Utrecht | not fit - buiten profiel | 2026-08-31 lane D; formule met vestigingen door het land, 14-19 jaar begeleidingservaring |
+| Restaurant Metzo | Haarlem | not fit - onvoldoende bewijs | 2026-08-31 lane D; erkend leerbedrijf 14-02-2019, metzolbd@gmail.com (SBB); geen gedateerd spoor binnen 12 maanden |
+| Bij Lot | Amersfoort | not fit - onvoldoende bewijs | 2026-08-31 lane D; erkend leerbedrijf 13-01-2025, keuken@bijlot.nl (SBB); erkenning ouder dan 12 maanden |
+| IXI restaurant B.V. | Utrecht | not fit - onvoldoende bewijs | 2026-08-31 lane D; erkend leerbedrijf 05-03-2025, info@ixirestaurant.nl (SBB); erkenning ouder dan 12 maanden |
+| Sunsell Zonwering | Woerden | not fit - te lang gevestigd | 2026-08-31 lane D; 25 jaar in het vak |
+| Ambiance Zonwering Tetteroo | Zoetermeer | not fit - te lang gevestigd | 2026-08-31 lane D; 35+ jaar zonweringspecialist |
