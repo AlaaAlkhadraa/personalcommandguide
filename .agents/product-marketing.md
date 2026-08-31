@@ -1,6 +1,6 @@
 # Product Marketing Context — ZEVREN
 
-**Document version:** 1.7 · 2026-08-31
+**Document version:** 1.8 · 2026-08-31
 Elke marketingskill in `.claude/skills/` leest dit document eerst.
 Feiten hier zijn bindend; een skill-advies dat ermee botst, verliest.
 
@@ -166,13 +166,27 @@ Niet elke regel in `agents/` is een verificatiepoort, en ze als poort
 gebruiken kost goede kaarten.
 
 - **De sectorcap (`agents/beats.md`, niet meer dan drie in zeven dagen) is een
-  jáágregel.** De grond staat er letterlijk bij: een uitgeputte sector levert
-  "de kaarten die Azzouz afkeurt". Een bedrijf dat uit `geen-emailadres.md`
-  wordt teruggehaald met een profiel dat al stond, is per definitie geen verse
-  sectorjacht en valt er dus buiten. Op 30-08 kwam de enige goedgekeurde kaart
-  van drie extra lanes uit een sector met twaalf ledgerrijen. Meld de
-  overschrijding wel altijd op de kaart, zoals lane F deed — het oordeel is aan
-  de verificatie, niet aan de lane.
+  jáágregel, en hij telt alleen KAARTEN — niet afvallers.** De grond staat er
+  letterlijk bij: een uitgeputte sector levert "de kaarten die Azzouz afkeurt".
+  Een bedrijf dat is afgewezen, heeft de sector niet uitgeput; het bewijst
+  alleen dat dát bedrijf niet paste. **De cap telt daarom rijen met status
+  `drafted` of goedgekeurd, per sector én per lane-regio — niet elke ledgerrij
+  en niet landelijk.**
+
+  Dit is geen verfijning maar een reparatie, en ze verklaart een deel van de
+  inzinking van deze week. In zeven dagen kwamen er 584 regels bij. Op de oude
+  telling is elke bewezen sector drie- tot negenvoudig over de cap
+  (kapsalons 26, barbershops 27, schilders 17, dakdekkers 16) en dus dicht. Op
+  de juiste telling staat kapsalon op 2 en is gewoon open; alleen barbershop en
+  pedicure staan met 5 boven de cap. De lanes hebben zichzelf dus uit de
+  sectoren gejaagd die wérken, op grond van rijen die vastleggen dat een bedrijf
+  is afgekeurd. Op 30-08 noemde `beats.md` fitness "verzadigd" op dertien
+  ledgerregels — die telling was de verkeerde.
+
+  Een bedrijf dat uit `geen-emailadres.md` wordt teruggehaald met een profiel
+  dat al stond, is geen verse sectorjacht en valt er sowieso buiten. Meld de
+  overschrijding altijd op de kaart, zoals lane F deed — het oordeel is aan de
+  verificatie, niet aan de lane.
 - **De leeftijdsrand loopt op bouwjaar en "grofweg" hoort erbij.** Op 30-08
   hanteerden twee lanes 2019 tegengesteld: lane F wees een zaak mede af met
   "2019-reeks, zeven jaar", lane G noemde hetzelfde bouwjaar "midden in de
@@ -192,6 +206,15 @@ demo's zijn concepten en worden nooit als echte klanten gepresenteerd.
 
 ## Changelog
 
+- 1.8 (2026-08-31, Azzouz, weekcyclus 30-08): de sectorcap gerepareerd. Bij de
+  weekreview bleek dat de lanes hem toepassen op elke ledgerrij in plaats van op
+  kaarten. Met 584 nieuwe rijen in zeven dagen sluit dat elke bewezen sector —
+  kapsalons stonden op 26 rijen en dus "dicht", terwijl er maar 2 kaarten van
+  gemaakt zijn. De lanes zijn daarmee stelselmatig de sectoren uit gejaagd die
+  werken, richting sectoren die dat niet doen, en dat is een deel van de
+  verklaring waarom de opbrengst van 35 kaarten (dinsdag, 4 lanes) naar 8
+  (zondag, 7 lanes) zakte. De cap telt vanaf nu `drafted`/goedgekeurd, per
+  sector én per lane-regio.
 - 1.7 (2026-08-31, Azzouz, weekcyclus 30-08): drie dingen. (1) De add-on-regel
   stond fout: "extra taal 150" suggereert 150 per taal, terwijl `ADD_ONS.language`
   in `zevren/lib/offer.ts` 150 is voor DRIE extra talen en de dictionaries dat in
