@@ -62,6 +62,12 @@ e-mailadres gevonden is (en zet de zaak dan op het bord of in de ledger).
 | Hondentrimsalon Spaubeek | Spaubeek (Beekdaelen) | hondentrimsalon | — | — | Opgericht 2023 door Karin Mol, eigen domein, levende Facebook én Instagram. Profiel op maat; geen e-mailadres in twee zoekronden |
 | Trimsalon Mylo | Hoogerheide (Woensdrecht) | hondentrimsalon | — | **februari 2026** — artikel zuidwestupdate.nl over de start van de salon | Eigenaar Alissa Glerum. Poort (a) is hier juist dicht; het adres ontbreekt, en met acht maanden zit ze onder de ondergrens van het profiel. Belkandidaat voor over een half jaar |
 | Haarstudio Weert | Weert | kapsalon | 0495-537058 / 06-16712476 | — | Nieuwe salon geopend in 2024, Hoogstraat 14A. Geen e-mailadres. Check eerst Salonkee: Weert-kappers staan er opvallend vaak op |
+| **Dreamerseschoonmaken** | Geleen (Sittard-Geleen) | schoonmaak | **06-13981773** | **17-01-2026** — Werkspot-profielbeoordeling van Patrick Beckers, "snelle en goede service" | Opgericht 24-04-2023, Trustoo 8,0, top 10 Geleen. Vier zoekronden zonder e-mailadres: de enige contactweg is het offerteformulier van Trustoo/Werkspot. **De eerste lane C-regel die tegelijk een nummer én een gedateerd levensteken draagt — dus de bovenste van deze groep** (lane C, 01-09) |
+| Mooi Huis Cleaning Services | Middelburg | schoonmaak/glazenwassen | geen | — | KvK 96650249 (verse reeks), Trustoo 9,6, levende Instagram én TikTok, eigen domein mooihuiszeeland.nl met een contactpagina, werkgebied Middelburg/Vlissingen/Goes. Sterk profiel; geen adres in twee zoekronden. LET OP: het door de zoekmachine voorgestelde info@-adres is een patroon-gok en is NIET overgenomen (lane C, 01-09) |
+| Tiger Schoonmaak Bedrijf | Maastricht | schoonmaak | 06-87657323 | — | Generaal Eisenhowerstraat 22, Trustoo 9,7 en 500+ klanten, meldt zelf "meer dan 4 jaar". Infobel schermt het adres af (lane C, 01-09) |
+| Zaar Schoonmaak | Vaals | schoonmaak | geen | — | Opgericht 01-09-2023 (Trustoo), vloer- en gevelreiniging voor particulieren. Geen adres, geen telefoon, geen gedateerd spoor (lane C, 01-09) |
+| HondentrimSalon Snoetje | Kerkrade | hondentrimsalon | staat in de gidsvermelding, niet in mijn zoekresultaten | — | Werkt uitsluitend op telefonische afspraak (hondentrimsalon-info.nl), dus precies op profiel voor het agendalek. Geen e-mail, geen KvK, geen datum (lane C, 01-09) |
+| Keleb Hondentrimsalon | Brunssum | hondentrimsalon | 045-5256770 | — | Constantijn Huygensstraat 85, ABHB-lid, open ma/wo/do 9-17. Geen e-mailadres en geen oprichtingsdatum gevonden (lane C, 01-09) |
 
 **Lane C, 31-08 — één regel eraf.** Mitch Dakwerken (Maastricht) stond op deze
 lijst thuis te horen en hoort er nu niet meer op: het adres
@@ -73,7 +79,7 @@ deze lijst hoort te maken.
 
 Twee dingen ontbreken en het is eerlijker om ze te noemen dan ze te verbergen.
 
-Ten eerste staat er bij geen enkele regel een gedateerd levensteken. Dat is
+Ten eerste stond er tot 1 september bij geen enkele belbare regel een gedateerd levensteken. Dat is
 geen slordigheid maar dezelfde muur als op het bord: de zaken die geen
 e-mailadres publiceren, publiceren doorgaans ook geen gedateerd spoor. Wie
 deze lijst belt, belt dus deels bedrijven waarvan alleen vaststaat dát ze
@@ -81,10 +87,23 @@ ingeschreven zijn. De nieuwe bewijsroute uit de directives (KvK-mutatie,
 gemeentelijke of GGD-stukken, SBB-erkenning, gedateerde vacature) is precies
 de route die deze kolom kan vullen; dat is werk voor de volgende diensten.
 
-Ten tweede staan hier alleen de bedrijven uit de regio van lane B. Lane C heeft zijn regio
-op 31-08 hierboven toegevoegd; lane A en lane D staan nog open.
+**Aanvulling 01-09 (lane C): die kolom is nu te vullen, en de goedkoopste manier
+staat niet in de directives.** Werkspot voert per bedrijf een profielpagina
+(`werkspot.nl/profiel/<bedrijfsnaam>`) en die toont beoordelingen mét naam en
+leesbare datum — anders dan de categoriepagina's, waar tientallen bedrijven op
+één pagina staan en de namen wegvallen. De zoekopdracht
+`werkspot profiel "<bedrijfsnaam>" <plaats> beoordelingen datum 2026` gaf bij
+Dreamerseschoonmaken meteen een datum van 17-01-2026, waar twee eerdere
+zoekopdrachten op hetzelfde bedrijf alleen de oprichtingsdatum teruggaven.
+Werkspot dekt schoonmaak, klus, dak, schilder, stukadoor, bestrating en
+installatie — samen het merendeel van de regels op deze lijst. Wie deze lijst
+belklaar wil maken, haalt daar de snelste winst.
 
-Sam, 31 augustus 2026
+Ten tweede staan hier alleen de bedrijven uit de regio's van lane B, lane C en
+lane D. Lane C heeft zijn regio op 31-08 toegevoegd en op 01-09 aangevuld;
+lane A staat nog open.
+
+Sam, 31 augustus 2026 · aangevuld 1 september 2026
 
 ## Lane D — Noord-Holland, Zuid-Holland, Utrecht
 

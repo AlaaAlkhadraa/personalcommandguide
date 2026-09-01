@@ -502,3 +502,35 @@ adres dat niet kan kloppen.
 | Trimsalon For your Doodle | Genemuiden (Zwartewaterland) | Geopend 05-04-2023 door Janneke Last, Jan van Arkelstraat 15, eigen domein foryourdoodle.nl, Facebookpagina, gedateerd openingsartikel op genemuidenactueel.nl van 08-05-2023. Open woensdag, vrijdagmiddag en zaterdag, uitsluitend op afspraak. Drie zoekrondes (naam+contact, domein+e-mail, naam+eigenaar) zonder e-mailadres én zonder telefoonnummer. Op leeftijd, sector en lek precies op profiel — het sterkste geparkeerde dossier van deze dienst | 2026-09-01 |
 | Eylin Multidiensten / Glazenwassersbedrijf Eylin | Almere (Filmwijk) | KvK 91631556, sinds 2023, 1 werkzaam persoon, Lucille Ballstraat 36. Eenbedrijfspagina op alleglazenwassers.nl draagt KvK en oprichtingsjaar maar geen adres; telefoonboek.nl en oozo geven de vermelding zonder e-mail | 2026-09-01 |
 | Trimsalon Doggy Style | Hardenberg | Vechtstraat 6, WhatsApp 06-22436971. Eigen contactpagina meldt uitdrukkelijk dat afspraken niet per e-mail gemaakt kunnen worden. Leeftijd niet vastgesteld | 2026-09-01 |
+## 1 september 2026 — lane C (Limburg, Noord-Brabant, Zeeland)
+
+Zes bedrijven binnen het groeifasevenster, geen van zes met een vindbaar
+e-mailadres. De muur is dezelfde als op 29, 30 en 31 augustus, maar de oorzaak
+is vandaag voor het eerst benoembaar en het is geen zoekprobleem: vijf van deze
+zes zijn schoonmaak- of glazenwassersbedrijven, en die groep is uitsluitend
+bereikbaar via het offerteformulier van Trustoo of Werkspot. **Werkspot rekent
+de vakman € 3,00 tot € 60,00 per lead**, in rekening gebracht zodra de consument
+zijn contactgegevens deelt (bron: Werkspots eigen helpdeskpagina "Hoe worden de
+leadkosten berekend?"). Het platform heeft er dus belang bij dat het adres niet
+openbaar is. Trustoo zet er zelfs bij dat het e-mailadres "geverifieerd door de
+eigenaar" is — en toont het niet.
+
+Voor de volgende lane betekent dat: in deze sector eerst het adres jagen en pas
+daarna de leeftijd. Een leeftijdscontrole op een bedrijf dat straks toch alleen
+telefonisch bereikbaar blijkt, is weggegooide tijd — en dat is vandaag drie keer
+gebeurd.
+
+| Bedrijf | Plaats | Wat er wel is | Datum |
+|---|---|---|---|
+| Dreamerseschoonmaken | Geleen (Sittard-Geleen) | Opgericht 24-04-2023, Trustoo 8,0, top 10 Geleen, 06-13981773. **Poort (a) DICHT**: Werkspot-profielbeoordeling van Patrick Beckers 17-01-2026. Vier zoekronden zonder adres. Op alles behalve het e-mailadres een kaart — de sterkste parkering van deze dienst en de bovenste regel van de lane C-bellijst | 2026-09-01 |
+| Mooi Huis Cleaning Services | Middelburg | KvK 96650249 (verse reeks), Trustoo 9,6, levende Instagram én TikTok, eigen domein mooihuiszeeland.nl met contactpagina, werkgebied Middelburg/Vlissingen/Goes. LET OP: de zoekmachine bood `info@mooihuiszeeland.nl` aan als "waarschijnlijk juist" — dat is een patroon-gok en die is niet overgenomen | 2026-09-01 |
+| Tiger Schoonmaak Bedrijf | Maastricht | Generaal Eisenhowerstraat 22, 06-87657323, Trustoo 9,7, meldt zelf "meer dan 4 jaar" en 500+ klanten. Infobel voert het adres afgeschermd | 2026-09-01 |
+| Zaar Schoonmaak | Vaals | Opgericht 01-09-2023 (Trustoo), vloer- en gevelreiniging voor particulieren. Geen adres, geen telefoon, geen gedateerd spoor | 2026-09-01 |
+| Succes Solutions | Tholen | KvK 90236572, glazenwasser sinds 2023, 1 werkzaam persoon, site schoonmaaksolutions.nl. Profiel wordt beheerd door AlleGlazenwassers.nl. LET OP lookalike: Schoonmaak Solutions B.V. (schoonmaaksolutions.com) is een andere, grotere zaak | 2026-09-01 |
+| HondentrimSalon Snoetje | Kerkrade | Werkt uitsluitend op telefonische afspraak (hondentrimsalon-info.nl), dus precies op profiel voor het agendalek. Geen e-mail, geen KvK, geen datum | 2026-09-01 |
+
+**Twee namen die hier NIET thuishoren en waarom.** Keleb Hondentrimsalon
+(Brunssum, 045-5256770) en Dierenpension Roermond (Swalmen) zijn wél te bereiken
+— Keleb telefonisch, Roermond op `info@dierenpensionroermond.nl`. Ze staan in de
+ledger, niet hier: Keleb omdat de leeftijd niet vast te stellen was, Roermond
+omdat het jongste leesbare spoor mei 2024 is.
