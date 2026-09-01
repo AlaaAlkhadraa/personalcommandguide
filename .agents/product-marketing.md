@@ -1,6 +1,6 @@
 # Product Marketing Context — ZEVREN
 
-**Document version:** 1.10 · 2026-08-31
+**Document version:** 1.11 · 2026-09-01
 Elke marketingskill in `.claude/skills/` leest dit document eerst.
 Feiten hier zijn bindend; een skill-advies dat ermee botst, verliest.
 
@@ -272,8 +272,32 @@ roepen:
 
 **De regel:** op een dienst zonder kaarten verschuift het skillgebruik van de
 schrijfskills naar de onderzoeksskills. De tabel meldt dan die twee, met wat
-ze aan de bevindingen veranderd hebben, en meldt cold-email en
-marketing-psychology eerlijk als niet van toepassing.
+ze aan de bevindingen veranderd hebben, en meldt cold-email eerlijk als niet
+van toepassing.
+
+**Bijstelling 1.11 — `marketing-psychology` vervalt niet, hij verplaatst.** Op
+01-09 meldde lane C de skill als niet van toepassing ("geen kaart, dus geen
+invalshoek om een model op te kiezen"), terwijl lane D hem diezelfde kaartloze
+dag inzette op de vraag *waarom* de lane nul oplevert: Theory of Constraints op
+de vraag welke poort de bindende beperking is, lokaal-versus-globaal optimum op
+de vraag of méér zoekopdrachten iets hadden opgeleverd, inversie op de
+sectorvolgorde. Dat was de beste skilltoepassing in beide bestanden. De
+veronderstelling onder lane C's regel klopt dus niet: een tekort is zelf een
+gedragsvraag. Op een kaartloze dag gaat `marketing-psychology` van de copy naar
+de diagnose van het tekort. Alleen `cold-email` blijft eerlijk n.v.t. — en ook
+die alleen zolang er geen tekst is klaargelegd voor een toekomstige kaart; ligt
+die er wel, dan wordt hij er nu al tegen getoetst.
+
+**En de toets die dan het meest oplevert: survivorship bias op elke sectortelling.**
+Een bedrijf dat via een boekingsplatform werkt, heeft dáárdoor een geïndexeerde
+platformpagina; een bedrijf dat dat niet doet, heeft dat spoor per definitie
+niet. Een zoekmethode die "zeven van zeven kapsalons boeken al via Fresha"
+oplevert, meet dus voor een deel zichzelf: hij brengt juist de bedrijven boven
+die zichzelf diskwalificeren en laat onze doelgroep onzichtbaar. **Een sector
+wordt daarom nooit afgewaardeerd of gesloten op zo'n telling alleen.** Draai de
+zoekopdracht eerst één keer om: neem de stadsindex van het platform zelf als
+uitsluitingslijst en jaag op het complement daarvan in de gewone
+bedrijvengidsen. Levert dat ook niets op, dan is de sector bezet op bewijs.
 
 ## Sectoren: gesloten, afgewaardeerd, of in de wacht
 
@@ -302,6 +326,40 @@ wil houden.
   groepen tegelijk.
 
 ## Changelog
+
+- 1.11 (2026-09-01, Azzouz, verificatie lanes C+D): vier dingen uit twee
+  nuldiensten. (1) **De drie ledgervelden blijven in de notitiekolom en worden
+  geen kolommen.** Drie lanes kozen op 01-09 onafhankelijk dezelfde vorm
+  (`Sector: … · Pakket: … · Hoek: …` vooraan de notitie) en trokken hun rijen
+  daarna naar elkaar toe. 878 rijen herschrijven om drie velden filterbaar te
+  maken die met één `grep` al filterbaar zijn, is de kosten niet waard in een
+  week waarin de kaartparser twee keer bijna een geldige kaart opat. Mijn
+  directive vroeg om echte kolommen; dat deel is ingetrokken. Waar het lek niet
+  is vastgesteld blijft er een streepje staan — een hoek invullen bij een
+  onbewezen lek maakt het veld onbruikbaar voor precies de vraag waarvoor het
+  bedacht is. (2) `marketing-psychology` verplaatst op een kaartloze dag naar de
+  diagnose van het tekort in plaats van te vervallen, en survivorship bias is de
+  verplichte toets bij elke sectortelling — beide hierboven uitgeschreven. (3)
+  **Twee zoekroutes bevestigd, elk met hun valstrik.** De Werkspot-profielpagina
+  draagt één bedrijf met beoordelingen mét leesbare datum en is geïndexeerd; de
+  exacte vorm is `werkspot.nl/profiel/<naam>/reviews`, en de categoriepagina
+  (`/schoonmaak/schoonmaakbedrijf-vakmannen/<stad>`) is de samengevatte gidsvorm
+  die niet telt. De gidsenfamilie `alle<sector>.nl` en `beste<sector>.nl` voert
+  per bedrijf oprichtingsjaar én KvK-nummer en is per provincie in één opdracht
+  uit te lezen (`site:alle<sector>.nl "opgericht" 2022 OR 2023 <provincie>`) —
+  maar **het twaalfcijferige nummer in de URL is het vestigingsnummer, niet het
+  KvK-nummer** (Aluclean draagt 000044801599 bij KvK 77078705). Wie op KvK zoekt
+  in die URL-vorm vindt niets en concludeert ten onrechte dat de route dood is.
+  Dezelfde familie dekt meer dan glazenwassers: schoonmaakbedrijven staan er ook
+  in. (4) **Werkspot-leadkosten zijn € 3,00 tot € 75,00 per lead**, in rekening
+  gebracht wanneer de consument bij wederzijdse interesse zijn contactgegevens
+  deelt (Werkspots eigen helpdesk). Lane C noteerde € 60,00 als bovengrens met
+  bronvermelding erbij. Het argument zelf deugt en mag een kaart dragen, maar
+  nooit als openingszin: haal de regel weg en het bericht leest nog voor iedere
+  vakman op dat platform, dus het is positionering en geen personalisatie. En
+  nooit met "en daarna niets" erachter — domein en hosting lopen via het
+  optionele verzorgingsplan, dus de toegestane formulering is "geen kosten per
+  klant".
 
 - 1.10 (2026-08-31, Azzouz, verificatie lanes C+D): twee dingen. (1) De kopvorm
   van bevindingen vastgelegd na een expliciete vraag van lane C — ongenummerde

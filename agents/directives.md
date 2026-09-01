@@ -96,13 +96,24 @@ en niet een gidsenzoekopdracht. Loop je vast op het e-mailadres, dan blijft
 `erkend leerbedrijf <sector> <stad> e-mail contactpersoon site:stagemarkt.nl`
 de beste eerste zoekopdracht. Volledig in `.agents/product-marketing.md` 1.7.
 
-**Drie kolommen in het ledger, vanaf je eerstvolgende dienst.** We kunnen op
+**Drie velden in het ledger, vanaf je eerstvolgende dienst.** We kunnen op
 dit moment niet uitrekenen wát werkt, omdat de invalshoek alleen in het
 dagbestand staat en niet in het ledger. Zet er per kaart bij: **`Sector`,
 `Pakket` (299/549/899) en `Hoek`** — die laatste in één woord uit een vaste
 lijst: `review-bewijs`, `openingstijden`, `vindbaarheid`, `offertelek`,
 `agendalek`. Het kost jou een regel en het is de enige manier waarop een
 antwoord ooit een les wordt.
+
+**Correctie 01-09: het worden geen echte kolommen.** Ik vroeg hier om drie
+kolommen in de tabel. Drie lanes kozen op 01-09 onafhankelijk van elkaar de
+notitiekolom in plaats daarvan, met dezelfde reden: 878 bestaande rijen
+herschrijven om iets filterbaar te maken dat met één `grep` al filterbaar is,
+in een week waarin de parser twee keer bijna een geldige kaart opat. Ze hebben
+gelijk en ik trek het kolomdeel in. **De vorm is vanaf nu vast:
+`Sector: … · Pakket: … · Hoek: …` vooraan het notitieveld**, en een streepje
+waar het lek niet is vastgesteld — een hoek noteren bij een onbewezen lek maakt
+het veld onbruikbaar voor precies de vraag waarvoor het bedacht is. Vastgelegd
+in `.agents/product-marketing.md` 1.11.
 
 **De bellijst wordt een eigen bestand:
 `marketing/outreach/bellijst.md`.** Jonge, op-profiel bedrijven zonder
@@ -121,9 +132,13 @@ beslist zelf of hij belt; onze taak is dat het klaarligt.
 - **De exacte vormen, letterlijk.** Kaartkop `## N. Naam — Plaats`, metadata
   `- **Key:** waarde` mét het streepje. Twee keer is een geldige kaart vorige
   week bijna van het bord verdwenen omdat de parser de vorm niet kende.
-- **Nummer bevindingssecties nooit op `## `-niveau met hetzelfde
-  cijferpatroon als kaarten.** Bevindingen op `### 1.` t/m `### 5.`; anders
-  loopt de laatste kaart door tot het einde van het bestand.
+- **Nummer bevindingssecties nooit.** Een genummerde bevindingskop kan het
+  kaartpatroon nabootsen en liet bij lane F de laatste kaart doorlopen tot het
+  einde van het bestand. De vastgelegde vorm is `## Bevinding — <onderwerp>`:
+  ongenummerd, op `## `-niveau (`.agents/product-marketing.md` 1.10). **Deze
+  regel schreef tot 01-09 `### 1.` t/m `### 5.` voor en sprak daarmee 1.10
+  tegen; twee lanes zijn erover gestruikeld en de tegenstrijdigheid is hierbij
+  opgeheven — 1.10 is leidend.**
 
 **Eén toevoeging aan het bericht:** de link naar de conceptbouwer krijgt een
 UTM, zodat we kunnen zien of een mail is aangekomen ook als niemand
