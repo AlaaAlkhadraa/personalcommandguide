@@ -25,6 +25,7 @@ export async function generateMetadata({ params }: PageProps) {
     title: content.title,
     description: content.excerpt,
     path: `/insights/${slug}`,
+    article: { publishedTime: article.date },
   });
 }
 

@@ -19,6 +19,8 @@ interface BuildMetadataOptions {
   noIndex?: boolean;
   /** The language actually being served, reported to Open Graph. */
   locale?: Locale;
+  /** Set on article pages: switches og:type and carries the publish date. */
+  article?: { publishedTime: string };
 }
 
 /**
@@ -51,6 +53,7 @@ export function buildMetadata({
   path,
   noIndex = false,
   locale,
+  article,
 }: BuildMetadataOptions): Metadata {
   const url = `${SITE_CONFIG.url}${path}`;
   const isHome = path === "/";
@@ -72,14 +75,24 @@ export function buildMetadata({
     robots: noIndex
       ? { index: false, follow: false }
       : { index: true, follow: true },
-    openGraph: {
-      title: fullTitle,
-      description,
-      url,
-      siteName: SITE_CONFIG.name,
-      locale: locale ? OG_LOCALE[locale] : undefined,
-      type: "website",
-    },
+    openGraph: article
+      ? {
+          title: fullTitle,
+          description,
+          url,
+          siteName: SITE_CONFIG.name,
+          locale: locale ? OG_LOCALE[locale] : undefined,
+          type: "article",
+          publishedTime: article.publishedTime,
+        }
+      : {
+          title: fullTitle,
+          description,
+          url,
+          siteName: SITE_CONFIG.name,
+          locale: locale ? OG_LOCALE[locale] : undefined,
+          type: "website",
+        },
     twitter: {
       card: "summary_large_image",
       title: fullTitle,
