@@ -85,6 +85,14 @@ export function Footer({ dict, navDict, servicesDict, workDict }: FooterProps) {
               {servicesDict.list[service.slug].title}
             </Link>
           ))}
+          {/* Dutch on purpose in every locale: the anchor text is the Dutch
+              search phrase the local landing pages target. */}
+          <Link
+            href="/website-laten-maken"
+            className="text-sm text-muted transition-colors hover:text-white"
+          >
+            Website laten maken
+          </Link>
         </nav>
 
         <nav aria-label={dict.projectsHeading} className="flex flex-col gap-3">

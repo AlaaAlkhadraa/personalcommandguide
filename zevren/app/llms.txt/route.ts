@@ -52,6 +52,7 @@ export function GET(): Response {
     "## Key pages",
     "",
     `- [Homepage](${base}/): what ZEVREN builds, with the four packages and prices on the page`,
+    `- [Website laten maken](${base}/website-laten-maken): the Dutch service hub, with city pages for Maastricht, the Limburg region and the major Dutch cities`,
     `- [Concept builder](${base}/concept-bouwer): pick a style and colours and see a live preview of your own homepage, free and without obligation`,
     `- [Projects](${base}/projects): interactive concept demos you can click through (booking systems, a webshop with checkout, a client portal)`,
     `- [Process](${base}/process): what happens in each step from first conversation to launch`,
