@@ -125,3 +125,21 @@ eerlijker dan hem weglaten.
 uitdrukkelijk dat er geen e-mailadres bekend is. Lane A noemt hem de sterkste
 belkandidaat van het noorden en op deze lijst is hij dat ook — hij is de enige
 noordelijke regel met een nummer erbij.
+
+## Lane A — Groningen, Friesland, Drenthe (aanvulling 01-09)
+
+Toegevoegd door lane A op 01-09-2026. Twee hondentrimsalons op profiel — jong, aantoonbaar
+draaiend als bedrijf, boekingspoort dicht — die uitsluitend op het e-mailadres stranden.
+Anders dan de zes van 31-08 hierboven is dit wél een bellijst: bij Knippe & Waskje staat een
+volledig mobiel nummer.
+
+| Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
+|---|---|---|---|---|---|
+| Trimsalon Knippe & Waskje | Oosterstreek (gem. Weststellingwerf) | hondentrimsalon | 06-27908291 | — | Patricia Siem, in Oosterstreek sinds 01-07-2022, Dwarsvaartweg 51, 8388 MK, eigen domein trimsalonknippe-waskje.nl. Ligt centraal tussen Noordwolde, Zandhuizen, Boijl en Vledder. Boekingspoort dicht: de eigen site zegt dat een afspraak via mail, telefoon of contactformulier loopt. Drie zoekronden zonder e-mailadres en geen gedateerd spoor |
+| Mobiele Trimsalon Tilia | Een (gem. Noordenveld) | mobiele hondentrimsalon | nummer staat in de gidsen afgekapt (06-42914…) — niet volledig vastgesteld | — | Schoolstraat 21, 9342 PE. Trimt honden, katten en konijnen aan huis, gediplomeerd; Facebookpagina naast een eigen domein. Drie zoekronden zonder e-mailadres, geen KvK-datum. Wie belt, heeft eerst het volledige nummer nodig — dat staat op de Facebookpagina |
+
+**Eén naam uit dezelfde dienst die hier bewust NIET staat:** Trimsalon De Hondenhut
+(Munnekezijl, Janna Hut, 06-81460660). Die heeft wél een e-mailadres
+(trimsalondehondenhut@hotmail.com) en hoort dus niet op de bellijst — hij staat in de ledger
+als `lead - poort open` omdat alleen het gedateerde levensteken ontbreekt. Wordt die datum
+gevonden, dan is het een kaart en geen telefoontje.

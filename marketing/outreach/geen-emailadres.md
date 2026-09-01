@@ -206,7 +206,7 @@ eigenaarsnaam, plus gidsen (telefoonboek, drimble, oozo, mijnzzp, bottin).
 | Rotgers Zonnepanelen | Winschoten | KvK 90325966, eenmanszaak; geen telefoon of e-mail vindbaar | 2026-08-28 |
 | G.E.M — Glasbewassing en meer | Hoogeveen | voorheen BBG Diensten (2018), hernoemd 2023, verhuisd naar Hoogeveen; eigen site glasbewassingenmeer.nl zonder zichtbaar e-mailadres | 2026-08-28 |
 | Kramer Airco Techniek | Hilaard | KvK-vermelding op airco-expres.nl, opgericht 06-01-2022; geen contactgegevens vindbaar | 2026-08-28 |
-| Van den Bos Bedrijfsdiensten | Gorredijk | KvK 88174824, glazenwasser sinds 2022; telefoonnummer afgeschermd in de gidsen | 2026-08-28 |
+| Van den Bos Bedrijfsdiensten | Gorredijk | KvK 88174824, glazenwasser sinds 2022; telefoonnummer afgeschermd in de gidsen. HERJACHT 2026-09-01 lane A: opnieuw gezocht op naam + KvK-nummer en op de eenbedrijfspagina van alleglazenwassers.nl - wel het bedrijf, geen e-mailadres. Parkering herbevestigd | 2026-08-28 |
 | E. Land montage | Groningen-Stad | KvK 88064123, opgericht 03-11-2022, 1 werknemer | 2026-08-28 |
 | H.Pijl Dienstverlening | Moddergat/Niezijl | cv-ketelmonteur, gestart 25-04-2023, 1 werknemer, eenmanszaak | 2026-08-28 |
 | Effectief Klusbedrijf | Drachten | KvK 87434725, elektricien, eenmanszaak, gestart 29-08-2022 | 2026-08-28 |
