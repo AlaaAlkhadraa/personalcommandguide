@@ -3,6 +3,7 @@ import Link from "next/link";
 import { headers } from "next/headers";
 
 import { CITIES } from "@/lib/local/cities";
+import { SECTORS } from "@/lib/local/sectors";
 import { Container } from "@/components/ui/Container";
 import { PackagesSection } from "@/components/pricing/PackagesSection";
 import { FinalCTA } from "@/components/home/FinalCTA";
@@ -117,6 +118,22 @@ export default async function WebsiteLatenMakenPage() {
                   </ul>
                 </div>
               ))}
+            </div>
+            <div className="flex flex-col gap-2.5 border-t border-slate-200 pt-6">
+              <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                Per branche
+              </h3>
+              <p className="flex flex-wrap gap-x-5 gap-y-2">
+                {SECTORS.map((sector) => (
+                  <Link
+                    key={sector.slug}
+                    href={`/website-voor/${sector.slug}`}
+                    className="text-sm font-medium text-navy underline-offset-2 transition-colors hover:text-primary hover:underline"
+                  >
+                    Website voor {sector.name}
+                  </Link>
+                ))}
+              </p>
             </div>
           </Container>
         </section>

@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { WORK_ITEMS, SITE_CONFIG } from "@/lib/constants";
 import { ARTICLES } from "@/lib/insights/articles";
 import { CITIES } from "@/lib/local/cities";
+import { SECTORS } from "@/lib/local/sectors";
 
 const routes = [
   { path: "/", priority: 1, changeFrequency: "weekly" as const },
@@ -41,6 +42,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
+  const sectorRoutes = SECTORS.map((sector) => ({
+    url: `${SITE_CONFIG.url}/website-voor/${sector.slug}`,
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
+  }));
+
   const articleRoutes = ARTICLES.map((article) => ({
     url: `${SITE_CONFIG.url}/insights/${article.slug}`,
     lastModified: new Date(article.date),
@@ -48,5 +55,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  return [...staticRoutes, ...cityRoutes, ...workRoutes, ...articleRoutes];
+  return [...staticRoutes, ...cityRoutes, ...sectorRoutes, ...workRoutes, ...articleRoutes];
 }

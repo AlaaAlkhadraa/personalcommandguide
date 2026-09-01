@@ -175,8 +175,24 @@ export default async function ArticlePage({ params }: PageProps) {
           </span>
           <h2 className="font-heading text-2xl font-bold text-white sm:text-3xl">{t.ctaTitle}</h2>
           <p className="max-w-xl text-base leading-relaxed text-muted">{t.ctaBody}</p>
-          <div className="pt-2">
+          <div className="flex flex-wrap items-center gap-5 pt-2">
             <Button href="/contact">{t.ctaButton}</Button>
+            {/* Dutch readers get a second door: the landing page matching the
+                article's subject. Dutch-only because those pages are. */}
+            {locale === "nl" && (
+              <Link
+                href={
+                  article.slug === "starting-an-online-store"
+                    ? "/webshop-laten-maken"
+                    : "/website-laten-maken"
+                }
+                className="text-sm font-medium text-accent underline-offset-2 hover:underline"
+              >
+                {article.slug === "starting-an-online-store"
+                  ? "Bekijk wat een webshop kost"
+                  : "Bekijk wat een website kost"}
+              </Link>
+            )}
           </div>
         </Container>
       </section>

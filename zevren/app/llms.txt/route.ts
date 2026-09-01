@@ -55,6 +55,7 @@ export function GET(): Response {
     `- [Website laten maken](${base}/website-laten-maken): the Dutch service hub, with city pages for Maastricht, the Limburg region and the major Dutch cities`,
     `- [Webshop laten maken](${base}/webshop-laten-maken): complete webshop with checkout for a fixed price`,
     `- [Webapplicatie laten maken](${base}/webapplicatie-laten-maken): dashboards, portals and internal tools, from a published starting price`,
+    `- [Website voor kappers, trimsalons, garages en administratiekantoren](${base}/website-voor/kappers): sector pages, each anchored on a working demo`,
     `- [Concept builder](${base}/concept-bouwer): pick a style and colours and see a live preview of your own homepage, free and without obligation`,
     `- [Projects](${base}/projects): interactive concept demos you can click through (booking systems, a webshop with checkout, a client portal)`,
     `- [Process](${base}/process): what happens in each step from first conversation to launch`,
