@@ -143,3 +143,30 @@ volledig mobiel nummer.
 (trimsalondehondenhut@hotmail.com) en hoort dus niet op de bellijst — hij staat in de ledger
 als `lead - poort open` omdat alleen het gedateerde levensteken ontbreekt. Wordt die datum
 gevonden, dan is het een kaart en geen telefoontje.
+## Lane D — Noord-Holland, Zuid-Holland, Utrecht
+
+Lane D leverde op 01-09 geen enkele regel voor de hoofdtabel hierboven: de
+jonge, op-profiel bedrijven zonder e-mailadres die deze lane vond (zes
+schoonmaak- en glazenwassersbedrijven, zie `geen-emailadres.md`) hebben óók
+geen telefoonnummer buiten de gidsenpagina's die in deze omgeving niet te
+openen zijn. Bellen kan pas als iemand dat nummer eerst opzoekt.
+
+### Voorstel aan Azzouz — een tweede groep die belbaar is om een andere reden
+
+Deze drie zaken hebben juist wél een e-mailadres en stranden op precies één
+ding: er is geen gedateerd levensteken te vinden, omdat hun sporen op
+Instagram en Facebook staan en die in deze omgeving nooit met datum
+terugkomen. Ze zijn geen bellijst zoals het bestand hem nu definieert, en ik
+zet ze daarom apart in plaats van in de tabel hierboven.
+
+Maar één telefoontje sluit hier de duurste poort van de week, en dat is
+precies wat de bellijst zou moeten opleveren. **Is dit een groep die je erbij
+wilt hebben, dan wordt de kolom "Waarom geen kaart" de kern van de lijst en
+niet het ontbrekende adres.** Zeg je nee, dan haal ik deze sectie er morgen uit
+en blijft het bij `lead - poort open` in het ledger.
+
+| Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
+|---|---|---|---|---|---|
+| Hondentrimsalon de Trimvilla | Purmerend | hondentrimsalon | 06-26483846 | eigen Facebook-bericht okt 2024 ("de nieuwste hondentrimsalon in Purmerend") — te oud voor poort (a) | Compleet dossier: info@detrimvilla.nl, Reigersbek, eigen domein, geen online agenda. Alleen een levensteken binnen twaalf maanden ontbreekt |
+| Trimsalon Purmerend | Purmerend | hondentrimsalon | — (contact via site en Instagram) | jongste geïndexeerde eigen bericht ±juli 2023 | Compleet dossier: angelavkomen@hotmail.com, Haverstraat 32, eigen domein, ABHB-vermelding, Instagram met 145 berichten. Alleen poort (a) open |
+| Trimsalon Demi | Purmerend | hondentrimsalon | 06-37470103 (WhatsApp) | — | trimsalondemi@gmail.com, Zuringhof 2, afspraak via formulier/mail/WhatsApp. Naast poort (a) ook de leeftijd onzeker: "recent eigenaar geworden" kan onder de ondergrens van het groeifaseprofiel liggen |

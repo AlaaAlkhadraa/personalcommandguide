@@ -473,3 +473,25 @@ en alleen op het adres strandt.
 | Bedrijf | Plaats | Wat er wel is | Datum gecheckt |
 |---|---|---|---|
 | Trimsalon De Harige Vrienden | Maassluis | Gestart juni 2023, Zwarte Zee 34, eigen domein trimsalondeharigevrienden.nl met contact-, diensten-, tarieven- en voorwaardenpagina; contact loopt uitsluitend via een formulier. Drie zoekrondes zonder e-mailadres en zonder telefoonnummer in de zoekresultaten, dus ook niet belklaar | 2026-08-31 |
+
+Lane D, 01-09: zes schoonmaak- en glazenwassersbedrijven die op leeftijd, sector
+en regio precies op profiel zitten en alle zes uitsluitend op het e-mailadres
+stranden. Ze kwamen uit één zoekopdracht op `alleglazenwassers.nl`, die per
+bedrijf KvK-nummer én oprichtingsjaar voert. Bij vier van de zes is ook geen
+telefoonnummer buiten de gidsenpagina's gevonden, dus ze zijn nog niet belklaar.
+
+| Bedrijf | Plaats | Wat er wel is | Datum gecheckt |
+|---|---|---|---|
+| Glazenwasserij de Tijd | Rotterdam (Charlois) | KvK 85053090, opgericht 2022, Gruttostraat 49A, 1 medewerker. Eenbedrijfspagina op alleglazenwassers.nl en een Oozo-vermelding; geen eigen domein gevonden, geen e-mailadres, geen telefoonnummer buiten de gidsen | 2026-09-01 |
+| Respect Glaswasserij | Zaandam (Poelenburg) | KvK 87626616, sinds 2022, 3 medewerkers. Geen eigen domein, geen e-mailadres, geen telefoonnummer buiten de gidsen | 2026-09-01 |
+| Super Schoon Holland | Wormerveer (Zaanstad) | KvK 86477587, opgericht 2022, Vestaplein 44. Eigen domein superschoonholland.nl (gevelreiniging plus een aparte glasbewassingstak) én een Werkspot-profiel — dat profiel is de beste kans op zowel een gedateerde recensie als een adres, maar is in deze omgeving niet te openen | 2026-09-01 |
+| Smink Cleaning | Wateringen | KvK 86948377, opgericht 2022, drie jaar actief als glazenwasser. Geen e-mailadres, geen telefoonnummer buiten de gidsen | 2026-09-01 |
+| Schoonmaakbedrijf M Koopman | Oud-Beijerland | KvK 84870125, opgericht 2022. Geen e-mailadres, geen telefoonnummer buiten de gidsen | 2026-09-01 |
+| Shétiel Dekker Dienstverlening | Zwaag (Hoorn) | KvK 89301552, opgericht 2023, Langetuin 166 (Risdam-Noord). Jongste van de zes. Eenbedrijfspagina's op alleglazenwassers.nl, drimble en companyinfo.nl; geen e-mailadres | 2026-09-01 |
+
+Lane D, 01-09: één zaak die niet op een ontbrekend adres strandt maar op een
+adres dat niet kan kloppen.
+
+| Bedrijf | Plaats | Wat er wel is | Datum gecheckt |
+|---|---|---|---|
+| Gastouderopvang De Zonnestraal (KvK-naam Gastouderopvang Zorg24/7) | Rijswijk | KvK 86511270 (2022), Prinses Beatrixlaan 703, contactpersoon Ilham El Bouaiadi, zzp'er, capaciteit 3, telefoon 06-11279752. De SBB-registerpagina geeft als e-mailadres `ilhamamanah@icloud.con` — `.con` is geen bestaand topleveldomein. Niet naar `.com` geraden: dat is een adres verzinnen. Wie de registerpagina zelf kan openen, lost dit in één blik op | 2026-09-01 |
