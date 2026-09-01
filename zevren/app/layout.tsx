@@ -79,6 +79,11 @@ export async function generateMetadata(): Promise<Metadata> {
       "maatwerk webapplicatie",
     ],
     authors: [{ name: SITE_CONFIG.name, url: SITE_CONFIG.url }],
+    // Set GOOGLE_SITE_VERIFICATION in the Vercel project env to claim the
+    // site in Search Console without touching code; absent, no tag renders.
+    verification: process.env.GOOGLE_SITE_VERIFICATION
+      ? { google: process.env.GOOGLE_SITE_VERIFICATION }
+      : undefined,
     openGraph: {
       type: "website",
       locale: OG_LOCALE[locale],

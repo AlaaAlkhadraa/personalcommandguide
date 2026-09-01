@@ -163,6 +163,114 @@ export const CITIES: City[] = [
     metaDescription:
       "Website laten maken in Groningen. Volledig online geregeld, vaste prijzen vanaf 299 euro, demo's om zelf te proberen.",
   },
+  {
+    slug: "den-haag",
+    name: "Den Haag",
+    province: "Zuid-Holland",
+    intro:
+      "Den Haag is naast regeringsstad vooral een stad van honderdduizenden gewone klanten die hun kapper, klusser of boekhouder online zoeken. Wie daar niet tussen staat, bestaat voor hen niet. Wij bouwen de site die dat oplost, op afstand vanuit Maastricht, met de prijs vooraf op tafel.",
+    metaDescription:
+      "Website laten maken in Den Haag. Vaste prijzen vanaf 299 euro, volledig online geregeld, met werkende demo's om zelf te proberen.",
+  },
+  {
+    slug: "haarlem",
+    name: "Haarlem",
+    province: "Noord-Holland",
+    intro:
+      "Haarlem zit vol kleine zaken met een trouwe buurt, en juist die zaken verliezen stilletjes klanten aan wie beter vindbaar is. Een eigen site met je werk en je tijden houdt de buurt bij jou. Wat die kost staat op onze site, niet in een offerte achteraf.",
+    metaDescription:
+      "Website laten maken in Haarlem? Openbare prijzen vanaf 299 euro, geen offertetraject, demo's online te proberen.",
+  },
+  {
+    slug: "leiden",
+    name: "Leiden",
+    province: "Zuid-Holland",
+    intro:
+      "In een studentenstad als Leiden zoekt vrijwel iedereen alles eerst online, van de fietsenmaker tot de tandarts. Voor een ondernemer is de rekensom simpel: vindbaar zijn of overgeslagen worden. Wij bouwen de site die je vindbaar maakt, tegen een prijs die vooraf vaststaat.",
+    metaDescription:
+      "Website laten maken in Leiden. Vaste prijzen vanaf 299 euro, snel en volledig online geregeld vanuit Maastricht.",
+  },
+  {
+    slug: "dordrecht",
+    name: "Dordrecht",
+    province: "Zuid-Holland",
+    intro:
+      "Dordrecht is een stad van vakmensen, en vakwerk wordt gegund op wat je kunt laten zien. Een site met je afgeronde projecten doet dat tonen voor jou, ook buiten werktijd. Wij bouwen hem op afstand en rekenen de prijs die op onze site staat.",
+    metaDescription:
+      "Website laten maken in Dordrecht? Laat je vakwerk zien met een eigen site, vaste prijs vanaf 299 euro.",
+  },
+  {
+    slug: "almere",
+    name: "Almere",
+    province: "Flevoland",
+    intro:
+      "Almere is de jongste grote stad van het land, met ondernemers die net zo jong zijn en geen zin hebben in bureaus met lange trajecten. Daarom houden wij het kort: prijs op de site, demo om te proberen, en een oplevering zonder verrassingen.",
+    metaDescription:
+      "Website laten maken in Almere. Vaste prijzen vanaf 299 euro, geen lang traject, alles online geregeld.",
+  },
+  {
+    slug: "zwolle",
+    name: "Zwolle",
+    province: "Overijssel",
+    intro:
+      "Zwolle groeit hard, en met de stad groeit de concurrentie per branche. De zaak die er online verzorgd uitziet wint de klant die vandaag nog niet weet waar hij heen gaat. Wij bouwen die verzorgde site, met openbare prijzen en werkende demo's als bewijs.",
+    metaDescription:
+      "Website laten maken in Zwolle? Verzorgde sites met vaste prijzen vanaf 299 euro. Demo's staan online.",
+  },
+  {
+    slug: "enschede",
+    name: "Enschede",
+    province: "Overijssel",
+    intro:
+      "Enschede heeft de nuchterheid van het oosten: niet te veel woorden, gewoon laten zien wat iets kost en wat je ervoor krijgt. Dat is toevallig precies hoe wij werken. Vier pakketten, prijzen op de site, en demo's die je kunt doorklikken voordat je iets beslist.",
+    metaDescription:
+      "Website laten maken in Enschede. Gewoon duidelijk: vier pakketten, prijzen online vanaf 299 euro, werkende demo's.",
+  },
+  {
+    slug: "apeldoorn",
+    name: "Apeldoorn",
+    province: "Gelderland",
+    intro:
+      "Apeldoorn en de dorpen op de Veluwe eromheen draaien op lokale dienstverleners, en die worden gevonden via de zoekmachine of niet. Een eigen site met je diensten en je werk is daarvoor de basis. Wij bouwen hem op afstand, met de prijs vooraf op de pagina.",
+    metaDescription:
+      "Website laten maken in Apeldoorn? Vaste prijzen vanaf 299 euro, volledig online, met demo's om te proberen.",
+  },
+  {
+    slug: "amersfoort",
+    name: "Amersfoort",
+    province: "Utrecht",
+    intro:
+      "Amersfoort zit precies in het midden van het land, en voor ons maakt dat niets uit: het hele traject loopt toch online. Wat wél telt is dat je klanten je vinden voordat ze je concurrent vinden, en daar is de site voor. De prijs staat vooraf vast.",
+    metaDescription:
+      "Website laten maken in Amersfoort. Openbare prijzen vanaf 299 euro, volledig online geregeld, demo's beschikbaar.",
+  },
+  {
+    slug: "leeuwarden",
+    name: "Leeuwarden",
+    province: "Friesland",
+    intro:
+      "In Friesland wordt zaken doen nog op vertrouwen gedaan, en dat vertrouwen begint tegenwoordig bij wat iemand online van je ziet. Een verzorgde site met je werk en je prijzen zet dat vertrouwen neer voordat het eerste gesprek plaatsvindt. Wij bouwen hem op afstand, voor de prijs die op onze site staat.",
+    metaDescription:
+      "Website laten maken in Leeuwarden? Vaste prijzen vanaf 299 euro, volledig online, met werkende demo's als bewijs.",
+  },
+  {
+    slug: "middelburg",
+    name: "Middelburg",
+    province: "Zeeland",
+    intro:
+      "Zeeland heeft relatief de minste webbureaus van het land, en ondernemers in Middelburg en omstreken betalen daar vaak de prijs voor: lange wachttijden of hoge tarieven van ver weg. Bij ons maakt afstand niet uit en staat de prijs gewoon online.",
+    metaDescription:
+      "Website laten maken in Middelburg. Vaste prijzen vanaf 299 euro, geen wachttijden, volledig online geregeld.",
+  },
+  {
+    slug: "kerkrade",
+    name: "Kerkrade",
+    province: "Limburg",
+    intro:
+      "Kerkrade en Parkstad zitten vol eenmanszaken die hun werk via via krijgen, tot de via-via opdroogt. Een site die je vindbaar maakt is dan geen luxe. Wij zitten zelf in Limburg, bouwen alles online, en wat het kost staat hieronder gewoon op de kaart.",
+    metaDescription:
+      "Website laten maken in Kerkrade? Limburgse studio, vaste prijzen vanaf 299 euro, alles online geregeld.",
+  },
 ];
 
 export function getCity(slug: string): City | undefined {

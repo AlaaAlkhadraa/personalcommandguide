@@ -21,8 +21,9 @@ export interface Sector {
   /** H1: "Een website voor <h1Noun>". */
   h1Noun: string;
   planKey: PlanKey;
-  demoSlug: WorkSlug;
-  demoName: string;
+  /** Absent for portfolio trades: their proof is the concept builder. */
+  demoSlug?: WorkSlug;
+  demoName?: string;
   /** Two to four sentences, unique per sector. */
   intro: string;
   /** One paragraph: what the demo proves, in this sector's terms. */
@@ -86,6 +87,82 @@ export const SECTORS: Sector[] = [
       "Beide kun je bekijken in onze demo van een denkbeeldig kantoor: een heldere dienstenpresentatie én een werkend klantportaal. Zo zie je vooraf welk niveau bij jouw kantoor past.",
     metaDescription:
       "Een website voor je administratiekantoor: vindbaar, verzorgd, met desgewenst een klantportaal. Vaste prijzen, demo online te bekijken.",
+  },
+  {
+    slug: "schoonheidssalons",
+    name: "schoonheidssalons",
+    h1Noun: "je schoonheidssalon",
+    planKey: "business",
+    demoSlug: "barbershop-website",
+    demoName: "onze agenda-demo",
+    intro:
+      "Een schoonheidssalon verkoopt rust en verzorging, en de eerste indruk daarvan is tegenwoordig je site. Een verzorgde pagina met je behandelingen, je prijzen en een agenda waarin klanten zelf boeken straalt precies uit wat je cabine ook doet. Het Business-pakket is er inclusief afsprakensysteem.",
+    proof:
+      "Hoe zo'n boeking voelt, probeer je in onze demo: behandeling kiezen, moment kiezen, bevestiging. Dezelfde flow, in de stijl van jouw salon, komt op jouw site.",
+    metaDescription:
+      "Een website voor je schoonheidssalon met online agenda en je behandelingen. Vaste prijs, werkende demo om te proberen.",
+  },
+  {
+    slug: "nagelsalons",
+    name: "nagelsalons",
+    h1Noun: "je nagelsalon",
+    planKey: "business",
+    demoSlug: "barbershop-website",
+    demoName: "onze agenda-demo",
+    intro:
+      "Nagelsalons leven van herhaalafspraken, en elke herhaalafspraak die telefonisch moet, is er een die 's avonds niet gemaakt wordt. Een agenda op je eigen site vangt die avondboekingen op, en je werk staat er meteen naast in beeld. Het Business-pakket is er inclusief afsprakensysteem.",
+    proof:
+      "In onze demo doorloop je precies zo'n boeking, van behandeling tot bevestiging. Dat systeem, met jouw behandelingen en jouw huisstijl, zetten wij op jouw site.",
+    metaDescription:
+      "Een website voor je nagelsalon met online boeken en je werk in beeld. Vaste prijs, demo online te proberen.",
+  },
+  {
+    slug: "hoveniers",
+    name: "hoveniers",
+    h1Noun: "je hoveniersbedrijf",
+    planKey: "starter",
+    intro:
+      "Een tuin wordt gegund op zicht: wie jouw aangelegde tuinen kan bekijken, belt eerder dan wie alleen een telefoonnummer in een gids vindt. Een eigen site met je projecten doet dat tonen voor jou, het hele jaar door. Het Starter-pakket is daarvoor gebouwd, voor de prijs die hieronder staat.",
+    proof:
+      "Wil je eerst zien hoe jouw site eruit kan zien? In de conceptbouwer kies je een stijl en kleuren en krijg je direct een voorbeeld van je eigen homepage, gratis en zonder verplichtingen.",
+    metaDescription:
+      "Een website voor je hoveniersbedrijf die je aangelegde tuinen laat zien. Vaste prijs, voorbeeld direct te bekijken.",
+  },
+  {
+    slug: "schilders",
+    name: "schilders",
+    h1Noun: "je schildersbedrijf",
+    planKey: "starter",
+    intro:
+      "Strak schilderwerk verkoopt zichzelf, maar alleen als iemand het kan zien. Wie 's avonds twee of drie schilders vergelijkt, kiest degene met foto's van afgerond werk, niet degene met alleen een vermelding. Een eigen site met je projecten is daarvoor genoeg, en die is er al voor de Starter-prijs.",
+    proof:
+      "Hoe die site eruit kan zien, bepaal je zelf in de conceptbouwer: stijl en kleuren kiezen, direct een voorbeeld van je eigen homepage zien. Gratis en zonder verplichtingen.",
+    metaDescription:
+      "Een website voor je schildersbedrijf met je afgeronde werk in beeld. Vaste prijs, voorbeeld direct online te maken.",
+  },
+  {
+    slug: "dakdekkers",
+    name: "dakdekkers",
+    h1Noun: "je dakdekkersbedrijf",
+    planKey: "starter",
+    intro:
+      "Bij een lekkage zoekt de klant met haast, en belt hij wie er betrouwbaar uitziet: afgeronde daken, duidelijke diensten, een telefoonnummer bovenaan. Een gidsvermelding wint die race niet van een eigen site. Het Starter-pakket zet die site neer voor een vaste prijs.",
+    proof:
+      "In de conceptbouwer zie je binnen een paar minuten hoe jouw site eruit kan zien: stijl kiezen, kleuren kiezen, voorbeeld bekijken. Gratis en zonder verplichtingen.",
+    metaDescription:
+      "Een website voor je dakdekkersbedrijf: betrouwbaar vindbaar bij spoed en gepland werk. Vaste prijs, voorbeeld direct te zien.",
+  },
+  {
+    slug: "stukadoors",
+    name: "stukadoors",
+    h1Noun: "je stukadoorsbedrijf",
+    planKey: "starter",
+    intro:
+      "Stucwerk beoordeel je met je ogen, en dus wint de stukadoor wiens strakke wanden en plafonds online staan het van de stukadoor die alleen op een gidssite te vinden is. Een eigen pagina met je werk kost eenmalig de Starter-prijs die hieronder staat, en daarna doet hij elke avond zijn werk.",
+    proof:
+      "Bouw in de conceptbouwer eerst zelf een voorbeeld van je eigen homepage: stijl en kleuren kiezen, direct resultaat zien. Gratis en zonder verplichtingen.",
+    metaDescription:
+      "Een website voor je stukadoorsbedrijf die je strakke werk laat zien. Vaste prijs, voorbeeld direct online te bekijken.",
   },
 ];
 

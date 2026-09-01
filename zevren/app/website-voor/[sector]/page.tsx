@@ -97,17 +97,31 @@ export default async function SectorPage({ params }: PageProps) {
           <p className="text-lg leading-relaxed text-muted">{sector.intro}</p>
           <p className="text-base leading-relaxed text-muted">
             {sector.proof}{" "}
-            <Link
-              href={`/projects/${sector.demoSlug}`}
-              className="text-accent underline-offset-2 hover:underline"
-            >
-              Bekijk {sector.demoName}
-            </Link>
-            , of bouw eerst zelf een concept met{" "}
-            <Link href="/concept-bouwer" className="text-accent underline-offset-2 hover:underline">
-              de conceptbouwer
-            </Link>
-            .
+            {sector.demoSlug ? (
+              <>
+                <Link
+                  href={`/projects/${sector.demoSlug}`}
+                  className="text-accent underline-offset-2 hover:underline"
+                >
+                  Bekijk {sector.demoName}
+                </Link>
+                , of bouw eerst zelf een concept met{" "}
+                <Link
+                  href="/concept-bouwer"
+                  className="text-accent underline-offset-2 hover:underline"
+                >
+                  de conceptbouwer
+                </Link>
+                .
+              </>
+            ) : (
+              <Link
+                href="/concept-bouwer"
+                className="text-accent underline-offset-2 hover:underline"
+              >
+                Open de conceptbouwer
+              </Link>
+            )}
           </p>
         </Container>
       </section>
