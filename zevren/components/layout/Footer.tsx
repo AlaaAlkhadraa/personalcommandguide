@@ -93,6 +93,18 @@ export function Footer({ dict, navDict, servicesDict, workDict }: FooterProps) {
           >
             Website laten maken
           </Link>
+          <Link
+            href="/webshop-laten-maken"
+            className="text-sm text-muted transition-colors hover:text-white"
+          >
+            Webshop laten maken
+          </Link>
+          <Link
+            href="/webapplicatie-laten-maken"
+            className="text-sm text-muted transition-colors hover:text-white"
+          >
+            Webapplicatie laten maken
+          </Link>
         </nav>
 
         <nav aria-label={dict.projectsHeading} className="flex flex-col gap-3">

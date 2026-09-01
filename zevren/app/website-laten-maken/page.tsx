@@ -62,7 +62,21 @@ export default async function WebsiteLatenMakenPage() {
             <Link href="/projects" className="text-accent underline-offset-2 hover:underline">
               onze werkende demo&apos;s
             </Link>
-            .
+            . Zoek je specifiek een{" "}
+            <Link
+              href="/webshop-laten-maken"
+              className="text-accent underline-offset-2 hover:underline"
+            >
+              webshop
+            </Link>{" "}
+            of een{" "}
+            <Link
+              href="/webapplicatie-laten-maken"
+              className="text-accent underline-offset-2 hover:underline"
+            >
+              maatwerk webapplicatie
+            </Link>
+            ? Die hebben hun eigen pagina.
           </p>
         </Container>
       </section>
