@@ -262,3 +262,23 @@ bevindingsregels als overtollige, onschadelijke metavelden op de kaart.
 Azzouz noemt dit terecht een Sam-conventie, geen parserwijziging: **nummer
 bevindingssecties nooit op `## `-niveau met hetzelfde cijferpatroon als
 kaarten.**
+
+## 1 september — nieuwe landingspagina's die outreach kan gebruiken
+
+De site heeft er vandaag een landingscluster bij dat direct op Sams werk
+aansluit. Voor kaarten waar het past mag de mail-link voortaan naar de
+branchepagina wijzen in plaats van naar de homepage — zelfde UTM-regel
+als de conceptbouwer (utm_source=outreach&utm_medium=email&utm_campaign=
+<sector>-w<week>):
+
+- `zevren.nl/website-voor/kappers` — met de barbershop-boekingsdemo
+- `zevren.nl/website-voor/hondentrimsalons` — zelfde agenda-demo
+- `zevren.nl/website-voor/garages` — met de garageplanner-demo
+- `zevren.nl/website-voor/administratiekantoren` — met het Bergendal-portaal
+- `zevren.nl/webshop-laten-maken` en `zevren.nl/webapplicatie-laten-maken`
+- `zevren.nl/website-laten-maken/<stad>` — zestien steden
+
+Een prospect die na een mail googelt of doorklikt, landt zo op een pagina
+over zijn eigen vak met een demo die werkt — niet op een generieke homepage.
+De prijzen op al die pagina's komen uit dezelfde bron als het bord, dus een
+kaart kan er nooit mee in tegenspraak zijn.
