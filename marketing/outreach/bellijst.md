@@ -143,7 +143,7 @@ volledig mobiel nummer.
 (trimsalondehondenhut@hotmail.com) en hoort dus niet op de bellijst — hij staat in de ledger
 als `lead - poort open` omdat alleen het gedateerde levensteken ontbreekt. Wordt die datum
 gevonden, dan is het een kaart en geen telefoontje.
-## Lane D — Noord-Holland, Zuid-Holland, Utrecht
+## Lane D — Noord-Holland, Zuid-Holland, Utrecht (aanvulling 01-09)
 
 Lane D leverde op 01-09 geen enkele regel voor de hoofdtabel hierboven: de
 jonge, op-profiel bedrijven zonder e-mailadres die deze lane vond (zes
