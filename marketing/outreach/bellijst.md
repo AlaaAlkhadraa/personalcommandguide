@@ -170,3 +170,21 @@ en blijft het bij `lead - poort open` in het ledger.
 | Hondentrimsalon de Trimvilla | Purmerend | hondentrimsalon | 06-26483846 | eigen Facebook-bericht okt 2024 ("de nieuwste hondentrimsalon in Purmerend") — te oud voor poort (a) | Compleet dossier: info@detrimvilla.nl, Reigersbek, eigen domein, geen online agenda. Alleen een levensteken binnen twaalf maanden ontbreekt |
 | Trimsalon Purmerend | Purmerend | hondentrimsalon | — (contact via site en Instagram) | jongste geïndexeerde eigen bericht ±juli 2023 | Compleet dossier: angelavkomen@hotmail.com, Haverstraat 32, eigen domein, ABHB-vermelding, Instagram met 145 berichten. Alleen poort (a) open |
 | Trimsalon Demi | Purmerend | hondentrimsalon | 06-37470103 (WhatsApp) | — | trimsalondemi@gmail.com, Zuringhof 2, afspraak via formulier/mail/WhatsApp. Naast poort (a) ook de leeftijd onzeker: "recent eigenaar geworden" kan onder de ondergrens van het groeifaseprofiel liggen |
+## Overijssel, Gelderland, Flevoland — aanvulling 01-09-2026 (lane B)
+
+Drie namen, en ik zet er meteen bij wat lane A's lijst van 31-08 verweten werd,
+omdat het hier deels net zo ligt: **maar één van de drie heeft een nummer.**
+Wie deze aanvulling opent om te bellen, kan er één bellen.
+
+| Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
+|---|---|---|---|---|---|
+| Trimsalon Doggy Style | Hardenberg | hondentrimsalon | 06-22436971 (WhatsApp) | — | Vechtstraat 6. De eigen contactpagina meldt uitdrukkelijk dat afspraken **niet** per e-mail kunnen; het agendalek staat er dus in hun eigen woorden, maar er is geen adres om het naartoe te sturen. Leeftijd niet vastgesteld, dus vóór het bellen checken of de zaak in het venster valt |
+| Trimsalon For your Doodle | Genemuiden (Zwartewaterland) | hondentrimsalon | geen nummer in de zoekresultaten; wel eigen domein foryourdoodle.nl en een Facebookpagina | 08-05-2023 (gedateerd artikel genemuidenactueel.nl over de opening) — ouder dan twaalf maanden | Geopend 05-04-2023 door Janneke Last, Jan van Arkelstraat 15. Open woensdag, vrijdagmiddag en zaterdag, uitsluitend op afspraak: het lek staat in haar eigen openingstijden. Drie zoekrondes zonder e-mailadres én zonder telefoonnummer |
+| Eylin Multidiensten | Almere (Filmwijk) | glazenwasserij/schoonmaak | geen nummer gevonden | — | KvK 91631556, sinds 2023, 1 werkzaam persoon, Lucille Ballstraat 36. Drie zoekrondes zonder e-mailadres |
+
+**Wat deze drie regels waard zijn.** Eén belbare naam, en bij die ene staat de
+leeftijd nog niet vast. De andere twee horen strikt genomen in
+`geen-emailadres.md` en staan hier alleen omdat de order vraagt om alles op één
+plek; ze zijn niet belklaar en ik presenteer ze ook niet zo. For your Doodle is
+van de drie het sterkste profiel — jong, op afspraak, eigen domein — en juist
+daar ontbreken beide kanalen.

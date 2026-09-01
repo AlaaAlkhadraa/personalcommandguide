@@ -495,3 +495,10 @@ adres dat niet kan kloppen.
 | Bedrijf | Plaats | Wat er wel is | Datum gecheckt |
 |---|---|---|---|
 | Gastouderopvang De Zonnestraal (KvK-naam Gastouderopvang Zorg24/7) | Rijswijk | KvK 86511270 (2022), Prinses Beatrixlaan 703, contactpersoon Ilham El Bouaiadi, zzp'er, capaciteit 3, telefoon 06-11279752. De SBB-registerpagina geeft als e-mailadres `ilhamamanah@icloud.con` — `.con` is geen bestaand topleveldomein. Niet naar `.com` geraden: dat is een adres verzinnen. Wie de registerpagina zelf kan openen, lost dit in één blik op | 2026-09-01 |
+## Overijssel, Gelderland, Flevoland — 01-09-2026 (lane B)
+
+| Bedrijf | Plaats | Wat er wél is | Datum |
+|---|---|---|---|
+| Trimsalon For your Doodle | Genemuiden (Zwartewaterland) | Geopend 05-04-2023 door Janneke Last, Jan van Arkelstraat 15, eigen domein foryourdoodle.nl, Facebookpagina, gedateerd openingsartikel op genemuidenactueel.nl van 08-05-2023. Open woensdag, vrijdagmiddag en zaterdag, uitsluitend op afspraak. Drie zoekrondes (naam+contact, domein+e-mail, naam+eigenaar) zonder e-mailadres én zonder telefoonnummer. Op leeftijd, sector en lek precies op profiel — het sterkste geparkeerde dossier van deze dienst | 2026-09-01 |
+| Eylin Multidiensten / Glazenwassersbedrijf Eylin | Almere (Filmwijk) | KvK 91631556, sinds 2023, 1 werkzaam persoon, Lucille Ballstraat 36. Eenbedrijfspagina op alleglazenwassers.nl draagt KvK en oprichtingsjaar maar geen adres; telefoonboek.nl en oozo geven de vermelding zonder e-mail | 2026-09-01 |
+| Trimsalon Doggy Style | Hardenberg | Vechtstraat 6, WhatsApp 06-22436971. Eigen contactpagina meldt uitdrukkelijk dat afspraken niet per e-mail gemaakt kunnen worden. Leeftijd niet vastgesteld | 2026-09-01 |
