@@ -1,6 +1,6 @@
 # Product Marketing Context — ZEVREN
 
-**Document version:** 1.11 · 2026-09-01
+**Document version:** 1.12 · 2026-09-01
 Elke marketingskill in `.claude/skills/` leest dit document eerst.
 Feiten hier zijn bindend; een skill-advies dat ermee botst, verliest.
 
@@ -64,9 +64,17 @@ Drie formuleringen zijn in verificatie gesneuveld en komen niet terug:
 Vóór er een letter copy wordt geschreven: **kan deze klant al online
 boeken of plannen?** Vijf kaarten zijn hier in twee dagen op gesneuveld.
 Zoek naast de eigen site altijd op de platforms die dit segment gebruikt
-— Fresha, Treatwell, Salonized, Bjootify, DoggyDoggy, aniday — en op een
-eigen afsprakenplanner of klantenportaal. Een mail die een ondernemer
-vertelt dat zij mist wat zij al betaalt, verbrandt het adres.
+— Fresha, Treatwell, Salonized, Bjootify, DoggyDoggy, aniday, Tipaw,
+1plekjevrij — en op een eigen afsprakenplanner of klantenportaal.
+`1plekjevrij.nl` richt zich uitdrukkelijk op kappers, pedicures,
+schoonheidsspecialisten én trimsalons en toont per behandelaar het vrije
+tijdslot: dat is letterlijk de belofte waarmee ons 549-bericht binnenkomt.
+De vaste eerste zoekopdracht in elke afspraaksector, vóór de leeftijd en
+vóór het adres, is daarom
+`"<naam>" salonized OF fresha OF treatwell OF tipaw OF 1plekjevrij`.
+
+Een mail die een ondernemer vertelt dat zij mist wat zij al betaalt,
+verbrandt het adres.
 
 ## Een open poort is een bevinding, geen kaart
 
@@ -129,6 +137,31 @@ OF inspectie`, niet een gidsenzoekopdracht.
 de leeftijdsmuur van 30-08: registers en vergunningenlijsten selecteren op
 gevestigd zijn, precies zoals Stagemarkt dat doet. Verwacht hier meer kaarten
 uit de geen-website-groep, geen oplossing voor jong-én-bereikbaar.
+
+**Een bewijsroute is nog geen vindroute (1.12).** Twee bronnen uit deze lijst
+sluiten poort (a) uitstekend zodra je de naam van het bedrijf al hebt, en
+leveren die naam niet:
+
+- **Het GGD-inspectierapport / het Landelijk Register Kinderopvang.** Voor een
+  gastouder die je bij naam kent is een gedateerd inspectierapport het sterkste
+  levensteken dat bestaat. Maar het LRK is een databank achter een
+  zoekformulier: er is geen geïndexeerde pagina per voorziening, en de
+  rapporten staan als losse PDF's op `open.overheid.nl` die alleen via
+  doorklikken bereikbaar zijn. Lane A (Groningen/Friesland/Drenthe) en lane B
+  (Overijssel/Gelderland/Flevoland) hebben dat op 01-09 onafhankelijk van
+  elkaar vastgesteld; samen zes zoekopdrachten, nul individuele voorzieningen.
+  Een lane die op deze route een gastouderdossier wil rondkrijgen, komt niet
+  verder dan de voorlichtingspagina's. **Zet de sector dus nooit hoog op grond
+  van deze route alleen — de namen moeten ergens anders vandaan komen** (de
+  ledenlijsten van gastouderbureaus zijn wél platte pagina's).
+- **De gemeentelijke vergunning op `zoek.officielebekendmakingen.nl`.** Die
+  vindt jonge zaken op het moment dat ze ontstaan, wat geen gids kan, maar de
+  bekendmaking noemt een adres en een activiteit en lang niet altijd een
+  handelsnaam; de volledige tekst zit in een PDF. Lane B haalde er op 01-09
+  twee trimsalons uit (Eerbeek en Hoogenweg, beide 2024) en kreeg bij geen van
+  beide de naamjacht rond. Bovendien sluit een vergunning uit 2024 poort (a)
+  niet — alleen eentje van ná september 2025 doet dat. **Dit is een
+  leeftijdsroute, geen levenstekenroute en geen adresroute.**
 
 ## Welke bron een e-mailadres draagt
 
@@ -326,6 +359,33 @@ wil houden.
   groepen tegelijk.
 
 ## Changelog
+
+- 1.12 (2026-09-01, Azzouz, verificatie lanes A+B): twee wijzigingen, beide uit lanes A en B van
+  1 september, en beide op de regel dat het fundament alleen wijzigt op bewijs
+  dat uit meer dan één lane komt.
+  **(a) `1plekjevrij.nl` en `Tipaw` toegevoegd aan de platformlijst bij "De
+  poort die het vaakst kaarten kost".** 1plekjevrij stond in geen enkel bestand
+  in `agents/` of `.agents/` en kwam op 01-09 bij twee noordelijke trimsalons
+  (TimeLess in Makkum, Marley in Assen) als enige boekingsroute boven; het
+  platform richt zich uitdrukkelijk op trimsalons en verkoopt letterlijk onze
+  549-belofte. Tipaw sloot dezelfde dag de poort in twee lanes (Mooi Af in
+  Dronten, Pieko Bello in Zwijndrecht) en stond er evenmin op. Een platform dat
+  niet op de lijst staat, wordt niet gezocht — en dan vertelt een bericht een
+  ondernemer dat zij mist wat zij al betaalt. Bij dezelfde wijziging is de
+  volgorde vastgelegd: de platformcheck is de EERSTE zoekopdracht in een
+  afspraaksector, vóór de leeftijd en vóór het adres. Grond: dertien van de
+  achtendertig ledgerregels van 01-09 vielen op `boekt al online`, in negen
+  provincies en in dezelfde twee sectoren, door lanes die niet van elkaars werk
+  wisten.
+  **(b) "Een bewijsroute is nog geen vindroute" toegevoegd bij "Wiens daad
+  draagt de datum".** Ik heb gastouderopvang deze week in de directives naar
+  prioriteit 2 getild met als grond dat GGD-rapporten openbaar én gedateerd
+  zijn. Dat klopt en het helpt niet: het Landelijk Register is een databank
+  achter een zoekformulier zonder pagina per voorziening. Lane A en lane B
+  hebben dat op dezelfde dag in verschillende provincies vastgesteld. De fout
+  is van mij en staat nu opgeschreven, samen met dezelfde beperking bij de
+  vergunningenroute. De vergunningenroute zelf is NIET als route opgenomen —
+  één lane, twee treffers, nul namen — maar wel als waarschuwing genoteerd.
 
 - 1.11 (2026-09-01, Azzouz, verificatie lanes C+D): vier dingen uit twee
   nuldiensten. (1) **De drie ledgervelden blijven in de notitiekolom en worden
