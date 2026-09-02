@@ -212,3 +212,31 @@ daar ontbreken beide kanalen.
 | Alhussein | Landgraaf | hovenier | geen nummer in de zoekresultaten | — | Opgericht 01-02-2023, tuinrenovatie, aanleg, onderhoud en bestrating, staat in de Trustoo top 10 van Landgraaf. Noch adres noch nummer openbaar; alleen bereikbaar via het offerteformulier van het platform. Niet belklaar zolang er geen nummer is |
 | T.R.Z Cleaning | Maastricht | schoonmaak | geen nummer in de zoekresultaten | — | Trustoo 9,4, top 10 Maastricht. Warme kandidaat van 01-09, adres opnieuw gejaagd en opnieuw niet gevonden: uitsluitend bereikbaar via het offerteformulier van Werkspot en Trustoo. Precies het patroon uit de leadkostenbevinding van 01-09 — het platform heeft er belang bij dat de klant het bedrijf niet rechtstreeks bereikt |
 | Clean Care Limburg | Maastricht | schoonmaak/glazenwasser | 06-53914312 | — | Trustoo 8,8, eigen domein cleancarelimburg.nl, Sibemaweg 87D, bedient bedrijven, horeca, VvE's en particulieren in Zuid-Limburg. De eigen site noemt bellen, appen en mailen als contactweg en zegt binnen 24 uur persoonlijk te reageren, maar het e-mailadres komt in vier zoekronden niet in de zoekresultaten. Belklaar op het nummer; leeftijd nog niet vastgesteld, dus vóór het bellen checken |
+
+## Lane D — Noord-Holland, Zuid-Holland, Utrecht (aanvulling 02-09)
+
+Vandaag levert deze lane wél regels voor de hoofdtabel, en de bovenste is de
+sterkste die deze lane in drie dagen heeft geproduceerd: een zaak die op alle
+poorten klopt behalve het e-mailadres, mét telefoonnummer én mét een gedateerd
+levensteken. Volgens de leesregel bovenaan dit bestand is dat belklaar.
+
+| Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
+|---|---|---|---|---|---|
+| Jodieh's Trimsalon | Westbroek (De Bilt) | hondentrimsalon | 06-57468912 | **ja** — eigen tarievenpagina voert aangepaste tarieven voor 2026 | KvK 82814384, begin 2022, uitbreiding openingsdagen (De Vierklank 06-01-2025). Lek hard: bellen is de enige afspraakweg die de zaak zelf noemt. Vier zoekronden zonder e-mailadres. Onderwerp en bericht liggen woordelijk klaar in `2026-09-02-d.md` |
+| Nova's trimsalon | Leiden | hondentrimsalon | 06-28563589 | — | Rebecca Botbijl, Maansteenpad, "recent eigen salon gestart"; geen e-mailadres en de leeftijd is niet hard te maken (drimble voert een nummer uit een oudere reeks) |
+| Baasjes Mooiste | Amersfoort | hondentrimsalon | 06-39222401 | — | Fazantenstraat 26, ook 's avonds en op zaterdag open; geen e-mailadres, geen KvK, geen oprichtingsjaar |
+| Trimsalon Purmerend | Purmerend | hondentrimsalon | zie ledger | — | Compleet dossier op poort (a) na; zes extra zoekopdrachten op 02-09 zonder resultaat. Eén blik op de Google-recensies sluit de poort |
+| Hondentrimsalon de Trimvilla | Purmerend | hondentrimsalon | 06-26483846 | — | Idem; eigen post oktober 2024 is 23 maanden oud. Heeft wél `info@detrimvilla.nl`, dus staat hier alleen voor de datumvraag |
+
+**Wat deze vijf regels waard zijn.** Eén ervan (Jodieh's) is belklaar in de
+volle zin: als de owner belt, hoeft er niets meer uitgezocht te worden en ligt
+de pitch er woordelijk. De andere vier zijn dossiers waarvan één vraag aan de
+telefoon — "sinds wanneer draait u?" of "kan iemand bij u online een tijd
+kiezen?" — de laatste poort in tien seconden sluit. Dat is precies het werk
+dat deze omgeving niet kan doen en een telefoon wel.
+
+**Twee namen die hier NIET thuishoren en waarom.** Anne's trimsalon kWAFure
+(Huizen) en Trimsalon Demi (Purmerend) hebben allebei een openbaar
+e-mailadres; ze staan in de ledger als `lead - poort open`, niet hier. Bellen
+lost bij hen niets op wat mailen niet ook zou oplossen — wat ontbreekt is de
+datum, niet het kanaal.
