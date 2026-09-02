@@ -557,3 +557,25 @@ drimble). De eerste vier komen uit één sector en dat is geen toeval: zie
 | Breedveld | Almere | alleglazenwassers.nl-pagina met KvK 91375223 en startjaar 2023, Rietmeent 135, 06-13354043. LET OP lookalike: Breedveld BV (breedveldbv.nl) is een andere zaak | 2026-09-02 |
 | Trimsalon Perfect Dog | Borculo (Berkelland) | eigen domein met "Tarieven per 1 januari 2026", Jessica van Eck sinds 2019, 06-42727281, Heer Rudolfstraat 26. Staat ook op `bellijst.md`, want hier is het telefoonnummer er wél | 2026-09-02 |
 
+## Groningen, Friesland, Drenthe — aanvulling 02-09-2026 (lane A)
+
+Acht bedrijven die vandaag de leeftijdspoort én het lek haalden en uitsluitend op het
+e-mailadres strandden. Vier ervan hebben een telefoonnummer en staan daarom óók in
+`bellijst.md`; de vier zonder nummer staan alleen hier. Twee regels zijn nadrukkelijk
+herjaagbaar en dat staat erbij.
+
+| Bedrijf | Plaats | Wat er wél is | Datum |
+|---|---|---|---|
+| Otter Hoveniers | Heerenveen | Roan Otter, KvK 83325824, opgericht 01-07-2021, Dotterhof 3, eigen domein otterhoveniers.nl mét contactpagina, 06-55296850. **Poort (a) DICHT**: Werkspot-profielbeoordeling 11-02-2026. Drie zoekronden op naam, eigenaarsnaam en domein; hovenier.website meldt uitdrukkelijk dat er geen adres bekend is. Op alles behalve het e-mailadres een kaart — de sterkste parkering van deze dienst en de bovenste regel van de lane A-bellijst | 2026-09-02 |
+| Dakman Renovaties & Onderhoud | Groningen-Stad | KvK 87982315, opgericht 17-10-2022, eenmanszaak, Hereplein 4, eigen domein, 06-16520927, Trustoo 9,1 en 9,8 uit 71 beoordelingen. LET OP: één gids meldt dat er wél een adres is maar zet het achter "klik hier om het e-mailadres weer te geven". Een afgeschermde vermelding is niet gelezen en dus niet overgenomen — wie hem herjaagt, weet dat het adres bestaat | 2026-09-02 |
+| Aloush Stukadoor | Hoogeveen | Jawad Aloush, KvK 91177901, opgericht 01-09-2023, eenmanszaak, Korhoenlaan 20, 7905 GV, eigen domein aloushstukadoor.nl, 06-28857774. Contact loopt uitsluitend via het formulier op de eigen site. Geen gedateerd levensteken vastgesteld | 2026-09-02 |
+| L&G Bouw | Damwâld (Dantumadiel) | KvK 89709993, opgericht 13-03-2023, 2 werkzame personen, Ds. Germswei 41, eigen domein lengbouw.nl, 06-11028406, Werkspot 4,5 uit 2 beoordelingen. De contactgegevens op de eigen site komen pas na cookie-acceptatie en zijn in deze omgeving niet te lezen | 2026-09-02 |
+| Dennis de Bouwman renovatie & onderhoud | Groningen-Stad | KvK 91501512, opgericht 02-10-2023, eenmanszaak, Grote Beerstraat 77, 9742 RD, Trustoo 9,3 en top 10 badkamerinstallateurs. **Herjaagbaar met voorrang**: het profiel is precies op maat en het is de enige van deze acht die in één zoekopdracht naast Stark en Rahma bovenkwam. De registers melden uitdrukkelijk dat er géén telefoon en géén e-mail bekend is, dus geen bellijstregel | 2026-09-02 |
+| Bontsema Dienstverlening | Groningen-Stad | KvK 91541301, opgericht 02-10-2023, eenmanszaak, 1 werkzaam persoon, hovenier. Geen adres, geen nummer, geen eigen domein gevonden. LET OP wie hem herjaagt: er zijn minstens drie andere Bontsema-bedrijven in dezelfde provincie (meubelreiniging, schildersbedrijf, en een vermelding in Delfzijl) — zoek op het KvK-nummer, niet op de naam | 2026-09-02 |
+| HJ BAKKER Bestratingen & Klussenbedrijf | Delfzijl | Opgericht 22-05-2023, bestrating en schuttingen. **Poort (a) DICHT**: Werkspot-beoordeling 03-05-2026 over 150 m2 bestrating plus kunstgras. LET OP: op hetzelfde profiel staat een beoordeling van 26-10-2024 die meldt dat hij niet kwam opdagen en onbereikbaar bleef. Geen e-mail én geen telefoon in de zoekresultaten | 2026-09-02 |
+| The Golden Phila | Drouwenerveen (Borger-Odoorn) | Lisanne van der Scheun, KvK 80989683, Verbindingsweg 5, 9525 TH, eigen domein thegoldenphila.nl. Trimsalon plus hondenopvang plus gedragstherapie, dus het agendalek zit er dubbel in. Drie zoekronden zonder e-mailadres en zonder telefoonnummer in de zoekresultaten | 2026-09-02 |
+
+**Eén herbevestigde parkering.** Van den Bos Bedrijfsdiensten (Gorredijk) stond hier al
+en is op 01-09 opnieuw gejaagd zonder resultaat. Vandaag niet opnieuw geprobeerd: twee
+mislukte herjachten binnen twee dagen is genoeg, en de eerstvolgende poging is pas
+zinvol als er een nieuwe bron bij komt.

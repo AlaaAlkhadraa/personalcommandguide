@@ -252,3 +252,39 @@ dat deze omgeving niet kan doen en een telefoon wel.
 e-mailadres; ze staan in de ledger als `lead - poort open`, niet hier. Bellen
 lost bij hen niets op wat mailen niet ook zou oplossen — wat ontbreekt is de
 datum, niet het kanaal.
+
+## Lane A — Groningen, Friesland, Drenthe (aanvulling 02-09)
+
+Toegevoegd door lane A op 02-09-2026. Vier bedrijven, alle vier jong, op profiel en met
+een volledig telefoonnummer. Anders dan de zes "langsrijregels" van 31-08 is dit dus
+een echte bellijst: hier valt bij alle vier te bellen.
+
+**De bovenste regel is de sterkste die deze lane ooit heeft opgeleverd.** Otter Hoveniers
+is de eerste noordelijke regel met een volledig nummer én een gedateerd levensteken
+tegelijk, en hoort daarmee op de leeswijze van dit bestand bovenaan de hele lijst — niet
+alleen bovenaan deze sectie. Daarmee is de tekortkoming die dit bestand van zichzelf
+meldde ("bij geen enkele belbare regel staat een gedateerd levensteken") nu ook in het
+noorden weggewerkt, met dezelfde Werkspot-profielroute die lane C op 01-09 vond.
+
+| Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
+|---|---|---|---|---|---|
+| **Otter Hoveniers** | Heerenveen | hovenier | **06-55296850** | **11-02-2026** — Werkspot-profielbeoordeling: "de appelboom en houtduifstruik zijn vakkundig gesnoeid, afspraak op tijd nagekomen, goede communicatie" | Roan Otter, KvK 83325824, opgericht 01-07-2021, Dotterhof 3, eigen domein otterhoveniers.nl mét een contactpagina. Drie zoekronden op naam, op eigenaarsnaam en op het domein zonder e-mailadres; hovenier.website meldt uitdrukkelijk dat er geen adres bekend is. Offertevormig werk, dus het gesprek gaat over afgerond werk dat de koper wil zien — pakket 299 |
+| Dakman Renovaties & Onderhoud | Groningen-Stad | dakdekker | 06-16520927 | — | KvK 87982315, opgericht 17-10-2022, eenmanszaak, Hereplein 4, eigen domein, Trustoo 9,1 en 9,8 uit 71 beoordelingen. LET OP: een gids meldt dat er wél een e-mailadres bestaat maar zet het achter "klik hier om het e-mailadres weer te geven" — afgeschermd, dus niet gelezen en niet opgeschreven |
+| Aloush Stukadoor | Hoogeveen | stukadoor | 06-28857774 | — | Jawad Aloush, KvK 91177901, opgericht 01-09-2023, eenmanszaak, Korhoenlaan 20, 7905 GV, eigen domein aloushstukadoor.nl. Contact loopt uitsluitend via het formulier op de eigen site |
+| L&G Bouw | Damwâld (Dantumadiel) | bouw-/aannemersbedrijf | 06-11028406 | — | KvK 89709993, opgericht 13-03-2023, 2 werkzame personen, Ds. Germswei 41, eigen domein lengbouw.nl, Werkspot 4,5 uit 2 beoordelingen. De contactgegevens op de eigen site komen pas na cookie-acceptatie en zijn in deze omgeving niet te lezen |
+
+**Twee namen uit dezelfde dienst die hier bewust NIET staan**, om dezelfde reden als
+De Hondenhut destijds: er valt niets te bellen. Dennis de Bouwman renovatie & onderhoud
+(Groningen, 02-10-2023, Trustoo 9,3) en Bontsema Dienstverlening (Groningen, 02-10-2023)
+hebben geen telefoonnummer én geen e-mailadres in enig register. Ze staan in
+`geen-emailadres.md`, en Dennis de Bouwman staat daar aangemerkt als herjaagbaar met
+voorrang.
+
+**Eén naam eraf, en het is een waarschuwing.** Trimsalon De Hondenhut (Munnekezijl) stond
+hier niet op de bellijst maar wel in de ledger als `lead - poort open`, met de notitie dat
+één blik op de Facebookpagina er een kaart van zou maken. Dat klopt niet meer: de salon
+neemt tijdelijk geen nieuwe klanten aan. Wie hem alsnog zou bellen of mailen, vertelt een
+trimster dat zij klanten misloopt terwijl zij er bewust geen meer aanneemt. De ledgerrij
+staat nu op `not fit - klantenstop`.
+
+Sam, 2 september 2026
