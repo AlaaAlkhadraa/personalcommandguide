@@ -1,6 +1,6 @@
 # Product Marketing Context — ZEVREN
 
-**Document version:** 1.12 · 2026-09-01
+**Document version:** 1.13 · 2026-09-02
 Elke marketingskill in `.claude/skills/` leest dit document eerst.
 Feiten hier zijn bindend; een skill-advies dat ermee botst, verliest.
 
@@ -162,6 +162,40 @@ leveren die naam niet:
   beide de naamjacht rond. Bovendien sluit een vergunning uit 2024 poort (a)
   niet — alleen eentje van ná september 2025 doet dat. **Dit is een
   leeftijdsroute, geen levenstekenroute en geen adresroute.**
+
+## De prijsaanpassing met het lopende jaartal — een poort-(a)-route (1.13)
+
+De goedkoopste manier om poort (a) te sluiten bij een afspraakzaak zonder
+levende socials is haar eigen prijsaanpassing. Een zaak die met uurtarieven
+werkt, past die één keer per jaar aan en kondigt dat op haar eigen site aan,
+mét datum. Dat is een daad van het bedrijf met een datum erin, dus hij haalt
+"Wiens daad draagt de datum" zonder discussie, en hij is geïndexeerd.
+
+De zoekopdracht, in twee vormen die allebei bewezen zijn:
+
+- `<sector> "per 1 januari 2026" prijzen verhoogd OF aangepast`
+- `<sector> "per 1 januari 2026" tarieven verhoogd <provincie>`
+
+**Waarom dit als regel is opgenomen en niet als tip:** lane C (Noord-Brabant/
+Limburg/Zeeland) en lane D (Noord-Holland/Zuid-Holland/Utrecht) vonden hem op
+2 september onafhankelijk van elkaar, in verschillende provincies, zonder elkaars
+bestand te kennen, en met drie namen die in beide lijsten terugkomen (Woeffie,
+Trim Salabim, TRIM ME!). Elk van beide haalde er in één opdracht vijf tot zes
+salons uit met een leesbare datum op hun eigen domein.
+
+Twee grenzen horen erbij:
+
+- **Het jaartal moet het lopende jaar zijn.** "Per 1 januari 2025" is twintig
+  maanden en telt niet.
+- **De aankondiging telt, de prijslijst niet.** Een kale prijslijst met "2026"
+  erboven draagt geen datum: hij staat er, en je weet niet wanneer hij er is
+  neergezet. De mededeling ("per 1 januari 2026 zijn de tarieven aangepast")
+  is de daad. Hondentrimsalon Dinges (tarieven per 01-07-2026) bewijst dat de
+  route niet toevallig één keer aansloeg.
+
+De route werkt in elke afspraaksector die met uurtarieven werkt en dus in
+januari aanpast: trimsalons, kapsalons, pedicures, schoonheidssalons, fysio —
+precies de sectoren waar het agendabericht op past.
 
 ## Welke bron een e-mailadres draagt
 
@@ -359,6 +393,34 @@ wil houden.
   groepen tegelijk.
 
 ## Changelog
+
+- 1.13 (2026-09-02, Azzouz, verificatie lanes C+D): twee dingen, beide op de regel
+  dat het fundament alleen wijzigt op bewijs uit meer dan één lane.
+  **(a) De prijsaanpassing met het lopende jaartal is opgenomen als poort-(a)-route**
+  (eigen sectie hierboven). Lane C en lane D vonden hem op 2 september onafhankelijk
+  in verschillende provincies, met drie overlappende namen en zonder elkaars bestand
+  te kennen; elk haalde er in één zoekopdracht vijf tot zes salons met een leesbare
+  datum uit. De scheidslijn die er meteen bij hoort komt ook van beide lanes: de
+  aankondiging van de wijziging draagt de datum, de prijslijst niet. Dit is de vierde
+  route die poort (a) kan sluiten bij een zaak zonder levende socials, en de eerste
+  die per definitie jaarlijks ververst.
+  **(b) De regel "één vraag" begrenst het aantal vragen, niet het aantal bewijsstukken.**
+  Lane C haalde op 02-09 de verwijzing naar de conceptbouwer uit een verder sterke
+  kaart, onder de `cold-email`-regel "one ask, low friction", en logde dat als een
+  verbetering. Dat is één regel te ver doorgevoerd: de staande order van 25 augustus
+  eist de demo als bewijslast, één keer genoemd met een concrete uitnodiging, en een
+  bericht dat op een prijs en een kale link eindigt geeft de lezer niets wat hij die
+  avond kan doen. De correctie is in de goedgekeurde kaart doorgevoerd zonder tweede
+  link, want de conceptbouwer staat op de branchepagina waar de link al heen wijst.
+  **Vastgelegd als eis: elk bericht noemt de demo of de conceptbouwer precies één
+  keer, met een concrete uitnodiging, en de link ernaartoe telt niet als tweede ask.**
+  Twee dingen zijn uitdrukkelijk NIET opgenomen omdat ze uit één dienst komen: lane C's
+  omgekeerde jaagvolgorde (eerst reviewvolume, dan leeftijd) en lane D's zoekvorm op
+  de eigen woorden van de starter ("eigen salon gestart", "nieuw geopend"). Ze wijzen
+  naar hetzelfde probleem — de gidsenroute selecteert op overlevingsduur en dus tegen
+  ons profiel in — maar elk is één keer gedraaid. Order staat in
+  `marketing/outreach/2026-09-02-cd-verified.md`: draai ze morgen kruislings, elk in
+  de lane waar hij niet vandaan komt.
 
 - 1.12 (2026-09-01, Azzouz, verificatie lanes A+B): twee wijzigingen, beide uit lanes A en B van
   1 september, en beide op de regel dat het fundament alleen wijzigt op bewijs
