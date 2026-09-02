@@ -538,3 +538,22 @@ omdat het jongste leesbare spoor mei 2024 is.
 | Nova's trimsalon | Leiden | Rebecca Botbijl, Maansteenpad 2332RM, 06-28563589, novastrimsalon.nl, "recent haar eigen trimsalon gestart", gespecialiseerd in collies en keeshonden. Geen adres. LET OP: het nummer 51030799 in de drimble-URL wijst op een oudere reeks en spreekt de eigen tekst tegen — leeftijd niet hard | 2026-09-02 |
 | Trimsalon HappyFeet | plaats niet vastgesteld | Opgericht 01-01-2023, eigenaar Tania (24), salon achter het huis, tijden in overleg. Precies in het leeftijdsvenster en gevonden via de omgekeerde zoekopdracht ("recent gestart"). Buiten één profiel op hondentrimsalon-info.nl kwam noch een plaats noch een adres terug; wie de plaats vindt, heeft waarschijnlijk een kaart | 2026-09-02 |
 | Baasjes Mooiste | Amersfoort | Fazantenstraat 26, 06-39222401, ook 's avonds en op zaterdag open. Geen e-mailadres, geen KvK-nummer en geen oprichtingsjaar in twee zoekronden | 2026-09-02 |
+
+## Toevoeging lane B — 2 september 2026 (Overijssel, Gelderland, Flevoland)
+
+Alle vijf hieronder haalden de leeftijdspoort en de sectorpoort en stranden
+uitsluitend op het adres. Zoekopdrachten per bedrijf: naam + plaats + "e-mail",
+naam + "gmail/hotmail/outlook", naam + eigenaarsnaam of KvK, plus de
+gidsvermeldingen (Trustoo, Werkspot, alleglazenwassers.nl, telefoonboek, oozo,
+drimble). De eerste vier komen uit één sector en dat is geen toeval: zie
+"Bevinding — de adresmuur in schoonmaak en glazenwassen is een platformmuur" in
+`2026-09-02-b.md`.
+
+| Bedrijf | Plaats | Wat er wel is | Datum gecheckt |
+|---|---|---|---|
+| G.Sunshine (Sunshine cleaning) | Zwolle | Trustoo- en Werkspot-profiel, opgericht 15-02-2023, Trustoo 8,2. Beide platforms melden "e-mail en telefoon geverifieerd door de eigenaar" en tonen geen van beide | 2026-09-02 |
+| TJ Glasbewassing en Schoonmaakservice | Zwolle | eigen domein jtglasbewassingenschoonmaakservice.nl met contactpagina, KvK 90143426 (2023), Wulphof 5, ma-vr 08:00-17:00 | 2026-09-02 |
+| Mouwcleaning | Apeldoorn | alleglazenwassers.nl-pagina met KvK 81417292 en startjaar 2021 | 2026-09-02 |
+| Breedveld | Almere | alleglazenwassers.nl-pagina met KvK 91375223 en startjaar 2023, Rietmeent 135, 06-13354043. LET OP lookalike: Breedveld BV (breedveldbv.nl) is een andere zaak | 2026-09-02 |
+| Trimsalon Perfect Dog | Borculo (Berkelland) | eigen domein met "Tarieven per 1 januari 2026", Jessica van Eck sinds 2019, 06-42727281, Heer Rudolfstraat 26. Staat ook op `bellijst.md`, want hier is het telefoonnummer er wél | 2026-09-02 |
+

@@ -36,6 +36,18 @@ e-mailadres gevonden is (en zet de zaak dan op het bord of in de ledger).
 | PB Daktechniek | Holten | dakdekker | 06-14863250 | — | pbdaktechniek.nl, geen adres |
 | Lageman Dak & Zinkwerk | Lelystad | dakdekker | 06-14773701 | — | eigen domein, geen adres |
 | Plattel Dakbedekkingen | Zwolle/Kampen | dakdekker | 038-3037718 | wheree "Updated March 2026" — telt NIET als levensteken (PM 1.7: dat is de daad van de uitgever) | eigen domein, geen adres |
+| Trimsalon Perfect Dog | Borculo (Berkelland) | hondentrimsalon | 06-42727281 | eigen pagina "Tarieven per 1 januari 2026" | Jessica van Eck sinds 2019, Heer Rudolfstraat 26, afspraken uitsluitend telefonisch of per bericht, geen platformprofiel. Vier zoekronden zonder e-mailadres (lane B, 02-09). **Belklaar en het sterkste nummer op deze lijst: het levensteken is van dit jaar en het lek is vastgesteld** |
+| Breedveld | Almere | glazenwassen/schilder | 06-13354043 | — | KvK 91375223, actief sinds 2023, Rietmeent 135. LET OP lookalike: Breedveld BV (breedveldbv.nl) is een andere zaak (lane B, 02-09) |
+
+**Toevoeging lane B, 02-09.** Twee regels erbij, en drie bewust NIET. G.Sunshine
+(Zwolle), TJ Glasbewassing (Zwolle) en Mouwcleaning (Apeldoorn) zijn jong en op
+profiel, maar bij alle drie ontbreekt óók het telefoonnummer: Trustoo en Werkspot
+zetten er "e-mail en telefoon geverifieerd door de eigenaar" bij en tonen
+vervolgens geen van beide. Een regel zonder kanaal hoort niet op een bellijst,
+hoe goed het profiel ook is; ze staan daarom alleen in `geen-emailadres.md`.
+Trimsalon Perfect Dog is van de hele lijst het beste nummer om als eerste te
+bellen: gedateerd levensteken van dit jaar, lek vastgesteld, en de eigenaresse
+neemt haar afspraken zelf telefonisch aan.
 
 ## Lane C — Limburg, Noord-Brabant, Zeeland
 
