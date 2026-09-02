@@ -14,6 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
     description:
       "Kies je stijl, kleuren en pagina's, zie direct hoe jouw website eruit kan zien, en vraag het concept gratis aan. Zonder verplichtingen.",
     path: "/concept-bouwer",
+    singleLocale: true,
     locale,
   });
 }

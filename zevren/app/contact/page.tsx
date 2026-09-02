@@ -29,7 +29,7 @@ export default async function ContactPage() {
   return (
     <>
       <JsonLd
-        data={breadcrumbJsonLd(dict.nav.home, [{ name: dict.nav.contact, path: "/contact" }])}
+        data={breadcrumbJsonLd(dict.nav.home, [{ name: dict.nav.contact, path: "/contact" }], locale)}
         nonce={nonce}
       />
       <PageHero eyebrow={c.eyebrow} title={c.title} description={c.subtitle} />

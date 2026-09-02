@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/Button";
 import { WORK_DEMOS } from "@/components/projects/registry";
 import { TajexDemo } from "@/components/demos/tajex/TajexDemo";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { WORK_ITEMS, SITE_CONFIG } from "@/lib/constants";
-import { buildMetadata } from "@/lib/seo";
+import { WORK_ITEMS } from "@/lib/constants";
+import { buildMetadata, localizedUrl } from "@/lib/seo";
 import { getLocale } from "@/lib/i18n/get-locale";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { headers } from "next/headers";
@@ -39,6 +39,7 @@ export async function generateMetadata({
     title: project.name,
     description: project.description,
     path: `/projects/${project.slug}`,
+    locale: await getLocale(),
   });
 }
 
@@ -72,18 +73,18 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: dict.nav.home, item: SITE_CONFIG.url },
+      { "@type": "ListItem", position: 1, name: dict.nav.home, item: localizedUrl("/", locale) },
       {
         "@type": "ListItem",
         position: 2,
         name: dict.nav.projects,
-        item: `${SITE_CONFIG.url}/projects`,
+        item: localizedUrl("/projects", locale),
       },
       {
         "@type": "ListItem",
         position: 3,
         name: project.name,
-        item: `${SITE_CONFIG.url}/projects/${project.slug}`,
+        item: localizedUrl(`/projects/${project.slug}`, locale),
       },
     ],
   };

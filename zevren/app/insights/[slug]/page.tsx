@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RevealGroup } from "@/components/ui/RevealGroup";
-import { buildMetadata } from "@/lib/seo";
+import { buildMetadata, localizedUrl } from "@/lib/seo";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { getLocale } from "@/lib/i18n/get-locale";
 
@@ -20,11 +20,13 @@ export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
   const article = getArticle(slug);
   if (!article) return {};
-  const { content } = resolveContent(article, await getLocale());
+  const locale = await getLocale();
+  const { content } = resolveContent(article, locale);
   return buildMetadata({
     title: content.title,
     description: content.excerpt,
     path: `/insights/${slug}`,
+    locale,
     article: { publishedTime: article.date },
   });
 }
@@ -89,7 +91,7 @@ export default async function ArticlePage({ params }: PageProps) {
     description: content.excerpt,
     datePublished: article.date,
     inLanguage: isEnglishFallback ? "en" : locale,
-    url: `${SITE_CONFIG.url}/insights/${article.slug}`,
+    url: localizedUrl(`/insights/${article.slug}`, locale),
     author: { "@type": "Organization", name: SITE_CONFIG.name, url: SITE_CONFIG.url },
     publisher: {
       "@type": "Organization",
@@ -102,13 +104,13 @@ export default async function ArticlePage({ params }: PageProps) {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: dict.nav.home, item: SITE_CONFIG.url },
-      { "@type": "ListItem", position: 2, name: t.eyebrow, item: `${SITE_CONFIG.url}/insights` },
+      { "@type": "ListItem", position: 1, name: dict.nav.home, item: localizedUrl("/", locale) },
+      { "@type": "ListItem", position: 2, name: t.eyebrow, item: localizedUrl("/insights", locale) },
       {
         "@type": "ListItem",
         position: 3,
         name: content.title,
-        item: `${SITE_CONFIG.url}/insights/${article.slug}`,
+        item: localizedUrl(`/insights/${article.slug}`, locale),
       },
     ],
   };

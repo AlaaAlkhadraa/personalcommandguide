@@ -31,7 +31,7 @@ export default async function ProcessPage() {
   return (
     <>
       <JsonLd
-        data={breadcrumbJsonLd(dict.nav.home, [{ name: dict.nav.process, path: "/process" }])}
+        data={breadcrumbJsonLd(dict.nav.home, [{ name: dict.nav.process, path: "/process" }], locale)}
         nonce={nonce}
       />
       <PageHero

@@ -11,6 +11,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: doc.metaTitle,
     description: doc.metaDescription,
     path: "/privacy-policy",
+    singleLocale: true,
   });
 }
 

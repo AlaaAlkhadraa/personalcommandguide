@@ -15,7 +15,7 @@ import { RevealGroup } from "@/components/ui/RevealGroup";
 import { SERVICES } from "@/lib/constants";
 import { SECTORS } from "@/lib/local/sectors";
 import { IMAGES } from "@/lib/assets";
-import { breadcrumbJsonLd, buildMetadata } from "@/lib/seo";
+import { breadcrumbJsonLd, buildMetadata, localizedUrl } from "@/lib/seo";
 import { getLocale } from "@/lib/i18n/get-locale";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 
@@ -43,7 +43,7 @@ export default async function ServicesPage() {
     "@context": "https://schema.org",
     "@type": "OfferCatalog",
     name: "Website packages",
-    url: `${SITE_CONFIG.url}/services`,
+    url: localizedUrl("/services", locale),
     // The price quoted here is the one the cards actually charge, not the
     // struck-through regular figure: a rich result must never show a number
     // the page does not.
@@ -55,7 +55,7 @@ export default async function ServicesPage() {
         description: copy.description,
         price: String(plan.price),
         priceCurrency: "EUR",
-        url: `${SITE_CONFIG.url}/services`,
+        url: localizedUrl("/services", locale),
         seller: { "@type": "Organization", name: SITE_CONFIG.name, url: SITE_CONFIG.url },
       };
     }),
@@ -65,7 +65,7 @@ export default async function ServicesPage() {
     <>
       <JsonLd data={pricingJsonLd} nonce={nonce} />
       <JsonLd
-        data={breadcrumbJsonLd(dict.nav.home, [{ name: dict.nav.services, path: "/services" }])}
+        data={breadcrumbJsonLd(dict.nav.home, [{ name: dict.nav.services, path: "/services" }], locale)}
         nonce={nonce}
       />
       <PageHero eyebrow={s.eyebrow} title={s.title} description={s.subtitle} />

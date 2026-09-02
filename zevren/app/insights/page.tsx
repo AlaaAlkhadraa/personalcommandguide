@@ -2,21 +2,22 @@ import Link from "next/link";
 import { headers } from "next/headers";
 
 import { ARTICLES, resolveContent } from "@/lib/insights/articles";
-import { SITE_CONFIG } from "@/lib/constants";
 import { Container } from "@/components/ui/Container";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { PageHero } from "@/components/ui/PageHero";
 import { RevealGroup } from "@/components/ui/RevealGroup";
-import { breadcrumbJsonLd, buildMetadata } from "@/lib/seo";
+import { breadcrumbJsonLd, buildMetadata, localizedUrl } from "@/lib/seo";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { getLocale } from "@/lib/i18n/get-locale";
 
 export async function generateMetadata() {
-  const dict = getDictionary(await getLocale());
+  const locale = await getLocale();
+  const dict = getDictionary(locale);
   return buildMetadata({
     title: dict.insights.metaTitle,
     description: dict.insights.metaDescription,
     path: "/insights",
+    locale,
   });
 }
 
@@ -38,7 +39,7 @@ export default async function InsightsPage() {
     itemListElement: ARTICLES.map((article, index) => ({
       "@type": "ListItem",
       position: index + 1,
-      url: `${SITE_CONFIG.url}/insights/${article.slug}`,
+      url: localizedUrl(`/insights/${article.slug}`, locale),
       name: resolveContent(article, locale).content.title,
     })),
   };
@@ -47,7 +48,7 @@ export default async function InsightsPage() {
     <>
       <JsonLd data={listJsonLd} nonce={nonce} />
       <JsonLd
-        data={breadcrumbJsonLd(dict.nav.home, [{ name: t.eyebrow, path: "/insights" }])}
+        data={breadcrumbJsonLd(dict.nav.home, [{ name: t.eyebrow, path: "/insights" }], locale)}
         nonce={nonce}
       />
       <PageHero eyebrow={t.eyebrow} title={t.title} description={t.subtitle} />

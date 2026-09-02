@@ -34,7 +34,7 @@ export default async function AboutPage() {
   return (
     <>
       <JsonLd
-        data={breadcrumbJsonLd(dict.nav.home, [{ name: dict.nav.about, path: "/about" }])}
+        data={breadcrumbJsonLd(dict.nav.home, [{ name: dict.nav.about, path: "/about" }], locale)}
         nonce={nonce}
       />
       <PageHero eyebrow={a.eyebrow} title={a.title} description={a.subtitle} />

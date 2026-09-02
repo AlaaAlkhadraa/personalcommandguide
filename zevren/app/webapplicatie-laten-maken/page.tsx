@@ -25,6 +25,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: `Webapplicatie laten maken vanaf ${CUSTOM_PRICE} euro`,
     description: `Dashboards, portalen en interne tools op maat, vanaf ${CUSTOM_PRICE} euro. Gebouwd rond hoe jouw bedrijf echt werkt, met werkende demo's online om zelf te proberen.`,
     path: "/webapplicatie-laten-maken",
+    singleLocale: true,
     locale: "nl",
   });
 }

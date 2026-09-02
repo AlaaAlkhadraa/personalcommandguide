@@ -24,6 +24,7 @@ export async function generateMetadata(): Promise<Metadata> {
     description:
       "Een website laten maken zonder offertetraject: vier pakketten met openbare prijzen vanaf 299 euro, werkende demo's, volledig online geregeld vanuit Maastricht.",
     path: "/website-laten-maken",
+    singleLocale: true,
     locale: "nl",
   });
 }

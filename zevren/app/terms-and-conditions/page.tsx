@@ -11,6 +11,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: doc.metaTitle,
     description: doc.metaDescription,
     path: "/terms-and-conditions",
+    singleLocale: true,
   });
 }
 

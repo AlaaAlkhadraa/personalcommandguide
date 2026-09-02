@@ -32,7 +32,7 @@ export default async function ProjectsPage() {
   return (
     <>
       <JsonLd
-        data={breadcrumbJsonLd(dict.nav.home, [{ name: dict.nav.projects, path: "/projects" }])}
+        data={breadcrumbJsonLd(dict.nav.home, [{ name: dict.nav.projects, path: "/projects" }], locale)}
         nonce={nonce}
       />
       <PageHero eyebrow={w.eyebrow} title={w.title} description={w.subtitle} />

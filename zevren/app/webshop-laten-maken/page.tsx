@@ -27,6 +27,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: `Webshop laten maken voor ${STORE_PRICE} euro`,
     description: `Een complete webshop met checkout, productbeheer en betalingen voor ${STORE_PRICE} euro. De prijs staat gewoon online, en de demo-webshops kun je zelf doorklikken tot en met het afrekenen.`,
     path: "/webshop-laten-maken",
+    singleLocale: true,
     locale: "nl",
   });
 }

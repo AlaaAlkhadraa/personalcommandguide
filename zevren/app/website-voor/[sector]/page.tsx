@@ -40,6 +40,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title: `Website voor ${sector.name}`,
     description: sector.metaDescription,
     path: `/website-voor/${sector.slug}`,
+    singleLocale: true,
     locale: "nl",
   });
 }

@@ -21,6 +21,23 @@ interface BuildMetadataOptions {
   locale?: Locale;
   /** Set on article pages: switches og:type and carries the publish date. */
   article?: { publishedTime: string };
+  /**
+   * Pages that exist in one language only (the Dutch landing cluster, the
+   * legal texts): no /en twin is announced and the canonical stays bare.
+   */
+  singleLocale?: boolean;
+}
+
+/**
+ * The address of a page in a given language. Dutch lives at the root and is
+ * what a cookieless crawler gets; English has its own /en prefix (see
+ * middleware.ts). The other languages are cookie-only and have no address of
+ * their own, so they canonicalise to the Dutch page.
+ */
+export function localizedUrl(path: string, locale: Locale | undefined): string {
+  const base = SITE_CONFIG.url;
+  if (locale === "en") return path === "/" ? `${base}/en` : `${base}/en${path}`;
+  return path === "/" ? base : `${base}${path}`;
 }
 
 /**
@@ -30,18 +47,21 @@ interface BuildMetadataOptions {
  */
 export function breadcrumbJsonLd(
   homeName: string,
-  items: Array<{ name: string; path: string }>
+  items: Array<{ name: string; path: string }>,
+  locale?: Locale
 ) {
+  // On the English address space the crumbs point at /en/... too, so the
+  // structured data names the same URLs as the canonical.
   return {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: homeName, item: SITE_CONFIG.url },
+      { "@type": "ListItem", position: 1, name: homeName, item: localizedUrl("/", locale) },
       ...items.map((item, index) => ({
         "@type": "ListItem",
         position: index + 2,
         name: item.name,
-        item: `${SITE_CONFIG.url}${item.path}`,
+        item: localizedUrl(item.path, locale),
       })),
     ],
   };
@@ -54,8 +74,19 @@ export function buildMetadata({
   noIndex = false,
   locale,
   article,
+  singleLocale = false,
 }: BuildMetadataOptions): Metadata {
-  const url = `${SITE_CONFIG.url}${path}`;
+  // The canonical follows the language: an English page, whether reached by
+  // its /en address or by cookie, points at its /en address. Single-language
+  // pages and the cookie-only languages canonicalise to the Dutch root URL.
+  const url = singleLocale ? `${SITE_CONFIG.url}${path}` : localizedUrl(path, locale);
+  const languages = singleLocale
+    ? undefined
+    : {
+        nl: localizedUrl(path, "nl"),
+        en: localizedUrl(path, "en"),
+        "x-default": localizedUrl(path, "nl"),
+      };
   const isHome = path === "/";
   // Open Graph/Twitter cards never inherit the root layout's title
   // template, so they need the " | ZEVREN" suffix spelled out here. The
@@ -71,6 +102,7 @@ export function buildMetadata({
     description,
     alternates: {
       canonical: url,
+      languages,
     },
     robots: noIndex
       ? { index: false, follow: false }

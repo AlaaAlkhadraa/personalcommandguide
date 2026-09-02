@@ -10,6 +10,12 @@ import {
   type Locale,
 } from "@/lib/i18n/config";
 
+/**
+ * English has an address of its own (/en/...), the other languages are
+ * chosen by cookie on the Dutch URL. Switching therefore also moves the
+ * visitor onto or off the /en prefix, so the address bar, the canonical and
+ * the page agree on the language.
+ */
 export function LanguageSwitcher({ locale }: { locale: Locale }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -29,6 +35,24 @@ export function LanguageSwitcher({ locale }: { locale: Locale }) {
   function selectLocale(next: Locale) {
     document.cookie = `${LOCALE_COOKIE}=${next}; path=/; max-age=31536000; SameSite=Lax`;
     setOpen(false);
+
+    // The browser's own URL, not usePathname(): after a middleware rewrite
+    // the hook reports the rewritten path (/services) rather than the address
+    // shown (/en/services), which is the one that has to change here.
+    const current = window.location.pathname;
+    const onEnglishPath = current === "/en" || current.startsWith("/en/");
+    const bare = onEnglishPath ? current.slice(3) || "/" : current;
+    const target = next === "en" ? (bare === "/" ? "/en" : `/en${bare}`) : bare;
+
+    if (target !== current) {
+      // A full navigation, on purpose: a client-side transition to a
+      // rewritten address can keep the previous language's tree and the
+      // <html lang> of the old page. Loading the new address fresh makes the
+      // URL, the cookie and the rendered language agree.
+      // eslint-disable-next-line @next/next/no-location-assign-relative-destination -- the full load is the point, see above
+      window.location.assign(`${target}${window.location.search}`);
+      return;
+    }
     router.refresh();
   }
 

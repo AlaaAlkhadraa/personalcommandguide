@@ -81,6 +81,46 @@ export function middleware(request: NextRequest) {
   requestHeaders.set("x-nonce", nonce);
   requestHeaders.set("Content-Security-Policy", csp);
 
+  // ---------------------------------------------------------------------
+  // English URL space.
+  //
+  // Every other language is chosen by cookie on the same URL, which means a
+  // crawler (no cookie) only ever sees Dutch. /en/<path> is the one language
+  // with an address of its own: it is rewritten to the same route with an
+  // x-locale header that getLocale() honours above the cookie, so the English
+  // page can be linked, indexed and paired with its Dutch twin via hreflang.
+  // Admin, API and the demo pages stay outside it.
+  // ---------------------------------------------------------------------
+  if (pathname === "/en" || pathname.startsWith("/en/")) {
+    const stripped = pathname === "/en" ? "/" : pathname.slice(3);
+    const outside =
+      stripped.startsWith("/admin") || stripped.startsWith("/api") || stripped.startsWith("/demo");
+    // The landing cluster, the concept builder and the legal pages exist in
+    // Dutch only. Their /en twin would be the same Dutch page under a second
+    // address, so send the visitor (and the crawler) to the one real URL.
+    const dutchOnly = [
+      "/website-laten-maken",
+      "/website-voor",
+      "/webshop-laten-maken",
+      "/webapplicatie-laten-maken",
+      "/concept-bouwer",
+      "/privacy-policy",
+      "/terms-and-conditions",
+    ].some((prefix) => stripped === prefix || stripped.startsWith(`${prefix}/`));
+    if (dutchOnly) {
+      const url = request.nextUrl.clone();
+      url.pathname = stripped;
+      return NextResponse.redirect(url, 308);
+    }
+    if (!outside) {
+      const url = request.nextUrl.clone();
+      url.pathname = stripped;
+      requestHeaders.set("x-locale", "en");
+      const rewritten = NextResponse.rewrite(url, { request: { headers: requestHeaders } });
+      return withSecurityHeaders(rewritten, nonce, request, csp);
+    }
+  }
+
   const response = NextResponse.next({ request: { headers: requestHeaders } });
   return withSecurityHeaders(response, nonce, request, csp);
 }

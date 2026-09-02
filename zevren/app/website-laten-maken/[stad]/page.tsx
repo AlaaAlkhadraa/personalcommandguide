@@ -42,6 +42,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title: `Website laten maken in ${city.name}`,
     description: city.metaDescription,
     path: `/website-laten-maken/${city.slug}`,
+    singleLocale: true,
     locale: "nl",
   });
 }
