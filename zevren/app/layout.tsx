@@ -14,6 +14,7 @@ import {
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { LocaleProvider } from "@/components/i18n/LocaleProvider";
 import { OG_LOCALE } from "@/lib/seo";
 import { SERVICES, SITE_CONFIG } from "@/lib/constants";
 import { getLocale } from "@/lib/i18n/get-locale";
@@ -176,6 +177,7 @@ export default async function RootLayout({
       className={`${inter.variable} ${spaceGrotesk.variable} ${orbitron.variable} ${plusJakarta.variable} ${plexMono.variable}`}
     >
       <body className="flex min-h-screen flex-col">
+        <LocaleProvider locale={locale}>
         <JsonLd data={organizationJsonLd} nonce={nonce} />
         <JsonLd data={websiteJsonLd(locale)} nonce={nonce} />
         <a
@@ -207,6 +209,7 @@ export default async function RootLayout({
         {/* Rendered only when the server holds an API key, so a deployment
             without one shows no button that leads nowhere. */}
         {chatConfigured() && <AssistantWidget locale={locale} dict={dict.assistant} />}
+        </LocaleProvider>
       </body>
     </html>
   );

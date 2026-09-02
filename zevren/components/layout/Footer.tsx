@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/components/ui/Link";
 import { FOOTER_LEGAL_LINKS, NAV_LINKS, SERVICES, SITE_CONFIG, WORK_ITEMS } from "@/lib/constants";
 import { IMAGES } from "@/lib/assets";
 import { Wordmark } from "@/components/layout/Wordmark";

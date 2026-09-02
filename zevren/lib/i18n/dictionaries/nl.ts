@@ -247,7 +247,7 @@ const nl: Dictionary = {
   },
   meta: {
     home: {
-      title: "Website laten maken in Maastricht | ZEVREN",
+      title: "ZEVREN | Website laten maken, vaste prijzen, Maastricht",
       description: "Websites, webshops en webapplicaties op maat. Prijzen staan gewoon online, vanaf 299 euro. Klik zelf door werkende demo's op zevren.nl.",
     },
     services: {
@@ -509,6 +509,7 @@ const nl: Dictionary = {
     detailCtaBody: "Elk project begint met een gesprek over wat je daadwerkelijk nodig hebt, geen sjabloon dat we aanpassen.",
     seeMoreConcepts: "Bekijk meer concepten",
     conceptDisclaimer: "ZEVREN CONCEPT: een websiteconcept gemaakt door ZEVREN om te laten zien hoe dit soort digitale ervaring zou kunnen werken.",
+    metaTitle: "{name}: website voor {category}",
     items: {
       "tajex-logistics": {
         category: "Logistiek",

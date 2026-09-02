@@ -35,7 +35,7 @@ export function Wordmark({
         height={155}
         priority={priority}
         sizes="220px"
-        className={`${markHeight} w-auto drop-shadow-[0_0_14px_rgba(37,99,235,0.45)] transition-[filter] duration-300 group-hover:drop-shadow-[0_0_20px_rgba(96,165,250,0.65)]`}
+        className={`${markHeight} w-auto self-start drop-shadow-[0_0_14px_rgba(37,99,235,0.45)] transition-[filter] duration-300 group-hover:drop-shadow-[0_0_20px_rgba(96,165,250,0.65)]`}
       />
       <span className="sr-only">ZEVREN</span>
       <span

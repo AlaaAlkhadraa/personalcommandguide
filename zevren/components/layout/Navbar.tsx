@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import { Link } from "@/components/ui/Link";
 import { usePathname } from "next/navigation";
 import { NAV_LINKS, SITE_CONFIG } from "@/lib/constants";
 import { ArrowButton } from "@/components/ui/ArrowButton";
@@ -20,6 +20,10 @@ export function Navbar({ locale, dict }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
+  // The English address space is a prefix, not a section: /en/services is
+  // the Services item, so the prefix is dropped before matching.
+  const current =
+    pathname === "/en" ? "/" : pathname.startsWith("/en/") ? pathname.slice(3) : pathname;
 
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 8);
@@ -68,7 +72,7 @@ export function Navbar({ locale, dict }: NavbarProps) {
         >
           {NAV_LINKS.map((link) => {
             const isActive =
-              link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
+              link.href === "/" ? current === "/" : current.startsWith(link.href);
             return (
               <Link
                 key={link.href}
@@ -154,7 +158,7 @@ export function Navbar({ locale, dict }: NavbarProps) {
         >
           {NAV_LINKS.map((link) => {
             const isActive =
-              link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
+              link.href === "/" ? current === "/" : current.startsWith(link.href);
             return (
               <Link
                 key={link.href}

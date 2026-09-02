@@ -509,6 +509,7 @@ const fr: Dictionary = {
     detailCtaBody: "Chaque projet commence par une conversation sur ce dont vous avez réellement besoin, pas un modèle que nous adaptons.",
     seeMoreConcepts: "Voir plus de concepts",
     conceptDisclaimer: "CONCEPT ZEVREN : un concept de site web créé par ZEVREN pour démontrer comment ce type d'expérience numérique pourrait fonctionner.",
+    metaTitle: "{name} : site web pour {category}",
     items: {
       "tajex-logistics": {
         category: "Logistique",

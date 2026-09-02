@@ -505,6 +505,7 @@ const ar: Dictionary = {
     detailCtaBody: "كل مشروع يبدأ بمحادثة عمّا تحتاجه فعلاً، لا بقالب جاهز نعدّله فحسب.",
     seeMoreConcepts: "شاهد مفاهيم أكثر",
     conceptDisclaimer: "مفهوم ZEVREN: موقع أنشأته ZEVREN لتوضيح كيف يمكن أن يعمل هذا النوع من التجارب الرقمية.",
+    metaTitle: "{name}: موقع لـ{category}",
     items: {
       "tajex-logistics": {
         category: "لوجستيات",

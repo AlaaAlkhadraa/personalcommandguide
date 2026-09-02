@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { isDutchOnlyPath } from "@/lib/i18n/href";
 
 const isDev = process.env.NODE_ENV !== "production";
 
@@ -98,15 +99,7 @@ export function middleware(request: NextRequest) {
     // The landing cluster, the concept builder and the legal pages exist in
     // Dutch only. Their /en twin would be the same Dutch page under a second
     // address, so send the visitor (and the crawler) to the one real URL.
-    const dutchOnly = [
-      "/website-laten-maken",
-      "/website-voor",
-      "/webshop-laten-maken",
-      "/webapplicatie-laten-maken",
-      "/concept-bouwer",
-      "/privacy-policy",
-      "/terms-and-conditions",
-    ].some((prefix) => stripped === prefix || stripped.startsWith(`${prefix}/`));
+    const dutchOnly = isDutchOnlyPath(stripped);
     if (dutchOnly) {
       const url = request.nextUrl.clone();
       url.pathname = stripped;

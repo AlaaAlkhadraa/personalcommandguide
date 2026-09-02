@@ -26,7 +26,7 @@ const en: Dictionary = {
     ctaTitle: "Rather have it built than read about it?",
     ctaBody: "Tell us about your project and we will come back with a clear plan and a fixed price.",
     ctaButton: "Start a project",
-    metaTitle: "Insights",
+    metaTitle: "Insights: website costs, speed and SEO",
     metaDescription: "Plain answers about websites: costs, speed, SEO and online stores, written without jargon by ZEVREN.",
   },
   footer: {
@@ -251,23 +251,23 @@ const en: Dictionary = {
       description: "Websites, online stores and web applications built from scratch. Prices are published up front, from 299 euro. Click through working demos at zevren.nl.",
     },
     services: {
-      title: "Services and prices",
+      title: "Web design services and prices",
       description: "Web design, online stores, web applications, multilingual sites and maintenance. Four packages with published prices, from 299 euro.",
     },
     projects: {
-      title: "Projects",
+      title: "Projects and working demos",
       description: "Interactive concepts you can use yourself: a booking flow, a garage planner, a full online store with working checkout, and a client portal.",
     },
     about: {
-      title: "About us",
+      title: "About us: web studio in Maastricht",
       description: "ZEVREN is an independent web studio in Maastricht. You work directly with the person building your website. Read how we work.",
     },
     process: {
-      title: "How we work",
+      title: "How we work: from first call to launch",
       description: "From the first conversation through design and development to launch: what happens at each step of a ZEVREN project, and what we need from you.",
     },
     contact: {
-      title: "Contact",
+      title: "Contact: start your website project",
       description: "Tell us about your website, online store or web application. Send the form and you get an honest answer about what your project needs.",
     },
   },
@@ -509,6 +509,7 @@ const en: Dictionary = {
     detailCtaBody: "Every project starts with a conversation about what you actually need, not a template we adapt.",
     seeMoreConcepts: "See more concepts",
     conceptDisclaimer: "ZEVREN CONCEPT: a website concept created by ZEVREN to demonstrate how this type of digital experience could work.",
+    metaTitle: "{name}: website for {category}",
     items: {
       "tajex-logistics": {
         category: "Logistics",

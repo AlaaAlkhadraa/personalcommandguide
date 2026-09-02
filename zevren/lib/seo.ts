@@ -67,15 +67,29 @@ export function breadcrumbJsonLd(
   };
 }
 
+/**
+ * Google shows roughly 155 to 160 characters of a description and cuts the
+ * rest mid-word. A longer text is trimmed here at the last full sentence
+ * that fits, so what appears under the result reads as a whole thought.
+ */
+export function clampDescription(text: string): string {
+  if (text.length <= 160) return text;
+  const cut = text.slice(0, 158);
+  const sentenceEnd = Math.max(cut.lastIndexOf(". "), cut.lastIndexOf("! "), cut.lastIndexOf("? "));
+  if (sentenceEnd >= 90) return cut.slice(0, sentenceEnd + 1);
+  return `${cut.slice(0, cut.lastIndexOf(" "))}…`;
+}
+
 export function buildMetadata({
   title,
-  description,
+  description: rawDescription,
   path,
   noIndex = false,
   locale,
   article,
   singleLocale = false,
 }: BuildMetadataOptions): Metadata {
+  const description = clampDescription(rawDescription);
   // The canonical follows the language: an English page, whether reached by
   // its /en address or by cookie, points at its /en address. Single-language
   // pages and the cookie-only languages canonicalise to the Dutch root URL.

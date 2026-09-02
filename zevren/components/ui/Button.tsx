@@ -1,5 +1,5 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react";
-import Link from "next/link";
+import { Link } from "@/components/ui/Link";
 
 type Variant = "primary" | "secondary" | "ghost";
 

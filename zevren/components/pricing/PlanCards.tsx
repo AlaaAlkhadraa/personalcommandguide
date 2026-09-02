@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/components/ui/Link";
 
 import { PLANS, formatLike, parsePrice, planHref } from "@/lib/offer";
 import type { Dictionary } from "@/lib/i18n/dictionary-type";

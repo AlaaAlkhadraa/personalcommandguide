@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import Link from "next/link";
+import { Link } from "@/components/ui/Link";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { WORK_DEMOS } from "@/components/projects/registry";
@@ -35,11 +35,19 @@ export async function generateMetadata({
     });
   }
 
+  // Title and description in the page's own language; the WORK_ITEMS copy
+  // is English and was showing up under Dutch results.
+  const locale = await getLocale();
+  const w = getDictionary(locale).work;
+  const copy = w.items[project.slug as keyof typeof w.items];
+  // German capitalises nouns and Arabic has no case, so only the others
+  // lower the category when it lands mid-sentence.
+  const category = ["de", "ar"].includes(locale) ? copy.category : copy.category.toLowerCase();
   return buildMetadata({
-    title: project.name,
-    description: project.description,
+    title: w.metaTitle.replace("{name}", project.name).replace("{category}", category),
+    description: copy.description,
     path: `/projects/${project.slug}`,
-    locale: await getLocale(),
+    locale,
   });
 }
 

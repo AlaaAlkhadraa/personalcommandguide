@@ -509,6 +509,7 @@ const es: Dictionary = {
     detailCtaBody: "Cada proyecto empieza con una conversación sobre lo que realmente necesitas, no una plantilla que adaptamos.",
     seeMoreConcepts: "Ver más conceptos",
     conceptDisclaimer: "CONCEPTO ZEVREN: un concepto de sitio web creado por ZEVREN para demostrar cómo podría funcionar este tipo de experiencia digital.",
+    metaTitle: "{name}: sitio web para {category}",
     items: {
       "tajex-logistics": {
         category: "Logística",

@@ -253,6 +253,8 @@ export interface Dictionary {
     detailCtaBody: string;
     seeMoreConcepts: string;
     conceptDisclaimer: string;
+    /** Document title of a project page; {name} and {category} are filled in. */
+    metaTitle: string;
     items: Record<
       | "tajex-logistics"
       | "barbershop-website"

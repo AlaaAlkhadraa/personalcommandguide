@@ -36,6 +36,7 @@ export function HeroEnvironment() {
         alt=""
         width={city.width}
         height={city.height}
+        quality={55}
         priority
         sizes="(max-width: 1024px) 100vw, 70vw"
         placeholder="blur"
@@ -49,7 +50,9 @@ export function HeroEnvironment() {
         alt=""
         width={map.width}
         height={map.height}
+        quality={55}
         priority
+        fetchPriority="high"
         sizes="(max-width: 1024px) 100vw, 60vw"
         placeholder="blur"
         blurDataURL={map.blurDataURL}
@@ -62,6 +65,7 @@ export function HeroEnvironment() {
         alt=""
         width={floor.width}
         height={floor.height}
+        quality={55}
         sizes="100vw"
         placeholder="blur"
         blurDataURL={floor.blurDataURL}
@@ -74,6 +78,7 @@ export function HeroEnvironment() {
         alt=""
         width={fog.width}
         height={fog.height}
+        quality={55}
         sizes="100vw"
         placeholder="blur"
         blurDataURL={fog.blurDataURL}
