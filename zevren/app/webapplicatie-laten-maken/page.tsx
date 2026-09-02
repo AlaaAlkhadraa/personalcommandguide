@@ -6,7 +6,7 @@ import { PLANS } from "@/lib/offer";
 import { SITE_CONFIG } from "@/lib/constants";
 import { Container } from "@/components/ui/Container";
 import { PackagesSection } from "@/components/pricing/PackagesSection";
-import { FAQ } from "@/components/home/FAQ";
+import { LocalFaq } from "@/components/local/LocalFaq";
 import { FinalCTA } from "@/components/home/FinalCTA";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RevealGroup } from "@/components/ui/RevealGroup";
@@ -100,7 +100,24 @@ export default async function WebapplicatieLatenMakenPage() {
       <RevealGroup>
         <PackagesSection dict={dict.offer} pricingDict={dict.pricing} />
 
-        <FAQ dict={dict.faq} homeDict={dict.home.faq} />
+        <LocalFaq
+          title="Veelgestelde vragen over maatwerk"
+          nonce={nonce}
+          items={[
+            {
+              question: "Wat kost een webapplicatie laten maken?",
+              answer: `Maatwerk begint bij ${CUSTOM_PRICE} euro, exclusief btw. Omdat geen twee applicaties hetzelfde zijn, wordt een project vooraf op omvang geprijsd: je weet de prijs voordat we beginnen, en dat is de prijs op de factuur.`,
+            },
+            {
+              question: "Kan de applicatie koppelen met wat ik al gebruik?",
+              answer: "Ja. We bouwen rond hoe jouw bedrijf echt werkt en koppelen waar nodig aan de systemen die je al gebruikt, zodat gegevens niet twee keer ingevoerd hoeven te worden.",
+            },
+            {
+              question: "Hoe weet ik vooraf of dit bij mijn bedrijf past?",
+              answer: "Klik onze demo's door: het klantportaal van Bergendal Accountants en de track-en-trace-omgeving van Tajex Logistics werken echt. Vertel ons daarna kort wat je nodig hebt en je krijgt een eerlijk antwoord, ook als een standaardpakket toch volstaat.",
+            },
+          ]}
+        />
 
         <FinalCTA dict={dict.home.finalCta} contactDict={dict.contact} />
       </RevealGroup>

@@ -8,7 +8,7 @@ import { PLANS } from "@/lib/offer";
 import { SITE_CONFIG } from "@/lib/constants";
 import { Container } from "@/components/ui/Container";
 import { PackagesSection } from "@/components/pricing/PackagesSection";
-import { FAQ } from "@/components/home/FAQ";
+import { LocalFaq } from "@/components/local/LocalFaq";
 import { FinalCTA } from "@/components/home/FinalCTA";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RevealGroup } from "@/components/ui/RevealGroup";
@@ -129,7 +129,7 @@ export default async function SectorPage({ params }: PageProps) {
       <RevealGroup>
         <PackagesSection dict={dict.offer} pricingDict={dict.pricing} />
 
-        <FAQ dict={dict.faq} homeDict={dict.home.faq} />
+        <LocalFaq title={`Veelgestelde vragen van ${sector.name}`} items={sector.faq} nonce={nonce} />
 
         <FinalCTA dict={dict.home.finalCta} contactDict={dict.contact} />
 

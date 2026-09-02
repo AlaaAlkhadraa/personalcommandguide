@@ -6,7 +6,7 @@ import { PLANS } from "@/lib/offer";
 import { SITE_CONFIG } from "@/lib/constants";
 import { Container } from "@/components/ui/Container";
 import { PackagesSection } from "@/components/pricing/PackagesSection";
-import { FAQ } from "@/components/home/FAQ";
+import { LocalFaq } from "@/components/local/LocalFaq";
 import { FinalCTA } from "@/components/home/FinalCTA";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RevealGroup } from "@/components/ui/RevealGroup";
@@ -103,7 +103,24 @@ export default async function WebshopLatenMakenPage() {
       <RevealGroup>
         <PackagesSection dict={dict.offer} pricingDict={dict.pricing} />
 
-        <FAQ dict={dict.faq} homeDict={dict.home.faq} />
+        <LocalFaq
+          title="Veelgestelde vragen over een webshop"
+          nonce={nonce}
+          items={[
+            {
+              question: "Wat kost een webshop laten maken?",
+              answer: `Het Webshop-pakket is ${STORE_PRICE} euro eenmalig, exclusief btw: productpagina's, winkelwagen, veilige checkout en betalingen, en productbeheer dat je zelf aankunt. De prijs staat op de site; grotere webshops worden vooraf op omvang geprijsd.`,
+            },
+            {
+              question: "Kan ik zelf producten toevoegen en prijzen wijzigen?",
+              answer: "Ja. De webshop wordt zo opgezet dat je hem zelf kunt beheren zodra hij live staat: producten, prijzen, voorraad en teksten. Wil je dat liever uitbesteden, dan kan dat via het onderhoudsplan van 49,99 euro per maand.",
+            },
+            {
+              question: "Werkt de webshop ook goed op mobiel?",
+              answer: "Ja, mobiel is het uitgangspunt: het grootste deel van de bezoekers komt via de telefoon, dus van productpagina tot afrekenen is elke stap daarop gebouwd. Probeer het zelf in onze demo-webshops.",
+            },
+          ]}
+        />
 
         <FinalCTA dict={dict.home.finalCta} contactDict={dict.contact} />
       </RevealGroup>

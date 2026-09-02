@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import Image from "next/image";
 import { headers } from "next/headers";
 
@@ -12,6 +13,7 @@ import { Button } from "@/components/ui/Button";
 import { PricingSection } from "@/components/services/PricingSection";
 import { RevealGroup } from "@/components/ui/RevealGroup";
 import { SERVICES } from "@/lib/constants";
+import { SECTORS } from "@/lib/local/sectors";
 import { IMAGES } from "@/lib/assets";
 import { breadcrumbJsonLd, buildMetadata } from "@/lib/seo";
 import { getLocale } from "@/lib/i18n/get-locale";
@@ -137,6 +139,40 @@ export default async function ServicesPage() {
         </Container>
       </section>
       <PricingSection dict={s} pricingDict={dict.pricing} offerDict={dict.offer} />
+
+      {/* The sector and city landing pages, linked from the one page every
+          visitor comparing services reaches: Dutch anchor text on purpose,
+          it is the query each page targets. */}
+      <section className="border-b border-slate-200 bg-white py-12 sm:py-16">
+        <Container className="flex flex-col gap-6">
+          <div className="flex max-w-2xl flex-col gap-2">
+            <h2 className="font-heading text-2xl font-bold text-navy sm:text-3xl">
+              Websites per branche
+            </h2>
+            <p className="text-base leading-relaxed text-slate-600">
+              Voor deze branches schreven we een eigen pagina, elk met de demo die
+              erbij hoort.
+            </p>
+          </div>
+          <p className="flex flex-wrap gap-x-5 gap-y-2">
+            {SECTORS.map((sector) => (
+              <Link
+                key={sector.slug}
+                href={`/website-voor/${sector.slug}`}
+                className="text-sm font-medium text-navy underline-offset-2 transition-colors hover:text-primary hover:underline"
+              >
+                Website voor {sector.name}
+              </Link>
+            ))}
+            <Link
+              href="/website-laten-maken"
+              className="text-sm font-medium text-primary underline-offset-2 hover:underline"
+            >
+              Alle steden
+            </Link>
+          </p>
+        </Container>
+      </section>
       <section className="py-20">
         <Container data-reveal className="flex flex-col items-center gap-6 text-center">
           <h2 className="max-w-xl text-3xl font-semibold text-white">{s.notSureTitle}</h2>
