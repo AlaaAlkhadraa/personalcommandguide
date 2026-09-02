@@ -1,6 +1,6 @@
 # Product Marketing Context — ZEVREN
 
-**Document version:** 1.13 · 2026-09-02
+**Document version:** 1.14 · 2026-09-02
 Elke marketingskill in `.claude/skills/` leest dit document eerst.
 Feiten hier zijn bindend; een skill-advies dat ermee botst, verliest.
 
@@ -65,13 +65,34 @@ Vóór er een letter copy wordt geschreven: **kan deze klant al online
 boeken of plannen?** Vijf kaarten zijn hier in twee dagen op gesneuveld.
 Zoek naast de eigen site altijd op de platforms die dit segment gebruikt
 — Fresha, Treatwell, Salonized, Bjootify, DoggyDoggy, aniday, Tipaw,
-1plekjevrij — en op een eigen afsprakenplanner of klantenportaal.
+1plekjevrij, 1Kapper/1BeautyAfspraak, Belliata — en op een eigen
+afsprakenplanner of klantenportaal.
 `1plekjevrij.nl` richt zich uitdrukkelijk op kappers, pedicures,
 schoonheidsspecialisten én trimsalons en toont per behandelaar het vrije
 tijdslot: dat is letterlijk de belofte waarmee ons 549-bericht binnenkomt.
+`1kapper.nl` en `1beautyafspraak.nl` (leverancier 1Kappersoftware: agenda,
+kassa én plaatsing op het boekingsplatform) zijn geen gidsen maar een echt
+agendaplatform, met "real time een afspraak en direct een bevestiging" als
+eigen belofte — letterlijk de zin waarmee ons 549-bericht binnenkomt.
 De vaste eerste zoekopdracht in elke afspraaksector, vóór de leeftijd en
 vóór het adres, is daarom
-`"<naam>" salonized OF fresha OF treatwell OF tipaw OF 1plekjevrij`.
+`"<naam>" salonized OF fresha OF treatwell OF tipaw OF 1plekjevrij OF 1kapper OF belliata`.
+
+**Direct daarna, in dezelfde adem: `"<naam>" klantenstop OF "geen nieuwe
+klanten" OF wachtlijst` (1.14).** De ICP sluit volle boeken en klantenstop uit,
+maar dat stond in geen enkele poortenlijst en in geen enkele zoekvolgorde, dus
+het werd alleen per ongeluk gevonden. Erger: onze profielregels jagen op
+"aantoonbaar lopend" — reviews die binnenstromen, "wegens drukte" — en in een
+ambacht waar de capaciteit één paar handen is, is dát precies het signaal dat
+vlak vóór een klantenstop komt. We selecteren daar dus systematisch op bedrijven
+met een verhoogde kans om vol te zitten. Eén zoekopdracht, en hij voorkomt geen
+gemiste kaart maar een verbrand adres.
+
+**En één regel die geen zoekopdracht is maar wel een poort: lees het ledger op
+naam, over de hele lengte, niet alleen de rijen van deze week.** Op 02-09 kwam
+Stark Stuc als nieuwe kaart op het bord terwijl dezelfde lane het bedrijf vier
+dagen eerder zelf had afgewezen, met exact de reden die opnieuw gold. Een kaart
+die op poort (e) valt, valt nadat al het andere werk er al in zit.
 
 Een mail die een ondernemer vertelt dat zij mist wat zij al betaalt,
 verbrandt het adres.
@@ -94,6 +115,21 @@ Wat NIET telt: een gemiddelde score zonder datum, een registerinschrijving of
 erkenningsdatum die ouder is dan twaalf maanden, en het jaartal in de titel van
 een gidsenpagina ("Top 25 installateurs [2026]") — dat is de verversingsstempel
 van de gids, niet een levensteken van het bedrijf.
+
+**Een stil levensteken sluit poort (a) wel, maar draagt een kortere
+houdbaarheid (1.14).** Sommige sporen dragen een datum zonder ooit te
+verouderen: een versiemarkering achter een bestandslink op het eigen domein
+(`.../Privacyverklaring.pdf?v=2026-05-03`), een kale prijslijst met alleen een
+jaartal, een "sinds"-regel. Ze tellen — de uitgever is het bedrijf zelf, dus
+de daad is zijn daad in de zin van 1.7 — maar ze bewijzen onderhoud en geen
+handel, en ze zien er over drie weken precies hetzelfde uit. Een kaart die op
+zo'n spoor rust, krijgt daarom de verzendtermijn op de kaart zelf, en de
+hercontrole is dan niet "staat het er nog" (het staat er nog) maar **"zoek een
+spoor van een andere soort"** — bij een afspraakzaak is de prijsaanpassing met
+het lopende jaartal hierboven daarvoor de goedkoopste route. Zonder die
+toevoeging keurt de hercontrole bij dit bewijstype zichzelf altijd goed. Een
+gedateerde review of post veroudert wel zichtbaar; daar volstaat de staande
+termijn van ongeveer twee weken.
 
 Omgekeerd is `geen-emailadres.md` geen eindstation. Een lane die daar een sterk
 profiel ziet staan, mag het adres opnieuw jagen: op 30-08 leverde dat bij
@@ -393,6 +429,62 @@ wil houden.
   groepen tegelijk.
 
 ## Changelog
+
+- 1.14 (2026-09-02, Azzouz, verificatie lanes A+B): vijf dingen uit drie kaarten
+  en vier lane-voorstellen. Deze versie staat naast 1.13 van dezelfde dag: die
+  kwam uit de verificatie van lanes C en D en was al gepusht toen deze dienst
+  wilde schrijven. Beide zijn behouden; niets van 1.13 is teruggedraaid.
+  **(a) "Een stil levensteken sluit poort (a) wel, maar draagt een kortere
+  houdbaarheid"** toegevoegd bij poort (a). Lane B sloot de poort bij FlevoDogs
+  op een versiemarkering achter een PDF-link op het eigen domein
+  (`?v=2026-05-03`) en noemde dat zelf het zwakste bewijsstuk van het dossier —
+  precies de goede manier om dun bewijs aan te bieden, en de reden dat het is
+  aangenomen. Vier extra zoekronden leverden geen steviger spoor op, dus dit
+  soort bewijs gaat vaker langskomen naarmate de leeftijds- en de adresmuur de
+  rest wegnemen. Het probleem is niet of het telt maar dat het niet veroudert:
+  de hercontrole na twee weken keurt zichzelf goed omdat het spoor er
+  onveranderd staat. Vandaar de eis van een spoor van een ándere soort bij
+  hercontrole. Dit sluit rechtstreeks aan op 1.13(a) van vandaag, dat met de
+  scheidslijn "de aankondiging draagt de datum, de prijslijst niet" hetzelfde
+  onderscheid van de andere kant benadert.
+  **(b) `1Kapper.nl`/`1BeautyAfspraak.nl` en `Belliata` op de platformlijst.**
+  Lane A vond ze op 02-09 bij Kapsalon-barbershop Fris in Uithuizen — het
+  bedrijf dat de verificatie van 01-09 uitdrukkelijk terug in de jacht had
+  gezet — met 9,5 uit 68 beoordelingen en direct online boeken. Geen gids maar
+  een agendaplatform met kassa erbij. Zelfde grond als 1plekjevrij in 1.12: een
+  platform dat niet op de lijst staat, wordt niet gezocht, en dan vertelt een
+  bericht een ondernemer dat hij mist wat hij al betaalt. Met de aantekening van
+  de lane erbij: de stadsindexpagina's (`1kapper.nl/<stad>`) zijn onder de
+  survivorship-toets van 1.11 geen uitputtingsbewijs voor de sector maar een
+  bruikbare uitsluitingslijst — jaag op het complement.
+  **(c) `klantenstop` als vaste tweede zoekopdracht,** direct ná de
+  platformcheck. De ICP sluit volle boeken uit maar het stond in geen enkele
+  poortenlijst, dus het werd alleen per ongeluk gevonden. De diagnose van lane A
+  eronder is scherper dan het voorstel: onze profielregels jagen op "aantoonbaar
+  lopend", en in een eenpersoonsambacht is dát het signaal dat vlak vóór een
+  klantenstop komt — we selecteren er dus systematisch op. Drie bedrijven, drie
+  provincies, twee sectoren, twee lanes die niets van elkaars werk wisten (lane A
+  bij twee noordelijke trimsalons, lane B bij Hondenpension Het Oude Bos in
+  Flevoland).
+  **(d) "Lees het ledger op naam over de hele lengte"** erbij gezet, uit de
+  enige afkeuring van vandaag: Stark Stuc kwam als nieuwe kaart op het bord
+  terwijl dezelfde lane het bedrijf op 29-08 zelf had afgewezen, met exact de
+  reden die opnieuw gold. Een kaart die op poort (e) valt, valt nadat al het
+  andere werk er al in zit.
+  **(e) Twee sectorbesluiten.** Schoonmaak en glazenwassen worden een
+  **bellijstsector**: vier van vier op-profiel bedrijven halen de leeftijdspoort
+  en stranden op het adres, omdat Trustoo en Werkspot aan het formulier
+  verdienen — vastgesteld door lane C op 01-09 in het zuiden en lane B vandaag
+  in het oosten. Uitdrukkelijk een afwaardering en geen sluiting: de sector hangt
+  aan beslissing 3 bij de owner, en 1.9 verbiedt permanent sluiten wat een
+  openstaande ownerbeslissing kan heropenen. **Gastouderopvang gaat van plaats 2
+  af,** maar op de tweede grond van lane B en niet op de eerste: het
+  privacyargument gaat te ver (een gastouder met KvK en LRK-nummer is een
+  ondernemer, en zou dat argument kloppen dan raakte het ook thuiskapsters en
+  trimsalons aan huis). Wat wél klopt is dat het bureau de bemiddeling doet, dus
+  het lek dat wij oplossen bestaat daar niet. Met 1.12 staat de sector daarmee op
+  drie gronden stil, waarvan er twee van mij komen — ik heb hem zelf op plaats 2
+  gezet en dat was fout. Kinderopvang met een eigen pand blijft in beeld.
 
 - 1.13 (2026-09-02, Azzouz, verificatie lanes C+D): twee dingen, beide op de regel
   dat het fundament alleen wijzigt op bewijs uit meer dan één lane.
