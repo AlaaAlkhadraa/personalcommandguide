@@ -1,6 +1,6 @@
 # Product Marketing Context — ZEVREN
 
-**Document version:** 1.14 · 2026-09-02
+**Document version:** 1.15 · 2026-09-03
 Elke marketingskill in `.claude/skills/` leest dit document eerst.
 Feiten hier zijn bindend; een skill-advies dat ermee botst, verliest.
 
@@ -162,6 +162,26 @@ de uitgever?** Alleen het eerste is een levensteken.
   gemiddelde score zonder datum · een registerinschrijving of erkenningsdatum
   ouder dan twaalf maanden. Dat is de huishouding van de uitgever. Een gids
   die zijn pagina ververst, bewijst dat de gids leeft.
+
+**Een gedateerde review op een vakgidspagina is pas een levensteken als de
+datum per review verschilt EN de reviewtekst over dít bedrijf gaat (1.15).**
+Dit is de gevaarlijkste variant van de uitgeversstempel hierboven, want hij
+vermomt zich als het sterkste bewijstype dat wij kennen: geen "Updated ‹maand›"
+bovenaan de pagina, maar een datum ín de review zelf. Op 03-09 sloot de
+verificatie poort (a) bijna bij Brinkveld Hoveniers (Hattem) op een Google-review
+met 10,0 van 14-11-2025 op de eenbedrijfspagina van `hovenier.website`. Drie
+vervolgronden haalden hem onderuit: een tweede 10,0 draagt exact dezelfde datum
+14-11-2025, over drie ronden komen drie verschillende reviewernamen terug bij
+diezelfde ene datum, en de tekst bij een van beide gaat over "Rutger Broekhuis"
+die een wespennest behandelde — niet de eigenaar en niet hovenierswerk. Dat is
+het moment waarop de gids zijn reviewblok heeft ingeladen, niet het moment waarop
+een klant iets vond.
+
+De toets kost één extra ronde en hij is verplicht bij elke gidsreview: **dragen
+twee reviews dezelfde datum, dan telt geen van beide.** En lees altijd de
+reviewtekst — een gids die reviews importeert, importeert ook de reviews van de
+buren. Poort (a) sluit alleen op een review die zowel een eigen datum als een
+eigen onderwerp heeft.
 
 Voor Sam betekent dit dat de geen-website-groep wél door de poort kán, maar
 via het register en het vergunningenspoor, niet via de gidsenstempel. De
@@ -345,6 +365,28 @@ Alle drie zagen er op de registerpagina uit als een jonge zaak op profiel.
 provinciale reeksen (01, 02, 04, 05, 08, 09, 10, 11, 17, 27, 30, 32) zijn van
 vóór 2008 en verraden de leeftijd in één blik.
 
+**En de omgekeerde val: een verse registerdatum over een oude zaak (1.15).** Een
+hoog KvK-nummer, een oprichtingsdatum van twee jaar geleden of een handelsnaam
+uit 2024 zeggen wanneer de PAPIEREN veranderden, niet wanneer het bedrijf begon.
+Een omzetting naar een B.V., een naamswissel of een eigenaarswissel maakt een
+bedrijf van vijfendertig jaar op de gidsenpagina twee jaar oud. Twee lanes zijn
+er op 03-09 onafhankelijk ingelopen, in verschillende provincies en sectoren, en
+daarmee haalt de regel de meer-dan-één-lane-drempel:
+
+- **Middeljans Schilders (Odoorn/Emmen, lane A):** `schilder-nu.nl` meldt
+  "KvK 94419671, 2 jaar actief"; de eigen over-onspagina meldt dat Eit
+  Middeljans in **1991** begon. Vijfendertig jaar.
+- **De Hondentrimsalon van Zutphen (lane B):** handelsnaam sinds 01-04-2024,
+  SBB-erkenning 29-04-2024, salon op dit adres sinds 2017 — en de eigen
+  over-pagina meldt dat Ellen Lammers **sinds 1994** specialist is en dertig
+  jaar met honden werkt. Tweeëndertig jaar. Lane B liet de leeftijd als
+  "dubbelzinnig" openstaan; één zoekopdracht op de eigen site besliste hem.
+
+**De regel:** bij een B.V.-achtervoegsel, een handelsnaamwissel of een
+oprichtingsdatum die niet strookt met vaste openingstijden, een vast
+telefoonnummer of een gevestigde uitstraling, leg je de gidsdatum eerst naast de
+eigen over-onspagina. Dat kost één ronde en het scheelt een volledig dossier.
+
 Twee bronnen die het omgekeerde probleem oplossen en die dezelfde dag door
 twee lanes onafhankelijk zijn gevonden (lane A in het noorden, lane B in het
 oosten): de vakgidsen van het `-nu.nl`- en `-gids.nl`-type publiceren per
@@ -429,6 +471,31 @@ wil houden.
   groepen tegelijk.
 
 ## Changelog
+
+- 1.15 (2026-09-03, Azzouz, verificatie lanes A+B): twee regels, allebei uit een
+  dossier dat vandaag bijna een kaart werd of bijna een afwijzing miste.
+  **(a) "Een gedateerde review op een vakgidspagina is pas een levensteken als de
+  datum per review verschilt en de reviewtekst over dít bedrijf gaat"**
+  toegevoegd bij "Wiens daad draagt de datum". Brinkveld Hoveniers was het
+  sterkste openstaande dossier van beide lanes — adres bevestigd, opgericht
+  12-06-2023, lek positief vastgesteld, geen boekingspoort — en poort (a) leek
+  te sluiten op een 10,0 van 14-11-2025. Twee reviews met dezelfde datum en een
+  reviewtekst over een ander vakman maakten er de importstempel van de gids van.
+  Zonder deze regel was dat de enige kaart van 03-09 geweest, gebouwd op de
+  huishouding van hovenier.website. **(b) "Een verse registerdatum over een oude
+  zaak"** toegevoegd bij de erkenningsdatum-sectie, als spiegelbeeld van de
+  Stagemarkt-val die daar al stond. Lane A vond hem bij Middeljans Schilders
+  (1991 achter een KvK-nummer uit 2024), lane B bij De Hondentrimsalon van
+  Zutphen (Ellen Lammers sinds 1994 achter een handelsnaam uit 2024) —
+  onafhankelijk, dezelfde dag, verschillende provincies en sectoren, dus boven
+  de meer-dan-één-lane-drempel. Lane A bood hem zelf aan als waarneming en niet
+  als wijziging; lane B's geval is de tweede lane die hij nodig had.
+  **Niet opgenomen:** lane A's voorstel om `optios` aan de vaste
+  platformzoekopdracht toe te voegen. Het komt uit één lane en één bedrijf
+  (Kapsalon Promise, Groningen) en lane A biedt het zelf uitdrukkelijk als
+  waarneming aan. Het staat als order voor morgen in
+  `marketing/outreach/2026-09-03-ab-verified.md`; zodra een tweede lane erop
+  zoekt, hoort het hier thuis.
 
 - 1.14 (2026-09-02, Azzouz, verificatie lanes A+B): vijf dingen uit drie kaarten
   en vier lane-voorstellen. Deze versie staat naast 1.13 van dezelfde dag: die

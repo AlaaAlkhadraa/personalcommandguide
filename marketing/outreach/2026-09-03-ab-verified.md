@@ -253,6 +253,19 @@ registerdatum over een oude zaak — nu in lane B, in een andere provincie en ee
 sector. Twee lanes, onafhankelijk, dezelfde dag: daarmee haalt lane A's voorstel de
 meer-dan-één-lane-drempel en gaat het als regel mee het fundament in.
 
+**En er is een tweede laag, die ik pas bij het bijwerken van het ledger zag.** Lane B
+heeft dit bedrijf op **02-09 zelf al afgewezen**, en met exact deze grond: er staat een
+rij `not fit - te lang gevestigd` met "op dit adres sinds 01-01-2017 en daarvoor ruim
+tien jaar aan de Graaf Ottosingel". Eén dag later zet dezelfde lane hetzelfde bedrijf
+opnieuw op als `lead - poort open` met de leeftijd als "dubbelzinnig". Dat is dus **het
+tweede geval van poort (e) in dit ene bestand op deze ene dag**, naast Salon Only You.
+
+Dat verandert mijn oordeel over lane B op één punt. De telling en de tekstdiscipline zijn
+uitstekend, maar de eerste zoekopdracht van 1.14 — het ledger op naam lezen over de hele
+lengte, vóór het profielwerk — is vandaag twee keer overgeslagen. Beide keren kostte het
+geen kaart, omdat lane B ze zelf niet als kaart aanbood. Beide keren kostte het wel een
+volledig dossier aan werk dat vier dagen respectievelijk één dag eerder al gedaan was.
+
 Status wordt `not fit - te lang gevestigd`. Niet opnieuw oppakken.
 
 ### Bevinding — Hondencentrum Zevenaar hoort niet op de bellijst
@@ -356,7 +369,7 @@ volgordeprobleem, en de volgorde staat hieronder in de orders.
 ### Lane B — Overijssel, Gelderland, Flevoland
 
 **Oordeel: nul kaarten TERECHT, verantwoording JUIST EN NAREKENBAAR, klaargelegde tekst
-TERECHT GEEN KAART, twee ledgercorrecties.**
+TERECHT GEEN KAART, twee ledgercorrecties en twee gevallen van poort (e).**
 
 De telling klopt tot op het bedrijf, de onafgeronde namen staan eerlijk buiten de
 telling, en het besluit om Salon Only You en Autospuiterij Zwolle níet als kaart te
@@ -364,9 +377,14 @@ schrijven — terwijl dat de dag van 0 naar 2 had gebracht — is exact de afweg
 orders vragen. De klaargelegde tekst is het beste schrijfwerk in beide bestanden en heeft
 één ontbrekend element: hij vraagt niets.
 
-Twee correcties: Salon Only You is een dubbele rij tegen een bestaande afwijzing van
-30-08 (poort e) met een onopgeloste platformtegenstrijdigheid, en de leeftijd van De
-Hondentrimsalon van Zutphen is niet dubbelzinnig maar uit — 1994.
+Twee correcties, en ze hebben dezelfde oorzaak. Salon Only You is een dubbele rij tegen
+een bestaande afwijzing van 30-08 met een onopgeloste platformtegenstrijdigheid, en De
+Hondentrimsalon van Zutphen is een dubbele rij tegen een afwijzing van **02-09 door deze
+lane zelf**, met exact de grond die opnieuw geldt (de leeftijd is niet dubbelzinnig maar
+uit: 1994). Twee keer poort (e) op één dag, allebei doordat het ledger niet op naam over
+de hele lengte is gelezen. Dat is de enige echte tekortkoming in een verder sterk bestand,
+en het is dezelfde die 1.14 na Stark Stuc heeft vastgelegd. Eén zoekopdracht in
+`contacted.md` vóór het profielwerk had vandaag twee volledige dossiers bespaard.
 
 ---
 
@@ -381,6 +399,10 @@ Hondentrimsalon van Zutphen is niet dubbelzinnig maar uit — 1994.
   Steengoed!) als eerste, met bij Steengoed! de KvK-toets vóór al het andere. Bij elke
   gidsreview: lees de reviewtekst en kijk of meerdere reviews dezelfde datum dragen —
   zie 1.15 hieronder.
+- **Lane B, en het is de enige echte tekortkoming van vandaag:** draai `contacted.md` op
+  naam over de hele lengte vóór het profielwerk, niet erna. Twee dossiers van vandaag
+  (Salon Only You, De Hondentrimsalon van Zutphen) stonden er al in als afgewezen, één
+  van de twee afgewezen door deze lane zelf, één dag eerder, met dezelfde grond.
 - **Beide lanes:** onafgeronde namen tellen niet mee in de tekortverantwoording, en een
   afwijzingsgrond per bedrijf is de eerste grond die hard is, niet een tweede die er
   toevallig ook bij past. Als twee gronden gelden, noteer beide en tel het bedrijf één
@@ -428,7 +450,7 @@ changelogregel. Beide komen uit vandaag en beide zijn met een concreet dossier b
 | Brinkveld Hoveniers & Dienstverlening | B | Hattem | **GEEN KAART** — zelf nagejaagd; de review van 14-11-2025 is de importstempel van hovenier.website, met reviewtekst over een ander vakman. Poort (a) open |
 | Autospuiterij Zwolle | B | Zwolle | **GEEN KAART** — zelf nagejaagd, geen gedateerd spoor. Tekst is verder verzendklaar; mist één interessevraag |
 | Salon Only You | B | Almelo | **GEEN KAART + ledgerfout** — staat sinds 30-08 als `not fit - boekt al online`; poort (e) gemist, platformtegenstrijdigheid onopgelost |
-| De Hondentrimsalon van Zutphen | B | Zutphen | **GEEN KAART + correctie** — leeftijd niet dubbelzinnig: Ellen Lammers sinds 1994. `not fit - te lang gevestigd` |
+| De Hondentrimsalon van Zutphen | B | Zutphen | **GEEN KAART + ledgerfout** — leeftijd niet dubbelzinnig: Ellen Lammers sinds 1994; bovendien op 02-09 door deze lane zelf al afgewezen op deze grond. Poort (e), tweede geval |
 | Hondencentrum Zevenaar | B | Zevenaar | **GEEN KAART + correctie** — geen bellijstregel: e-mail bevestigd, poort (a) dicht (cursusstart 05-09-2026); open is de leeftijd |
 | Verantwoording van het tekort | A | — | **DEELS ONJUIST** — 21 beoordeeld en niet 23; vier op uitsluitend het adres en niet zeven; diagnose weerlegd door lane B |
 | Verantwoording van het tekort | B | — | **JUIST** — telling sluit exact op 31 en is per bedrijf na te rekenen |
