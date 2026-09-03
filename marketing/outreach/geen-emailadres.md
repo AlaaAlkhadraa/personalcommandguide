@@ -617,3 +617,21 @@ Sam, 3 september 2026
 | Schildersbedrijf Faay | provincie Utrecht | opgericht 01-08-2023 (schilder-nu.nl); geen contactkanaal | 2026-09-03 |
 | A. Stukadoor B.V. | Amsterdam (NH) | opgericht 01-03-2023; stukadoorgids meldt uitdrukkelijk "geen contactgegevens bekend" | 2026-09-03 |
 | U Klusser | Utrecht-Stad (U) | KvK 89941187, opgericht 20-03-2023, eenmanszaak; klusbedrijf-nu.nl meldt geen telefoon, geen e-mail, nul beoordelingen | 2026-09-03 |
+## Lane C — 03-09-2026 (Limburg, Noord-Brabant, Zeeland)
+
+Drie zaken kwamen door het profiel en publiceren nergens een adres. Alle drie
+staan ook in `bellijst.md`, want alle drie hebben wel een telefoonnummer.
+
+- **Honden & Katten Trimsalon Woofff — Roosendaal.** KvK 88696200 (2023), V.O.F.
+  met 2 tot 5 werkzame personen, Boomgaardstraat 1-a, 06-14674432. Zoekopdrachten:
+  naam + plaats + "e-mail", naam + "info@" + straat, naam + stagemarkt +
+  contactpersoon, naam + Boomgaardstraat. De Stagemarkt-bedrijfspagina bestaat
+  maar geeft in het zoekresultaat geen contactpersoon prijs. Instagram en Facebook
+  vragen allebei om een privébericht. Dit is de zaak om als eerste te herjagen:
+  het profiel is het beste dat lane C deze week heeft gezien.
+- **Hondentrimsalon Het Knappe Snuitje — Etten-Leur.** Eigen domein, Brakkenstraat
+  4, 06-24270046. Drie zoekronden zonder adres. Let op bij herjacht: de zaak staat
+  op Tipaw, dus de boekingspoort moet eerst dicht voordat het adres iets waard is.
+- **Naamloze trimster, wijk Tolberg, Roosendaal.** 06-45822020, alleen een
+  Marktplaats-advertentie. Hier ontbreekt niet alleen het adres maar ook de
+  bedrijfsnaam, dus een gerichte zoekopdracht bestaat nog niet.

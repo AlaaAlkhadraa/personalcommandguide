@@ -317,3 +317,10 @@ levensteken.
 |---|---|---|---|---|---|
 | A&S Stukadoor en Schilder | Velsen-Noord | stukadoor/schilder | 06-18894022 | **ja** — Werkspot-profielbeoordeling 28-05-2026, tweede van 31-07-2025 | KvK 89714849, opgericht 01-04-2023, eenmanszaak, contactpersoon Sajad, Pancrasplantsoen 3. Lek hard: beoordelingen tot minstens pagina 4 op Werkspot plus Zoofy, en Werkspot rekent EUR 3,00-75,00 per aanvraag. Vier zoekronden zonder e-mailadres. Onderwerp en bericht liggen woordelijk klaar in `2026-09-03-d.md` |
 | Schildersbedrijf Frank Heus | Westbroek (De Bilt) | schilder | 06-23745248 | — | KvK 91125642, opgericht 01-07-2023, Kerkdijk 100. De vakgids meldt uitdrukkelijk geen e-mailadres, geen website en geen beoordelingen — dus ook geen levensteken. Op profiel qua leeftijd, verder blind |
+## Lane C — Limburg, Noord-Brabant, Zeeland (aanvulling 03-09-2026)
+
+| Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
+|---|---|---|---|---|---|
+| Honden & Katten Trimsalon Woofff | Roosendaal | hondentrimsalon | 06-14674432 | — | KvK 88696200 (2023), V.O.F. met 2-5 werkzame personen, Boomgaardstraat 1-a, levende Instagram en Facebook, eigen Stagemarkt-bedrijfspagina, geen eigen domein. Vier zoekronden zonder e-mailadres; beide social kanalen vragen om een privébericht. Sterkste profiel van lane C op 03-09 |
+| Naamloze trimster wijk Tolberg | Roosendaal | hondentrimsalon | 06-45822020 | — | Marktplaats-advertentie "Nieuwe hondentrimsalon in Roosendaal", wijk Tolberg, eigen tekst "sinds kort ben ik begonnen met mijn eigen trimsalon". Ander nummer dan Trimsalon by Paulina, dus een tweede jonge trimster in dezelfde wijk. Geen bedrijfsnaam, geen KvK, geen e-mailadres, geen datum op de advertentie — bellen is de enige route en de naam is dan meteen de eerste vraag |
+| Hondentrimsalon Het Knappe Snuitje | Etten-Leur | hondentrimsalon | 06-24270046 | — | Eigen domein hetknappesnuitje.nl, Brakkenstraat 4, alle rassen. Geen e-mailadres gevonden, en de zaak staat op boekingsplatform Tipaw: bellen heeft alleen zin voor iets anders dan een agenda, precies zoals bij Barbershop 150 hierboven |
