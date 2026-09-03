@@ -579,3 +579,27 @@ herjaagbaar en dat staat erbij.
 en is op 01-09 opnieuw gejaagd zonder resultaat. Vandaag niet opnieuw geprobeerd: twee
 mislukte herjachten binnen twee dagen is genoeg, en de eerstvolgende poging is pas
 zinvol als er een nieuwe bron bij komt.
+
+## Lane A — 3 september 2026 (Groningen, Friesland, Drenthe)
+
+Zeven van de drieëntwintig bedrijven van deze dienst kwamen op profiel, leeftijd, sector
+en boekingspoort door alle poorten en strandden uitsluitend hierop. Dat is de bindende
+beperking van deze lane en hij staat uitgeschreven in `2026-09-03-a.md`.
+
+| Bedrijf | Plaats | Wat er wél is | Datum gecheckt |
+|---|---|---|---|
+| **Trimsalon Tassie** | Eenrum (Het Hogeland) | **HERJAGEN — sterkste noordelijke profiel van de week.** Natasha (29), salon gestart in 2023, diploma gezelschapsdierentrimmer 2018, eigen domein trimsalontassie.nl, honden én katten. Poort (a) is al dicht: eigen gedateerde melding dat de salon tot januari 2026 gesloten was wegens zwangerschapsverlof. Alleen het adres ontbreekt; drie ronden zonder resultaat, ook geen telefoonnummer | 2026-09-03 |
+| Gezond Groen | Finsterwolde (Oldambt) | KvK 91478316, opgericht 25-09-2023, eenmanszaak, Meijerslaan 3, 9684 CV, eigen domein gezondgroen.com mét contactpagina, werkgebied provincie Groningen en Noord-Drenthe. Twee ronden zonder e-mailadres en zonder telefoonnummer | 2026-09-03 |
+| Stukadoorsbedrijf J W Geleijnse | Emmen | KvK 88646270 (2023), Oude Roswinkelerweg 54, 7822 AE, eigen domein stukadoorgeleijnse.nl, Facebook en Instagram. De gids meldt uitdrukkelijk dat er geen e-mailadres bekend is; contact loopt via het formulier op de eigen site en via Trustoo | 2026-09-03 |
+| SBR Betonvloeren | Nieuwlande (Coevorden) | KvK 91044308, opgericht 08-08-2023, eenmanszaak, 1 werkzaam persoon. Het register meldt uitdrukkelijk dat er géén contactgegevens bekend zijn — geen e-mail én geen telefoon. Geen eigen domein gevonden | 2026-09-03 |
+| Mobiele Trimsalon Tilia | Een (Noordenveld) | Schoolstraat 21, 9342 PE, mobiele salon voor hond, kat en konijn aan huis, Facebookpagina. Telefoonnummer staat in de gidsen alleen afgekapt (06 42914…), dus ook geen bellijstregel. Geen KvK-nummer en geen oprichtingsdatum gevonden | 2026-09-03 |
+| Trimsalon All for Dogs Center | Heiligerlee (Oldambt) | Veronique Steenbergen, eigenaar sinds september 2019, Provincialeweg 88, 9677 PE, 06-22252134, eigen domein allfordogscenter.nl. Poort (a) is dicht via de eigen tariefaankondiging per 01-01-2026 (+ € 2,50). Het énige e-mailspoor is de Cylex-pagina en die geeft het adres verminkt weer als "[email protected]" — niet overgenomen | 2026-09-03 |
+
+**Twee herjachten uitgevoerd, beide zonder resultaat.** Otter Hoveniers (Heerenveen) is
+vandaag met twee extra ronden gejaagd, waaronder de eenbedrijfsbron regiohoveniers.nl die
+gisteren nog niet was geprobeerd: nog steeds geen adres, wel een tweede vestiging aan
+Wederik 198. Blijft op de bellijst. Stukadoorsbedrijf J W Geleijnse en SBR Betonvloeren
+stonden sinds 02-09 als `lead - niet nagelopen` in het ledger en zijn vandaag nagelopen
+zoals afgesproken; beide komen hier terecht.
+
+Sam, 3 september 2026

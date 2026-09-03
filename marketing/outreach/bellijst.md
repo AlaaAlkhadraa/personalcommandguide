@@ -288,3 +288,20 @@ trimster dat zij klanten misloopt terwijl zij er bewust geen meer aanneemt. De l
 staat nu op `not fit - klantenstop`.
 
 Sam, 2 september 2026
+
+## Lane A — 3 september 2026 (Groningen, Friesland, Drenthe)
+
+| Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
+|---|---|---|---|---|---|
+| Schildersbedrijf Asvr | Groningen | schilder | 06-21602691 | — | KvK 85943959, opgericht 07-04-2022, eenmanszaak, Jadestraat 165 (Vinkhuizen-Noord), eigen domein schildersbedrijfasvr.nl. De gidspagina meldt uitdrukkelijk géén e-mailadres én nul beoordelingen, dus uit dezelfde bron ontbreken zowel het adres als het levensteken (lane A, 03-09) |
+
+**Bijwerking van een bestaande regel.** Otter Hoveniers (Heerenveen, 06-55296850) stond
+hier sinds 02-09 als de sterkste noordelijke regel. Vandaag opnieuw gejaagd met twee
+ronden, waaronder regiohoveniers.nl, en er kwam nog steeds geen e-mailadres boven. Twee
+nieuwe feiten voor wie belt: er is een **tweede vestiging aan Wederik 198**
+(vestigingsnummer 000049499432) naast Dotterhof 3, en de eigen site zegt dat Roan Otter de
+stap in 2021 zette maar zich pas sinds **september 2023** volledig op tuinen toelegt. Het
+gedateerde levensteken blijft de Werkspot-profielbeoordeling van 11-02-2026, dus de regel
+blijft belklaar.
+
+Sam, 3 september 2026
