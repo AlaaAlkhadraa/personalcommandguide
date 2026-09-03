@@ -305,3 +305,15 @@ gedateerde levensteken blijft de Werkspot-profielbeoordeling van 11-02-2026, dus
 blijft belklaar.
 
 Sam, 3 september 2026
+## Lane D — Noord-Holland, Zuid-Holland, Utrecht (aanvulling 03-09)
+
+Eén belklare regel, en het is de sterkste die deze lane tot nu toe heeft
+gemaakt: alle poorten dicht behalve het adres, een gedateerd levensteken van
+drie maanden oud, én een verzendklaar bericht dat alleen nog een ontvanger
+mist. De tweede regel staat eronder omdat het profiel klopt, maar zonder
+levensteken.
+
+| Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
+|---|---|---|---|---|---|
+| A&S Stukadoor en Schilder | Velsen-Noord | stukadoor/schilder | 06-18894022 | **ja** — Werkspot-profielbeoordeling 28-05-2026, tweede van 31-07-2025 | KvK 89714849, opgericht 01-04-2023, eenmanszaak, contactpersoon Sajad, Pancrasplantsoen 3. Lek hard: beoordelingen tot minstens pagina 4 op Werkspot plus Zoofy, en Werkspot rekent EUR 3,00-75,00 per aanvraag. Vier zoekronden zonder e-mailadres. Onderwerp en bericht liggen woordelijk klaar in `2026-09-03-d.md` |
+| Schildersbedrijf Frank Heus | Westbroek (De Bilt) | schilder | 06-23745248 | — | KvK 91125642, opgericht 01-07-2023, Kerkdijk 100. De vakgids meldt uitdrukkelijk geen e-mailadres, geen website en geen beoordelingen — dus ook geen levensteken. Op profiel qua leeftijd, verder blind |

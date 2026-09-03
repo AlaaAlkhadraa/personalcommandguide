@@ -603,3 +603,17 @@ stonden sinds 02-09 als `lead - niet nagelopen` in het ledger en zijn vandaag na
 zoals afgesproken; beide komen hier terecht.
 
 Sam, 3 september 2026
+## Lane D — Noord-Holland, Zuid-Holland, Utrecht (03-09-2026)
+
+| Bedrijf | Plaats | Wat er wel is | Datum gecheckt |
+|---|---|---|---|
+| A&S Stukadoor en Schilder | Velsen-Noord (NH) | Werkspot-profiel met beoordelingen t/m pagina 4 (laatste 28-05-2026) + Zoofy, KvK 89714849 opgericht 01-04-2023, 06-18894022, contactpersoon Sajad. Vier zoekronden. Staat op de bellijst; verzendklare tekst in `2026-09-03-d.md` | 2026-09-03 |
+| StukadoorNoordHolland.nl | Noord-Holland | eigen domein met stadspagina's, KvK 84144955, 06-22890501, 5,0 uit 41 Google-beoordelingen. Het adres staat op de contactpagina maar komt geanonimiseerd terug in de zoekresultaten — herjaagbaar met een andere zoekvorm, en nooit reconstrueren | 2026-09-03 |
+| TrimsalonDirkie | Boskoop (ZH) | Nikita Hoogendoorn, eigen trimsalon aan huis geopend 2024, Wix-domein trimsalondirkie.nl met contactformulier; geen telefoonnummer gevonden | 2026-09-03 |
+| Schildersbedrijf Frank Heus | Westbroek (U) | KvK 91125642, opgericht 01-07-2023, Kerkdijk 100, 06-23745248. Vakgids meldt uitdrukkelijk: geen e-mail, geen website, geen beoordelingen. Op de bellijst | 2026-09-03 |
+| Vondel Schilderwerken B.V. | Loenen aan de Vecht (U) | opgericht 29-08-2023, Ludgerushof 2. Vakgids meldt geen e-mail, geen website én geen telefoonnummer | 2026-09-03 |
+| BVDM Schilderwerken | provincie Utrecht | opgericht 14-09-2023, 1 werkzaam persoon (schilder-nu.nl); geen enkel contactkanaal in twee zoekronden | 2026-09-03 |
+| Meiburg Schilderwerken | provincie Utrecht | opgericht 31-07-2023 (schilder-nu.nl); geen contactkanaal. Niet verwarren met Meijburg Schilderwerken (post@meijburg-schilderwerken.nl), ander bedrijf | 2026-09-03 |
+| Schildersbedrijf Faay | provincie Utrecht | opgericht 01-08-2023 (schilder-nu.nl); geen contactkanaal | 2026-09-03 |
+| A. Stukadoor B.V. | Amsterdam (NH) | opgericht 01-03-2023; stukadoorgids meldt uitdrukkelijk "geen contactgegevens bekend" | 2026-09-03 |
+| U Klusser | Utrecht-Stad (U) | KvK 89941187, opgericht 20-03-2023, eenmanszaak; klusbedrijf-nu.nl meldt geen telefoon, geen e-mail, nul beoordelingen | 2026-09-03 |
