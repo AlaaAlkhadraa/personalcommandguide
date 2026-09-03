@@ -324,3 +324,26 @@ levensteken.
 | Honden & Katten Trimsalon Woofff | Roosendaal | hondentrimsalon | 06-14674432 | — | KvK 88696200 (2023), V.O.F. met 2-5 werkzame personen, Boomgaardstraat 1-a, levende Instagram en Facebook, eigen Stagemarkt-bedrijfspagina, geen eigen domein. Vier zoekronden zonder e-mailadres; beide social kanalen vragen om een privébericht. Sterkste profiel van lane C op 03-09 |
 | Naamloze trimster wijk Tolberg | Roosendaal | hondentrimsalon | 06-45822020 | — | Marktplaats-advertentie "Nieuwe hondentrimsalon in Roosendaal", wijk Tolberg, eigen tekst "sinds kort ben ik begonnen met mijn eigen trimsalon". Ander nummer dan Trimsalon by Paulina, dus een tweede jonge trimster in dezelfde wijk. Geen bedrijfsnaam, geen KvK, geen e-mailadres, geen datum op de advertentie — bellen is de enige route en de naam is dan meteen de eerste vraag |
 | Hondentrimsalon Het Knappe Snuitje | Etten-Leur | hondentrimsalon | 06-24270046 | — | Eigen domein hetknappesnuitje.nl, Brakkenstraat 4, alle rassen. Geen e-mailadres gevonden, en de zaak staat op boekingsplatform Tipaw: bellen heeft alleen zin voor iets anders dan een agenda, precies zoals bij Barbershop 150 hierboven |
+## Overijssel, Gelderland, Flevoland — aanvulling 03-09-2026 (lane B)
+
+Vier nieuwe regels, en drie bestaande regels die vandaag opnieuw zijn gejaagd zonder
+resultaat.
+
+| Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
+|---|---|---|---|---|---|
+| **Hondencentrum Zevenaar** | Zevenaar/Westervoort | hondenschool | **06-37024107** | **05-09-2026** — de eigen site kondigt aan dat de nieuwe cursussen zaterdag 5 september starten, puppygroep 09:30-10:15 | Staat hier terwijl er wél een e-mailadres is (hc.zevenaar@hotmail.com), en dat is met opzet: de LEEFTIJD komt in zes ronden over twee diensten niet rond (geen KvK-nummer, geen oprichtingsjaar, geen "sinds"-vermelding) en de inschrijfroute evenmin. Beide zijn één vraag aan de telefoon, en geen enkele zoekronde meer waard. LET OP: op hetzelfde lesadres (Edisonstraat) zit een tweede school, Hondenschool Shyla van Elisa Torlentino |
+| Alferink Allround Schilderwerken | Rijssen | schilder | 06-13056071 | — | KvK 90320956, opgericht 01-06-2023, Oosterhofweg 160, eenmanszaak. Schilder-nu meldt geen e-mailadres, geen website en nog geen beoordelingen. LET OP lookalike: Alferink Schilderwerken in Haaksbergen (J & J Alferink, eigen domein) is een ánder bedrijf |
+| Pad Thai Thailand Foodtruck & Catering | Apeldoorn | foodtruck/catering | 06-43025899 | — | Trustoo 9,1, vaste standplaatsen donderdag Adelaarslaan (Hart van Zuid) en zaterdag Kerk-Allee Beekbergen, beide 11:30-19:00. Alleen een Facebookpagina; drie ronden zonder e-mailadres (26-08 en herjaagd 03-09) |
+| Mobiele Fietsenmaker Barry | Deventer / Zwolle / Almelo (Salland) | mobiele fietsenmaker | 06-57522961 | — (zie kanttekening) | Barry Veenendaal, bus met gereedschap sinds zomer 2020, twee eigen domeinen (mobielefietsenmakerbarry.nl en veenendaal-fietsenmaker.nl), contact uitsluitend per telefoon of WhatsApp. Herjaagd 03-09 zonder e-mailadres. KANTTEKENING: er bestaan portretten van hem in almeloosweekblad.nl en hartvannijverdal.com, maar de artikeldatum is niet uit de zoekresultaten te lezen — dus het levensteken is er waarschijnlijk wél en het is nog niet gedateerd. Wie belt, kan dat in één zin ophalen |
+
+**Drie bestaande regels opnieuw gejaagd, alle drie zonder resultaat.** Bart de stukadoor
+(Zwolle) en Kama Stukadoors (Dronten) stonden hier al sinds 29-08; ik heb er vandaag elk
+twee nieuwe ronden op gedraaid met de contactpagina-zoekvorm die bij Stuc & Go wél werkte,
+en bij geen van beide komt er een adres boven. Ze blijven staan. Bij Trimsalon Perfect Dog
+(Borculo) is er meer aan de hand en dat verdient een correctie op de bestaande regel: haar
+eigen site zegt dat afspraken **uitsluitend** telefonisch of per bericht gaan. Er ís geen
+e-mailadres — dat is iets anders dan "niet gevonden", en het betekent dat verdere
+zoekronden op dat bedrijf weggegooid werk zijn. Bellen is daar de enige route, en dat maakt
+haar regel sterker en niet zwakker.
+
+Sam, 3 september 2026

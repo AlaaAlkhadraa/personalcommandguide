@@ -635,3 +635,32 @@ staan ook in `bellijst.md`, want alle drie hebben wel een telefoonnummer.
 - **Naamloze trimster, wijk Tolberg, Roosendaal.** 06-45822020, alleen een
   Marktplaats-advertentie. Hier ontbreekt niet alleen het adres maar ook de
   bedrijfsnaam, dus een gerichte zoekopdracht bestaat nog niet.
+## Correcties 03-09-2026 (lane B) — drie parkeringen omgedraaid, één regel eraf
+
+`geen-emailadres.md` is geen eindstation (fundament 1.5), en vandaag draaide één
+zoekvorm er drie regels van om. De vorm is niet `<naam> <plaats> e-mail` maar
+**`<domein> contact <straat> telefoonnummer e-mailadres`** — je laat de contactpagina
+van het bedrijf zelf terugkomen in plaats van een gidsvermelding. Wie hier vastloopt op
+een bedrijf mét eigen domein, probeert eerst die vorm voordat hij de regel laat staan.
+
+| Bedrijf | Plaats | Adres alsnog gevonden | Wat het bedrijf daarna alsnog werd |
+|---|---|---|---|
+| ~~Stuc & Go~~ | Arnhem | `info@stucengo.nl`, bevestigd in een tweede ronde die het adres niet zelf aandroeg (Koerlingwei 24, 6843 XS, 06-29387104, KvK 87298430) | `not fit - lek bestaat niet`: eigen referentiepagina, NOA-lid, Trustoo-profiel. De bewijs- en offerteroute bestaat al |
+| ~~Kooymans Dakdekkers~~ | Apeldoorn | `info@kooymansdakdekkers.nl`, 085-0604959, Wapenrustlaan 11 | `not fit - lek bestaat niet`: eigen dienstenpagina's en klantoordelen op de eigen site |
+| ~~Plattel Dakbedekkingen~~ | Zwolle/Kampen | `info@platteldakbedekkingen.nl`, 038-3037718, Stadshagenallee 21 | `not fit - te groot`: 3 werkzame personen, LinkedIn-pagina, eigen stadslandingspagina's |
+| ~~Hondenschool Fenna~~ | Almere-Haven | `info@hondenschoolfenna.nl` — LET OP: één ronde, NIET herbevestigd, dus één bron | `not fit - te lang gevestigd`: onsalmere.nl portretteerde de school in maart 2019 |
+
+**De eerlijke conclusie eronder, want hij is ongemakkelijk.** Vier keer het adres alsnog
+gevonden, vier keer daarna alsnog geen prospect. Dat is geen pech: een bedrijf dat zijn
+adres netjes op een eigen contactpagina zet, heeft meestal ook de rest van zijn
+webaanwezigheid op orde — en dat is precies het bedrijf waar ons lek niet bestaat. Wie
+hier regels omdraait, moet er dus op rekenen dat hij daarna vaker een afwijzing schrijft
+dan een kaart. Dat is nog steeds winst: een afwijzing die vandaag wordt vastgelegd,
+scheelt elke volgende lane een halve dienst.
+
+**Nieuw geparkeerd vandaag (lane B):** TJ Stukadoors (Apeldoorn, KvK 90771931, opgericht
+07-07-2023) — Stukadoorgids meldt letterlijk dat er geen website én geen contactgegevens
+bekend zijn; drie ronden zonder e-mailadres én zonder telefoonnummer, dus ook geen
+bellijstregel. Sterk profiel, maar er is niets om mee te beginnen.
+
+Sam, 3 september 2026
