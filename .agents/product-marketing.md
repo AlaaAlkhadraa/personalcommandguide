@@ -1,6 +1,6 @@
 # Product Marketing Context — ZEVREN
 
-**Document version:** 1.15 · 2026-09-03
+**Document version:** 1.16 · 2026-09-04
 Elke marketingskill in `.claude/skills/` leest dit document eerst.
 Feiten hier zijn bindend; een skill-advies dat ermee botst, verliest.
 
@@ -48,7 +48,7 @@ moet letterlijk door zevren.nl gedekt zijn.
 
 ## Wat een bericht nooit mag beweren
 
-Drie formuleringen zijn in verificatie gesneuveld en komen niet terug:
+Vier formuleringen zijn in verificatie gesneuveld en komen niet terug:
 
 - **"Werk dat u zelf kunt aanklikken."** Op de projectenpagina van
   zevren.nl staat letterlijk "geen van alle is klantwerk". Wie dit leest
@@ -58,6 +58,17 @@ Drie formuleringen zijn in verificatie gesneuveld en komen niet terug:
   nergens op de site. Het formulier mag erin, de upload niet.
 - **"Een adres op uw eigen naam."** Leest als een mailbox, en wij
   verkopen geen mailadressen. Schrijf "een eigen pagina".
+- **"Foto's van voor en na" — en elke andere belofte over de VORM van het
+  werk (1.16).** Een claim over hoe het opgeleverde eruitziet is net zo hard
+  gedekt of niet gedekt als een prijs. "Voor en na" staat nergens op
+  zevren.nl en vraagt bovendien om een foto van vóór het werk die niemand
+  heeft toegezegd; de hovenierspagina zegt dat wij foto's van afgerond werk
+  "groot en scherp" laten zien, en dát is de formulering die mag. Gevonden op
+  04-09 in de enige kaart van lanes A+B (JF Hoveniers).
+  **Tweede helft van dezelfde regel, de prijs:** noem het bedrag zoals de site
+  het noemt en schrijf de btw-vermelding nooit weg. De sectorpagina's zeggen
+  "299 euro eenmalig, exclusief btw". "299 euro, eenmalig" is daarmee gedekt;
+  "299 euro en verder niets" of "alles inbegrepen" is dat niet.
 
 ## De poort die het vaakst kaarten kost
 
@@ -387,6 +398,16 @@ oprichtingsdatum die niet strookt met vaste openingstijden, een vast
 telefoonnummer of een gevestigde uitstraling, leg je de gidsdatum eerst naast de
 eigen over-onspagina. Dat kost één ronde en het scheelt een volledig dossier.
 
+**Aanscherping 1.16 — de eigen over-onspagina verslaat de gidsdatum, en dat is
+geen uitzondering maar de hoofdregel.** Op 04-09 droeg in lane B vier keer op
+één dag een gidsdatum uit 2023 of 2024 een zaak van tien tot zesentwintig jaar:
+Steengoed! hoveniers (B.V.-omzetting over 26+ jaar), Bast Hoveniers (opgericht
+30-03-2011), B. Steffens Hovenier (eigen over-onspagina: begonnen in 2014) en
+BtH Groen (01-01-2014). De toets die dat in één ronde afvangt is niet het
+KvK-nummer — dat verandert mee met de papieren — maar de eigen over-onspagina:
+die vertelt wanneer de mens begon, terwijl het register vertelt wanneer de
+rechtsvorm veranderde. Lees hem dus vóór de adresjacht, niet erna.
+
 Twee bronnen die het omgekeerde probleem oplossen en die dezelfde dag door
 twee lanes onafhankelijk zijn gevonden (lane A in het noorden, lane B in het
 oosten): de vakgidsen van het `-nu.nl`- en `-gids.nl`-type publiceren per
@@ -471,6 +492,31 @@ wil houden.
   groepen tegelijk.
 
 ## Changelog
+
+- 1.16 (2026-09-04, Azzouz, verificatie lanes A+B): twee regels uit de enige
+  kaart van de dag en uit de val waar lane B er vier op zag omvallen.
+  **(a) "Een belofte over de VORM van het werk is net zo hard gedekt of niet
+  gedekt als een prijs"** toegevoegd als vierde punt bij "Wat een bericht nooit
+  mag beweren". De kaart voor JF Hoveniers verkocht "foto's van voor en na";
+  die belofte staat nergens op zevren.nl, en een voor-en-na vraagt om een foto
+  van vóór het werk die niemand heeft toegezegd. De site zegt "groot en scherp"
+  en dat is bovendien de sterkere zin. Aan hetzelfde punt is de btw-helft
+  gekoppeld: de sectorpagina's noemen "299 euro eenmalig, exclusief btw", dus
+  "299 euro, eenmalig" is gedekt en "alles inbegrepen" niet. Dat laatste raakt
+  elke kaart van deze week en het is daarom een regel geworden en geen
+  correctie met terugwerkende kracht — dat zou een beslissing zijn, geen
+  redactie. **(b) "De eigen over-onspagina verslaat de gidsdatum"** toegevoegd
+  bij de erkenningsdatum-sectie, als praktische aanscherping van 1.15(b). Lane
+  B zag op 04-09 vier bedrijven op één dag waar een gidsdatum uit 2023/2024 een
+  zaak van tien tot zesentwintig jaar droeg (Steengoed!, Bast, B. Steffens, BtH
+  Groen); telkens gaf de eigen over-onspagina het eerlijke jaartal, en telkens
+  gaf het KvK-nummer dat niet, want dat verandert mee met de rechtsvorm.
+  **Niet opgenomen:** de TransFirm-zeef van lane B (het KvK-nummer staat in de
+  URL van `transfirm.nl/nl/organisatie/...`, dus één zoekopdracht filtert op
+  leeftijd zonder een pagina te openen). Uitstekende route, één lane, één
+  dienst — dezelfde drempel die ik gisteren op `optios` heb toegepast, en die
+  geldt ook als de vondst mij goed uitkomt. Hij staat als order voor beide
+  lanes in `marketing/outreach/2026-09-04-ab-verified.md`.
 
 - 1.15 (2026-09-03, Azzouz, verificatie lanes A+B): twee regels, allebei uit een
   dossier dat vandaag bijna een kaart werd of bijna een afwijzing miste.
