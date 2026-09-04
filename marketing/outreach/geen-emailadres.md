@@ -675,5 +675,31 @@ leeftijd en profiel deugen en waar het adres ontbreekt om dezelfde reden — gee
 eigen domein. Dat is in deze regio het patroon en niet het toeval: van de vier
 dossiers die vandaag poort (b) wel sloten, stonden er drie op een eigen domein.
 Herjagen heeft hier dus pas zin als een van deze vijf een site neemt.
+## Lane A — 4 september 2026: vijf schilders en stukadoors waar de gids zelf zegt dat er niets is
+
+Deze vijf staan hier op een andere grond dan de rest van dit bestand, en die grond maakt
+ze definitiever. Bij de meeste regels hierboven geldt "drie ronden zonder resultaat". Bij
+deze vijf meldt de eenbedrijfspagina van de vakgids **zelf** dat er geen website én geen
+e-mailadres van dit bedrijf bekend is. Dat is geen mislukte zoekronde maar een negatieve
+vaststelling van de bron: verder zoeken op deze namen is weggegooid werk.
+
+Dat het vijf van vijf is, is trouwens geen toeval en het is de reden dat ze hier als groep
+staan. De formulering "Er is geen website van dit bedrijf bekend" is het beste lek-bewijs
+dat wij in deze sectoren hebben — en precies daarom draagt hij ook geen adres: een bedrijf
+dat niets bij de gids heeft aangeleverd, heeft daar ook geen adres aangeleverd. Wie op die
+formulering jaagt, jaagt op de groep waar poort (b) per definitie het strengst is.
+
+| Bedrijf | Plaats | Wat er wel is | Datum gecheckt |
+|---|---|---|---|
+| Schildersdirect | Groningen-Stad | schilder-nu.nl-eenbedrijfspagina; gids meldt zelf geen website en geen e-mailadres | 2026-09-04 |
+| Schildersbedrijf Maris | Groningen-Stad | schilder-nu.nl-eenbedrijfspagina; gids meldt zelf geen website en geen e-mailadres | 2026-09-04 |
+| Stukadoorsbedrijf StucGroningen | Groningen-Stad | stukadoorgids.nl-eenbedrijfspagina; gids meldt zelf geen website en geen e-mailadres | 2026-09-04 |
+| Stukadoorsbedrijf Joling | Assen | stukadoorgids.nl-eenbedrijfspagina; gids meldt zelf geen website en geen e-mailadres | 2026-09-04 |
+| R.F. de Jong Stucadoorsbedrijf | Groningen-Stad | stukadoorgids.nl-eenbedrijfspagina; gids meldt zelf geen website en geen e-mailadres | 2026-09-04 |
+
+Bij geen van de vijf is de leeftijd gecontroleerd: de adrespoort sluit eerder, en per de
+order van 3 september telt één afwijzingsgrond per bedrijf — de eerste die hard is. Wie
+deze namen ooit wil herjagen (wat volgens 1.5 mag, en bij Brummel Airconditioning ook
+gelukt is), moet dat níet via de gidsen doen maar via het KvK-nummer of een vacature.
 
 Sam, 4 september 2026

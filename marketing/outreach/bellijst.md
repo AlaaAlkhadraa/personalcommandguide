@@ -359,5 +359,27 @@ leeftijd binnen het profiel vallen en alle vier geen eigen domein hebben — dat
 is in deze regio de reden dat er geen adres is, niet de zoekmethode. Van drie is
 ook het telefoonnummer nog niet gevonden; die staan er zodat de volgende lane
 ziet dat ze bestaan en niet omdat er vandaag gebeld kan worden.
+## Lane A — Groningen, Friesland, Drenthe · aanvulling 4 september 2026
+
+Twee complete dossiers uit de dienst van vandaag. Allebei kwamen ze door élke poort
+behalve het e-mailadres, en bij allebei is het adres niet "nog niet gevonden" maar na
+drie gerichte ronden aantoonbaar niet openbaar. Verdere zoekronden zijn hier weggegooid
+werk; bellen is de enige route. Beide staan met een gedateerd levensteken, dus ze horen
+volgens de leeswijzer bovenaan deze lijst en niet onderaan.
+
+| Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
+|---|---|---|---|---|---|
+| **Rianne's Haarmode** | Waskemeer (Ooststellingwerf) | kapsalon | **06-23483106** | **maart 2023** — NieuweOoststellingwerver: "Rianne de Boer start kapsalon in Waskemeer. 'Ik was na zeventien jaar in dienst toe aan een nieuwe uitdaging'", en kappers.nl voert haar inschrijving op 14-03-2023 | Het sterkste noordelijke kapsalonprofiel van deze week: drie jaar, eenmanszaak, eigen domein rianneshaarmode.nl, Bakkeveensterweg 14C. **Boekingspoort dicht:** alle bronnen noemen bellen of WhatsApp als enige route en twee ronden op Salonized/Fresha/Treatwell/Optios/1Kapper/Belliata/1plekjevrij geven geen profiel — dus het 549-bericht past hier woord voor woord. Drie ronden zonder e-mailadres (naam + plaats + "e-mail", naam + gmail/hotmail/outlook, naam + telefoonboek/oozo/drimble/infobel). Wie belt, heeft het hele verhaal al: zij is na zeventien jaar in loondienst voor zichzelf begonnen |
+| **R. de Leeuw schildersbedrijf** | Sneek (Súdwest-Fryslân) | schilder | **06-11139571** | — (zie kanttekening) | KvK 82752982, opgericht 21-05-2021, eenmanszaak. 9,6 uit 24 beoordelingen op schilder-nu tegen een sectorgemiddelde van 8,5, en Trustoo 8,7 met een top-10-notering in Sneek. Eigen domein rdeleeuwschildersbedrijf.nl met een contactpagina, maar drie ronden geven het adres uitsluitend gemaskeerd terug ("[email protected]") en een maskering is geen bron. **KANTTEKENING bij het levensteken:** de reviewteksten die de gidsen tonen lezen als recent, maar geen enkele ronde geeft er een leesbare datum bij — dus het levensteken is er waarschijnlijk wél en het is nog niet gedateerd. **LET OP vóór het bellen:** er zijn twee adressen in omloop, Wagenbrugge 18 en Marnezijlstraat 24. En "ruim 35 jaar ervaring" op zijn site is de ervaring van de schilder, niet de leeftijd van de zaak — die is vijf jaar |
+
+**Eén regel die hier bewust NIET staat.** Trimsalon de Kattenvriendin (Eexterveen,
+06-16517895) hoort niet op de bellijst: zij publiceert wél een e-mailadres
+(andrea@trimsalondekattenvriendin.nl) en haar open poort is de gedateerde levensteken,
+niet de bereikbaarheid. Zij staat in het ledger als `lead - poort open`, met de
+verzendklare tekst in `marketing/outreach/2026-09-04-a.md`. Dat onderscheid is de moeite
+waard omdat het precies de correctie is die de verificatie op 3 september bij
+Hondencentrum Zevenaar aanbracht, maar dan andersom: daar hoorde een bedrijf mét adres
+juist wél op de lijst omdat de open poort telefonisch te sluiten was. Bij de
+Kattenvriendin is de open poort een datum, en een datum bel je niet los.
 
 Sam, 4 september 2026
