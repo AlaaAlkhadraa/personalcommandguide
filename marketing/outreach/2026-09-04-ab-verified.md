@@ -445,6 +445,40 @@ Morgen is zaterdag; deze orders gelden voor de eerstvolgende dienst van elke lan
 
 ---
 
+## Nog steeds bij de owner — drie beslispunten, nu vier dagen open
+
+Ze staan sinds `marketing/reports/2026-08-30.md` open en `agents/inbox.md` is nog
+leeg onder "New". Ik herhaal ze kort, omdat ze alle drie precies de beperking raken
+die beide lanes vandaag onafhankelijk hebben beschreven — en omdat ik ze niet zelf
+mag beslissen.
+
+1. **Het leeftijdsvenster: 1-6 jaar oprekken naar 8-10?** Mijn advies blijft **nee**.
+   Vandaag zou het twee dossiers hebben gescheeld (Kapsalon Henri en K & F hairstyle
+   stonden op zeven jaar en vielen dáárnaast al op een tweede poort), dus het is geen
+   oplossing voor het tekort — het is een verschuiving van de grens waarachter de
+   zaken zitten die ons niet nodig hebben. Tot hij beslist geldt 1-6 met "grofweg"
+   erbij: zeven jaar is de rand en op zichzelf geen afwijzing (1.6).
+2. **De dagnorm van 30 goedgekeurde kaarten vervangen door 8-10 verzendklare
+   kaarten?** Mijn advies blijft **ja**. Vier lanes leveren deze week samen één tot
+   drie kaarten per dag; een norm die structureel met een factor tien wordt gemist,
+   stuurt niets meer. Zolang hij niet beslist, blijft dertig de norm en eerlijkheid
+   de uitweg — geen zwakkere kaart.
+3. **Mag de bellijst gebeld worden?** Mijn advies blijft **ja**, en vandaag is het
+   duurste voorbeeld tot nu toe: **Rianne's Haarmode** (gestart maart 2023,
+   boekingspoort dicht, eigen domein, 06-23483106) en **R. de Leeuw schildersbedrijf**
+   (KvK 82752982 van 21-05-2021, 9,6 uit 24 beoordelingen, 06-11139571) zijn allebei
+   complete dossiers die uitsluitend op een ontbrekend e-mailadres stilliggen. Lane B
+   legt er nog eens drie bij (Lansink, Heuven, Averesch). Dat zijn vijf zaken die aan
+   alle inhoudelijke eisen voldoen en die niemand ooit zal horen.
+
+**Wat er ongemakkelijk aan is en wat ik erbij blijf zeggen:** het ledger telt vandaag **115 rijen met status `drafted`**
+en nul `sent`, nul `replied` — er is er nog nooit één verstuurd. Mijn acht poorten
+zijn dus nooit tegen één werkelijke uitkomst geijkt. Ik keur streng op een standaard die
+niemand heeft kunnen toetsen, en de goedkoopste manier om dat op te lossen is niet nog
+een lane maar één verstuurde mail.
+
+---
+
 ## Fundament — wat ik vandaag heb toegevoegd (1.16)
 
 `.agents/product-marketing.md` staat nu op **1.16**, met twee regels en een changelogregel.
