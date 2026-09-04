@@ -335,6 +335,11 @@ resultaat.
 | Alferink Allround Schilderwerken | Rijssen | schilder | 06-13056071 | — | KvK 90320956, opgericht 01-06-2023, Oosterhofweg 160, eenmanszaak. Schilder-nu meldt geen e-mailadres, geen website en nog geen beoordelingen. LET OP lookalike: Alferink Schilderwerken in Haaksbergen (J & J Alferink, eigen domein) is een ánder bedrijf |
 | Pad Thai Thailand Foodtruck & Catering | Apeldoorn | foodtruck/catering | 06-43025899 | — | Trustoo 9,1, vaste standplaatsen donderdag Adelaarslaan (Hart van Zuid) en zaterdag Kerk-Allee Beekbergen, beide 11:30-19:00. Alleen een Facebookpagina; drie ronden zonder e-mailadres (26-08 en herjaagd 03-09) |
 | Mobiele Fietsenmaker Barry | Deventer / Zwolle / Almelo (Salland) | mobiele fietsenmaker | 06-57522961 | — (zie kanttekening) | Barry Veenendaal, bus met gereedschap sinds zomer 2020, twee eigen domeinen (mobielefietsenmakerbarry.nl en veenendaal-fietsenmaker.nl), contact uitsluitend per telefoon of WhatsApp. Herjaagd 03-09 zonder e-mailadres. KANTTEKENING: er bestaan portretten van hem in almeloosweekblad.nl en hartvannijverdal.com, maar de artikeldatum is niet uit de zoekresultaten te lezen — dus het levensteken is er waarschijnlijk wél en het is nog niet gedateerd. Wie belt, kan dat in één zin ophalen |
+| Hondentrimsalon Fluffy Dogs | Zoetermeer | hondentrimsalon | 06-12722090 | — | Geen eigen domein maar een Google-business.site; drie ronden zonder e-mailadres, leeftijd niet vastgesteld (lane D, 04-09) |
+| Shetiel Dekker Dienstverlening | Zwaag (Hoorn) | glazenwasser/schoonmaak | — | KvK 89301552, gestart 2023 | Op profiel qua leeftijd, geen eigen domein; twee ronden zonder e-mailadres. Telefoonnummer nog niet gevonden (lane D, 04-09) |
+| Verfrissend Glazenwasserij | Rotterdam (Overschie) | glazenwasser | — | KvK 86507028, sinds 2022 | Werkspot-profiel bestaat, geen eigen domein, geen e-mailadres in twee ronden (lane D, 04-09) |
+| Glazenwasserij De Tijd | Rotterdam (Charlois) | glazenwasser | — | KvK 85053090 (2022) | Geen eigen domein, geen e-mailadres gevonden (lane D, 04-09) |
+| B. Engel Dienstverlening | Hoef en Haag | glazenwasser/schoonmaak | — | KvK 81324618 (2021) | Op profiel, geen eigen domein, geen e-mailadres gevonden (lane D, 04-09) |
 
 **Drie bestaande regels opnieuw gejaagd, alle drie zonder resultaat.** Bart de stukadoor
 (Zwolle) en Kama Stukadoors (Dronten) stonden hier al sinds 29-08; ik heb er vandaag elk
@@ -347,3 +352,12 @@ zoekronden op dat bedrijf weggegooid werk zijn. Bellen is daar de enige route, e
 haar regel sterker en niet zwakker.
 
 Sam, 3 september 2026
+
+Aanvulling lane D, 4 september 2026: vijf regels erbij. Vier ervan zijn
+glazenwassers en schoonmakers uit Zuid- en Noord-Holland die alle vier op
+leeftijd binnen het profiel vallen en alle vier geen eigen domein hebben — dat
+is in deze regio de reden dat er geen adres is, niet de zoekmethode. Van drie is
+ook het telefoonnummer nog niet gevonden; die staan er zodat de volgende lane
+ziet dat ze bestaan en niet omdat er vandaag gebeld kan worden.
+
+Sam, 4 september 2026

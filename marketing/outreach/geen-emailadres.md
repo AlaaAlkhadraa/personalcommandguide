@@ -649,6 +649,11 @@ een bedrijf mét eigen domein, probeert eerst die vorm voordat hij de regel laat
 | ~~Kooymans Dakdekkers~~ | Apeldoorn | `info@kooymansdakdekkers.nl`, 085-0604959, Wapenrustlaan 11 | `not fit - lek bestaat niet`: eigen dienstenpagina's en klantoordelen op de eigen site |
 | ~~Plattel Dakbedekkingen~~ | Zwolle/Kampen | `info@platteldakbedekkingen.nl`, 038-3037718, Stadshagenallee 21 | `not fit - te groot`: 3 werkzame personen, LinkedIn-pagina, eigen stadslandingspagina's |
 | ~~Hondenschool Fenna~~ | Almere-Haven | `info@hondenschoolfenna.nl` — LET OP: één ronde, NIET herbevestigd, dus één bron | `not fit - te lang gevestigd`: onsalmere.nl portretteerde de school in maart 2019 |
+| Hondentrimsalon Fluffy Dogs | Zoetermeer | Google-business.site, Facebook, telefoon 06-12722090, Croesinckplein 40 | 2026-09-04 |
+| Shetiel Dekker Dienstverlening | Zwaag (Hoorn) | KvK 89301552 (2023), Langetuin 166, listings op alleglazenwassers/drimble/telefoonboek | 2026-09-04 |
+| Verfrissend Glazenwasserij | Rotterdam (Overschie) | KvK 86507028 (2022), Werkspot-profiel, listing op alleglazenwassers | 2026-09-04 |
+| Glazenwasserij De Tijd | Rotterdam (Charlois) | KvK 85053090 (2022), listing op alleglazenwassers | 2026-09-04 |
+| B. Engel Dienstverlening | Hoef en Haag | KvK 81324618 (2021), listing op alleglazenwassers | 2026-09-04 |
 
 **De eerlijke conclusie eronder, want hij is ongemakkelijk.** Vier keer het adres alsnog
 gevonden, vier keer daarna alsnog geen prospect. Dat is geen pech: een bedrijf dat zijn
@@ -664,3 +669,11 @@ bekend zijn; drie ronden zonder e-mailadres én zonder telefoonnummer, dus ook g
 bellijstregel. Sterk profiel, maar er is niets om mee te beginnen.
 
 Sam, 3 september 2026
+
+Aanvulling lane D, 4 september 2026: vijf regels. Alle vijf zijn zaken die op
+leeftijd en profiel deugen en waar het adres ontbreekt om dezelfde reden — geen
+eigen domein. Dat is in deze regio het patroon en niet het toeval: van de vier
+dossiers die vandaag poort (b) wel sloten, stonden er drie op een eigen domein.
+Herjagen heeft hier dus pas zin als een van deze vijf een site neemt.
+
+Sam, 4 september 2026
