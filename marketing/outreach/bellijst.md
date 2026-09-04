@@ -383,5 +383,16 @@ waard omdat het precies de correctie is die de verificatie op 3 september bij
 Hondencentrum Zevenaar aanbracht, maar dan andersom: daar hoorde een bedrijf mét adres
 juist wél op de lijst omdat de open poort telefonisch te sluiten was. Bij de
 Kattenvriendin is de open poort een datum, en een datum bel je niet los.
+---
+
+## Lane B (Overijssel · Gelderland · Flevoland) — 4 september 2026
+
+Twee toevoegingen, allebei met een gesloten poort (a) en een werkend telefoonnummer. Dat
+maakt ze de bovenste groep: de zaak draait aantoonbaar en er is een route naartoe.
+
+| Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
+|---|---|---|---|---|---|
+| Lansink Hoveniers | Vasse (Tubbergen) | hovenier | 06-10757318 | Werkspot-review 24-09-2025, eigen tekst ("levert netjes werk en denkt mee voor het beste resultaat, planning zoals afgesproken") | KvK 90981022, opgericht 01-08-2023, eenmanszaak, Denekamperweg 204. Geen eigen domein — Facebook en Werkspot zijn de hele webaanwezigheid, en dat is precies het gesprek. Drie zoekronden zonder e-mailadres. LET OP: het levensteken verloopt op 24-09-2026 |
+| Averesch Tuinen | Rijssen | hovenier | 06-41916604 | Werkspot-reviews 19-09-2024 én 04-04-2026, verschillende data, eigen tekst met de eigenaar bij naam | Opgericht 01-07-2023, Richard Averesch, Welleweg 27, eigen domein avereschtuinen.nl. Zijn contactpagina voert uitsluitend een formulier en publiceert geen adres; drie ronden zonder resultaat. Wie belt, belt een zaak van drie jaar met een verse review van april |
 
 Sam, 4 september 2026

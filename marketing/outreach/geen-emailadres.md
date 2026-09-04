@@ -738,5 +738,28 @@ Bij geen van de vijf is de leeftijd gecontroleerd: de adrespoort sluit eerder, e
 order van 3 september telt één afwijzingsgrond per bedrijf — de eerste die hard is. Wie
 deze namen ooit wil herjagen (wat volgens 1.5 mag, en bij Brummel Airconditioning ook
 gelukt is), moet dat níet via de gidsen doen maar via het KvK-nummer of een vacature.
+---
+
+**Nieuw geparkeerd op 4 september 2026 (lane B).** Zes bedrijven die de leeftijds- en
+regiopoort haalden en bij vier waarvan poort (a) ook dichtstaat. Ze vielen uitsluitend op
+het ontbreken van een openbaar e-mailadres. Alles wat wél vaststaat staat erbij, zodat een
+volgende dienst het dossier niet opnieuw hoeft te bouwen.
+
+| Bedrijf | Plaats | Wat er wel is | Datum gecheckt |
+|---|---|---|---|
+| Lansink Hoveniers | Vasse (Tubbergen) | KvK 90981022, opgericht 01-08-2023, Denekamperweg 204, 06-10757318, Facebook + Werkspot, geen eigen domein. Poort (a) dicht: Werkspot-review 24-09-2025 (verloopt 24-09-2026). Ook op `bellijst.md` | 2026-09-04 |
+| Heuven Tuinonderhoud | Raalte | KvK 85049646, opgericht 13-01-2022, Werkspot + RegioHoveniers, geen eigen domein en geen telefoonnummer gevonden. Poort (a) dicht en vers: Werkspot-review 23-08-2026 | 2026-09-04 |
+| Averesch Tuinen | Rijssen | Richard Averesch, Welleweg 27, 06-41916604, eigen domein avereschtuinen.nl met uitsluitend een contactformulier, opgericht 01-07-2023. Poort (a) dicht: Werkspot-reviews 19-09-2024 én 04-04-2026. Ook op `bellijst.md` | 2026-09-04 |
+| Nala's trimsalon | IJsselmuiden (Kampen) | KvK 91732905 (2024-reeks), Veenstraat 36, één werkzaam persoon, uitsluitend Instagram `@trimsalonnala` en Facebook. Geen website, geen telefoonnummer gevonden | 2026-09-04 |
+| DDB schilderwerken | Diepenveen (Deventer) | KvK 91390656, gestart 21-09-2023, Olsterweg 29, Instagram `@ddbschilderwerken` + Facebook, geen website. Poort (a) staat ook open | 2026-09-04 |
+| Romero Hoveniers | Almelo | KvK 89465636, opgericht 01-03-2023, Bleijenbeek 11, Instagram `@romerohoveniers` + Facebook + Werkspot, geen eigen domein. Poort (a) staat ook open | 2026-09-04 |
+
+**Wat deze zes samen laten zien, en waarom het geen inspanningsprobleem is.** Vijf van de
+zes hebben geen eigen domein. Dat is geen toeval maar de kern van het profiel dat wij jagen:
+een zaak zonder domein heeft per definitie geen contactpagina, en het adres moet dan van een
+derde komen. De enige derden die per bedrijf één hard adres publiceren zijn registers
+(Stagemarkt/SBB) — en die selecteren op gevestigd zijn, precies de eigenschap die onze
+leeftijdspoort wegfiltert. De e-mailmuur en de leeftijdsmuur zijn dus geen twee poorten maar
+één beperking, van twee kanten bekeken.
 
 Sam, 4 september 2026
