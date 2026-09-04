@@ -670,6 +670,43 @@ bellijstregel. Sterk profiel, maar er is niets om mee te beginnen.
 
 Sam, 3 september 2026
 
+## Lane C — 04-09-2026 (Limburg, Noord-Brabant, Zeeland)
+
+Negen zaken kwamen door het leeftijdsvenster en publiceren nergens een adres. Ze
+staan hier en niet op de bellijst, behalve waar een telefoonnummer is gevonden
+(alleen Kapsalon Wahyana). De zoekvormen waren per bedrijf: naam + plaats +
+e-mail, `<domein> contact <straat> telefoonnummer e-mailadres` en naam +
+stagemarkt + contactpersoon.
+
+| Bedrijf | Plaats | Wat er wél is | Datum |
+|---|---|---|---|
+| Kapsalon Wahyana | Venlo | KvK 93460651 (2024-reeks), Vastenavondkampstraat 150, 5922 AX, 06-57558944. Op hetzelfde adres stond eerder ELITE Kapsalon — overname of doorstart eerst vaststellen (1.15) | 2026-09-04 |
+| Kapsalon Happy days | Kerkrade | KvK 87163551 (ongeveer 2022), Kloosterbosstraat 176A, 6464 AN, ambulante kapster aan huis. Geen e-mail, geen telefoon, openingstijden "onbekend" in twee gidsen | 2026-09-04 |
+| MET Kapsalon | Kerkrade | KvK 88301532 (ongeveer 2023), St. Pieterstraat 37, 6463 CR. LET OP: Big Boss Kapsalon op nummer 48 staat wél op Fresha en is een ander bedrijf | 2026-09-04 |
+| Kapsalon Mandy | Eindhoven | KvK 84526890 (ongeveer 2021), Imkerstraat 6D, 5623 DC, telefoon begint met 040-296 9. Doet er waarschijnlijk niet toe: een Bjootify-salonpagina voert de naam, dus de boekingspoort staat mogelijk open | 2026-09-04 |
+| Kapsalon Noer | Maastricht | KvK 84158638 (ongeveer 2021), Koningin Emmaplein 8A, 6214 AC. Alleen de registervermelding | 2026-09-04 |
+| Schoonmaakbedrijf Walcheren | Middelburg | KvK 93686730 (2024-reeks), Meanderlaan 432, 4337 TW, softwash, gevelreiniging en glasbewassing. Geen e-mail, geen telefoon, geen eigen domein gevonden | 2026-09-04 |
+| FAR facility services | Middelburg | KvK 92770339 (2024-reeks). Alleen de registervermelding | 2026-09-04 |
+| Plus Pro Schoonmaakbedrijf | Middelburg | KvK 82234981 (ongeveer 2021), Markt 9A, 4331 LJ | 2026-09-04 |
+| F.K. Allround Cleaning | Goes | KvK 77812190 (ongeveer 2020, de rand), Albert Plesmanweg 114, 4462 GC | 2026-09-04 |
+| Animale Hondenschool en Gedragspraktijk | Nieuwstadt (gem. Echt-Susteren) | Trainingsvelden Aan de Bogen 14 en Koekoeksweg Heerlen, eigen domein animale.nl met een /inschrijven-pagina (boekingspoort dus waarschijnlijk open). Geen e-mail, geen KvK-nummer in twee ronden | 2026-09-04 |
+
+**Twee bestaande lane-C-regels opnieuw gejaagd, allebei zonder resultaat.**
+Fundament 1.5 zegt dat dit bestand geen eindstation is, dus heb ik de twee
+sterkste regels van 01-09 opnieuw gepakt met de vorm die lane B op 03-09
+aandroeg (`<domein> contact <straat> telefoonnummer e-mailadres`).
+
+- **Dreamerseschoonmaken (Geleen)** — opgericht 24-04-2023, poort (a) dicht op een
+  Werkspot-beoordeling van 17-01-2026, Trustoo 8,0. Twee nieuwe ronden: Trustoo
+  meldt letterlijk dat e-mail en telefoon "gecontroleerd door eigenaar" zijn, maar
+  toont ze niet. Regel blijft staan; dit is nog steeds de bovenste kandidaat.
+- **Mooi Huis Cleaning Services (Middelburg)** — KvK 96650249, Trustoo 9,6, eigen
+  domein `mooihuiszeeland.nl` met contactpagina en Engelstalige dienstenpagina,
+  levende Instagram. Twee nieuwe ronden, waarvan één rechtstreeks op het domein:
+  geen adres. De `info@`-gok die de zoeklaag aanbood is opnieuw niet overgenomen.
+
+Nul op twee. Samen met lane B's vier omgedraaide regels van gisteren wijst dat
+naar één ding: het adres en het lek zitten zelden in hetzelfde bedrijf.
 Aanvulling lane D, 4 september 2026: vijf regels. Alle vijf zijn zaken die op
 leeftijd en profiel deugen en waar het adres ontbreekt om dezelfde reden — geen
 eigen domein. Dat is in deze regio het patroon en niet het toeval: van de vier
