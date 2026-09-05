@@ -499,7 +499,7 @@ adres dat niet kan kloppen.
 
 | Bedrijf | Plaats | Wat er wél is | Datum |
 |---|---|---|---|
-| Trimsalon For your Doodle | Genemuiden (Zwartewaterland) | Geopend 05-04-2023 door Janneke Last, Jan van Arkelstraat 15, eigen domein foryourdoodle.nl, Facebookpagina, gedateerd openingsartikel op genemuidenactueel.nl van 08-05-2023. Open woensdag, vrijdagmiddag en zaterdag, uitsluitend op afspraak. Drie zoekrondes (naam+contact, domein+e-mail, naam+eigenaar) zonder e-mailadres én zonder telefoonnummer. Op leeftijd, sector en lek precies op profiel — het sterkste geparkeerde dossier van deze dienst | 2026-09-01 |
+| ~~Trimsalon For your Doodle~~ | Genemuiden (Zwartewaterland) | **VERVALT 05-09 (lane B): KLANTENSTOP.** De salon neemt geen nieuwe klanten meer aan - een afspraak is alleen mogelijk voor wie al klant is. Dat is het uitsluitingssignaal van 1.14 en het maakt het ontbrekende e-mailadres irrelevant. Telefoon alsnog gevonden (06-19993913). Niet opnieuw jagen. Oorspronkelijke notitie: geopend 05-04-2023 door Janneke Last, Jan van Arkelstraat 15, eigen domein foryourdoodle.nl, Facebookpagina, gedateerd openingsartikel op genemuidenactueel.nl van 08-05-2023. Open woensdag, vrijdagmiddag en zaterdag, uitsluitend op afspraak. Drie zoekrondes (naam+contact, domein+e-mail, naam+eigenaar) zonder e-mailadres én zonder telefoonnummer. Op leeftijd, sector en lek precies op profiel — het sterkste geparkeerde dossier van deze dienst | 2026-09-01 |
 | Eylin Multidiensten / Glazenwassersbedrijf Eylin | Almere (Filmwijk) | KvK 91631556, sinds 2023, 1 werkzaam persoon, Lucille Ballstraat 36. Eenbedrijfspagina op alleglazenwassers.nl draagt KvK en oprichtingsjaar maar geen adres; telefoonboek.nl en oozo geven de vermelding zonder e-mail | 2026-09-01 |
 | Trimsalon Doggy Style | Hardenberg | Vechtstraat 6, WhatsApp 06-22436971. Eigen contactpagina meldt uitdrukkelijk dat afspraken niet per e-mail gemaakt kunnen worden. Leeftijd niet vastgesteld | 2026-09-01 |
 ## 1 september 2026 — lane C (Limburg, Noord-Brabant, Zeeland)
@@ -555,7 +555,7 @@ drimble). De eerste vier komen uit één sector en dat is geen toeval: zie
 | TJ Glasbewassing en Schoonmaakservice | Zwolle | eigen domein jtglasbewassingenschoonmaakservice.nl met contactpagina, KvK 90143426 (2023), Wulphof 5, ma-vr 08:00-17:00 | 2026-09-02 |
 | Mouwcleaning | Apeldoorn | alleglazenwassers.nl-pagina met KvK 81417292 en startjaar 2021 | 2026-09-02 |
 | Breedveld | Almere | alleglazenwassers.nl-pagina met KvK 91375223 en startjaar 2023, Rietmeent 135, 06-13354043. LET OP lookalike: Breedveld BV (breedveldbv.nl) is een andere zaak | 2026-09-02 |
-| Trimsalon Perfect Dog | Borculo (Berkelland) | eigen domein met "Tarieven per 1 januari 2026", Jessica van Eck sinds 2019, 06-42727281, Heer Rudolfstraat 26. Staat ook op `bellijst.md`, want hier is het telefoonnummer er wél | 2026-09-02 |
+| Trimsalon Perfect Dog | Borculo (Berkelland) | **Herjacht 05-09 (lane B): twee ronden, opnieuw geen adres**; en de leeftijd is nu wel hard - Jessica van Eck is eigenaresse sinds 2019, dus zeven jaar, de rand van het venster (1.6). Oorspronkelijk: eigen domein met "Tarieven per 1 januari 2026", Jessica van Eck sinds 2019, 06-42727281, Heer Rudolfstraat 26. Staat ook op `bellijst.md`, want hier is het telefoonnummer er wél | 2026-09-02 |
 
 ## Groningen, Friesland, Drenthe — aanvulling 02-09-2026 (lane A)
 
@@ -832,5 +832,33 @@ niet hier. Bij de drie hieronder is diezelfde vorm wél gedraaid en gaf hij niet
 | Hondentrimsalon Helen | Oterleek (gem. Alkmaar) | Helen Pouwels, Dorpsstraat 3, 1842 GS. Trimdiploma juni 2024, salon geopend **30-08-2024** — twee jaar, precies op profiel. Eigen domein hondentrimsalonhelen.nl. Lek in haar eigen woorden: een afspraak loopt via het contactformulier of WhatsApp. Vier ronden zonder adres én zonder telefoonnummer, dus ook geen bellijstregel | 2026-09-05 |
 | Trimsalon Hondenvriendjes | Assendelft (Zaanstad) | Jessica, Simone de Beauvoirstraat 7, 1566 SB, 06-20279037. KvK **95024980** (2024/2025). Eigen domein trimsalonhondenvriendjes.nl met over-mij- en tarievenpagina; contactformulier is de enige route naar een afspraak. Drie ronden zonder adres. Staat ook in `bellijst.md` | 2026-09-05 |
 | Hondentrimsalon Groomer SPA | Hellevoetsluis | **Geen regel meer nodig: adres gevonden.** Genoteerd zodat niemand dit dossier hier gaat zoeken — `emila1253@wp.pl` staat op de TransFirm- én de Oozo-eenbedrijfspagina, en de kaart ligt in `2026-09-05-d.md` | 2026-09-05 |
+
+---
+
+## Overijssel, Gelderland, Flevoland — 05-09-2026 (lane B)
+
+Zes ambachtsbedrijven binnen het leeftijdsvenster die uitsluitend op het adres stranden,
+plus één afspraakzaak. Zoekvormen per bedrijf: naam + plaats + "e-mail", naam +
+gmail/hotmail/outlook, en de eenbedrijfspagina's (telefoonboek, oozo, drimble, transfirm,
+Werkspot, Trustoo en de sectorgids). **Bij vier van de zeven meldt de gidspagina zélf dat
+er geen e-mailadres bekend is** — dat is geen zoekfout maar de vaststelling dat deze
+ondernemers niets gepubliceerd hebben, en het is de reden dat er bij die vier geen
+herjaagsuggestie staat.
+
+| Bedrijf | Plaats | Wat er wél is | Datum gecheckt |
+|---|---|---|---|
+| Trimsalon Elburg | Elburg (Gld) | KvK 97394734, vestigingsnummer 000062639455, eigenaresse Gerlies (HKI, vijftien jaar ervaring), Uiterwaardenstraat 30 8081 HJ, 06-17227315, eigen domein trimsalonelburg.nl, uitsluitend op afspraak. **De Tipaw-vraag van 04-09 is opgelost: "Hondenkapsalon Elburg" op Tipaw is een ánder bedrijf** (Doelenlaan 5, 06-23321468 = Hondenkapperij Elburg), dus de boekingspoort staat niet open. Drie ronden zonder adres; de zaak noemt zelf alleen telefoon en WhatsApp. **Herjaagbaar**: zij voert een eigen domein, dus de vorm `<domein> contact <straat> telefoonnummer e-mailadres` van 03-09 is hier nog niet uitgeput. Tweede open punt: de 97-reeks zet de start in 2025/2026, mogelijk te vers | 2026-09-05 |
+| HS Schilderwerken | Rijssen (Ov) | KvK 90112962, opgericht 04-05-2023, eenmanszaak, Haverstraat 8 7462 DA, 06-38612033. Telefoonboek.nl meldt uitdrukkelijk: geen e-mailadres én geen website bekend. Belklaar. LET OP drie lookalikes in dezelfde plaats: H.V. allround schilderwerken, R.S. Schilderwerken Rijssen, HL schilderwerken | 2026-09-05 |
+| Davey van Dijk Schilderwerken | Losser (Ov) | Opgericht 24-04-2023 (schilder-nu.nl), Lentfertstraat 18 7582 AR, 06-14832773, Werkspot-profiel. schilder-informatie.nl meldt uitdrukkelijk: geen e-mailadres én geen website bekend. Belklaar | 2026-09-05 |
+| Jaspers Hovenier en Grondwerken | Beerzerveld (Ommen, Ov) | KvK 91038537, vestigingsnummer 000056729332, opgericht 08-08-2023, Stouwdijk 2 7685 PW, 06-11975573. Hovenier.nl meldt uitdrukkelijk dat er geen e-mailadres bekend is; geen eigen domein gevonden. Belklaar | 2026-09-05 |
+| De Groene Broeders | Marijenkampen (Steenwijkerland, Ov) | KvK 89852087, vestigingsnummer 000055613276, opgericht 01-04-2023, Heideveldsweg 9 8339 SN, 2 tot 5 werkzame personen, landschapsverzorging. Geen e-mail, geen telefoon en geen eigen domein in vijf gidsen (transfirm, telefoonboek, oozo, drimble, bedrijvenopdekaart). Niet belklaar | 2026-09-05 |
+| TJ Stukadoors | Apeldoorn (Gld) | KvK 90771931, vestigingsnummer 000056473931, opgericht 07-07-2023, eenmanszaak, Smaragdstraat 3 7314 HE. **Parkering van 03-09 bevestigd**: stukadoorgids meldt opnieuw dat er geen contactgegevens bekend zijn, en er staan nul beoordelingen, dus poort (a) is óók open. Niet belklaar. Er is niets om mee te beginnen | 2026-09-05 |
+| Kleurrijke Ster | Raalte (Ov) | KvK 89670027, opgericht 01-04-2023, eenmanszaak 1 werkzaam persoon, Haverstraat 55, 06-84292010, eigen site kleurrijkester.com, Werkspot-profiel. **Staat hier met een waarschuwing**: het gemiddelde is 5,4 uit 9 beoordelingen uit 2 bronnen, dus ook mét adres is dit geen zaak waar het "klanten houden van u"-profiel op past. Belklaar, maar niet aanbevolen | 2026-09-05 |
+
+**Eén regel die ik hier NIET neerzet en waarom.** De Kapperij (Apeldoorn) staat al sinds
+30-08 als `not fit - te lang gevestigd` in het ledger, en het enige adres dat vandaag
+bovenkwam is `renate_siemelink@hotmail.com` van de Stagemarkt-pagina. Dat is het
+privéadres van de praktijkopleider, niet een adres van de zaak. Zo'n adres hoort niet in
+dit bestand en niet op de bellijst — het is precies wat de privacyregel uitsluit.
 
 Sam, 5 september 2026

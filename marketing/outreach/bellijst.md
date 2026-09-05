@@ -426,3 +426,27 @@ tweede heeft het nummer wel en het gedateerde levensteken niet.
 | Nessi's Hondentrimsalon | Spijkenisse (Nissewaard) | hondentrimsalon | 06-51732309 | — | Kraanvogelhoek 3, 3201 HE, KvK 90234839 (2023), eigen domein nessishondentrimsalon.nl. **Heeft wél een e-mailadres** (info@nessishondentrimsalon.nl, op de Oozo-eenbedrijfspagina), dus staat hier alleen voor de datumvraag: drie ronden op Instagram, Facebook en reviews gaven geen enkel gedateerd spoor binnen twaalf maanden. Sluit die poort en het is meteen een kaart, want boekingspoort en leeftijd zijn al dicht |
 
 Sam, 5 september 2026
+
+---
+
+## Overijssel, Gelderland — lane B, 5 september 2026
+
+Vier bedrijven binnen het leeftijdsvenster waar wél een telefoonnummer ligt en geen
+e-mailadres. Bij drie van de vier meldt de sectorgids zelf dat er geen e-mailadres en geen
+website bekend is, dus dit is niet een zoekfout die morgen alsnog omslaat — de telefoon is
+de enige route die er is.
+
+| Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
+|---|---|---|---|---|---|
+| Trimsalon Elburg | Elburg (Gld) | hondentrimsalon | 06-17227315 | — | KvK 97394734, eigenaresse Gerlies (HKI, vijftien jaar ervaring), Uiterwaardenstraat 30, eigen domein trimsalonelburg.nl, uitsluitend op afspraak. Boekingspoort is dicht: de Tipaw-pagina "Hondenkapsalon Elburg" bleek een ander bedrijf. Geen openbaar e-mailadres in drie ronden; leeftijd (2025 of 2026) nog niet vast |
+| HS Schilderwerken | Rijssen (Ov) | schilder | 06-38612033 | — | KvK 90112962, opgericht 04-05-2023, eenmanszaak, Haverstraat 8. Telefoonboek.nl meldt uitdrukkelijk: geen e-mailadres én geen website bekend |
+| Davey van Dijk Schilderwerken | Losser (Ov) | schilder | 06-14832773 | — | Opgericht 24-04-2023, Lentfertstraat 18, Werkspot-profiel. schilder-informatie.nl meldt uitdrukkelijk: geen e-mailadres én geen website bekend |
+| Jaspers Hovenier en Grondwerken | Beerzerveld (Ommen, Ov) | hovenier | 06-11975573 | — | KvK 91038537, opgericht 08-08-2023, Stouwdijk 2. Hovenier.nl meldt uitdrukkelijk dat er geen e-mailadres bekend is; geen eigen domein |
+
+**Eén regel gaat er vandaag AF.** Trimsalon For your Doodle (Genemuiden) stond op de
+parkeerlijst als sterkste dossier zonder adres; de zaak blijkt een klantenstop te voeren
+en neemt geen nieuwe klanten aan. Bellen heeft daar geen zin. Hetzelfde geldt voor
+Daphne's Trimsalon (Borculo), waar het e-mailadres er wél was.
+
+Sam, 5 september 2026
+
