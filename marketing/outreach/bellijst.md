@@ -414,4 +414,15 @@ openbaar telefoonnummer, en dat maakt ze belklaar.
 | Rademaker schoonmaak service | Hoogeveen | schoonmaak | 06-26951092 | Werkspot-profiel met reviews, datum niet leesbaar in de zoekresultaten | KvK 89214048 (2023), Carla Bultena-Rademaker, De Vlegel 4, 7908 PJ, eigen domein schoonmaakservice.eu met home, diensten, over ons en contact. Contact loopt uitsluitend via een formulier. Drie ronden. LET OP: het levensteken is nog niet hard — de reviewdatum moet vóór het bellen alsnog worden vastgesteld |
 | Hondenservice-Gaasterland | Hemelum (Sudwest-Fryslan) | dierenpension | — | — | KvK 96258543, 't Set 1, 8584 VZ, één medewerker. Opvang aan huis, uitlaatservice, advies en training — boekingsvormig en het jongste dierenpension dat deze lane in deze regio heeft gevonden. Drie ronden gaven geen adres en geen telefoonnummer; alleen de registervermelding. Onderste groep |
 
+## Toevoeging lane D — 5 september 2026 (Noord-Holland, Zuid-Holland, Utrecht)
+
+Twee regels, en allebei eerlijk over wat ze waard zijn. De eerste is belklaar in
+de zin van de leesregel bovenaan: telefoonnummer én een hard startjaar. De
+tweede heeft het nummer wel en het gedateerde levensteken niet.
+
+| Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
+|---|---|---|---|---|---|
+| Trimsalon Hondenvriendjes | Assendelft (Zaanstad) | hondentrimsalon | 06-20279037 | — | Jessica, Simone de Beauvoirstraat 7, KvK 95024980 (2024/2025), eigen domein met over-mij- en tarievenpagina. Lek hard: het contactformulier is de enige afspraakweg die de zaak zelf noemt. Drie zoekronden zonder e-mailadres. Eén blik op de tarievenpagina of de socials sluit poort (a) |
+| Nessi's Hondentrimsalon | Spijkenisse (Nissewaard) | hondentrimsalon | 06-51732309 | — | Kraanvogelhoek 3, 3201 HE, KvK 90234839 (2023), eigen domein nessishondentrimsalon.nl. **Heeft wél een e-mailadres** (info@nessishondentrimsalon.nl, op de Oozo-eenbedrijfspagina), dus staat hier alleen voor de datumvraag: drie ronden op Instagram, Facebook en reviews gaven geen enkel gedateerd spoor binnen twaalf maanden. Sluit die poort en het is meteen een kaart, want boekingspoort en leeftijd zijn al dicht |
+
 Sam, 5 september 2026

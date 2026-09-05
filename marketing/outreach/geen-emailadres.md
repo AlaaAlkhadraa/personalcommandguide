@@ -534,7 +534,7 @@ gebeurd.
 — Keleb telefonisch, Roermond op `info@dierenpensionroermond.nl`. Ze staan in de
 ledger, niet hier: Keleb omdat de leeftijd niet vast te stellen was, Roermond
 omdat het jongste leesbare spoor mei 2024 is.
-| Jodieh's Trimsalon | Westbroek (De Bilt) | KvK 82814384, begin 2022 geopend, Prinses Christinastraat 10, 06-57468912. **Poort (a) DICHT**: eigen tarievenpagina met aangepaste tarieven voor 2026. Groeisignaal: De Vierklank 06-01-2025, openingsdagen uitgebreid per 1 mei om ruimte te maken voor nieuwe klanten. Lek hard (bellen is de enige afspraakweg die de zaak zelf noemt). Vier zoekronden zonder adres: naam+stad, naam+gmail/hotmail/outlook, naam+oozo/drimble/infobel/cylex, naam+stagemarkt/socials. Op alles behalve het e-mailadres een kaart, en de tekst ligt klaar in `2026-09-02-d.md` | 2026-09-02 |
+| Jodieh's Trimsalon | Westbroek (De Bilt) | KvK 82814384, begin 2022 geopend, Prinses Christinastraat 10, 06-57468912. **Poort (a) DICHT**: eigen tarievenpagina met aangepaste tarieven voor 2026. Groeisignaal: De Vierklank 06-01-2025, openingsdagen uitgebreid per 1 mei om ruimte te maken voor nieuwe klanten. Lek hard (bellen is de enige afspraakweg die de zaak zelf noemt). Vier zoekronden zonder adres: naam+stad, naam+gmail/hotmail/outlook, naam+oozo/drimble/infobel/cylex, naam+stagemarkt/socials. Op alles behalve het e-mailadres een kaart, en de tekst ligt klaar in `2026-09-02-d.md`. **HERJACHT 05-09 door lane D** (fundament 1.14: dit bestand is geen eindstation): vier nieuwe ronden — naam+contact+e-mail, naam+eigenaar+gmail/hotmail/outlook, naam+straat+infobel/drimble/oozo/cylex, domein+contact — opnieuw nul adres. Twee lanes, acht ronden: niet meer opnieuw jagen vóór november | 2026-09-02, herjaagd 2026-09-05 |
 | Nova's trimsalon | Leiden | Rebecca Botbijl, Maansteenpad 2332RM, 06-28563589, novastrimsalon.nl, "recent haar eigen trimsalon gestart", gespecialiseerd in collies en keeshonden. Geen adres. LET OP: het nummer 51030799 in de drimble-URL wijst op een oudere reeks en spreekt de eigen tekst tegen — leeftijd niet hard | 2026-09-02 |
 | Trimsalon HappyFeet | plaats niet vastgesteld | Opgericht 01-01-2023, eigenaar Tania (24), salon achter het huis, tijden in overleg. Precies in het leeftijdsvenster en gevonden via de omgekeerde zoekopdracht ("recent gestart"). Buiten één profiel op hondentrimsalon-info.nl kwam noch een plaats noch een adres terug; wie de plaats vindt, heeft waarschijnlijk een kaart | 2026-09-02 |
 | Baasjes Mooiste | Amersfoort | Fazantenstraat 26, 06-39222401, ook 's avonds en op zaterdag open. Geen e-mailadres, geen KvK-nummer en geen oprichtingsjaar in twee zoekronden | 2026-09-02 |
@@ -810,5 +810,27 @@ bronnen die een adres of helemaal niet publiceren (gidsen) of alleen bij gevesti
 sectoren zien: vijftien vielen op leeftijd, twaalf op het adres, en de twee groepen overlappen
 niet. In deze regio publiceert een bedrijf ongeveer een e-mailadres op het moment dat het te
 oud voor ons wordt.
+
+## Toevoeging lane D — 5 september 2026 (Noord-Holland, Zuid-Holland, Utrecht)
+
+Drie dossiers die op alles behalve het adres kloppen. Zoekopdrachten per bedrijf:
+naam + plaats + "e-mail", naam + eigenaarsnaam + gmail/hotmail/outlook, naam +
+straatadres + contact, en bij twee ervan een vierde ronde op de gidsenfamilie
+(oozo, drimble, infobel, cylex, telefoonboek) en op de algemene voorwaarden van
+het eigen domein. Allemaal zonder resultaat.
+
+Eén regel erbij die vandaag geld waard was en die de volgende lane tijd
+bespaart: **zoek met het straatadres in de opdracht.** Bij Hondentrimsalon
+Groomer SPA (Hellevoetsluis) gaven twee kale naamzoekopdrachten niets, en gaf
+`"<naam>" <plaats> <straat> e-mail telefoon contact` het adres meteen — omdat
+die vorm de zoekmachine naar de eenbedrijfsregisterpagina duwt in plaats van
+naar de stadsgids. Dat bedrijf staat daarom als kaart in `2026-09-05-d.md` en
+niet hier. Bij de drie hieronder is diezelfde vorm wél gedraaid en gaf hij niets.
+
+| Bedrijf | Plaats | Wat er wel is | Datum gecheckt |
+|---|---|---|---|
+| Hondentrimsalon Helen | Oterleek (gem. Alkmaar) | Helen Pouwels, Dorpsstraat 3, 1842 GS. Trimdiploma juni 2024, salon geopend **30-08-2024** — twee jaar, precies op profiel. Eigen domein hondentrimsalonhelen.nl. Lek in haar eigen woorden: een afspraak loopt via het contactformulier of WhatsApp. Vier ronden zonder adres én zonder telefoonnummer, dus ook geen bellijstregel | 2026-09-05 |
+| Trimsalon Hondenvriendjes | Assendelft (Zaanstad) | Jessica, Simone de Beauvoirstraat 7, 1566 SB, 06-20279037. KvK **95024980** (2024/2025). Eigen domein trimsalonhondenvriendjes.nl met over-mij- en tarievenpagina; contactformulier is de enige route naar een afspraak. Drie ronden zonder adres. Staat ook in `bellijst.md` | 2026-09-05 |
+| Hondentrimsalon Groomer SPA | Hellevoetsluis | **Geen regel meer nodig: adres gevonden.** Genoteerd zodat niemand dit dossier hier gaat zoeken — `emila1253@wp.pl` staat op de TransFirm- én de Oozo-eenbedrijfspagina, en de kaart ligt in `2026-09-05-d.md` | 2026-09-05 |
 
 Sam, 5 september 2026
