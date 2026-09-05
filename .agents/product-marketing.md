@@ -1,6 +1,6 @@
 # Product Marketing Context — ZEVREN
 
-**Document version:** 1.17 · 2026-09-05
+**Document version:** 1.18 · 2026-09-05
 Elke marketingskill in `.claude/skills/` leest dit document eerst.
 Feiten hier zijn bindend; een skill-advies dat ermee botst, verliest.
 
@@ -88,6 +88,26 @@ eigen belofte — letterlijk de zin waarmee ons 549-bericht binnenkomt.
 De vaste eerste zoekopdracht in elke afspraaksector, vóór de leeftijd en
 vóór het adres, is daarom
 `"<naam>" salonized OF fresha OF treatwell OF tipaw OF 1plekjevrij OF 1kapper OF belliata`.
+
+**De platformzoekopdracht sluit de boekingspoort niet — vraag welke route er
+WEL bestaat (1.18).** Een leeg zoekresultaat op de platformlijst is een
+afwezigheid in jouw zoekresultaat, geen vaststelling over hun bedrijf. Draai er
+daarom altijd één opdracht bij op het eigen domein
+(`<domein> inschrijven OR reserveren OR bestellen OR winkelwagen OR product OR
+agenda`) en stel de route positief vast. Vier gevallen op één dag, uit twee
+lanes onafhankelijk, bewijzen dat de platformlijst alleen te weinig is:
+Hondenschool & uitlaatservice Kersten (Gassel) heeft een eigen inschrijfpagina
+op `hondenschoolkersten.aniday.io/register`, Salon-013 (Tilburg) een eigen pad
+`/online-reserveren`, Hondenschool Dogstart (Oud Ade) een eigen
+`/inschrijven/inschrijfformulier` plus `/login`, en Leven Massage (Rotterdam)
+naast twee platforms ook nog een eigen agendapagina. Alle vier waren schoon op
+de platformlijst; alle vier zouden een bericht hebben gekregen dat hun vertelt
+dat zij missen wat zij al hebben.
+
+De omkering geldt in beide richtingen: een positief vastgestelde route sluit de
+poort (Hondenschool de Walsert, 05-09: aanmelden loopt via een eigen
+inschrijfformulier met overboeking, geen `/product/`-pad, geen winkelwagen,
+geen agenda), en alleen zo'n vaststelling doet dat.
 
 **Direct daarna, in dezelfde adem: `"<naam>" klantenstop OF "geen nieuwe
 klanten" OF wachtlijst` (1.14).** De ICP sluit volle boeken en klantenstop uit,
@@ -444,6 +464,35 @@ KvK-nummer — dat verandert mee met de papieren — maar de eigen over-onspagin
 die vertelt wanneer de mens begon, terwijl het register vertelt wanneer de
 rechtsvorm veranderde. Lees hem dus vóór de adresjacht, niet erna.
 
+**En de verklaring eronder, plus de goedkope toets — de gidsdatum "opgericht op"
+is de VESTIGINGSdatum (1.18).** De `-nu.nl`-, `-spot.nl`- en `.website`-gidsen
+publiceren per VESTIGING, niet per onderneming. De KvK zegt zelf wat dat
+betekent: het KvK-nummer identificeert de hele onderneming, elk
+vestigingsnummer (twaalf cijfers) identificeert één plaats waar die onderneming
+activiteiten uitvoert, en de vestigingsdatum is de datum waarop díé vestiging
+is ingeschreven — één onderneming met meerdere filialen heeft één KvK-nummer en
+meerdere vestigingsnummers. De gidsregel "opgericht op ‹datum›" is dus per
+definitie een vestigingsdatum, en dat is de mechanische verklaring van alle
+vijf de gevallen hierboven.
+
+Voorbeeld, na te rekenen: **Garage Huis Eemland (Amersfoort)** staat op
+`garage-spot.nl` als "opgericht op 01-07-2021". De TransFirm-URL is
+`635959070001-garage-huis-eemland`: KvK **63595907** (de 63-reeks is 2015),
+vestigingsnummer 000015673693, en onder datzelfde KvK-nummer hangen meer
+vestigingen. De onderneming is elf jaar; de vestiging aan de Zwaaikom vijf.
+
+**De toets, en let op de formulering.** Dat er een vestigingsnummer in de URL
+staat, is géén afwijzingsgrond — dat is bij vrijwel elk bedrijf zo, ook bij een
+eenmanszaak met één vestiging waar beide datums samenvallen (Hondentrimsalon
+Groomer SPA, goedgekeurd op 05-09, draagt
+`90017668-000055770363-…` en daar klopt de gidsdatum gewoon). Het
+vestigingsnummer zegt welk SOORT datum je leest. Wat de datum verdacht maakt,
+is de tegenspraak: **een KvK-reeks die ouder is dan de gidsdatum, of meer dan
+één vestiging onder hetzelfde nummer.** Lees daarom de TransFirm-URL en niet de
+gidsregel — het KvK-nummer staat erin, dus één zoekopdracht geeft naam én
+leeftijdsondergrens zonder een pagina te openen. En bij tegenspraak beslist nog
+altijd de eigen over-onspagina, niet het register.
+
 Twee bronnen die het omgekeerde probleem oplossen en die dezelfde dag door
 twee lanes onafhankelijk zijn gevonden (lane A in het noorden, lane B in het
 oosten): de vakgidsen van het `-nu.nl`- en `-gids.nl`-type publiceren per
@@ -528,6 +577,37 @@ wil houden.
   groepen tegelijk.
 
 ## Changelog
+
+- 1.18 (2026-09-05, Azzouz, verificatie lanes C+D): twee regels, allebei op de
+  drempel gehouden tot het bewijs er was. **(a) "De platformzoekopdracht sluit
+  de boekingspoort niet"** toegevoegd bij "De poort die het vaakst kaarten
+  kost". Ik legde deze regel op 04-09 vast als voorstel en hield hem tegen tot
+  een tweede, onafhankelijke bevestiging — dezelfde drempel die ik lane C op de
+  transfirm-route oplegde. Die kwam op 05-09 uit een andere lane dan de eerste,
+  in vier gevallen (Kersten, Salon-013, Dogstart, Leven Massage), alle vier
+  schoon op de platformlijst en alle vier met een eigen boekingsroute. **(b)
+  "De gidsdatum 'opgericht op' is de VESTIGINGSdatum"** toegevoegd bij de
+  erkenningsdatum-sectie, als verklaring én goedkope toets onder 1.16. Lane D
+  vond het mechanisme (Garage Huis Eemland: gids 01-07-2021, KvK 63595907 uit
+  2015, meerdere vestigingen onder één nummer) en de KvK-documentatie
+  bevestigt het structureel. **Opgenomen in gecorrigeerde vorm:** lane D's eigen
+  toets ("staat er een vestigingsnummer, dan is de datum die van de vestiging")
+  is waar maar te breed om op af te wijzen — zijn eigen goedgekeurde kaart van
+  dezelfde dag draagt er ook een en daar klopt de gidsdatum. De opgenomen toets
+  is de tegenspraak: een KvK-reeks ouder dan de gidsdatum, of meer dan één
+  vestiging onder één nummer. **Niet opgenomen:** de straatnaam-adresroute van
+  lane D (`"<naam>" <plaats> <straat> e-mail telefoon contact`). Goede gewoonte
+  en verenigbaar met 1.6, maar het contrast waarop ze rust reproduceerde bij mij
+  niet — ik kreeg het adres van Groomer SPA in één kale naamronde. Staat als
+  order om op vijf dossiers te tellen. Ook niet opgenomen: "twee KvK-nummers op
+  één naam, het laagste telt" (lane C, Rinus Biemans) — juist, maar één lane,
+  één dossier; staat als jaagregel in de orders.
+  **Nummering:** deze dienst en de verificatie van lanes A+B liepen vandaag
+  parallel in twee sessies; A+B claimde 1.17 als eerste op `main`, dus deze
+  regels staan als 1.18. De twee entries spreken elkaar niet tegen en vullen
+  elkaar op één punt aan: A+B(b) waarschuwt dat de KvK-reeks in de TransFirm-URL
+  een REGISTERdatum is en geen leeftijd, en 1.18(b) hieronder legt uit waarom de
+  gidsdatum ernaast dat evenmin is.
 
 - 1.17 (2026-09-05, Azzouz, verificatie lanes A+B): twee regels, allebei over de
   VOLGORDE van het werk en niet over wat een kaart moet dragen.
