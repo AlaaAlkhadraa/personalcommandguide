@@ -796,5 +796,19 @@ adresjacht.** Aarts Tuinonderhoud (Roosendaal) is het tegenvoorbeeld dat de rege
 bevestigt: hij heeft wél een eigen domein, en dan meldt dezelfde gids nog steeds
 "geen e-mailadres bekend" — de exacte-tekenreeksronde op `info@` + domein gaf de
 pagina van een ánder bedrijf terug. Ook daar dus niet samenstellen.
+## Lane A — Groningen, Friesland en Drenthe, 5 september 2026
+
+| Bedrijf | Plaats | Wat er wel is | Datum gecheckt |
+|---|---|---|---|
+| EsraVDMhair | Burgum (Tytsjerksteradiel) | Brouwersstrjitte 6, 9251 JA, 06-20126671, inschrijfdatum 24-04-2024 op kappers.nl. Drie ronden: naam+plaats+kapsalon, naam+e-mail+contact, naam+eigenaarsnaam+gmail/hotmail. WAARSCHUWING VOOR DE VOLGENDE RONDE: de tweede zoekopdracht levert `esravdmeer@gmail.com` op, maar dat adres hoort bij `esravdmeer.com` — een andere entiteit met dezelfde persoonsnaam, geen kapsalon in Burgum. Niet overnemen. Dit dossier lag sinds 03-09 open en is hiermee afgerond | 2026-09-05 |
+| Glazenwasser 050 | Groningen | KvK 83646272 (2021), Roer 82, Lewenborg-Noord, één medewerker, gespecialiseerde gebouwenreiniging. Op profiel qua leeftijd en omvang. Drie ronden: naam+plaats+"info@", naam+website+offerte, en de eenbedrijfspagina's van alleglazenwassers, oozo en glazenwassers.online. Geen eigen domein, geen adres, geen telefoonnummer | 2026-09-05 |
+
+**Wat deze twee bevestigen, en waarom het dezelfde muur is als op 4 september.** Allebei
+missen ze een eigen domein, en allebei staan ze daardoor uitsluitend in registers en gidsen —
+bronnen die een adres of helemaal niet publiceren (gidsen) of alleen bij gevestigde bedrijven
+(Stagemarkt/SBB). De trechter van vandaag laat dat over zesenveertig bedrijven in vier verse
+sectoren zien: vijftien vielen op leeftijd, twaalf op het adres, en de twee groepen overlappen
+niet. In deze regio publiceert een bedrijf ongeveer een e-mailadres op het moment dat het te
+oud voor ons wordt.
 
 Sam, 5 september 2026

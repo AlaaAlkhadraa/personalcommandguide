@@ -397,5 +397,21 @@ maakt ze de bovenste groep: de zaak draait aantoonbaar en er is een route naarto
 
 | Colin-Stucwerk | Sittard (Sittard-Geleen) | stukadoor | 06-31956603 | GEEN gedateerd levensteken gevonden — bellen is hier een gok, en dat staat er eerlijk bij | KvK 88601684, opgericht 01-01-2023, 1 werkzaam persoon, Fons Olterdissenstraat 13, 6136 HZ. `stukadoorgids.nl` meldt uitdrukkelijk "geen e-mailadres bekend"; geen eigen domein gevonden. Lane C 05-09 |
 | Aarts Tuinonderhoud | Roosendaal | hovenier | 06-37423294 | GEEN gedateerd levensteken gevonden; wel reviewteksten zonder leesbare datum over eigenaar Bjorn Aarts | KvK 90784154, opgericht 10-07-2023, eenmanszaak, Hofstraat 69, eigen domein aartstuinonderhoud.nl. De gids meldt "geen e-mailadres bekend" en de exacte-tekenreeksronde op info@ + domein gaf de pagina van een ánder bedrijf terug. Lane C 05-09 |
+Sam, 4 september 2026
+
+## Lane A — Groningen, Friesland en Drenthe, 5 september 2026
+
+Vijf dossiers uit de vier sectoren die de verificatie van 4 september opdroeg. Alle vijf
+zitten binnen het leeftijdsvenster, alle vijf zijn op profiel, en alle vijf liggen stil op
+uitsluitend één ding: er is nergens een openbaar e-mailadres. Vier van de vijf hebben een
+openbaar telefoonnummer, en dat maakt ze belklaar.
+
+| Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
+|---|---|---|---|---|---|
+| Cleaning Service Kaale | Leeuwarden | schoonmaak/glazenwasser | — | — | KvK 89450841, "sinds 2023" met één ervaren medewerker volgens de eenbedrijfspagina van alleglazenwassers.nl, Uiterdijksterweg 36b, 8931 BP. Drie ronden zonder e-mailadres én zonder telefoonnummer; geen eigen domein gevonden. Onderste groep: de zaak bestaat en zit op profiel, maar er is nog geen route naartoe |
+| Ruitenboer Glasbewassing en Schoonmaak | Leeuwarden | glazenwasser | 06-11771884 | — | KvK 93505973, Hottingastate 85, 8926 PW, eigen domein ruitenboerglasbewassing.nl met een tarieven- en een offertepagina. De contactpagina voert uitsluitend een formulier; ook de algemene voorwaarden (PDF, september 2024) leverden geen adres op. Drie ronden. Wie belt, belt een zaak van ongeveer twee jaar die zelf belooft binnen 24 uur te reageren |
+| Feisal Fietsen | Groningen | mobiele fietsenmaker | 06-36360025 | — | KvK 94107513, Nieuwe Ebbingestraat 72, 9712 NN, eigen domein feisalfietsen.nl plus een Facebookpagina. Regionale mobiele fietsenmaker die op afspraak aan huis repareert — jong, eenmanszaak, exact het profiel. Drie ronden zonder adres |
+| Rademaker schoonmaak service | Hoogeveen | schoonmaak | 06-26951092 | Werkspot-profiel met reviews, datum niet leesbaar in de zoekresultaten | KvK 89214048 (2023), Carla Bultena-Rademaker, De Vlegel 4, 7908 PJ, eigen domein schoonmaakservice.eu met home, diensten, over ons en contact. Contact loopt uitsluitend via een formulier. Drie ronden. LET OP: het levensteken is nog niet hard — de reviewdatum moet vóór het bellen alsnog worden vastgesteld |
+| Hondenservice-Gaasterland | Hemelum (Sudwest-Fryslan) | dierenpension | — | — | KvK 96258543, 't Set 1, 8584 VZ, één medewerker. Opvang aan huis, uitlaatservice, advies en training — boekingsvormig en het jongste dierenpension dat deze lane in deze regio heeft gevonden. Drie ronden gaven geen adres en geen telefoonnummer; alleen de registervermelding. Onderste groep |
 
 Sam, 5 september 2026
