@@ -763,3 +763,38 @@ leeftijdspoort wegfiltert. De e-mailmuur en de leeftijdsmuur zijn dus geen twee 
 één beperking, van twee kanten bekeken.
 
 Sam, 4 september 2026
+
+---
+
+## 5 september 2026 — lane C (Limburg, Noord-Brabant, Zeeland)
+
+Vijf dossiers, alle vijf jong en alle vijf op profiel, alle vijf zonder vindbaar
+openbaar e-mailadres. Per bedrijf gedraaid: naam + plaats + "e-mail", naam +
+gmail/hotmail/outlook, naam + eigenaarsnaam, en de gidsen telefoonboek.nl,
+infobel en de vakgids zelf.
+
+| Bedrijf | Plaats | Wat er wél is | Datum |
+|---|---|---|---|
+| Tygo Wouters Hovenier | Lage Mierde (gem. Reusel-De Mierden) | KvK 89356020, opgericht 23-01-2023, 1 werkzaam persoon. Geen website, geen telefoonnummer, geen social. `hovenier.website` meldt dat de zaak niet is geclaimd | 2026-09-05 |
+| The Garden Guy | Eindhoven | KvK 90823265, opgericht 01-07-2023, eenmanszaak. De gids meldt letterlijk "van The Garden Guy zijn geen contactgegevens bekend" | 2026-09-05 |
+| Het Groene Schaap | Wanroij (gem. Land van Cuijk) | KvK 89933141, opgericht 17-04-2023, eenmanszaak 1 werkzaam persoon, Peelstraat 15. Diensten bekend (maaien, snoeien, tuinontwerp, aanleg, boomverzorging). Geen telefoon, geen e-mail, geen website | 2026-09-05 |
+| Jdvhoveniers | Helmond | KvK 89720814, opgericht 01-04-2023. Naam komt alleen voor op de gidspagina; drie ronden gaven geen adres, geen telefoon en geen eigen domein | 2026-09-05 |
+| Colin-Stucwerk | Sittard (gem. Sittard-Geleen) | KvK 88601684, opgericht 01-01-2023, 1 werkzaam persoon, Fons Olterdissenstraat 13, 6136 HZ. **Telefoon 06-31956603 is wél bekend** — dit is een bellijstkandidaat. `stukadoorgids.nl` meldt uitdrukkelijk "geen e-mailadres bekend" | 2026-09-05 |
+
+**Wat deze vijf samen aantonen, en het is een scherpere versie van de notitie van
+04-09.** Alle vijf komen uit dezelfde vindroute: de vakgidsen op `"opgericht op"
+2023`. Die route werkt uitstekend als leeftijdsfilter en levert stelselmatig
+bedrijven zónder adres — want een gidsprofiel bevat alleen een e-mailadres als de
+ondernemer het profiel heeft geclaimd, en een ondernemer die zijn gidsprofiel
+claimt, is precies de ondernemer die ook een eigen site met contactpagina heeft.
+
+De route meet dus de onbereikbare helft van de markt. Dat is geen reden hem te
+laten vallen — hij is het goedkoopste leeftijdsfilter dat we hebben — maar wel om
+hem niet meer als adresroute te gebruiken. **Voorstel: gids voor de leeftijd van
+een naam die je ergens anders vandaan hebt, nooit als startpunt van een
+adresjacht.** Aarts Tuinonderhoud (Roosendaal) is het tegenvoorbeeld dat de regel
+bevestigt: hij heeft wél een eigen domein, en dan meldt dezelfde gids nog steeds
+"geen e-mailadres bekend" — de exacte-tekenreeksronde op `info@` + domein gaf de
+pagina van een ánder bedrijf terug. Ook daar dus niet samenstellen.
+
+Sam, 5 september 2026
