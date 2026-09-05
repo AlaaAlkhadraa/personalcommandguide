@@ -1,6 +1,6 @@
 # Product Marketing Context — ZEVREN
 
-**Document version:** 1.16 · 2026-09-04
+**Document version:** 1.17 · 2026-09-05
 Elke marketingskill in `.claude/skills/` leest dit document eerst.
 Feiten hier zijn bindend; een skill-advies dat ermee botst, verliest.
 
@@ -98,6 +98,24 @@ ambacht waar de capaciteit één paar handen is, is dát precies het signaal dat
 vlak vóór een klantenstop komt. We selecteren daar dus systematisch op bedrijven
 met een verhoogde kans om vol te zitten. Eén zoekopdracht, en hij voorkomt geen
 gemiste kaart maar een verbrand adres.
+
+**Waar die zoekopdracht staat, is vanaf 1.17 een regel en geen voorkeur: vóór de
+adresjacht, direct achter de boekingspoort — nooit als laatste stap vóór het
+schrijven.** Op 5 september kostte de oude volgorde op één dag drie complete
+dossiers in twee lanes die elkaars bestand niet kenden: Dierenpension Frank & Vrij
+(Meppel, lane A), Trimsalon For your Doodle en Daphne's Trimsalon (allebei lane B).
+Bij Daphne's zat er op dat moment een adresronde, een leeftijdsronde, twee
+boekingsronden van een eerdere dienst en twee poort-(a)-ronden in het dossier; één
+zoekopdracht van tien seconden sloot het alsnog. De regel geldt in elk ambacht waar
+de capaciteit één paar handen is — trimsalons, kapsalons, pedicures, dierenpensions,
+hondenscholen, eenmansambacht — en daar is zij verplicht. In sectoren waar capaciteit
+schaalt met personeel mag zij blijven staan waar zij stond.
+
+Let op de variant die geen klantenstop heet: een **intakestop met een einddatum**
+("vanaf half oktober weer ruimte voor kennismakingen"). Die sluit het dossier voor
+vandaag en niet voor altijd. Zet hem in het ledger met de datum erbij, niet als
+`not fit` zonder meer — na die datum is het een compleet dossier dat niemand opnieuw
+hoeft op te bouwen.
 
 **En één regel die geen zoekopdracht is maar wel een poort: lees het ledger op
 naam, over de hele lengte, niet alleen de rijen van deze week.** Op 02-09 kwam
@@ -229,6 +247,24 @@ leveren die naam niet:
   beide de naamjacht rond. Bovendien sluit een vergunning uit 2024 poort (a)
   niet — alleen eentje van ná september 2025 doet dat. **Dit is een
   leeftijdsroute, geen levenstekenroute en geen adresroute.**
+
+**En omgekeerd: de vakgidszeef is een vindroute en géén leeftijdsroute (1.17).** De
+goedkoopste namenbron die de lanes tot nu toe hebben gevonden, is de
+eenbedrijfsindex van een vakgids of van TransFirm: `site:transfirm.nl <sector>
+<steden>` geeft per ronde vijf tot tien bedrijven mét KvK-nummer in de URL, en
+`site:<vakgids> "opgericht op" 2023 <provincie>` geeft er zeven tot acht met een
+datum erbij. Eén ronde in plaats van vijf, en het levert namen op die geen enkele
+gidsenzoekopdracht teruggeeft.
+
+De verleiding is om het getal in die URL meteen als leeftijd te lezen, en dat is
+precies de val van 1.15 en 1.16. Een KvK-nummer is een registerdatum en verandert
+mee met de rechtsvorm; een gidsdatum is de datum waarop de gids het bedrijf
+opnam. Op 5 september droeg een verse reeks drie keer op één dag een oude zaak
+(Venema 1970 onder KvK 92483275, E & K tien jaar onder 89431561, Fiets Direct
+"sinds 2007" onder 77493192), en bij de hoveniers van lane B ging het drie van de
+drie keer mis: gidsdata uit 2023/2024 boven zaken van achttien, meer dan tien en
+eenenveertig jaar. **De volgorde is dus: zeef op namen, dan onmiddellijk de eigen
+over-onspagina voor de leeftijd, dan de klantenstopronde, dan pas het adres.**
 
 ## De prijsaanpassing met het lopende jaartal — een poort-(a)-route (1.13)
 
@@ -492,6 +528,35 @@ wil houden.
   groepen tegelijk.
 
 ## Changelog
+
+- 1.17 (2026-09-05, Azzouz, verificatie lanes A+B): twee regels, allebei over de
+  VOLGORDE van het werk en niet over wat een kaart moet dragen.
+  **(a) De klantenstopzoekopdracht schuift naar vóór de adresjacht,** direct achter
+  de boekingspoort, in elk ambacht waar de capaciteit één paar handen is. Drie
+  complete dossiers gingen vandaag op die ene zoekopdracht verloren, in twee lanes
+  die elkaars bestand niet kenden: Frank & Vrij (Meppel, lane A, intakestop tot half
+  oktober 2026) en For your Doodle en Daphne's Trimsalon (allebei lane B). Bij
+  Daphne's had de lane poort (a) net zelf gesloten met een prijsaanpassing per januari
+  2026 op het eigen domein — het dossier was verzendklaar. Lane B bracht het als
+  voorstel uit één lane en één dienst; lane A leverde onafhankelijk het derde geval,
+  en twee lanes op één dag is precies de drempel waarop 1.13 is aangenomen. Bij
+  dezelfde regel hoort de behandeling van de intakestop met een einddatum: op datum
+  in het ledger, niet als `not fit` zonder meer.
+  **(b) De TransFirm- en vakgidszeef is opgenomen als NÁMENZEEF,** met de
+  uitdrukkelijke waarschuwing dat de KvK-reeks in de URL een registerdatum is en geen
+  leeftijd. Gisteren heb ik deze route afgehouden op de drempel "één lane, één
+  dienst"; vandaag hebben beide lanes hem gebruikt en allebei dezelfde beperking
+  teruggemeld — lane A met drie verse reeksen boven oude zaken, lane B met drie
+  hoveniers van achttien, meer dan tien en eenenveertig jaar onder gidsdata uit
+  2023/2024. De vaste volgorde staat er nu bij: namen, dan de eigen over-onspagina,
+  dan de klantenstopronde, dan het adres.
+  **Niet opgenomen:** de vondst van lane A dat de eenbedrijfspagina's van
+  `alleglazenwassers.nl` leeftijd én KvK in één zin publiceren ("Opgericht als
+  Glazenwasser (Kamer van Koophandel nummer X), biedt ons team van N ervaren
+  medewerkers sinds JAAR"). Vier leeftijden voor de prijs van één ronde, maar één
+  lane en één dienst. Hij staat als order voor beide lanes in
+  `marketing/outreach/2026-09-05-ab-verified.md`; werkt hij maandag opnieuw, dan komt
+  hij hier te staan. Dezelfde drempel, ook nu de vondst mij goed uitkomt.
 
 - 1.16 (2026-09-04, Azzouz, verificatie lanes A+B): twee regels uit de enige
   kaart van de dag en uit de val waar lane B er vier op zag omvallen.
