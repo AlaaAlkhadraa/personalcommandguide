@@ -862,3 +862,33 @@ privéadres van de praktijkopleider, niet een adres van de zaak. Zo'n adres hoor
 dit bestand en niet op de bellijst — het is precies wat de privacyregel uitsluit.
 
 Sam, 5 september 2026
+
+---
+
+## Overijssel, Gelderland, Flevoland — 06-09-2026 (lane B)
+
+Zeven bedrijven die op leeftijd en profiel door de check kwamen en waar drie
+adresronden geen openbaar e-mailadres opleverden. Ronden per bedrijf: naam +
+plaats + "e-mail"; naam + gmail/hotmail/outlook + straat; naam + gids
+(telefoonboek, oozo, hovenier.website, transfirm, alleglazenwassers). Waar de
+gids uitdrukkelijk meldt dat er geen adres bekend is, staat dat erbij — dat is
+een negatieve vaststelling en scheelt de volgende lane een ronde.
+
+| Bedrijf | Plaats | Wat er wél is | Datum gecheckt |
+|---|---|---|---|
+| Veldman Multidiensten | Apeldoorn | KvK 88033503, opgericht 04-11-2022, eenmanszaak, Damhertstraat 56 7315 GE, 06-30112641. Gemiddelde 10 uit 9 beoordelingen tegen een sectorgemiddelde van 8,7. hovenier.nl meldt uitdrukkelijk: geen e-mailadres bekend. **Belbaar** — staat op de bellijst | 06-09-2026 |
+| Arjan Zomer Groene dienstverlening | Hellendoorn | KvK 91179181, opgericht 01-09-2023, eenmanszaak 1 persoon, Sanatoriumlaan 30 7447 PK. Hovenier plus dierbeheer en mollenbestrijding. Telefoonboek.nl toont het nummer afgeschermd, dus ook niet belbaar | 06-09-2026 |
+| Zoethout Hovenier | Zutphen | KvK 81958471, opgericht 04-03-2021, eenmanszaak 1 persoon, Melatensteeg 5 7201 BP. Geen eigen domein gevonden in twee ronden, geen telefoonnummer. Leeftijd midden in het venster — de moeite waard voor één extra ronde later | 06-09-2026 |
+| Schneider Tuin | (Gelderland) | KvK 91695562, opgericht 01-10-2023, eenmanszaak. Drie ronden gaven noch adres noch vestigingsplaats; alleen de KvK-regel is hard. LET OP twee lookalikes die telkens bovenaan komen en andere zaken zijn: Schneider Tuincreaties en Schneider Tuinmaterialen | 06-09-2026 |
+| Loohuis Boom & Landschapsonderhoud | Oldenzaal | KvK 89522079, opgericht 01-03-2023, eenmanszaak. hovenier.website meldt drie dingen uitdrukkelijk: geen contactgegevens bekend, geen website bekend, nog geen reviews. Ook geen telefoonnummer, dus niet belbaar. Dit is een zaak die online niet bestaat | 06-09-2026 |
+| Mark Landschapsonderhoud | Ossenzijl (Steenwijkerland) | KvK 90817613, opgericht 13-07-2023, eenmanszaak. De gids meldt uitdrukkelijk dat er geen contactgegevens bekend zijn | 06-09-2026 |
+| Final Touch Cleaning Services | Zwolle | KvK 87978326 (2022-reeks), Hunzelaan 2 8032 XH, vestigingsnummer 000053865243, eigen domein finaltouchcleaningservices.nl, schoonmaak plus glasbewassing en vloeronderhoud. Drie ronden zonder adres én zonder telefoonnummer. LET OP: er zijn minstens zes gelijknamige bedrijven in de VS en het VK, die elke zoekopdracht vervuilen — zoek altijd met "Zwolle" of "Hunzelaan" erbij | 06-09-2026 |
+
+Eén aantekening bij deze zeven. Zes van de zeven zijn hoveniers, en dat is geen
+toeval: de `site:hovenier.website "opgericht op" <jaar>`-vorm levert per ronde
+zeven tot negen namen mét oprichtingsdatum, maar diezelfde gids voert bij jonge
+eenmanszaken vaak geen contactgegevens. De zeef die de leeftijdspoort oplost,
+levert dus stelselmatig bedrijven aan die op de adrespoort stranden. Dat is een
+echte spanning in de route en niet iets wat met meer ronden weggaat.
+
+Sam, 6 september 2026

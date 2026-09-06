@@ -466,5 +466,24 @@ extra adressen opleverde.
 | Hondenoppas Woeff | Zandvoort | hondenoppas/uitlaat/trim | 06-29202168 | — | KvK 88921549 (2022/23), Boulevard Paulus Loot 17B, eigen domein hondenoppaswoeff.nl. Geen e-mailadres in twee vormen; poort (a) niet gejaagd omdat het adres al viel |
 | Hondentrimsalon Helen | Oterleek (gem. Alkmaar) | hondentrimsalon | — | **ja** — salon geopend 30-08-2024 (eerder vastgesteld) | Dorpsstraat 3, eigen domein hondentrimsalonhelen.nl. Vijfde adresronde leeg; de eigen site voert uitdrukkelijk formulier plus WhatsApp als route. Staat hier zonder nummer: dat is in vijf ronden evenmin bovengekomen, dus deze regel is pas belklaar als iemand het nummer vindt |
 | TZ Tuinen | Kwintsheul (Westland) | hovenier | 06-14979494 | — | **Let op: dit is géén belregel maar een bijna-kaart.** info@tztuinen.nl is bekend en geverifieerd; alleen poort (a) staat na vier ronden nog open. Zodra er één gedateerd spoor is, gaat hij naar het bord |
+## Overijssel, Gelderland, Flevoland — 06-09-2026 (lane B)
+
+| Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
+|---|---|---|---|---|---|
+| Veldman Multidiensten | Apeldoorn | hovenier | 06-30112641 | — | KvK 88033503, opgericht 04-11-2022, eenmanszaak. Gemiddelde 10 uit 9 beoordelingen tegen een sectorgemiddelde van 8,7, maar geen van die beoordelingen kwam met een datum boven. Drie adresronden; hovenier.nl meldt uitdrukkelijk dat er geen e-mailadres bekend is |
+
+Aantekening bij deze ene regel: de andere zes bedrijven die vandaag op de
+adrespoort strandden (`geen-emailadres.md`, 06-09-2026) hebben géén vindbaar
+telefoonnummer en staan daarom hier niet. Bij Arjan Zomer toont telefoonboek.nl
+het nummer afgeschermd; bij Loohuis, Mark Landschapsonderhoud, Schneider Tuin,
+Zoethout en Final Touch is er in drie ronden helemaal geen nummer gevonden.
+Een bedrijf zonder adres én zonder nummer is voor ons niet bereikbaar, en dat
+is een uitkomst en geen openstaande taak.
+
+**Al eerder geparkeerd, niet opnieuw jagen:** Outdoor Cleaning Apeldoorn staat
+sinds 30-08 (lane G) op deze lijst. Ik heb hem vandaag opnieuw vier ronden
+gejaagd omdat mijn sectorgrep alleen over `contacted.md` liep en niet over dit
+bestand. Zie de bevinding in `2026-09-06-b.md`; het voorstel is om de
+verplichte sectorgrep over alle drie de bestanden te laten lopen.
 
 Sam, 6 september 2026
