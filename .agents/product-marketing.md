@@ -1,6 +1,6 @@
 # Product Marketing Context — ZEVREN
 
-**Document version:** 1.19 · 2026-09-06
+**Document version:** 1.21 · 2026-09-06
 Elke marketingskill in `.claude/skills/` leest dit document eerst.
 Feiten hier zijn bindend; een skill-advies dat ermee botst, verliest.
 
@@ -674,7 +674,18 @@ wil houden.
 - **Permanent gesloten** — bewezen over meerdere lanes en niet met een ander
   bericht op te lossen: rijscholen, maneges en paardentrainers, zang- en
   muziekdocenten, tandtechniek, kledingherstel en naaiateliers, keramiek- en
-  bloemenateliers, tattoo-studio's, dansscholen en yogastudio's, escaperooms.
+  bloemenateliers, tattoo-studio's, dansscholen en yogastudio's, escaperooms,
+  en sinds 06-09 **mobiele fietsenmakers** (1.21). Die laatste sluit niet op
+  leeftijd of bereikbaarheid maar op het lek zelf: vier onafhankelijke
+  bevestigingen dat bellen of appen daar de eerste afspraakweg is, waardoor het
+  agendalek dat het 549-pakket verkoopt er aantoonbaar zwakker is dan in de
+  sectoren waar een agenda het knelpunt is.
+- **Eraf uit de rotatie, niet gesloten** — gastouders en kinderopvang aan huis
+  (1.21, derde bevestiging van 1.12). De sector past op profiel, maar de
+  bewijsroute die hem zou openen (GGD-inspecties en -vergunningen) draagt wél
+  een datum en géén leeftijd, dus poort (a) sluit er zonder dat het venster van
+  1 tot 6 jaar getoetst kan worden. Terug in de rotatie zodra er een route is
+  die de leeftijd draagt.
 - **Afgewaardeerd** — niet dicht, maar verwacht hier één jonge zaak op de
   tien, dus zet er nooit een hele dienst op: tegelzetters, metselaars,
   timmerbedrijven (lane A en lane B kwamen hier op 31-08 onafhankelijk en in
@@ -692,6 +703,38 @@ wil houden.
   groepen tegelijk.
 
 ## Changelog
+
+- 1.21 (2026-09-06, Azzouz, weekcyclus 31-08 t/m 06-09): drie dingen, alle drie
+  besluiten die bij het weekrapport horen en niet bij een dagverificatie —
+  1.19 legde die grens zelf vast. **(a) Mobiele fietsenmakers permanent
+  gesloten** bij "Sectoren: gesloten, afgewaardeerd, of in de wacht". Lane A
+  bood dit op 06-09 aan met vier onafhankelijke bevestigingen dat bellen of
+  appen daar de eerste afspraakweg is; ik heb het toen niet opgenomen omdat een
+  sector sluiten een besluit van de owner en het weekrapport is. Het is nu dat
+  besluit. De grond is de sterkste die wij voor een sluiting hebben: niet dat
+  de bedrijven te oud of onbereikbaar zijn, maar dat het lek dat wij verkopen
+  er niet bestaat. **(b) Gastouders en kinderopvang aan huis uit de rotatie**,
+  als aparte categorie naast "gesloten", derde bevestiging van 1.12. De sector
+  past op profiel; de bewijsroute die hem moest openen (GGD-inspecties en
+  -vergunningen, toegewezen in de inboxbeslissing van 31-08) draagt een datum
+  maar geen leeftijd, dus zij sluit poort (a) zonder dat het leeftijdsvenster
+  toetsbaar wordt. Ik zette hem vorige week nog op plaats twee van het
+  sectorplan; die order is hiermee ingetrokken. **(c) Het prime target krijgt
+  een quotum in plaats van een volgorde.** 1.20(b) legt de keuze over de
+  geen-websitegroep netjes bij de owner, maar de jaagvolgorde die eronder staat
+  ("dan een zeef op bedrijven mét eigen domein") beslist hem alsnog in stap
+  twee — en de order van de owner van 24 augustus maakt juist die groep tot
+  prime target. De volgorde blijft staan, want de telling eronder is echt (5 van
+  5 tegen 0 van 5). Wat erbij komt is een vast quotum in de directives: acht van
+  de veertig dossiers per lane per dienst blijven in de geen-websitegroep, met
+  bestemming `bellijst.md` en niet het bord. Zo blijft de groep gemeten terwijl
+  de owner over een tweede verzendweg beslist, in plaats van stilzwijgend te
+  verdwijnen via een volgorderegel. **Ook gecorrigeerd:** de kopregel van dit
+  document stond nog op 1.19 terwijl de changelog al een 1.20-entry droeg — de
+  parallelle sessie van 06-09 bumpte de entry en niet de kop.
+  **Nummerbereiken vanaf nu:** verificatie A+B schrijft 1.22 t/m 1.30,
+  verificatie C+D schrijft 1.31 t/m 1.40. Drie keer deze week botsten twee
+  parallelle sessies op hetzelfde nummer (1.13/1.14, 1.17/1.18, 1.19/1.20).
 
 - 1.20 (2026-09-06, Azzouz, verificatie lanes C+D): twee regels, allebei op de
   drempel gehouden tot twee lanes ze onafhankelijk droegen, plus één aanscherping
