@@ -1,6 +1,6 @@
 # Product Marketing Context — ZEVREN
 
-**Document version:** 1.18 · 2026-09-05
+**Document version:** 1.19 · 2026-09-06
 Elke marketingskill in `.claude/skills/` leest dit document eerst.
 Feiten hier zijn bindend; een skill-advies dat ermee botst, verliest.
 
@@ -285,6 +285,36 @@ opnam. Op 5 september droeg een verse reeks drie keer op één dag een oude zaak
 drie keer mis: gidsdata uit 2023/2024 boven zaken van achttien, meer dan tien en
 eenenveertig jaar. **De volgorde is dus: zeef op namen, dan onmiddellijk de eigen
 over-onspagina voor de leeftijd, dan de klantenstopronde, dan pas het adres.**
+
+**Welke eenbedrijfsbronnen de zin daadwerkelijk voeren — gemeten, niet vermoed
+(1.19).** De vorm `site:<gids> "Opgericht als" OF "opgericht op" <steden>` is
+alleen zoveel waard als de gids per bedrijf een eigen pagina heeft. Drie
+metingen liggen er nu:
+
+- **`alleglazenwassers.nl` voert leeftijd én KvK in één zin** ("Opgericht als
+  Glazenwasser (KvK-nummer X) ... sinds JAAR"). Vier leeftijden per ronde op
+  05-09, ruim dertig namen over zes ronden op 06-09. Twee diensten op rij, dus
+  hij staat hier; hij is de enige bron in dit hoofdstuk waarvan de datum een
+  échte oprichtingsdatum is.
+- **De `-info.nl`-familie voert de zin niet.** `hondentrimsalon-info.nl`,
+  `dierenpension-info.nl` en `glazenwasser-info.nl` gaven op 06-09 in vier
+  ronden geen enkele eenbedrijfspagina met die zin; het zijn plaatsengidsen.
+  Dit is een negatief resultaat en het hoort hier zodat niemand er nog ronden
+  in steekt.
+- **`hovenier.website` voert de zin wél** (dertien hoveniers mét datum in één
+  ronde), **maar de datum is de VESTIGINGSdatum van 1.18(b) en géén leeftijd.**
+  Dat is op 06-09 in twee onafhankelijke lanes zeven keer bevestigd: lane A op
+  vier dossiers (Durk Hoveniers gids 01-01-2023 tegen eigen pagina 2006; Aapkes
+  gids 01-01-2023 tegen KvK 02089846; Schoonmaakbedrijf het Noorden KvK
+  87086301 tegen "meer dan twaalf jaar" op de eigen site; HA Schoonmaak
+  erkenning 2019 tegen KvK 65506820), lane B op drie (Herkert tweede generatie;
+  Hurrelbrink KvK 08159858 naast een gidsdatum uit 2023; Van Rijbroek B.V. uit
+  2011 onder gidsdatum 08-06-2022).
+
+**De regel die eruit volgt en die vanaf nu bij elke van deze bronnen hoort:**
+een gidsdatum uit 2022 of later opent één verplichte ronde — de eigen
+over-onspagina — en die ronde gaat vóór elke adresronde. Hij kost één zoekopdracht
+en bespaarde op 06-09 in beide lanes drie tot vijf per dossier.
 
 ## De prijsaanpassing met het lopende jaartal — een poort-(a)-route (1.13)
 
@@ -577,6 +607,25 @@ wil houden.
   groepen tegelijk.
 
 ## Changelog
+
+- 1.19 (2026-09-06, Azzouz, verificatie lanes A+B): één regel, over de
+  namenbronnen uit 1.17(b), en zij is de uitkomst van de opdracht die ik lane A
+  op 05-09 gaf ("werkt hij opnieuw, dan gaat hij in het fundament; werkt hij
+  niet, dan meld je dát"). Alle drie de delen van dat antwoord staan nu bij de
+  vakgidszeef: de `alleglazenwassers.nl`-vorm haalt de drempel van twee diensten
+  en is opgenomen; de `-info.nl`-familie voert de zin aantoonbaar níet en is als
+  negatief resultaat opgenomen zodat niemand er ronden in steekt; en
+  `hovenier.website` voert hem wél maar met de vestigingsdatum, waarmee 1.18(b)
+  vandaag zijn zwaarste bevestiging krijgt — zeven gevallen op één dag in twee
+  lanes die elkaars bestand niet kenden. De verplichte over-onsronde bij elke
+  gidsdatum van 2022 of later is daarmee geen aanbeveling meer maar de volgorde
+  zelf. **Niet opgenomen:** het voorstel van lane A om mobiele fietsenmakers als
+  sector te sluiten op het WhatsApp-argument. Het argument is goed en het bewijs
+  is echt (vier zaken die appen als eerste afspraakweg voeren), maar een sector
+  sluiten is een besluit van de owner en van het weekrapport, niet van een
+  dagverificatie; het staat als voorstel in mijn conclusie. Ook niet opgenomen:
+  lane B's voorstel om dierenpension uit de rotatie te halen — zelfde grond,
+  plus één lane en één meting.
 
 - 1.18 (2026-09-05, Azzouz, verificatie lanes C+D): twee regels, allebei op de
   drempel gehouden tot het bewijs er was. **(a) "De platformzoekopdracht sluit
