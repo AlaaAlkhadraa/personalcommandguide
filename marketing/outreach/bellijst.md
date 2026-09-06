@@ -234,7 +234,7 @@ levensteken. Volgens de leesregel bovenaan dit bestand is dat belklaar.
 
 | Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
 |---|---|---|---|---|---|
-| Jodieh's Trimsalon | Westbroek (De Bilt) | hondentrimsalon | 06-57468912 | **ja** — eigen tarievenpagina voert aangepaste tarieven voor 2026 | KvK 82814384, begin 2022, uitbreiding openingsdagen (De Vierklank 06-01-2025). Lek hard: bellen is de enige afspraakweg die de zaak zelf noemt. Vier zoekronden zonder e-mailadres. Onderwerp en bericht liggen woordelijk klaar in `2026-09-02-d.md` |
+| Jodieh's Trimsalon | Westbroek (De Bilt) | hondentrimsalon | 06-57468912 | **ja** — eigen tarievenpagina voert aangepaste tarieven voor 2026 | KvK 82814384, begin 2022, uitbreiding openingsdagen (De Vierklank 06-01-2025). Lek hard: bellen is de enige afspraakweg die de zaak zelf noemt. Vier zoekronden zonder e-mailadres. Onderwerp en bericht liggen woordelijk klaar in `2026-09-02-d.md` **06-09-2026 lane D:** zesde adresronde leeg (order 7 van Azzouz). Dossier is compleet; alleen het adres ontbreekt en dat blijft zo. Belklaar. |
 | Nova's trimsalon | Leiden | hondentrimsalon | 06-28563589 | — | Rebecca Botbijl, Maansteenpad, "recent eigen salon gestart"; geen e-mailadres en de leeftijd is niet hard te maken (drimble voert een nummer uit een oudere reeks) |
 | Baasjes Mooiste | Amersfoort | hondentrimsalon | 06-39222401 | — | Fazantenstraat 26, ook 's avonds en op zaterdag open; geen e-mailadres, geen KvK, geen oprichtingsjaar |
 | Trimsalon Purmerend | Purmerend | hondentrimsalon | zie ledger | — | Compleet dossier op poort (a) na; zes extra zoekopdrachten op 02-09 zonder resultaat. Eén blik op de Google-recensies sluit de poort |
@@ -423,7 +423,7 @@ tweede heeft het nummer wel en het gedateerde levensteken niet.
 | Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
 |---|---|---|---|---|---|
 | Trimsalon Hondenvriendjes | Assendelft (Zaanstad) | hondentrimsalon | 06-20279037 | — | Jessica, Simone de Beauvoirstraat 7, KvK 95024980 (2024/2025), eigen domein met over-mij- en tarievenpagina. Lek hard: het contactformulier is de enige afspraakweg die de zaak zelf noemt. Drie zoekronden zonder e-mailadres. Eén blik op de tarievenpagina of de socials sluit poort (a) |
-| Nessi's Hondentrimsalon | Spijkenisse (Nissewaard) | hondentrimsalon | 06-51732309 | — | Kraanvogelhoek 3, 3201 HE, KvK 90234839 (2023), eigen domein nessishondentrimsalon.nl. **Heeft wél een e-mailadres** (info@nessishondentrimsalon.nl, op de Oozo-eenbedrijfspagina), dus staat hier alleen voor de datumvraag: drie ronden op Instagram, Facebook en reviews gaven geen enkel gedateerd spoor binnen twaalf maanden. Sluit die poort en het is meteen een kaart, want boekingspoort en leeftijd zijn al dicht |
+| Nessi's Hondentrimsalon | Spijkenisse (Nissewaard) | hondentrimsalon | 06-51732309 | — | Kraanvogelhoek 3, 3201 HE, KvK 90234839 (2023), eigen domein nessishondentrimsalon.nl. **Heeft wél een e-mailadres** (info@nessishondentrimsalon.nl, op de Oozo-eenbedrijfspagina), dus staat hier alleen voor de datumvraag: drie ronden op Instagram, Facebook en reviews gaven geen enkel gedateerd spoor binnen twaalf maanden. Sluit die poort en het is meteen een kaart, want boekingspoort en leeftijd zijn al dicht **06-09-2026 lane D:** poort (a) na vijf ronden nog open, maar let op — dit is géén belregel meer in de gewone zin: haar e-mailadres info@nessishondentrimsalon.nl IS bekend, dus zodra één gedateerd spoor opduikt gaat zij naar het bord en niet naar de telefoon. De verzendklare tekst ligt in 2026-09-06-d.md. |
 
 Sam, 5 september 2026
 
@@ -450,3 +450,21 @@ Daphne's Trimsalon (Borculo), waar het e-mailadres er wél was.
 
 Sam, 5 september 2026
 
+
+---
+
+## Noord-Holland, Zuid-Holland, Utrecht — lane D, 6 september 2026
+
+Drie bedrijven binnen het leeftijdsvenster met een telefoonnummer en zonder
+vindbaar e-mailadres. Alle drie zijn in twee vormen gejaagd (kaal en met het
+straatadres erbij) en bij alle drie is de uitkomst hetzelfde — zie de
+adresroutetoets in `2026-09-06-d.md`, die op vier dossiers naast elkaar nul
+extra adressen opleverde.
+
+| Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
+|---|---|---|---|---|---|
+| Hondenoppas Woeff | Zandvoort | hondenoppas/uitlaat/trim | 06-29202168 | — | KvK 88921549 (2022/23), Boulevard Paulus Loot 17B, eigen domein hondenoppaswoeff.nl. Geen e-mailadres in twee vormen; poort (a) niet gejaagd omdat het adres al viel |
+| Hondentrimsalon Helen | Oterleek (gem. Alkmaar) | hondentrimsalon | — | **ja** — salon geopend 30-08-2024 (eerder vastgesteld) | Dorpsstraat 3, eigen domein hondentrimsalonhelen.nl. Vijfde adresronde leeg; de eigen site voert uitdrukkelijk formulier plus WhatsApp als route. Staat hier zonder nummer: dat is in vijf ronden evenmin bovengekomen, dus deze regel is pas belklaar als iemand het nummer vindt |
+| TZ Tuinen | Kwintsheul (Westland) | hovenier | 06-14979494 | — | **Let op: dit is géén belregel maar een bijna-kaart.** info@tztuinen.nl is bekend en geverifieerd; alleen poort (a) staat na vier ronden nog open. Zodra er één gedateerd spoor is, gaat hij naar het bord |
+
+Sam, 6 september 2026
