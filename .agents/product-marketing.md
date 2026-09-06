@@ -232,6 +232,29 @@ reviewtekst — een gids die reviews importeert, importeert ook de reviews van d
 buren. Poort (a) sluit alleen op een review die zowel een eigen datum als een
 eigen onderwerp heeft.
 
+**De samenvattende alinea boven de zoekresultaten is geen bron (1.20a).** Dit is
+de gevaarlijkste bronfout die de lanes tot nu toe hebben gevonden, want hij
+vermomt zich niet als een gids maar als een citaat, en hij vult precies het gat
+dat poort (a) openhoudt: een jaartal. In deze omgeving schrijft het model dat de
+zoekresultaten samenvat er feiten bij die in geen enkele onderliggende pagina
+staan. Twee gevallen op 06-09 in lane C, plus een onafhankelijke reproductie door
+de verificatie diezelfde dag:
+
+- Hondenschool de Walsert publiceert een vakantiemelding "gesloten van 25
+  augustus t/m 8 september" **zonder jaartal**, in vijf ronden en bij drie
+  agenten. De samenvatting antwoordt: "Hondenschool De Walsert is gesloten van 25
+  augustus t/m 8 september **in 2026**" — respectievelijk "during the current time
+  period". Dat jaartal is een gevolgtrekking van de samenvatter, geen paginatekst.
+- Leeters Dienstverlening noemt zich op zijn eigen pagina "een jong bedrijf"
+  zonder jaartal. De samenvatting biedt aan de datum uit de sitemetadata af te
+  leiden: "established around September 2022". Ook dat staat nergens.
+
+**Alleen geciteerde paginatekst is een bron.** Een zin die alleen in de
+samenvatting bestaat en niet in een resultaat terug te vinden is, sluit geen
+poort — ook niet als hij plausibel is, ook niet als het venster dat hij noemt op
+dit moment loopt. Wie hem toch gebruikt, sluit de duurste poort van het bord op
+een zin die de zoekmachine zelf heeft geschreven.
+
 Voor Sam betekent dit dat de geen-website-groep wél door de poort kán, maar
 via het register en het vergunningenspoor, niet via de gidsenstempel. De
 eerste zoekopdracht bij een bedrijf zonder site is daarom
@@ -350,6 +373,21 @@ De route werkt in elke afspraaksector die met uurtarieven werkt en dus in
 januari aanpast: trimsalons, kapsalons, pedicures, schoonheidssalons, fysio —
 precies de sectoren waar het agendabericht op past.
 
+**En hij werkt NIET in sectoren met een bindende cao of een landelijk normbedrag
+(aanscherping 06-09).** Lane C draaide hem op 6 september vier keer, in vier
+sectoren, en hij faalde vier keer op dezelfde grond: in schoonmaak,
+glazenwasserij en hovenierswerk is "per 1 januari 2026 zijn de tarieven
+aangepast" geen mededeling van het bedrijf maar een **cao-bericht**, en de
+resultaten vullen zich met `schoonmakendnederland.nl`, de cao Hoveniersbedrijf en
+brancheprijsindexaties. Bij gastouders gebeurt hetzelfde met het maximumuurtarief
+voor de kinderopvangtoeslag. Het bedrijfsniveau verdrinkt in het branchenieuws.
+Lane D bevestigde dezelfde dag de andere helft: in trimsalons gaf één opdracht
+zes salons met een gedateerde eigen prijsaanpassing — maar vijf ervan lagen
+buiten zijn lane-regio, want de zeef mist een geografische knop. **Zet de plaats
+of provincie dus ín de opdracht, en gebruik de route alleen waar de ondernemer
+zijn eigen uurtarief zet.** Waar een cao geldt, is de sinds-regel op het eigen
+domein (1.14) de goedkoopste poort-(a)-sluiter.
+
 ## Welke bron een e-mailadres draagt
 
 Niet elk openbaar adres is even hard, en het verschil zit in de vorm van de
@@ -379,6 +417,53 @@ oprichtingsdatum, adres en telefoon terug en juist géén e-mailadres. Eén hard
 eenbedrijfspagina is genoeg om de poort te halen — maar noteer dan één bron,
 want een opgeblazen zekerheid is precies de plek waar de volgende lane niet
 meer nakijkt.
+
+**Het eigen domein is de enige bron die leeftijd, adres én levensteken tegelijk
+draagt (1.20b).** Op 6 september stelden lane C en lane D dit onafhankelijk van
+elkaar vast, op dezelfde dag, uit verschillende hoeken, en met een telling
+eronder. Lane C: **vijf van vijf** bedrijven mét eigen domein gaven in één
+gerichte ronde (`<domein> contact e-mailadres info@`) hun adres —
+Glazenwasser Plus, Zeelen Glasbewassing, Leeters Dienstverlening, Dierenpension
+Zeeland, Dierenpension Oosterhout. **Nul van vijf** bedrijven zónder eigen domein
+gaven er een, na drie ronden elk: AV groen, Loof groenonderhoud, Kellsservice,
+Dankers-Uitvoering, Blink&Pro. Lane D kwam via de bronnenkant tot dezelfde
+uitkomst: de vakgidszeef levert namen mét datum en zonder adres (een ongeclaimd
+gidsprofiel bevat per definitie geen adres), het SBB-register levert adres zonder
+levensteken, en alleen het eigen domein draagt een contactpagina, een
+over-onspagina met een startjaar en meestal een pagina met een datum. **De twee
+enige goedgekeurde kaarten van beide lanes die dag kwamen allebei uit deze route
+en geen enkele uit de gidsroute.**
+
+De jaagvolgorde die eruit volgt: eerst het ledger op naam over de volle lengte,
+dan een zeef op bedrijven mét eigen domein, dan de leeftijd van de eigen
+over-onspagina, dan de klantenstopronde, dan het adres. Dat is de omgekeerde
+volgorde van de gidsroute, en hij kost minder ronden.
+
+**De operationele helft: stel het lek vast met een `site:`-ronde, niet met een
+paginabezoek.** In een omgeving waarin eigen domeinen niet te laden zijn, geeft
+`site:<domein> reviews OR referenties OR projecten OR ervaringen OR klanten OR
+tarieven` de complete lijst geïndexeerde eigen pagina's terug — en daarmee
+positief wat er wél staat en wat er níét staat. Zo is bij Glazenwasser Plus
+vastgesteld dat er vier eigen pagina's zijn en geen enkele met afgerond werk of
+klantoordeel, en bij Zeelen dat het er vijf zijn met hetzelfde gat. Zonder deze
+ronde is 1.20(b) in zo'n omgeving niet uitvoerbaar: lane D parkeerde TZ Tuinen
+dezelfde dag met de motivering "ik kan die pagina niet laden, dus ik weet niet of
+het afgeronde werk erop staat", terwijl één `site:`-ronde het antwoord had
+gegeven. De terughoudendheid was juist — een offertelek verkopen aan een site die
+je niet gezien hebt is de fout van 25-08 — de gevolgtrekking was onnodig.
+
+**Wat deze regel NIET zegt.** Hij waardeert de geen-websitegroep niet af en kan
+dat ook niet: de owner heeft op 24 augustus vastgelegd dat de hoog gewaardeerde
+zaak zónder website het prime target is, en een fundamentregel overruled geen
+order. Wat hij zegt is smaller en waar: sinds 25 augustus wordt een kaart zonder
+geverifieerd openbaar e-mailadres afgekeurd, en in deze omgeving levert een zaak
+zonder eigen domein dat adres structureel niet op. **Die groep is daarmee een
+bellijstgroep en geen mailgroep** — niet omdat ze slechter is, maar omdat het bord
+alleen langs e-mail verstuurt. Lane D vond dezelfde muur van de andere kant bij
+Hondentrimsalon Helen en Jodieh's Trimsalon: allebei sterk op profiel, allebei
+alleen op het adres gevallen, allebei met een formulier en WhatsApp als bewuste
+contactroute. De keuze die daaruit volgt — het prime target verschuiven of het
+bord een tweede verzendweg geven — ligt bij de owner en staat in het weekrapport.
 
 ## Twee regels die geen poort zijn
 
@@ -607,6 +692,51 @@ wil houden.
   groepen tegelijk.
 
 ## Changelog
+
+- 1.20 (2026-09-06, Azzouz, verificatie lanes C+D): twee regels, allebei op de
+  drempel gehouden tot twee lanes ze onafhankelijk droegen, plus één aanscherping
+  van 1.13. **(a) "De samenvattende alinea boven de zoekresultaten is geen bron"**
+  toegevoegd bij "Wiens daad draagt de datum". Dit is de enige bronfout die zich
+  als citaat vermomt en die precies het gat vult dat poort (a) openhoudt: een
+  jaartal. Lane C ving hem twee keer op één dag (de Walsert: "gesloten van 25
+  augustus t/m 8 september **in 2026**", waar de pagina geen jaartal draagt;
+  Leeters: "established around September 2022", afgeleid uit sitemetadata) en
+  weigerde allebei. Ik heb hem diezelfde dag onafhankelijk gereproduceerd op de
+  Walsert. Opgenomen bij één dienst in plaats van twee, omdat de kosten van de
+  fout eenzijdig zijn: hij sluit de duurste poort van het bord op een zin die de
+  zoekmachine zelf heeft geschreven. **(b) "Het eigen domein is de enige bron die
+  leeftijd, adres én levensteken tegelijk draagt"** toegevoegd bij "Welke bron een
+  e-mailadres draagt", mét de `site:`-lekronde als operationele helft. Lane C en
+  lane D stelden dit op 06-09 onafhankelijk vast, uit verschillende hoeken, met
+  een telling (5 van 5 mét eigen domein tegen 0 van 5 zonder, na drie ronden elk),
+  en beide goedgekeurde kaarten van die dag komen eruit. Dat is de drempel waarop
+  ook 1.13 en 1.17 zijn aangenomen. **Opgenomen in ingeperkte vorm:** lane D's
+  eigen formulering ("wij selecteren op de eigenschap die het dossier onvindbaar
+  maakt") leest als een afwaardering van de geen-websitegroep, en dat zou de order
+  van de owner van 24 augustus overrulen — wat een fundamentregel niet mag. De
+  opgenomen vorm zegt alleen dat die groep poort (b) niet haalt op een bord dat
+  uitsluitend mailt, en legt de keuze bij de owner. **Aanscherping van 1.13:** de
+  prijsaanpassingsroute werkt niet in sectoren met een bindende cao of een
+  landelijk normbedrag (schoonmaak, glazenwasserij, hovenierswerk, gastouders) —
+  daar is dezelfde zin een cao-bericht en verdrinkt het bedrijfsniveau in
+  branchenieuws; lane C draaide hem vier keer in vier sectoren en hij faalde vier
+  keer. Lane D leverde de andere helft: de route werkt wel in trimsalons maar is
+  niet op provincie te sturen, dus de plaatsnaam moet ín de opdracht.
+  **Niet opgenomen:** de straatnaam-adresroute van lane D — die stond als order om
+  op vijf dossiers te tellen, lane D draaide hem op vier (het vijfde was al op de
+  kale vorm gesloten, en hij schreef dat er eerlijk bij), haalde nul extra
+  adressen en trok zijn eigen voorstel in. Wat ervan overblijft is een gewoonte en
+  geen regel: het straatadres duwt de zoekmachine naar de eenbedrijfspagina en
+  maakt het resultaat schóner, niet rijker — een precisiewinst tegen de val van
+  1.6, geen vindwinst.
+  **Nummering:** de verificatie van lanes A+B liep vandaag opnieuw parallel in een
+  tweede sessie en claimde 1.19 als eerste op `main`, dus deze regels staan als
+  1.20 — voor de tweede dag op rij, en het is de tweede keer dat ik het achteraf
+  moet rechtzetten. De twee entries spreken elkaar niet tegen en raken elkaar op
+  één punt: A+B legt bij de vakgidszeef vast welke gidsfamilies de leeftijdszin
+  wél en niet voeren, en 1.20(b) hieronder legt uit waarom die zeef sowieso geen
+  adres draagt en het eigen domein wel. **Voor de volgende zondag hoort in de
+  directieven te staan welke lane welk nummerbereik krijgt**, zodat dit ophoudt.
 
 - 1.19 (2026-09-06, Azzouz, verificatie lanes A+B): één regel, over de
   namenbronnen uit 1.17(b), en zij is de uitkomst van de opdracht die ik lane A
