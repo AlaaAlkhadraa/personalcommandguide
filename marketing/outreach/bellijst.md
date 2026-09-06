@@ -494,3 +494,21 @@ Sam, 6 september 2026
 | Dierenpension Oosterhout | Oosterhout (NB) | dierenpension | 0162-454087 | — | E-mail is er wél (dpoosterhout@tutanota.com) en de KvK-reeks 86720872 wijst op 2022, maar de eigen site noemt zich een familiebedrijf en twee ronden gaven geen oprichtings- of overnamejaar: leeftijd onbeslist (1.15/1.16). Poort (a) ook open — Yelp voert alleen "Updated February 2026", een uitgeversstempel |
 | Blink&Pro Glasbewassing | Tilburg (NB) | glazenwasser | — | — | Geen telefoonnummer en geen e-mailadres losgekomen in twee ronden. Staat hier omdat het profiel klopt als een bus: jonge glasbewasser, eigen recensies op Werkspot, levende Instagram, en als enige "site" een gratis vev.co-pagina |
 | Hondenschool de Walsert | Rijkevoort-De Walsert (NB) | hondenschool | 06-42556632 | — | Zeven poorten dicht en de tekst ligt klaar sinds 05-09; alleen poort (a) open. Drie door Azzouz voorgeschreven routes plus twee eigen routes gedraaid op 06-09, alle bronpagina's geblokkeerd. Bellen is hier sneller dan nog een zoekronde |
+
+---
+
+## Groningen, Friesland, Drenthe — lane A, 6 september 2026
+
+Drie bedrijven binnen het leeftijdsvenster, met een eigen domein en een eigen
+contactpagina, die daar geen adres publiceren. Bij twee van de drie meldt de
+gids dat uitdrukkelijk — dat is het verschil tussen "niet gevonden" en "bestaat
+niet", en het is de reden dat verder zoeken bij deze drie geen ronden meer waard
+is. Volledige verantwoording in `2026-09-06-a.md`.
+
+| Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
+|---|---|---|---|---|---|
+| vdv stukadoors | Leeuwarden | stukadoor | 06-39219381 | Werkspot-profiel, 10 uit 2 beoordelingen | KvK 85468134, opgericht 01-02-2022, eenmanszaak, eigen domein vdvstukadoors.com. Gidsen melden uitdrukkelijk dat er geen e-mailadres bekend is (lane A, 06-09) |
+| Stukadoors- en schildersbedrijf Mahmudov | Heerenveen | stukadoor/schilder | 06-19123170 | Werkspot-profiel met reviews | KvK 83826629, opgericht 16-09-2021, eenmanszaak, Koornbeursweg 230, eigen domein. Geen e-mailadres bekend volgens de gidsen (lane A, 06-09) |
+| Oost Clean Support | Harlingen | glazenwasser | 085-0048307 | Levende Instagram @oostcleansupport | KvK 84889772, sinds 2022, Pieter Jelles Troelstrastraat 31, eigen domein met dienstenpagina en over-onspagina. Drie adresronden; contact loopt uitsluitend via een formulier (lane A, 06-09) |
+
+Sam, 6 september 2026

@@ -897,3 +897,39 @@ Sam, 6 september 2026
 | Kellsservice | Heerlen | KvK 89055551 (2023), hovenier; alleen een hoveniers.online-eenbedrijfspagina. Drie ronden. LET OP lookalike: Kells Service Centre is een garage in Ontario | 2026-09-06 |
 | Dankers - Uitvoering | Son en Breugel | KvK 87507455, hovenier sinds 2022, Afrikalaan 35 5691 ZH, 1 werkzaam persoon; oozo- en hoveniers.online-vermelding. Geen eigen domein. Twee ronden | 2026-09-06 |
 | Blink&Pro Glasbewassing | Tilburg | Werkspot-profiel met eigen recensies, Instagram (@blink_pro_glasbewassing), Marktplaats-advertentie en als enige eigen pagina een gratis bouwerpagina op vev.co. Precies op profiel (gratis subdomein). Twee ronden; ook het KvK-nummer kwam niet los. Verdient een ronde in een omgeving die Instagram kan lezen | 2026-09-06 |
+## 6 september 2026 — lane A (Groningen, Friesland, Drenthe)
+
+Negen bedrijven, alle negen binnen het leeftijdsvenster en alle negen zonder
+openbaar e-mailadres na twee of meer ronden. Ze staan hier en niet op het bord.
+
+| Bedrijf | Plaats | Sector | Leeftijd | Wat er wél is | Ronden |
+|---|---|---|---|---|---|
+| ESB Schoonmaak & Glasbewassing | Groningen | schoonmaak/glazenwasser | KvK 92492290, 2024 | Kornoeljestraat 1-m 9741 JA | 2 |
+| HD Specialistische Schoonmaak | Stadskanaal | schoonmaak | KvK 90085752, 2023 | Koninginnelaan 12 9503 KL | 2 |
+| Wilkens Bedrijfsdiensten | Hoogezand | schoonmaak/glazenwasser | KvK 83128425, 2021 | van Linschotenstraat 3 9601 HH | 2 |
+| Octo Schoonmaakbedrijf | Groningen | schoonmaak | KvK 84177284, 2021 | Damsterdiep 54 9713 EJ | 2 |
+| Akse Schoonmaak en Klussen | Veendam | schoonmaak | KvK 77101170, 2020 | Veendam-Kern | 2 |
+| HSE Schoonmaakbedrijf | Assen | schoonmaak | KvK 77052838, 2020 | Lariks, Assen | 2 |
+| Bezt | Assen | glazenwasser | KvK 76509869, 2019 | Peelo, Assen; 1 medewerker | 2 |
+| Leo boomverzorging | Groningen | boomverzorging | KvK 84885149, 2022 | Gelderse Roosstraat 60, eigen domein met blog | 2 |
+| Grienwurk Fonk | Drachten | hovenier | opgericht 04-04-2023 | eenmanszaak, 1 persoon | 3 |
+| Dijkstra boom en groen | Opende/Drachten | hovenier | KvK 91270928, 01-09-2023 | 9,9 uit 2 beoordelingen | 2 |
+
+**Apart genoteerd, want dit is geen "nog niet gevonden":**
+**Extra Clean Schoonmaakbedrijf** (Emmen, KvK 85125288, 2022, Fokkingeslag 39).
+Telefoonboek.nl meldt dat de adresgegevens **op verzoek van de Kamer van
+Koophandel zijn afgeschermd**. Dat is een besluit van de ondernemer zelf. Een
+volgende lane hoeft hier geen ronde meer in te steken, en dat is een
+betrouwbaarder cijfer dan een leeg zoekresultaat.
+
+**Wat deze tien samen zeggen.** Het zijn precies de bedrijven die het
+leeftijdsvenster hálen — 2019 tot 2024, eenmanszaken en zaken van één tot vijf
+mensen — en ze publiceren geen van allen een adres. Dat is vandaag de derde
+onafhankelijke meting van dezelfde conjunctie in twee dagen (lane A gisteren 12
+van 46, lane B gisteren 8 van 36, vandaag 20 van 74). Zie de bevinding daarover
+in `2026-09-06-a.md`: de omgekeerde trechter (eerst jagen op bronnen die
+gegarandeerd een adres dragen) is vandaag gemeten en verplaatst de muur wel,
+maar haalt hem niet weg — vier Stagemarkt-adressen, vier keer een bedrijf dat
+te oud is.
+
+Sam, 6 september 2026
