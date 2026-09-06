@@ -487,3 +487,10 @@ bestand. Zie de bevinding in `2026-09-06-b.md`; het voorstel is om de
 verplichte sectorgrep over alle drie de bestanden te laten lopen.
 
 Sam, 6 september 2026
+## Lane C — Limburg, Noord-Brabant, Zeeland (aanvulling 2026-09-06)
+
+| Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
+|---|---|---|---|---|---|
+| Dierenpension Oosterhout | Oosterhout (NB) | dierenpension | 0162-454087 | — | E-mail is er wél (dpoosterhout@tutanota.com) en de KvK-reeks 86720872 wijst op 2022, maar de eigen site noemt zich een familiebedrijf en twee ronden gaven geen oprichtings- of overnamejaar: leeftijd onbeslist (1.15/1.16). Poort (a) ook open — Yelp voert alleen "Updated February 2026", een uitgeversstempel |
+| Blink&Pro Glasbewassing | Tilburg (NB) | glazenwasser | — | — | Geen telefoonnummer en geen e-mailadres losgekomen in twee ronden. Staat hier omdat het profiel klopt als een bus: jonge glasbewasser, eigen recensies op Werkspot, levende Instagram, en als enige "site" een gratis vev.co-pagina |
+| Hondenschool de Walsert | Rijkevoort-De Walsert (NB) | hondenschool | 06-42556632 | — | Zeven poorten dicht en de tekst ligt klaar sinds 05-09; alleen poort (a) open. Drie door Azzouz voorgeschreven routes plus twee eigen routes gedraaid op 06-09, alle bronpagina's geblokkeerd. Bellen is hier sneller dan nog een zoekronde |

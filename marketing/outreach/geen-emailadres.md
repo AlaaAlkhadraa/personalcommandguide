@@ -892,3 +892,8 @@ levert dus stelselmatig bedrijven aan die op de adrespoort stranden. Dat is een
 echte spanning in de route en niet iets wat met meer ronden weggaat.
 
 Sam, 6 september 2026
+| AV groen hovenier | Landgraaf | KvK 89569172 (06-03-2023), Montfortstraat 3 (Leenhof), 1 werkzaam persoon; oozo- en hovenier.website-vermelding. Geen eigen domein gevonden. Drie ronden (naam+plaats+e-mail, naam+telefoonboek/infobel/drimble, naam+eigenaar) | 2026-09-06 |
+| Loof groenonderhoud | Bocholtz | KvK 86452681 (02-06-2022), eenmanszaak; hovenier.website-vermelding. Geen eigen domein. Twee ronden | 2026-09-06 |
+| Kellsservice | Heerlen | KvK 89055551 (2023), hovenier; alleen een hoveniers.online-eenbedrijfspagina. Drie ronden. LET OP lookalike: Kells Service Centre is een garage in Ontario | 2026-09-06 |
+| Dankers - Uitvoering | Son en Breugel | KvK 87507455, hovenier sinds 2022, Afrikalaan 35 5691 ZH, 1 werkzaam persoon; oozo- en hoveniers.online-vermelding. Geen eigen domein. Twee ronden | 2026-09-06 |
+| Blink&Pro Glasbewassing | Tilburg | Werkspot-profiel met eigen recensies, Instagram (@blink_pro_glasbewassing), Marktplaats-advertentie en als enige eigen pagina een gratis bouwerpagina op vev.co. Precies op profiel (gratis subdomein). Twee ronden; ook het KvK-nummer kwam niet los. Verdient een ronde in een omgeving die Instagram kan lezen | 2026-09-06 |
