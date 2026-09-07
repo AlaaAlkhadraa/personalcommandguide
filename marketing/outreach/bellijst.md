@@ -535,3 +535,21 @@ niet op bewijs, en dat hoort erbij te staan.
 | Hondentrimsalon De Oude Haven | Rotterdam | hondentrimsalon | 010-2362531 (WhatsApp 06-43037078) | — | KvK 87846721 (2022), Haringvliet 619. **Het e-mailadres is er wél** (info@trimsalondeoudehaven.nl) en zeven poorten zijn dicht, inclusief de boekingspoort: uitsluitend op afspraak via bellen, WhatsApp of mailen, geen platformprofiel. Alleen poort (a) blijft open na vier ronden. Staat hier omdat bellen hier sneller is dan nog een zoekronde, precies zoals bij Hondenschool de Walsert (lane C) (lane D, 07-09) |
 
 Sam, 7 september 2026
+## Lane C — Limburg, Noord-Brabant, Zeeland (aanvulling 2026-09-07)
+
+Acht dossiers uit de geen-websitegroep, het quotum van de directives van deze week. De
+uitkomst is eenduidig en hij is hard: **nul van acht gaf een e-mailadres**, na twee tot drie
+gerichte ronden elk. Bij vijf van de acht kwam ook geen telefoonnummer boven, en dat is de
+regel die de owner moet lezen voordat hij de lijst pakt: voor die vijf is zelfs de belroute
+niet klaar. Wie belt, begint bij de bovenste drie.
+
+| Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
+|---|---|---|---|---|---|
+| Glazenwassersbedrijf Potters | Roermond (LB) | glazenwasser | — (contactformulier) | — | KvK 88183688 (2022, "3 jaren" op de gidspagina), eigen domein glazenwassersbedrijfpotters.nl, Stationspark 190, werkt met osmosewater voor Roermond en gemeente Leudal. **Drie** adresronden; contact loopt uitsluitend via een formulier. Sterkste profiel van deze acht: eigen domein én leeftijd op profiel, alleen het adres ontbreekt |
+| GroenPlezier Hovenier | Helmond (NB) | hovenier | — | — | Eigenaar Martijn Vogels, opgericht 01-04-2023, eigen domein groenplezierhovenier.nl met een eigen `/martijn-vogels/`-pagina ("besloot voor zichzelf te beginnen"). Drie adresronden, niets. Eén ronde van een kaart af |
+| D.A Hovenier & Allround Klussen | Gennep (LB) | hovenier/klusbedrijf | 06-19387000 | Werkspot-review 12-09-2025 | HEEFT wél een e-mailadres (`D.A.hovenier.en.klussen@hotmail.com`) en staat hier om de andere reden: 3,6 uit 5 op 57 Werkspot-beoordelingen faalt op de "goed bedrijf"-helft van de order van 24-08, en 57 beoordelingen naast oprichting 25-04-2025 maken de leeftijd tegenstrijdig (1.15). Bellen kan; mailen namens het bord niet |
+| Glazenwasser Simon | Kerkrade (LB) | glazenwasser | — | — | KvK 88600084, sinds 2023, Platanenstraat 16 6464 XG, 1 werkzaam persoon, vestigingsnummer 000054449782. Geen eigen domein, geen adres, geen telefoonnummer in twee ronden |
+| Totaal Glans | Bergen op Zoom (NB) | glazenwasser/schoonmaak | — | — | KvK 85122149 (2022), Amstelstraat 19 4615 BX, vestigingsnummer 000048552038. LET OP: Oozo voert op dezelfde buurt **twee** entiteiten, "Totaal Glans" en "Totaal Glans V.O.F." — stel eerst vast welke handelt, want een V.O.F.-omzetting maakt de gidsleeftijd onbetrouwbaar (1.15) |
+| Cleancomplete | Valkenswaard (NB) | glazenwasser | — | — | KvK 83859187, sinds 2021, Julianastraat 32 5554 JC, vestigingsnummer 000050007270. Twee ronden, geen domein en geen adres |
+| Sam's Cleaning Service | Rijen (NB) | glazenwasser | — | — | KvK 82236402, sinds 2021, 1 werkzaam persoon, vestigingsnummer 000048483494. LET OP de naamgenoot in Badhoevedorp (KvK 66647444) die de ronden vervuilt |
+| Ramenwas Service Eberwijn | Posterholt (LB) | glazenwasser | — | — | KvK 93187440, sinds 2024, Burg Geradtsstraat 26, 1 ervaren medewerker, vestigingsnummer 000058749381. Jongste zaak van de acht en dus op profiel; geen domein, geen adres, geen nummer |
