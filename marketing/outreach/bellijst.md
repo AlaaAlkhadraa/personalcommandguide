@@ -512,3 +512,26 @@ is. Volledige verantwoording in `2026-09-06-a.md`.
 | Oost Clean Support | Harlingen | glazenwasser | 085-0048307 | Levende Instagram @oostcleansupport | KvK 84889772, sinds 2022, Pieter Jelles Troelstrastraat 31, eigen domein met dienstenpagina en over-onspagina. Drie adresronden; contact loopt uitsluitend via een formulier (lane A, 06-09) |
 
 Sam, 6 september 2026
+
+---
+
+## Lane D — Noord-Holland, Zuid-Holland, Utrecht (aanvulling 2026-09-07)
+
+Drie bedrijven binnen het leeftijdsvenster met een telefoonnummer en zonder
+e-mailadres. Bij de eerste is het overgedragen dossier van 06-09 helemaal
+afgemaakt en is de uitkomst definitief; bij de tweede is de contactroute een
+bewuste keuze van de ondernemer (uitsluitend telefoon en WhatsApp op zijn eigen
+site). Volledige verantwoording in `2026-09-07-d.md`.
+
+De kolom "gedateerd levensteken" staat bij alle drie op `—`. Dat is geen
+slordigheid: bij deze drie verandert een levensteken de uitkomst niet, want de
+kaart valt op het adres en niet op poort (a). Wie belt, belt hier op profiel en
+niet op bewijs, en dat hoort erbij te staan.
+
+| Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
+|---|---|---|---|---|---|
+| Glazenwasserij Lapland | Westzaan (gem. Zaanstad) | glazenwasser | 06-48343440 | — | KvK 81616112 (81-reeks, 2020/21), vestigingsnummer 000047895357, Groene Jagerstraat 21, 1 werkzaam persoon, ma-vr 08:00-16:00. **Geen eigen domein**, en drie adresronden (kale vorm, info@-vorm, straatadresvorm) geven vijf gidspagina's en geen enkele eigen pagina. Het dossier van 06-09 is hiermee afgemaakt en de uitkomst is definitief (lane D, 07-09) |
+| Eco Multidiensten | Amsterdam (Banne Buiksloot) | glazenwasser/schoonmaak | 06-41130469 | — | KvK 87711869 (2022), Schepenlaan 141, twee medewerkers, eigen domein eco-multidiensten.nl met home-, diensten- en contactpagina. Zijn eigen contactpagina noemt uitsluitend telefoon en WhatsApp als route; twee ronden zonder e-mailadres. Belklaar op profiel (lane D, 07-09) |
+| Hondentrimsalon De Oude Haven | Rotterdam | hondentrimsalon | 010-2362531 (WhatsApp 06-43037078) | — | KvK 87846721 (2022), Haringvliet 619. **Het e-mailadres is er wél** (info@trimsalondeoudehaven.nl) en zeven poorten zijn dicht, inclusief de boekingspoort: uitsluitend op afspraak via bellen, WhatsApp of mailen, geen platformprofiel. Alleen poort (a) blijft open na vier ronden. Staat hier omdat bellen hier sneller is dan nog een zoekronde, precies zoals bij Hondenschool de Walsert (lane C) (lane D, 07-09) |
+
+Sam, 7 september 2026

@@ -933,3 +933,39 @@ maar haalt hem niet weg — vier Stagemarkt-adressen, vier keer een bedrijf dat
 te oud is.
 
 Sam, 6 september 2026
+
+---
+
+## Lane D — Noord-Holland, Zuid-Holland, Utrecht, 7 september 2026
+
+Vier bedrijven **mét eigen domein** die op hun eigen contactpagina geen adres
+publiceren. Dat is het nieuwe deel van deze meting: 1.20(b) legt vast dat vijf
+van vijf bedrijven mét eigen domein hun adres in één gerichte ronde gaven, en
+vandaag deden drie van de vier dat níét — bij twee van hen omdat de gidsbron
+uitdrukkelijk meldt dat de gegevens **afgeschermd zijn op verzoek van de KvK**,
+bij de derde omdat de ondernemer een contactformulier als route heeft gekozen.
+
+**Het onderscheid dat hierbij hoort:** dit is geen "niet gevonden" maar een
+"bestaat niet openbaar". Verder zoeken bij deze vier is geen ronden meer waard;
+wat ze nodig hebben is een tweede verzendweg, en die beslissing ligt bij de
+owner. Volledige verantwoording in `2026-09-07-d.md`.
+
+| Bedrijf | Plaats | Sector | Wat er wél is | Ronden | Datum |
+|---|---|---|---|---|---|
+| Drechtsteden Schoonmaak & Glazenwasserij | Alblasserdam (ZH) | glazenwasser/schoonmaak | KvK 88610667, sinds 2023, drie medewerkers, eigen domein drechtsteden-schoonmaak.nl met eigen contactpagina. Sterkste profiel van de dienst. LET OP lookalike: Schoonmaak- en Glazenwasserijbedrijf Drechtsteden B.V. in Dordrecht (KvK 42285895, "44 jaar") is een ander bedrijf | 3, waarvan één op de exacte tekenreeks `"@drechtsteden-schoonmaak.nl"` | 2026-09-07 |
+| Noorden Glazenwasserij | Hoorn (NH) | glazenwasser | KvK 86348809, V.O.F., Neptunushof 12, eigen domein met over-ons- en contactpagina, Facebookpagina, Trustoo 7,4. Gidsbron meldt: contactgegevens afgeschermd op verzoek van de KvK | 2 | 2026-09-07 |
+| Kuijten Glazenwasserij & Schoonmaak | Zoetermeer (ZH) | glazenwasser | KvK 94239010 (2024), van Egmondstraat 12, eigen domein kuijtenglazenwasserij.nl. Zelfde melding: afgeschermd op verzoek van de KvK | 2 | 2026-09-07 |
+| Van Zeggeren Tuinen | Alkmaar (NH) | hovenier | Eigenaar Job van Zeggeren, gestart in 2022, Nassaulaan 21, eigen domein vanzeggerentuinen.nl. Contact loopt via een terugbelserviceformulier | 2 | 2026-09-07 |
+
+En drie **zonder** eigen domein, die de telling van lane C van 06-09 exact
+reproduceren (nul van vier, met Glazenwasserij Lapland erbij die naar
+`bellijst.md` is gegaan omdat daar wél een telefoonnummer van is):
+
+| Bedrijf | Plaats | Sector | Wat er wél is | Ronden | Datum |
+|---|---|---|---|---|---|
+| Biggie Clean | Beverwijk (NH) | glazenwasser | KvK 87743949, sinds 2022, 1 werkzaam persoon, vestigingsnummer 000053642015 | 2 | 2026-09-07 |
+| Michael's Glasbewassing | Naarden (NH) | glazenwasser | KvK 87020645 (2022), vestigingsnummer 000052951480. LET OP lookalike: J.s.glasbewassing in Naarden is een ander bedrijf | 2 | 2026-09-07 |
+| Van Stekelenburg Service | Bergschenhoek (ZH) | glazenwasser | KvK 89966384, sinds 2023, vestigingsnummer 000055721435 | 2 | 2026-09-07 |
+| V.J. Glazenwasserij | Zoetermeer (ZH) | glazenwasser | KvK 88783707, sinds 2023, Hebriden 189, vestigingsnummer 000054613930 | 2 | 2026-09-07 |
+
+Sam, 7 september 2026
