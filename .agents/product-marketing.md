@@ -1,6 +1,6 @@
 # Product Marketing Context — ZEVREN
 
-**Document version:** 1.21 · 2026-09-06
+**Document version:** 1.22 · 2026-09-07
 Elke marketingskill in `.claude/skills/` leest dit document eerst.
 Feiten hier zijn bindend; een skill-advies dat ermee botst, verliest.
 
@@ -338,6 +338,35 @@ metingen liggen er nu:
 een gidsdatum uit 2022 of later opent één verplichte ronde — de eigen
 over-onspagina — en die ronde gaat vóór elke adresronde. Hij kost één zoekopdracht
 en bespaarde op 06-09 in beide lanes drie tot vijf per dossier.
+
+### De reviewdatum op een platformprofiel draagt poort (a) niet alleen (1.22)
+
+Een profiel op Werkspot, Homedeal, Trustoo of een vergelijkbaar platform is
+geen bedrijfspagina maar een **vakmanprofiel**: het verzamelt klussen over
+categorieën heen, en de zoekmachine koppelt een datum aan een reviewtekst
+zonder te garanderen dat beide bij hetzelfde bedrijf en dezelfde klus horen.
+
+**De regel.** Een reviewdatum van een platformprofiel sluit poort (a) alleen
+als **datum, tekst én bedrijf in één resultaat samen staan**. Geeft een tweede
+ronde een afwijkende datum bij dezelfde tekst, dan **wint de oudste**. En
+citeert het bericht die review — in de onderwerpregel of in een kernalinea —
+dan moet zij die toets sowieso doorstaan, want dan draagt zij niet alleen poort
+(a) maar ook poort (c) en de geloofwaardigheid van de hele mail.
+
+**Waar hij vandaan komt.** Gomar Multidiensten (Markelo), twee diensten, twee
+keer dezelfde val. Op 28-08 hield de verificatie de kaart aan omdat de gevonden
+reviews (tuinonderhoud, stucwerk) niet in het dienstenpakket van een
+buitenreiniger passen. Op 07-09 bood lane B twee vervangende reviews aan
+(01-03-2026 en 19-01-2025) op zijn eigen profielpagina; zes onafhankelijke
+ronden reproduceerden geen van beide datums, en één ronde gaf dezelfde
+reviewtekst terug **met datum 31-05-2025 en met een klus buiten zijn pakket**
+(dakisolatie, dakraam vervangen). Vijftien maanden, dus buiten het venster.
+
+**Waarom hij streng is.** De kosten zijn eenzijdig, net als bij 1.20(a). Deze
+bron vult precies het gat dat poort (a) openhoudt — een datum — en zij vult het
+met iets dat er alleen in één ronde zo uitziet. Een gidsvermelding die te oud
+is, kost een kaart; een reviewdatum die niet klopt, kost het adres van de
+ontvanger en de naam van de owner.
 
 ## De prijsaanpassing met het lopende jaartal — een poort-(a)-route (1.13)
 
@@ -703,6 +732,29 @@ wil houden.
   groepen tegelijk.
 
 ## Changelog
+
+- 1.22 (2026-09-07, Azzouz, verificatie lanes A+B): één regel, bij "Wiens daad
+  draagt de datum" — **de reviewdatum op een platformprofiel draagt poort (a)
+  niet alleen.** Datum, tekst en bedrijf moeten in één resultaat samen staan;
+  bij twee ronden met verschillende datums bij dezelfde tekst wint de oudste; en
+  een review die het bericht citeert, moet die toets sowieso doorstaan omdat zij
+  dan ook poort (c) en de geloofwaardigheid van de mail draagt. De drempel is
+  gehaald op de manier waarop ook 1.13 en 1.17 zijn aangenomen: twee
+  onafhankelijke diensten aan hetzelfde dossier (Gomar Multidiensten, 28-08 en
+  07-09) die langs precies dezelfde weg vielen — de eerste keer op reviews buiten
+  het dienstenpakket, de tweede keer op twee datums die zes ronden niet
+  reproduceerden terwijl dezelfde tekst elders 31-05-2025 draagt bij een
+  dakisolatieklus. **Niet opgenomen:** het voorstel dat in mijn eigen directives
+  besloten ligt, dat glazenwasserij zichzelf op leeftijd zou selecteren omdat
+  osmose en softwash technieken van ná 2018 zijn. Lane A heeft die grond op
+  07-09 gemeten en weerlegd (elf van negentien vielen op leeftijd; de twee zaken
+  met het jongste techniekverhaal waren de oudste ondernemingen, Glazenwasser
+  Drenthe uit 1991 en GBC met KvK 02063951). Een moderne dienstpositionering over
+  een oude onderneming heen is een nieuwe drager van 1.15, maar het quotum
+  herschrijven is een besluit van het weekrapport en niet van een dagverificatie
+  — 1.19 legde die grens vast. Ik neem het mee naar zondag.
+  **Nummering:** binnen het bereik dat het weekrapport aan A+B toewees (1.22 t/m
+  1.30). Geen botsing met de parallelle C+D-sessie, die 1.31 t/m 1.40 schrijft.
 
 - 1.21 (2026-09-06, Azzouz, weekcyclus 31-08 t/m 06-09): drie dingen, alle drie
   besluiten die bij het weekrapport horen en niet bij een dagverificatie —
