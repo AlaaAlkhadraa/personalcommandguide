@@ -997,5 +997,47 @@ te onderbouwen is: de gidszeef en de adrespoort sluiten elkaar in deze lane vrij
 hier ronden in steekt om alsnog een adres te vinden, betaalt per naam drie zoekopdrachten voor
 een uitkomst die vooraf bekend is.
 
+## Lane A — 7 september 2026 (Groningen, Friesland, Drenthe)
+
+Elf van de tweeënveertig dossiers van vandaag vielen op het adres. Vijf ervan
+staan met een teruggevonden telefoonnummer in `bellijst.md` (Glazenwasserij de
+Zeeuw, JPB Stukadoors, Schilderbedrijf Esthetica, Bolsema Tuinen, Wonderkwast) en
+worden hier niet herhaald. De zes die daar níét op passen, omdat er ook geen
+telefoonnummer loskwam:
+
+- **Martini Stuc** (Groningen, stukadoor, gestart 01-07-2023, Kamerlingh
+  Onnesstraat 50, eigen domein `martinistuc.nl` met contact- en dienstenpagina).
+  Twee ronden. Contact loopt uitsluitend via een formulier; geen telefoonnummer
+  losgekomen, dus ook geen bellijstregel.
+- **Stukadoorsbedrijf J.W. Geleijnse** (Emmen, KvK 88646270, gidsdatum 01-01-2023,
+  Oude Roswinkelerweg 54, eigen domein met over-ons- en contactpagina, levende
+  Instagram). Twee ronden gaven het adres maar geen e-mailadres en geen nummer.
+  Tweede poort: klantoordelen staan al op zijn eigen site, dus de
+  review-bewijshoek bestaat er niet.
+- **SBR Betonvloeren** (Nieuwlande, KvK 91044308, opgericht 08-08-2023). Derde
+  ronde over drie diensten. Het register meldt uitdrukkelijk dat er geen
+  contactgegevens bekend zijn: geen e-mail, geen telefoon. **Niet opnieuw najagen
+  zonder een nieuwe bron** - dit is nu drie keer hetzelfde antwoord.
+- **Multiservice N. Visser** (Leeuwarden e.o., glazenwassen en buitenschoonmaak,
+  sinds september 2022, werkgebied 20 km rond Leeuwarden). Bestaat alleen als
+  Werkspotprofiel: geen eigen domein, geen adres, geen telefoonnummer buiten het
+  platform.
+- **HJ Bakker Bestratingen & Klussenbedrijf** (Delfzijl, opgericht 22-05-2023).
+  Op profiel en op poort (a) het sterkste dossier van deze dienst - de
+  Werkspot-beoordeling van 03-05-2026 sluit het levensteken - maar de ledgerregel
+  van 02-09 legt vast dat er noch een e-mailadres noch een telefoonnummer in de
+  zoekresultaten staat, dus hij kan ook niet naar de bellijst. Wie hem oppakt,
+  leest eerst de waarschuwing uit die regel: een beoordeling van 26-10-2024 meldt
+  dat hij niet kwam opdagen en onbereikbaar was.
+- **Ruitenboer Glasbewassing en Schoonmaak** (Leeuwarden, KvK 93505973, sinds
+  2024) stond hier al sinds 05-09 en kwam vandaag opnieuw boven als het jongste
+  profiel van de glazenwasserronde. Ik heb er bewust geen vierde adresronde in
+  gestoken; hij staat op de bellijst en dat is de goedkoopste weg.
+
+En één correctie in de andere richting, zoals de staande regel vraagt:
+**visscher hoveniers** (Opende) heeft naast `info@visscherhoveniers.nl` ook
+`visscherhoveniers@gmail.com` op de eenbedrijfspagina van `hovenier.website`.
+Hij staat niet hier maar als `lead - poort open`; het adres is nooit zijn
+probleem geweest.
 
 Sam, 7 september 2026

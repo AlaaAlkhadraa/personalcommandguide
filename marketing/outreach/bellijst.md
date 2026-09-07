@@ -570,3 +570,33 @@ niet klaar. Wie belt, begint bij de bovenste drie.
 | Cleancomplete | Valkenswaard (NB) | glazenwasser | — | — | KvK 83859187, sinds 2021, Julianastraat 32 5554 JC, vestigingsnummer 000050007270. Twee ronden, geen domein en geen adres |
 | Sam's Cleaning Service | Rijen (NB) | glazenwasser | — | — | KvK 82236402, sinds 2021, 1 werkzaam persoon, vestigingsnummer 000048483494. LET OP de naamgenoot in Badhoevedorp (KvK 66647444) die de ronden vervuilt |
 | Ramenwas Service Eberwijn | Posterholt (LB) | glazenwasser | — | — | KvK 93187440, sinds 2024, Burg Geradtsstraat 26, 1 ervaren medewerker, vestigingsnummer 000058749381. Jongste zaak van de acht en dus op profiel; geen domein, geen adres, geen nummer |
+## Groningen, Friesland, Drenthe — lane A, 7 september 2026
+
+Vijf regels. Alle vijf zitten in het venster van 1 tot 6 jaar, alle vijf
+publiceren nergens een e-mailadres, en van alle vijf is het telefoonnummer
+werkelijk in de zoekresultaten teruggevonden. De bovenste is de enige met een gedateerd levensteken en hoort
+dus bovenaan het belrondje.
+
+| Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
+|---|---|---|---|---|---|
+| Glazenwasserij de Zeeuw | Emmen | glazenwasser | 06-22438382 | Social Deal-actie okt 2024 (23 maanden) | KvK 94916942 (2024), eigen domein met prijzenpagina, noemt zichzelf "jong groeiend bedrijf". Drie adresronden; contact loopt via WhatsApp en Facebook |
+| JPB Stukadoors | Eelde (Tynaarlo) | stukadoor | 06-36336671 | — | KvK 95744584 (2024), gidsdatum 09-12-2024, eigen domein met over-ons-, contact- en stadspagina's. Twee ronden zonder adres. Verwar niet met jbstukadoors.nl, een ander bedrijf |
+| Schilderbedrijf Esthetica | Groningen | schilder | 06-39517534 | — | KvK 90828585, opgericht 14-07-2023, eenmanszaak, West-Indischekade 50. Twee ronden; geen eigen domein om een contactpagina op te vinden |
+| Bolsema Tuinen | Niehove (Westerkwartier) | hovenier | 06-21664934 | — | KvK 93404735, opgericht 01-04-2024, eigen domein, eigenaar Simon de Vries. Twee ronden. De site voert al klantoordelen; wie belt, verkoopt vindbaarheid en niet bewijs |
+| Schildersbedrijf Wonderkwast | Beilen (Midden-Drenthe) | schilder | 06-23334949 | — | Gestart 16-08-2023 volgens schilder-nu.nl, De Vonderkampen 106. **Let op: twee tegenstrijdige KvK-nummers (91099919 en 99000776), dus de leeftijd staat niet vast** - vraag het aan de telefoon |
+
+Vier zaken die hier NIET in staan en waarom: **Martini Stuc** (Groningen,
+stukadoor, gestart 01-07-2023, eigen domein) omdat er buiten het contactformulier
+geen enkel nummer loskwam; **Stukadoorsbedrijf J.W. Geleijnse** (Emmen, KvK
+88646270, eigen domein met over-ons- en contactpagina) om dezelfde reden - twee
+ronden gaven wel het adres Oude Roswinkelerweg 54 maar geen nummer; **SBR Betonvloeren** (Nieuwlande) omdat het register
+uitdrukkelijk meldt dat er geen contactgegevens bekend zijn - geen adres én geen
+telefoon; en **HJ Bakker Bestratingen** (Delfzijl), dat op profiel en op poort (a)
+het sterkste dossier van de dag is (opgericht 22-05-2023, Werkspot-beoordeling
+03-05-2026) maar waarvoor de ledgerregel van 02-09 uitdrukkelijk vastlegt dat er
+géén telefoonnummer en géén e-mailadres in de zoekresultaten staan. Bij hem hoort
+bovendien de waarschuwing uit diezelfde regel: een beoordeling van 26-10-2024
+meldt dat hij niet kwam opdagen en onbereikbaar was. Een bellijstregel zonder
+nummer helpt niemand.
+
+Sam, 7 september 2026
