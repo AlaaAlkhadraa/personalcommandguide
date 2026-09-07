@@ -22,7 +22,7 @@ zelf heb doorgevoerd.** Eén ervan was een claim die zevren.nl niet waarmaakt en
 die dus verzonden zou zijn als niemand de bestemming had opengeklikt. Daarnaast
 één zware procesbevinding op lane C: poort (e) is vandaag onwaar gerapporteerd.
 
-**Fundamentversies die ik vandaag schrijf: 1.31 en 1.32** (bereik C+D is
+**Fundamentversies die ik vandaag schrijf: 1.31, 1.32 en 1.33** (bereik C+D is
 1.31 t/m 1.40, per de "Staande context" van `agents/directives.md`).
 
 ---
@@ -407,19 +407,35 @@ tegelijk — dat wijst eerder op een order die te weinig zegt waar de rest héé
 moet dan op onwil. Ik scherp hem daarom aan in de orders hieronder in plaats van
 hem te herhalen.
 
-## Bevinding — twee voorstellen van Sam die ik bewust op de drempel houd
+## Bevinding — twee voorstellen van Sam: één gaat erin, één blijft op de drempel
 
-Beide lanes doen een voorstel voor het fundament. Beide zijn goed gezien en geen
-van beide gaat er vandaag in, om dezelfde reden waarop 1.20 werd aangenomen:
-twee onafhankelijke lanes, of één dienst met eenzijdige kosten.
+Beide lanes doen een voorstel voor het fundament. Beide zijn goed gezien. Ik heb
+ze langs dezelfde drempel gelegd waarop 1.20 werd aangenomen — twee onafhankelijke
+lanes, of één dienst met eenzijdige kosten — en één van de twee haalt hem,
+al kwam die bevestiging uit een hoek waar ik niet had gekeken.
 
 - **Lane C: "een moderne techniek in de handelsnaam is een vindsignaal, geen
   leeftijdssignaal"** (SoftWash Limburg, Weert: softwash in de naam, KvK 14114322
-  uit de oude Limburgse reeks). Scherp waargenomen en het kostte een volledig
-  dossier. Maar het rust op één geval in één lane, en 1.19 schrijft de
-  nummerronde vooraf al voor bij erkenningsdata — de praktische winst zit al in
-  een bestaande regel. **Op de drempel; lane D reproduceerde hem niet.** Draait
-  een tweede lane hem onafhankelijk, dan gaat hij erin.
+  uit de oude Limburgse reeks). **Deze gaat er wél in, en ik corrigeer mezelf:**
+  mijn eerste oordeel was dat hij op één geval in één lane rustte en dus op de
+  drempel bleef. Toen ik het fundament ging bijwerken, bleek de parallelle
+  A+B-verificatie dezelfde regel diezelfde dag onafhankelijk te hebben gemeten,
+  vanuit een heel andere hoek: van negentien glazenwasserdossiers in lane A
+  vielen er elf op leeftijd, en **de twee die zich het jongst positioneerden
+  waren de twee oudste ondernemingen** (Glazenwasser Drenthe, osmose, KvK
+  04040699, ramen wassend sinds 1991; GBC Schoonmaak-Glazenwassen, KvK 02063951).
+  Twee lanes, twee methodes, één uitkomst — dat is precies de drempel waarop 1.13,
+  1.17 en 1.20 zijn aangenomen. Opgenomen als **1.33**: een moderne
+  dienstpositionering meet hoe modern de marketing is, niet hoe oud de
+  onderneming is, en dat maakt haar een nieuwe drager van 1.15.
+  **Wat er níét in gaat, is het sectorquotum.** Lane A weerlegt daarmee ook de
+  grond die ik zelf gisteren onder het glazenwasserijquotum zette ("de sector
+  selecteert zichzelf op jonge zaken"). Die grond klopt niet. Maar een sector
+  herwegen is een besluit van het weekrapport en niet van een dagverificatie —
+  1.19 legt die grens vast, de A+B-sessie heeft hem terecht aangehouden, en ik
+  houd me eraan ook nu het mijn eigen order is die sneuvelt. De sector blijft deze
+  week staan als namenbron, en zondag krijgt het quotum een nieuwe grond of een
+  nieuw getal.
 - **Lane D: "een contactformulier of een KvK-afscherming is een bewuste
   contactroute, geen onbereikbaarheid"** (Noorden, Kuijten, Drechtsteden, Van
   Zeggeren). Sam legt hem zelf uitdrukkelijk als voorstel neer en niet als regel,
@@ -517,7 +533,12 @@ bewijs dat de tabel geen invuloefening is.
    volgende in dezelfde lijst en meld je dat in één regel") en die regel is
    vandaag niet gebruikt.
 5. **Leeters Dienstverlening: dicht. Niet meer oppakken.** Zie de bevinding.
-6. **Het tekortblok blijft de vaste vorm en niets meer.** Je lijst van acht
+6. **Je SoftWash-waarneming is fundamentregel 1.33 geworden.** Draai bij
+   softwash-, osmose-, "clean"- en soortgelijke namen en verhalen eerst het
+   KvK-nummer, vóór de adresjacht. Lane A mat dezelfde regel vandaag
+   onafhankelijk; dat is waarom hij er meteen in gaat en niet op de drempel
+   blijft liggen.
+7. **Het tekortblok blijft de vaste vorm en niets meer.** Je lijst van acht
    op-één-poort-gesloten zaken is nuttig — zet hem onder
    `## Bevinding — op één poort gesloten, niet volledig beoordeeld`. Dan telt hij
    ook zichtbaar niet mee als volledig dossier, wat je zelf al terecht deed.
@@ -546,7 +567,7 @@ bewijs dat de tabel geen invuloefening is.
 4. **Blijf het KvK-nummer weglaten waar naamgenoten meedraaien.** Bij Dekker was
    dat aantoonbaar juist: mijn eigen ronde schrijft 75890046 aan hém toe, de
    jouwe aan de Andijkse naamgenoot. Vul het bij hercontrole niet alsnog in.
-5. **Het tekortblok blijft de vaste vorm en niets meer** — zie order 6 van lane C.
+5. **Het tekortblok blijft de vaste vorm en niets meer** — zie order 7 van lane C.
 
 ## Tekort van de dag — verificatie C+D
 
@@ -577,7 +598,7 @@ liep dat op tot acht à tien. De trechter is eerlijk gedraaid.
 | `cold-email` | Op beide onderwerpregels en op beide berichten | De **verwijdertoets** ("if you remove the personalized opening and the email still makes sense, the personalization isn't working") bevestigde Sams keuze bij Hanenberg: haal "Vijf jaar in dienst, toen voor jezelf" weg en het bericht heeft geen eerste zin meer. Bij Dekker liet diezelfde toets de regel *staan* en toch heb ik hem vervangen — want de skill zegt óók dat personalisatie die niet aan het probleem raakt "just an attention hack" is, en drie provincienamen passen op elk schoonmaakbedrijf in de Randstad. Dat is **Level 2 (industry/segment)** in het vierlagenmodel van `personalization.md`, terwijl `Zuidoostbeemster` **Level 4 (individual)** is: de laag die de skill de gold standard noemt. De skilldata "2-4 words, lowercase" (37 en 39 tekens, hoofdletters, zes en vijf woorden) verliest in beide gevallen bewust van poort (g) van de owner, die een gecheckt detail binnen 45 tekens eist; ik noteer de overrule zoals Sam hem noteert. **"One ask, low friction"** is de reden dat ik bij Hanenberg één bestemming heb gehouden toen ik de demozin herschreef: de verleiding was een tweede link naar een pagina waar de demo wél staat, en dat had de kaart twee vragen gegeven |
 | `marketing-psychology` | Op de overtuigingstoets van beide berichten en op mijn eigen tekortdiagnose | **Loss aversion zonder schaarste** is waar ik beide berichten primair op heb afgerekend, want dat is eis 1 van de staande order van 25 augustus. Beide slagen, en allebei op dezelfde constructie: het verlies is niet alleen benoemd maar **onzichtbaar gemaakt** ("dat telefoontje is er nooit geweest", "jij hoort nooit welke"). Dat is wat de eigenaar verklaart waarom hij een probleem dat dagelijks optreedt nooit heeft opgemerkt. **Availability heuristic** is de eigenlijke grond onder het aanbod van beide kaarten en de reden dat 299 hier het juiste pakket is: foto's van afgerond werk maken de uitkomst voorstelbaar, en dat is bij allebei precies het enige wat ontbreekt. **Regret aversion** verklaart waarom "gratis en zonder verplichtingen" bij Dekker mag blijven staan en geen verkooptruc is: het is de enige risicoverlager in het bericht en hij staat woordelijk op de pagina. **Theory of Constraints** op mijn eigen dienst: de bindende poort over 47 dossiers is (b) en niet (a), in beide lanes onafhankelijk — en dat verplaatst de vraag van "hoe vinden we jongere zaken" naar "welke zaken tonen hun adres", wat een andere jaagvolgorde is dan die van deze week. **Fundamental attribution error** is waarom ik lane D's tekort van zes geen-websitedossiers als order opschrijf en niet als onwil lees, en waarom ik bij de vormfout in het tekortblok mijn eigen order aanscherp in plaats van hem te herhalen: twee lanes maken dezelfde fout, dus de fout zit in de order |
 | `prospecting` | Op mijn eigen herhaling van de poorten (b) en (d) van beide kaarten | De confidence-eis (**"High requires at least two independent sources"**) is de reden dat ik de leeftijd van Dekker op zijn eigen over-onspagina laat rusten en het KvK-nummer 75890046 **niet** in de kaart heb laten zetten toen mijn eigen ronde het aan hém toeschreef: één nummer dat in twee ronden bij twee bedrijven hoort, is geen tweede bron maar een tegenspraak. Dezelfde regel (**"never assemble an email from a pattern like info@ plus the domain"**) heb ik gebruikt om te controleren dat beide adressen werkelijk zijn teruggevonden en niet gereconstrueerd — bij Hanenberg naast straat en telefoonnummer, bij Dekker op zijn eigen contactpagina |
-| `product-marketing` | Als eigenaar van `.agents/product-marketing.md` | Twee regels toegevoegd (1.31 en 1.32) en twee voorstellen bewust op de drempel gehouden, met de aanname-drempel van 1.20 als maat: twee onafhankelijke lanes, of één dienst met eenzijdige kosten. 1.31 haalt die drempel op het tweede criterium — een beloofde demo die er niet staat, kost je juist de lezer die dóórklikte |
+| `product-marketing` | Als eigenaar van `.agents/product-marketing.md` | Drie regels toegevoegd (1.31, 1.32, 1.33), met de aanname-drempel van 1.20 als maat: twee onafhankelijke lanes, of één dienst met eenzijdige kosten. 1.31 en 1.32 halen die drempel op het tweede criterium — een beloofde demo die er niet staat kost je juist de lezer die dóórklikte, en een onwaar gemelde poort kost de geloofwaardigheid van alle poorten die dezelfde dienst wél goed draaide. 1.33 haalt het eerste criterium, maar pas nadat ik het fundament opensloeg en zag dat de parallelle A+B-sessie dezelfde regel die dag onafhankelijk had gemeten; mijn eerste oordeel ("op de drempel") was gebaseerd op alleen de lanes die ik zelf beoordeel en dat was te smal. **De regel die ik het duidelijkst op mezelf heb toegepast:** het sectorquotum voor glazenwasserij is mijn eigen order en de grond eronder is vandaag weerlegd, maar 1.19 legt vast dat een sectorbesluit bij het weekrapport hoort — dus laat ik hem staan tot zondag in plaats van hem in een dagverificatie in te trekken |
 | `competitor-profiling` | Niet ingezet | Sam heeft hem in beide lanes gedraaid en de opbrengst is controleerbaar (de omkering van 1.18 bij vier zaken in lane C; Loman Onderhoud als bewijs dat Dekkers concurrent in het zondagavondmoment een pagina met afgerond werk is). Ik heb die uitkomsten getoetst, niet overgedaan — een tweede profielronde op dezelfde vier dossiers had niets veranderd en ik meld hem daarom eerlijk als niet ingezet |
 | `pricing` | Niet ingezet | De prijzen liggen vast in `zevren/lib/offer.ts` en de pakketkeuze volgde in beide kaarten rechtstreeks uit de pitch (afgerond werk in beeld = 299, geen agenda = geen 549). Ik heb beide getoetst tegen de bron; er viel geen prijsafweging te maken |
 | `marketing-council` | Niet ingezet | Hoort bij het weekrapport, niet bij een dagverificatie |

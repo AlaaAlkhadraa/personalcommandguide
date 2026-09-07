@@ -1,6 +1,6 @@
 # Product Marketing Context — ZEVREN
 
-**Document version:** 1.22 · 2026-09-07
+**Document version:** 1.33 · 2026-09-07
 Elke marketingskill in `.claude/skills/` leest dit document eerst.
 Feiten hier zijn bindend; een skill-advies dat ermee botst, verliest.
 
@@ -69,6 +69,19 @@ Vier formuleringen zijn in verificatie gesneuveld en komen niet terug:
   het noemt en schrijf de btw-vermelding nooit weg. De sectorpagina's zeggen
   "299 euro eenmalig, exclusief btw". "299 euro, eenmalig" is daarmee gedekt;
   "299 euro en verder niets" of "alles inbegrepen" is dat niet.
+- **Een belofte over wat de lezer op de gelinkte pagina zal aantreffen (1.31).**
+  De bestemming van een link is zelf een claim en wordt net zo gedekt als een
+  prijs. "Op de hovenierspagina staat een demo die echt werkt" is een juiste
+  formulering (1.1) naar een bestaande pagina met de juiste UTM — en toch onwaar,
+  want in `zevren/lib/local/sectors.ts` draagt de hovenierssector geen
+  `demoSlug`. **Zes sectorpagina's tonen een demo** (kappers, hondentrimsalons,
+  garages, administratiekantoren, schoonheidssalons, nagelsalons); **vier tonen
+  de conceptbouwerroute** (hoveniers, schilders, dakdekkers, stukadoors). Kijk
+  één keer welke van de twee het is voordat je beschrijft wat de lezer zal zien.
+  De kosten van deze fout zijn eenzijdig en daarom gaat de regel er op één dienst
+  in: wie dóórklikt is juist de lezer die geïnteresseerd was, en die vindt dan
+  niet wat hem beloofd is. Gevonden op 07-09 in de enige kaart van lane C
+  (Hanenberg Hoveniers).
 
 ## De poort die het vaakst kaarten kost
 
@@ -185,6 +198,30 @@ profiel ziet staan, mag het adres opnieuw jagen: op 30-08 leverde dat bij
 Brummel Airconditioning een bruikbaar adres op waar twee dagen eerder "niets"
 stond. Corrigeer die regel dan ook, anders kost dezelfde zaak elke volgende
 lane opnieuw tijd.
+
+**Een oude ledgerrij op hetzelfde bedrijf is geen beletsel, maar een omkering
+die je opschrijft (1.32).** Poort (e) mag `not fit` worden teruggedraaid — de
+tweede dienst weet vaak meer dan de eerste. Wat niet mag, is dat de omkering
+onzichtbaar blijft. Noteer bij de poort de oude status, de oude grond en waarom
+die niet meer geldt, en schrijf nooit "nul rijen" over een bedrijf dat er staat.
+
+Op 07-09 stond Hanenberg Hoveniers sinds 02-09 in het ledger als
+`not fit - geen lek vastgesteld`; de kaart van die dag meldde bij poort (e) "nul
+rijen" terwijl beide genoemde zoekopdrachten de rij hadden gegeven. De omkering
+zélf was terecht en is bij de verificatie onafhankelijk bevestigd: het oordeel
+van 02-09 rustte op "volledige eigen site", en een complete site is niet
+hetzelfde als een site zonder lek — er staat geen enkele projecten- of
+referentiepagina op, bij een vak dat op zicht wordt gegund. De dienst van 02-09
+stelde de vraag "is de site af?", de dienst van 07-09 de vraag "staat er afgerond
+werk?". Dat verschil is de hele Tuinrobuust-order.
+
+**Waarom de regel er staat en niet alleen de order:** de verificatie kan niet
+elke ronde overdoen en leest poortuitkomsten op hun woord. Eén onwaar gemelde
+poort kost meer dan één kaart — zij kost de betrouwbaarheid van alle poorten die
+diezelfde dienst wél goed heeft gedraaid. Vergelijk Stark Stuc (29-08), waar de
+oude grond nog gold en de kaart dus niet geschreven had mogen worden: het
+verschil tussen die twee gevallen is precies wat een genoteerde omkering
+zichtbaar maakt en een verzwegen omkering verbergt.
 
 ## Wiens daad draagt de datum — poort (a) beslist
 
@@ -625,6 +662,40 @@ Voorbeeld, na te rekenen: **Garage Huis Eemland (Amersfoort)** staat op
 vestigingsnummer 000015673693, en onder datzelfde KvK-nummer hangen meer
 vestigingen. De onderneming is elf jaar; de vestiging aan de Zwaaikom vijf.
 
+### Een moderne dienstpositionering is geen leeftijd (1.33)
+
+Een techniek, een handelsnaam of een dienstverhaal dat van ná 2018 dateert, meet
+hoe modern de márketing is en niet hoe oud de onderneming is. Dit is een nieuwe
+drager van 1.15, naast de B.V.-omzetting en de verse handelsnaam over een oude
+zaak heen. **Draai bij softwash-, osmose-, "clean"- en soortgelijke namen en
+verhalen eerst het KvK-nummer, vóór de adresjacht** — dezelfde volgorde die 1.19
+voor de erkenningsdatum voorschrijft. Het kost één ronde en het bespaart een
+volledig dossier.
+
+De regel haalt de aannamedrempel op de manier waarop ook 1.13, 1.17 en 1.20 zijn
+aangenomen: **twee lanes die hem op 07-09 onafhankelijk en uit verschillende
+hoeken vaststelden.**
+
+- **Lane C, één geval van dichtbij:** SoftWash Limburg (Weert) draagt de techniek
+  in zijn handelsnaam, heeft een eigen domein met sectorpagina's, een
+  Trustoo-profiel en een Facebookpagina — op het oog het ideale dossier. KvK
+  **14114322** is een oude Limburgse reeks van vóór 2008. De naam is jong, het
+  bedrijf niet.
+- **Lane A, een telling:** van negentien glazenwasserdossiers vielen er elf op
+  leeftijd, en **de twee die zich in hun positionering het jongst voordeden waren
+  de twee oudste van de lijst** — Glazenwasser Drenthe (osmose, acht eigen
+  stadspagina's, KvK 04040699, ramen wassend sinds 1991) en GBC
+  Schoonmaak-Glazenwassen (KvK 02063951).
+
+**Wat hier uitdrukkelijk níét in staat.** Dit is een leeftijdsregel, geen
+sectoroordeel. De grond onder het sectorquotum voor glazenwasserij ("de sector
+selecteert zichzelf op jonge zaken") is door lane A weerlegd en die grond
+herschrijven is een besluit van het weekrapport en niet van een dagverificatie —
+1.19 legde die grens vast. De sector blijft deze week staan als **namenbron**:
+de `alleglazenwassers.nl`-vorm levert onverminderd namen mét KvK-nummer in één
+ronde, en beide goedgekeurde kaarten van 07-09 komen uit een route met een eigen
+domein. Zondag krijgt het quotum een nieuwe grond of een nieuw getal.
+
 **De toets, en let op de formulering.** Dat er een vestigingsnummer in de URL
 staat, is géén afwijzingsgrond — dat is bij vrijwel elk bedrijf zo, ook bij een
 eenmanszaak met één vestiging waar beide datums samenvallen (Hondentrimsalon
@@ -732,6 +803,41 @@ wil houden.
   groepen tegelijk.
 
 ## Changelog
+
+- 1.33 (2026-09-07, Azzouz, verificatie lanes C+D): drie regels, binnen het
+  bereik 1.31 t/m 1.40 dat het weekrapport aan C+D toewees. **1.31 — de
+  bestemming van een link is zelf een claim**, toegevoegd bij "Wat een bericht
+  nooit mag beweren". De enige kaart van lane C beloofde een werkende demo op
+  `zevren.nl/website-voor/hoveniers`, met de juiste formulering (1.1), de juiste
+  UTM en een pagina die werkelijk bestaat — en toch onwaar, want zes van de tien
+  sectorpagina's dragen een demo en vier de conceptbouwerroute. Opgenomen op één
+  dienst omdat de kosten eenzijdig zijn: wie dóórklikt is juist de geïnteresseerde
+  lezer. **1.32 — een oude ledgerrij is geen beletsel maar een omkering die je
+  opschrijft**, toegevoegd bij "Een open poort is een bevinding, geen kaart".
+  Hanenberg Hoveniers stond sinds 02-09 als `not fit - geen lek vastgesteld` en de
+  kaart van 07-09 meldde "nul rijen"; de omkering was inhoudelijk terecht en bij
+  de verificatie onafhankelijk bevestigd, maar zij is niet als omkering
+  geschreven. De regel bestaat omdat de verificatie poortuitkomsten op hun woord
+  leest: één onwaar gemelde poort kost de geloofwaardigheid van alle poorten die
+  dezelfde dienst wél goed draaide. **1.33 — een moderne dienstpositionering is
+  geen leeftijd**, toegevoegd als nieuwe drager van 1.15 bij "Een erkenningsdatum
+  is een levensteken". Dit is de enige van de drie die op de klassieke drempel
+  binnenkomt: twee lanes stelden hem op dezelfde dag onafhankelijk vast, lane C
+  op één geval van dichtbij (SoftWash Limburg, KvK 14114322 uit een reeks van
+  vóór 2008) en lane A op een telling (de twee jongst gepositioneerde van
+  negentien dossiers waren de twee oudste ondernemingen). **Uitdrukkelijk niet
+  opgenomen:** het sectorquotum voor glazenwasserij. Lane A weerlegde de grond
+  eronder en de parallelle A+B-verificatie heeft die vraag terecht naar zondag
+  verwezen; 1.19 legt vast dat een sectorbesluit bij het weekrapport hoort. Ik
+  houd me daaraan, ook al is het mijn eigen order die sneuvelt.
+  **Twee voorstellen bewust niet opgenomen:** lane D's regel dat een
+  contactformulier of KvK-afscherming een bewuste contactroute is en geen
+  onbereikbaarheid (rust op één lane en één dienst, en raakt rechtstreeks aan het
+  onbeantwoorde beslispunt over een tweede verzendweg — hij gaat naar het
+  weekrapport), en de aanscherping bij Van Barlingen dat een treffer uit de
+  `"sinds JAAR"`-zeef een naam is en geen leeftijd, óók op `alleglazenwassers.nl`
+  (één geval; lane D krijgt de order hem morgen te reproduceren, dan gaat hij bij
+  1.19 in).
 
 - 1.22 (2026-09-07, Azzouz, verificatie lanes A+B): één regel, bij "Wiens daad
   draagt de datum" — **de reviewdatum op een platformprofiel draagt poort (a)
