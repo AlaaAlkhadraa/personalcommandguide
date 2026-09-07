@@ -534,6 +534,23 @@ niet op bewijs, en dat hoort erbij te staan.
 | Eco Multidiensten | Amsterdam (Banne Buiksloot) | glazenwasser/schoonmaak | 06-41130469 | — | KvK 87711869 (2022), Schepenlaan 141, twee medewerkers, eigen domein eco-multidiensten.nl met home-, diensten- en contactpagina. Zijn eigen contactpagina noemt uitsluitend telefoon en WhatsApp als route; twee ronden zonder e-mailadres. Belklaar op profiel (lane D, 07-09) |
 | Hondentrimsalon De Oude Haven | Rotterdam | hondentrimsalon | 010-2362531 (WhatsApp 06-43037078) | — | KvK 87846721 (2022), Haringvliet 619. **Het e-mailadres is er wél** (info@trimsalondeoudehaven.nl) en zeven poorten zijn dicht, inclusief de boekingspoort: uitsluitend op afspraak via bellen, WhatsApp of mailen, geen platformprofiel. Alleen poort (a) blijft open na vier ronden. Staat hier omdat bellen hier sneller is dan nog een zoekronde, precies zoals bij Hondenschool de Walsert (lane C) (lane D, 07-09) |
 
+| Mo Schoonmaak Salland | Heeten (Raalte) | glazenwasser/schoonmaak | afgeschermd op de gidsen | Eenbedrijfspagina alleglazenwassers.nl met "biedt diensten sinds 2022" | KvK 90067592, 2 medewerkers, Hordelmansweg 12 8111 AM. Geen eigen domein. Niet verwarren met moschoomaakbedrijf.nl (lane B, 07-09) |
+| Glaswas Service Patrick | Zutphen | glazenwasser | niet gevonden in twee ronden | Facebookpagina Glaswas Service Patrick, Zutphen | KvK 89010442, sinds 2023, Gerard Doustraat, Wijk 04 Leesten. Facebook-only, geen eigen domein (lane B, 07-09) |
+| Van Goethem Schilderwerken | Oldenzaal | schilder | 06-51998174 | Gidsvermelding schilder-nu.nl, gestart 01-09-2023 | Vier gidsen melden uitdrukkelijk dat er geen e-mailadres en geen website bekend is. Twee adressen in omloop: Glindestraat 23 en Zilverschoon 178 (lane B, 07-09) |
+| Hidde Prakken, groen, grond & dienstverlening | IJhorst (Staphorst) | hovenier | niet gevonden | Facebookpagina Hidde Prakken groen grond & dienstverlening | KvK 87853019, opgericht 13-10-2022, 1 persoon, Heerenweg 53 7955 PC. Geen telefoon, geen e-mail, geen site. Let op de naamgenoten in hetzelfde dorp (lane B, 07-09) |
+| Hummelink Hoveniersbedrijf | Haaksbergen (Buurse) | hovenier | niet gevonden | Facebookpagina Hoveniersbedrijf Hummelink | KvK 87042444, opgericht 01-07-2022, eenmanszaak, Kleuvert 1. Geen eigen domein (lane B, 07-09) |
+| Weernink Boomverzorging | Delden (Hof van Twente) | hovenier/boomverzorging | niet gevonden | Eenbedrijfspagina hovenier.website, opgericht 17-10-2022 | KvK 88100707, eenmanszaak. Twee ronden zonder telefoon, e-mail of eigen domein. LET OP: 1.18, de gidsdatum is de vestigingsdatum - de over-onsronde is niet gedaan (lane B, 07-09) |
+| Van Helten Groenonderhoud | Velp (Gld) | hovenier | niet gevonden | Eenbedrijfspagina hovenier.website, opgericht 13-10-2023 | KvK 91701961, eenmanszaak, Zuider Parallelweg 43 6882 AG. Twee ronden zonder adres (lane B, 07-09) |
+| Veldtuin hovenier | Culemborg | hovenier | 06-12915355 | Eenbedrijfspagina hovenier.website, opgericht 12-09-2023 | KvK 91334330, eenmanszaak. De gids meldt dat er een e-mailadres bestaat maar toont het niet; geen eigen domein gevonden (lane B, 07-09) |
+
+**Noot lane B, 07-09.** Deze acht vullen het quotum voor de geen-websitegroep van deze week
+(acht dossiers, bestemming bellijst en niet het bord). Zeven van de acht hebben geen eigen
+domein, en dat is precies de reden dat er geen adres is: van 17 bedrijven zonder eigen domein
+gaf er vandaag nul een e-mailadres, tegen 8 van de 9 mét domein. De groep is daarmee niet
+zwakker dan het bord — Hummelink en Hidde Prakken draaien allebei op een levende Facebookpagina
+— maar zij is alleen langs de telefoon te bereiken zolang het bord uitsluitend mailt.
+
+
 Sam, 7 september 2026
 ## Lane C — Limburg, Noord-Brabant, Zeeland (aanvulling 2026-09-07)
 

@@ -968,4 +968,34 @@ reproduceren (nul van vier, met Glazenwasserij Lapland erbij die naar
 | Van Stekelenburg Service | Bergschenhoek (ZH) | glazenwasser | KvK 89966384, sinds 2023, vestigingsnummer 000055721435 | 2 | 2026-09-07 |
 | V.J. Glazenwasserij | Zoetermeer (ZH) | glazenwasser | KvK 88783707, sinds 2023, Hebriden 189, vestigingsnummer 000054613930 | 2 | 2026-09-07 |
 
+
+## 7 september 2026 — lane B (Overijssel, Gelderland, Flevoland)
+
+Negen bedrijven die op leeftijd en sector door de poort komen en waar drie of minder
+zoekronden geen openbaar e-mailadres opleverden. De acht van de geen-websitegroep staan in
+`bellijst.md`; deze negen staan hier omdat er wél iets van een spoor is en een latere lane
+het adres opnieuw mag jagen (1.14: dit bestand is geen eindstation).
+
+| Bedrijf | Plaats | Sector | Wat er wél is | Datum |
+|---|---|---|---|---|
+| Bbsj Schoonmaakbedrijf | Nijmegen (Dukenburg) | glazenwasser | KvK 87206765, sinds 2022, 1 medewerker, eenbedrijfspagina op alleglazenwassers.nl | 07-09-2026 |
+| Schildersbedrijf GHK | Buurse (Haaksbergen) | schilder | Gestart 23-08-2023, eenmanszaak, gidsvermelding schilder-nu.nl | 07-09-2026 |
+| Faster Schilder & more | onbekend (Overijssel) | schilder | Gestart 19-01-2023; twee ronden gaven geen bron buiten de gids, plaats onbekend | 07-09-2026 |
+| High Gloss Schilderwerken | onbekend (Overijssel) | schilder | Gestart 26-05-2023. Naamverwarring met High Gloss Foliedruk B.V. (Doetinchem, KvK 09076646) | 07-09-2026 |
+| Geertman Schilderwerken | onbekend (Overijssel) | schilder | Gestart 01-01-2023, gidsvermelding | 07-09-2026 |
+| Visscher schildersblik | Genemuiden | schilder | Gestart 01-01-2023, gidsvermelding | 07-09-2026 |
+| Hasebos Schilderservice | onbekend (Overijssel) | schilder | Gestart 06-01-2022, gidsvermelding, plaats niet vastgesteld | 07-09-2026 |
+| Gellingschilderwerken | onbekend (Overijssel) | schilder | Gestart 04-02-2022, gidsvermelding | 07-09-2026 |
+| GVL ESL Schilderwerken | onbekend (Overijssel) | schilder | Gestart 17-03-2022, gidsvermelding | 07-09-2026 |
+
+**Wat deze negen samen laten zien, en het is een ander punt dan de tabel.** Alle negen komen
+uit dezelfde bron: de `-nu.nl`-vakgidszeef met "opgericht op". Die zeef levert in één ronde
+tien tot twaalf namen mét een datum, en dat is de goedkoopste namenbron die deze lane kent.
+Maar geen van de negen draagt een eigen domein, en geen van de negen gaf een adres. Dat is de
+keerzijde die 1.17 al noemt ("de vakgidszeef is een namenzeef") en die vandaag met een getal
+te onderbouwen is: de gidszeef en de adrespoort sluiten elkaar in deze lane vrijwel uit. Wie
+hier ronden in steekt om alsnog een adres te vinden, betaalt per naam drie zoekopdrachten voor
+een uitkomst die vooraf bekend is.
+
+
 Sam, 7 september 2026
