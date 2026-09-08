@@ -1,6 +1,6 @@
 # Product Marketing Context — ZEVREN
 
-**Document version:** 1.33 · 2026-09-07
+**Document version:** 1.36 · 2026-09-08
 Elke marketingskill in `.claude/skills/` leest dit document eerst.
 Feiten hier zijn bindend; een skill-advies dat ermee botst, verliest.
 
@@ -143,6 +143,23 @@ zoekopdracht van tien seconden sloot het alsnog. De regel geldt in elk ambacht w
 de capaciteit één paar handen is — trimsalons, kapsalons, pedicures, dierenpensions,
 hondenscholen, eenmansambacht — en daar is zij verplicht. In sectoren waar capaciteit
 schaalt met personeel mag zij blijven staan waar zij stond.
+
+**In de hondensector draagt die zoekopdracht het woord "honden" (1.34).** Een
+trimsalon of hondenschool schrijft niet "klanten" maar honden. Bij Saloon Bark &
+Bubbles (Delft) gaf de verplichte ronde hierboven, letterlijk gedraaid, **niets**
+— terwijl de eigen paginatekst luidt: "Momenteel nemen wij geen nieuwe honden
+aan." Een tweede ronde op `"geen nieuwe honden"` gaf die zin woordelijk terug.
+De vorm in elke hondensectorronde is daarom
+`"<naam>" "geen nieuwe honden" OF "geen nieuwe klanten" OF vol OF wachtlijst`,
+en de melding staat zelden op een eigen pagina: draai de ronde op de contact- of
+afspraakpagina en niet op de bedrijfsnaam alleen (Trimstyle "kan op dit moment
+geen nieuwe klanten aannemen", Soof Hondenservice "de uitlaatservice zit vol").
+
+Deze regel komt binnen op één lane en één dienst, en dat mag hier om dezelfde
+reden als bij 1.31: **de kosten zijn eenzijdig.** Een verplichte zoekopdracht
+verbreden kost nul ronden en kan geen goede kaart doden; hem niet verbreden kost
+het adres van een zaak die vol zit — en dat is precies wat de alinea hierboven
+al zegt.
 
 Let op de variant die geen klantenstop heet: een **intakestop met een einddatum**
 ("vanaf half oktober weer ruimte voor kennismakingen"). Die sluit het dossier voor
@@ -317,6 +334,32 @@ poort — ook niet als hij plausibel is, ook niet als het venster dat hij noemt 
 dit moment loopt. Wie hem toch gebruikt, sluit de duurste poort van het bord op
 een zin die de zoekmachine zelf heeft geschreven.
 
+**De alinea verzint niet alleen feiten bij bestaande bedrijven, maar ook hele
+regels en de PLAATS (1.36).** Twee lanes vonden dat op dezelfde dag, 08-09, in
+twee vormen:
+
+- **Hele regels.** De ronde `site:hovenier.website "opgericht op" 2023 <provincies>`
+  gaf acht URL's; de samenvatting daarboven noemde negen bedrijven, mét
+  oprichtingsdatum. Vier ervan kwamen in **geen enkele** URL voor (Geert Vink
+  B.V., Van der Zalm Tuinen B.V., Snel Tuinaanleg, Weelderige Tuinen), en later
+  op de dag een vijfde mét KvK-nummer (RH Tuinen, Zeist). Twee ronden weggegooid
+  vóór het doorhad. Ter contrast: van Dorland Hoveniers, uit diezelfde
+  samenvatting, bestaat wél — die naam had een eigen resultaat-URL. **Dat is de
+  scheidslijn: lees bij een zeefronde alleen de URL-titels en nooit de opsomming
+  eronder.** Een naam die alleen in de samenvatting staat, is geen prospect maar
+  een gemiddelde van de pagina.
+- **De plaats.** Een ronde op recent geopende trimsalons in Zeeland gaf
+  "Trimsalon De Harige Vrienden, opgericht juni 2023, eveneens gevestigd in
+  Vlissingen". Het jaartal klopt; de plaats niet — de zaak zit aan de Zwarte Zee
+  34 in **Maassluis**, en dus in een andere lane.
+
+**En dit is de reden dat 1.36 er apart staat naast 1.20(a): een verzonnen jaartal
+valt op de leeftijdspoort, een verzonnen plaats valt nergens op.** Geen enkele
+poort vraagt "klopt de provincie". Wat het op 08-09 ving was de ledgerronde op
+naam, en die ving het bij toeval — omdat de zaak al bestond. Bij een nieuwe naam
+was er niets geweest, en een kaart met de verkeerde stad erin verbrandt het adres
+in één zin.
+
 Voor Sam betekent dit dat de geen-website-groep wél door de poort kán, maar
 via het register en het vergunningenspoor, niet via de gidsenstempel. De
 eerste zoekopdracht bij een bedrijf zonder site is daarom
@@ -400,6 +443,26 @@ metingen liggen er nu:
 een gidsdatum uit 2022 of later opent één verplichte ronde — de eigen
 over-onspagina — en die ronde gaat vóór elke adresronde. Hij kost één zoekopdracht
 en bespaarde op 06-09 in beide lanes drie tot vijf per dossier.
+
+**Het vestigingsnummer in de gids-URL is een gratis tegenspraaktoets — en nooit
+meer dan dat (1.35).** De URL van een `alleglazenwassers.nl`-eenbedrijfspagina
+eindigt op het vestigingsnummer, en dat nummer loopt op in de tijd. Een láág
+nummer naast een recente "sinds JAAR" is dus een zichtbare tegenspraak, zonder
+één extra zoekopdracht. Elf waarnemingen uit twee lanes, zonder tegenspraak:
+000009153578 → vóór 2008 · 000046288384 → 2020 · 000053368576, 000053531477,
+000053641302, 000054063337, 000054141958 → 2022 · 000055561020, 000056062435,
+000057208867 → 2023 · 000059262370 → 2024. Lane D leidde hem af, lane C leverde
+haar helft van de reeks zonder de hypothese te kennen.
+
+**Wat hij mag en wat hij nooit mag.** Hij mag een gidsdatum **onbruikbaar**
+verklaren, en daarmee ronden besparen. Hij mag **nooit zelf een dossier sluiten
+of een poort dichtdoen**: de monotonie van de reeks is een afgeleide uit
+waarnemingen en geen bron, en de leeftijd blijft de eigen over-onspagina (1.16b).
+Na een tegenspraak staat het dossier er dus precies zo voor als elk ander dossier
+zonder bruikbare gidsdatum — je draait de eigen pagina, en je laat het niet
+vallen op het nummer. Op 08-09 zijn Verdam Groep (Haarlem) en H. Kommer
+(Amersfoort) op die tegenspraak weggelegd zonder eigen ronde; dat is één ronde te
+vroeg.
 
 ### De reviewdatum op een platformprofiel draagt poort (a) niet alleen (1.22)
 
@@ -854,6 +917,50 @@ wil houden.
   groepen tegelijk.
 
 ## Changelog
+
+- 1.36 (2026-09-08, Azzouz, verificatie lanes C+D): drie regels, binnen het
+  bereik 1.31 t/m 1.40 dat het weekrapport aan C+D toewees, alle drie afkomstig
+  uit de bevindingen van lane D en alle drie getoetst tegen wat lane C
+  onafhankelijk zag. **1.34 — de klantenstopronde draagt in de hondensector het
+  woord "honden"**, toegevoegd bij "De poort die het vaakst kaarten kost".
+  Saloon Bark & Bubbles (Delft) gaf op de verplichte ronde van 1.14 letterlijk
+  niets terug terwijl zijn eigen pagina "Momenteel nemen wij geen nieuwe honden
+  aan" voert. Eén lane, één dienst, en toch opgenomen: de kosten zijn eenzijdig,
+  precies zoals bij 1.31 — een verplichte zoekopdracht verbreden kost nul ronden
+  en kan geen goede kaart doden, hem niet verbreden kost een verbrand adres.
+  **1.35 — het vestigingsnummer in de gids-URL is een gratis tegenspraaktoets en
+  nooit een poort**, toegevoegd bij "Wiens daad draagt de datum", achter 1.19.
+  Lane D leidde de regel af uit negen waarnemingen en noemde de monotonie van de
+  reeks eerlijk een aanname; lane C leverde haar helft van dezelfde reeks zonder
+  de hypothese te kennen, wat de elf waarnemingen onafhankelijk maakt. **De rem
+  erop is van mij en niet van Sam:** de regel is op 08-09 gebruikt om Verdam Groep
+  en H. Kommer te laten vallen zonder eigen ronde, en dat mag een heuristiek
+  zonder bron niet. Hij verklaart een gidsdatum onbruikbaar; de leeftijd blijft
+  de eigen over-onspagina (1.16b). **1.36 — de samenvattende alinea verzint hele
+  regels en de plaats, niet alleen jaartallen**, toegevoegd in het 1.20(a)-blok.
+  Twee lanes op dezelfde dag: lane D telde vijf verzonnen hoveniersnamen mét
+  oprichtingsdatum en KvK-nummer die in geen enkele resultaat-URL voorkwamen
+  (twee ronden weggegooid), lane C ving een verzonnen PLAATS — De Harige Vrienden
+  in Vlissingen in plaats van Maassluis, en dus in de verkeerde lane. Het
+  scherpste deel komt van lane C en het staat er woordelijk in: een verzonnen
+  jaartal valt op de leeftijdspoort, een verzonnen plaats valt nergens op, want
+  geen enkele poort vraagt "klopt de provincie".
+  **Uitdrukkelijk niet opgenomen:** (a) lane D's voorstel om de poort-(a)-ronde
+  direct achter de domeinzeef te zetten, vóór de leeftijd en vóór het lek. De
+  meting eronder is echt (vier van vier met eigen domein vielen op (a); bij QK
+  Glazenwasserij kostte dat vier ronden op een compleet dossier), maar hij raakt
+  rechtstreeks aan de jaagvolgorde van 1.20(b) die op een telling van vijf tegen
+  nul rust, en hij komt van één lane en één dienst. Lane D krijgt de order hem
+  morgen te draaien en te meten wat hij bespaart. (b) Lane C's voorstel om de
+  lekronde vóór de adresjacht te zetten, om dezelfde reden en met dezelfde order
+  erbij; lane C stelde zelf al voor hem niet op één dienst door te voeren.
+  **Wel vastgelegd zonder fundamentregel te worden**, omdat het een vormfout is
+  en geen inzicht: een citaat tussen aanhalingstekens in de
+  `## Gebruikte skills`-tabel is een bronclaim en moet woordelijk in de skill
+  staan. Beide lanes schreven op 08-09 `"never assemble an email from a pattern
+  like info@ plus the domain"` als citaat uit `prospecting`; die zin staat daar
+  niet, in geen van de zes referentiebestanden. Het besluit is goed en verplicht
+  — de bron is dít document en de harde regel van de owner van 25 augustus.
 
 - 1.25 (2026-09-08, Azzouz, verificatie lanes A+B): drie regels, binnen het
   bereik 1.22 t/m 1.30 dat het weekrapport aan A+B toewees. Geen van de twee
