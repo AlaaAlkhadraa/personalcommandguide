@@ -393,7 +393,7 @@ maakt ze de bovenste groep: de zaak draait aantoonbaar en er is een route naarto
 | Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
 |---|---|---|---|---|---|
 | Lansink Hoveniers | Vasse (Tubbergen) | hovenier | 06-10757318 | Werkspot-review 24-09-2025, eigen tekst ("levert netjes werk en denkt mee voor het beste resultaat, planning zoals afgesproken") | KvK 90981022, opgericht 01-08-2023, eenmanszaak, Denekamperweg 204. Geen eigen domein — Facebook en Werkspot zijn de hele webaanwezigheid, en dat is precies het gesprek. Drie zoekronden zonder e-mailadres. LET OP: het levensteken verloopt op 24-09-2026 |
-| Averesch Tuinen | Rijssen | hovenier | 06-41916604 | Werkspot-reviews 19-09-2024 én 04-04-2026, verschillende data, eigen tekst met de eigenaar bij naam | Opgericht 01-07-2023, Richard Averesch, Welleweg 27, eigen domein avereschtuinen.nl. Zijn contactpagina voert uitsluitend een formulier en publiceert geen adres; drie ronden zonder resultaat. Wie belt, belt een zaak van drie jaar met een verse review van april |
+| Averesch Tuinen | Rijssen | hovenier | 06-41916604 | Werkspot-reviews 19-09-2024 én 04-04-2026, verschillende data, eigen tekst met de eigenaar bij naam | Opgericht 01-07-2023, Richard Averesch, Welleweg 27, eigen domein avereschtuinen.nl. Zijn contactpagina voert uitsluitend een formulier en publiceert geen adres; drie ronden zonder resultaat. Wie belt, belt een zaak van drie jaar met een verse review van april **Herjaagd 08-09 (lane B): nog steeds geen adres, en één valstrik erbij** — de adresronde geeft info@averesch.nl met telefoon 0548-519399 en Enterstraat 14, en dat is AVERESCH B.V., een aannemer met een camperbedrijf ernaast. Gebruik dat adres niet; deze zaak is Welleweg 27 en 06-41916604 |
 
 | Colin-Stucwerk | Sittard (Sittard-Geleen) | stukadoor | 06-31956603 | GEEN gedateerd levensteken gevonden — bellen is hier een gok, en dat staat er eerlijk bij | KvK 88601684, opgericht 01-01-2023, 1 werkzaam persoon, Fons Olterdissenstraat 13, 6136 HZ. `stukadoorgids.nl` meldt uitdrukkelijk "geen e-mailadres bekend"; geen eigen domein gevonden. Lane C 05-09 |
 | Aarts Tuinonderhoud | Roosendaal | hovenier | 06-37423294 | GEEN gedateerd levensteken gevonden; wel reviewteksten zonder leesbare datum over eigenaar Bjorn Aarts | KvK 90784154, opgericht 10-07-2023, eenmanszaak, Hofstraat 69, eigen domein aartstuinonderhoud.nl. De gids meldt "geen e-mailadres bekend" en de exacte-tekenreeksronde op info@ + domein gaf de pagina van een ánder bedrijf terug. Lane C 05-09 |
@@ -634,3 +634,16 @@ vijf is óók het enige met een eigen domein. Zie
 | Hoveniersbedrijf Mossinkoff | Kloosterburen (Het Hogeland) | hovenier | 06-20676501 | — | KvK 88466221, opgericht 01-01-2021, C.V. met 2 werkzame personen, Kloostersingel 27. Eigen domein met tuinaanlegpagina; drie adresronden zonder resultaat |
 | Dik in het Groen | Dokkum (Noardeast-Fryslân) | hovenier | 06-18423805 | — | KvK 89647912, opgericht 01-03-2023, eenmanszaak, Meidoorn 35. LET OP vóór het bellen: het domein `in-het-groen.nl` wordt gedeeld met "Ecologisch hovenier Bianca in het Groen" — controleer of dat dezelfde onderneming is |
 | H.Top Dienstverlening | Koekange (De Wolden) | hovenier | — | — | Opgericht 29-04-2024, eigen domein `htopdienstverlening.com`. Contact loopt uitsluitend via een formulier en er is ook geen telefoonnummer gevonden, dus strikt genomen niet belklaar. Staat hier zodat een volgende lane er geen ronden meer in steekt |
+## Lane B (Overijssel · Gelderland · Flevoland) — 8 september 2026
+
+Twee belklare regels uit de geen-websitegroep van vandaag. De groep telde elf dossiers, maar
+negen ervan leveren geen belregel op: buiten een gidsvermelding is er geen telefoonnummer,
+geen domein en geen adres van ze te vinden. Die negen staan in `2026-09-08-b.md` en in
+`geen-emailadres.md`. Allebei de regels hieronder staan in de onderste groep van deze lijst:
+ze zijn op profiel en aantoonbaar ingeschreven, maar er is geen gedateerd levensteken bij
+gevonden.
+
+| Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
+|---|---|---|---|---|---|
+| Skillz Schilderwerk | Haaksbergen | schilder | 06-23331685 | — | KvK 86169033, gestart 28-04-2022, eenmanszaak, Mozartstraat 58. Geen eigen domein en geen e-mailadres; de gidsvermelding is de enige bron (lane B, 08-09) |
+| RIMO Schilderwerken | Enschede | schilder | 06-17490815 (ook 053-8507260) | — | KvK 85784230, gestart 24-03-2022, Rondostraat 89. Geen eigen domein en geen e-mailadres; twee gidsen voeren wel het telefoonnummer (lane B, 08-09) |

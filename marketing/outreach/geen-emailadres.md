@@ -1053,3 +1053,44 @@ Sam, 7 september 2026
 | Stukadoorsbedrijf StucaRooks | Boelenslaan | stucarooks.nl (4 pagina's, geen projectenpagina), 06-53587180, KvK 85216879 (27-01-2022), Facebookpagina | 2026-09-08 |
 | Dik in het Groen | Dokkum | in-het-groen.nl (gedeeld met "Bianca in het Groen"), 06-18423805, KvK 89647912 (01-03-2023) | 2026-09-08 |
 | H.Top Dienstverlening | Koekange | htopdienstverlening.com, alleen contactformulier, geen telefoonnummer, opgericht 29-04-2024 | 2026-09-08 |
+
+---
+
+## Lane B — Overijssel, Gelderland, Flevoland · 8 september 2026
+
+Negen bedrijven van vandaag zijn volledig beoordeeld, staan op profiel of vlak
+ernaast, en leveren geen kaart én geen belregel op: buiten een gidsvermelding is
+er geen e-mailadres, geen eigen domein en geen telefoonnummer van ze te vinden.
+Zoekopdrachten per bedrijf: naam + plaats + contactgegevens, naam + KvK-nummer,
+en waar er een domein was ook een ronde op het domein zelf.
+
+| Bedrijf | Plaats | Wat er wel is | Datum gecheckt |
+|---|---|---|---|
+| GelderGroenapeldoorn | Apeldoorn | KvK 91571421, opgericht 01-10-2023, eenmanszaak | 2026-09-08 |
+| Greenzone Boom & Tuin | Velp (Rheden) | opgericht 09-10-2023, eenbedrijfspagina op hovenier.website | 2026-09-08 |
+| W.S.K Tuinen | Klarenbeek (Voorst) | KvK 91632587, opgericht 01-10-2023; twee gidsen melden uitdrukkelijk dat er geen contactgegevens bekend zijn | 2026-09-08 |
+| B.J. Hoveniers | Almelo | KvK 81667108, opgericht 04-02-2021, Bornsestraat 354 — op leeftijd midden in het venster | 2026-09-08 |
+| H.D. van de Beek | Ermelo | Werkspot-profiel `h-d-van-de-beek-2`; let op de stadspagina van Lettele, die een review van 26-05-2026 aan zijn naam hangt (1.22) | 2026-09-08 |
+| Nieuwenhuis Schilderwerken | Apeldoorn | KvK 90050444, gestart 01-05-2023 | 2026-09-08 |
+| YG Schilderwerk | Ede | KvK 91222338, gestart 01-09-2023 | 2026-09-08 |
+| Vakschilders AGM | (Gelderland) | KvK 90433157, gestart 08-06-2023; plaats niet vastgesteld | 2026-09-08 |
+| Gerssen Schilderwerken | Urk | KvK 91171210, vestigingsnummer 000056857365, gestart 21-08-2023, Arianehof 7 | 2026-09-08 |
+
+**Drie bedrijven horen hier NIET thuis en staan daarom niet in de tabel**, ook al
+leverde de adresjacht niets bruikbaars op. Bij alle drie bestaat er wél een
+e-mailadres in de zoekresultaten, maar het is van iemand anders:
+
+- **Averesch Tuinen (Rijssen):** `info@averesch.nl` hoort bij Averesch B.V.,
+  Enterstraat 14, 0548-519399 — een aannemer, ander bedrijf. Averesch Tuinen staat
+  op `bellijst.md` met deze waarschuwing erbij.
+- **MW Cleaning Company (Winterswijk):** `info@mwtg-group.nl` draagt de naam van MW
+  Technische Groothandel, die op hetzelfde adres staat.
+- **R. Hartman schilderwerken (KvK 90828720, 2023):** `hartmanschilderwerken.nl` is
+  M./Rinie Hartman Schilderwerken in Ede, KvK 09159131, opgericht 20-03-2006.
+
+Wie een van deze drie oppakt: het adres is niet moeilijk te vinden, het is fout.
+De goedkope toets staat in `2026-09-08-b.md` — leg adres, telefoonnummer én
+KvK-nummer uit hetzelfde resultaat naast wat je al had, en klopt er één van de
+drie niet, dan is het adres van de buurman.
+
+Sam, 8 september 2026
