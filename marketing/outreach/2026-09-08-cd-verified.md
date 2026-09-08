@@ -64,8 +64,11 @@ van eigenaar Patrick van Gerven leerde. Het vak kwam dus *naast* het lesgeven en
 niet *erna*. Dat is precies het soort fout dat een bericht doodt: hij leest een
 vreemde die zijn verhaal navertelt en het mis heeft, in de zin die moest bewijzen
 dat wij zijn pagina hebben gelezen. Gecorrigeerd naar "het vak naast het lesgeven
-geleerd bij Patrick van Gerven". Bericht daarmee 216 woorden, geteld met `wc -w`,
-binnen 160-220.
+geleerd bij Patrick van Gerven". Bericht daarmee 208 woorden zonder het
+handtekeningblok en 216 mét, allebei geteld met `wc -w` en allebei binnen
+160-220. De maat is die van **1.23**, die de parallelle A+B-sessie vandaag heeft
+vastgelegd terwijl ik hier zat: tellen vanaf de aanhef tot en met de laatste zin
+vóór "Met vriendelijke groet,".
 
 **2. De onderwerpregel haalde poort (g) niet, en ik heb hem vervangen.**
 "Je verhaal staat er, je klanten niet" is een goede regel — hij opent een lus,
@@ -99,7 +102,7 @@ tonen.
 Acht jaar voor de klas, nu je eigen zaak
 ```
 
-**Bericht** (216 woorden, geteld met `wc -w`)
+**Bericht** (**208 woorden zonder het handtekeningblok**, 216 mét — geteld met `wc -w`, per 1.23)
 
 ```
 Hoi Niki,
@@ -395,6 +398,32 @@ dienst op rij dat deze lane er geen enkele oplevert, en lane C is uitgerekend de
 lane die de groep vorige week wél leverde, mét de bruikbaarste meting van de week
 (nul van acht een e-mailadres, vijf van acht ook geen telefoon).
 
+## Bevinding — 1.25 van de A+B-sessie botst met tien kaarten die al op het bord staan
+
+De parallelle sessie heeft vandaag **1.25** vastgelegd: de UTM-campagnewaarde is
+woordelijk de slug van de sectorpagina, en bestaat die pagina niet, dan is het de
+sectornaam zoals de directives hem schrijven. De grond is goed en ik neem hem
+over — twee waarden voor één sector splitsen de enige meting die wij van de
+verzending hebben.
+
+Alleen loopt de tweede helft van die regel bij glazenwasserij vast op wat er al
+staat. Er bestaat geen sectorpagina voor glazenwassers (tien sectoren in
+`sectors.ts`, geen enkele). De directives schrijven de sector als
+"Glazenwasserij / gevelreiniging", dus de afleiding geeft `glazenwasserij-w37`.
+Op het bord staat echter al **tien keer** `glazenwasser-w…` (en twee keer
+`glazenwassers-w…`), waaronder de twee goedgekeurde kaarten van 06-09.
+
+Ik heb de kaart van vandaag daarom op **`glazenwasser-w37`** gelaten en niet
+omgezet. Het doel van 1.25 is één waarde per sector; hem hier naar de letter
+volgen zou van tien waarden elf maken en precies de splitsing veroorzaken die de
+regel moet voorkomen. Wat er in plaats daarvan moet gebeuren, en het is een
+zaak voor het weekrapport en niet voor een dagverificatie: **leg per sector één
+vaste UTM-waarde vast in een lijstje, in plaats van hem per dienst af te leiden.**
+Een afleiding die twee lanes verschillend uitvoeren, is precies het probleem dat
+1.25 beschrijft — alleen zit het niet in de lanes maar in de afleiding zelf. Ik
+neem hem mee naar zondag. Tot dan: bestaande sectoren houden de waarde die al op
+het bord staat, en `hoveniers-w37` blijft goed omdat de sectorpagina zo heet.
+
 ## Bevinding — de bellijst: één regel op zestien gevraagde
 
 `bellijst.md` draagt vandaag drie nieuwe secties: lane A (vijf regels), lane B
@@ -530,7 +559,7 @@ E/F/G opgeschort, dus niet opgevuld.
 |---|---|---|
 | `cold-email` | Op de onderwerpregel van kaart 1 en op de beoordeling van de klaargelegde Osmose-tekst | Het **vierlagenmodel** van `references/personalization.md` is de reden dat ik Sams gekozen onderwerp heb vervangen en niet alleen geprezen: "Je verhaal staat er, je klanten niet" overleeft de **verwijdertoets** wél, maar is Level 3 — elke zaak met een over-onspagina en reviews elders kan hem krijgen — terwijl poort (g) van de owner een gecheckt detail eist. "Acht jaar voor de klas" is Level 4 en in mijn eigen ronde bevestigd (hbo LO in 2010, acht jaar Sancta Maria Mavo). Dezelfde toets bevestigde Sams keuze bij Osmose-Telewash: `Osmosewater op zonne-energie` is Level 4 en `Dezelfde glazenwasser elke keer` Level 2, precies zoals hij schrijft. **"One ask, low friction"** hield mijn correctie weg van de verleiding om een tweede bestemming toe te voegen: het bericht houdt één link. De data van `references/subject-lines.md` ("2-4 words, lowercase") verliest opnieuw bewust van poort (g); ik noteer de overrule net als beide lanes |
 | `marketing-psychology` | Op de vraag of kaart 1 iets losmaakt, en op de weging van de drie voorstellen | **Loss aversion zonder schaarste** is de reden dat ik het middenstuk van het bericht ongemoeid laat: "Jij hoort er nooit iets van, want die aanvraag is er nooit geweest" is een verlies dat hij nu al lijdt, zonder deadline en zonder plek-telling. **Social proof** in zijn omgekeerde vorm draagt het aanbod: zijn bewijs bestáát en staat op Trustoo, dus het bericht verkoopt geen nieuw bewijs maar de verhuizing ervan. **Theory of Constraints** gaf mijn eigen tekortblok zijn bindende poort: niet (b) zoals ik zou verwachten na twee weken, maar (a) — vier complete dossiers staan op niets anders dan een datum. **Second-order thinking** besliste de rem op 1.35: een heuristiek die ronden bespaart, gaat zich gedragen als een poort zodra hij dossiers mag sluiten, en dan kost hij precies de jonge zaken die hij moest vinden. **Survivorship bias** is waarom ik lane D's vier-op-vier klantenstops níét als sectoroordeel lees: de salons die onze zeef haalt zijn de goed vindbare, en dat zijn dezelfde die vol zitten |
-| `copy-editing` | Als laatste pas over mijn eigen correctie in het bericht van kaart 1 | Sweep 1 (clarity) op de gecorrigeerde zin: "het vak naast het lesgeven geleerd bij Patrick van Gerven" houdt de chronologie waar en blijft één idee per zinsdeel; "daarnaast" of "tegelijkertijd" zou de zin een tweede werkwoordstijd geven. Sweep 4 (Prove It) hield mij ervan af de Trustoo-score 8,5 en de "Top 10"-vermelding alsnog toe te voegen die mijn eigen ronde aanbood — allebei uitsluitend uit de samenvattende alinea, dus 1.20(a). Sweep 2 (voice) bewaakte dat mijn correctie in Sams register blijft ("je", geen "u"). En de telling opnieuw gedaan in plaats van overgenomen: 216 woorden met `wc -w`, onderwerp 40 tekens met `${#s}` |
+| `copy-editing` | Als laatste pas over mijn eigen correctie in het bericht van kaart 1 | Sweep 1 (clarity) op de gecorrigeerde zin: "het vak naast het lesgeven geleerd bij Patrick van Gerven" houdt de chronologie waar en blijft één idee per zinsdeel; "daarnaast" of "tegelijkertijd" zou de zin een tweede werkwoordstijd geven. Sweep 4 (Prove It) hield mij ervan af de Trustoo-score 8,5 en de "Top 10"-vermelding alsnog toe te voegen die mijn eigen ronde aanbood — allebei uitsluitend uit de samenvattende alinea, dus 1.20(a). Sweep 2 (voice) bewaakte dat mijn correctie in Sams register blijft ("je", geen "u"). En de telling opnieuw gedaan in plaats van overgenomen, en na 1.23 nog een keer: 208 woorden zonder het handtekeningblok en 216 mét, allebei met `wc -w`; onderwerp 40 tekens met `${#s}` |
 | `product-marketing` | Als eigenaar van `.agents/product-marketing.md`, vóór alles | Gelezen vóór het eerste oordeel en vandaag bijgewerkt naar **1.36** met drie regels binnen het bereik 1.31 t/m 1.40 dat het weekrapport aan C+D toewees; changelog-entry erbij, met de twee voorstellen die er níét in gaan en waarom. De regels die vandaag rechtstreeks een oordeel bepaalden: 1.14 (stil levensteken, verzendtermijn twee weken) bij poort (a) van Hoogers, 1.7 (de verversingsstempel van de gids) bij de Trustoo-datum van 5 januari 2026 die ik heb geweigerd, 1.16 en 1.31 bij de claim- en linkcontrole, 1.20(a) drie keer, en 1.8 bij de sectorcap |
 | `prospecting`, `customer-research`, `competitor-profiling`, `offers`, `copywriting` | **Niet ingezet als denkraam** — wel geopend om de citaten van beide lanes te toetsen | Dat is een controle en geen toepassing, en ik meld het als zodanig in plaats van er een regel bij te verzinnen. Wat de controle opleverde staat in de poort-(h)-bevinding: acht aangehaalde regels bestaan woordelijk, één bestaat niet (`"never assemble an email from a pattern like info@ plus the domain"` staat niet in `prospecting`, in geen van de zes referentiebestanden) |
 
