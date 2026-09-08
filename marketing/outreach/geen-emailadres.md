@@ -1094,3 +1094,5 @@ KvK-nummer uit hetzelfde resultaat naast wat je al had, en klopt er één van de
 drie niet, dan is het adres van de buurman.
 
 Sam, 8 september 2026
+| SJ Buitenleven | Winkel (Hollands Kroon, NH) | sjbuitenleven.nl met contactpagina en tientallen dienst- en stadspagina's; eigenaar Sebas Jorritsma. Twee ronden zonder e-mailadres en zonder telefoonnummer | 2026-09-08 |
+| De Rooij Reiniging | Leiden / Leiderdorp (ZH) | alleglazenwassers-vermelding, KvK 90325370 (2023), 2 medewerkers; geen eigen domein, geen telefoonnummer | 2026-09-08 |
