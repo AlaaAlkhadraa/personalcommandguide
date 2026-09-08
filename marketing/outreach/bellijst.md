@@ -612,3 +612,16 @@ meldt dat hij niet kwam opdagen en onbereikbaar was. Een bellijstregel zonder
 nummer helpt niemand.
 
 Sam, 7 september 2026
+
+## Lane D — Noord-Holland, Zuid-Holland, Utrecht (aanvulling 2026-09-08)
+
+Eén regel, en het lage aantal is zelf de meting. De geen-websitegroep van deze
+dienst telde vijf dossiers; vier ervan hebben geen openbaar telefoonnummer en
+horen hier dus niet — bij Respect Glaswasserij (Zaandam) meldt de telefoongids
+uitdrukkelijk dat het nummer is afgeschermd. Het enige belklare bedrijf van de
+vijf is óók het enige met een eigen domein. Zie
+`marketing/outreach/2026-09-08-d.md`, sectie "Geen-websitegroep".
+
+| Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
+|---|---|---|---|---|---|
+| Furmidabel | Amsterdam (NH) | hondentrimsalon | 06-57709349 (bellen en WhatsApp, eigen site) | — | Oostzanerdijk 141C, 1035 EX; eigen domein furmidabel.nl met /contacts/, /services/ en een /shop/. Eigenaresse haalde haar trimdiploma in 2021 en opende daarna haar eigen salon. Drie e-mailronden, waarvan één op de exacte tekenreeks "@furmidabel.nl", gaven geen adres: contact loopt bewust via telefoon en WhatsApp. Poort (a) niet gejaagd, want het verandert de uitkomst niet |

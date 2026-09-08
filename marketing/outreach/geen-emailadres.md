@@ -1042,3 +1042,9 @@ probleem geweest.
 
 Sam, 7 september 2026
 | Glaswas Service Sijstermans | Valkenburg aan de Geul (LB) | eigen domein `glaswasservicesijstermans.nl` + Facebookpagina; KvK 86346105 (2022), vestigingsnummer 000052328724, Dr Ariënsstraat, Broekhem-Noord; eigenaren Ruben en Ramona Sijstermans. Leeftijd, eigen domein en klantenstopronde alle drie dicht — alleen het adres ontbreekt, na VIER onafhankelijk geformuleerde ronden (contact, exacte domeinronde, vrije-providerronde, klantenstopronde). Oozo, alleglazenwassers, nextdoor en transfirm voeren geen adres. Bij herjacht: de Facebook-infobalk is het enige wat nog niet is uitgesloten | 2026-09-08 |
+| Furmidabel | Amsterdam (NH) | furmidabel.nl met /contacts/, /services/ en /shop/, telefoon en WhatsApp 06-57709349, Oostzanerdijk 141C; trimdiploma 2021. Drie ronden, waarvan een op "@furmidabel.nl" | 2026-09-08 |
+| Respect Glaswasserij | Zaandam (NH) | alleglazenwassers- en telefoonboekvermelding, KvK 87626616 (2022), 3 medewerkers, Poelenburg 7; geen eigen domein en telefoonnummer afgeschermd | 2026-09-08 |
+| Hsd Schoonmaakbedrijf | Alphen aan den Rijn (ZH) | alleglazenwassers-vermelding, KvK 87743159 (2022), 3 medewerkers, Oudshoorn; geen eigen domein, geen telefoonnummer | 2026-09-08 |
+| Cleaning Service Oleh | Voorburg (ZH) | alleglazenwassers-vermelding, KvK 88266567 (2022), 1 werkzaam persoon; geen eigen domein, geen telefoonnummer | 2026-09-08 |
+| Glow Multidiensten | Amsterdam / Zaandam (NH) | alleglazenwassers- en TransFirm-vermelding, KvK 92963080 (2024), Slotermeerlaan 58 (gedeeld adres); de twee bronnen zetten het bedrijf in twee gemeenten | 2026-09-08 |
+| Reinigingsbedrijf Ruben De Laat | Bodegraven (ZH) | alleglazenwassers-vermelding, KvK 89475232, 2 medewerkers; geen eigen domein, dus geen adresroute | 2026-09-08 |
