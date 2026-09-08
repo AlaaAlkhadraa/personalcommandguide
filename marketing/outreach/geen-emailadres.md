@@ -1048,3 +1048,8 @@ Sam, 7 september 2026
 | Cleaning Service Oleh | Voorburg (ZH) | alleglazenwassers-vermelding, KvK 88266567 (2022), 1 werkzaam persoon; geen eigen domein, geen telefoonnummer | 2026-09-08 |
 | Glow Multidiensten | Amsterdam / Zaandam (NH) | alleglazenwassers- en TransFirm-vermelding, KvK 92963080 (2024), Slotermeerlaan 58 (gedeeld adres); de twee bronnen zetten het bedrijf in twee gemeenten | 2026-09-08 |
 | Reinigingsbedrijf Ruben De Laat | Bodegraven (ZH) | alleglazenwassers-vermelding, KvK 89475232, 2 medewerkers; geen eigen domein, dus geen adresroute | 2026-09-08 |
+| Otter Hoveniers | Heerenveen | otterhoveniers.nl (over-ons + contact), 06-55296850, Roan Otter, KvK 83325824 (01-07-2021), 9,8 uit 13 op Werkspot | 2026-09-08 |
+| Hoveniersbedrijf Mossinkoff | Kloosterburen | hoveniersbedrijfmossinkoff.nl, 06-20676501, KvK 88466221 (01-01-2021), C.V. 2 personen | 2026-09-08 |
+| Stukadoorsbedrijf StucaRooks | Boelenslaan | stucarooks.nl (4 pagina's, geen projectenpagina), 06-53587180, KvK 85216879 (27-01-2022), Facebookpagina | 2026-09-08 |
+| Dik in het Groen | Dokkum | in-het-groen.nl (gedeeld met "Bianca in het Groen"), 06-18423805, KvK 89647912 (01-03-2023) | 2026-09-08 |
+| H.Top Dienstverlening | Koekange | htopdienstverlening.com, alleen contactformulier, geen telefoonnummer, opgericht 29-04-2024 | 2026-09-08 |

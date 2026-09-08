@@ -625,3 +625,12 @@ vijf is óók het enige met een eigen domein. Zie
 | Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
 |---|---|---|---|---|---|
 | Furmidabel | Amsterdam (NH) | hondentrimsalon | 06-57709349 (bellen en WhatsApp, eigen site) | — | Oostzanerdijk 141C, 1035 EX; eigen domein furmidabel.nl met /contacts/, /services/ en een /shop/. Eigenaresse haalde haar trimdiploma in 2021 en opende daarna haar eigen salon. Drie e-mailronden, waarvan één op de exacte tekenreeks "@furmidabel.nl", gaven geen adres: contact loopt bewust via telefoon en WhatsApp. Poort (a) niet gejaagd, want het verandert de uitkomst niet |
+## Lane A — Groningen, Friesland, Drenthe (aanvulling 8 september 2026)
+
+| Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
+|---|---|---|---|---|---|
+| Stukadoorsbedrijf StucaRooks | Boelenslaan (Achtkarspelen) | stukadoor | 06-53587180 | — | KvK 85216879, opgericht 27-01-2022, Michielsreed 13. Eigen domein `stucarooks.nl` met vier pagina's en GEEN projectenpagina — het lek is er dus wél, alleen het adres niet. Vier adresronden (eigen contactpagina, telefoonboek, bedrijvenopdekaart/oozo/bouwenverbouw, gmail-vorm). **Sterkste profiel van deze aanvulling** |
+| Otter Hoveniers | Heerenveen | hovenier | 06-55296850 | — | KvK 83325824, opgericht 01-07-2021, Dotterhof 3. Roan Otter, 9,8 uit 13 op Werkspot, eigen domein met over-ons en contact. `hovenier.website` meldt uitdrukkelijk "geen e-mailadres bekend"; drie ronden bevestigen dat |
+| Hoveniersbedrijf Mossinkoff | Kloosterburen (Het Hogeland) | hovenier | 06-20676501 | — | KvK 88466221, opgericht 01-01-2021, C.V. met 2 werkzame personen, Kloostersingel 27. Eigen domein met tuinaanlegpagina; drie adresronden zonder resultaat |
+| Dik in het Groen | Dokkum (Noardeast-Fryslân) | hovenier | 06-18423805 | — | KvK 89647912, opgericht 01-03-2023, eenmanszaak, Meidoorn 35. LET OP vóór het bellen: het domein `in-het-groen.nl` wordt gedeeld met "Ecologisch hovenier Bianca in het Groen" — controleer of dat dezelfde onderneming is |
+| H.Top Dienstverlening | Koekange (De Wolden) | hovenier | — | — | Opgericht 29-04-2024, eigen domein `htopdienstverlening.com`. Contact loopt uitsluitend via een formulier en er is ook geen telefoonnummer gevonden, dus strikt genomen niet belklaar. Staat hier zodat een volgende lane er geen ronden meer in steekt |
