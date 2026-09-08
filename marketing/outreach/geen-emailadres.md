@@ -1041,3 +1041,4 @@ Hij staat niet hier maar als `lead - poort open`; het adres is nooit zijn
 probleem geweest.
 
 Sam, 7 september 2026
+| Glaswas Service Sijstermans | Valkenburg aan de Geul (LB) | eigen domein `glaswasservicesijstermans.nl` + Facebookpagina; KvK 86346105 (2022), vestigingsnummer 000052328724, Dr Ariënsstraat, Broekhem-Noord; eigenaren Ruben en Ramona Sijstermans. Leeftijd, eigen domein en klantenstopronde alle drie dicht — alleen het adres ontbreekt, na VIER onafhankelijk geformuleerde ronden (contact, exacte domeinronde, vrije-providerronde, klantenstopronde). Oozo, alleglazenwassers, nextdoor en transfirm voeren geen adres. Bij herjacht: de Facebook-infobalk is het enige wat nog niet is uitgesloten | 2026-09-08 |
