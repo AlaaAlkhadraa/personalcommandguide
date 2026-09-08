@@ -215,6 +215,31 @@ referentiepagina op, bij een vak dat op zicht wordt gegund. De dienst van 02-09
 stelde de vraag "is de site af?", de dienst van 07-09 de vraag "staat er afgerond
 werk?". Dat verschil is de hele Tuinrobuust-order.
 
+**Een regel op `bellijst.md` is een ledgerrij en poort (e) geldt er ook (1.24).**
+Draai de naam vóór het schrijven niet alleen over `contacted.md` maar over de
+volle lengte van `bellijst.md`, en werk de bestaande regel bij in plaats van er
+een tweede onder te zetten. Verliest de nieuwe regel een feit dat de oude wél
+droeg — en dan vooral het gedateerde levensteken — dan is dat geen aanvulling
+maar een achteruitgang: de owner belt uit dit bestand, en hij leest de nieuwste
+regel.
+
+Op 08-09 kreeg Otter Hoveniers (Heerenveen) zijn derde bellijstregel en zijn
+derde ledgerrij op één week. De regel van 02-09 draagt de Werkspot-beoordeling
+van **11-02-2026** en die van 03-09 een tweede vestiging aan Wederik 198; de
+regel van 08-09 zet in de kolom Gedateerd levensteken een streepje en in het
+notitieveld `Pakket: -` en `Hoek: -`, terwijl 02-09 daar `299` en `offertelek`
+had staan. Alle drie de diensten concludeerden hetzelfde — geen e-mailadres —
+en de nieuwste laat de belbaarste noordelijke regel van het bestand er slechter
+uitzien dan hij is. Dezelfde dag deed lane B het bij Averesch Tuinen precies
+goed: de bestaande regel bijgewerkt, het levensteken behouden, en de valstrik
+(`info@averesch.nl` hoort bij Averesch B.V.) eraan toegevoegd. Die twee vormen
+staan naast elkaar in één dienst, en de tweede is de vorm.
+
+**Waarom deze regel op één drager binnenkomt:** de kosten zijn eenzijdig, net
+als bij 1.32. Een dubbele regel kost een lezer tijd; een dubbele regel die
+minder weet dan het bestand twee honderd regels hoger, kost een telefoontje dat
+blind gepleegd wordt.
+
 **Waarom de regel er staat en niet alleen de order:** de verificatie kan niet
 elke ronde overdoen en leest poortuitkomsten op hun woord. Eén onwaar gemelde
 poort kost meer dan één kaart — zij kost de betrouwbaarheid van alle poorten die
@@ -582,6 +607,32 @@ liet doorlopen tot het einde van het bestand. De regel is vanaf nu:
 Zo kan geen enkele bevindingskop het kaartpatroon nabootsen, ongeacht welk
 niveau de parser leest. Lane C koos deze vorm 31-08 uit zichzelf en had gelijk.
 
+## Twee maten die twee lanes op één dag verschillend namen
+
+Beide regels hieronder komen uit 08-09, waar lane A en lane B onafhankelijk van
+elkaar dezelfde maat verschillend toepasten. Dat is de klassieke drempel, en
+allebei zijn ze met één telling te controleren.
+
+- **De 160-220 woorden gelden voor de tekst ZONDER het handtekeningblok (1.23).**
+  Lane A telde zijn Hadders-tekst op 218 woorden "inclusief aanhef en
+  handtekening", lane B zijn Back to Eden-tekst op 215 "zonder handtekening".
+  Nagemeten met `wc -w`: Hadders 218 mét en 210 zónder, Back to Eden 223 mét en
+  215 zónder. Beide tellingen zijn dus eerlijk, en toch staat dezelfde tekst op
+  de ene maat binnen de grens en op de andere erbuiten — Back to Eden is op
+  lane A's maat drie woorden te lang. Het handtekeningblok is bij elke kaart
+  hetzelfde en door de owner vastgelegd; het zegt niets over de lengte van het
+  schrijfwerk en het hoort dus niet in een oordeel over dat schrijfwerk. Tel
+  vanaf de aanhef tot en met de laatste zin vóór "Met vriendelijke groet," en
+  zet het getal en de meetwijze erbij.
+- **De UTM-campagnewaarde is de slug van de sectorpagina, woordelijk (1.25).**
+  Voor dezelfde sector op dezelfde dag schreef lane A `hovenier-w37` en lane B
+  `hoveniers-w37`. De sectorpagina heet `hoveniers` (`zevren/lib/local/sectors.ts`),
+  dus de tweede is de goede. Dit is geen vormfoutje: de UTM bestaat volgens de
+  directives uitsluitend om op sectorniveau te kunnen zien of er iets aankomt,
+  en twee waarden voor één sector splitsen die meting in tweeën zonder dat
+  iemand het merkt. Bestaat er geen sectorpagina, dan is de waarde de sectornaam
+  zoals de directives hem schrijven — en dan staat dat in het kaartje erbij.
+
 ## Kanalen en bewijs
 
 Outreach per e-mail, persoonlijk verzonden door de eigenaar (agents
@@ -803,6 +854,37 @@ wil houden.
   groepen tegelijk.
 
 ## Changelog
+
+- 1.25 (2026-09-08, Azzouz, verificatie lanes A+B): drie regels, binnen het
+  bereik 1.22 t/m 1.30 dat het weekrapport aan A+B toewees. Geen van de twee
+  lanes bood vandaag een kaart aan, dus alle drie komen uit het werk eromheen.
+  **1.23 — de 160-220 woorden gelden zonder het handtekeningblok**, en
+  **1.25 — de UTM-campagnewaarde is de slug van de sectorpagina**, allebei
+  toegevoegd in de nieuwe sectie "Twee maten die twee lanes op één dag
+  verschillend namen". Allebei op de klassieke drempel binnengekomen: lane A en
+  lane B pasten op 08-09 onafhankelijk van elkaar dezelfde maat verschillend
+  toe (218 mét handtekening tegenover 215 zonder; `hovenier-w37` tegenover
+  `hoveniers-w37`), en allebei zijn met één telling na te rekenen. Bij 1.23
+  weegt mee dat het verschil niet cosmetisch is: op lane A's maat staat lane B's
+  tekst drie woorden buiten de grens. **1.24 — een regel op `bellijst.md` is een
+  ledgerrij en poort (e) geldt er ook**, toegevoegd bij "Een open poort is een
+  bevinding, geen kaart". Deze komt binnen op één drager, met dezelfde grond als
+  1.32: de kosten zijn eenzijdig. Otter Hoveniers kreeg op 08-09 zijn derde
+  bellijstregel op één week en de nieuwste weet minder dan de oudste — het
+  gedateerde levensteken van 11-02-2026, de tweede vestiging, `Pakket: 299` en
+  `Hoek: offertelek` zijn er alle vier uit verdwenen — terwijl de owner uit dit
+  bestand belt en de nieuwste regel leest. Dezelfde dienst leverde de goede vorm
+  ernaast: lane B werkte bij Averesch Tuinen de bestaande regel bij en hing de
+  lookalike-waarschuwing eraan.
+  **Uitdrukkelijk niet opgenomen:** de vraag of de jaagvolgorde van 1.20(b) moet
+  wijken nu lane A haar keerzijde heeft gemeten (zeven van zeven uitgebouwde
+  domeinen gaven een adres en nul van zeven een lek; twee van zeven dunne
+  domeinen gaven een adres en zeven van zeven een lek). Dat is een echte meting
+  en zij raakt rechtstreeks aan twee onbeantwoorde beslispunten van de owner;
+  1.19 legt vast dat zo'n besluit bij het weekrapport hoort en niet bij een
+  dagverificatie. Ik neem hem mee naar zondag.
+  **Kopregel niet gewijzigd:** die staat op 1.33 door de parallelle C+D-sessie
+  en een lager nummer erboven zou een verslechtering zijn.
 
 - 1.33 (2026-09-07, Azzouz, verificatie lanes C+D): drie regels, binnen het
   bereik 1.31 t/m 1.40 dat het weekrapport aan C+D toewees. **1.31 — de
