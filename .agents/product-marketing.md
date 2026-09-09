@@ -1,6 +1,6 @@
 # Product Marketing Context — ZEVREN
 
-**Document version:** 1.36 · 2026-09-08
+**Document version:** 1.39 · 2026-09-09
 Elke marketingskill in `.claude/skills/` leest dit document eerst.
 Feiten hier zijn bindend; een skill-advies dat ermee botst, verliest.
 
@@ -82,6 +82,34 @@ Vier formuleringen zijn in verificatie gesneuveld en komen niet terug:
   in: wie dóórklikt is juist de lezer die geïnteresseerd was, en die vindt dan
   niet wat hem beloofd is. Gevonden op 07-09 in de enige kaart van lane C
   (Hanenberg Hoveniers).
+
+**En de bronvermelding zelf is ook een claim (1.39).** De blokken "Waar de
+belofte op staat" en "Claimcontrole" bestaan om de volgende lezer het naslaan
+te besparen. Een verkeerd bestand erin doet het omgekeerde: het geeft een
+onjuiste zin een stempel van gecontroleerdheid, en de lezer die hem gelooft
+kijkt juist niet meer na. Daarom geldt: **een bestandsnaam of een citaat in een
+claimcontrole wordt met dezelfde `grep` nagekeken als de claim erboven.**
+
+Drie waarnemingen op twee diensten, alle drie in één regel na te rekenen:
+
+- Lane D schreef op 09-09 dat "gratis en zonder verplichtingen" **woordelijk**
+  op `zevren/app/concept-bouwer/page.tsx` staat. Die pagina voert "vraag het
+  concept gratis aan. Zonder verplichtingen."; de exacte tekenreeks staat in
+  `zevren/lib/local/sectors.ts`. De zin in het bericht is gedekt — de
+  bronvermelding niet, en zij was op 08-09 juist als correctie opgedragen.
+- Beide lanes schreven op 08-09 `"never assemble an email from a pattern like
+  info@ plus the domain"` als citaat uit `prospecting`. Die zin staat in geen
+  van de zes referentiebestanden.
+- Beide lanes schreven op 09-09 `"2-4 words, lowercase"` als citaat uit
+  `references/subject-lines.md`, waar twee koppen staan ("Length: 2–4 words" en
+  "Capitalization: lowercase wins"). Lane C schreef daarnaast **"High requires
+  at least two independent sources"** als citaat uit `prospecting`, terwijl daar
+  `"High" requires 2 independent sources, not just two of your own searches`
+  staat — lane D citeerde diezelfde regel diezelfde dag wél woordelijk.
+
+De vorm is niet nieuw maar de handhaving wel: samenvatten mag altijd, **maar
+dan zonder aanhalingstekens**. Aanhalingstekens zijn een bewering over een
+bestand, en die weegt in dit werk even zwaar als een bewering over een prijs.
 
 ## De poort die het vaakst kaarten kost
 
@@ -290,6 +318,38 @@ de uitgever?** Alleen het eerste is een levensteken.
   gemiddelde score zonder datum · een registerinschrijving of erkenningsdatum
   ouder dan twaalf maanden. Dat is de huishouding van de uitgever. Een gids
   die zijn pagina ververst, bewijst dat de gids leeft.
+
+**De post-ID draagt zijn eigen datum, en dat is de enige poort-(a)-route die
+door de bruikbare laag loopt (1.38).** Lane D stelde op 09-09 iets vast dat de
+nulscores van 07-09, 08-09 en 09-09 met één oorzaak verklaart in plaats van
+drie: alles waar poort (a) op rust — een leesbare datum — bestaat in deze
+omgeving vrijwel uitsluitend in de samenvattende alinea, en die is per 1.20(a)
+en 1.36 verboden. Een resultaat-URL draagt geen datum en een paginatitel bijna
+nooit. Eén uitzondering: **een TikTok- of Instagram-post-URL draagt zijn
+aanmaakmoment in de ID zelf**, en die URL staat in de resultatenlijst. De datum
+komt dan uit de bruikbare laag, en de uitgever van de post is het bedrijf zelf,
+dus de daad is zijn daad in de zin van 1.7.
+
+**De rem staat er meteen bij en zij is van mij, niet van Sam.** Een decodering
+is rekenkunde en geen bron. Zij sluit poort (a) pas na twee toevoegingen:
+
+1. **Eén semantische bevestiging.** De inhoud van de post moet de berekende
+   datum dragen. Lane D deed dat voorbeeldig: `instagram.com/p/C-K-fcPo69M/`
+   van HondenTrimSalon Utrecht decodeert naar 2 augustus 2024 en draagt als
+   titel "gesloten van 3 aug t/m 20 aug" — de dag vóór de vakantie die de post
+   aankondigt. Zonder zo'n bevestiging is een getal geen levensteken.
+2. **Het account moet aan het bedrijf vastzitten.** Lane D schreef dat zelf op:
+   de post van 23-06-2026 met `#hondentrimsalon #haarlem` valt binnen het
+   venster, maar het account erachter is niet geïdentificeerd, en een datum
+   zonder vastgesteld bedrijf is geen levensteken van een prospect.
+
+En de tweede-orde-rem, ook van lane D zelf: **de route mag bewijs leveren en
+nooit profiel bepalen.** Wie hem als poort gebruikt, selecteert op bedrijven
+mét TikTok of Instagram, en dat is een andere populatie dan de ICP. De route is
+opgenomen omdat de kosten eenzijdig zijn — één decodering kost niets en kan
+geen goede kaart doden — en niet omdat zij het aantal oplost: van twaalf
+gedecodeerde sporen vielen er drie binnen het venster, want de zoekindex geeft
+de best gelinkte post terug en dat is zelden de nieuwste.
 
 **Een gedateerde review op een vakgidspagina is pas een levensteken als de
 datum per review verschilt EN de reviewtekst over dít bedrijf gaat (1.15).**
@@ -563,6 +623,28 @@ tegenovergestelde resultaat op:
 Een adres dat alleen een persoonsnaam draagt (`kocak_k@hotmail.com`) haalt de
 poort wél, mits het op de registerpagina van precies dát bedrijf staat. Een
 adres dat de naam van een ánder bedrijf draagt, haalt hem nooit.
+
+**Een e-mailadres uit de samenvattende alinea is nooit een adres — ook niet
+als bevestiging van een vermoeden (1.37).** 1.20(a) verbood die alinea als bron
+en 1.36 legde vast dat zij hele regels en de plaats verzint. Op 09-09 kwam de
+categorie erbij die een klasse erger is: bij Trimsalon Lucky Bastard (Haarlem)
+bood zij adres, telefoon én `info@trimsalonluckybastard.nl` aan, en de
+controleronde op de exacte tekenreeks gaf **nul pagina's op dat domein** terug —
+er is geen aanwijzing dat het domein bestaat.
+
+De reden dat dit een eigen regel krijgt en niet onder 1.36 valt, staat in de
+kosten. Een verzonnen jaartal valt op de leeftijdspoort en kost hooguit een
+afgekeurde kaart. **Een verzonnen adres is de enige fout in dit proces die
+niemand kan zien vóór verzending:** het bord keurt op "geverifieerd openbaar
+e-mailadres", de owner doet een controle van dertig seconden, en een plausibel
+adres doorstaat allebei. De fout wordt pas zichtbaar bij de bounce, en dan is
+er een adres verbrand voor een bedrijf dat verder op profiel stond.
+
+Het enige geldige bewijs is dus een **eigen pagina van het bedrijf die in de
+resultatenlijst terugkomt op de exacte tekenreeks** — de vorm die op 08-09 bij
+Hoogers is goedgekeurd en die op 09-09 bij QK Glazenwasserij en Robinson
+Glasbewassing werkte en bij Lucky Bastard juist niet. Blijft die ronde leeg,
+dan is er geen adres, hoe stellig de alinea ook is.
 
 Een tweede bron telt pas mee als hij het ADRES draagt, niet als hij het
 bedrijf draagt. Op 30-08 schreef lane F het adres van Dayan Stukadoorsbedrijf
@@ -967,6 +1049,46 @@ wil houden.
 
 ## Changelog
 
+- 1.39 (2026-09-09, Azzouz, verificatie lanes C+D): drie regels, binnen het
+  bereik 1.31 t/m 1.40. **1.37 — een e-mailadres uit de samenvattende alinea is
+  nooit een adres, ook niet als bevestiging**, toegevoegd bij "Welke bron een
+  e-mailadres draagt". Woordelijk lane D's voorstel, en hij gaat er op één lane
+  en één waarneming in om de reden die 1.34 er ook op één in liet: de kosten
+  zijn eenzijdig. De grond is scherper dan de eenzijdigheid alleen, en zij is
+  van lane D: dit is de enige fout in het proces die noch het bord noch de
+  controle van de owner vóór verzending kan zien. **1.38 — de post-ID draagt
+  zijn eigen datum**, toegevoegd bij "Wiens daad draagt de datum", mét twee
+  remmen die niet in het voorstel stonden: een decodering sluit poort (a) pas
+  na een semantische bevestiging uit de post zelf, en pas als het account aan
+  het bedrijf vastzit. Lane D leverde de eerste rem zelf als bewijs
+  (HondenTrimSalon Utrecht, 02-08-2024 tegen "gesloten van 3 aug t/m 20 aug")
+  en de tweede zelf als waarschuwing; ik maak er allebei een voorwaarde van,
+  want de route is rekenkunde en rekenkunde is geen bron. **1.39 — de
+  bronvermelding in een claimcontrole is zelf een claim**, toegevoegd bij "Wat
+  een bericht nooit mag beweren". Dit is de enige regel van vandaag die uit een
+  fout komt in plaats van uit een vondst, en hij komt binnen omdat de fout zich
+  herhaalde nádat ik hem op 08-09 als correctie had opgedragen: lane D verving
+  een ontbrekende bronvermelding door een verkeerde. Beide lanes dragen
+  daarnaast nog een gestikt citaat tussen aanhalingstekens.
+  **Uitdrukkelijk niet opgenomen:** (a) de sectorcap als grond om een kaart af
+  te keuren. Lane C bood Cleancare Solutions aan mét de melding dat hij één
+  boven de cap staat en liet het oordeel aan mij, precies zoals het hoort. Het
+  oordeel is: **de kaart gaat door.** De cap staat in dit document al onder de
+  kop "Twee regels die geen poort zijn", zijn grond is sectoruitputting, en
+  deze sector is aantoonbaar niet uitgeput — hij leverde vandaag het enige
+  echte gedateerde eigen spoor van beide lanes. Er is geen nieuwe regel nodig;
+  er was toepassing van een bestaande nodig. (b) een regel over de ontbrekende
+  slotvraag in de drie berichten. Dat is een schrijfcorrectie en die hoort in
+  een order, niet in het fundament. **1.40 blijft bewust vrij** voor de
+  C+D-diensten van donderdag en vrijdag.
+  **Naast 1.27 van de parallelle A+B-sessie, en dat is geen dubbeling.** Beide
+  sessies liepen vandaag onafhankelijk op hetzelfde onderliggende probleem vast
+  en beide schreven er een regel over: 1.27 gaat over het citaat uit een skill,
+  1.39 over de bronvermelding in een claimcontrole. Dat twee sessies met
+  verschillend bewijs op één grond uitkomen, is precies de drempel die dit
+  document elders voor een regel hanteert — het maakt allebei de regels sterker
+  en geen van beide overbodig.
+
 - 1.28 (2026-09-09, Azzouz, verificatie lanes A+B): drie regels, binnen het
   bereik 1.26 t/m 1.30 dat mij na 1.25 resteerde. Geen van beide lanes bood een
   kaart aan - nul van nul, bij 86 volledig beoordeelde dossiers - dus alle drie
@@ -1001,6 +1123,7 @@ wil houden.
   dezelfde claim. Versterkt, niet gedragen.
   **Kopregel niet gewijzigd:** die staat op 1.36 door de parallelle C+D-sessie, en
   een lager nummer erboven zou een verslechtering zijn - zelfde grond als bij 1.25.
+
 
 - 1.36 (2026-09-08, Azzouz, verificatie lanes C+D): drie regels, binnen het
   bereik 1.31 t/m 1.40 dat het weekrapport aan C+D toewees, alle drie afkomstig
