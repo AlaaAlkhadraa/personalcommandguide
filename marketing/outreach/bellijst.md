@@ -646,3 +646,15 @@ gevonden.
 |---|---|---|---|---|---|
 | Skillz Schilderwerk | Haaksbergen | schilder | 06-23331685 | — | KvK 86169033, gestart 28-04-2022, eenmanszaak, Mozartstraat 58. Geen eigen domein en geen e-mailadres; de gidsvermelding is de enige bron (lane B, 08-09) |
 | RIMO Schilderwerken | Enschede | schilder | 06-17490815 (ook 053-8507260) | — | KvK 85784230, gestart 24-03-2022, Rondostraat 89. Geen eigen domein en geen e-mailadres; twee gidsen voeren wel het telefoonnummer (lane B, 08-09) |
+
+## Lane A — Groningen, Friesland, Drenthe (aanvulling 9 september 2026)
+
+Eén belklare regel. De groep telde vandaag zes beoordeelde dossiers, alle zes op
+profiel en alle zes zonder eigen domein; vijf ervan leveren geen belregel op
+omdat de gidsen die hun nummer dragen het achter "Telefoonnummer tonen" zetten en
+een zoekresultaat het daarom nooit meeneemt. Zie de derde bevinding in
+`2026-09-09-a.md`. Die vijf staan in `geen-emailadres.md`.
+
+| Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
+|---|---|---|---|---|---|
+| J. de Jong Schilderwerken | Leeuwarden (Fr) | schilder | **06-38089162** | — | Kamgras 165 8935 EH, KvK 82161712, opgericht 18-03-2021, eenmanszaak, 1 werkzaam persoon. Vijf jaar en dus op profiel. Geen eigen domein en in drie ronden geen e-mailadres. **LET OP vóór het bellen:** `schilderwerkenjdejong.nl` is NIET van dit bedrijf maar van Schilderwerken J. de Jong in Beek en Donk (Noord-Brabant), sinds 2000 — noem dat domein dus niet aan de telefoon |

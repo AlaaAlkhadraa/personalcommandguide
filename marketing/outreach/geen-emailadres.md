@@ -1096,3 +1096,21 @@ drie niet, dan is het adres van de buurman.
 Sam, 8 september 2026
 | SJ Buitenleven | Winkel (Hollands Kroon, NH) | sjbuitenleven.nl met contactpagina en tientallen dienst- en stadspagina's; eigenaar Sebas Jorritsma. Twee ronden zonder e-mailadres en zonder telefoonnummer | 2026-09-08 |
 | De Rooij Reiniging | Leiden / Leiderdorp (ZH) | alleglazenwassers-vermelding, KvK 90325370 (2023), 2 medewerkers; geen eigen domein, geen telefoonnummer | 2026-09-08 |
+
+## Lane A — 9 september 2026 (Groningen, Friesland, Drenthe)
+
+Zes bedrijven, alle zes binnen het leeftijdsvenster en alle zes op profiel. Bij
+vijf ervan ontbreekt niet alleen het e-mailadres maar ook het telefoonnummer, en
+dat is vandaag gemeten in twee tot drie gerichte ronden per bedrijf (naam +
+plaats + telefoon, naam + straat + 06, naam + telefoonboek). De gidsen voeren de
+vermelding wél en het nummer niet.
+
+| Bedrijf | Plaats | Wat er wel is | Datum gecheckt |
+|---|---|---|---|
+| Siepol Schoonmaakbedrijf | Stadskanaal (Gr) | KvK 90322304 (2023), Convenantstraat 23, eigenaar Martin Oortwijn, Facebookpagina, profiel op klussersvinden.nl. Geen domein, geen adres, geen nummer | 2026-09-09 |
+| SiZo Cleaning and More | Hoogezand (Gr) | KvK 91357551 (2023), Hoofdstraat 200, schoonmaak + glasbewassing + tuinonderhoud, Werkspot-profiel. Geen domein, geen adres, geen nummer | 2026-09-09 |
+| Glazenwasser F. de Wit | Musselkanaal (Gr) | KvK 91500796 (2023), Asterstraat 20, eenmanszaak, twee telefoonboekvermeldingen zonder zichtbaar nummer | 2026-09-09 |
+| Michael's Meesterwerk | Smilde (Dr) | KvK 97214078 (2025), glazenwasser/schilder/klusbedrijf. Eén jaar: mogelijk een starter zonder tractie, geen tractiespoor gevonden | 2026-09-09 |
+| Extra Clean Schoonmaakbedrijf | Emmen (Dr) | KvK 85125288 (2022), Fokkingeslag 39. Adresgegevens op verzoek van de KvK afgeschermd, wat ook het nummer wegneemt | 2026-09-09 |
+| Total Cleaning | Winschoten (Gr) | KvK 80730876 (2020), Venne 146A / Industrieweg 25. Geen website in de vermelding, nummer afgeschermd | 2026-09-09 |
+| Glasbewassing & Schoonmaakbedrijf Swarts | Stadskanaal (Gr) | KvK 84843004 (2021), eigen domein schoonmaakbedrijfswarts.nl met alleen home en /contact, Facebook, Werkspot. Het lek zou bestaan; vier ronden gaven geen e-mailadres en geen nummer | 2026-09-09 |
