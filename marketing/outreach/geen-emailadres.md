@@ -1114,3 +1114,17 @@ vermelding wél en het nummer niet.
 | Extra Clean Schoonmaakbedrijf | Emmen (Dr) | KvK 85125288 (2022), Fokkingeslag 39. Adresgegevens op verzoek van de KvK afgeschermd, wat ook het nummer wegneemt | 2026-09-09 |
 | Total Cleaning | Winschoten (Gr) | KvK 80730876 (2020), Venne 146A / Industrieweg 25. Geen website in de vermelding, nummer afgeschermd | 2026-09-09 |
 | Glasbewassing & Schoonmaakbedrijf Swarts | Stadskanaal (Gr) | KvK 84843004 (2021), eigen domein schoonmaakbedrijfswarts.nl met alleen home en /contact, Facebook, Werkspot. Het lek zou bestaan; vier ronden gaven geen e-mailadres en geen nummer | 2026-09-09 |
+| Green Future | Hoevelaken (GLD) | hovenier | KvK 84508361, eenmanszaak; twee ronden zonder adres én zonder telefoonnummer. Lookalike: Green Future B.V. Leerdam is een ander bedrijf | 2026-09-09 |
+| JK Grondverzet & Tuin | Wehl (Doetinchem, GLD) | hovenier | KvK 81688490, Horststraat 12; Facebookpagina bestaat, geen adres en geen telefoonnummer in twee ronden | 2026-09-09 |
+| Herbert Keurentjes Tuinaanleg | Silvolde (GLD) | hovenier | KvK 81909101, Dr. Dreesstraat 22; twee gidsen melden uitdrukkelijk dat er geen e-mailadres én geen telefoonnummer bekend is | 2026-09-09 |
+| Van de Pol Tuinen (Tuin Totaal Salland) | Raalte (OV) | hovenier | KvK 81891326, de Deel 8; Facebookpagina bestaat, twee ronden zonder adres en zonder telefoonnummer | 2026-09-09 |
+| Glazenwasserij A.S.U. | Arnhem (GLD) | glazenwasser | KvK 82334951 (2021), Johan de Wittlaan 425; twee ronden zonder adres en zonder telefoonnummer | 2026-09-09 |
+| Glazenwasserij De Oude | Almere (FL) | glazenwasser | KvK 77181492 (2020), v.o.f., Simon Carmiggeltstraat 39; twee ronden zonder adres | 2026-09-09 |
+| Eylin Multidiensten / Glazenwassersbedrijf Eylin | Almere (FL) | glazenwasser | KvK 91631556, Lucille Ballstraat 36; twee handelsnamen op één vestigingsnummer (000057297630), dus één bedrijf. Geen adres in twee ronden | 2026-09-09 |
+| R.G Multi Diensten (RG Glasbewassing) | Raalte / Heeten (OV) | glazenwasser | KvK 91799996, eigen domein rg-multidiensten.nl; twee ronden waarvan één op het domein zelf gaven geen adres | 2026-09-09 |
+| P. Heesen Schoonmaakdiensten | Zutphen (GLD) | glazenwasser | KvK 71594035 (2018), Stokebrand 84; geen eigen domein, geen adres en geen telefoon in één ronde | 2026-09-09 |
+| Schoonmaakberijf Wemmenhove | Zutphen (GLD) | glazenwasser | Alleen de eenbedrijfspagina op alleglazenwassers.nl (000053926218); geen KvK-nummer, geen adres, geen telefoon | 2026-09-09 |
+| Spraykend! | Doetinchem (GLD) | schilder | Gestart 2023 volgens schilder-nu.nl; twee ronden gaven geen enkele bron buiten de gids | 2026-09-09 |
+| Schilderwerken Steven Kaija | Ede (GLD) | schilder | KvK 88633985, Leusveld 18, gestart 2023; telefoonboek.nl voert het nummer als "Afgeschermd" - weggehaald, niet ontbrekend | 2026-09-09 |
+| Schildersbedrijf JM | Zutphen (GLD) | schilder | Gestart 2023 volgens schilder-nu.nl; één ronde gaf geen KvK-nummer, geen adres, geen telefoon en geen domein | 2026-09-09 |
+| Clean4You N&W | Arnhem (GLD) | glazenwasser | KvK 88740862, sinds 2023, eigen domein clean4younw.nl. Het aangeboden `younw@gmail.com` staat in geen enkel resultaat - niet gebruiken. Contactformulier is de bewuste route | 2026-09-09 |
