@@ -619,6 +619,27 @@ alleen op het adres gevallen, allebei met een formulier en WhatsApp als bewuste
 contactroute. De keuze die daaruit volgt — het prime target verschuiven of het
 bord een tweede verzendweg geven — ligt bij de owner en staat in het weekrapport.
 
+**De exacte-tekenreeksronde is een verplichte controle op elk gevonden
+e-mailadres (1.28).** Elk adres dat niet van een eenbedrijfs-registerpagina komt,
+wordt gezocht als exacte tekenreeks tussen aanhalingstekens, en er wordt een URL
+van het bedrijf zelf of een eenbedrijfspagina geeist. Komt er niets terug, dan is
+het adres **niet fout bewezen** - dan weet je nog niets, en is de volgende stap het
+ledger en de eigen contactpagina, niet de conclusie "geen e-mailadres".
+
+De reden is een gevaar dat op geen enkele poort valt: **de samenvattende alinea kapt
+adressen af.** Op 08-09 zag lane B het zichtbaar (`info@backtoedenhoveniers`, zonder
+domein, dus kapot op het oog). Op 09-09 zag dezelfde lane de gevaarlijke vorm: bij
+Clean4You N&W bood de alinea `younw@gmail.com` aan - `Clean4younw@gmail.com` zonder de
+eerste zes tekens, en dus een geldig adresformaat dat vertrekt, aankomt en bij een
+vreemde in de bus ligt zonder dat iemand het ooit merkt. Een verzonnen adres bounced en
+de owner ziet een foutmelding; een afgekapt adres doet dat niet. Het adres is zelf de
+poort, dus er is geen tweede poort die het vangt.
+
+De toets werkt ook in de andere richting en maakt een adres juist hard: bij Stukadoor
+Lawand gaf `"info@stukadoorlawand.nl"` in de verificatie van 09-09 zijn eigen
+`/Contact/`-pagina terug, en dat is de "official business page" die `prospecting` als
+hoogste zekerheid kent. Kosten: een ronde per adres. Zij kan geen goed adres doden.
+
 ## Twee regels die geen poort zijn
 
 Niet elke regel in `agents/` is een verificatiepoort, en ze als poort
@@ -879,6 +900,34 @@ zoekopdracht eerst één keer om: neem de stadsindex van het platform zelf als
 uitsluitingslijst en jaag op het complement daarvan in de gewone
 bedrijvengidsen. Levert dat ook niets op, dan is de sector bezet op bewijs.
 
+**Een gebrek in de tekst van een skill is een gebrek in wat je geserveerd kreeg,
+niet automatisch in het bestand (1.26).** Controleer een vermoed bestandsdefect met een
+directe lezing voordat je het meldt, en laat een verminkte weergave nooit het gebruik
+van de skill onderdrukken.
+
+Op 09-09 meldde lane A drie regels in `.claude/skills/marketing-psychology/SKILL.md` als
+stuk door een zoek-en-vervangactie en hield op die grond citaten achter waar hij recht op
+had. Bij de verificatie van dezelfde dag kwamen dezelfde drie passages verminkt door -
+maar met **andere** vervangingen - terwijl een directe lezing van het bestand alle drie de
+regels ongeschonden toont (regels 154, 204 en 306). Twee dragers, een dag, hetzelfde
+bestand: het gebrek zit in de weergave en niet op schijf. De kosten zijn eenzijdig: een
+`grep` kost nul ronden, en de fout kost tegelijk een verzwakte skill en een meldpunt aan
+de eigenaar van het fundament over een bestand dat niets mankeert.
+
+**Een aanscherping van jezelf hoort buiten de aanhalingstekens (1.27).** Een citaat
+tussen aanhalingstekens in de `## Gebruikte skills`-tabel is een bronclaim en moet
+woordelijk in de skill staan; een eigen toevoeging zet je erbuiten en schrijf je op eigen
+naam. De aanscherping zelf mag blijven - alleen niet als citaat.
+
+Op 08-09 stond dit als vormfout in de changelog van 1.36 zonder regel te worden. Op 09-09
+herhaalden **beide** lanes hem met dezelfde zin: `"High confidence requires two independent
+sources, not just two of your own searches"`, waarvan alleen het eerste deel in
+`prospecting` staat ("**High**: confirmed by at least two independent sources or official
+business page", SKILL.md:68) en het tweede deel Sams eigen, en overigens juiste,
+aanscherping is. Tweede dienst op rij, twee onafhankelijke lanes: dat is de drempel.
+De verificatie leest poortuitkomsten en skillstabellen op hun woord; een citaat dat niet
+klopt kost de geloofwaardigheid van de citaten die wel kloppen.
+
 ## Sectoren: gesloten, afgewaardeerd, of in de wacht
 
 Drie categorieën, en het verschil is belangrijk genoeg om hier te staan,
@@ -917,6 +966,41 @@ wil houden.
   groepen tegelijk.
 
 ## Changelog
+
+- 1.28 (2026-09-09, Azzouz, verificatie lanes A+B): drie regels, binnen het
+  bereik 1.26 t/m 1.30 dat mij na 1.25 resteerde. Geen van beide lanes bood een
+  kaart aan - nul van nul, bij 86 volledig beoordeelde dossiers - dus alle drie
+  komen uit het werk eromheen. **1.26 - een verminkte skillweergave is geen
+  bestandsdefect**, en **1.27 - een citaat is woordelijk of het is geen citaat**,
+  allebei toegevoegd bij "Een dag zonder kaarten is geen dag zonder skills".
+  1.26 komt binnen op twee dragers op een dag (lane A las drie passages van
+  `marketing-psychology` verminkt, ik las bij mijn eigen aanroep dezelfde drie
+  passages verminkt met **andere** vervangingen, en het bestand op schijf is
+  ongeschonden) en op de eenzijdige-kostentoets van 1.31/1.34. 1.27 komt binnen op
+  de klassieke drempel: op 08-09 als vormfout opgeschreven, op 09-09 door beide
+  lanes onafhankelijk herhaald met dezelfde halve `prospecting`-zin.
+  **1.28 - de exacte-tekenreeksronde is een verplichte controle op elk gevonden
+  e-mailadres**, toegevoegd bij "Welke bron een e-mailadres draagt". Voorgedragen
+  door lane B en bij de verificatie onafhankelijk toegepast; drie dragers, waarvan
+  de tweede het gevaar draagt dat de regel bestaat om te vangen (een adres dat de
+  samenvattende alinea zo afkapt dat er een geldig adres van iemand anders
+  overblijft, dat op geen enkele poort valt omdat het adres zelf de poort is).
+  **Uitdrukkelijk niet opgenomen:** (a) lane A's paginateller-zeef (onder drie
+  geindexeerde pagina's geen adres, boven zes geen lek). De meting is echt en staat
+  nu op twee diensten, maar hij raakt de jaagvolgorde van 1.20(b) en twee
+  onbeantwoorde beslispunten van de owner; 1.19 wijst dat naar het weekrapport. Hij
+  gaat zondag mee, rijp voor een besluit en niet voor nog een meting. (b) Lane B's
+  vestigingsnummer-als-sleutel (twee handelsnamen op een twaalfcijferig nummer is
+  een onderneming; DeHult / Turtle SoftWash / SoftWash Vechtdal). Overtuigend en een
+  natuurlijke uitbreiding van 1.35, maar een drager en een dienst - lane B krijgt de
+  order hem op een tweede geval te draaien. (c) Lane B's regel dat een
+  zoekresultaattitel bij een gedeelde achternaam niet vaststelt wie het domein voert
+  (Kers / Back to Eden). Ik liep die dag zelf in een naaste variant - een
+  Werkspot-review van "Hovenier Roel" in Ederveen die de samenvattende alinea aan
+  RS Hovenier in Borculo plakte - maar dat is 1.20(a) en 1.22 die samen vuren, niet
+  dezelfde claim. Versterkt, niet gedragen.
+  **Kopregel niet gewijzigd:** die staat op 1.36 door de parallelle C+D-sessie, en
+  een lager nummer erboven zou een verslechtering zijn - zelfde grond als bij 1.25.
 
 - 1.36 (2026-09-08, Azzouz, verificatie lanes C+D): drie regels, binnen het
   bereik 1.31 t/m 1.40 dat het weekrapport aan C+D toewees, alle drie afkomstig
