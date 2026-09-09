@@ -1127,4 +1127,3 @@ vermelding wél en het nummer niet.
 | Spraykend! | Doetinchem (GLD) | schilder | Gestart 2023 volgens schilder-nu.nl; twee ronden gaven geen enkele bron buiten de gids | 2026-09-09 |
 | Schilderwerken Steven Kaija | Ede (GLD) | schilder | KvK 88633985, Leusveld 18, gestart 2023; telefoonboek.nl voert het nummer als "Afgeschermd" - weggehaald, niet ontbrekend | 2026-09-09 |
 | Schildersbedrijf JM | Zutphen (GLD) | schilder | Gestart 2023 volgens schilder-nu.nl; één ronde gaf geen KvK-nummer, geen adres, geen telefoon en geen domein | 2026-09-09 |
-| Clean4You N&W | Arnhem (GLD) | glazenwasser | KvK 88740862, sinds 2023, eigen domein clean4younw.nl. Het aangeboden `younw@gmail.com` staat in geen enkel resultaat - niet gebruiken. Contactformulier is de bewuste route | 2026-09-09 |
