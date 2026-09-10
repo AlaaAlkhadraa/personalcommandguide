@@ -252,7 +252,18 @@ dat is op de maat van 1.27 geen citaat — ook niet als de gedachte erin klopt. 
 vervalt is uitsluitend de bewering dat Sam de tweede helft verzon.
 
 De correctie staat in `.agents/product-marketing.md` bij 1.27, met de reden erbij,
-zodat niemand hem opnieuw hoeft te vinden. Lane A's eigen conclusie — een citaat
+zodat niemand hem opnieuw hoeft te vinden.
+
+**Nagekomen, en het maakt de zaak sterker: de parallelle C+D-sessie is vandaag
+onafhankelijk op precies dezelfde fout uitgekomen** en schrijft hem in
+`2026-09-10-cd-verified.md` onder de kop "1.27 is op verkeerd bewijs geschreven, en
+de fout is van mij". Twee verificatiesessies, twee lanesets, één conclusie, en
+allebei komen we uit op dezelfde werkregel: `grep -n` over het hele bestand in
+plaats van de regel waar je hem verwacht. C+D draagt hem terecht als kandidaat voor
+zondag voor omdat zij het fundament vandaag niet wijzigen; **ik heb hem al
+doorgevoerd**, dus voor het weekrapport is dit punt afgehandeld en geen openstaande
+kandidaat meer. Dat is precies de dubbeling die het gescheiden nummerbereik moet
+voorkomen, en zij is hier voorkomen. Lane A's eigen conclusie — een citaat
 zoeken met `grep -n` over het hele bestand en niet op de regel waar je hem verwacht
 — is de goede en zij is nu de regel.
 
