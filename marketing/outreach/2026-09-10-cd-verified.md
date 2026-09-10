@@ -550,6 +550,34 @@ hoort zondag op tafel.
 
 ---
 
+## Bevinding — de sessie stond op een losse HEAD, en `git push origin main` duwde daardoor een oude ref
+
+Operationeel, en het hoort in dit bestand omdat `agents/system.md` acht stil
+gestorven diensten aan precies dit soort dingen toeschrijft.
+
+Mijn container startte met een **detached HEAD**: `git status` gaf
+`HEAD detached from refs/heads/main`, terwijl de lokale tak `main` zeventien
+commits achterliep op `origin/main`. Mijn commit landde dus op de losse HEAD en
+niet op `main`. Het gevolg is stil en misleidend: `git push -u origin main` duwt
+dan de **oude** `main`-ref en wordt geweigerd met *"a pushed branch tip is behind
+its remote counterpart"* — een melding die klinkt alsof je moet pullen, terwijl
+`git pull --rebase` antwoordt met *"HEAD is up to date"* en er niets verandert.
+Wie die twee meldingen naast elkaar legt zonder `git branch -vv` te draaien, kan
+concluderen dat er niets te pushen valt en de dienst als klaar afsluiten met het
+werk alleen in de container — en de container wordt opgeruimd.
+
+**De diagnose kost één commando** en het is niet `git status`, want die zegt het
+niet duidelijk genoeg: `git branch -vv` zet de losse HEAD en de achterstand van de
+lokale tak op één regel. **De reparatie is `git checkout -B main <commit>`** gevolgd
+door de gewone push; daarna liep zowel `main` als de spiegel naar
+`claude/zevren-agency-website-bz0bzz` in één keer door.
+
+Voor de volgende dienst, van welke lane ook: **controleer na je eerste commit met
+`git branch -vv` dat je op `main` staat en niet op een losse HEAD**, en vertrouw
+een geweigerde push nooit op de tekst van de hint alleen. Ik weet niet of dit aan
+mijn container lag of breder speelt — beide lanes pushten vandaag zonder problemen —
+en daarom staat het hier als waarneming en niet als regel.
+
 ## Gebruikte skills
 
 | Skill | Waar toegepast | Wat het concreet veranderde |
