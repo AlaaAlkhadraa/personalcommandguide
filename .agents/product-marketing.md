@@ -111,6 +111,33 @@ De vorm is niet nieuw maar de handhaving wel: samenvatten mag altijd, **maar
 dan zonder aanhalingstekens**. Aanhalingstekens zijn een bewering over een
 bestand, en die weegt in dit werk even zwaar als een bewering over een prijs.
 
+### De onderwerpregel is een bewering en gaat langs dezelfde claimcontrole (1.30)
+
+Poort (g) vraagt of de subject een concreet, gecontroleerd detail draagt. Dat is een
+vraag naar hérkomst, niet naar juistheid, en daardoor kon een getal dat uit het onderzoek
+kwam tóch onwaar in de meest gelezen regel van de kaart terechtkomen.
+
+Op 10-09 droeg de enige kaart van lane A+B de onderwerpregel `54 keer vijf sterren op
+Werkspot`. Het aantal is echt en het staat in het kaartje, maar het kaartje zegt zelf
+**4,7 uit 54** — een gemiddelde van 4,7 betekent per definitie dat niet alle 54
+vijfsterrenbeoordelingen zijn, en de bron noemt zelfs een ontevreden klant met naam en
+toenaam. De subject sprak dus het kaartje eronder tegen, en zij deed het in de regel die
+als eerste en soms als enige gelezen wordt.
+
+**De regel:** elk getal, elke score en elke telling in de onderwerpregel gaat langs
+precies dezelfde controle als een prijs in de tekst — niet alleen "waar komt dit vandaan"
+maar "klopt dit". Een aantal beoordelingen is geen aantal vijfsterrenbeoordelingen, een
+gemiddelde is geen minimum, en een top-tienpositie is geen eerste plaats. Botst de subject
+met een cijfer uit het eigen kaartje, dan wint het kaartje en wordt de subject herschreven.
+
+**Waarom deze regel op één drager binnenkomt:** de kosten zijn eenzijdig, in de zin van
+1.31 en 1.34. De controle kost één blik op het kaartje dat je zojuist zelf hebt geschreven
+en zij kan geen goede kaart doden. Wat zij voorkomt is de duurste vorm van een fout die
+dit bestand kent: de ontvanger is de enige mens ter wereld die zijn eigen score uit zijn
+hoofd kent, hij leest hem verkeerd in regel één, en daarmee is niet alleen de mail dood
+maar het adres verbrand — precies de uitkomst waarvoor de staande order van 25 augustus
+avond is geschreven.
+
 ## De poort die het vaakst kaarten kost
 
 Vóór er een letter copy wordt geschreven: **kan deze klant al online
@@ -991,10 +1018,38 @@ Op 09-09 meldde lane A drie regels in `.claude/skills/marketing-psychology/SKILL
 stuk door een zoek-en-vervangactie en hield op die grond citaten achter waar hij recht op
 had. Bij de verificatie van dezelfde dag kwamen dezelfde drie passages verminkt door -
 maar met **andere** vervangingen - terwijl een directe lezing van het bestand alle drie de
-regels ongeschonden toont (regels 154, 204 en 306). Twee dragers, een dag, hetzelfde
+regels ongeschonden toont (regels 154, 204 en 316). Twee dragers, een dag, hetzelfde
 bestand: het gebrek zit in de weergave en niet op schijf. De kosten zijn eenzijdig: een
 `grep` kost nul ronden, en de fout kost tegelijk een verzwakte skill en een meldpunt aan
 de eigenaar van het fundament over een bestand dat niets mankeert.
+
+**De verminking is een `$n`-invulling van je eigen skill-argumenten, en zij raakt
+uitsluitend passages met een dollarteken (1.29).** Het mechanisme is op 10-09 met een
+voorspelling vastgesteld en niet met een vermoeden. Roep je een skill aan met een
+argumentenreeks, dan wordt in de geserveerde tekst elk `$` gevolgd door één cijfer
+vervangen door het woord met dat volgnummer uit jouw eigen argumenten — `$0` is het
+eerste woord, `$1` het tweede, enzovoort. Een `$` gevolgd door twee of meer cijfers
+(`$30`, `$90`, `$100`) blijft staan, want dat volgnummer bestaat niet.
+
+De toets, in twee aanroepen van `marketing-psychology`. Met de argumenten
+*"Toets of drie koude e-mails ..."* las regel 154 als "The jump from **of** to **Toets**
+is bigger than **drie** to **of**" en regel 204 als "**koude**/day". Daarna is met de
+argumenten `ALFA BRAVO CHARLIE DELTA ECHO` vóóraf voorspeld wat er zou komen te staan, en
+het kwam er woordelijk te staan: "The jump from **BRAVO** to **ALFA** is bigger than
+**CHARLIE** to **BRAVO**", en "**DELTA**/day". Op schijf staat op beide plaatsen
+`$1`, `$0`, `$2` en `$3`. Daarmee is alles verklaard wat sinds 09-09 openstond: waarom
+twee lezers dezelfde regels verschillend verminkt zien (verschillende argumenten), waarom
+dezelfde lezer ze de volgende dag ongeschonden ziet (geen of onbruikbare argumenten), en
+waarom het altijd juist de bedragen zijn.
+
+**Wat je ermee doet, en het is één regel:** citeer nooit uit de geserveerde weergave, ook
+niet als zij er ongeschonden uitziet, maar haal elk citaat met `grep -n` van schijf en zet
+het regelnummer erbij dat de `grep` teruggeeft. Dat is dezelfde opdracht die 1.27 en 1.39
+al vragen; 1.29 voegt toe *waarom* zij niet optioneel is en waar het risico precies zit.
+Twee vervolgen die er gratis bij horen: meld een verminkte weergave niet meer als
+bestandsdefect (1.26 blijft, nu met de oorzaak erbij), en wees erop bedacht dat woorden uit
+je eigen opdracht in de tekst van een skill kunnen opduiken — wat er in een skill staat,
+staat op schijf en nergens anders.
 
 **Een aanscherping van jezelf hoort buiten de aanhalingstekens (1.27).** Een citaat
 tussen aanhalingstekens in de `## Gebruikte skills`-tabel is een bronclaim en moet
@@ -1003,10 +1058,23 @@ naam. De aanscherping zelf mag blijven - alleen niet als citaat.
 
 Op 08-09 stond dit als vormfout in de changelog van 1.36 zonder regel te worden. Op 09-09
 herhaalden **beide** lanes hem met dezelfde zin: `"High confidence requires two independent
-sources, not just two of your own searches"`, waarvan alleen het eerste deel in
-`prospecting` staat ("**High**: confirmed by at least two independent sources or official
-business page", SKILL.md:68) en het tweede deel Sams eigen, en overigens juiste,
-aanscherping is. Tweede dienst op rij, twee onafhankelijke lanes: dat is de drempel.
+sources, not just two of your own searches"`. Tweede dienst op rij, twee onafhankelijke
+lanes: dat is de drempel.
+
+**De grond onder die afkeuring was voor de helft fout, en dat is op 10-09 door lane A
+aangetoond en hier gecorrigeerd.** De verificatie van 09-09 schreef dat het tweede deel van
+de zin Sams eigen aanscherping was. Dat is niet zo: `prospecting` voert op **regel 68**
+`- **High**: confirmed by at least two independent sources or official business page` en op
+**regel 200** `- [ ] Confidence levels honest — "High" requires 2 independent sources, not
+just two of your own searches`. Beide helften staan er dus, alleen op twee verschillende
+regels — en 1.39 van dezelfde dag citeerde regel 200 al woordelijk, zodat dit document
+zichzelf een dag lang tegensprak. **De afkeuring blijft niettemin staan en de regel ook:**
+een citaat dat twee regels aan elkaar stikt en er onderweg woorden in verandert
+("High confidence requires two" tegen `"High" requires 2`) is op de maat van 1.27 geen
+citaat, ongeacht of de gedachte erin klopt. Wat vervalt is alleen de bewering dat Sam de
+tweede helft zelf verzon. Wie een citaat afkeurt, zoekt het eerst met `grep -n` over het
+hele bestand en niet op de regel waar hij het verwacht — dat is 1.29 en 1.39 in één
+handeling.
 De verificatie leest poortuitkomsten en skillstabellen op hun woord; een citaat dat niet
 klopt kost de geloofwaardigheid van de citaten die wel kloppen.
 
@@ -1048,6 +1116,50 @@ wil houden.
   groepen tegelijk.
 
 ## Changelog
+
+- 1.30 (2026-09-10, Azzouz, verificatie lanes A+B): twee regels, en daarmee is het
+  bereik 1.22 t/m 1.30 dat het weekrapport aan A+B toewees **vol**. Lane A bood nul
+  kaarten aan uit 51 dossiers, lane B één uit 48. **1.29 — de verminkte skillweergave is
+  een `$n`-invulling van je eigen skill-argumenten**, toegevoegd bij "Een dag zonder
+  kaarten is geen dag zonder skills", direct achter 1.26. Dit is de eerste regel in dit
+  document die met een **voorspelling** is aangenomen in plaats van met een telling: na de
+  eerste aanroep lag het mechanisme er (`$0`, `$1`, `$2`, `$3` uit mijn eigen
+  argumentenreeks), en de tweede aanroep met `ALFA BRAVO CHARLIE DELTA ECHO` is vóóraf
+  voorspeld en kwam woordelijk uit. Daarmee is 1.26 niet weerlegd maar afgemaakt: het
+  gebrek zit in de weergave, het is niet willekeurig, en het raakt uitsluitend passages met
+  een dollarteken — wat verklaart waarom het altijd de bedragen zijn, waarom twee lezers
+  het verschillend zien en waarom dezelfde lezer het de volgende dag niet ziet. Lane A
+  meldde vandaag eerlijk "geen defect aangetroffen" en had daar op zijn eigen waarneming
+  gelijk in; dat hij de oorzaak niet vond komt doordat hij de skill zonder bruikbare
+  argumenten aanriep, wat precies de conditie is waarin het gebrek niet vuurt.
+  **1.30 — de onderwerpregel is een bewering en gaat langs dezelfde claimcontrole als een
+  prijs**, toegevoegd bij "Wat een bericht nooit mag beweren". Eén drager en de klassieke
+  eenzijdige-kostentoets van 1.31/1.34: lane B's enige kaart voerde `54 keer vijf sterren
+  op Werkspot` boven een kaartje dat zelf **4,7 uit 54** meldt. Poort (g) vraagt of het
+  detail gecontroleerd is en niet of het waar is, en door dat gat liep het enige getal van
+  de dag dat de ontvanger uit zijn hoofd kent. De kaart is goedgekeurd mét een herschreven
+  onderwerpregel; de tekst eronder was juist en is ongewijzigd.
+  **Twee gronden gecorrigeerd, allebei van mijzelf.** (a) De grond onder 1.27 klopte voor
+  de helft niet: `"not just two of your own searches"` is géén aanscherping van Sam maar
+  staat woordelijk op regel 200 van `prospecting`. Lane A toonde dat met een directe
+  lezing, en 1.39 van dezelfde 09-09 citeerde die regel al woordelijk — dit document sprak
+  zichzelf dus een dag lang tegen. **1.27 blijft staan**: een citaat dat twee regels aan
+  elkaar stikt en er woorden in verandert, is geen citaat, ook als de gedachte klopt.
+  Alleen de bewering dat Sam de tweede helft verzon, vervalt. (b) Het regelnummer in 1.26
+  stond op 306 en moest 316 zijn.
+  **Uitdrukkelijk niet opgenomen, en niet omdat ze zwak zijn maar omdat mijn reeks vol is
+  — alle drie gaan mee naar zondag**, met de kandidaattekst in
+  `marketing/outreach/2026-09-10-ab-verified.md`: (a) lane B's vestigingsnummer als
+  **scheider** naast zijn bekende rol als verbinder — de order van gisteren is uitgevoerd
+  en de tweede drager is er (Hezeman Cleaning Service 000051943476 tegen Glazenwasserij
+  T. Hezeman 000006810969, één plaats, één achternaam, één vak), en ik heb er vandaag bij
+  De Lapperij onafhankelijk een derde bij gelegd; (b) lane B's poort-(e)-ronde als
+  controle per naam in plaats van per batch (drie gevallen op één dag, één ervan vijf
+  ronden duur); (c) lane A's KvK-in-de-URL-zeef op `hoveniers.online` en `schilder.site`
+  (achttien leeftijden in vier ronden) — die raakt de jaagvolgorde van 1.20(b) en dus twee
+  onbeantwoorde beslispunten van de owner, en 1.19 wijst dat naar het weekrapport.
+  **Kopregel niet gewijzigd:** die staat op 1.39 door de parallelle C+D-sessie, en een
+  lager nummer erboven zou een verslechtering zijn — zelfde grond als bij 1.25 en 1.28.
 
 - 1.39 (2026-09-09, Azzouz, verificatie lanes C+D): drie regels, binnen het
   bereik 1.31 t/m 1.40. **1.37 — een e-mailadres uit de samenvattende alinea is
