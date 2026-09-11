@@ -904,7 +904,7 @@ openbaar e-mailadres na twee of meer ronden. Ze staan hier en niet op het bord.
 
 | Bedrijf | Plaats | Sector | Leeftijd | Wat er wél is | Ronden |
 |---|---|---|---|---|---|
-| ESB Schoonmaak & Glasbewassing | Groningen | schoonmaak/glazenwasser | KvK 92492290, 2024 | Kornoeljestraat 1-m 9741 JA | 2 |
+| ESB Schoonmaak & Glasbewassing | Groningen | schoonmaak/glazenwasser | KvK 92492290, 2024 | Kornoeljestraat 1-m 9741 JA. **Bijgewerkt 11-09 lane A, derde ronde: opnieuw geen e-mailadres en geen telefoonnummer.** telefoonboek.nl voert uitdrukkelijk "geen website"; de gidsen schermen de contactgegevens af. Jongste zaak van de lane die het leeftijdsvenster haalt en daarmee het scherpste voorbeeld van de muur: jong genoeg, niet bereikbaar | 3 |
 | HD Specialistische Schoonmaak | Stadskanaal | schoonmaak | KvK 90085752, 2023 | Koninginnelaan 12 9503 KL | 2 |
 | Wilkens Bedrijfsdiensten | Hoogezand | schoonmaak/glazenwasser | KvK 83128425, 2021 | van Linschotenstraat 3 9601 HH | 2 |
 | Octo Schoonmaakbedrijf | Groningen | schoonmaak | KvK 84177284, 2021 | Damsterdiep 54 9713 EJ | 2 |
@@ -1153,3 +1153,6 @@ vermelding wél en het nummer niet.
 | Rubio Schilderwerken & Onderhoud | Apeldoorn (GLD) | schilder | Alleen de gidsvermelding op schilder-nu.nl (21-04-2022); één ronde gaf geen enkele treffer op de naam erbuiten | 2026-09-10 |
 | Schildersbedrijf Plessen | Zwolle (OV) | schilder | Eigen domein schildersbedrijfplessen.com, Werkspot-profiel, Struweelstraat 23, gestart 30-06-2022; twee ronden zonder adres. LET OP: oozo voert een tweede vestiging in Amersfoort met KvK 86704788 — scheid ze eerst op het vestigingsnummer | 2026-09-10 |
 | Van Bentum Hoveniers | Barneveld (GLD) | hovenier | Eigen domein vanbentumhoveniers.nl, Facebook en LinkedIn, 0342-785604; contact loopt uitsluitend via een terugbelformulier. Ook buiten het venster (2019, zeven jaar) | 2026-09-10 |
+| Hendriks Totaalreiniging | Emmen | glazenwasser | geen gedateerd spoor vastgesteld | Laan van het Kinholt 579 7823 GN, daarnaast G. Grieminkstraat 3 7815 CS - twee adressen, identiteit niet gescheiden. Geen eigen domein, geen telefoonnummer, geen e-mailadres. "Jong bedrijf" en drie positieve oordelen kwamen uit de samenvattende alinea en zijn niet vastgesteld. 2026-09-11 lane A | 2 |
+| Trimsalon Trim & Go | Meppel | hondentrimsalon | geen gedateerd spoor vastgesteld | Facebookpagina + doggo.nl-profiel, geen eigen domein. Basisbehandeling vanaf 29,50, compleet vanaf 35. Telefoonnummer 06-42958311 stond ALLEEN in de samenvattende alinea en is per 1.37 niet overgenomen - zoek het eerst als exacte tekenreeks voordat iemand het belt. 2026-09-11 lane A | 1 |
+| Caja Trimsalon | Norg | hondentrimsalon | GEEN - de Yelp-stempel "Updated April 2026" telt per 1.7 niet | Batinge 28 Norg, open ma-vr 08:30-17:00. Geen eigen domein, geen e-mailadres, geen telefoonnummer in de bruikbare laag. 2026-09-11 lane A | 1 |
