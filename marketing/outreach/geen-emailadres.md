@@ -1167,3 +1167,19 @@ vermelding wél en het nummer niet.
 | in 't groen tuinonderhoud | Middelburg (ZL) | hovenier | KvK 89262506, opgericht 18-02-2023 — drie jaar, op profiel. De gids meldt zelf uitdrukkelijk "geen contactgegevens bekend". Eén ronde, geen adres, geen eigen domein | 2026-09-11 |
 | Kloet Dienstverlening | Sint-Maartensdijk (gem. Tholen, ZL) | hovenier | Weelweg 10 4695 PK, onderhoud van tuinen, parken en plantsoenen. Werkspot-profiel, eigen Facebookpagina 61584245767143 (Meta-reeks wijst op 2024/25, een indicatie en geen inschrijvingsdatum), bedrijvenopdekaart 5131277. Eén ronde gaf geen e-mailadres. **LET OP:** A.M. Kloet in Sint-Maartensdijk (cylex 11693400) kan dezelfde persoon zijn — eerst scheiden op het vestigingsnummer | 2026-09-11 |
 | Trimsalon Dog Care | Haps (gem. Land van Cuijk, NB) | hondentrimsalon | KvK 82359970 + vestigingsnummer 000048600911 uit de companyinfo-URL, 2021 (vijf jaar), op profiel, sectorcap ruim. Eén ronde gaf geen enkele treffer op de handelsnaam buiten de registerpagina en geen eigen domein | 2026-09-11 |
+
+## 11 september 2026 — lane D (Noord-Holland, Zuid-Holland, Utrecht)
+
+Zeven zaken, alle zeven op profiel of aan de rand ervan, alle zeven zonder openbaar
+e-mailadres na twee ronden. Zes ervan hebben geen eigen domein; Trimsalon Tante Net
+heeft er wél een, maar met één geïndexeerde pagina en geen contactpagina.
+
+| Bedrijf | Plaats | Sector | Wat er wél is | Ronden | Datum |
+|---|---|---|---|---|---|
+| Blink & Co | Gouda (ZH) | glazenwasser | KvK 98467972, vestigingsnummer 000063629402 (2025), Lisplantsoen 1 2802 ZA. Twee ronden, geen eigen domein. Ligt aan de ONDERRAND van het venster | 2 | 2026-09-11 |
+| Mete Multi | Zaandam (NH) | glazenwasser | Vestigingsnummer 000050500988 (2021-band), Kogerveldwijk. Op profiel, geen eigen domein | 2 | 2026-09-11 |
+| Noordster Multidiensten | Zaandam (NH) | glazenwasser | Vestigingsnummer 000051171627 (2021/22-band), Rosmolenwijk. Op profiel, geen eigen domein | 2 | 2026-09-11 |
+| Noordside Multidienst | Zaandam (NH) | glazenwasser | Vestigingsnummer 000045659605, net onder de 2020-grens. Pelders- en Hoornseveld | 2 | 2026-09-11 |
+| Royal Cleaning Services | Zaandam (NH) | glazenwasser | Vestigingsnummer 000045502919, zelfde band. Poelenburg | 2 | 2026-09-11 |
+| Tuinaanleg Huijnen | Zoetermeer (ZH) | hovenier | KvK 88153258, vestigingsnummer 000054034574 (2022), Alkmenehof 7. Op profiel op leeftijd; activiteit in de gids is "klussen in en om het huis" naast groen, dus wat de zaak doet staat niet vast | 2 | 2026-09-11 |
+| Trimsalon Tante Net | Leiden (ZH) | hondentrimsalon | Eigen domein trimsalontantenet.nl (EEN geindexeerde pagina, geen contactpagina), levend Instagram @trimsalon_tante_net met posts 02-07, 10-07 en 09-08-2026, drimble-nieuwsbericht over de opening. Sterk profiel, uitsluitend op afspraak = 549-lek. Twee adresronden leeg. Wie hem oppakt heeft een adresbron nodig die de zoekindex niet heeft | 2 | 2026-09-11 |
