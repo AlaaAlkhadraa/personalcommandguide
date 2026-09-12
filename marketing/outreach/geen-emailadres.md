@@ -1190,3 +1190,17 @@ heeft er wél een, maar met één geïndexeerde pagina en geen contactpagina.
 | Van gelderen hoveniers | Lelystad (FL) | hovenier | KvK 85070904, 13-01-2022, geen eigen domein en geen contactgegevens in twee ronden. **VAL:** Van Gelderen Hoveniers in Zoelmond (gem. Buren) voert wél een eigen domein vangelderenhoveniers.nl en is een ánder bedrijf | 2026-09-11 |
 | Bruns hoveniers | Almelo (OV) | hovenier | Gidsdatum 01-07-2022, eenmanszaak, één werkzaam persoon, Facebook-only. Eén ronde gaf geen telefoonnummer en geen adres. LOOKALIKE: Brummer hoveniers in Almelo is een ánder bedrijf | 2026-09-11 |
 | Hovenier Eckenbach | Flevoland | hovenier | Gidsdatum 05-12-2023, één werkzaam persoon, geen eigen domein. De gids geeft geen plaats die een tweede bron bevestigt, dus de identiteit staat niet vast | 2026-09-11 |
+
+## 12 september 2026 — lane B (Overijssel, Gelderland, Flevoland)
+
+Vier zaken die op leeftijd binnen het venster vielen en op poort (b) strandden. Drie ervan
+strandden op een adres dat de samenvattende alinea aanbood en dat de exacte-tekenreeksronde
+(1.28) niet droeg — drie verschillende vormen van dezelfde val, op één dag.
+
+| Bedrijf | Plaats | Sector | Wat er wél is | Datum |
+|---|---|---|---|---|
+| RS Glas- & Gevelreiniging | Nijverdal (OV) | glazenwasserij | Vestigingsnummer 000064277178 op twee onafhankelijke URL's (drimble en alleglazenwassers), het hoogste van deze lane; Grotestraat 316; telefoon 06-20273380. **VAL:** de alinea bood `rsglasengevel@outlook.com` aan; de exacte-tekenreeksronde geeft uitsluitend `rosssalland.nl` — Ross Salland Schoonmaakservice, een ánder bedrijf. Wél belbaar, dus ook op `bellijst.md` | 2026-09-12 |
+| A.J.Hovenier | Ermelo (GLD) | hovenier | KvK 86543210 (2022) uit de hoveniers.online-URL, plaats bevestigd door `hovenier.website/ermelo/a-j-hovenier/`. Geen telefoonnummer gevonden. **VAL:** `ajhovenier.nl` bestaat mét `/Contact/`, maar die site draagt zich als hovenier in **Blaricum (NH)** en is niet aan Ermelo of aan dit KvK-nummer te knopen | 2026-09-12 |
+| Golzsch Glazenwasbedrijf | Hardenberg (OV) | glazenwasserij | Vestigingsnummer 000049476203, boven de grens en dus binnen het venster. Twee ronden geven geen e-mailadres, geen telefoonnummer en geen eigen domein; alleen gidsvermeldingen | 2026-09-12 |
+| FEV Dienstverlening | Doetinchem (GLD) | glazenwasserij | Vestigingsnummer 000052377776 én KvK 86398423 (2022) — twee bronnen die de leeftijd bevestigen. Delistraat 14. Eén ronde geeft geen e-mailadres, geen telefoonnummer en geen eigen domein | 2026-09-12 |
+| Laurens' Tuinen en Dienstverlening | Ermelo of Nunspeet (GLD) | hovenier | KvK 83968636 (2021), op leeftijd binnen het venster. Geen eigen domein en geen adres in één ronde. **LET OP:** de plaats staat niet vast — de oozo-URL zegt Ermelo, de alinea zegt Nunspeet (1.36) | 2026-09-12 |
