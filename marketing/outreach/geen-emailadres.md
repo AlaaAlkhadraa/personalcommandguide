@@ -1221,6 +1221,16 @@ Trimsalon Pluishuis is de duurste van de vijf: zij haalt elke andere poort.
 | Uldex | Etten-Leur (NB) | glazenwasserij | alleglazenwassers.nl/business/uldex-ettenleur-midden-woongebied-000052872300/, vestigingsnummer 000052872300 (2022), KvK 86935739. Geen eigen domein, ongeclaimd gidsprofiel. Voert naast glazenwassen ook tuin- en voertuigreiniging, chauffeurs- en koeriersdiensten | 1 | 2026-09-12 |
 | A. Molhoek Glazenwasserij | Nieuwegein óf Harmelen (UT) | glazenwasser | KvK 83162607 (2021) en vestigingsnummer 000049352814 — op leeftijd gewoon op profiel, vijf jaar. Twee ronden: geen eigen domein, geen e-mailadres; draait volledig op Werkspot- en gidsprofielen. **PLAATSTEGENSPRAAK:** `alleglazenwassers.nl` voert Nieuwegein/Hoogzandveld, `oozo.nl` voert Harmelen (gem. Woerden) bij dezelfde naam — stel de plaats eerst vast uit twee URL's | 2026-09-12 |
 | Boris Jagtenberg Adventures | Haarlem (NH) | hovenier | KvK 89745965, opgericht 01-04-2023, eenmanszaak, één werkzaam persoon, Antoniestraat 6-B — precies op profiel. De eigen gidspagina meldt uitdrukkelijk dat er geen contactgegevens bekend zijn; geen eigen domein in één ronde. **VAL:** Jagtenberg Hoveniers (`jagtenberghovenier.nl`) is een ánder en ouder bedrijf | 2026-09-12 |
+
+## 13-09-2026 — lane A (Groningen, Friesland, Drenthe)
+
+Tien zaken binnen of op de rand van het venster, alle tien zonder adres in de
+bruikbare laag. Deze rijen stonden bij het aanmaken onder de kop van lane C van
+12-09; Azzouz heeft ze op 13-09 onder hun eigen kop gezet zonder één teken aan de
+inhoud te wijzigen.
+
+| Bedrijf | Plaats | Sector | Wat er wél is en waarom er geen adres is | Datum |
+|---|---|---|---|---|
 | MHD Multiservice | Leeuwarden (Fr) | glazenwasser | KvK 94818444 + vestigingsnummer 000060266163 (companyinfo): 1-2 jaar, op profiel. Twee ronden. Het domein mhdschoonmaakservice.nl bestaat alleen in de samenvattende alinea en in geen enkele resultaat-URL; per 1.20(a) dus niet vastgesteld, en zonder domein geen adres. Abeelstraat kwam uit dezelfde alinea en is niet overgenomen | 2026-09-13 |
 | Glanzend schoon van Eis | Leeuwarden (Fr) | glazenwasser | KvK 95820477 + vestigingsnummer 000061203084 (transfirm én alleglazenwassers): ±1 jaar, onderrand van het profiel. Geen eigen domein; twee ronden over alleglazenwassers, telefoonboek t9644507 en oozo gaven geen adres en geen nummer in de bruikbare laag | 2026-09-13 |
 | Cleanservice Agnes | Oude Pekela (Gr) | glazenwasser | KvK 82566968 + vestigingsnummer 000048791695: 2021, vijf jaar, gewoon op profiel. Eigen Facebookpagina, eenbedrijfspagina's op alleglazenwassers, besteschoonmaakbedrijven, companyinfo en telefoonboek t8440887. Twee ronden zonder adres; het 06-nummer stond alleen in de samenvattende alinea (1.37). VAL: Agnes Clean Service in Sint-Maartensdijk is een ander bedrijf | 2026-09-13 |
