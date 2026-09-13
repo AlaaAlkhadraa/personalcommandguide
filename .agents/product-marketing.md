@@ -1,6 +1,6 @@
 # Product Marketing Context — ZEVREN
 
-**Document version:** 1.39 · 2026-09-09
+**Document version:** 1.40 · 2026-09-13
 Elke marketingskill in `.claude/skills/` leest dit document eerst.
 Feiten hier zijn bindend; een skill-advies dat ermee botst, verliest.
 
@@ -137,6 +137,25 @@ dit bestand kent: de ontvanger is de enige mens ter wereld die zijn eigen score 
 hoofd kent, hij leest hem verkeerd in regel één, en daarmee is niet alleen de mail dood
 maar het adres verbrand — precies de uitkomst waarvoor de staande order van 25 augustus
 avond is geschreven.
+
+### Welke velden een formulier uitvraagt, is een belofte over de vorm van het werk (1.40b)
+
+**De regel.** Noem nooit een veld, een stap of een scherm dat de demo of de
+sectorpagina niet aantoonbaar heeft. "Hij vult zijn naam en het ras in" is
+dezelfde soort claim als een prijs: zij beschrijft de vorm van het werk, en 1.16
+zegt dat die vorm net zo hard gedekt moet zijn als een bedrag. Het woord `ras`
+komt in `zevren/` nergens voor.
+
+**Drie dragers, twee lanes, twee dagen.** Op 12-09 schreef lane C "vult zijn naam
+en het ras in" en lane D onafhankelijk "vult zijn naam en die van de hond in"; op
+13-09 paste lane C de regel vooruitlopend zelf toe en schreef het in zijn
+claimcontrole op.
+
+**En de verbreding, want zij is dezelfde regel in een andere jas: een belofte die
+van een ándere sectorpagina komt, is niet gedekt op deze.** Lane D leende op 13-09
+een tarievenzin van een pagina die de ontvanger nooit te zien krijgt. Wat op
+`/website-voor/kappers` staat, dekt geen zin in een mail aan een trimsalon. Kosten
+van de hele regel: je schrapt vijf woorden. Zij kan geen kaart doden.
 
 ## De poort die het vaakst kaarten kost
 
@@ -580,6 +599,80 @@ met iets dat er alleen in één ronde zo uitziet. Een gidsvermelding die te oud
 is, kost een kaart; een reviewdatum die niet klopt, kost het adres van de
 ontvanger en de naam van de owner.
 
+### De insolventieronde — verplicht vóór het schrijven (1.40a)
+
+**Eén ronde, `site:drimble.nl/faillissementen <KvK-nummer>`, op elk dossier dat
+kaartrijp is.** Niet op de rest; de kosten zijn daarmee één zoekopdracht per kaart
+en nul voor alles wat toch afvalt.
+
+**Waarom deze regel op één drager binnenkomt, en dat is bewust.** Pfeiffer Tuinen
+(Sittard) haalde op 13-09 zeven poorten en is failliet — F.03/25/233, op drie
+onafhankelijke URL's, in de bruikbare laag. Het insolventienummer kwam ongevraagd
+binnen op een ándere ronde; geen enkele bestaande poort vraagt ernaar. Dat is het
+gevaarlijke: een failliete zaak ziet er op elke poort uit als een lopende, want het
+bewijs dát zij liep is echt en gedateerd. De eenzijdige-kostentoets van 1.31, 1.34
+en 1.37 laat één drager toe wanneer de regel geen goede kaart kán doden, en deze
+kan dat niet. Wat zij voorkomt is de duurste fout die dit systeem kan maken: een
+verkoopmail aan een ondernemer die zojuist failliet is verklaard, met de naam van
+de owner eronder.
+
+### Het vestigingsnummer mag een leeftijd begrenzen waar het haar niet mag dateren (1.40c)
+
+1.35 zegt dat het vestigingsnummer een tegenspraaktoets is en **nooit zelf een
+dossier sluit**. Die zin blijft staan, en zij is geschreven tegen één ding: een
+nummer dat een gidsdatum tegenspreekt. Zij is niet geschreven tegen een
+begrenzing, en dat onderscheid is nu gemeten.
+
+**De regel.** Ligt het vestigingsnummer van een bedrijf **zó ver onder het
+dichtstbijzijnde gedocumenteerde ankerpunt dat geen bouwjaar binnen het venster
+denkbaar is**, dan mag dat de leeftijdspoort sluiten — negatief, dus: "te lang
+gevestigd". Het mag een dossier nooit openen en het mag nooit een leeftijd
+vaststellen. Bij twijfel, en dus vlak onder een anker, geldt 1.35 onverkort: eigen
+over-onspagina draaien.
+
+**De afstandseis is de hele regel.** Zonder haar past de Verdam/Kommer-fout van
+08-09 er alsnog onder — twee dossiers die één ronde te vroeg op een tegenspraak
+werden weggelegd. De ankerreeks staat hierboven bij 1.35; het bruikbaarste anker is
+`000046288384` → 2020.
+
+**Vierendertig dragers in twee dagen, en ik heb ze nageteld.** Lane C leverde er
+twaalf op 12-09; lane D tweeëntwintig op 13-09, alle tweeëntwintig onder het
+2020-anker met het hoogste 1,8 miljoen eronder, en **alle zes nummers erbóven zijn
+niet gesloten** — de lane heeft de regel dus ook aan de goede kant laten werken.
+
+### Een gids die één getal toont, zegt niet welk getal het is (1.40d)
+
+Twee lanes vonden dit van twee kanten en het is één regel. Lane A: een getal in een
+`drimble.nl`-URL is een **vestigings**nummer en geen KvK-nummer — vijf dragers over
+twee lanes en twee provincies (Dé Glazenwasser Paterswolde, StedeGro Emmen,
+Dakdekkers AE Assen, Glazenwasser 050 Groningen, Glazenwasserij Bubbels Eerbeek),
+en tweemaal voert drimble hetzelfde getal mét én zonder voorloopnullen. Lane B: een
+KvK-nummer in een gids-URL ontdubbelt twee gelijknamige zaken waar de naam dat niet
+kan.
+
+**Wat eruit volgt.** Stel eerst vast wélk register een getal draagt, vóór je er iets
+mee doet. Een dossier dat op een drimble-getal wordt gesloten alsof het een
+KvK-nummer is, wordt gesloten op iets wat 1.35 verbiedt — en de reparatie kost nul
+ronden, want het getal staat er al.
+
+**Mét de rem van lane B erbij, en die is belangrijker dan de regel.** Deze route
+wordt beter in het **afwijzen** en niet in het vinden: zij ziet per definitie alleen
+het geïndexeerde deel van de markt, en het prime target van de owner (24 augustus)
+zit juist in het deel dat geen gids indexeert. Eén geval staat open en is terecht
+niet teruggedraaid: De Haan Glazenwasserij, Sint Annaparochie, 45691533, in de
+gevoelige band.
+
+### De handle bindt in de titel van de post, niet in dezelfde resultatenlijst (1.40e)
+
+Aanscherping van rem 2 van 1.38 (het account moet aan het bedrijf vastzitten). De
+binding is bewezen wanneer de **handle in de titel van de post-URL** staat. Twee
+namen die toevallig in één resultatenlijst naast elkaar staan, binden niet: dat is
+co-voorkomen en het is twee keer gemeten misgegaan.
+
+Drie dragers en twee faalgevallen op 12-09; op 13-09 twee gebruiken door lane D in
+beide richtingen plus één reproductie door de verificatie (HappyDees: account wél,
+post-URL niet — dus geen datum, en dat is de goede uitkomst).
+
 ## De prijsaanpassing met het lopende jaartal — een poort-(a)-route (1.13)
 
 De goedkoopste manier om poort (a) te sluiten bij een afspraakzaak zonder
@@ -749,6 +842,15 @@ Lawand gaf `"info@stukadoorlawand.nl"` in de verificatie van 09-09 zijn eigen
 `/Contact/`-pagina terug, en dat is de "official business page" die `prospecting` als
 hoogste zekerheid kent. Kosten: een ronde per adres. Zij kan geen goed adres doden.
 
+**De tekenreeksronde controleert of een adres bij een bedrijf hoort, niet of het bij
+het JUISTE bedrijf hoort — leg de plaats ernaast (1.40h).** Aanvulling op 1.28.
+Drager: Abel Glazenwasbedrijf (Oss, NB) kreeg in een tekenreeksronde het adres van
+een naamgenoot in Moordrecht (ZH) aangeplakt, en de ronde sloot de poort met het
+verkeerde antwoord — een adres dat vertrekt, aankomt en bij een vreemde in de bus
+ligt, precies het gevaar waarvoor 1.28 zelf is geschreven. Eén drager, en hij komt
+binnen op dezelfde eenzijdige-kostentoets: de controle is één blik op de plaatsnaam
+in de gevonden URL.
+
 ## Twee regels die geen poort zijn
 
 Niet elke regel in `agents/` is een verificatiepoort, en ze als poort
@@ -825,6 +927,13 @@ allebei zijn ze met één telling te controleren.
   en twee waarden voor één sector splitsen die meting in tweeën zonder dat
   iemand het merkt. Bestaat er geen sectorpagina, dan is de waarde de sectornaam
   zoals de directives hem schrijven — en dan staat dat in het kaartje erbij.
+
+- **Meet een onderwerpregel met `wc -m`, niet met `wc -c` of `${#s}` (1.40f).**
+  De limiet van poort (g) is 45 **tekens**; `wc -c` en `${#s}` in een bytegeoriënteerde
+  shell tellen bytes, en een `é` of een `ë` is twee bytes. De maat bindt dus alleen
+  vlak onder de grens en bij accenttekens — precies waar niemand hem nakijkt. Drie
+  dragers: lane D op 12-09, beide lanes op 13-09 (42 en 38 tekens, allebei door de
+  verificatie nagemeten en allebei exact).
 
 ## Kanalen en bewijs
 
@@ -1051,6 +1160,22 @@ bestandsdefect (1.26 blijft, nu met de oorzaak erbij), en wees erop bedacht dat 
 je eigen opdracht in de tekst van een skill kunnen opduiken — wat er in een skill staat,
 staat op schijf en nergens anders.
 
+**De drempel is de lengte van je eigen argumentstring, en de prikkel loopt de
+verkeerde kant op (1.40g).** Aanscherping van 1.29, nu op **vier dragers over drie
+sessies**. De laatste was een vooraf uitgeschreven voorspelling die op vier van vier
+posities uitkwam, inclusief `$16` → woord 16 en `$30` → woord 30 — dat laatste had
+nog nooit gevuurd, en het vuurde omdat de aanroep lang genoeg was. Negatieve
+controle: twee skills zonder dollarteken kwamen ongeschonden terug, één ervan mét de
+argumentstring letterlijk zichtbaar als `ARGUMENTS:`.
+
+**De consequentie die hier hoort is niet de waarschuwing maar de omgekeerde prikkel:
+hoe zorgvuldiger een agent zijn aanroep formuleert, hoe langer zijn argumentstring
+is, en hoe meer bedragen er stilletjes worden vervangen.** Dat raakt elke agent in
+dit systeem, niet alleen wie citeert. Roep een skill dus aan met een kort argument —
+één woord waar dat kan — en haal elk citaat met `grep -n` van schijf.
+
+staat op schijf en nergens anders.
+
 **Een aanscherping van jezelf hoort buiten de aanhalingstekens (1.27).** Een citaat
 tussen aanhalingstekens in de `## Gebruikte skills`-tabel is een bronclaim en moet
 woordelijk in de skill staan; een eigen toevoeging zet je erbuiten en schrijf je op eigen
@@ -1116,6 +1241,57 @@ wil houden.
   groepen tegelijk.
 
 ## Changelog
+
+- 1.40 (2026-09-13, Azzouz, weekcyclus 07-09 t/m 13-09): acht regels, en daarmee is
+  het bereik 1.31 t/m 1.40 dat het weekrapport van 06-09 aan C+D toewees vol. Alle acht
+  zijn deze week door de dagverificaties als kandidaat neergelegd omdat beide reeksen
+  (1.22-1.30 en 1.31-1.40) opraakten; ik neem ze hier op in plaats van ze te laten
+  verdampen, en ik doe dat als weeksessie omdat 1.19 die grens zo trekt. **Zes van de
+  acht komen op twee of meer dragers binnen, twee op één** — en die twee staan er
+  uitdrukkelijk mét de grond waarom, want de uitzondering wordt hier voor de vierde keer
+  gebruikt (1.31, 1.34, 1.37, nu 1.40a en 1.40h) en zij is aan het verslijten.
+  **(a) De insolventieronde**, bij "Wiens daad draagt de datum". Eén verplichte ronde
+  `site:drimble.nl/faillissementen <KvK>` op elk kaartrijp dossier. Eén drager (Pfeiffer
+  Tuinen, zeven poorten dicht en failliet), toegelaten op de eenzijdige-kostentoets. Zij
+  is het duurste faalgeval van dit hele systeem: geen enkele bestaande poort vraagt ernaar,
+  en een failliete zaak ziet er op elke poort uit als een lopende omdat het bewijs dát zij
+  liep echt is. **(b) De velden die een formulier uitvraagt zijn een belofte over de vorm
+  van het werk (1.16) en zijn niet gedekt**, bij "Wat een bericht nooit mag beweren". Drie
+  dragers, twee lanes, twee dagen, en verbreed tot de vorm die beide gevallen deelt: een
+  belofte die van een ándere sectorpagina komt, is niet gedekt op deze. **(c) Het
+  vestigingsnummer mag een leeftijd begrenzen waar het haar niet mag dateren**, bij 1.35.
+  Vierendertig dragers in twee dagen (lane C twaalf, lane D tweeëntwintig), en de
+  afstandseis is er als voorwaarde in geschreven: niet "onder het anker" maar zó ver
+  eronder dat geen bouwjaar binnen het venster denkbaar is. Zonder die eis zou de
+  Verdam/Kommer-fout van 08-09 er alsnog onder passen. **Dit was de duurste beslissing van
+  de week**: wees ik hem af, dan moesten tweeëntwintig dossiers van lane D opnieuw open.
+  1.35 blijft woordelijk staan; hij is geschreven tegen een nummer dat een gidsdatum
+  tegenspreekt, en dat is niet wat hier gebeurt. **(d) Een gids die één getal toont, zegt
+  niet welk getal het is**, bij 1.35. Lane A's drimble-vondst (vijf dragers, twee lanes,
+  twee provincies) en lane B's KvK-in-de-URL-ontdubbeling zijn dezelfde regel vanaf twee
+  kanten, en ik schrijf ze bewust als één regel — twee regels die hetzelfde zeggen is
+  precies hoe 1.13/1.14 en 1.17/1.18 in de knoop raakten. Mét lane B's eigen rem erin: de
+  route wordt beter in het afwijzen en niet in het vinden. **(e) De handle bindt in de
+  titel van de post, niet in dezelfde resultatenlijst**, als aanscherping van rem 2 van
+  1.38. Drie dragers en twee gemeten faalgevallen op 12-09, twee gebruiken en één
+  reproductie op 13-09. **(f) Meet een onderwerpregel met `wc -m`**, bij "Twee maten die
+  twee lanes op één dag verschillend namen". Drie dragers; hij bindt alleen bij
+  accenttekens vlak onder de 45, en dat is precies waar niemand hem nakijkt. **(g) De
+  `$N`-drempel is de lengte van je eigen argumentstring**, aanscherping van 1.29. Vier
+  dragers over drie sessies, waarvan de laatste een vooraf uitgeschreven voorspelling was
+  die op vier van vier posities uitkwam (`$30` vuurde voor het eerst), plus een negatieve
+  controle. Wat ik eraan toevoeg is niet de waarschuwing maar de omgekeerde prikkel: hoe
+  zorgvuldiger een agent zijn aanroep formuleert, hoe meer bedragen er stilletjes worden
+  vervangen. **(h) Leg de plaats naast het adres**, aanvulling op 1.28. Eén drager (Abel
+  Glazenwasbedrijf, Oss, kreeg het adres van een naamgenoot in Moordrecht), zelfde
+  eenzijdige-kostentoets: de controle is één blik.
+  **Niet opgenomen, en het is geen zwakte van het voorstel:** `transfirm.nl` en
+  `kostenglazenwasser.nl` als bronnen. Ze horen in de jaagvolgorde van 1.20(b) en dus in de
+  directives, niet in het fundament — de C+D-verificatie van 13-09 zegt dat zelf.
+  **Nummerbereiken vanaf nu:** verificatie A+B schrijft **1.41 t/m 1.50**, verificatie C+D
+  schrijft **1.51 t/m 1.60**. Beide oude reeksen zijn vol en de lanes hebben daardoor drie
+  dagen lang kandidaten moeten parkeren in plaats van vastleggen; dat is de kostprijs van
+  een te krap bereik en hij is nu betaald.
 
 - 1.30 (2026-09-10, Azzouz, verificatie lanes A+B): twee regels, en daarmee is het
   bereik 1.22 t/m 1.30 dat het weekrapport aan A+B toewees **vol**. Lane A bood nul

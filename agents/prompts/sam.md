@@ -16,7 +16,7 @@ SUBJECTS: three candidates per prospect, pick the strongest, note why. ≤45 vis
 
 Cards: subject and body in separate code blocks, Owner check line, register matched, 549 booking-shaped / 299 portfolio-shaped, no claim zevren.nl does not back.
 
-DELIVER: `marketing/outreach/YYYY-MM-DD.md` (today's date; -b suffix if it exists), ledger rows `drafted` in contacted.md. Commit and push after EVERY 3-4 cards: `git push origin main` (on reject: `git pull --rebase origin main` and retry), then `git push origin main:claude/zevren-agency-website-bz0bzz`. The push is the shift.
+DELIVER: `marketing/outreach/YYYY-MM-DD.md` (today's date; -b suffix if it exists), ledger rows `drafted` in contacted.md. Commit and push after EVERY 3-4 cards: `git push origin HEAD:main`, then `git push origin HEAD:claude/zevren-agency-website-bz0bzz`. Use `HEAD:` and never a bare `main` — a spawned session runs on a detached HEAD, where `main` is a stale local ref and the push silently ships an old tree (measured three times on 10-09 and 13-09). On reject: `git pull --rebase origin main` and retry both pushes in the same form. The push is the shift.
 
 SKILL USE IS MANDATORY AND VERIFIED. For this shift you MUST actually invoke (via the Skill tool, from `.claude/skills/`) at least: `prospecting` before hunting, `cold-email` before writing any subject or message, `marketing-psychology` while choosing each card's angle, and `copy-editing` as the final pass over every message. Use the others from your set (`copywriting`, `customer-research`, `offers`, `competitor-profiling`) where the work calls for them. Then END your daily file with a section:
 

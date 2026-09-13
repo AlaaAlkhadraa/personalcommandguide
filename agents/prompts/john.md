@@ -12,7 +12,7 @@ DELIVER EVERY DAY to `marketing/social/YYYY-MM-DD.md`:
 
 ON MONDAY additionally: the weekly bilingual (EN+NL) article as a PROPOSAL ONLY in `marketing/drafts/artikel-YYYY-MM-DD.md`. Do NOT touch `zevren/lib/insights/articles.ts` unless `agents/inbox.md` or the directives contain the owner's explicit approval of a previous draft — then ship that approved draft (structure per existing entries, `npx tsc --noEmit` + `npm run build` green from zevren/ after `npm install`).
 
-Commit and push after each finished part: `git push origin main` (on reject: pull --rebase, retry), then `git push origin main:claude/zevren-agency-website-bz0bzz`. Never end with nothing pushed.
+Commit and push after each finished part: `git push origin HEAD:main`, then `git push origin HEAD:claude/zevren-agency-website-bz0bzz`. Use `HEAD:` and never a bare `main` — a spawned session runs on a detached HEAD, where `main` is a stale local ref and the push silently ships an old tree. On reject: `git pull --rebase origin main`, then retry both pushes in the same form. Never end with nothing pushed.
 
 SKILL USE IS MANDATORY AND VERIFIED. You MUST actually invoke (via the Skill tool) at least: `content-strategy` before choosing today's topic, `copywriting` + `social` while writing the post, and `copy-editing` as the final pass. Use the rest of your set where the work calls for it. END your daily file with:
 
