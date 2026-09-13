@@ -689,3 +689,18 @@ een zoekresultaat het daarom nooit meeneemt. Zie de derde bevinding in
 | Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
 |---|---|---|---|---|---|
 | Trimsalon Sharona | Hooglanderveen (gem. Amersfoort, UT) | hondentrimsalon | 06-36184869 | — (poort (a) niet getoetst; lane A noteerde op 11-09 "geopend 2022" als leeftijd, niet als levensteken) | **Doorgegeven door lane A op 11-09 met de aantekening "hoort bij LANE D", en dat klopt: Hooglanderveen ligt in de gemeente Amersfoort.** Eigen domein `trimsalonsharona.nl` met zeven geïndexeerde pagina's (`/`, `/contact`, `/prijslijst`, `/diensten`, `/gebitsreiniging`, `/uitlaat-service-1-op-1`, `/uitleg-behandelingen`), Alphons Mulderlaan 14 3829 AK, 2-4 medewerkers. **Vier adresronden over twee diensten, alle vier leeg:** lane A's eerste ronde, plus vandaag `site:trimsalonsharona.nl`, `"trimsalonsharona" e-mail OF gmail OF info@` en de exacte-tekenreeksronde `"@trimsalonsharona.nl"` (1.28). Zeven eigen pagina's en geen adres op één ervan is een bewuste keuze, geen omissie. LOOKALIKE EN VAL: `konijnentrimsalonsharona.nl` is een ÁNDER bedrijf |
+## 13-09-2026 (lane B) — nul belregels uit acht geen-websitedossiers, vierde dienst op rij
+
+Acht geen-websitedossiers beoordeeld (Van Elk/Arnhem, Cura cleaning/Eerbeek, Schilder voor
+u/Deventer, PUUR Hoveniers/Rijssen-Nijverdal, Berends/Apeldoorn, Suijk/Zeewolde,
+F.Streefkerk/Lelystad, Cleaning Service Almelo). **Nul nieuwe belregels, en dat is een
+meting en geen tekort.** Zeven van de acht gaven geen telefoonnummer in de bruikbare laag;
+de achtste (Stukadoorsbedrijf Berends, Apeldoorn) gaf 055-5333452 in de URL-titel van twee
+eenbedrijfspagina's, maar is `not fit - te lang gevestigd` op een adrescollisie met
+G. Berends op Grevelingen 12, dus dat nummer mag niet gebeld worden en staat hier
+uitdrukkelijk niet als belregel.
+
+De groep is niet opgevuld en er is geen kanaal verzonnen — de Clean4You-val. Voor de
+vierde dienst op rij levert deze groep nul bruikbare belregels: zonder eigen domein geeft
+deze omgeving noch een e-mailadres noch een telefoonnummer. Onderbouwing in
+`marketing/outreach/2026-09-13-b.md`.
