@@ -1221,3 +1221,27 @@ Trimsalon Pluishuis is de duurste van de vijf: zij haalt elke andere poort.
 | Uldex | Etten-Leur (NB) | glazenwasserij | alleglazenwassers.nl/business/uldex-ettenleur-midden-woongebied-000052872300/, vestigingsnummer 000052872300 (2022), KvK 86935739. Geen eigen domein, ongeclaimd gidsprofiel. Voert naast glazenwassen ook tuin- en voertuigreiniging, chauffeurs- en koeriersdiensten | 1 | 2026-09-12 |
 | A. Molhoek Glazenwasserij | Nieuwegein óf Harmelen (UT) | glazenwasser | KvK 83162607 (2021) en vestigingsnummer 000049352814 — op leeftijd gewoon op profiel, vijf jaar. Twee ronden: geen eigen domein, geen e-mailadres; draait volledig op Werkspot- en gidsprofielen. **PLAATSTEGENSPRAAK:** `alleglazenwassers.nl` voert Nieuwegein/Hoogzandveld, `oozo.nl` voert Harmelen (gem. Woerden) bij dezelfde naam — stel de plaats eerst vast uit twee URL's | 2026-09-12 |
 | Boris Jagtenberg Adventures | Haarlem (NH) | hovenier | KvK 89745965, opgericht 01-04-2023, eenmanszaak, één werkzaam persoon, Antoniestraat 6-B — precies op profiel. De eigen gidspagina meldt uitdrukkelijk dat er geen contactgegevens bekend zijn; geen eigen domein in één ronde. **VAL:** Jagtenberg Hoveniers (`jagtenberghovenier.nl`) is een ánder en ouder bedrijf | 2026-09-12 |
+
+## 13-09-2026 — lane D (Noord-Holland, Zuid-Holland, Utrecht)
+
+Negen bedrijven. Acht ervan zijn de geen-websitegroep van de directives; zij
+horen daar formeel naar `bellijst.md`, maar bij geen van de acht levert enige
+gids een telefoonnummer in de bruikbare laag, en een belregel zonder nummer is
+geen belregel (1.24: een nieuwe regel mag niet minder weten dan het bestand al
+wist). De botsing met de directives staat gemeld in `2026-09-13-d.md`.
+
+| Bedrijf | Plaats | Sector | Wat er wél is | Ronden | Datum |
+|---|---|---|---|---|---|
+| De Laplijn | Gouda, Bloemendaal (ZH) | glazenwasserij | Ribeslaan 11. Eenbedrijfspagina `alleglazenwassers.nl/business/de-laplijn-gouda-bloemendaal-000047090286/` (vestigingsnummer 000047090286) en `companyinfo.nl/organisatieprofiel/glazenwassen/de-laplijn-gouda-807512450000` — de companyinfo-URL draagt KvK 80751245 in het pad zelf, een 2020-reeks, dus **op leeftijd gewoon op profiel**. Ook een oozo- en een telefoonboek-vermelding | 2 | 13-09-2026 |
+| Judith's Trimservice | Amersfoort (UT) | hondentrimsalon | Uitsluitend `bestehondentrimmers.nl/groomer/1822`. Geen eigen domein, geen adres, geen telefoonnummer in een URL-titel | 1 | 13-09-2026 |
+| Trimsalon Black and White | Utrecht (UT) | hondentrimsalon | Uitsluitend `bestehondentrimmers.nl/groomer/1478`. Zelfde beeld | 1 | 13-09-2026 |
+| Hondentrimsalon Cynthia | Amersfoort (UT) | hondentrimsalon | Uitsluitend `bestehondentrimmers.nl/trimsalon/amersfoort-hondentrimsalon-cynthia`. Zelfde beeld | 1 | 13-09-2026 |
+| Bloemenbende | Delft, Wijk 11 Binnenstad (ZH) | hovenier | `regiohoveniers.nl` (vestigingsnummer 000056132492, 2023-band van 1.35), `hovenier.website/delft/bloemenbende/`, `telefoonboek.nl`. **Op leeftijd precies op profiel.** Geen eigen domein | 1 | 13-09-2026 |
+| GSW Projects | Rhenen, Binnenveld (UT) | hovenier | `regiohoveniers.nl` (vestigingsnummer 000055330525, 2023-band), `hovenier.website/rhenen/gsw-projects/`, `telefoonboek.nl`, `hoveniers.online/ut/rhenen/1`. **Op profiel.** Geen eigen domein | 1 | 13-09-2026 |
+| De Hovenier. Piet Deken | De Weere (gem. Opmeer, NH) | hovenier | `regiohoveniers.nl` (vestigingsnummer 000052400328, 2022-band). **Op profiel.** Geen eigen domein. NIET VERWARREN met Hoveniersbedrijf Piet Neefjes, eveneens De Weere | 1 | 13-09-2026 |
+| Hoveniersbedrijf Coen Otten | Assendelft (gem. Zaanstad, NH) | hovenier | `regiohoveniers.nl` (vestigingsnummer 000047597348, net boven het 2020-anker). **Op profiel.** Geen eigen domein | 1 | 13-09-2026 |
+| Hoveniersbedrijf De Vlaming | Soesterberg (gem. Soest, UT) | hovenier | Generaal Winkelmanstraat 144. `regiohoveniers.nl` (vestigingsnummer 000050806262), `hovenier.website/soesterberg/`, `oozo.nl`, `telefoonboek.nl`. **Op profiel.** Geen eigen domein | 1 | 13-09-2026 |
+
+**De vijf hoveniers zijn het prime target van de owner in zuiverste vorm:** jong,
+aantoonbaar ingeschreven, en volledig onvindbaar. Ze zijn langs deze weg niet te
+bereiken — niet per mail en niet per telefoon.
