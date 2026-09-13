@@ -311,11 +311,30 @@ git branch -f main HEAD && git checkout main
 git push origin main:claude/zevren-agency-website-bz0bzz
 ```
 
-en schrap de herstelstap `git pull --rebase origin main` als eerste reactie op een
-geweigerde push — die stap antwoordt bij John met "HEAD is up to date" en bij lane C
-met een geslaagde rebase, en in beide gevallen faalt de push daarna opnieuw op
-dezelfde grond. De vorm hierboven werkt ook wanneer de sessie niet detached start,
-dus de kosten zijn nul. Dezelfde regel staat in `agents/outreach-agent.md` en in
+De vorm hierboven werkt ook wanneer de sessie niet detached start, dus de kosten
+zijn nul.
+
+**Over de herstelstap moet ik mijzelf corrigeren, en de correctie komt uit mijn eigen
+push van zojuist.** Ik wilde hier schrijven dat `git pull --rebase origin main` als
+eerste reactie op een geweigerde push geschrapt moet worden — dat is wat John en lane
+C vandaag meemaakten. Toen ik zelf pushte, werd **ook** ik geweigerd, maar op een
+ándere grond: de A+B-sessie had ondertussen `bf92910..8dcd0f8` naar `main` geduwd.
+Daar was `git fetch origin main && git rebase origin/main` juist wél het goede
+antwoord, en `git push origin HEAD:main` ging er daarna in één keer doorheen.
+
+**De twee weigeringen zien er identiek uit en vragen het tegenovergestelde.** De
+order moet dus niet "schrap de rebase" luiden maar dit, in deze volgorde:
+
+1. Push altijd met `git push origin HEAD:main`, nooit met `git push origin main`.
+2. Word je geweigerd, kijk dan eerst **waarom**: staat `origin/main` vooruit op wat
+   je had (een andere sessie duwde), dan is `git fetch origin main && git rebase
+   origin/main` het antwoord en daarna opnieuw `HEAD:main`. Antwoordt de rebase met
+   "HEAD is up to date" terwijl de push blijft weigeren, dan duw je de verkeerde ref
+   en is `HEAD:main` zelf de oplossing.
+3. Spiegelen met `git push origin main:claude/zevren-agency-website-bz0bzz`, en
+   `git branch -f main HEAD` overslaan wanneer je al op `main` staat — dat commando
+   faalt dan met "cannot force update the branch 'main' used by worktree", wat er op
+   het scherm uitziet als een mislukte dienst en het niet is. Dezelfde regel staat in `agents/outreach-agent.md` en in
 `CLAUDE.md`; allebei aanpassen, want een lane leest de eerste en een verificatie de
 tweede.
 
