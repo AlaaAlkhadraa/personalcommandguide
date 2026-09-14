@@ -250,6 +250,53 @@ die op poort (e) valt, valt nadat al het andere werk er al in zit.
 Een mail die een ondernemer vertelt dat zij mist wat zij al betaalt,
 verbrandt het adres.
 
+### De lekronde draagt ook de woorden die de eigenaar zelf kiest (1.41)
+
+De operationele helft van 1.20(b) schrijft de vorm `site:<domein> reviews OR
+referenties OR projecten OR ervaringen OR klanten OR tarieven` voor. Die lijst
+bevat geen enkel woord dat een Nederlandse vakman voor zijn eigen fotopagina
+gebruikt, en dat is op 14-09 twee keer op het punt van schrijven gebleken.
+
+**De regel: een ontbrekende projectenpagina is pas een vaststelling nadat een
+verbrede ronde leeg terugkomt.** Die ronde draagt ook `impressie`,
+`gerealiseerd`, `ons werk`, `inspiratie`, `sfeer`, `portfolio-item` en
+`gallerij`. Eén ronde erbij; zij kan geen goede kaart doden.
+
+Twee dragers, beide lane B, beide 14-09. Stukadoorsbedrijf Kommerkamp: de smalle
+ronde gaf tien eigen pagina's en geen portfolio, de naamronde gaf
+`/impressie/` — de hoek, het register en de onderwerpregel waren op dat moment al
+gekozen. Schaffelaar Hoveniers: de verbrede lijst gaf in één ronde
+`/projecten-schaffelaar-hoveniers/`, `/tuin-inspiratie/`, een `/portfolio-item/`-pad
+en vier losse projectpagina's; met de smalle lijst was dat dezelfde fout geweest.
+
+**Mét een negatieve controle over de lanegrens heen**, want een aanscherping is
+pas bruikbaar als hij een goed dossier met rust laat: de verificatie van 14-09
+draaide de verbrede ronde op lane A's verzendklare dossier (Huizinga
+Schoonmaakservice, twee domeinen) en kreeg uitsluitend de homepage en
+`/over-ons` terug. Het lek daar bestaat dus werkelijk en overleeft de strengere
+vorm. Dit is de reden dat de regel op twee dragers binnenkomt in plaats van te
+wachten: wat zij voorkomt is de mail die een ondernemer vertelt dat hij mist wat
+hij heeft, en dat is het faalgeval waarvoor de eerste alinea van dit document is
+geschreven.
+
+### Een poort-(e)-ronde is pas gedraaid als de notitietekst gelezen is (1.42)
+
+**Een telling van treffers is geen poortuitkomst.** Wie het ledger, `bellijst.md`
+en `geen-emailadres.md` afzoekt op een naam en alleen het aantal treffers leest,
+heeft de poort niet gedraaid maar alleen aangeraakt.
+
+Eén drager, toegelaten op de eenzijdige-kostentoets van 1.31 en 1.34. Lane A gaf
+op 14-09 zeven zoekopdrachten aan Trimsalon De Hondenhut — leeftijd, eigen
+domein, boekingspoort, klantenstopronde, de exacte-tekenreeksronde, de
+1.38-postroute en twee poort-(a)-ronden — en het bedrijf stond al sinds 01-09 in
+het ledger als `not fit - klantenstop`. De goedkope naamtelling had `7`
+teruggegeven en die zeven zijn als ruis gelezen in plaats van geopend; de
+bulkronde die de notitietekst mee uitdraait sloot het dossier in één regel.
+
+Het verschil is nul zoekopdrachten en één `cut -c1-200`. Wat het voorkomt is wat
+dit document bij Stark Stuc beschrijft: een kaart die op poort (e) valt, valt
+nadat al het andere werk er al in zit — en hier zat dat werk er al in.
+
 ## Een open poort is een bevinding, geen kaart
 
 Een kaart mag nooit op het bord komen met een poort die de agent zelf niet
@@ -640,6 +687,35 @@ twaalf op 12-09; lane D tweeëntwintig op 13-09, alle tweeëntwintig onder het
 2020-anker met het hoogste 1,8 miljoen eronder, en **alle zes nummers erbóven zijn
 niet gesloten** — de lane heeft de regel dus ook aan de goede kant laten werken.
 
+### Een hoog KvK-nummer boven een laag vestigingsnummer voorspelt een omzetting (1.43)
+
+1.40(c) laat het vestigingsnummer een leeftijd **begrenzen**. De verhouding
+tussen de twee nummers in één TransFirm-URL doet meer: zij **voorspelt** de
+1.15-val vóór er één extra ronde in gaat.
+
+De vorm: staat er een **hoog** KvK-nummer (jonge papieren) boven een **laag**
+vestigingsnummer (oude vestiging), dan is de zaak vrijwel zeker ouder dan haar
+KvK-nummer — een B.V.-omzetting, een generatiewissel of een handelsnaamwissel.
+
+Vijf dragers, alle lane B, 14-09. Hoveniersbedrijf Jutten B.V. (KvK 95977708 uit
+2025 boven vestigingsnummer 000015035123, dat óók KvK 08096316 draagt —
+omzetting bewezen binnen één zoekopdracht); Herkert Hoveniersbedrijf (KvK
+85037311 uit 2022 boven 000008855668; de oprichter begon ruim veertig jaar
+geleden, sinds 2022 v.o.f. met zijn zoon); Glazenwasserij Heppen (KvK 96339969
+uit 2025 boven 000006230288); Steengoed! hoveniers B.V. (KvK 93295332 uit 2024
+boven 000007527063 — dit document voert die zaak al sinds 04-09 als
+B.V.-omzetting over 26+ jaar, dus een onafhankelijke bevestiging); Mol Hoveniers.
+
+**Wat deze regel boven een patroon uittilt is dat hij vooruit is getoetst:** bij
+Heppen is de uitkomst opgeschreven vóór de controleronde — laag vestigingsnummer,
+dus verwacht een tegenspraak — en de ronde gaf die tegenspraak (een tweede
+KvK-nummer plus een adrescollisie). De regel kost nul ronden: beide nummers staan
+al in de URL die toch gelezen wordt.
+
+**Wat de regel niet zegt**, precies zoals 1.33 dat over het vestigingsnummer zelf
+zegt: een laag vestigingsnummer is geen afwijzingsgrond. Hij zegt: draai hier de
+eigen over-onspagina vóór de adresjacht, want de gidsdatum gaat je bedriegen.
+
 ### Een gids die één getal toont, zegt niet welk getal het is (1.40d)
 
 Twee lanes vonden dit van twee kanten en het is één regel. Lane A: een getal in een
@@ -982,6 +1058,25 @@ allebei zijn ze met één telling te controleren.
   dat ook waarom de fout maandenlang niemand is opgevallen. De kosten zijn
   eenzijdig in de zin van 1.31: een locale voor een commando zetten kost nul
   ronden en kan geen goede kaart doden.
+- **Een samenvattende telling is pas een meting als zij uit haar eigen regels
+  herbouwbaar is, en een commando dat zijn eigen getal niet teruggeeft is geen
+  meetwijze (1.45).** De vormregel van week 38 eist de meetwijze bij elk getal.
+  Dat is niet genoeg gebleken: een commando eronder zetten en een commando dat
+  klopt zijn twee dingen. Vier dragers op één dag, 14-09. Lane A drie keer: de
+  tekorttabel voert poort (c) op **13** terwijl de regels erboven er **8**
+  dragen — vijf dossiers zonder enige leeftijdsuitspraak zijn eronder geschoven,
+  en de som sluit op 41 juist omdát zij eronder zijn geschoven; het proza claimt
+  "alle acht zijn zaken van ver buiten het leeftijdsvenster" boven zes regels die
+  "leeftijd niet vastgesteld" zeggen; en "vijf rijen, door drie lanes geschreven"
+  staat boven drie rijen (`grep -c -i "hondenhut" contacted.md` geeft 3). Lane B
+  één keer, en precies omgekeerd: het getal **6** is juist, het commando
+  `grep -c "| 14-09-2026 |" geen-emailadres.md` geeft 21 vandaag en gaf 12 op de
+  eigen commit — het telt alle vier de lanes. Sinds de lanekolom verplicht is,
+  luidt de juiste vorm `grep -c '| B | .*| 14-09-2026 |'`. **De toets is: tel het
+  getal terug naar de regels erboven, en draai het commando dat eronder staat.**
+  De grond is niet netheid maar besmetting: een telling die niet reproduceert
+  kost de betrouwbaarheid van álle tellingen in hetzelfde bestand, ook de vele
+  die wél kloppen.
 
 ## Kanalen en bewijs
 
@@ -1251,6 +1346,30 @@ handeling.
 De verificatie leest poortuitkomsten en skillstabellen op hun woord; een citaat dat niet
 klopt kost de geloofwaardigheid van de citaten die wel kloppen.
 
+### Roep een skill met een `$`-telling boven nul zonder argument aan (1.44)
+
+1.40(g) stelt vast dat de geserveerde skilltekst `$N` vervangt door woord N uit
+het aanroepargument, en adviseert "één woord waar dat kan". Dat advies is één
+stap te kort.
+
+De meting, lane B op 14-09, vooraf uitgeschreven. Van de acht toegewezen skills
+hebben er vier een `$`-telling boven nul: `marketing-psychology` 8,
+`offers` 5, `customer-research` 1, `competitor-profiling` 1; `prospecting`,
+`cold-email`, `copy-editing` en `copywriting` staan op nul.
+`marketing-psychology` voert `$1` **twee keer** (regels 154 en 306). Een aanroep
+met één woord — precies wat 1.40(g) aanbeveelt — haalt de drempel voor `$1` en
+verminkt dus juist de prijspsychologie, waar `$1` het meest voorkomende bedrag is.
+
+**De regel: heeft een skill een `$`-telling boven nul, roep hem dan zonder
+argument aan.** Waar een argument inhoudelijk nodig is, gaat het naar een skill
+met telling nul.
+
+Gereproduceerd in een derde sessie: de verificatie van 14-09 riep
+`marketing-psychology` zonder argument aan en kreeg regel 154 letterlijk als
+`The jump from $1 to $0 is bigger than $2 to $1` binnen, met `$3`, `$90`, `$99`,
+`$100`, `$500`, `$497`, `$80`, `$16` en `$30` alle intact. Daarmee staat de
+meting op drie sessies en is 1.40(g) niet weerlegd maar afgemaakt.
+
 ## Sectoren: gesloten, afgewaardeerd, of in de wacht
 
 Drie categorieën, en het verschil is belangrijk genoeg om hier te staan,
@@ -1340,6 +1459,76 @@ wil houden.
   haalt. Ik heb er vandaag zelf zes ronden in gestoken op de vier dossiers die één
   ronde van een kaart af staan en er nul mee gesloten. Dat is geen regel die dit
   document kan repareren; het is het netwerkbeslispunt dat bij de owner ligt.
+- 1.45 (2026-09-14, Azzouz, verificatie lanes A+B): vijf regels, 1.41 t/m 1.45, uit
+  een dag waarop beide lanes **nul kaarten** aanboden uit 93 beoordeelde dossiers
+  (lane A 41, lane B 52). Ik leg er vijf van mijn tien vast en parkeer de rest
+  bewust: de changelog van 1.40 klaagt terecht over reeksen die te krap zijn, maar
+  de omgekeerde fout — de halve reeks op maandag opmaken — is even duur, en de week
+  loopt tot en met zondag. **Drie van de vijf komen op twee of meer dragers binnen,
+  twee op één**, en die twee staan er mét de grond waarom.
+  **(1.41) De lekronde draagt ook de woorden die de eigenaar zelf kiest.** Twee
+  dragers (Kommerkamp, Schaffelaar), en ik heb de duurste van de twee zelf
+  nagekeken in plaats van geloofd, want er hangt een ingetrokken kaart aan:
+  `stukadoorsbedrijfkommerkamp.nl/impressie/` staat in de **bruikbare laag**, met
+  URL én titel ("Stukadoor Diepenveen — Mike Kommerkamp") en met afgerond werk in
+  Deventer en omgeving. Toegevoegd mét een **negatieve controle over de lanegrens
+  heen**: de verbrede ronde op lane A's verzendklare dossier (Huizinga, twee
+  domeinen) kwam leeg terug, dus de regel laat een goed dossier met rust. Dat is
+  het bewijstype dat een aanscherping nodig heeft en dat we tot nu toe zelden
+  leverden.
+  **(1.42) Een poort-(e)-ronde is pas gedraaid als de notitietekst gelezen is.**
+  Eén drager (Trimsalon De Hondenhut, zeven zoekopdrachten aan een bedrijf dat
+  sinds 01-09 als `not fit - klantenstop` in het ledger stond), op de
+  eenzijdige-kostentoets: nul ronden en één `cut`. Ik gebruik die uitzondering hier
+  voor de vijfde keer en zij verslijt — maar het faalgeval is een verkoopmail aan
+  een onderneemster die het drukker heeft dan zij aankan, en geen bestaande poort
+  vangt hem.
+  **(1.43) Een hoog KvK-nummer boven een laag vestigingsnummer voorspelt een
+  omzetting.** Vijf dragers, waarvan één **vooraf voorspeld** (Heppen: uitkomst
+  opgeschreven vóór de controleronde, en de ronde gaf de tegenspraak) en één
+  onafhankelijk bevestigd door dit document zelf (Steengoed!, al sinds 04-09 als
+  B.V.-omzetting geboekt). Dit is de tweede regel in dit document die met een
+  vooruitwerkende voorspelling binnenkomt in plaats van met een telling achteraf,
+  na 1.29. **En zij heeft zich dezelfde dag terugbetaald op een dossier dat níét
+  in de reeks zat:** lane B liet Zoethout Hovenier achter als "vijf jaar, midden in
+  het venster"; één eigen ronde gaf een eigenaar die ongeveer vijfentwintig jaar
+  hovenier is onder papieren uit 2021. Status omgezet naar `not fit - te lang
+  gevestigd`.
+  **(1.44) Roep een skill met een `$`-telling boven nul zonder argument aan.**
+  Aanscherping van 1.40(g), dat "één woord waar dat kan" adviseert — één stap te
+  kort, want `marketing-psychology` voert `$1` twee keer en een aanroep van één
+  woord haalt juist die drempel. Lane B mat het vooraf; ik heb het in een derde
+  sessie gereproduceerd door de skill zonder argument aan te roepen, waarna regel
+  154 letterlijk `The jump from $1 to $0 is bigger than $2 to $1` gaf en alle tien
+  de bedragen intact stonden. Daarmee is 1.40(g) niet weerlegd maar afgemaakt.
+  **(1.45) Een samenvattende telling is pas een meting als zij uit haar eigen
+  regels herbouwbaar is.** Vier dragers op één dag, en dit is de regel die mij het
+  meest kostte om op te schrijven, omdat hij tegen de auteurs van de andere vier
+  in gaat. De vormregel van week 38 eist de meetwijze bij elk getal; gebleken is
+  dat een commando eronder zetten en een commando dat klopt twee verschillende
+  dingen zijn. Lane A drie keer (poort (c) telt 13 waar de regels er 8 dragen —
+  vijf dossiers zonder leeftijdsuitspraak eronder geschoven; "alle acht buiten het
+  venster" boven zes regels die "niet vastgesteld" zeggen; "vijf rijen, drie lanes"
+  boven drie rijen), lane B één keer en precies omgekeerd (het getal 6 klopt, het
+  commando geeft 21). **De ironie is de grond:** lane A's eigen bevinding van
+  dezelfde dag is dat een telling van treffers geen poortuitkomst is, en de dienst
+  doet op drie plaatsen precies dat. De regel is dus niet tegen lane A geschreven
+  maar met hem mee, één niveau hoger.
+  **Niet opgenomen, en geen van de drie is zwak:** het legacy-ISP-adres als
+  leeftijdszeef (2 dragers plus een controlegroep — te dun voor dag één, gaat naar
+  zondag); het jaartal in de titel van een **reviewaggregator** (1 drager, maar 1.7
+  dekt dit naar mijn lezing al — ik leg de interpretatie vast in plaats van een
+  nummer te verbranden); en `glazenwassertarieven.nl` als adresbron, die per het
+  precedent van 13-09 in de jaagvolgorde van 1.20(b) hoort en dus in de directives.
+  **Eén bouwopdracht in plaats van een agentregel**, en zij is twee keer los
+  gemeld (John 11-09, lane A 14-09): glazenwasserij heeft **geen sectorpagina** op
+  zevren.nl — `zevren/lib/local/sectors.ts` voert tien slugs en geen glazenwassers
+  — waardoor 1.25 (de UTM is de slug van de sectorpagina, woordelijk) er niet op
+  toe te passen is en de sector geen demo heeft om als bewijslast te noemen. Dat is
+  geen fout van een lane; het is een gat in het product, en het staat vanaf nu in
+  het weekrapport tot het dicht is.
+  **Reeks na vandaag:** verificatie A+B heeft 1.46 t/m 1.50 open voor de rest van
+  de week; verificatie C+D houdt 1.51 t/m 1.60.
 
 - 1.40 (2026-09-13, Azzouz, weekcyclus 07-09 t/m 13-09): acht regels, en daarmee is
   het bereik 1.31 t/m 1.40 dat het weekrapport van 06-09 aan C+D toewees vol. Alle acht
