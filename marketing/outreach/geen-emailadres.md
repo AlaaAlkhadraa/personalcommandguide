@@ -1346,3 +1346,25 @@ de owner en staat als beslispunt in het weekrapport.
 **Herjaagbaar, want dit bestand is geen eindstation:** bij alle vier is nul keer
 een eigen domein gevonden, dus de goedkoopste vervolgroute is niet nóg een
 adresronde maar de vraag of er inmiddels een eigen domein ís.
+## Lane C — 14 september 2026 (Limburg / Noord-Brabant / Zeeland)
+
+**Acht rijen**, geteld uit de tabel hieronder (`grep -c '^|.*| C | 14-09-2026 |$'`). Alle acht zijn de
+geen-websitegroep van de dienst van 14-09, en alle acht gaan hierheen en niet naar `bellijst.md` omdat er
+in de bruikbare laag **geen telefoonnummer** staat — een belregel zonder nummer is geen belregel (1.24).
+Dat is zelf een meting: de bronnen die dit segment vinden (`transfirm.nl`, `compadex.com`, de
+`/business/`-familie, `123auto.nl`) voeren geen nummer.
+
+| Bedrijf | Plaats | Sector | Wat er wel is | Ronden | Lane | Datum |
+|---|---|---|---|---|---|---|
+| Autoservice Rick Bekkers | Liempde (gem. Boxtel, NB) | garage | KvK 95322698, vestigingsnummer 000060740744 — **2025, één jaar**. `123auto.nl` voert `4,8 ★ (20 reviews)` in de URL-titel. Eigen Facebookpagina 61563375897409. Geen eigen domein. **VAL: Autobedrijf Bekkers, Boxtelseweg 57, dezelfde plaats, is een ander bedrijf en zijn e-mailadres werd bij beide ronden aangeboden** | 2 | C | 14-09-2026 |
+| Glazenwasser Simon | Kerkrade (LB) | glazenwasserij | KvK 88600084, vestigingsnummer 000054449782 — 2022, vier jaar. Platanenstraat 16. Geen eigen domein | 2 | C | 14-09-2026 |
+| Autoservice Makelaar | Tilburg (NB) | garage | KvK 94752915, vestigingsnummer 000060204095 — 2024/2025. Geen enkele webaanwezigheid buiten `transfirm.nl`; de naamronde gaf uitsluitend andere Tilburgse garages | 1 | C | 14-09-2026 |
+| Gevelreiniging 1000 poot | Veldhoven (NB) | gevelreiniging/softwash | KvK 95377883, vestigingsnummer 000060792507 — 2025. Eenmanszaak, Beerze 8. Telefoon én e-mail staan op verzoek van de KvK **afgeschermd** | 1 | C | 14-09-2026 |
+| Softwash Gevelreiniging | Eindhoven (NB) | gevelreiniging/softwash | KvK 96961090, vestigingsnummer 000062237772 — 2025/2026. Boschdijk 520. Geen eigen domein | 1 | C | 14-09-2026 |
+| Ligtendag Hoveniers | Sint-Annaland (gem. Tholen, ZL) | hovenier | KvK 92513824, vestigingsnummer 000058112863 — 2023/2024. Kromsteven 20. Geen eigen domein | 1 | C | 14-09-2026 |
+| Hoveniersbedrijf Van Eenennaam | Stavenisse (gem. Tholen, ZL) | hovenier | KvK 90811275, vestigingsnummer 000056511337 — 2023. Eenmanszaak, Julianastraat 2. Geen eigen domein | 1 | C | 14-09-2026 |
+| De Vos Straat- en Tuinaanleg | 's-Heerenhoek (gem. Borsele, ZL) | hovenier/stratenmaker | KvK 92725279, vestigingsnummer 000058310533 — 2023/2024. Eigen Werkspot-profiel, geen eigen domein. LOOKALIKE: Herenkappers de Vos | 1 | C | 14-09-2026 |
+
+**Alle acht staan op leeftijd binnen het venster** — van één tot vier jaar — en alle acht vallen
+uitsluitend op het kanaal. Dat is de muur van 25 augustus in acht regels: het bord verstuurt alleen langs
+e-mail, en een zaak zonder eigen domein levert dat adres in deze omgeving structureel niet op (1.20b).
