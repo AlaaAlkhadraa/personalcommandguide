@@ -704,3 +704,22 @@ De groep is niet opgevuld en er is geen kanaal verzonnen — de Clean4You-val. V
 vierde dienst op rij levert deze groep nul bruikbare belregels: zonder eigen domein geeft
 deze omgeving noch een e-mailadres noch een telefoonnummer. Onderbouwing in
 `marketing/outreach/2026-09-13-b.md`.
+
+---
+
+## 14-09-2026 — lane B (Overijssel, Gelderland, Flevoland)
+
+Twee belregels, allebei mét nummer (1.24). Geen van beide heeft een e-mailadres of een
+eigen domein, dus zij zijn langs de mailweg onbereikbaar en langs de telefoon niet.
+
+| Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
+|---|---|---|---|---|---|
+| Aqua L & T | Hengelo (OV) | glazenwasser | 074-2770192 | — | Geen website, geen e-mailadres. **Controleer vóór het bellen welke Hengelo:** `glazenwasser-in.nl` voert deze zaak onder "Hengelo Bronckhorst" (Gld) terwijl Londenstraat 146, 7559 KT in Hengelo (Ov) ligt — 1.40(h). Tweede waarschuwing: `alleglazenwassers.nl` voert dezelfde zaak als "Aqua **J** & T" met vestigingsnummer 000005673585, een lage reeks die op een oude vestiging wijst. Leeftijd dus onzeker |
+| Stanley Smit Stukadoor | Barneveld (GLD) | stukadoor | 06-57600876 | — | KvK 88788504 (88-reeks, 2023) — **binnen het venster**, en dat is de sterkste van de twee regels. Jan van Schaffelaarstraat 22, 3771 BT. Geen eigen domein en geen e-mailadres in twee ronden. Twee naamgenoten niet verwarren: Stukadoor Simon Smit staat in Leiden en `smitstucadoors.nl` is een derde zaak |
+
+**Eerlijk erbij, en het is de vijfde dienst op rij dat dit zo staat:** beide regels dragen een
+streepje in de kolom Gedateerd levensteken. Poort (a) kan in deze omgeving alleen sluiten op
+een datum in een URL, een URL-titel of een reproduceerbaar snippet, en een zaak zonder eigen
+domein levert die niet. De owner kan dat bij een telefoontje in dertig seconden zelf
+vaststellen — dat is precies waar een belregel voor is — maar hij moet weten dat het nog
+openstaat.

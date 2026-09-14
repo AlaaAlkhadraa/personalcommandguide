@@ -878,7 +878,7 @@ een negatieve vaststelling en scheelt de volgende lane een ronde.
 |---|---|---|---|
 | Veldman Multidiensten | Apeldoorn | KvK 88033503, opgericht 04-11-2022, eenmanszaak, Damhertstraat 56 7315 GE, 06-30112641. Gemiddelde 10 uit 9 beoordelingen tegen een sectorgemiddelde van 8,7. hovenier.nl meldt uitdrukkelijk: geen e-mailadres bekend. **Belbaar** — staat op de bellijst | 06-09-2026 |
 | Arjan Zomer Groene dienstverlening | Hellendoorn | KvK 91179181, opgericht 01-09-2023, eenmanszaak 1 persoon, Sanatoriumlaan 30 7447 PK. Hovenier plus dierbeheer en mollenbestrijding. Telefoonboek.nl toont het nummer afgeschermd, dus ook niet belbaar | 06-09-2026 |
-| Zoethout Hovenier | Zutphen | KvK 81958471, opgericht 04-03-2021, eenmanszaak 1 persoon, Melatensteeg 5 7201 BP. Geen eigen domein gevonden in twee ronden, geen telefoonnummer. Leeftijd midden in het venster — de moeite waard voor één extra ronde later | 06-09-2026 |
+| Zoethout Hovenier | Zutphen | ~~Geen eigen domein gevonden in twee ronden~~ **ACHTERHAALD 14-09-2026 (lane B) — dit bedrijf HEEFT een openbaar e-mailadres.** Eigen domein `zoethouthovenier.nl`; de exacte-tekenreeksronde (1.28) op `"info@zoethouthovenier.nl"` geeft `zoethouthovenier.nl/contact` als resultaat 1, een eigen pagina van het bedrijf. Poort (b) is dus dicht en deze rij hoort hier niet meer thuis als adresprobleem. De extra ronde die de rij van 06-09 zelf voorstelde, is gedraaid en zij leverde op. Het dossier staat nu in `contacted.md` als `lead - poort (a) en (c) open`: het domein serveert een site die "Hoveniersbedrijf Bauer" heet, en die tegenspraak met het register (KvK 81958471, opgericht 04-03-2021) is niet te sluiten omdat er geen eigen over-onspagina bestaat. KvK, adres en oprichtingsdatum van de oude rij blijven correct: Melatensteeg 5, 7201 BP | 06-09-2026, herzien 14-09-2026 |
 | Schneider Tuin | (Gelderland) | KvK 91695562, opgericht 01-10-2023, eenmanszaak. Drie ronden gaven noch adres noch vestigingsplaats; alleen de KvK-regel is hard. LET OP twee lookalikes die telkens bovenaan komen en andere zaken zijn: Schneider Tuincreaties en Schneider Tuinmaterialen | 06-09-2026 |
 | Loohuis Boom & Landschapsonderhoud | Oldenzaal | KvK 89522079, opgericht 01-03-2023, eenmanszaak. hovenier.website meldt drie dingen uitdrukkelijk: geen contactgegevens bekend, geen website bekend, nog geen reviews. Ook geen telefoonnummer, dus niet belbaar. Dit is een zaak die online niet bestaat | 06-09-2026 |
 | Mark Landschapsonderhoud | Ossenzijl (Steenwijkerland) | KvK 90817613, opgericht 13-07-2023, eenmanszaak. De gids meldt uitdrukkelijk dat er geen contactgegevens bekend zijn | 06-09-2026 |
@@ -1297,3 +1297,27 @@ voor de uitzondering, en zij hoort bij het beslispunt over een tweede
 verzendweg.
 
 Sam, 14 september 2026
+---
+
+## 14-09-2026 — lane B (Overijssel, Gelderland, Flevoland)
+
+**Nieuwe kolomvorm, op de harde vormregel van deze week:** elke rij draagt vanaf nu een
+**lane-** én een **datumkolom**. Zonder die twee weerspreekt niets de kop erboven, en dat is
+precies hoe tien lane A-rijen onder een lane C-kop konden belanden. De koppen hierboven zijn
+niet met terugwerkende kracht aangepast — dat is werk voor de verificatie, niet voor een
+dagdienst die de rijen niet zelf heeft geschreven.
+
+**Zes rijen.** Geteld met `grep -c` op de regels onder deze kop.
+
+| Bedrijf | Plaats | Lane | Sector | Wat er wel is | Datum gecheckt |
+|---|---|---|---|---|---|
+| Hoveniersbedrijf Veldhuizen | Apeldoorn (GLD) | B | hovenier | KvK 94381062 (94-reeks, 2024) — binnen het venster. Geen eigen domein, geen e-mailadres, geen telefoonnummer in twee ronden. LOOKALIKE niet overgenomen (1.40h): `hoveniersbedrijfvanveldhuizen.nl` is een andere zaak in Nijkerk, `hoveniersbedrijfmcveldhuizen.nl` staat in Groenekan (Utrecht) | 14-09-2026 |
+| Nieuwenhuis hoveniers | Almelo (OV) | B | hovenier | KvK 93556373, vestigingsnummer 000059088788 (2024) — binnen het venster, nummerverhouding consistent. Hackfort 31, 7608 MK. Geen domein, geen adres, geen telefoon in twee ronden | 14-09-2026 |
+| Glazenwasser Tony | Ermelo (GLD) | B | glazenwasser | KvK 91267439, vestigingsnummer 000056952732 (2023) — binnen het venster. Lange Haeg 26, 3853 EH. Geen domein, geen adres, geen telefoon. `alleglazenwassers.nl` voert hem twee keer onder hetzelfde vestigingsnummer, in twee wijken — één zaak, twee gidsregels | 14-09-2026 |
+| Glazenwasser Johan | Renkum (GLD) | B | glazenwasser | KvK 95049037 (2024/25) — binnen het venster. Van Ingenweg 18A, 6871 EP. **Twee eigen domeinen** (`glazenwasserjohan.nl` en `glazenwasser-johan.nl`), contact uitsluitend via formulier. Dit is dus geen zaak zonder website maar een zaak zonder kanaal — dezelfde muur als Hondentrimsalon Helen en Jodieh's Trimsalon | 14-09-2026 |
+| OFG-Glazenwasserij | Swifterbant (gem. Dronten, FL) | B | glazenwasser | Eigen domein `ofg-glazenwasserij.nl`. Buitenhof 76, 8255 AZ. De titelregel op `glazenwassertarieven.nl` voert wél het telefoonnummer 06-45610649 en géén e-mailadres. Leeftijd niet vastgesteld: geen TransFirm-record in twee ronden | 14-09-2026 |
+| WB Hovenier | Dedemsvaart (gem. Hardenberg, OV) | B | hovenier | KvK 93442033 (2024) — binnen het venster. Lijsterstraat 31, 7701 VA. Eigen domein `wbhovenier.nl` bestaat, maar `site:wbhovenier.nl` geeft alleen de homepage; twee adresronden leeg | 14-09-2026 |
+
+**Twee zaken uit deze dienst staan NIET hier maar op `bellijst.md`**, want zij hebben wél een
+telefoonnummer en een belregel zonder nummer is geen belregel (1.24): Aqua L & T (Hengelo,
+Ov) en Stanley Smit Stukadoor (Barneveld, Gld).
