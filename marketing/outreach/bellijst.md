@@ -723,3 +723,23 @@ een datum in een URL, een URL-titel of een reproduceerbaar snippet, en een zaak 
 domein levert die niet. De owner kan dat bij een telefoontje in dertig seconden zelf
 vaststellen — dat is precies waar een belregel voor is — maar hij moet weten dat het nog
 openstaat.
+## Lane D — maandag 14 september 2026 (Noord-Holland, Zuid-Holland, Utrecht)
+
+Vier belregels uit de geen-websitegroep van vandaag. Alle vier hebben een
+telefoonnummer in de bruikbare laag — in de URL-titel van de gids of in een
+eenbedrijfs-gidsprofiel — en geen van vier een e-mailadres. Dat is precies de
+splitsing die de directives van deze week voorschrijven: mét nummer hierheen,
+zonder nummer naar `geen-emailadres.md`.
+
+| Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
+|---|---|---|---|---|---|
+| Zomers Glazenwasserij | Hilversum (NH) | glazenwasserij | 06-11382106 | — | 2026-09-14 lane D. Nummer staat IN DE URL-TITEL van `kostenglazenwasser.nl`, dus in de bruikbare laag en niet in de samenvattende alinea. Hoogstraat 7, 1211 JL. Geen e-mailadres in de titel en geen eigen domein in vier glazenwasserijronden, terwijl diezelfde ronden bij zeven andere namen wél een eigen domein gaven — dat contrast is de vaststelling. Leeftijd niet getoetst: het dossier viel op het kanaal |
+| Start Glazenwasserij De | Nootdorp (ZH) | glazenwasserij | 06-54692818 | — | 2026-09-14 lane D. Nummer in de URL-titel van `kostenglazenwasser.nl`. Fellowshiplaan 60, 2631 MK. Geen e-mailadres, geen eigen domein in vier ronden. Leeftijd niet getoetst |
+| Mit's Glazenwasserij | Zoetermeer (ZH) | glazenwasserij | 06-39055246 | — | 2026-09-14 lane D. Nummer in de URL-titel van `kostenglazenwasser.nl`. Geen e-mailadres, geen eigen domein in vier ronden. LET OP: niet verwarren met Julien Schoonmaakservice, óók Zoetermeer, dat op 09-09 al als te lang gevestigd is afgesloten |
+| Big Dog Company-Hondentrimsalon | Rotterdam (ZH) | hondentrimsalon | 06-34146116 | — | 2026-09-14 lane D. Oudedijk 229B, 3061 AG. Gidsprofielen `bestehondentrimmers.nl/groomer/1413` en `doggo.nl/bedrijf/9493`; geen eigen domein, geen e-mailadres. LET OP NAAMCOLLISIE: `bigdog.nl` is een ánder bedrijf met een eigen grooming-pagina. Leg vóór het bellen de plaats naast de naam (1.40h) |
+
+Alle vier de regels zijn nieuw; er stond geen eerdere regel op deze namen, dus
+1.24 (werk de bestaande regel bij in plaats van er een tweede onder te zetten)
+is hier niet aan de orde. Gecontroleerd met
+`grep -niE "Zomers|Start Glazenwasserij|Mit's|Big Dog" bellijst.md` vóór het
+schrijven: nul rijen.

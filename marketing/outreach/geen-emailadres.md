@@ -1321,3 +1321,28 @@ dagdienst die de rijen niet zelf heeft geschreven.
 **Twee zaken uit deze dienst staan NIET hier maar op `bellijst.md`**, want zij hebben wél een
 telefoonnummer en een belregel zonder nummer is geen belregel (1.24): Aqua L & T (Hengelo,
 Ov) en Stanley Smit Stukadoor (Barneveld, Gld).
+## Lane D — maandag 14 september 2026 (Noord-Holland, Zuid-Holland, Utrecht)
+
+**Vier zaken, en er staan vier rijen onder.** Alle vier komen uit de
+geen-websitegroep van vandaag, alle vier zonder e-mailadres én zonder
+telefoonnummer in de bruikbare laag — daarom staan ze hier en niet op
+`bellijst.md`. De lane- en datumkolom staan per rij, conform de directives van
+deze week.
+
+| Bedrijf | Plaats | Sector | Wat er wél is, en waarom er geen adres is | Ronden | Lane | Datum |
+|---|---|---|---|---|---|---|
+| Pom Salon Zuidplas | Rotterdam (ZH) | hondentrimsalon | Uitsluitend het gidsprofiel `bestehondentrimmers.nl/groomer/1436`. Geen eigen domein, geen e-mailadres, geen telefoonnummer en geen adres in de bruikbare laag. LET OP: niet dezelfde zaak als Pom's Trimsalon (Zoetermeer, klantenstop) of Pom Salon Beer (Made, NB) | 2 | D | 2026-09-14 |
+| Trimsalon Doodles & Co | Koog aan de Zaan (gem. Zaanstad, NH) | hondentrimsalon | Kieftstraat 9, 1541 HJ. Facebookpagina `facebook.com/trimsalondoodlesenco` plus `doggo.nl/bedrijf/10285` en een `bestehondentrimmers.nl`-profiel. Geen eigen domein, geen e-mailadres, geen telefoonnummer | 2 | D | 2026-09-14 |
+| Fiona's Trimboutique | Den Haag (ZH) | hondentrimsalon | **Op profiel:** KvK 88122522 en vestigingsnummer 000054005310, allebei 2022 — vier jaar. Stuyvesantplein 12, 2593 EK. Geen eigen domein, geen e-mailadres, geen telefoonnummer. TWEE VALLEN: (1) "trimster Fiona sinds 1996" is de ervaring van de persoon en NIET de leeftijd van de zaak — dezelfde val als bij Frouk's Trimsalon op 03-09; (2) haar Facebookpagina draait onder de naam DegoudvisTrimsalon, dus wie op de handelsnaam zoekt, mist hem | 2 | D | 2026-09-14 |
+| Jeffrey Kuipers Hovenier | Zwijndrecht (ZH) | hovenier | **Pal op het prime target van de owner (24 augustus):** KvK 94366942 en vestigingsnummer 000059838507 uit de TransFirm-URL, allebei 2024 — twee jaar, eenmanszaak met één werkzaam persoon. Prins Hendrikstraat 26, 3331 XS. Geen eigen domein, geen e-mailadres, geen telefoonnummer. LOOKALIKES die op deze naam bovenkomen: Hoveniersbedrijf Kuiper (Roden), Kuipers Tuinaanleg en Kuipers Hovenier — drie andere bedrijven | 2 | D | 2026-09-14 |
+
+**Twee van deze vier staan binnen het leeftijdsvenster en zijn dus geen zwakke
+dossiers maar onbereikbare goede** (Fiona's Trimboutique, 2022; Jeffrey Kuipers,
+2024). Dat is de muur van 30-08 in haar zuiverste vorm: jong genoeg én
+bereikbaar komt in dit segment nauwelijks samen. De keuze die daaruit volgt —
+het prime target verschuiven of het bord een tweede verzendweg geven — ligt bij
+de owner en staat als beslispunt in het weekrapport.
+
+**Herjaagbaar, want dit bestand is geen eindstation:** bij alle vier is nul keer
+een eigen domein gevonden, dus de goedkoopste vervolgroute is niet nóg een
+adresronde maar de vraag of er inmiddels een eigen domein ís.
