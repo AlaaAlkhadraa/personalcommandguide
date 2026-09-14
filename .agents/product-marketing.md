@@ -1,6 +1,6 @@
 # Product Marketing Context — ZEVREN
 
-**Document version:** 1.40 · 2026-09-13
+**Document version:** 1.53 · 2026-09-14
 Elke marketingskill in `.claude/skills/` leest dit document eerst.
 Feiten hier zijn bindend; een skill-advies dat ermee botst, verliest.
 
@@ -851,6 +851,39 @@ ligt, precies het gevaar waarvoor 1.28 zelf is geschreven. Eén drager, en hij k
 binnen op dezelfde eenzijdige-kostentoets: de controle is één blik op de plaatsnaam
 in de gevonden URL.
 
+**De tariefgidsen delen één titelsjabloon en zijn samen één vindplaats, geen twee
+of drie (1.52).** `kostenglazenwasser.nl`, `glazenwassertarieven.nl` en
+`kostentuinman.nl` voeren alle drie naam, telefoonnummer én e-mailadres in de
+URL-titel, in hetzelfde sjabloon. Dat maakt ze bijzonder waardevol, want zij zijn
+in deze omgeving zowat de enige bron die poort (b) in de bruikbare laag kan
+sluiten — en precies daarom is de rem nodig. Wie twee van die gidsen als **twee
+onafhankelijke bronnen** boekt, sluit poort (b) op de "High"-drempel van
+`prospecting` r. 68 terwijl er één sjabloon onder ligt, en dat is woordelijk wat
+r. 200 van diezelfde skill verbiedt: twee eigen zoekopdrachten zijn geen twee
+bronnen. Drie dragers: lane D's negen titels over de drie gidsen op 14-09, en de
+verificatie van diezelfde dag die Glazenwassersbedrijf Roerdalen in één ronde op
+**twee** van die gidsen tegelijk terugkreeg, met woordelijk dezelfde titelvorm.
+**De keerzijde hoort erbij, want zij is gemeten:** de tariefgidsroute lost poort
+(b) op en verergert de leeftijdspoort, want zij selecteert op jaren in het vak —
+zes van acht adressen vielen op de leeftijd.
+
+**Een gedeelde naam scheidt op straat of nummer, nooit op plaats alleen (1.53).**
+Uitbreiding op 1.40(h), die de plaats naast het adres legt maar zwijgt over het
+geval dat twee gelijknamige zaken in **dezelfde** plaats zitten — en dan is de
+plaatscontrole van 1.40(h) een groen licht dat niets heeft gecontroleerd. Het
+onderscheidende feit is dan het KvK- of vestigingsnummer, en bij gebrek daaraan
+de straat met huisnummer. Zes dragers op één dag over twee lanes, wat deze regel
+tot de best gedragen van de week maakt: Autoservice Rick Bekkers tegen
+Autobedrijf Bekkers (allebei Liempde — de zuivere vorm, één plaats), Lutter
+Glazenwasserij (Amsterdam) tegen Glazenwasserij W.H.C. Lutter (Almere),
+`svohoveniers.nl` (De Lier) tegen `svhoveniers.nl` (Zoetermeer) — één letter
+verschil in het domein — en Sander van Os (De Lier) tegen Sander Weerman
+(Sintjohannesga) en Tuinman Sander (Rockanje), waar alleen een **voornaam**
+gedeeld werd. Daar komen Van Soest en Beregoed uit dezelfde dienst bij. De
+lookalike-domeinvorm is de gevaarlijkste van de zes, want zij overleeft ook een
+tekenreeksronde: het adres bestaat, het hoort bij een bedrijf, en het is niet dat
+van jou.
+
 ## Twee regels die geen poort zijn
 
 Niet elke regel in `agents/` is een verificatiepoort, en ze als poort
@@ -934,6 +967,21 @@ allebei zijn ze met één telling te controleren.
   vlak onder de grens en bij accenttekens — precies waar niemand hem nakijkt. Drie
   dragers: lane D op 12-09, beide lanes op 13-09 (42 en 38 tekens, allebei door de
   verificatie nagemeten en allebei exact).
+
+- **`wc -m` telt alleen tekens onder een expliciete UTF-8-locale; kaal telt hij
+  bytes en is hij identiek aan `wc -c` (1.51). De vorm die 1.40(f) bedoelt is
+  `LC_ALL=C.UTF-8 wc -m`.** Dit is geen aanvulling op 1.40(f) maar een reparatie
+  ervan: die regel is een week geleden aangenomen om accenttekens vlak onder de
+  45 te vangen, en zij deed in deze omgeving exact niets, want `LC_ALL` en `LANG`
+  zijn hier allebei leeg. Twee onafhankelijke dragers, elk met een positieve en
+  een negatieve controle: lane D op 14-09 en de C+D-verificatie van diezelfde dag,
+  die de meting zelfstandig reproduceerde. `Eén pagina, geen tuin te zien` geeft
+  kaal 30 en onder `C.UTF-8` 29 — één byte per accentteken, in precies de richting
+  die 1.40(f) wilde uitsluiten. `Afspraak maken, maar niet 's avonds` geeft in
+  beide locales 35, dus waar geen accent staat is er geen verschil en verklaart
+  dat ook waarom de fout maandenlang niemand is opgevallen. De kosten zijn
+  eenzijdig in de zin van 1.31: een locale voor een commando zetten kost nul
+  ronden en kan geen goede kaart doden.
 
 ## Kanalen en bewijs
 
@@ -1241,6 +1289,57 @@ wil houden.
   groepen tegelijk.
 
 ## Changelog
+
+- 1.53 (2026-09-14, Azzouz, verificatie lanes C+D): drie regels uit het bereik
+  1.51 t/m 1.60 dat het weekrapport van 13-09 aan C+D toewees. **Ik neem er drie en
+  laat 1.54 t/m 1.60 uitdrukkelijk vrij**, en dat is een beslissing en geen gebrek
+  aan aanbod: het vorige changelogpunt klaagt dat te krappe reeksen de lanes drie
+  dagen lang kandidaten hebben laten parkeren, en het antwoord daarop is niet een
+  reeks in één dienst leegtrekken. Er lagen vandaag nog vier kandidaten die ik
+  bewust heb doorgeschoven naar het weekrapport; ze staan met hun dragers in
+  `marketing/outreach/2026-09-14-cd-verified.md`. **Geen van beide lanes bood een
+  kaart aan — nul uit 122 volledig beoordeelde dossiers — dus alle drie komen uit
+  het werk eromheen.**
+  **(a) 1.51 — `wc -m` telt zonder expliciete UTF-8-locale bytes en geen tekens**,
+  bij "Twee maten die twee lanes op één dag verschillend namen". Dit is de eerste
+  regel in dit document die een regel van de week ervóór **repareert** in plaats van
+  aanvult: 1.40(f) is op 13-09 aangenomen om accenttekens vlak onder de 45 te
+  vangen en deed in deze omgeving niets, omdat `LC_ALL` en `LANG` allebei leeg zijn
+  en `wc -m` dan identiek is aan `wc -c`. Twee onafhankelijke dragers met elk een
+  positieve en een negatieve controle: lane D mat het, en ik heb het in mijn eigen
+  sessie zelfstandig gereproduceerd vóór ik zijn getallen las. 1.40(f) blijft
+  woordelijk staan — haar grond klopt, alleen haar commando niet — en 1.51 vervangt
+  het commando door `LC_ALL=C.UTF-8 wc -m`.
+  **(b) 1.52 — de tariefgidsen delen één titelsjabloon en zijn samen één
+  vindplaats**, bij "Welke bron een e-mailadres draagt". Drie dragers: lane D's
+  negen titels over `kostenglazenwasser.nl`, `glazenwassertarieven.nl` en
+  `kostentuinman.nl`, plus mijn eigen ronde die Roerdalen in één keer op twee van
+  die gidsen tegelijk terugkreeg met woordelijk hetzelfde sjabloon. **Ik schrijf
+  hem bewust als poortregel en niet als bronnotitie** — dat onderscheid heeft 1.40
+  zelf getrokken toen het `transfirm.nl` en `kostenglazenwasser.nl` naar de
+  directives verwees — want hij verandert wanneer poort (b) op "High" mag sluiten
+  en niet waar je een naam vindt. Zonder hem boekt een lane twee gidsen als twee
+  onafhankelijke bronnen, en dat is precies wat `prospecting` r. 200 verbiedt.
+  **(c) 1.53 — een gedeelde naam scheidt op straat of nummer, nooit op plaats
+  alleen**, als uitbreiding op 1.40(h). Zes dragers op één dag over twee lanes, en
+  daarmee de best gedragen regel van de week. 1.40(h) is vorige week op **één**
+  drager binnengekomen op de eenzijdige-kostentoets, en die uitzondering was
+  aan het verslijten; deze uitbreiding betaalt dat terug met bewijs. Het gat dat
+  zij dicht is scherp: 1.40(h) legt de plaats naast het adres, maar waar twee
+  gelijknamige zaken in dezelfde plaats zitten (Bekkers tegen Bekkers, allebei
+  Liempde) is die controle een groen licht dat niets heeft gecontroleerd. De
+  gevaarlijkste vorm is het lookalike-domein (`svohoveniers.nl` tegen
+  `svhoveniers.nl`), want dat overleeft ook een tekenreeksronde van 1.28.
+  **Uitdrukkelijk niet opgenomen, en geen van de vier is zwak:** `123auto.nl` als
+  gemeten derde route, de `/business/`-URL-familie over meerdere gidsen, de
+  bestemmingsregel die aan de bronklasse hangt in plaats van aan het dossier, en de
+  Stagemarkt-route als niet-jaagroute in hovenier en glazenwasserij. Alle vier
+  raken de jaagvolgorde van 1.20(b), en 1.19 wijst dat naar het weekrapport.
+  **Eén waarneming die geen regel is maar hier hoort:** poort (a) is nu zeven
+  diensten op rij de bindende beperking op elk dossier dat de andere zeven poorten
+  haalt. Ik heb er vandaag zelf zes ronden in gestoken op de vier dossiers die één
+  ronde van een kaart af staan en er nul mee gesloten. Dat is geen regel die dit
+  document kan repareren; het is het netwerkbeslispunt dat bij de owner ligt.
 
 - 1.40 (2026-09-13, Azzouz, weekcyclus 07-09 t/m 13-09): acht regels, en daarmee is
   het bereik 1.31 t/m 1.40 dat het weekrapport van 06-09 aan C+D toewees vol. Alle acht
