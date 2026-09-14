@@ -1271,3 +1271,29 @@ bereiken — niet per mail en niet per telefoon.
 | Stukadoorsbedrijf Wouters | Loerbeek (gem. Montferland) / Arnhem (GLD) | stukadoor | 2026-09-13 lane B. KvK 87606917 uit de TransFirm-URL (87-reeks, ca. 2022) — BINNEN HET VENSTER. Eigen domein stukadoorsbedrijfwouters.nl met precies EEN geïndexeerde pagina (/over-ons) in twee site:-vormen, en geen adres. PLAATSTEGENSPRAAK (1.36): TransFirm voert Arnhem, de eigen site voert Loerbeek met werkgebied Achterhoek/Liemers. De alinea meldt dat de contactgegevens op verzoek van de KvK zijn afgeschermd. LOOKALIKE: Tygo Wouters Hovenier in Lage Mierde (NB) is een ander bedrijf |
 | Schilder voor u | Deventer (OV) | schilder | 2026-09-13 lane B. TWEE open poorten. Geen eigen domein en geen e-mailadres in twee ronden. EN poort (c) open op TWEE KvK-NUMMERS OP URL-NIVEAU met zeven jaar verschil: TransFirm 93308701 + vestigingsnummer 000058863729 (ca. 2024) tegen schilder.site/schilder-voor-u/679547070000 → KvK 67954707 (ca. 2017). De naam is generiek genoeg dat het ook twee bedrijven kunnen zijn, en er is geen eigen over-onspagina om het te beslissen. Albert Haelweghstraat 7 |
 | Suijk Facility Management | Zeewolde (FL) | hovenier | 2026-09-13 lane B. KvK 89031350, eenmanszaak, ca. 2023 — OP PROFIEL. Eenbedrijfspagina hovenier.website/zeewolde/suijk-facility-management/. Geen eigen domein, en geen telefoonnummer, adres of e-mailadres in de bruikbare laag, dus ook geen belregel |
+
+## 14 september 2026 — lane A (Groningen, Friesland, Drenthe)
+
+Zes zaken, alle zes binnen of op de rand van het leeftijdsvenster, alle zes
+zonder e-mailadres in de bruikbare laag. De lane- en datumkolom staan per rij,
+zoals de directives van week 38 voorschrijven.
+
+| Bedrijf | Plaats | Sector | Wat er wél is en waarom er geen adres is | Lane | Datum |
+|---|---|---|---|---|---|
+| Van dijk glas en gevelreiniging | Surhuisterveen (gem. Achtkarspelen, FR) | glazenwasserij/gevelreiniging | KvK 82380406 (2021, vijf jaar) uit de TransFirm-URL `823804060000` en de companyinfo-URL. De Zwaluw 8, 9231 KG. Geen eigen domein; twee adresronden, waaronder de exacte-tekenreeksronde, geven niets. Alleen gids- en registerpagina's (transfirm, companyinfo, oozo, openingstijden) | A | 14-09-2026 |
+| Straal- en Gevelreiniging Noord B.V. | Peize (gem. Noordenveld, DR) | gevelreiniging | KvK 86504290 + vestigingsnummer 000052476499 in één TransFirm-URL, allebei 2022. De Westerd 9, 9321 AJ. B.V.-vorm. Eén adresronde, geen eigen domein | A | 14-09-2026 |
+| Schoonmaakbedrijf vlekkeloos | Boornbergum (gem. Smallingerland, FR) | glazenwasserij/gevelreiniging | KvK 96701900 + vestigingsnummer 000062009591 in de TransFirm- én de companyinfo-URL, ±1 jaar. Ljippeblom 28, 9212 RV. Geen eigen domein. **Geen belregel mogelijk:** `telefoonboek.nl/bedrijven/t9703233` meldt het nummer als afgeschermd, en een belregel zonder nummer is geen belregel (1.24) | A | 14-09-2026 |
+| Trimsalon De Pronte hond | Heerenveen (FR) | hondentrimsalon | KvK 83785604 (2021, vijf jaar) uit de TransFirm-URL `837856040000`. Willem Lodewijklaan 58, 8448 PK. Alleen een Facebookpagina, geen eigen domein. Twee ronden: geen e-mailadres én geen telefoonnummer in de bruikbare laag | A | 14-09-2026 |
+| Trimsalon de blije viervoeter | Gieten (gem. Aa en Hunze, DR) | hondentrimsalon | KvK 85786160 (2022, vier jaar) uit de TransFirm-URL `857861600000`. Gasselterweg 37. Alleen Facebook en een bedrijvenpagina-vermelding; geen eigen domein, geen adres, geen nummer | A | 14-09-2026 |
+| Hondentrimsalon t'Hekje | Coevorden (DR) | hondentrimsalon | **Het sterkste geparkeerde profiel van de dienst.** KvK 91922607 (2023, drie jaar) uit de TransFirm-URL `919226070000`. Krimweg 111, 7741 MC. Eigen domein `hondentrimsalonthekje.com` met een eigen Facebookpagina ernaast. Boekingspoort positief vastgesteld en OPEN: `/afspraak-inplannen` vraagt om contact op te nemen en is geen agenda, dus het 549-lek bestaat. Twee adresronden, waaronder de site:-ronde over het eigen domein, geven geen adres — de site voert alleen een formulier. **Herjaagbaar met voorrang** zodra er een tweede verzendweg is | A | 14-09-2026 |
+
+**Wat deze zes bij elkaar zeggen, en het is dezelfde muur als vorige week met
+één nieuw scheurtje.** Vijf van de zes hebben geen eigen domein, en die vijf
+bevestigen 1.20(b) opnieuw: geen domein, geen adres. De zesde (t'Hekje) hééft
+een eigen domein en geeft toch geen adres, omdat de contactroute bewust een
+formulier is — hetzelfde uitzonderingsgeval als Green Leaf op 09-09 en als
+Hondentrimsalon Helen en Jodieh's Trimsalon bij lane D. Dat is nu vier dragers
+voor de uitzondering, en zij hoort bij het beslispunt over een tweede
+verzendweg.
+
+Sam, 14 september 2026
