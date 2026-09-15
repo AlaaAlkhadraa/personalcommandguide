@@ -1390,3 +1390,25 @@ bereiken. De derde valt op een naamsverwarring die 1.40(h) blootlegde.
 | JGM Glas & Gevel | Nootdorp (ZH) | glazenwasserij | KvK **84498218** (URL-pad `transfirm.nl/nl/organisatie/844982180000-jgm-glas-&-gevel`) en vestigingsnummer **000050613650** uit twee onafhankelijke URL-paden (`alleglazenwassers.nl` en `drimble.nl/bedrijf/nootdorp/50613650/`); 1.40(d) toegepast — het drimble-getal is het vestigingsnummer, en de twee dragers spreken elkaar niet tegen. 84-reeks, **binnen het venster**. Zonnehof 184, 2632 BM. Vier gidsen voeren hem (alleglazenwassers, drimble, oozo, regiobedrijf) en **geen eigen domein in vier ronden**. Geen e-mailadres én **geen telefoonnummer**, daarom geen belregel (1.24) | 4 | D | 2026-09-15 |
 | Hoveniersbedrijf Marco Bouwman | Eemnes (UT) | hovenier | KvK **83304835** (URL-pad `transfirm.nl/nl/organisatie/833048350000-hoveniersbedrijf-marco-bouwman`), 83-reeks, **binnen het venster**. Beemdlang 7, 3755 WN. **Vijf** gidsen voeren hem (openingstijden.com, oozo, telefoonboek, bedrijvenpagina, hovenier.website) en geen enkele geeft een e-mailadres of een telefoonnummer in URL of titel. Geen nummer, dus geen belregel (1.24) | 3 | D | 2026-09-15 |
 | Roxy's Trimsalon | Schiedam (ZH) | hondentrimsalon | KvK **95949844** en vestigingsnummer **000061318124** (URL-pad TransFirm), Esther Vergeerstraat 30, 3118 JK; 95-reeks, aan de jonge rand van het venster. **1.40(h) en het scheelde een fout adres:** de treffers `trimsalonroxy.nl`, de doggo-pagina en de telefoonboekrij horen bij *Trimsalon Roxy* in **Den Haag** — een andere zaak. Voor de Schiedamse zaak gaven drie ronden geen e-mailadres en geen telefoonnummer | 3 | D | 2026-09-15 |
+## Lane C — dinsdag 15 september 2026
+
+Zes zaken, alle zes zonder openbaar e-mailadres **en** zonder telefoonnummer in
+de bruikbare laag — daarom hier en niet op `bellijst.md` (1.24: een belregel
+zonder nummer is geen belregel). De drie oozo-regels zijn de geen-websitegroep
+van vandaag; de drie andere hebben wel een eigen registratie maar geen kanaal.
+
+| Bedrijf | Plaats | Lane | Datum | Wat er wel is |
+|---|---|---|---|---|
+| Dave Haverkamp Glazenwasser ea werkzaamheden | Roermond (LB) | C | 2026-09-15 | Alleen een oozo-record `/829561/`; geen eigen domein, geen nummer, geen adres |
+| uw. glazenwasser | Hoensbroek (gem. Heerlen, LB) | C | 2026-09-15 | Alleen een oozo-record `/829749/` |
+| De Regio Glazenwasser | Venlo (LB) | C | 2026-09-15 | Alleen een oozo-record `/829602/` |
+| Daal cleaning service | Tilburg (NB) | C | 2026-09-15 | KvK 85636851 (circa 2022, in het venster), Heuvelring 67-25; drie adresronden zonder resultaat |
+| Autoservice Zeeland | Middelburg (ZL) | C | 2026-09-15 | KvK 80548504 (circa 2020/2021, in het venster), Klarinetweg 18A; telefoonnummer staat in de gidsen als "afgeschermd" |
+| Autoverkoop van Dongen B.V. | Zeeland (gem. Maashorst, NB) | C | 2026-09-15 | KvK 76564932 (circa 2020, bovenrand van het venster), Langenboomseweg 97. LET OP 1.40(h): dorp in Noord-Brabant, niet de provincie |
+
+**Zes rijen, geteld met `grep -c "^| .*| C | 2026-09-15 |" geen-emailadres.md`**
+(de kale vorm zonder het rij-anker telt er een meer, want deze telzin bevat de
+tekenreeks zelf). Drie
+van de zes liggen aantoonbaar binnen het leeftijdsvenster en vallen dus
+uitsluitend op het kanaal — dezelfde muur van 25 augustus die de acht regels
+hierboven al beschrijven, nu ook in garages en niet alleen in salons.

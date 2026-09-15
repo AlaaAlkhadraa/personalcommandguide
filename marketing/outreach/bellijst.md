@@ -775,3 +775,28 @@ in `2026-09-15-d.md`.
 | Kolk Glazenwasserij | Enkhuizen (NH) | glazenwasserij | 0228-317787 | — | 2026-09-15 lane D. Nummer in de URL-titel van `kostenglazenwasser.nl/noord-holland/enkhuizen/kolk-glazenwasserij/`, Voor de Boeg 8, 1602 CH. Geen e-mailadres, geen registergetal |
 | Glazenwasserij & Reinigingsbedrijf R de Hond | Heerhugowaard (NH) | glazenwasserij | 072-5720213 | — | 2026-09-15 lane D. Nummer in de URL-titel van `kostenglazenwasser.nl/noord-holland/heerhugowaard/...`, Valkkooglaan 36, 1705 AP. Geen e-mailadres, geen registergetal |
 | Vachtwellness | Schiedam (ZH) | hondentrimsalon | 0683700636 | — | 2026-09-15 lane D. Nummer in de titel van de telefoonboekrij. **Belt de owner hier, dan niet met de vindbaarheidshoek**: de zaak voert een eigen domein met vier eigen pagina's (`/behandelingen`, `/vachtuitleg`, `/actie-s`, `/contact-adres`), dus het lek bestaat daar niet. Zij staat hier uitsluitend omdat het kanaal telefoon is en niet e-mail |
+## Lane C — dinsdag 15 september 2026
+
+Zeven regels van vandaag, waarvan vijf uit de geen-websitegroep. Alle zeven komen uit een
+tariefgidstitel (`kostenglazenwasser.nl`, `kostentuinman.nl`) die naam én
+telefoon in de URL-titel voert en het e-mailveld leeg laat. Bij geen van de zeven
+is een gedateerd levensteken gevonden, dus geen van de zeven is belklaar in de zin
+van de kop hierboven: het zijn belregels met een nummer en zonder bewijs dat de
+zaak vandaag draait.
+
+| Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
+|---|---|---|---|---|---|
+| Ster Glazenwasserij De | Woudrichem (gem. Altena, NB) | glazenwasserij | 0183-309247 | — | Geen e-mailveld in de gidstitel, geen KvK-nummer in de bruikbare laag, dus geen leeftijd (lane C, 15-09) |
+| Ribaldus Hovenier-Straatmaker | Kerkrade (LB) | hovenier | 06-42205550 | — | E-mailveld leeg in de gidstitel; geen eigen domein gevonden. Marktstraat 33 (lane C, 15-09) |
+| ERA Boomverzorging Hovenier Houtwerken | Beringe (gem. Peel en Maas, LB) | hovenier/boomverzorging | 06-25137699 | — | E-mailveld leeg in de gidstitel. Hoogstraat 38 (lane C, 15-09) |
+| Henselmans Hoveniers | Heeze (gem. Heeze-Leende, NB) | hovenier | 040-2261989 | — | E-mailveld leeg in de gidstitel (lane C, 15-09) |
+| Hoveniersbedrijf Van Bokhoven | 's-Hertogenbosch (NB) | hovenier | 073-6149679 | — | E-mailveld leeg in de gidstitel (lane C, 15-09) |
+| Timmers Glazenwassersbedrijf M P | Helmond (NB) | glazenwasserij | 0492-529187 | — | E-mailveld leeg in de gidstitel; geen KvK-nummer in de bruikbare laag (lane C, 15-09) |
+| Bruggen Schoonmaakbedrijf vd | Vught (NB) | glazenwasserij | 073-6564860 | — | E-mailveld leeg in de gidstitel; geen KvK-nummer in de bruikbare laag (lane C, 15-09) |
+
+**Zeven rijen, geteld met `grep -c "^| .*lane C, 15-09" bellijst.md`** (de kale
+vorm zonder het rij-anker telt er een meer, want de telzin bevat de tekenreeks
+zelf). Twee van de zeven dragen een 06-nummer en vijf een vastnummer. Dat een
+zaak een vastnummer voert, zegt iets over hoe lang zij bestaat en niets dat een
+poort sluit; het staat hier alleen omdat het de belvolgorde van de owner kan
+sturen.
