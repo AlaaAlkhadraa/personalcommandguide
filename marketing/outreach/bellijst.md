@@ -753,3 +753,25 @@ Ledgercontrole vóór het schrijven:
 | Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
 |---|---|---|---|---|---|
 | De Knipkamer | Groningen | kapsalon | 050-3180990 | — | 5,0 in de VindLokaal-top-3 van 138 Groningse kappers; Nieuweweg 42, 9711 TH. Geen eigen site in twee ronden, alleen gidspagina's (haar.expert, wiewathaar), dus ook geen e-mailadres. Nummer aanwezig, dus per 1.24 hierheen en niet naar `geen-emailadres.md` (lane A, 15-09) |
+## 15-09-2026 — lane D (Noord-Holland, Zuid-Holland, Utrecht)
+
+Zes zaken, allemaal met een telefoonnummer in een **URL-titel** van
+`kostenglazenwasser.nl` of van een telefoonboekrij, en geen van alle met een
+vindbaar e-mailadres. Gecontroleerd met
+`grep -niE "Verhaar|Blinq|Glashelder|Kolk|R de Hond|Vachtwellness" bellijst.md`
+vóór het schrijven: nul eerdere rijen voor deze zes zaken.
+
+**Meting die bij deze zes hoort:** `kostenglazenwasser.nl` gaf vandaag zes
+e-mailadressen in URL-titels, waarvan er **vier al terminaal in het ledger
+stonden**. De bron is voor lane D dus leeg als e-mailbron, maar **niet** als
+belnummerbron — deze zes rijen zijn daar het bewijs van. Voorstel aan Azzouz staat
+in `2026-09-15-d.md`.
+
+| Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
+|---|---|---|---|---|---|
+| Verhaar Glazenwasserij | Nieuwegein (UT) | glazenwasserij | 06-12356116 | — | 2026-09-15 lane D. Nummer in de URL-titel van `kostenglazenwasser.nl/utrecht/nieuwegein/verhaar-glazenwasserij/`. Geen e-mailadres in de titel en geen in een tweede ronde; geen registergetal, dus ook de leeftijd is open |
+| Blinq Glazenwasserij | Nieuwegein (UT) | glazenwasserij | 06-23340591 | — | 2026-09-15 lane D. Nummer in de URL-titel van `kostenglazenwasser.nl/utrecht/nieuwegein/blinq-glazenwasserij/`. Geen e-mailadres, geen registergetal. LET OP: zelfde plaats als Verhaar, Roman en Vinna's — vier Nieuwegeinse glazenwassers op één dienst, niet met elkaar verwarren |
+| Glashelder Glasbewassing | Odijk (UT) | glazenwasserij | 06-20628090 | — | 2026-09-15 lane D. Nummer in de URL-titel van `kostenglazenwasser.nl/utrecht/odijk/glashelder-glasbewassing/`. LET OP voor wie belt: "Glashelder" is een veelgebruikte handelsnaam en het ledger draagt hem in vier andere provincies — dit is de **Odijkse** zaak (1.40h) |
+| Kolk Glazenwasserij | Enkhuizen (NH) | glazenwasserij | 0228-317787 | — | 2026-09-15 lane D. Nummer in de URL-titel van `kostenglazenwasser.nl/noord-holland/enkhuizen/kolk-glazenwasserij/`, Voor de Boeg 8, 1602 CH. Geen e-mailadres, geen registergetal |
+| Glazenwasserij & Reinigingsbedrijf R de Hond | Heerhugowaard (NH) | glazenwasserij | 072-5720213 | — | 2026-09-15 lane D. Nummer in de URL-titel van `kostenglazenwasser.nl/noord-holland/heerhugowaard/...`, Valkkooglaan 36, 1705 AP. Geen e-mailadres, geen registergetal |
+| Vachtwellness | Schiedam (ZH) | hondentrimsalon | 0683700636 | — | 2026-09-15 lane D. Nummer in de titel van de telefoonboekrij. **Belt de owner hier, dan niet met de vindbaarheidshoek**: de zaak voert een eigen domein met vier eigen pagina's (`/behandelingen`, `/vachtuitleg`, `/actie-s`, `/contact-adres`), dus het lek bestaat daar niet. Zij staat hier uitsluitend omdat het kanaal telefoon is en niet e-mail |

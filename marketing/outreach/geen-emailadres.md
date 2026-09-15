@@ -1378,3 +1378,15 @@ kan belanden.
 | Bedrijf | Plaats | Wat er wel is | Lane | Datum gecheckt |
 |---|---|---|---|---|
 | Evelyn's Mobile Hairservice | Groningen | Alleen een VindLokaal-vermelding met score 5,0 in de top-3 van 138 Groningse kappers. Geen site, geen telefoonnummer en geen adres in twee ronden — en zonder nummer is het geen belregel (1.24), dus niet naar `bellijst.md` | A | 2026-09-15 |
+## 15-09-2026 — lane D (Noord-Holland, Zuid-Holland, Utrecht)
+
+**Drie zaken**, en onder deze kop staan er precies drie rijen. Twee ervan zijn het
+prime target van de owner in zijn zuiverste vorm — aantoonbaar binnen het venster,
+aantoonbaar zonder eigen domein — en juist die twee zijn langs geen enkel kanaal te
+bereiken. De derde valt op een naamsverwarring die 1.40(h) blootlegde.
+
+| Bedrijf | Plaats | Sector | Wat er wél is, en waarom er geen adres is | Ronden | Lane | Datum |
+|---|---|---|---|---|---|---|
+| JGM Glas & Gevel | Nootdorp (ZH) | glazenwasserij | KvK **84498218** (URL-pad `transfirm.nl/nl/organisatie/844982180000-jgm-glas-&-gevel`) en vestigingsnummer **000050613650** uit twee onafhankelijke URL-paden (`alleglazenwassers.nl` en `drimble.nl/bedrijf/nootdorp/50613650/`); 1.40(d) toegepast — het drimble-getal is het vestigingsnummer, en de twee dragers spreken elkaar niet tegen. 84-reeks, **binnen het venster**. Zonnehof 184, 2632 BM. Vier gidsen voeren hem (alleglazenwassers, drimble, oozo, regiobedrijf) en **geen eigen domein in vier ronden**. Geen e-mailadres én **geen telefoonnummer**, daarom geen belregel (1.24) | 4 | D | 2026-09-15 |
+| Hoveniersbedrijf Marco Bouwman | Eemnes (UT) | hovenier | KvK **83304835** (URL-pad `transfirm.nl/nl/organisatie/833048350000-hoveniersbedrijf-marco-bouwman`), 83-reeks, **binnen het venster**. Beemdlang 7, 3755 WN. **Vijf** gidsen voeren hem (openingstijden.com, oozo, telefoonboek, bedrijvenpagina, hovenier.website) en geen enkele geeft een e-mailadres of een telefoonnummer in URL of titel. Geen nummer, dus geen belregel (1.24) | 3 | D | 2026-09-15 |
+| Roxy's Trimsalon | Schiedam (ZH) | hondentrimsalon | KvK **95949844** en vestigingsnummer **000061318124** (URL-pad TransFirm), Esther Vergeerstraat 30, 3118 JK; 95-reeks, aan de jonge rand van het venster. **1.40(h) en het scheelde een fout adres:** de treffers `trimsalonroxy.nl`, de doggo-pagina en de telefoonboekrij horen bij *Trimsalon Roxy* in **Den Haag** — een andere zaak. Voor de Schiedamse zaak gaven drie ronden geen e-mailadres en geen telefoonnummer | 3 | D | 2026-09-15 |
