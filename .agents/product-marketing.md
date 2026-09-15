@@ -1,6 +1,6 @@
 # Product Marketing Context — ZEVREN
 
-**Document version:** 1.53 · 2026-09-14
+**Document version:** 1.56 · 2026-09-15
 Elke marketingskill in `.claude/skills/` leest dit document eerst.
 Feiten hier zijn bindend; een skill-advies dat ermee botst, verliest.
 
@@ -444,6 +444,28 @@ geen goede kaart doden — en niet omdat zij het aantal oplost: van twaalf
 gedecodeerde sporen vielen er drie binnen het venster, want de zoekindex geeft
 de best gelinkte post terug en dat is zelden de nieuwste.
 
+**Draagt de post-titel de datum leesbaar, dan vervalt rem 1 van 1.38 door de vorm
+(1.56).** In de titelvorm `Photo by <naam> (@<handle>) · <datum>` staat de datum in
+de bruikbare laag en is er geen decodering, dus de semantische bevestiging die rem 1
+eist, heeft geen voorwerp meer. Dat is geen versoepeling maar een vaststelling over
+de vorm. **Rem 2 blijft onverkort**, en de binding wordt bewezen zoals 1.40(e) zegt:
+de handle in de titel van de post-URL.
+
+De decodeerregel zelf is geijkt. Acht decoderingen over twee lanes en twee
+platforms, door de verificatie zelfstandig nagerekend vóór de lanegetallen gelezen
+waren: `C-K-fcPo69M` → 2 aug 2024 (de datum die 1.38 zelf noemt), `DW1IMVUERGR` →
+7 apr 2026 en `DWqvFGpkURl` → 3 apr 2026 (de datum in hun eigen titel),
+`DLOjticsUnM` → 23 jun 2025, `DSz8Q4ACPw4` → 28 dec 2025, `DScsDOSgqwN` →
+19 dec 2025, `DbQ6VvOCtr5` → 26 jul 2026, en de LinkedIn-activity
+`7405535688051347456` met `id >> 22` → 13 dec 2025. Drie van de acht dragen een
+onafhankelijke controle die had kunnen falen.
+
+**De rem die erbij hoort en die de route haar plaats geeft:** dit is een
+**bewijsroute en geen jaagroute**. Zij mag pas dossiers vullen nadat de meetregel
+van de directives is gedraaid — tien namen, met in één regel wat zij aan leeftijd,
+adres en gedateerd spoor teruggeeft. Lane C mat op twee titels plus twee nulronden
+en heeft er correct geen enkel dossier mee gevuld.
+
 **Een gedateerde review op een vakgidspagina is pas een levensteken als de
 datum per review verschilt EN de reviewtekst over dít bedrijf gaat (1.15).**
 Dit is de gevaarlijkste variant van de uitgeversstempel hierboven, want hij
@@ -662,6 +684,27 @@ en 1.37 laat één drager toe wanneer de regel geen goede kaart kán doden, en d
 kan dat niet. Wat zij voorkomt is de duurste fout die dit systeem kan maken: een
 verkoopmail aan een ondernemer die zojuist failliet is verklaard, met de naam van
 de owner eronder.
+
+### De insolventieronde bindt ook elke geparkeerde tekst (1.54)
+
+1.40(a) beperkt de ronde tot **kaartrijpe** dossiers. Dat gat is op 15-09 zichtbaar
+geworden: er liggen verzendklare teksten op `geparkeerd - tekst klaar,
+owner-controle poort (a)` die de owner morgen kan versturen en waarop de ronde
+nooit is gedraaid. Een parkering duurt weken; een kaart wordt binnen twee weken
+opnieuw langs poort (a) gehaald, een geparkeerde tekst niet.
+
+**De regel.** Elke tekst die voor de owner wordt klaargelegd — kaart of parkering —
+draagt een insolventieronde. Is zij niet te draaien omdat er geen KvK-nummer in de
+bruikbare laag staat, dan staat dát in de **ondernemerscontrole** van de tekst en
+niet alleen in de poortlijst. De poortlijst leest niemand vlak vóór verzenden; de
+ondernemerscontrole wel.
+
+Dragers: vijf geparkeerde rijen, **nul** met een gedraaide ronde, drie met een
+KvK-nummer waarop zij te draaien was (Bubbels 80672612, JR Hoveniers 89575946,
+Heenck 90416619). Positieve controle: de ronde op Trimsalon Westeinde (93410808)
+en op Poseidon SoftWash (90272994) kwam allebei schoon terug, dus zij is
+uitvoerbaar en kost één zoekopdracht. De eenzijdige-kostentoets van 1.31, 1.34 en
+1.37 geldt onverkort — deze regel kan geen goede kaart doden.
 
 ### Het vestigingsnummer mag een leeftijd begrenzen waar het haar niet mag dateren (1.40c)
 
@@ -1078,6 +1121,22 @@ allebei zijn ze met één telling te controleren.
   kost de betrouwbaarheid van álle tellingen in hetzelfde bestand, ook de vele
   die wél kloppen.
 
+### Eén herkomstvorm per bestand, en een telling zonder commando telt niet (1.55)
+
+De herkomst van een rij staat in de vorm die **haar bestand** voert, en een lane
+die een aantal rapporteert, noemt het commando waarmee hij telde.
+
+Dragers: twintig `bellijst.md`-rijen van 15-09 in twee onverenigbare vormen — lanes
+A en C schrijven `(lane X, 15-09)`, lanes B en D `2026-09-15 lane X` — waardoor
+geen enkel commando ze alle twintig vangt: `grep -c "2026-09-15"` geeft 13,
+`grep -c "15-09"` geeft 11, en het werkelijke aantal is 20. Daarnaast lane D's
+eigen meting dat de kolomvorm in `geen-emailadres.md` de oude grep op nul zet.
+
+**De tweede helft van de regel is de belangrijkste en zij is niet cosmetisch.**
+Lane C's telling van zeven belregels wás juist, en zij bleek alleen juist doordat
+de verificatie de zeven rijen met de hand natelde. Een telling die alleen met de
+hand te controleren is, is geen telling.
+
 ## Kanalen en bewijs
 
 Outreach per e-mail, persoonlijk verzonden door de eigenaar (agents
@@ -1409,6 +1468,75 @@ wil houden.
 
 ## Changelog
 
+- 1.56 (2026-09-15, Azzouz, verificatie lanes C+D): drie regels uit het bereik
+  1.51 t/m 1.60. **Ik neem er drie en laat 1.57 t/m 1.60 vrij**, op dezelfde grond
+  als bij 1.53: een reeks in één dienst leegtrekken is even duur als een reeks die
+  te krap is, en de week loopt tot en met zondag. Negen kandidaten staan met hun
+  dragers geparkeerd in `marketing/outreach/2026-09-15-cd-verified.md`. **Geen van
+  beide lanes bood een kaart aan — nul uit 84 volledig beoordeelde dossiers (lane C
+  47, lane D 37)** — dus alle drie komen uit het werk eromheen.
+  **(a) 1.54 — de insolventieronde bindt elke tekst die voor de owner wordt
+  geparkeerd, niet alleen een kaartrijp dossier**, bij "De insolventieronde". Dit
+  is de tweede regel in dit document die een regel **repareert** in plaats van
+  aanvult: 1.40(a) beperkt de ronde tot kaartrijpe dossiers, en precies daardoor
+  liggen er verzendklare teksten op `geparkeerd - tekst klaar, owner-controle poort
+  (a)` waarop zij nooit is gedraaid. `grep "geparkeerd - tekst klaar" contacted.md`
+  geeft vijf rijen en **nul** ervan draagt de ronde, terwijl drie een KvK-nummer
+  dragen waarop zij te draaien was (Bubbels 80672612, JR Hoveniers 89575946, Heenck
+  90416619); Westeinde (93410808) stond vandaag op het punt de zesde te worden.
+  **Met een positieve controle van mijzelf:** ik heb de ronde op Westeinde en op
+  Poseidon SoftWash (90272994) gedraaid en allebei kwamen schoon terug, dus zij is
+  uitvoerbaar en kost één zoekopdracht. De eenzijdige-kostentoets van 1.31, 1.34 en
+  1.37 geldt onverkort — deze regel kan geen goede kaart doden. **Waar de ronde
+  niet te draaien is omdat er geen KvK-nummer is, staat dat in de
+  ondernemerscontrole van de tekst en niet alleen in de poortlijst**: een parkering
+  duurt weken en de poortlijst leest niemand vlak vóór verzenden. Drager voor die
+  tweede helft: Trimsalon Newfy & Co, tekst klaargelegd op 15-09, geen KvK-nummer,
+  ronde niet te draaien, in de poortlijst genoteerd en in de ondernemerscontrole
+  vergeten.
+  **(b) 1.55 — één herkomstvorm per bestand, en een telling zonder commando telt
+  niet**, bij "Twee maten die twee lanes op één dag verschillend namen". De
+  herkomst van een rij staat in de vorm die haar bestand voert, en een lane die een
+  aantal rapporteert, noemt het commando waarmee hij telde. Dragers: twintig
+  `bellijst.md`-rijen van 15-09 in twee onverenigbare vormen — lanes A en C
+  schrijven `(lane X, 15-09)`, lanes B en D `2026-09-15 lane X` — waardoor geen
+  enkel commando ze alle twintig vangt (`grep -c "2026-09-15"` geeft 13,
+  `grep -c "15-09"` geeft 11, het werkelijke aantal is 20); plus lane D's eigen
+  meting dat de nieuwe kolomvorm in `geen-emailadres.md` de oude grep op nul zet.
+  **De tweede helft van de regel is de belangrijkste en zij is niet cosmetisch:**
+  lane C's telling van zeven belregels wás juist, en zij bleek alleen juist doordat
+  ik de zeven rijen met de hand natelde. Een telling die alleen met de hand te
+  controleren is, is geen telling — dat is de vormregel van de directives van deze
+  week, hier met een gemeten faalgeval erbij.
+  **(c) 1.56 — draagt de post-titel de datum leesbaar, dan vervalt rem 1 van 1.38
+  door de vorm; rem 2 en 1.40(e) blijven onverkort**, bij "Wiens daad draagt de
+  datum". In de titelvorm `Photo by <naam> (@<handle>) · <datum>` staat de datum in
+  de bruikbare laag en is er geen decodering, dus de semantische bevestiging die
+  rem 1 eist, heeft geen voorwerp meer. Dat is geen versoepeling maar een
+  vaststelling over de vorm. De binding tussen account en bedrijf blijft vereist en
+  wordt bewezen zoals 1.40(e) zegt: de handle in de titel van de post-URL. Dragers:
+  acht decoderingen over twee lanes en twee platforms, **die ik zelfstandig heb
+  nagerekend vóór ik de lanegetallen las** — `C-K-fcPo69M` → 2 aug 2024 (de datum
+  die 1.38 zelf noemt), `DW1IMVUERGR` → 7 apr 2026 en `DWqvFGpkURl` → 3 apr 2026
+  (de datum in hun eigen titel), `DLOjticsUnM`, `DSz8Q4ACPw4`, `DScsDOSgqwN`,
+  `DbQ6VvOCtr5`, en de LinkedIn-activity `7405535688051347456` met `id >> 22` →
+  13 dec 2025. Drie van de acht dragen dus een onafhankelijke controle die had
+  kunnen falen. **Met de rem die lane C er zelf op zette en die ik overneem:** dit
+  is een bewijsroute en geen jaagroute, en zij mag pas dossiers vullen nadat de
+  meetregel van de directives is gedraaid (tien namen). Lane C mat op twee titels
+  plus twee nulronden en heeft er — correct — geen enkel dossier mee gevuld.
+  **Uitdrukkelijk niet opgenomen, en geen van de vier is zwak:** de rijkdom van een
+  exacte-tekenreeksronde als voorspeller dat het lek niet bestaat (drie dragers,
+  maar hij raakt poort (b) en dat is de duurste poort om te versoepelen), de
+  nul-overlap tussen venster-bron en bereikbaarheids-bron (27 dragers, maar hij
+  raakt de jaagvolgorde van 1.20(b) en 1.19 wijst dat naar het weekrapport), de
+  ledgerronde die ook op KvK-nummer moet draaien, en de KvK-band uit het ledger.
+  **Eén bevinding die geen regel is maar hier hoort:** de vijf toegewezen
+  bewijsroutes binden **elk** dossier dat op poort (a) open blijft staan en niet
+  alleen de dossiers die een lane zelf kaartrijp noemt. Dat staat al zo in de
+  directives en het is vandaag voor de tweede dienst op rij misgegaan — gisteren
+  Sportscar Service Tilburg, vandaag Poseidon SoftWash, allebei lane C. Het is
+  handhaving en geen nieuwe regel, dus het krijgt geen nummer.
 - 1.53 (2026-09-14, Azzouz, verificatie lanes C+D): drie regels uit het bereik
   1.51 t/m 1.60 dat het weekrapport van 13-09 aan C+D toewees. **Ik neem er drie en
   laat 1.54 t/m 1.60 uitdrukkelijk vrij**, en dat is een beslissing en geen gebrek
