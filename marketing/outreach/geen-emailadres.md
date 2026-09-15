@@ -1368,3 +1368,13 @@ Dat is zelf een meting: de bronnen die dit segment vinden (`transfirm.nl`, `comp
 **Alle acht staan op leeftijd binnen het venster** — van één tot vier jaar — en alle acht vallen
 uitsluitend op het kanaal. Dat is de muur van 25 augustus in acht regels: het bord verstuurt alleen langs
 e-mail, en een zaak zonder eigen domein levert dat adres in deze omgeving structureel niet op (1.20b).
+
+## Lane A — 15-09-2026
+
+Per de nieuwe vormregel van deze week draagt elke rij hieronder een **lane-**
+en een **datumkolom**, zodat geen rij meer onder een kop van een andere lane
+kan belanden.
+
+| Bedrijf | Plaats | Wat er wel is | Lane | Datum gecheckt |
+|---|---|---|---|---|
+| Evelyn's Mobile Hairservice | Groningen | Alleen een VindLokaal-vermelding met score 5,0 in de top-3 van 138 Groningse kappers. Geen site, geen telefoonnummer en geen adres in twee ronden — en zonder nummer is het geen belregel (1.24), dus niet naar `bellijst.md` | A | 2026-09-15 |

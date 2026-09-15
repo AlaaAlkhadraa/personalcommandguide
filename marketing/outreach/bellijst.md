@@ -743,3 +743,13 @@ Alle vier de regels zijn nieuw; er stond geen eerdere regel op deze namen, dus
 is hier niet aan de orde. Gecontroleerd met
 `grep -niE "Zomers|Start Glazenwasserij|Mit's|Big Dog" bellijst.md` vóór het
 schrijven: nul rijen.
+
+## Lane A — Groningen, Friesland, Drenthe (15-09-2026)
+
+Ledgercontrole vóór het schrijven:
+`grep -niE "bij anita|knipkamer|evelyn" contacted.md bellijst.md geen-emailadres.md`
+-> nul rijen op alle drie de namen.
+
+| Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
+|---|---|---|---|---|---|
+| De Knipkamer | Groningen | kapsalon | 050-3180990 | — | 5,0 in de VindLokaal-top-3 van 138 Groningse kappers; Nieuweweg 42, 9711 TH. Geen eigen site in twee ronden, alleen gidspagina's (haar.expert, wiewathaar), dus ook geen e-mailadres. Nummer aanwezig, dus per 1.24 hierheen en niet naar `geen-emailadres.md` (lane A, 15-09) |
