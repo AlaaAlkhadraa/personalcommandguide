@@ -800,3 +800,28 @@ zelf). Twee van de zeven dragen een 06-nummer en vijf een vastnummer. Dat een
 zaak een vastnummer voert, zegt iets over hoe lang zij bestaat en niets dat een
 poort sluit; het staat hier alleen omdat het de belvolgorde van de owner kan
 sturen.
+
+## 15 september 2026 — lane B (Overijssel, Gelderland, Flevoland)
+
+Zes regels, alle zes uit de geen-websitegroep van vandaag. **Elk nummer staat in de
+URL-TITEL van een tariefgids en dus in de bruikbare laag**, niet in de samenvattende
+alinea — dat is de enige reden dat ze hier staan en niet in `geen-emailadres.md`.
+
+Gecontroleerd met
+`grep -niE "Extra Glans|Tempo Glazenwasserij|Joosten Glazenwasserij|M & W Glazenwasserij|JF-Millingen|Budding" bellijst.md`
+vóór het schrijven: nul rijen. OFG-Glazenwasserij (Swifterbant) is bewust NIET toegevoegd —
+die staat sinds 14-09 al in het ledger en in `geen-emailadres.md`, en per 1.24 gaat er geen
+tweede regel onder een bestaande.
+
+| Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
+|---|---|---|---|---|---|
+| Extra Glans Schoonmaak en Glazenwasserij | Biddinghuizen (gem. Dronten, FL) | glazenwasserij | 06-84055460 | — | 2026-09-15 lane B. Nummer in de URL-titel van `kostenschoonmaakbedrijf.nl`. Koolzaadhof 59, 8256 AB. Geen e-mailadres in de titel en geen eigen domein in twee ronden. Leeftijd niet getoetst: het dossier viel op het kanaal |
+| Tempo Glazenwasserij | Biddinghuizen (gem. Dronten, FL) | glazenwasserij | 06-85277990 | — | 2026-09-15 lane B. Nummer in de URL-titel van `glazenwassertarieven.nl`. Weidehof 26. Geen e-mailadres in de titel, geen eigen domein. LET OP: in dezelfde plaats zitten ook De Haan Cleaning, Schoonmaakbedrijf Mees en Extra Glans — drie andere zaken, niet samenvoegen |
+| Joosten Glazenwasserij | Bemmel (gem. Lingewaard, GLD) | glazenwasserij | 06-53495827 | — | 2026-09-15 lane B. Nummer in de URL-titel van `glazenwassertarieven.nl`. Geen e-mailadres in de titel. LET OP NAAMCOLLISIE: Joosten Kunststoffen B.V. en Joosten Kunststoffen II B.V. zitten aan de Veilingweg in dezelfde plaats en zijn andere bedrijven (1.53) |
+| M & W Glazenwasserij- en Schoonmaakdiensten | Nijmegen (GLD) | glazenwasserij | 06-51805034 | — | 2026-09-15 lane B. Nummer in de URL-titel van `glazenwassertarieven.nl`. Geen e-mailadres in de titel, geen eigen domein |
+| JF-Millingen Glazenwasser | Millingen aan de Rijn (gem. Berg en Dal, GLD) | glazenwasserij | 06-54917278 | — | 2026-09-15 lane B. Nummer in de URL-titel van `glazenwassertarieven.nl`. Geen e-mailadres in de titel, geen eigen domein |
+| Budding Glazenwasserij en Schoonmaakbedrijf Dennis | Heelsum (gem. Renkum, GLD) | glazenwasserij | 06-34866350 | — | 2026-09-15 lane B. Nummer in de URL-titel van `kostenglazenwasser.nl`. Willem Marisstraat 7. Geen e-mailadres in de titel, geen eigen domein |
+
+Alle zes dragen een streepje in de kolom Gedateerd levensteken: er is van geen van de zes
+een gedateerd spoor gevonden, en de kop van dit bestand zegt wat dat betekent — bestaat en
+op profiel, maar niet aantoonbaar draaiend. Wie belt, belt de bovenste groep eerst.

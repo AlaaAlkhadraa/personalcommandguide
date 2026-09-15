@@ -1412,3 +1412,30 @@ tekenreeks zelf). Drie
 van de zes liggen aantoonbaar binnen het leeftijdsvenster en vallen dus
 uitsluitend op het kanaal — dezelfde muur van 25 augustus die de acht regels
 hierboven al beschrijven, nu ook in garages en niet alleen in salons.
+
+## 15-09-2026 — lane B (Overijssel, Gelderland, Flevoland)
+
+Acht zaken, alle acht **binnen het leeftijdsvenster** en alle acht uitsluitend op het
+kanaal gevallen. Geen van de acht heeft een telefoonnummer in de bruikbare laag, dus geen
+van de acht kan een belregel worden (1.24). Dat is de muur van 25 augustus opnieuw, en de
+verdeling is vandaag scherper dan gisteren: van de acht hebben er zes helemaal geen eigen
+domein, en de twee die er wel een hebben, zijn afgeschermd of één pagina groot.
+
+Gecontroleerd met
+`grep -niE "Paradijs|DPA glas|Ambachtelijke Glazenwasser|DECO tuinen|Perfect Buitenwerk|Sterk in Schilderwerk|Roos&boom|Total Garden" geen-emailadres.md`
+vóór het schrijven: nul rijen.
+
+| Bedrijf | Plaats | Sector | Wat er wel is | Ronden | Lane | Datum |
+|---|---|---|---|---|---|---|
+| Paradijs Glazenwassersbedrijf | Arnhem (GLD) | glazenwasserij | KvK 83219919 uit het TransFirm-URL-pad — 2021, vijf jaar. Spuistraat 81, 6826 GR, oozo-record 2343822. Geen eigen domein. **OMKERING (1.32):** stond sinds 06-09 als `lead - niet afgerond` met als grond "geen enkele ronde gedaan"; die ronden zijn nu gedraaid | 2 | B | 15-09-2026 |
+| DPA glasbewassing en dienstverlening | Dodewaard (gem. Neder-Betuwe, GLD) | glazenwasserij | KvK 97017043, vestigingsnummer 000062288814 — **2025, één jaar**. Marijkelaan 10, 6669 AK. Eigen Werkspot- **en** Trustoo-profiel, geen eigen domein. Op profiel het sterkste dossier van de acht | 2 | B | 15-09-2026 |
+| De Ambachtelijke Glazenwasser | Andelst (gem. Overbetuwe, GLD) | glazenwasserij | KvK 95538763, vestigingsnummer 000060945559 — 2025. Geurdeland 17g, 6673 DR. Telefoonboek voert letterlijk "afgeschermd op verzoek van de KvK". **NIET VERWARREN** met de gelijknamige zaak in Hilversum (NH), KvK 66777550, die lane D op 14-09 als te lang gevestigd afsloot | 2 | B | 15-09-2026 |
+| DECO tuinen en klussen | Lelystad (FL) | hovenier | KvK 93263015 — 2024. Haverlij 48, 8219 DA. Oozo- en telefoonboekrecord, nummer afgeschermd, geen eigen domein | 2 | B | 15-09-2026 |
+| Perfect Buitenwerk | Apeldoorn (GLD) | stratenmaker/hovenier | KvK 80999956 — 2020. Houtweg 45, 7335 EV. De zeldzame vorm: `stratenmakers.in` en `hovenier.website` melden uitdrukkelijk dat er géén telefoonnummer en géén e-mailadres bekend is | 2 | B | 15-09-2026 |
+| Sterk in Schilderwerk | Enschede (OV) | schilder | KvK 84163577 — 2021. Meeuwenstraat 36, 7523 XV. Alleen een `schilder-nu.nl`-gidsprofiel; die gidsfamilie voert het adres nooit in de URL-titel (zie de tweede bevinding van vandaag) | 3 | B | 15-09-2026 |
+| Roos&boom | Zwolle (OV) | hovenier | KvK 91675073, vestigingsnummer 000057338809 — 2023/2024. Ten Oeverstraat 26, 8012 EV. Geen eigen domein; de Zwolse hovenierszoekopdrachten geven uitsluitend andere bedrijven | 2 | B | 15-09-2026 |
+| Total Garden | Zwolle (OV) | hovenier | KvK 90807456 — 2023. Gerboldinkstraat 78, 8044 AG. Geen eigen domein. **Naam zonder eigennaam:** leg bij een poort-(e)-treffer altijd het KvK-nummer ernaast, niet alleen de plaats | 2 | B | 15-09-2026 |
+
+**Te tellen met** `grep -cE '^\|.*\| B \| 15-09-2026 \|$' geen-emailadres.md` — acht regels, en de kop
+erboven zegt acht. Dat is de correctie van 1.40 op een kop die ooit "Vijf zaken"
+aankondigde met negen rijen eronder.
