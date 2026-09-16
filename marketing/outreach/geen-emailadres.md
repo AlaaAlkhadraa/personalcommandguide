@@ -1494,3 +1494,26 @@ vóór het schrijven: nul rijen.
 
 **Te tellen met** `grep -cE '^\|.*\| B \| 2026-09-16 \|$' geen-emailadres.md` — vier regels,
 en de kop erboven zegt vier.
+---
+
+## Twee zaken — lane A, 16-09-2026
+
+Twee dossiers van vandaag hebben **geen openbaar e-mailadres én geen
+telefoonnummer**, en gaan daarom naar dit bord en niet naar `bellijst.md`: een
+belregel zonder nummer is geen belregel (1.24).
+
+Gecontroleerd met
+`grep -niE "Van Dort|Mauties" geen-emailadres.md bellijst.md contacted.md`
+vóór het schrijven: nul rijen.
+
+**Datumvorm.** Ik schrijf `2026-09-16`, de vorm die 1.47 als huisvorm vastlegt.
+De acht rijen van 15-09 hierboven staan nog in `15-09-2026`, dus tot die zijn
+omgezet draait een dagtelling beide vormen, precies zoals 1.47 voorschrijft.
+
+| Bedrijf | Plaats | Sector | Wat er wel is | Ronden | Lane | Datum |
+|---|---|---|---|---|---|---|
+| Van Dort Dienstverlening | Sneek (gem. Súdwest-Fryslân, FR) | glazenwasserij | Glasbewassing, gevelreiniging, houtwerk en zonnepanelen in Sneek en Zuidwest-Friesland. Geen eigen domein in de zoekresultaten, geen registerpagina, geen nummer en geen adres. Leeftijd niet vastgesteld | 1 | A | 2026-09-16 |
+| Mauties beauty&more | Groningen-Lewenborg (GR) | schoonheidssalon/nagelstudio | **Op profiel het sterkste dossier van de dienst.** KvK 80961266 uit het TransFirm-URL-pad — 2020/21, vijf à zes jaar. Meerpaal 222, 9732 AN. Gratis `wordpress.com`-subdomein met PRECIES TWEE geïndexeerde pagina's, levende Instagram met 461 volgers. De eigen contactpagina noemt e-mail, WhatsApp én telefoon en zet er geen van drieën in de bruikbare laag — daarom geen belregel | 3 | A | 2026-09-16 |
+
+**Te tellen met** `grep -cE '^\|.*\| A \| 2026-09-16 \|$' geen-emailadres.md` — twee regels,
+en de kop erboven zegt twee.

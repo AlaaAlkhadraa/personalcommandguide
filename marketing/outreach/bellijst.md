@@ -882,3 +882,30 @@ Gecontroleerd met `grep -ni "Petegem" bellijst.md` vóór het schrijven: nul rij
 
 Eén rij, te tellen met `grep -cE '^\|.*\| B \| 2026-09-16 \|' bellijst.md`, en de kop
 erboven zegt één.
+---
+
+## Zes zaken — lane A, 2026-09-16 (glazenwasserij, geen-websitegroep)
+
+Alle zes komen uit de geen-websitegroep van het sectorplan: een nummer in een
+gidstitel of een telefoonboekrecord, geen e-mailadres, geen eigen domein.
+
+**Vormbotsing, gemeld en niet stil opgelost.** 1.47 wil een eigen datumkolom in
+dit bestand; 1.55 wil per bestand één herkomstvorm, en die van `bellijst.md` is
+de datum vooraan in de laatste kolom. Een zevende kolom voor zes van 829 rijen
+levert precies de twee vormen op die 1.47 wil uitroeien, dus ik volg 1.55, zet
+de datum in ISO vooraan in de laatste kolom, en laat de kolomkeuze aan het
+weekrapport. Te tellen met `grep -cE "^\|.*\| 2026-09-16 lane A\. " bellijst.md` — zes.
+
+| Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
+|---|---|---|---|---|---|
+| Weseman Fa J | Wildervank (gem. Veendam, GR) | glazenwasserij | 0598-623252 | — | 2026-09-16 lane A. Nummer in de URL-titel van `kostenglazenwasser.nl`. Geen e-mailadres in de titel, geen eigen domein, leeftijd niet vastgesteld |
+| Dick's Glazenwasserij | Groningen (GR) | glazenwasserij | 06-53940054 | — | 2026-09-16 lane A. Nummer in de URL-titel van `glazenwassertarieven.nl`. Geen e-mailadres in de titel, geen eigen domein |
+| Glazenwasserij de Zeeuw | Emmen (DR) | glazenwasserij | telefoonboekrecord t9580527 | — | 2026-09-16 lane A. Telefoonboek-bedrijfspagina, door de eigenaar zelf geverifieerd, zonder website. Het nummer staat op de gidspagina en niet in de titel, dus het is niet overgenomen (1.20a) |
+| Glazenwassersbedrijf A.S.E - install.bedr. Schepers | Emmen (DR) | glazenwasserij | telefoonboekrecord t5064832 | — | 2026-09-16 lane A. Wolfsklauw 2, 7815 KM. Geen website vermeld. Nummer staat op de gidspagina en niet in de titel, dus niet overgenomen (1.20a) |
+| Glazenwasserij De | Hoogeveen (DR) | glazenwasserij | 0528-820303 | — | 2026-09-16 lane A. Nummer in de URL-titel van `glazenwassertarieven.nl`. Geen e-mailadres in de titel |
+| Prent Schoonmaakbedrijf Glazenwasser J | Hoogeveen (DR) | glazenwasserij | 0528-262515 | — | 2026-09-16 lane A. Nummer in de URL-titel van `glazenwassertarieven.nl`. Geen e-mailadres in de titel |
+
+Alle zes dragen een streepje bij Gedateerd levensteken: er is van geen van de zes een
+gedateerd spoor gevonden. Bestaan en op de gids, maar niet aantoonbaar draaiend — en
+vier van de zes hebben een vastnetnummer, wat het groeifasevenster onwaarschijnlijk
+maakt zonder het te sluiten.
