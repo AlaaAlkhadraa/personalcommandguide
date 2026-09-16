@@ -1517,3 +1517,4 @@ omgezet draait een dagtelling beide vormen, precies zoals 1.47 voorschrijft.
 
 **Te tellen met** `grep -cE '^\|.*\| A \| 2026-09-16 \|$' geen-emailadres.md` — twee regels,
 en de kop erboven zegt twee.
+| Administratiekantoor Mans (Mans Administratie) | Sint Odiliënberg (gem. Roerdalen, LB) | administratiekantoor | KvK 90942760 uit de transfirm-URL (909427600000) — 2023, drie jaar, midden in het venster, één werkzaam persoon. Molenweg 12, 6077 BC. Geen eigen domein; telefoonboek en oozo voeren het nummer achter een klik en dus niet in de bruikbare laag, zodat ook een belregel niet kan (1.24) | 1 | C | 2026-09-16 |
