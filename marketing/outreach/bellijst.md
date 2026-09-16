@@ -866,3 +866,19 @@ het onverankerde `grep -c "2026-09-16 lane D"` geeft hier **twee**, omdat deze
 telregel zelf de tekenreeks draagt. Dat is geen theorie — ik ving het bij het
 natellen, en het is dezelfde klasse fout als een kop die een ander aantal
 aankondigt dan er rijen onder staan.
+## 2026-09-16 — lane B (Overijssel, Gelderland, Flevoland)
+
+Eén rij. **Met een datumkolom, per 1.47**: de verificatie van 15-09 stelde vast dat dit
+bestand er geen had en dat 136 rijen daardoor geen leesbare datum dragen. Ik zet hem
+hieronder in de vaste vorm `YYYY-MM-DD` en zet de herkomst in diezelfde kolommen in plaats
+van in de notitietekst (1.55). De oude rijen zijn niet omgezet — dat is werk voor één
+ronde van de verificatie en niet iets wat ik eenzijdig door 136 regels heen doe.
+
+Gecontroleerd met `grep -ni "Petegem" bellijst.md` vóór het schrijven: nul rijen.
+
+| Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Lane | Datum | Waarom geen kaart |
+|---|---|---|---|---|---|---|---|
+| Petegem Stukadoorsbedrijf | Kampen (OV) | stukadoor | 06-13364456 | — | B | 2026-09-16 | Nummer in de URL-titel van `stukadoorgids.nl`. KvK 84341645 uit het TransFirm-URL-pad, 2022 — op leeftijd het profiel. Oudestraat 163, 8261 CL. Eigen domein `petegemstukadoorsbedrijf.nl` bestaat, maar geen enkele ronde gaf een e-mailadres in de bruikbare laag. **LET OP bij het bellen:** de gids voert "ruim 10 jaar ervaring" naast een KvK-nummer uit 2022 — een 1.15-tegenspraak die niet is opgelost, dus behandel hem niet als starter |
+
+Eén rij, te tellen met `grep -cE '^\|.*\| B \| 2026-09-16 \|' bellijst.md`, en de kop
+erboven zegt één.

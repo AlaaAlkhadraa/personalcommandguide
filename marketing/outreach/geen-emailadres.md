@@ -1474,3 +1474,23 @@ meld hem opnieuw omdat hij nog steeds open staat.
 regels, en de kop erboven zegt zes. Het patroon is verankerd op `^\|` en `\|$` om
 dezelfde reden als in `bellijst.md`: onverankerd telt deze regel zichzelf mee en
 geeft zeven.
+## 2026-09-16 — lane B (Overijssel, Gelderland, Flevoland)
+
+Vier zaken. **Datumvorm `YYYY-MM-DD`, de huisvorm van dit bestand per 1.47.** De acht
+lane-B-rijen van gisteren dragen `15-09-2026` en zijn daarmee de afwijkende vorm; ik zet
+die niet om — dat is een ronde van de verificatie — maar ik volg vanaf vandaag de huisvorm,
+zodat één commando de nieuwe rijen vangt.
+
+Gecontroleerd met
+`grep -niE "Stadshagen|Sol Schoonmaak|Willems onderhoud|Fleurrijk" geen-emailadres.md`
+vóór het schrijven: nul rijen.
+
+| Bedrijf | Plaats | Sector | Wat er wel is | Ronden | Lane | Datum |
+|---|---|---|---|---|---|---|
+| Stadshagen Glazenwasserij | Zwartsluis (gem. Zwartewaterland, OV) | glazenwasserij | 06-85772878 in de URL-titel van `glazenwassertarieven.nl` en `kostenglazenwasser.nl`, daarnaast 06-29327551 op een derde gids. Handelskade 17 en Marijkestraat 42 — twee adressen over twee gidsen. Geen eigen domein, geen e-mailadres in enige titel. **Niet op `bellijst.md` gezet omdat de leeftijd na twee ronden niet vast te stellen was**: geen KvK- of vestigingsnummer in enig URL-pad, en de kop van dat bestand vraagt jonge zaken op profiel | 2 | B | 2026-09-16 |
+| Sol Schoonmaak Service | Almere (FL) | glazenwasserij | KvK 87910888, vestigingsnummer 000053800761 — 2023. Pieter de Hooghstraat 120. Geen eigen domein; alleen gids- en oozo-records. **NIET VERWARREN** met Sol Cleaning Service in dezelfde stad (KvK 93334982, vestigingsnummer 000052576582), dat een ánder record is en al sinds een eerdere dienst in het ledger staat — twee namen, twee nummers, één plaats (1.53) | 2 | B | 2026-09-16 |
+| Willems onderhoud | Arnhem (GLD) | schilder | KvK 96265388, vestigingsnummer 000061603287 uit het TransFirm-URL-pad — **2025, één jaar**, op leeftijd het sterkste van de vier. Herfsttooi 34, 6846 DS, een woonadres. Geen eigen domein, geen telefoonnummer en geen e-mailadres in de bruikbare laag; alleen een Werkspot-profiel | 2 | B | 2026-09-16 |
+| Schilders & Stukadoorsbedrijf Fleurrijk | Hengelo (OV) | schilder + stukadoor | KvK 93013353, vestigingsnummer 000058583084 — 2024. Breemarsweg 2, 7553 HR. Geen eigen domein: een YouTube-kanaal en profielen op Werkspot, Trustoo en Schildertarief. Telefoonnummer en beoordeling staan uitsluitend in de samenvattende alinea en dus niet in de bruikbare laag (1.20a). **1.15-tegenspraak:** "40 jaar ervaring" naast een KvK-nummer uit 2024 | 2 | B | 2026-09-16 |
+
+**Te tellen met** `grep -cE '^\|.*\| B \| 2026-09-16 \|$' geen-emailadres.md` — vier regels,
+en de kop erboven zegt vier.
