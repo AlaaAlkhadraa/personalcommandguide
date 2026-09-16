@@ -1452,3 +1452,25 @@ Te tellen met `grep -cE '^\|.*\| C \| 2026-09-16 \|$' marketing/outreach/geen-em
 |---|---|---|---|---|---|---|
 | Zegyesmetjes | Bergen op Zoom (NB) | glazenwasserij | KvK 86772260 uit de transfirm-URL (867722600000) — 2022, vier jaar, midden in het venster. Buiten `transfirm.nl` NUL webaanwezigheid: geen eigen domein, geen gidsvermelding, geen telefoon, geen social. Drie ronden op naam, op naam+plaats+e-mail en op naam+sector gaven alle drie uitsluitend andere Bergen op Zoomse glazenwassers | 3 | C | 2026-09-16 |
 | Autosloperij Limburg | Maasbree (gem. Peel en Maas, LB) | garage/autodemontage | KvK 83017364 en vestigingsnummer 000049218271 uit de transfirm-URL — 2021, in het venster. Eigen domein `autosloperijlimburg.nl`. Het e-mailadres staat nergens in de bruikbare laag: de eigen contactregel zegt "stuur een e-mail" zonder adres, en het telefoonnummer verschijnt alleen in de samenvattende alinea, die per 1.20(a) geen bron is | 2 | C | 2026-09-16 |
+## 2026-09-16 — lane D (Noord-Holland, Zuid-Holland, Utrecht)
+
+Zes zaken. Alle zes zonder eigen domein en zonder telefoonnummer in de bruikbare
+laag, na twee ronden elk. De datumkolom voert `YYYY-MM-DD`, de huisvorm die 1.47
+voor dit bestand vastlegt; de sectie hierboven van lane B voert `DD-MM-YYYY`, en
+zolang die rijen niet zijn omgezet vangt geen enkel commando beide vormen
+tegelijk. Dat is geen nieuwe fout maar de botsing die 1.47 zelf beschrijft, en ik
+meld hem opnieuw omdat hij nog steeds open staat.
+
+| Bedrijf | Plaats | Sector | Wat er wel is | Ronden | Lane | Datum |
+|---|---|---|---|---|---|---|
+| Glazenwasserij & Schoonmaakbedrijf DM | Piershil (gem. Hoeksche Waard, ZH) | glazenwasserij | KvK 94699208 + vestigingsnummer 000060153482, beide recent en consistent — 2024, in het venster. Smient 11, 3265 CW. Drimble-, AlleGlazenwassers-, Telefoonboek- en northdata-record, geen eigen domein, geen nummer in de gidstitel | 2 | D | 2026-09-16 |
+| Mcs-Cleaning | Utrecht (UT) | glazenwasserij | KvK 87060477 + vestigingsnummer 000052988872 — 2022, in het venster. Waterhoenhof 23, 3582 DD. Eén medewerker. TransFirm, AlleGlazenwassers, Drimble, Company.info en Oozo voeren hem alle vijf zonder adres en zonder nummer | 2 | D | 2026-09-16 |
+| Centraal Glazenwasserij | Zaandam (gem. Zaanstad, NH) | glazenwasserij | **Leeftijd niet vastgesteld — registerbotsing:** KvK 86101862 náást vestigingsnummer 000036320161 náást 678235210000 op `glazenwassers.online`, en twee adressen (Poelenburg 43 en Twiskeweg 188). De Telefoongids voert een record zonder nummer in de titel | 2 | D | 2026-09-16 |
+| Glazenwasserij het Sopje | 's-Gravenhage (ZH) | glazenwasserij | KvK 90512367 + vestigingsnummer 000056238568, bevestigd in het Compadex-pad — 2023, in het venster. Melis Stokelaan 1022, 2541 ED. Geen eigen domein; Telefoonboek voert hem zonder nummer in de titel | 2 | D | 2026-09-16 |
+| Hoveniersbedrijf Innemee | Elst Ut (gem. Rhenen, UT) | hovenier | **Leeftijd niet vastgesteld — registerbotsing:** KvK 96018542 (2025) náást vestigingsnummer 000001375741 (zeer oude reeks). Christinastraat 7, 3921 BS. De Telefoongids voert daarnaast "Innemee Renovatie en Onderhoudswerken" op dezelfde plaats — één zaak, twee namen, of twee zaken | 2 | D | 2026-09-16 |
+| Kapsalon Near me | Hoofddorp (gem. Haarlemmermeer, NH) | kapsalon | KvK 93634080 + vestigingsnummer 000059161892, beide recent en consistent — 2024, in het venster. Geen eigen domein. **De handelsnaam is letterlijk een zoekterm:** twee gerichte adresronden liepen allebei vol met generieke "kapsalon Hoofddorp"-resultaten en gaven de zaak zelf niet terug. Dat is een eigenschap van de naam, geen tekort aan ronden | 2 | D | 2026-09-16 |
+
+**Te tellen met** `grep -cE '^\|.*\| D \| 2026-09-16 \|$' geen-emailadres.md` — zes
+regels, en de kop erboven zegt zes. Het patroon is verankerd op `^\|` en `\|$` om
+dezelfde reden als in `bellijst.md`: onverankerd telt deze regel zichzelf mee en
+geeft zeven.

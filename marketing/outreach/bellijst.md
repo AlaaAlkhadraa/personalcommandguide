@@ -850,3 +850,19 @@ vorm omgezet, wat de correctie van 1.55 is.
 | Arets Hoveniersbedrijf Peter | Holtum (gem. Sittard-Geleen, LB) | hovenier | 046-4853147 | — | E-mailveld leeg in de gidstitel. 2026-09-16 lane C |
 | Garden Company | Middelburg (ZL) | hovenier | 06-20014917 | — | E-mailveld leeg in de gidstitel. Noordsingel 6. 2026-09-16 lane C |
 | Trimsalon bij Peet | Nuenen (gem. Nuenen c.a., NB) | hondentrimsalon | 06-24681558 | — | **De belbaarste regel van deze acht.** KvK 90009908 uit de transfirm-URL zet de zaak in 2023 en dus midden in het venster, en de klantenstopronde (1.34, mét "geen nieuwe honden") is schoon. Drie adresronden gaven niets. **LET OP vóór het bellen:** transfirm voert Gulberg 37 en doggo voert Gulberg 39 — noem geen huisnummer. 2026-09-16 lane C |
+## Lane D — woensdag 16 september 2026 (Noord-Holland / Zuid-Holland / Utrecht)
+
+Eén regel. De andere zes geen-websitedossiers van deze lane hadden géén
+telefoonnummer en staan daarom in `geen-emailadres.md` (1.24: een belregel zonder
+nummer is geen belregel). Herkomst in de vorm die dit bestand voert, per 1.55.
+
+| Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
+|---|---|---|---|---|---|
+| Trimsalon Nissewaard | Spijkenisse (gem. Nissewaard, ZH) | hondentrimsalon | 06-47027522 | — | 2026-09-16 lane D. Nummer op de Bottin- en bestehondentrimmers-vermelding. Borstelgras 87. Geen eigen domein, geen e-mailadres in twee ronden, en geen registergetal in enige gids — dus ook de leeftijd is niet vastgesteld |
+
+**Te tellen met** `grep -cE '^\|.*2026-09-16 lane D.*\|$' bellijst.md` — één regel,
+en de kop erboven zegt één. **Het patroon is bewust verankerd op `^\|` en `\|$`:**
+het onverankerde `grep -c "2026-09-16 lane D"` geeft hier **twee**, omdat deze
+telregel zelf de tekenreeks draagt. Dat is geen theorie — ik ving het bij het
+natellen, en het is dezelfde klasse fout als een kop die een ander aantal
+aankondigt dan er rijen onder staan.
