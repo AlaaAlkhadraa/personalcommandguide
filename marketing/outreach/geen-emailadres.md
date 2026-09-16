@@ -1439,3 +1439,16 @@ vóór het schrijven: nul rijen.
 **Te tellen met** `grep -cE '^\|.*\| B \| 15-09-2026 \|$' geen-emailadres.md` — acht regels, en de kop
 erboven zegt acht. Dat is de correctie van 1.40 op een kop die ooit "Vijf zaken"
 aankondigde met negen rijen eronder.
+
+## 2026-09-16 — lane C (Limburg, Noord-Brabant, Zeeland)
+
+Twee zaken. Allebei staan ze op leeftijd binnen het venster en allebei vallen ze
+uitsluitend op het kanaal — en anders dan de acht van gisteren dragen deze twee
+ook geen telefoonnummer in de bruikbare laag, dus zij worden geen belregel (1.24).
+
+Te tellen met `grep -cE '^\|.*\| C \| 2026-09-16 \|$' marketing/outreach/geen-emailadres.md` — twee regels.
+
+| Bedrijf | Plaats | Sector | Wat er wel is | Ronden | Lane | Datum |
+|---|---|---|---|---|---|---|
+| Zegyesmetjes | Bergen op Zoom (NB) | glazenwasserij | KvK 86772260 uit de transfirm-URL (867722600000) — 2022, vier jaar, midden in het venster. Buiten `transfirm.nl` NUL webaanwezigheid: geen eigen domein, geen gidsvermelding, geen telefoon, geen social. Drie ronden op naam, op naam+plaats+e-mail en op naam+sector gaven alle drie uitsluitend andere Bergen op Zoomse glazenwassers | 3 | C | 2026-09-16 |
+| Autosloperij Limburg | Maasbree (gem. Peel en Maas, LB) | garage/autodemontage | KvK 83017364 en vestigingsnummer 000049218271 uit de transfirm-URL — 2021, in het venster. Eigen domein `autosloperijlimburg.nl`. Het e-mailadres staat nergens in de bruikbare laag: de eigen contactregel zegt "stuur een e-mail" zonder adres, en het telefoonnummer verschijnt alleen in de samenvattende alinea, die per 1.20(a) geen bron is | 2 | C | 2026-09-16 |

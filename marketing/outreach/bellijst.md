@@ -786,13 +786,13 @@ zaak vandaag draait.
 
 | Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
 |---|---|---|---|---|---|
-| Ster Glazenwasserij De | Woudrichem (gem. Altena, NB) | glazenwasserij | 0183-309247 | — | Geen e-mailveld in de gidstitel, geen KvK-nummer in de bruikbare laag, dus geen leeftijd (lane C, 15-09) |
-| Ribaldus Hovenier-Straatmaker | Kerkrade (LB) | hovenier | 06-42205550 | — | E-mailveld leeg in de gidstitel; geen eigen domein gevonden. Marktstraat 33 (lane C, 15-09) |
-| ERA Boomverzorging Hovenier Houtwerken | Beringe (gem. Peel en Maas, LB) | hovenier/boomverzorging | 06-25137699 | — | E-mailveld leeg in de gidstitel. Hoogstraat 38 (lane C, 15-09) |
-| Henselmans Hoveniers | Heeze (gem. Heeze-Leende, NB) | hovenier | 040-2261989 | — | E-mailveld leeg in de gidstitel (lane C, 15-09) |
-| Hoveniersbedrijf Van Bokhoven | 's-Hertogenbosch (NB) | hovenier | 073-6149679 | — | E-mailveld leeg in de gidstitel (lane C, 15-09) |
-| Timmers Glazenwassersbedrijf M P | Helmond (NB) | glazenwasserij | 0492-529187 | — | E-mailveld leeg in de gidstitel; geen KvK-nummer in de bruikbare laag (lane C, 15-09) |
-| Bruggen Schoonmaakbedrijf vd | Vught (NB) | glazenwasserij | 073-6564860 | — | E-mailveld leeg in de gidstitel; geen KvK-nummer in de bruikbare laag (lane C, 15-09) |
+| Ster Glazenwasserij De | Woudrichem (gem. Altena, NB) | glazenwasserij | 0183-309247 | — | Geen e-mailveld in de gidstitel, geen KvK-nummer in de bruikbare laag, dus geen leeftijd 2026-09-15 lane C |
+| Ribaldus Hovenier-Straatmaker | Kerkrade (LB) | hovenier | 06-42205550 | — | E-mailveld leeg in de gidstitel; geen eigen domein gevonden. Marktstraat 33 2026-09-15 lane C |
+| ERA Boomverzorging Hovenier Houtwerken | Beringe (gem. Peel en Maas, LB) | hovenier/boomverzorging | 06-25137699 | — | E-mailveld leeg in de gidstitel. Hoogstraat 38 2026-09-15 lane C |
+| Henselmans Hoveniers | Heeze (gem. Heeze-Leende, NB) | hovenier | 040-2261989 | — | E-mailveld leeg in de gidstitel 2026-09-15 lane C |
+| Hoveniersbedrijf Van Bokhoven | 's-Hertogenbosch (NB) | hovenier | 073-6149679 | — | E-mailveld leeg in de gidstitel 2026-09-15 lane C |
+| Timmers Glazenwassersbedrijf M P | Helmond (NB) | glazenwasserij | 0492-529187 | — | E-mailveld leeg in de gidstitel; geen KvK-nummer in de bruikbare laag 2026-09-15 lane C |
+| Bruggen Schoonmaakbedrijf vd | Vught (NB) | glazenwasserij | 073-6564860 | — | E-mailveld leeg in de gidstitel; geen KvK-nummer in de bruikbare laag 2026-09-15 lane C |
 
 **Zeven rijen, geteld met `grep -c "^| .*lane C, 15-09" bellijst.md`** (de kale
 vorm zonder het rij-anker telt er een meer, want de telzin bevat de tekenreeks
@@ -825,3 +825,28 @@ tweede regel onder een bestaande.
 Alle zes dragen een streepje in de kolom Gedateerd levensteken: er is van geen van de zes
 een gedateerd spoor gevonden, en de kop van dit bestand zegt wat dat betekent — bestaat en
 op profiel, maar niet aantoonbaar draaiend. Wie belt, belt de bovenste groep eerst.
+
+## Lane C — woensdag 16 september 2026 (Limburg / Noord-Brabant / Zeeland)
+
+Acht belregels. Alle acht komen uit dezelfde bronklasse: de tariefgidsen
+`kostenglazenwasser.nl` en `kostentuinman.nl` voeren naam, plaats én telefoon in
+de URL-titel, maar laten het e-mailveld in die titel leeg. Het nummer staat dus
+in de bruikbare laag en het adres niet — dat is de reden dat deze acht een
+belregel zijn en geen kaart (1.24).
+
+Te tellen met `grep -cE '^\|.*2026-09-16 lane C' marketing/outreach/bellijst.md` —
+acht regels; de kale `grep -c` geeft 10, want de twee regels van deze alinea
+dragen de tekenreeks ook. Dat verschil is precies waar 1.55 over gaat. De herkomstvorm is `2026-09-16 lane C`, de vorm die dit bestand voert;
+mijn zeven regels van 15-09 zijn vandaag van `(lane C, 15-09)` naar diezelfde
+vorm omgezet, wat de correctie van 1.55 is.
+
+| Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
+|---|---|---|---|---|---|
+| Wilms Glazenwasserij | Grubbenvorst (gem. Horst aan de Maas, LB) | glazenwasserij | 077-3662911 | — | E-mailveld leeg in de gidstitel; geen KvK-nummer in de bruikbare laag, dus geen leeftijd. Gielenstraat 26, 5971 VP. 2026-09-16 lane C |
+| Bal-Manders J B | Nuenen (gem. Nuenen c.a., NB) | glazenwasserij | 040-2838856 | — | E-mailveld leeg in de gidstitel; geen KvK-nummer in de bruikbare laag. 2026-09-16 lane C |
+| Gubbels Hoveniersbedrijf en Bloemisterij | Lierop (gem. Someren, NB) | hovenier | 0492-331841 | — | E-mailveld leeg in de gidstitel; geen eigen domein gevonden. 2026-09-16 lane C |
+| Rob Vereijken Hoveniers | Helmond (NB) | hovenier | 06-22865803 | — | E-mailveld leeg in de gidstitel. Mobiel nummer, dus vermoedelijk eenmanszaak. 2026-09-16 lane C |
+| Maas Hoveniersbedrijf Patrick | Etten-Leur (NB) | hovenier | 076-5015118 | — | E-mailveld leeg in de gidstitel. 2026-09-16 lane C |
+| Arets Hoveniersbedrijf Peter | Holtum (gem. Sittard-Geleen, LB) | hovenier | 046-4853147 | — | E-mailveld leeg in de gidstitel. 2026-09-16 lane C |
+| Garden Company | Middelburg (ZL) | hovenier | 06-20014917 | — | E-mailveld leeg in de gidstitel. Noordsingel 6. 2026-09-16 lane C |
+| Trimsalon bij Peet | Nuenen (gem. Nuenen c.a., NB) | hondentrimsalon | 06-24681558 | — | **De belbaarste regel van deze acht.** KvK 90009908 uit de transfirm-URL zet de zaak in 2023 en dus midden in het venster, en de klantenstopronde (1.34, mét "geen nieuwe honden") is schoon. Drie adresronden gaven niets. **LET OP vóór het bellen:** transfirm voert Gulberg 37 en doggo voert Gulberg 39 — noem geen huisnummer. 2026-09-16 lane C |
