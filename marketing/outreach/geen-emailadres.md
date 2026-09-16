@@ -1442,16 +1442,26 @@ aankondigde met negen rijen eronder.
 
 ## 2026-09-16 — lane C (Limburg, Noord-Brabant, Zeeland)
 
-Twee zaken. Allebei staan ze op leeftijd binnen het venster en allebei vallen ze
-uitsluitend op het kanaal — en anders dan de acht van gisteren dragen deze twee
+Drie zaken. Alle drie staan ze op leeftijd binnen het venster en alle drie vallen
+ze uitsluitend op het kanaal — en anders dan de acht van gisteren dragen deze drie
 ook geen telefoonnummer in de bruikbare laag, dus zij worden geen belregel (1.24).
 
-Te tellen met `grep -cE '^\|.*\| C \| 2026-09-16 \|$' marketing/outreach/geen-emailadres.md` — twee regels.
+Te tellen met `grep -cE '^\|.*\| C \| 2026-09-16 \|$' marketing/outreach/geen-emailadres.md` — drie regels.
+
+**Correctie Azzouz, 16-09.** De derde rij (Administratiekantoor Mans) stond tot
+deze verificatie als losse regel onderaan het bestand, onder de slotregel van de
+lane A-sectie, terwijl de kop hierboven "Twee zaken" aankondigde en de telregel
+"twee regels" zei. De rij staat nu hier en beide tellingen zijn bijgewerkt. De
+lane-kolom stond wél goed op `C`, en dáárdoor gaf het verankerde commando de hele
+tijd drie — de kolom die de directives hiervoor invoerden, heeft precies gedaan
+waarvoor hij is ingevoerd.
 
 | Bedrijf | Plaats | Sector | Wat er wel is | Ronden | Lane | Datum |
 |---|---|---|---|---|---|---|
 | Zegyesmetjes | Bergen op Zoom (NB) | glazenwasserij | KvK 86772260 uit de transfirm-URL (867722600000) — 2022, vier jaar, midden in het venster. Buiten `transfirm.nl` NUL webaanwezigheid: geen eigen domein, geen gidsvermelding, geen telefoon, geen social. Drie ronden op naam, op naam+plaats+e-mail en op naam+sector gaven alle drie uitsluitend andere Bergen op Zoomse glazenwassers | 3 | C | 2026-09-16 |
 | Autosloperij Limburg | Maasbree (gem. Peel en Maas, LB) | garage/autodemontage | KvK 83017364 en vestigingsnummer 000049218271 uit de transfirm-URL — 2021, in het venster. Eigen domein `autosloperijlimburg.nl`. Het e-mailadres staat nergens in de bruikbare laag: de eigen contactregel zegt "stuur een e-mail" zonder adres, en het telefoonnummer verschijnt alleen in de samenvattende alinea, die per 1.20(a) geen bron is | 2 | C | 2026-09-16 |
+| Administratiekantoor Mans (Mans Administratie) | Sint Odiliënberg (gem. Roerdalen, LB) | administratiekantoor | KvK 90942760 uit de transfirm-URL (909427600000) — 2023, drie jaar, midden in het venster, één werkzaam persoon. Molenweg 12, 6077 BC. Geen eigen domein; telefoonboek en oozo voeren het nummer achter een klik en dus niet in de bruikbare laag, zodat ook een belregel niet kan (1.24) | 1 | C | 2026-09-16 |
+
 ## 2026-09-16 — lane D (Noord-Holland, Zuid-Holland, Utrecht)
 
 Zes zaken. Alle zes zonder eigen domein en zonder telefoonnummer in de bruikbare
@@ -1517,4 +1527,3 @@ omgezet draait een dagtelling beide vormen, precies zoals 1.47 voorschrijft.
 
 **Te tellen met** `grep -cE '^\|.*\| A \| 2026-09-16 \|$' geen-emailadres.md` — twee regels,
 en de kop erboven zegt twee.
-| Administratiekantoor Mans (Mans Administratie) | Sint Odiliënberg (gem. Roerdalen, LB) | administratiekantoor | KvK 90942760 uit de transfirm-URL (909427600000) — 2023, drie jaar, midden in het venster, één werkzaam persoon. Molenweg 12, 6077 BC. Geen eigen domein; telefoonboek en oozo voeren het nummer achter een klik en dus niet in de bruikbare laag, zodat ook een belregel niet kan (1.24) | 1 | C | 2026-09-16 |

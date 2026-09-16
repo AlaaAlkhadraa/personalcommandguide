@@ -1,6 +1,7 @@
 # Product Marketing Context — ZEVREN
 
-**Document version:** 1.56 · 2026-09-16 (1.46 t/m 1.50 alsnog vastgelegd; reeks A+B vol)
+**Document version:** 1.59 · 2026-09-16 (reeks A+B 1.41 t/m 1.50 vol en alsnog
+vastgelegd; reeks C+D staat op 1.59, 1.60 vrij)
 Elke marketingskill in `.claude/skills/` leest dit document eerst.
 Feiten hier zijn bindend; een skill-advies dat ermee botst, verliest.
 
@@ -466,6 +467,46 @@ van de directives is gedraaid — tien namen, met in één regel wat zij aan lee
 adres en gedateerd spoor teruggeeft. Lane C mat op twee titels plus twee nulronden
 en heeft er correct geen enkel dossier mee gevuld.
 
+### De route faalt op de aanvoer en niet op de decodering (1.59)
+
+**Voor een klein account levert de zoekindex géén post-URL's, dus de 1.38/1.56-route
+sluit poort (a) structureel niet voor het profiel dat de order van 24 augustus
+bejaagt. Noteer de accountomvang in plaats van er ronden in te steken.**
+
+Dit weerspreekt 1.56 niet, het vult hem aan, en het onderscheid is de hele regel:
+1.56 gaat over hoe je een post-URL *leest* als je er een hebt, 1.59 over of je er
+ooit een *krijgt*. De decodering die op acht dragers is geijkt, blijft geldig; zij
+heeft voor ons profiel alleen meestal geen voorwerp.
+
+**Het meetontwerp is wat deze regel draagt.** Lane D draaide op 16-09 identieke
+zoekopdrachten met een negatieve én een positieve controle in dezelfde ronde. Negatief:
+`@glazenwasserijschouwen` en HondenTrimsalon Paradise gaven over vier ronden
+uitsluitend de profiel-URL. Positief, in diezelfde ronden:
+`@delfseglazenwasser/video/7369868865766984992`,
+`@schoonmaakservicewilde/video/7351030150366072097`,
+`@omroepbrabant/video/7241652151020211483`,
+`@jjvbglazenwasser/video/7581777152559910177`, plus Facebook-permalinks van vijf
+ándere trimsalons. Dat sluit "de zoekopdracht was verkeerd" uit — negen URL's, twee
+dossiers, twee platforms. **De verificatie heeft het in een derde sessie met ándere
+zoekopdrachten gereproduceerd** en kreeg op allebei de dossiers eveneens alleen de
+profielpagina.
+
+**Uitdrukkelijk niet in de regel: een drempel.** Lane D's verklaring "onder circa
+honderd volgers" rust op één gemeten account (Schouwen, 67 volgers); van Paradise is
+geen volgersaantal gemeten en `@omroepbrabant` is een omroep. Het verschijnsel staat
+op negen URL's en drie sessies, het getal op één meting. De regel spreekt daarom van
+een **klein account** en laat de drempel open tot iemand hem meet.
+
+**Waarom dit meer is dan een route-aantekening.** Zes diensten lang luidt de
+verklaring voor poort (a) "de omgeving blokkeert `WebFetch`". Die verklaring is waar
+en niet volledig: de vervangende route die dit document aanwijst, is niet beschikbaar
+voor precies de bedrijven die het profiel definieert — een groeifasezaak met een
+levende maar kleine Instagram is per definitie te klein om per post geïndexeerd te
+worden. **De route werkt voor bedrijven die wij niet willen en faalt voor bedrijven
+die wij wel willen.** Poort (a) is daarmee een aanvoerprobleem en geen inzetprobleem,
+en dat is wat het beslispunt over het netwerkbeleid bij de owner werkelijk inhoudt.
+De rem van 1.56 blijft staan: bewijsroute, geen jaagroute.
+
 **Een gedateerde review op een vakgidspagina is pas een levensteken als de
 datum per review verschilt EN de reviewtekst over dít bedrijf gaat (1.15).**
 Dit is de gevaarlijkste variant van de uitgeversstempel hierboven, want hij
@@ -780,6 +821,37 @@ het geïndexeerde deel van de markt, en het prime target van de owner (24 august
 zit juist in het deel dat geen gids indexeert. Eén geval staat open en is terecht
 niet teruggedraaid: De Haan Glazenwasserij, Sint Annaparochie, 45691533, in de
 gevoelige band.
+
+### Eén gids, twee getallen op hetzelfde vestigingsnummer (1.58)
+
+**Voert TransFirm op hetzelfde vestigingsnummer twee verschillende voorloopgetallen,
+dan draagt géén van beide de leeftijd; sluit het dossier pas op een drager buiten
+TransFirm.**
+
+1.40(d) gaat over de **soort** van een getal — welk register draagt het. Deze regel
+gaat over de **betrouwbaarheid van het veld zelf**: dezelfde gids, dezelfde
+padpositie, dezelfde zaak, twee verschillende getallen.
+
+Drager: **Cleaning Force, 's-Gravenhage** (lane D, 16-09). Drie TransFirm-URL's in
+één dienst op vestigingsnummer `000012433330`:
+`96397330-000012433330-cleaning-force` tegenover
+`65527631-000012433330-cleaning-force` tegenover `655276310000-cleaning-force`. Het
+eerste getal zet de zaak in 2025 en ruim binnen het venster, het tweede in circa 2016
+en ruim erbuiten. De controle buiten de bron beslist:
+`glazenwassers.online/cleaning-force/65527631` voert 65527631 en de eigen
+bedrijfstekst zegt "sinds 2004". **Zonder die controle was een zaak van tweeëntwintig
+jaar als groeifasebedrijf geboekt.**
+
+**Het gewicht komt uit de context.** De directives van deze week wijzen `transfirm.nl`
+aan als hoofdroute voor beide lanes en lane D haalt er 34 van zijn 48 dossiers uit.
+Een hoofdroute die zichzelf tegenspreekt, verdient een eigen rem.
+
+**De rem is goedkoop en asymmetrisch, en die asymmetrie hoort in de regel.** Hij eist
+een tweede drager alléén op dossiers waarvan het TransFirm-getal *binnen* het venster
+valt. Valt het buiten, dan hoeft er niets: een tweede drager zou het oordeel daar
+alleen kunnen verzachten, en de fout die deze regel voorkomt is de tegenovergestelde.
+Lane D paste dat uit zichzelf al zo toe. De eenzijdige-kostentoets van 1.31, 1.34 en
+1.37 geldt onverkort.
 
 ### De handle bindt in de titel van de post, niet in dezelfde resultatenlijst (1.40e)
 
@@ -1217,6 +1289,44 @@ Voorbeeld, na te rekenen: **Garage Huis Eemland (Amersfoort)** staat op
 vestigingsnummer 000015673693, en onder datzelfde KvK-nummer hangen meer
 vestigingen. De onderneming is elf jaar; de vestiging aan de Zwaaikom vijf.
 
+### Twee registers die elkaar tien jaar tegenspreken, geven geen leeftijd (1.57)
+
+**Een registergetal binnen het venster náást een vestigingsnummer uit een tien of
+meer jaar oudere reeks is een leeftijds*botsing*. De uitkomst is "leeftijd niet
+vastgesteld" en nooit "binnen het venster".**
+
+1.15 en 1.16 zeggen dát een vers registergetal een oude zaak kan verbergen; 1.40(c)
+zegt dat een vestigingsnummer mag begrenzen waar het niet mag dateren. Wat hier
+bijkomt is de **uitkomst bij tegenspraak**, en dat is de helft die in de praktijk
+misgaat: bij twee getallen is de verleiding om het gunstigste te kiezen. Deze regel
+verbiedt dat en laat de uitkomst per dossier verschillen — de botsing kan een dossier
+sluiten, maar zij mag nooit een optimistisch oordeel dragen.
+
+**Vier dragers, twee lanes, één dag** (16-09), op drie verschillende bronnen:
+
+- **Hoveniersbedrijf Innemee, Elst Ut (lane D):** KvK 96018542 (2025) náást
+  vestigingsnummer 000001375741 uit de oude reeks; de Telefoongids voert daarnaast
+  "Innemee Renovatie en Onderhoudswerken" op dezelfde plaats. Sluit niets, maar
+  verbiedt "binnen het venster".
+- **Tojina Schoonmaak en Glazenwasserij, Oegstgeest (lane D):** KvK 90528417 (2023)
+  náást 000005150019, plus "sinds 2000 actief" op de eigen site. **De enige van de
+  vier die de botsing hard sluit** — en hij sluit hem langs 1.16: de eigen pagina
+  verslaat het register.
+- **Centraal Glazenwasserij, Zaandam (lane D):** 86101862 náást 000036320161 náást
+  678235210000 op een derde gids. Drie getallen, één naam, twee adressen.
+- **Autogalerij Brabant, Kaatsheuvel of Waalwijk (lane C):** twee KvK-nummers die
+  **vijfendertig jaar** uit elkaar liggen (84220244 en 42068877), drie
+  vestigingsnummers en twee plaatsen onder één handelsnaam — plus een "Autoplaza
+  Brabant" in dezelfde plaats. Lane C stelde niets vast en boekte
+  `not fit - leeftijd niet vastgesteld`. Dat is exact de uitkomst die deze regel eist.
+
+**De les zit in de volgorde, en zij is van lane C:** een zaak met twee registraties
+ziet er op elke afzonderlijke gids uit als een gewoon dossier. Alleen het náást
+elkaar leggen maakt de botsing zichtbaar, en dat gebeurt alleen als je ná het vinden
+van een nummer nog één keer verder kijkt. De eenzijdige-kostentoets van 1.31, 1.34 en
+1.37 geldt onverkort: deze regel kan geen goede kaart doden, alleen een optimistisch
+oordeel tegenhouden.
+
 ### Een moderne dienstpositionering is geen leeftijd (1.33)
 
 Een techniek, een handelsnaam of een dienstverhaal dat van ná 2018 dateert, meet
@@ -1558,6 +1668,79 @@ allebei de gevallen door de verificatie nagerekend en juist bevonden.
 
 ## Changelog
 
+- 1.59 (2026-09-16, Azzouz, verificatie lanes C+D): drie regels uit het bereik
+  1.51 t/m 1.60. **Ik neem er drie en laat 1.60 vrij**, op dezelfde grond als bij
+  1.53 en 1.56: het is woensdag, de week loopt tot en met zondag, en een reeks in
+  één dienst leegtrekken is even duur als een reeks die te krap is. Acht kandidaten
+  staan met hun dragers geparkeerd in
+  `marketing/outreach/2026-09-16-cd-verified.md`. **Geen van beide lanes bood een
+  kaart aan — nul uit 123 volledig beoordeelde dossiers (lane C 75, lane D 48)** —
+  dus alle drie komen uit het werk eromheen.
+  **(a) 1.57 — twee registers die elkaar tien jaar tegenspreken, geven geen
+  leeftijd**, bij "Een moderne dienstpositionering is geen leeftijd". Dit is de best
+  gedragen regel van de dag omdat **twee lanes hem op dezelfde dag onafhankelijk
+  raakten**, in twee provincies en op drie bronnen: Innemee (96018542 náást
+  000001375741), Tojina (90528417 náást 000005150019 plus "sinds 2000" op de eigen
+  site — de enige die de botsing sluit), Centraal Glazenwasserij (drie getallen, één
+  naam) en uit lane C Autogalerij Brabant (twee KvK-nummers vijfendertig jaar uit
+  elkaar, drie vestigingsnummers, twee plaatsen). Wat de regel toevoegt boven 1.15,
+  1.16 en 1.40(c) is niet de val maar de **uitkomst bij tegenspraak**: nooit "binnen
+  het venster". Lane C boekte Autogalerij Brabant uit zichzelf al zo.
+  **(b) 1.58 — één gids, twee getallen op hetzelfde vestigingsnummer**, bij "Een
+  gids die één getal toont, zegt niet welk getal het is". Drager: Cleaning Force,
+  's-Gravenhage — drie TransFirm-URL's in één dienst op vestigingsnummer
+  `000012433330` met `96397330` (2025) én `65527631` (circa 2016) ervoor; de controle
+  buiten de bron (`glazenwassers.online/cleaning-force/65527631` plus "sinds 2004" in
+  de eigen tekst) draaide het oordeel om. Eén dossier, maar met drie URL's en een
+  controle die **had kunnen falen**. 1.40(d) gaat over de *soort* van een getal, deze
+  regel over de *betrouwbaarheid van het veld zelf*. Het gewicht komt uit de context:
+  de directives wijzen `transfirm.nl` deze week aan als hoofdroute voor beide lanes
+  en lane D haalt er 34 van zijn 48 dossiers uit. De rem is asymmetrisch — tweede
+  drager alleen waar het getal *binnen* het venster valt — en lane D paste die
+  asymmetrie uit zichzelf al toe.
+  **(c) 1.59 — de 1.38/1.56-route faalt op de aanvoer en niet op de decodering**,
+  bij "Wiens daad draagt de datum", direct onder 1.56. **Dit weerspreekt mijn eigen
+  regel van gisteren niet, het vult hem aan**, en het onderscheid is de hele waarde:
+  1.56 gaat over hoe je een post-URL leest als je er een hebt, 1.59 over of je er ooit
+  een krijgt. Lane D's meetontwerp draagt hem: identieke zoekopdrachten met een
+  negatieve én een positieve controle in dezelfde ronde — nul post-URL's voor
+  `@glazenwasserijschouwen` en Paradise, wél post-URL's mét ID voor vier andere
+  accounts en vijf andere trimsalons. Negen URL's, twee dossiers, twee platforms.
+  **Met mijn eigen reproductie in een derde sessie**, met ándere zoekopdrachten en
+  uitgevoerd vóór ik zijn conclusie woog: op allebei de dossiers eveneens alleen de
+  profielpagina. **Uitdrukkelijk niet opgenomen: het getal honderd.** "Onder circa
+  honderd volgers" rust op één gemeten account (67 volgers); het verschijnsel staat
+  op negen URL's en drie sessies, de drempel op één meting, dus de regel spreekt van
+  een klein account en laat de drempel open. De rem van 1.56 blijft staan:
+  bewijsroute, geen jaagroute. **Waarom dit de belangrijkste van de drie is:** zes
+  diensten lang luidt de verklaring voor poort (a) "de omgeving blokkeert `WebFetch`",
+  en die verklaring is waar en niet volledig. De vervangende route die dit document
+  aanwijst, bestaat niet voor precies de bedrijven die het profiel van 24 augustus
+  definieert. Poort (a) is daarmee een **aanvoerprobleem en geen inzetprobleem**, en
+  dat verandert wat het beslispunt over het netwerkbeleid bij de owner inhoudt.
+  **Uitdrukkelijk niet opgenomen, en geen van de acht is zwak** (alle acht met hun
+  dragers in het verificatiebestand): de record-ID-als-eenheid-regel van lane C (5
+  dragers, maar hij raakt de jaagvolgorde van 1.20(b) en 1.19 wijst dat naar het
+  weekrapport); poort (e) als uitputtingsmeting van een bron (24 van 75 bij lane C, 15
+  van 48 bij lane D — sterk, maar het is een uitspraak over het sectorplan); de
+  osmose/softwash-meting van lane C (5 dragers, en zij raakt de gróndtekst van mijn
+  eigen sectorplan van deze week, dus zij hoort bij de herziening daarvan); de
+  KvK-band-asymmetrie (1 drager, deels opgevangen door 1.57); de bronklasse-regel
+  (vierde drager, rijp voor zondag); de 1.54-botsing met het ronde-verbod op
+  geparkeerde dossiers (2, en het is een order van de owner tegen een regel van mij,
+  dus hij beslist); en de laatste herkomstvorm in `bellijst.md` (1 rij, van lane A).
+  **Eén correctie op mijn eigen regel, te klein voor een nummer en te concreet om te
+  laten verdampen:** 1.44 telt `competitor-profiling` op een `$`-telling van 1, maar
+  zijn enige `$` is `$[estimated]` (r. 287) — geen `$N`, dus onvervangbaar, dus hij
+  hoort in de nulgroep en een argument is daar toegestaan. Gemeten met
+  `grep -oE '\$[0-9]+'`. **Eén handhavingspunt dat geen regel is:** lane C riep
+  `marketing-psychology` aan mét argument, tegen 1.44; de schade was nul omdat hij elk
+  citaat met `grep -n` van schijf haalde, en alle 21 citaten bleken exact. De ene
+  veiligheidsmaatregel ving de andere op. Lane D riep correct zonder argument aan maar
+  droeg één citaat zonder regelnummer. **Geen van beide lanes heeft de regel dus
+  helemaal, en dat komt doordat hij in twee documenten ligt** — aanroepvorm in
+  1.40(g)/1.44, citaatvorm in de directives. Dat hoort in het weekrapport als vormpunt
+  en niet als verwijt aan een lane.
 - 1.50 (vastgesteld 2026-09-15, alsnog vastgelegd 2026-09-16, Azzouz, verificatie
   lanes A+B): **dit is een herstelboeking en geen nieuwe reeks.** De verificatie van
   15-09 heeft 1.46 t/m 1.50 volledig uitgeschreven, met dragers, in
