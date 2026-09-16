@@ -1,6 +1,6 @@
 # Product Marketing Context — ZEVREN
 
-**Document version:** 1.56 · 2026-09-15
+**Document version:** 1.56 · 2026-09-16 (1.46 t/m 1.50 alsnog vastgelegd; reeks A+B vol)
 Elke marketingskill in `.claude/skills/` leest dit document eerst.
 Feiten hier zijn bindend; een skill-advies dat ermee botst, verliest.
 
@@ -1466,7 +1466,126 @@ wil houden.
   open staat: niet inzetten, niet sluiten. Eén antwoord opent of sluit beide
   groepen tegelijk.
 
+
+### Twee tellingen over dezelfde eenheid is een gefaalde telling (1.46)
+
+Een tabel die door een nieuwe versie wordt vervangen, wordt **verwijderd**, niet
+onder de nieuwe gelaten. Controleer vóór het pushen met `grep -c "^| \*\*Totaal\*\*"`
+dat er per eenheid één tekorttabel staat.
+
+De regel bindt ook waar de twee tellingen in **verschillende** tabellen staan: telt
+een sectorquotatabel een rij mee die de tekorttabel al onder een andere grond telt,
+dan is het quotum niet gehaald maar dubbelgeteld. Een rij die op een eerdere dienst
+al is geleverd, telt nooit mee voor het quotum van vandaag.
+
+Dragers: lane A 15-09, twee tabellen over 49 dossiers die op vier van de zeven
+gronden verschillen (poort (f) 10 tegen 14, lead 12 tegen 7, buiten profiel 5 tegen
+6), waarvan de tweede aantoonbaar onbereikbare getallen voert; lane A 16-09, waar
+rij 29 zowel onder de zeventien glazenwasserij-ledgerrijen als onder de acht van de
+geen-websitegroep staat, zodat een quotum van 7 als 8 wordt gerapporteerd.
+
+### Eén datumvorm op de bestemmingsborden (1.47)
+
+Vorm: `YYYY-MM-DD`, de huisvorm van `geen-emailadres.md`. Zolang de oude rijen niet
+zijn omgezet, draait een dagtelling **beide** vormen.
+
+**De kolomvraag is op 16-09 beslist, en zij is beslist tegen de kolom.** 1.47 en
+1.55 botsten op `bellijst.md`: 1.47 wil een eigen datumkolom, 1.55 wil per bestand
+één herkomstvorm, en die van `bellijst.md` is de datum vooraan in de laatste kolom.
+Lane A en lane B losten dat op dezelfde dag tegengesteld op — lane A hield de
+huisvorm aan en meldde de botsing, lane B zette zes nieuwe kolommen neer — en het
+resultaat is dat `bellijst.md` sinds 16-09 twee onverenigbare rijvormen draagt op
+één datum: precies wat 1.47 moest uitroeien. **De beslissing: op een bord met meer
+dan honderd bestaande rijen wint 1.55. De datum gaat in ISO vooraan in de laatste
+kolom, niet in een nieuwe kolom, totdat één ronde het hele bestand omzet.** Wie de
+botsing meldt in plaats van hem stil op te lossen, handelt goed; wie een zevende
+kolom neerzet voor één rij van 829, maakt het bord onteltbaar.
+
+Dragers: 8 rijen `15-09-2026` tegen 11 rijen `2026-09-15` op één dag in
+`geen-emailadres.md`, 53 rijen in de afwijkende vorm over het hele bestand;
+`bellijst.md` met 136 rijen zonder leesbare datum; en op 16-09 één rij in
+kolomvorm (lane B) tegen zes in notitievorm (lane A) in hetzelfde bestand.
+
+### Een jaartal in een gidstitel hoort bij de gids (1.48)
+
+Een jaartal in de titel van een gidspagina hoort bij de **gids**, niet bij het
+bedrijf, en draagt poort (a) nooit. Gidsen herschrijven hun eigen jaarstempel en
+hun eigen aantal op dezelfde URL.
+
+**De regel strekt zich uit tot vacaturebanken** (lane B, 16-09): een datum in de
+titel van een regio- of overzichtspagina van een vacaturebank is de datum van de
+bank en niet die van de werkgever. Alleen een vacature-URL die de werkgever zelf
+in titel of slug benoemt, draagt poort (a) — dezelfde vorm waarop 1.56 de
+Instagram-titelroute toelaat.
+
+Dragers: `hovenier.website/lemelerveld/` gaf in twee ronden van één dienst
+"Top 20 hoveniers Lemelerveld in ① gids [2025]!" en "Top 15 hoveniers uit
+Lemelerveld (2026)"; drie stadspagina's van dezelfde gids gaven lane B op 16-09
+drie verschillende jaarstempels (Winterswijk 2026, Harderwijk 2026, Almere 2025);
+en de Indeed-regiopagina Twente met "12 april 2026" in de titel naast een
+bedrijfskoppeling die uitsluitend in de samenvattende alinea stond (1.20a).
+
+### Het getal in een drimble-pad is het vestigingsnummer (1.49)
+
+Het getal in een `drimble.nl/bedrijf/<plaats>/<getal>/`-pad is het
+vestigingsnummer en is nooit het KvK-nummer (bevestiging van 1.40d over de
+lanegrens).
+
+**Verbreed op 16-09 door lane B: drimble serveert dat nummer mét én zonder
+voorloopnullen.** De vaststelling "het is een vestigingsnummer" blijft staan; de
+vaststelling "zonder voorloopnullen" is géén betrouwbaar kenmerk om het ene
+register van het andere te onderscheiden. **Het pad bepaalt het register, niet de
+opmaak van het getal.**
+
+Dragers: BK Service Cleaning, Leeuwarden — drimble `25979302` en `000025979302`
+naast KvK `95610103`; Liever Buiten Hoveniers, Lemelerveld — drimble `47927879`
+naast vestigingsnummer `000047927879` en KvK `81650817`; Schilders &
+Stukadoorsbedrijf Fleurrijk, Hengelo — `drimble.nl/bedrijf/hengelo/000058583084/`
+met twaalf cijfers, naast KvK `93013353` uit de TransFirm-URL.
+
+### De tekorttabel draagt per grond een kolom met de rijnummers (1.50)
+
+Dat maakt de hele telling in één ronde machinaal controleerbaar in plaats van op
+het woord van de agent: de reeksen moeten de eenheid partitioneren — elk dossier
+precies één keer, geen dubbel, geen gat.
+
+Dragers: lane B 15-09, wiens zeven nummerreeksen 1 t/m 98 exact partitioneren;
+lane A 15-09, wiens tabel zónder rijnummers een tweede, tegenstrijdige tabel vier
+secties lang onopgemerkt droeg. Op 16-09 droegen beide lanes de kolom en
+partitioneerden beide reeksen volmaakt (lane A 1 t/m 70, lane B 1 t/m 52), in
+allebei de gevallen door de verificatie nagerekend en juist bevonden.
+
+
 ## Changelog
+
+- 1.50 (vastgesteld 2026-09-15, alsnog vastgelegd 2026-09-16, Azzouz, verificatie
+  lanes A+B): **dit is een herstelboeking en geen nieuwe reeks.** De verificatie van
+  15-09 heeft 1.46 t/m 1.50 volledig uitgeschreven, met dragers, in
+  `marketing/outreach/2026-09-15-ab-verified.md`, en ze daarna **niet in dit document
+  gezet**. Het gevolg is een dag lang gedragen door het systeem: het fundament sprong
+  van 1.45 naar 1.51, lane A citeerde vandaag 1.46 correct uit een bestand dat geen
+  bindende status heeft, en mijn eigen dienstopdracht van vandaag droeg mij op te
+  toetsen aan 1.46 en 1.47 — twee nummers die op dat moment nergens in dit document
+  stonden. Ik land ze hier woordelijk zoals ze zijn vastgesteld, met twee
+  uitbreidingen die vandaag op eigen dragers zijn gemeten (1.48 naar vacaturebanken,
+  1.49 naar de opmaak van het getal) en met één beslissing die niet kon wachten
+  (de kolomvraag in 1.47). **De reeks 1.41 t/m 1.50 is daarmee vol en dicht.**
+  **De les is niet van een lane en zij is van mij: een regel die alleen in een
+  verdictbestand staat, is geen regel.** Een verificatiedienst is pas af als de
+  regels die zij vaststelt in `.agents/product-marketing.md` staan, niet als zij
+  beschreven zijn. Ik neem dat vanaf nu als vaste laatste handeling vóór de push.
+  **(1.46) Twee tellingen over dezelfde eenheid is een gefaalde telling** — vandaag
+  verbreed naar tellingen die over twee verschillende tabellen dubbelen, op lane A's
+  rij 29 die een quotum van 7 als 8 laat lezen.
+  **(1.47) Eén datumvorm op de bestemmingsborden** — met de kolomvraag beslist tegen
+  de kolom, omdat lane A en lane B haar op 16-09 tegengesteld oplosten en
+  `bellijst.md` daardoor twee rijvormen op één datum draagt.
+  **(1.48) Een jaartal in een gidstitel hoort bij de gids** — uitgebreid tot
+  vacaturebanken op twee dragers over de dag- en dossiergrens.
+  **(1.49) Het getal in een drimble-pad is het vestigingsnummer** — verbreed: het pad
+  bepaalt het register, niet de opmaak van het getal.
+  **(1.50) De tekorttabel draagt per grond een kolom met de rijnummers** — op 16-09
+  door beide lanes gedragen en door mij nagerekend; beide partities sluiten.
 
 - 1.56 (2026-09-15, Azzouz, verificatie lanes C+D): drie regels uit het bereik
   1.51 t/m 1.60. **Ik neem er drie en laat 1.57 t/m 1.60 vrij**, op dezelfde grond
