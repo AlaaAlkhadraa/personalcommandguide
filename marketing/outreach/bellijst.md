@@ -934,3 +934,15 @@ Te tellen met `grep -cE '^\|.*2026-09-17 lane C' marketing/outreach/bellijst.md`
 
 Alle zeven dragen een streepje bij Gedateerd levensteken: van geen van de zeven is
 een gedateerd spoor gevonden. Vier van de zeven hebben een vastnetnummer.
+## Twee zaken — lane A, 2026-09-17 (glazenwasserij, geen-websitegroep)
+
+Te tellen met `grep -cE "^\|.*\| 2026-09-17 lane A\. " bellijst.md` — twee.
+
+| Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
+|---|---|---|---|---|---|
+| THM Glasbewassing | Zwiggelte (gem. Midden-Drenthe, DR) | glazenwasserij | 06-27911754 | — | 2026-09-17 lane A. Nummer in de URL-titel van `glazenwassertarieven.nl/drenthe/zwiggelte/thm-glasbewassing/`. Geen e-mailadres in de titel, geen eigen domein, geen registerpagina, dus leeftijd niet vastgesteld |
+| Eco Glazenwasser Meinen | Hoogeveen (DR) | glazenwasserij | 06-21232726 | — | 2026-09-17 lane A. Nummer in de URL-titel van `glazenwassertarieven.nl/drenthe/hoogeveen/eco-glazenwasser-meinen/`. Geen e-mailadres in de titel, geen eigen domein, leeftijd niet vastgesteld |
+
+Allebei dragen een streepje bij Gedateerd levensteken: van geen van beide is een
+gedateerd spoor gevonden. Allebei een 06-nummer, wat het groeifasevenster
+waarschijnlijker maakt dan een vastnetnummer zonder het te sluiten.

@@ -1551,3 +1551,27 @@ de correctie van 16-09.
 komen uit de registerklasse-bronnen (`trimsalon-zoeken.nl`, `openingstijden.com`,
 `oozo.nl`, Facebook), die een nummer nooit in de bruikbare laag zetten — dat is de
 scheiding die de zeven belregels van dezelfde dienst aan de andere kant staaft.
+## Zeven zaken — lane A, 2026-09-17
+
+Te tellen met `grep -cE '^\|.*\| A \| 2026-09-17 \|$' geen-emailadres.md` — zeven.
+
+| Bedrijf | Plaats | Sector | Wat er wel is | Ronden | Lane | Datum |
+|---|---|---|---|---|---|---|
+| Glazenwasserij Mooi Schoon | Vlagtwedde (gem. Westerwolde, GR) | glazenwasserij | **Op profiel het sterkste dossier van de dienst.** KvK 94302669 + vestiging `000059782323`, op TransFirm én drimble — 2024/25, anderhalf à twee jaar. Utterlagerweg 5. Geen eigen domein: Facebook `61566465045062`, een SumUp-boekingspagina en vier gidsvermeldingen. Adres én telefoonnummer bestaan, maar staan uitsluitend in de samenvattende alinea; de exacte-tekenreeksronde op het adres komt leeg terug (1.20a). Insolventieronde op 94302669: schoon | 2 | A | 2026-09-17 |
+| Smittenberg Glazenwasserij | Groningen (GR) | glazenwasserij | Eenbedrijfspagina `glazenwasser-in.nl/groningen/smittenberg-glazenwasserij`, Maluslaan 10. Geen e-mailadres, geen telefoonnummer en geen registergetal in de bruikbare laag, dus ook geen belregel (1.24) | 1 | A | 2026-09-17 |
+| Briljant | Groningen, Oosterparkwijk (GR) | glazenwasserij | `alleglazenwassers.nl/business/briljant-groningen-oosterparkwijk-000054028477/`, Begoniastraat. Vestigingsnummer, geen KvK-nummer (1.49). NAAMGENOOT: Briljant Schoonmaakbedrijf & Glazenwasserij in Alkmaar is een ander bedrijf (1.53) | 1 | A | 2026-09-17 |
+| Fresh&Clean Glasbewassing | Roden (gem. Noordenveld, DR) | glazenwasserij | `drimble.nl/bedrijf/roden/000046061223/fresh&clean-glasbewassing.html`, Ceintuurbaan West. Het getal is het vestigingsnummer en draagt de leeftijd niet (1.49). Geen adres, geen nummer | 1 | A | 2026-09-17 |
+| De Wit Zonwering en Glasservice | Roden (gem. Noordenveld, DR) | glazenwasserij/zonwering | `drimble.nl/bedrijf/roden/000036143510/de-wit-zonwering-en-glasservice.html`, Hagen. Vestigingsnummer uit een lage reeks. Geen adres, geen nummer | 1 | A | 2026-09-17 |
+| klusbedrijf Verschragen | Groningen (GR) | klusbedrijf | VRIJ QUOTUM. KvK 88959678 + vestiging `000054778336` uit het TransFirm-pad — 2023, midden in het venster. Zilverlaan 111. Het enige bereikbare kanaal in de bruikbare laag is een Werkspot-profiel; geen eigen domein, geen adres, geen nummer | 1 | A | 2026-09-17 |
+| Klusbedrijf Helpman | Groningen (GR) | klusbedrijf | VRIJ QUOTUM. KvK 94889732 uit het TransFirm-pad — 2024/25, midden in het venster. Schubertlaan 13. Eigen domein `klusbedrijfhelpman.nl`, maar het adres zit achter een contactformulier en staat nergens in de bruikbare laag | 1 | A | 2026-09-17 |
+
+**Correctie op de rij van 2026-09-16 in dit bestand — Van Dort Dienstverlening, Sneek.**
+Die rij zegt "geen eigen domein in de zoekresultaten, geen registerpagina, geen nummer
+en geen adres", na één ronde. Een tweede ronde vandaag, met de gidsnaam in de
+zoekopdracht in plaats van de bedrijfsnaam alleen, geeft de titel
+`van Dort Dienstverlening 0651804649 info@vndort.nl` op
+`glazenwassertarieven.nl/friesland/sneek/van-dort-dienstverlening/` — nummer én adres
+in de bruikbare laag. Het domein `vndort.nl` serveert bovendien drie geïndexeerde
+pagina's, dus het lek bestaat niet en de zaak is sowieso geen prospect. Ik laat de
+rij van gisteren staan zodat de meetketen intact blijft; het ledger draagt het nieuwe
+oordeel. **De rij van 16-09 telt niet mee in de zeven van vandaag.**
