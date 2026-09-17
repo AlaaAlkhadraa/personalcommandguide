@@ -1602,3 +1602,30 @@ hierover staat in `2026-09-17-b.md` onder `## Voor het weekrapport`.
 
 **Te tellen met** `grep -cE '^\|.*\| B \| 2026-09-17 \|$' marketing/outreach/geen-emailadres.md` —
 negen regels, en de kop erboven zegt negen.
+## Lane D, donderdag 17 september 2026 — twaalf zaken, waarvan acht uit de geen-websitegroep
+
+Alle twaalf kwamen door de profieltoets of vielen er pas ná poort (b) op. Geen van
+de twaalf gaat naar `bellijst.md`, en dat is vandaag één grond: **geen van hun
+telefoonnummers staat in de bruikbare laag.** `goudengids.nl` voert het nummer
+afgekapt in de URL-titel (`Tel: 06-39531...`), en een nummer uit de samenvattende
+alinea is per 1.20(a) en 1.37 geen nummer. Een belregel zonder betrouwbaar nummer
+is geen belregel (1.24).
+
+| Bedrijf | Plaats | Sector | Wat er wel is | Ronden | Lane | Datum |
+|---|---|---|---|---|---|---|
+| Glamour Pets Hondentrimsalon | Amsterdam, Transvaalbuurt (NH) | hondentrimsalon | KvK 89506049 én vestigingsnummer 000055296661 uit één TransFirm-pad, 2022/23 en dus binnen het venster. Pretoriusstraat 21-H, 1092 EX. Eigen domein `glamourpets.nl` met vijf geïndexeerde `/en/`-pagina's, levende Instagram, VVTN-erkend. Klantenstopronde schoon. Drie ronden zonder adres: naam+plaats+e-mail, naam+gmail/hotmail/outlook, en de gidsroute via `bestehondentrimmers.nl/groomer/1354` | 3 | D | 2026-09-17 |
+| DGV Glazenwasserij en Onderhoud | Veenendaal (UT) | glazenwasserij | KvK 77447409 (2020) én vestigingsnummer 000045148562. Jan van Goyenstraat 49, 3904 VB. Geen eigen domein in de resultaten; wel TransFirm, drimble, alleglazenwassers, oozo en telefoonboek. De gidsen wijzen voor het nummer door naar een betaalde 0900-opzoekdienst | 2 | D | 2026-09-17 |
+| Intens Glazenwasserij | 's-Gravenhage (ZH) | glazenwasserij | KvK 74061372 (2019). Gramsbergenlaan 104, 2541 AM. Werkspot-profiel mét een eigen reviewpagina — de enige zaak van vandaag met een platformreviewroute, en per 1.22 draagt die poort (a) niet alleen. Telefoonboek schermt het nummer af | 2 | D | 2026-09-17 |
+| Nagelsalon Angela | Odijk (gem. Bunnik, UT) | nagelsalon | VRIJ QUOTUM. KvK 87646412 én drimble-vestigingsnummer 53549236, die elkaar bevestigen op circa 2022. Singel 47, 3984 NV. Eigen domein `nagelsalonangela.nl`, plus TransFirm, drimble, oozo en twee nagelstudiogidsen | 2 | D | 2026-09-17 |
+| Bubbles Hondentrimsalon | Leidschendam (gem. Leidschendam-Voorburg, ZH) | hondentrimsalon | GEEN-WEBSITEGROEP, signaalklasse **gratis subdomein**: `trimsalonbubbles.weebly.com` met `/contact.html` en `/openings-tijden.html`. Nieuwstraat 19, 2266 AA. Levende Facebook en Instagram (`@hondentrimsalonbubbles`). Leeftijd niet vastgesteld: geen registergetal in enige gids. Nummer alleen afgekapt in de goudengids-titel | 2 | D | 2026-09-17 |
+| Bobbie's hondentrimsalon | Katwijk (ZH) | hondentrimsalon | GEEN-WEBSITEGROEP. Geen eigen domein; alleen `telefoonboek.nl/bedrijven/t7992377/` en `oozo.nl/.../1900999/`. **Adresbotsing in één ronde:** Wassenaarseweg 77C én Bijdorpstraat 1 — de klasse van 1.36. Geen registergetal, geen nummer | 2 | D | 2026-09-17 |
+| Hondentrimsalon DA'SANDERS (Da's Anders) | Rozenburg (ZH) | hondentrimsalon | GEEN-WEBSITEGROEP. Magnoliastraat 3, 3181 WS. Tipaw-profiel, telefoonboekrecord `t3521589`, `trimsalon-zoeken.nl` en `hondentrimsalons.nu`. Geen eigen domein, geen registergetal, geen nummer in de bruikbare laag | 2 | D | 2026-09-17 |
+| Speedybedrijfsdiensten | Utrecht (UT) | glazenwasserij | GEEN-WEBSITEGROEP. Bosch van Drakesteinlaan 8, 3582 GX. Eén gidsvermelding op `glazenwasser-info.nl/utrecht/bedrijven`, geen eigen domein, geen registergetal | 2 | D | 2026-09-17 |
+| M. ter Haar | Nieuwegein (UT) | glazenwasserij | GEEN-WEBSITEGROEP. Vrijewade 15, 3439 PB. **Nummerbotsing:** `glazenwasser-info.nl` voert `+31 (0)30 2881222` bij dit bedrijf én bij Meere Vastgoed Onderhoud op een ander adres; in een tweede gerichte ronde woordelijk gereproduceerd. Daarom geen belregel, ook niet met het nummer erbij | 2 | D | 2026-09-17 |
+| Meere Vastgoed Onderhoud | Nieuwegein (UT) | glazenwasserij | GEEN-WEBSITEGROEP. Industrieweg 10/D, 3433 NL. Zelfde nummerbotsing als M. ter Haar, zelfde grond | 2 | D | 2026-09-17 |
+| A.B. Glazenwasserij | Wijdewormer (gem. Wormerland, NH) | glazenwasserij | GEEN-WEBSITEGROEP. Alleen telefoonboekrecord `t2941774`. Geen eigen domein, geen registergetal, geen adres en geen nummer buiten de gids. Leeftijd niet vastgesteld | 2 | D | 2026-09-17 |
+| Glazenwasser Helfensteijn | Purmerend (NH) | glazenwasserij | GEEN-WEBSITEGROEP. Vechtstraat 27, 1442 SH. Telefoonboekrecord `t3976387` plus een vermelding op `glazenwasser-in.nl/purmerend`. Geen eigen domein, geen registergetal | 2 | D | 2026-09-17 |
+
+**Te tellen met** `grep -cE '^\|.*\| D \| 2026-09-17 \|$' geen-emailadres.md` — twaalf regels,
+en de kop erboven zegt twaalf. De acht die de kop "geen-websitegroep" noemt, zijn met
+`grep -cE '^\|.*GEEN-WEBSITEGROEP.*\| D \| 2026-09-17 \|$' geen-emailadres.md` te tellen — acht.
