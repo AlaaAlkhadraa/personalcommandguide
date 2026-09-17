@@ -1575,3 +1575,30 @@ in de bruikbare laag. Het domein `vndort.nl` serveert bovendien drie geïndexeer
 pagina's, dus het lek bestaat niet en de zaak is sowieso geen prospect. Ik laat de
 rij van gisteren staan zodat de meetketen intact blijft; het ledger draagt het nieuwe
 oordeel. **De rij van 16-09 telt niet mee in de zeven van vandaag.**
+## Lane B, 17-09-2026 — negen jonge zaken zonder eigen domein
+
+**Datumvorm.** `2026-09-17`, de huisvorm die 1.47 vastlegt.
+
+**Waarom alle negen hier staan en niet in `bellijst.md`.** Het directief van deze week
+stuurt op telefoonnummer: is er een nummer, dan een belregel. Vier van deze negen (Voortman,
+Garritsen, Ruesink, Schildersblik) dragen een nummer in de zoekresultaten, maar alle vier
+uitsluitend in de **samenvattende alinea**, die 1.20(a) als bron verbiedt. Eén controleronde
+op de gidstitels (`kostenschilderbedrijf.nl`, `schildersregister.nl`) gaf alleen
+stadspagina's zonder naam-en-nummer in de titel. Een verkeerd cijfer in een belregel kost
+hetzelfde als een afgekapt e-mailadres (1.28): de owner belt een vreemde. De kandidaatregel
+hierover staat in `2026-09-17-b.md` onder `## Voor het weekrapport`.
+
+| Bedrijf | Plaats | Sector | Wat er wel is | Ronden | Lane | Datum |
+|---|---|---|---|---|---|---|
+| K. Voortman schilderwerken | Deventer (OV) | schilder | KvK 89367685 / vestigingsnummer 000055165281 uit het TransFirm-URL-pad, eenmanszaak, 01-02-2023, 2e Kruisstraat 14, 7413 VH. Facebookpagina. **Let op:** `voortmanschilderwerken.nl` is NIET van hem maar van Voortman Schilderwerken, KvK 74660381, Hanzeweg 45G — zelfde stad, zelfde sector, bijna dezelfde naam (1.53) | 4 | B | 2026-09-17 |
+| Herbert Garritsen schilderwerken | Warnsveld (gem. Zutphen, GLD) | schilder | KvK 89954068, 17-04-2023, De Fluite 23, 7232 BE. Vermeldingen op `schilder-nu.nl`, `schilder-informatie.nl`, cylex en goudengids; geen eigen domein in vier ronden | 3 | B | 2026-09-17 |
+| Ruesink Schilderwerken | Gaanderen (gem. Doetinchem, GLD) | schilder | Vestigingsnummer 000051075482, Langstraat 14. Facebookpagina en `schilder-informatie.nl`. Het aangeboden adres `mail@ruesinkschilderwerken.nl` **faalt op 1.28**: de exacte tekenreeks geeft nul pagina's op dat domein en `site:ruesinkschilderwerken.nl` geeft er evenmin één — vierde drager voor 1.37 | 4 | B | 2026-09-17 |
+| Zutekouw Schilderwerken | Boven-Leeuwen (gem. West Maas en Waal, GLD) | schilder | KvK 85096180, gestart 13-01-2022, eenmanszaak. Gidsvermelding `schilder-nu.nl/boven-leeuwen/`; geen eigen domein | 2 | B | 2026-09-17 |
+| Dumaij Schilderwerken | Warnsveld (gem. Zutphen, GLD) | schilder | Gidsvermelding `schilder-nu.nl/warnsveld/`, 1 werkzaam persoon. De oprichtingsdatum 09-06-2022 staat alleen in de samenvattende alinea (1.20a), dus de leeftijd is niet vastgesteld | 2 | B | 2026-09-17 |
+| Schildersblik | Genemuiden (gem. Zwartewaterland, OV) | schilder | KvK 85141429, Langestraat 130, 8281 AP. **Naamgenoten in hetzelfde dorp (1.53):** Visscher schildersblik (KvK 88593010, Fazant 13, al in het ledger) en Van der kamp schildersblik (KvK 92252362) | 2 | B | 2026-09-17 |
+| Van der kamp schildersblik | Genemuiden (gem. Zwartewaterland, OV) | schilder | KvK 92252362 uit het TransFirm-URL-pad `922523620000`; oozo voert het record in de Vogelbuurt. Geen eigen domein, geen nummer in de bruikbare laag | 2 | B | 2026-09-17 |
+| R. Kuijt Schilderwerken | Lelystad (FL) | schilder | KvK 89447824, eenmanszaak, gestart 07-10-2022. Facebookpagina `kuyt.schilderwerken`; geen eigen domein in twee ronden | 2 | B | 2026-09-17 |
+| Heal | Doetinchem (GLD) | hovenier | Trustoo-profiel `trustoo.nl/gelderland/doetinchem/hovenier/heal/` met uitsluitend een score. Geen KvK-nummer, geen vestigingsnummer, geen adres en geen telefoonnummer in de bruikbare laag; leeftijd niet vastgesteld | 2 | B | 2026-09-17 |
+
+**Te tellen met** `grep -cE '^\|.*\| B \| 2026-09-17 \|$' marketing/outreach/geen-emailadres.md` —
+negen regels, en de kop erboven zegt negen.
