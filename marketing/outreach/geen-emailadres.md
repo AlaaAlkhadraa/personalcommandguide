@@ -1527,3 +1527,27 @@ omgezet draait een dagtelling beide vormen, precies zoals 1.47 voorschrijft.
 
 **Te tellen met** `grep -cE '^\|.*\| A \| 2026-09-16 \|$' geen-emailadres.md` — twee regels,
 en de kop erboven zegt twee.
+
+## 2026-09-17 — lane C (Limburg, Noord-Brabant, Zeeland)
+
+Alle drie de zoekopdrachten zijn per bedrijf gedraaid: naam + plaats + "e-mail",
+naam + "gmail/hotmail/outlook", naam + eigenaarsnaam. Geen van de zes levert een
+adres, en geen van de zes levert een telefoonnummer in de bruikbare laag — zonder
+nummer is een belregel geen belregel (1.24), dus zij komen hierheen en niet naar
+`bellijst.md`. De rijen staan onder mijn eigen lane-kop en de kop kondigt geen
+aantal aan; het aantal volgt uit de rijen en uit het telcommando eronder. Dat is
+de correctie van 16-09.
+
+| Bedrijf | Plaats | Sector | Wat er wel is | Ronden | Lane | Datum |
+|---|---|---|---|---|---|---|
+| Trimsalon Anique | Schijndel (gem. Meierijstad, NB) | hondentrimsalon | Baselaarshoef 29 en openingstijden ma-vr 09:00-17:00, weekend dicht, uit trimsalon-zoeken.nl en oozo.nl. Geen eigen domein, geen e-mailveld, geen nummer in de bruikbare laag. Leeftijd niet vastgesteld | 3 | C | 2026-09-17 |
+| Hondentrimsalon Freule | Bergen (LB) | hondentrimsalon | Alleen een openingstijdenrecord op openingstijden.com. Geen adres, geen nummer, geen registergetal | 3 | C | 2026-09-17 |
+| Hondentrimsalon Does | Valkenburg (gem. Valkenburg aan de Geul, LB) | hondentrimsalon | Alleen een openingstijdenrecord op openingstijden.com. Geen adres, geen nummer, geen registergetal | 3 | C | 2026-09-17 |
+| Trimsalon van kop tot staart | Helmond (NB) | hondentrimsalon | Alleen een gidsrecord op trimsalon-zoeken.nl met plaats en provincie. Geen eigen domein, geen kanaal, geen leeftijd | 3 | C | 2026-09-17 |
+| Was en Trimsalon "Achterom" | Goirle (NB) | hondentrimsalon | Alleen een gidsrecord op trimsalon-zoeken.nl met plaats en provincie. Geen eigen domein, geen kanaal, geen leeftijd | 3 | C | 2026-09-17 |
+| Hondentrimsalon Woef & zo | Schijndel (gem. Meierijstad, NB) | hondentrimsalon | Alleen een Facebookpagina (facebook.com/woefenzo). Geen adres, geen nummer en geen e-mailadres in de bruikbare laag; de paginanaam draagt geen datum | 3 | C | 2026-09-17 |
+
+**Te tellen met** `grep -cE '^\|.*\| C \| 2026-09-17 \|$' geen-emailadres.md`. Alle zes
+komen uit de registerklasse-bronnen (`trimsalon-zoeken.nl`, `openingstijden.com`,
+`oozo.nl`, Facebook), die een nummer nooit in de bruikbare laag zetten — dat is de
+scheiding die de zeven belregels van dezelfde dienst aan de andere kant staaft.

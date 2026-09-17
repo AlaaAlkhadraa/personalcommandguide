@@ -909,3 +909,28 @@ Alle zes dragen een streepje bij Gedateerd levensteken: er is van geen van de ze
 gedateerd spoor gevonden. Bestaan en op de gids, maar niet aantoonbaar draaiend — en
 vier van de zes hebben een vastnetnummer, wat het groeifasevenster onwaarschijnlijk
 maakt zonder het te sluiten.
+
+## Lane C — donderdag 17 september 2026 (Limburg / Noord-Brabant / Zeeland)
+
+Zes van deze regels komen uit dezelfde bronklasse als gisteren: de tariefgidsen
+`kostenglazenwasser.nl` en `kostentuinman.nl` voeren naam, plaats én telefoon in
+de URL-titel en laten het e-mailveld in die titel leeg. De zevende (Trimsalabim)
+komt uit `telefoonboek.nl` en `doggo.nl` en gedraagt zich precies zo. Het nummer
+staat dus in de bruikbare laag en het adres niet — de reden dat dit belregels
+zijn en geen kaarten (1.24). De herkomstvorm is `2026-09-17 lane C`, de vorm die
+dit bestand voert.
+
+Te tellen met `grep -cE '^\|.*2026-09-17 lane C' marketing/outreach/bellijst.md`.
+
+| Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
+|---|---|---|---|---|---|
+| Spunske Glazenwasserij 't | Geleen (gem. Sittard-Geleen, LB) | glazenwasserij | 046-4425085 | — | E-mailveld leeg in de gidstitel; geen KvK-nummer in de bruikbare laag, dus geen leeftijd. 2026-09-17 lane C |
+| Put J J vd | Panningen (gem. Peel en Maas, LB) | glazenwasserij | 077-3075165 | — | E-mailveld leeg in de gidstitel; geen registergetal, dus geen leeftijd. Vastnetnummer maakt het groeifasevenster onwaarschijnlijk zonder het te sluiten. 2026-09-17 lane C |
+| Boumans Glazenwasserij | Gennep (LB) | glazenwasserij | 06-51796415 | — | E-mailveld leeg in de gidstitel; geen registergetal in de bruikbare laag. 2026-09-17 lane C |
+| Peter Verhagen Hovenier | Schijndel (gem. Meierijstad, NB) | hovenier | 073-5479411 | — | E-mailveld leeg in de gidstitel; geen registergetal. Vastnetnummer. 2026-09-17 lane C |
+| Verhagen Hoveniersbedrijf | Oirschot (NB) | hovenier | 06-25510568 | — | E-mailveld leeg in de gidstitel; geen registergetal in de bruikbare laag. 2026-09-17 lane C |
+| Beter Groen BV | Udenhout (gem. Tilburg, NB) | hovenier | 013-5114572 | — | E-mailveld leeg in de gidstitel; geen registergetal. B.V. plus vastnetnummer wijst naar buiten het venster zonder het te sluiten. 2026-09-17 lane C |
+| Hondentrimsalon Trimsalabim | Schijndel (gem. Meierijstad, NB) | hondentrimsalon | 06-36013058 | — | Venushoek 16, 5481 VM. E-mailveld leeg; geen registergetal, dus geen leeftijd. 2026-09-17 lane C |
+
+Alle zeven dragen een streepje bij Gedateerd levensteken: van geen van de zeven is
+een gedateerd spoor gevonden. Vier van de zeven hebben een vastnetnummer.
