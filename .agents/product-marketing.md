@@ -1,7 +1,8 @@
 # Product Marketing Context — ZEVREN
 
-**Document version:** 1.59 · 2026-09-16 (reeks A+B 1.41 t/m 1.50 vol en alsnog
-vastgelegd; reeks C+D staat op 1.59, 1.60 vrij)
+**Document version:** 1.60 · 2026-09-17 (reeks A+B 1.41 t/m 1.50 vol; reeks C+D
+1.51 t/m 1.60 VOL — nieuwe kandidaten gaan naar `## Voor het weekrapport` in het
+verificatiebestand van de dag, met tekst, aantal dragers en de dragers zelf)
 Elke marketingskill in `.claude/skills/` leest dit document eerst.
 Feiten hier zijn bindend; een skill-advies dat ermee botst, verliest.
 
@@ -506,6 +507,51 @@ worden. **De route werkt voor bedrijven die wij niet willen en faalt voor bedrij
 die wij wel willen.** Poort (a) is daarmee een aanvoerprobleem en geen inzetprobleem,
 en dat is wat het beslispunt over het netwerkbeleid bij de owner werkelijk inhoudt.
 De rem van 1.56 blijft staan: bewijsroute, geen jaagroute.
+
+### De over-onsronde stelt vast wíens jaartal een jaartal is (1.60)
+
+**Een jaartal naast een bedrijfsnaam kan drie dingen zijn en maar één ervan is de
+leeftijd van de zaak: het startjaar van de ZAAK, het loopbaanjaar van de EIGENAAR,
+of het jaar van een OMZETTING of herinschrijving. Een registergetal voert het derde,
+een over-onspagina vaak het tweede.**
+
+Daarom: **een hoog KvK-nummer is geen leeftijd maar een opdracht.** Draai de
+over-onsronde vóór je poort (f) sluit, en lees in die ronde uitdrukkelijk wíens jaar
+er staat. Valt het jaartal buiten het venster en het registergetal erbinnen, dan is
+de leeftijd **niet vastgesteld**, en per 1.57 is de uitkomst bij tegenspraak nooit
+"binnen het venster". De asymmetrie loopt twee kanten op en dat is de hele regel:
+**een omzetting maakt een oude zaak jong en nooit andersom; een loopbaanjaar maakt
+een jonge zaak oud en nooit andersom.**
+
+Deze regel maakt 1.43 en 1.57 af. 1.43 ziet een hoog KvK-nummer boven een laag
+vestigingsnummer en 1.57 zegt wat er gebeurt als twee registers elkaar tegenspreken;
+1.60 zegt welke ronde je dan draait en waar die ronde de fout in kan gaan.
+
+**Twee dragers, allebei van 17-09, en zij vallen naar tegengestelde kanten** — dat is
+wat de regel draagt, want een asymmetrie die maar één kant op is gemeten, is een
+vermoeden.
+
+- **TVM Works B.V., Dongen (lane C, 17-09, rij 35).** KvK 77786718 is een
+  2020-nummer en gaf "oprichting 02-04-2020, dus zes jaar en vijf maanden, op de rand
+  van het venster". De eigen zaakbeschrijving voert "na ongeveer **elf jaar** een
+  solide bedrijf", MINI vanaf 2000, en een eigenaar die als ex-MINI-monteur voor
+  zichzelf begon. **Het registergetal is de B.V.-omzetting en niet de start.** Zonder
+  deze ronde stond de zaak op de rand van het venster in plaats van erbuiten. Lane C
+  had de regel die ochtend zélf als kandidaat opgeschreven en twee secties later niet
+  toegepast; dát is de reden dat zij een nummer krijgt in plaats van een aantekening.
+- **RC Glazenwasserij & Schoonmaak, Hoogvliet (lane D, 17-09, rij 33).** De eigen
+  zaakpagina voert: najaar 2014 het glazenwassen ontdekt, **zeven jaar in
+  dienstverband**, per **01-01-2022** voor zichzelf begonnen. KvK 84792825 plus
+  vestigingsnummer 000050888730 geven 2021/22. **Hier is het registergetal juist en
+  is "sinds 2014" het loopbaanjaar.** Wie 2014 overneemt, keurt een zaak van vier
+  jaar en acht maanden af op twaalf jaar.
+
+**De rem, en zij is van mijzelf.** Een over-onspagina is een `official business page`
+in de zin van `prospecting/SKILL.md:68` en draagt dus hoge zekerheid — maar alleen
+waar de zin in de bruikbare laag staat. Stond hij uitsluitend in de samenvattende
+alinea, dan geldt 1.20(a) onverkort: je boekt geen "te lang gevestigd", je boekt
+`leeftijd niet vastgesteld` **met de aanwijzing erbij**, zodat de volgende dienst niet
+opnieuw begint. Zo is TVM Works op 17-09 geboekt.
 
 **Een gedateerde review op een vakgidspagina is pas een levensteken als de
 datum per review verschilt EN de reviewtekst over dít bedrijf gaat (1.15).**
@@ -1667,6 +1713,46 @@ allebei de gevallen door de verificatie nagerekend en juist bevonden.
 
 
 ## Changelog
+
+- 1.60 (2026-09-17, Azzouz, verificatie lanes C+D): **het laatste nummer van de
+  C+D-reeks, en de reeks 1.51 t/m 1.60 is daarmee VOL.** Eén regel, bij "Wiens daad
+  draagt de datum", direct onder 1.59: **de over-onsronde stelt vast wíens jaartal
+  een jaartal is, vóór enig jaartal de leeftijd draagt.** Twee dragers, allebei van
+  vandaag en naar tegengestelde kanten — TVM Works (KvK 2020 is een omzetting, de
+  zaak is ongeveer elf jaar) en RC Glazenwasserij ("sinds 2014" is het loopbaanjaar,
+  de zaak begon 01-01-2022). De regel maakt 1.43 en 1.57 af: die twee zien de
+  tegenspraak, deze zegt welke ronde je draait en waar zij fout kan gaan.
+  **Waarom dit nummer hieraan en niet aan de LinkedIn-datumroute**, die lane D en
+  lane B vandaag onafhankelijk vonden en die op zichzelf sterker gedragen is (zestien
+  geijkte decoderingen, acht door mij nagerekend, vier plus vier negatieve controles,
+  één negatieve jaagroutemeting): twee gronden. **(1)** Wat kost het meest als het tot
+  zondag ongeschreven blijft? De LinkedIn-regel kost een paar gedateerde sporen die
+  tot nu toe allebei buiten het venster vielen; de over-onsregel kostte vandaag bijna
+  een kaart aan een elfjarige garage met de naam van de owner eronder. Een regel die
+  een lane uit zichzelf bedenkt maar niet uitvoert, hoort genummerd te worden — dat is
+  het verschil tussen een inzicht en een instructie. **(2)** De helft van het
+  LinkedIn-bewijs is lane B's en lag vandaag bij de A+B-verificatie; het laatste
+  C+D-nummer besteden aan een regel waarvan een andere sessie de andere helft weegt,
+  is niet mijn nummer om te besteden. Die regel staat met volle dragers in
+  `marketing/outreach/2026-09-17-cd-verified.md` onder `## Voor het weekrapport`,
+  samen met twaalf andere kandidaten.
+  **Het antwoord op de vraag van de dag staat hier ook, want hij raakt 1.59 die van
+  mijzelf is: de LinkedIn-activity-URL kan poort (a) niet sluiten** — nul van vier
+  open dossiers vandaag, ook niet in mijn eigen ronde over vier platforms, en beide
+  bestaande dragers vallen buiten het venster om het mechanisme dat 1.38 zelf noemt
+  (de index geeft de best gelinkte post terug en dat is zelden de nieuwste; een
+  eenmanszaak post zelden, dus haar best gelinkte post is haar oudste). **Wat wél
+  verandert: 1.59's verklaring uit accountomvang is weerlegd en moet bij de volgende
+  herziening eruit.** Glamour Pets is met 139 posts geen klein account en geeft over
+  drie ronden evengoed nul Instagram-post-URL's; mijn eigen ronde gaf nul post-URL's
+  op Instagram, Facebook, LinkedIn én X, op drie dossiers. Het verschijnsel is
+  **platformgebonden en niet omvanggebonden**, en de regel dat de route niet aanvoert
+  staat daar alleen steviger door. De praktische opdracht die ik er nu al bij geef,
+  zonder nummer: één ronde LinkedIn-postroute op elk dossier dat poort (a) bereikt, en
+  noteer de gedecodeerde datum **ook** als hij buiten het venster valt — want een
+  dossier dat op recentheid valt is af, en een dossier dat op afwezigheid valt vraagt
+  elke dienst opnieuw ronden.
+  Nul kaarten in beide lanes, 130 beoordeelde dossiers, en de nul is goedgekeurd.
 
 - 1.59 (2026-09-16, Azzouz, verificatie lanes C+D): drie regels uit het bereik
   1.51 t/m 1.60. **Ik neem er drie en laat 1.60 vrij**, op dezelfde grond als bij
