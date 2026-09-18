@@ -959,3 +959,21 @@ Te tellen met `grep -cE "^\|.*\| 2026-09-18 lane A\. " bellijst.md` — één.
 ronde van vandaag gaf hetzelfde nummer 06-53940054 uit dezelfde titelvorm als de regel
 van 16-09 hierboven. Een tweede regel zou niets toevoegen en het bord onteltbaar maken;
 de bestaande regel klopt woordelijk en blijft staan.
+## Zes zaken — lane C, 2026-09-18 (glazenwasserij, geen-websitegroep)
+
+Te tellen met `grep -cE '^\|.*2026-09-18 lane C' bellijst.md` — zes. De datum
+staat in ISO vooraan in de laatste kolom, conform de beslissing onder 1.47: op
+een bord met meer dan honderd bestaande rijen wint de huisvorm van 1.55 en komt
+er geen zevende kolom bij.
+
+| Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
+|---|---|---|---|---|---|
+| Glas- en Gevelreiniging Snijders | Vlissingen (ZL) | glazenwasserij | 06-14886386 | — | 2026-09-18 lane C. Nummer in de URL-titel van `kostenglazenwasser.nl/zeeland/vlissingen/glas-en-gevelreiniging-snijders/`. E-mailveld leeg, geen eigen domein, geen registergetal, dus leeftijd niet vastgesteld |
+| Omega Glazenwassersbedrijf | Vrouwenpolder (gem. Veere, ZL) | glazenwasserij | 0118-596059 | — | 2026-09-18 lane C. Nummer in de URL-titel van `kostenglazenwasser.nl/zeeland/vrouwenpolder/omega-glazenwassersbedrijf/`. E-mailveld leeg, geen registergetal. Vastnetnummer maakt het groeifasevenster onwaarschijnlijk zonder het te sluiten |
+| Zuid Glazenwasserij | Vlissingen (ZL) | glazenwasserij | 06-44913011 | — | 2026-09-18 lane C. Nummer in de URL-titel van `kostenglazenwasser.nl/zeeland/vlissingen/zuid-glazenwasserij/`. E-mailveld leeg, geen registergetal |
+| Emans Glazenwasserij | Geersdijk (gem. Noord-Beveland, ZL) | glazenwasserij | 06-53892873 | — | 2026-09-18 lane C. Nummer in de URL-titel van `kostenglazenwasser.nl/zeeland/geersdijk/emans-glazenwasserij/`. E-mailveld leeg, geen registergetal |
+| John Verhelpen Glazenwasserij & Schoonmaakbedrijf | Sprundel (gem. Rucphen, NB) | glazenwasserij | 0165-340070 | — | 2026-09-18 lane C. Nummer en adres (Vorenseindseweg 101, 4714 RG) in de URL-titel van `kostenglazenwasser.nl/noord-brabant/sprundel/john-verhelpen-glazenwasserij-schoonmaakbedrijf/`. E-mailveld leeg, geen registergetal. Vastnetnummer |
+| GlasCleaning Breda | Breda (NB) | glazenwasserij | 06-30023668 | — | 2026-09-18 lane C. Gevonden via de nieuwe route `glazenwasser-in.nl/breda/glascleaning-breda` (Dennenbroek 3, 4822 XC), nummer op een tweede gids bevestigd. Drie e-mailronden leeg, geen registergetal |
+
+Alle zes dragen een streepje bij Gedateerd levensteken: van geen van de zes is
+een gedateerd spoor gevonden. Twee van de zes hebben een vastnetnummer.

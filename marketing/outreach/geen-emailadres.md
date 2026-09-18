@@ -1658,3 +1658,23 @@ achtste noordelijke bedrijf zonder eigen website dat ik vandaag beoordeelde —
 V.O.F. van Dijk Schone Diensten in Bovensmilde — viel op de leeftijd vóór poort (b),
 met KvK 04039187 in de bruikbare laag. Het telt daarom als leeftijdsdossier en niet
 als bestemmingsdossier; twee gronden voor één rij is een gefaalde telling (1.46).
+## 2026-09-18 — lane C (Limburg, Noord-Brabant, Zeeland)
+
+Alle drie de zoekopdrachten zijn per bedrijf gedraaid: naam + plaats + "e-mail",
+naam + "gmail/hotmail/outlook/info@", naam + eigenaars- of handelsnaam. Geen van
+de drie zaken levert een adres, en geen van de drie levert een telefoonnummer in
+de bruikbare laag — zonder nummer is een belregel geen belregel (1.24), dus zij
+komen hierheen en niet naar `bellijst.md`. De rijen staan onder mijn eigen
+lane-kop en de kop kondigt geen aantal aan; het aantal volgt uit de rijen en uit
+het telcommando eronder.
+
+| Bedrijf | Plaats | Sector | Wat er wel is | Ronden | Lane | Datum |
+|---|---|---|---|---|---|---|
+| De.Gevelspecialist (h.o.d.n. BM Allroundservice) | Helmond (NB) | gevelreiniging/softwash | GEEN-WEBSITEGROEP. Haaglaan 59, 5707 XS. KvK 93661207 uit het transfirm-pad plus vestigingsnummer 000059187050 uit het drimble-pad (1.49) - 2024, midden in het venster. Werkspot- en Trustoo-vermelding, geen eigen domein, geen e-mailveld en geen nummer in de bruikbare laag | 3 | C | 2026-09-18 |
+| Beyoutiful beautysalon | Bergen op Zoom (NB) | schoonheidssalon | GEEN-WEBSITEGROEP. Staakberg 1, 4613 BL. KvK 93821891 plus vestigingsnummer 000059338342 uit het transfirm-pad - 2024, midden in het venster. Geen eigen domein, geen e-mailveld en geen nummer in de bruikbare laag; staat op geen enkel boekingsplatform | 3 | C | 2026-09-18 |
+| Nagelsalon 't Kippenhok | Roosteren (gem. Echt-Susteren, LB) | nagelsalon | GEEN-WEBSITEGROEP. Maasheuvel 46, 6116 BT. KvK 88824012 uit het transfirm-pad 888240120000 - 2023. Levende Facebookpagina met 428 likes, geen eigen domein, geen e-mailveld en geen nummer in de bruikbare laag. Op profiel het mooiste dossier van de dienst; zodra er een kanaal opduikt is dit een kaart | 3 | C | 2026-09-18 |
+
+**Te tellen met** `grep -cE '^\|.*\| C \| 2026-09-18 \|$' geen-emailadres.md`. Alle
+drie hebben een registergetal binnen het venster en missen uitsluitend een
+kanaal — dat is de omgekeerde uitkomst van de zes belregels van dezelfde dienst,
+die een nummer hebben en geen leeftijd.
