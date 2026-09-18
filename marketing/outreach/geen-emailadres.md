@@ -1693,3 +1693,25 @@ onder "Tekort van de dag".
 
 **Te tellen met** `grep -cE '^\|.*\| B \| 2026-09-18 \|$' marketing/outreach/geen-emailadres.md` —
 twee regels, en de kop erboven zegt twee.
+## Lane D, vrijdag 18 september 2026 — zeven zaken, waarvan vijf uit de geen-websitegroep
+
+Alle zeven kwamen door de profieltoets of vielen er pas ná poort (b) op. Geen van de
+zeven gaat naar `bellijst.md`, en de grond is dezelfde als gisteren: **geen van hun
+telefoonnummers staat in de bruikbare laag.** Nieuw vandaag is dat er wél een bron
+bestaat die het nummer voluit in het URL-pad voert (`nederlandinbedrijf.nl`, zie de
+bevinding in het dagbestand); ik heb hem op twee van deze zeven gedraaid en hij gaf
+daar niets. Een belregel zonder betrouwbaar nummer is geen belregel (1.24).
+
+| Bedrijf | Plaats | Sector | Wat er wel is | Ronden | Lane | Datum |
+|---|---|---|---|---|---|---|
+| Sissy's Trimsalon (Trimsalon Sissy) | Heiloo (NH) | hondentrimsalon | Eigen domein `trimsalonsissy.nl` met zes geïndexeerde pagina's, waaronder `/services/collega-gezocht/` (vacature zonder datum); Tipaw-profiel; drimble `000045780056` | 3 | D | 2026-09-18 |
+| Hondenuitlaatservice Pip | Hilversum (NH) | hondenuitlaatservice | GEEN-WEBSITEGROEP. Facebook-pagina `100084304956270`; `telefoonboek.nl/bedrijven/t8895895/` voert het nummer als afgeschermd; TransFirm `87498758-000053409736` | 2 | D | 2026-09-18 |
+| Dog Lovers Trimsalon | Hippolytushoef (gem. Hollands Kroon, NH) | hondentrimsalon | GEEN-WEBSITEGROEP. Facebook-pagina `100063632677136`, cylex, drimble `44533705`, en een openingsbericht mét datum in het pad: `noordkop247.nl/09/07/2024/` | 2 | D | 2026-09-18 |
+| D.Twilt Glazenwasserij | 's-Gravenhage (ZH) | glazenwasserij | GEEN-WEBSITEGROEP. Werkspot-profiel, compadex `87023989-52954641`, northdata; `telefoonboek.nl/bedrijven/t8866088/` meldt afscherming op verzoek van de KvK | 3 | D | 2026-09-18 |
+| Ten Volle Glazenwasserij en Schoonmaakbedrijf | Zoetermeer (ZH) | glazenwasserij | Eigen domein `tenvolleglazenwasserij.nl` — pas in ronde 3 gevonden, na twee ronden die alleen gidsen gaven; compadex `78227739-45871809`, alleglazenwassers | 3 | D | 2026-09-18 |
+| SKAY Schoonmaak Utrecht | Nieuwegein (UT) | schoonmaak (glasbewassing niet vastgesteld) | GEEN-WEBSITEGROEP. Uitsluitend de TransFirm-pagina `94851379`; geen gidsvermelding, geen domein, geen nummer | 2 | D | 2026-09-18 |
+| Hoveniersbedrijf Teeuwen | Haarlem (NH) | hovenier | GEEN-WEBSITEGROEP. Uitsluitend TransFirm `96373164-000061704342`. Let op de naamgenoot: `hoveniersbedrijfteeuw.nl` is **Teeuw** en een ander bedrijf (1.53) | 2 | D | 2026-09-18 |
+
+**Te tellen met** `grep -cE '^\|.*\| D \| 2026-09-18 \|$' geen-emailadres.md` — zeven regels,
+en de kop erboven zegt zeven. De vijf die de kop "geen-websitegroep" noemt, zijn met
+`grep -cE '^\|.*GEEN-WEBSITEGROEP.*\| D \| 2026-09-18 \|$' geen-emailadres.md` te tellen — vijf.
