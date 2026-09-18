@@ -946,3 +946,16 @@ Te tellen met `grep -cE "^\|.*\| 2026-09-17 lane A\. " bellijst.md` — twee.
 Allebei dragen een streepje bij Gedateerd levensteken: van geen van beide is een
 gedateerd spoor gevonden. Allebei een 06-nummer, wat het groeifasevenster
 waarschijnlijker maakt dan een vastnetnummer zonder het te sluiten.
+
+## Eén zaak — lane A, 2026-09-18 (glazenwasserij)
+
+Te tellen met `grep -cE "^\|.*\| 2026-09-18 lane A\. " bellijst.md` — één.
+
+| Bedrijf | Plaats | Sector | Telefoon | Gedateerd levensteken | Waarom geen kaart |
+|---|---|---|---|---|---|
+| Regtop Glasbewassing en Onderhoud | Assen (DR) | glazenwasserij | 06-42168978 | — | 2026-09-18 lane A. Nummer in de URL-titel van `glazenwassertarieven.nl/drenthe/assen/regtop-glasbewassing-en-onderhoud/`, Jonagold 3. Geen e-mailadres in de titel, geen eigen domein, geen registerpagina, dus leeftijd niet vastgesteld. Stond sinds 14-09 in het ledger als `lead - geen e-mailadres`; dit is de eerste keer dat het nummer in de bruikbare laag staat |
+
+**Dick's Glazenwasserij, Groningen, krijgt vandaag géén tweede regel (1.24).** De
+ronde van vandaag gaf hetzelfde nummer 06-53940054 uit dezelfde titelvorm als de regel
+van 16-09 hierboven. Een tweede regel zou niets toevoegen en het bord onteltbaar maken;
+de bestaande regel klopt woordelijk en blijft staan.

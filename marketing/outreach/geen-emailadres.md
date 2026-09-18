@@ -1629,3 +1629,32 @@ is geen belregel (1.24).
 **Te tellen met** `grep -cE '^\|.*\| D \| 2026-09-17 \|$' geen-emailadres.md` — twaalf regels,
 en de kop erboven zegt twaalf. De acht die de kop "geen-websitegroep" noemt, zijn met
 `grep -cE '^\|.*GEEN-WEBSITEGROEP.*\| D \| 2026-09-17 \|$' geen-emailadres.md` te tellen — acht.
+
+## Zeven zaken — lane A, 2026-09-18 (glazenwasserij en schoonmaak, geen-websitegroep)
+
+Alle zeven vielen op poort (b) en alle zeven zijn geen-websitegroep. Geen van de zeven
+gaat naar `bellijst.md`, en dat is vandaag één grond: **geen van hun telefoonnummers
+staat in de bruikbare laag.** `schoonmaker.in`, `cylex`, `oozo`, `workle` en
+`telefoonboek.nl` voeren naam en plaats in de titel en het nummer alleen in de
+samenvattende alinea; per 1.20(a) en 1.37 is dat geen nummer, en een belregel zonder
+betrouwbaar nummer is geen belregel (1.24).
+
+| Bedrijf | Plaats | Sector | Wat er wel is | Ronden | Lane | Datum |
+|---|---|---|---|---|---|---|
+| Glazenwasserij Marcelino | Winschoten (gem. Oldambt, GR) | glazenwasserij | GEEN-WEBSITEGROEP. KvK 90096592 uit het TransFirm-pad `900965920000-glazenwasserij-marcelino`, plus vestiging 000055845843 uit het drimble-pad (1.49). Hortensiastraat 3, 9675 GP — drimble voert op dat huisnummer ook C.H. Begeleiding (000054856566) en Martien ZZP (000052536866), dus het is een verzameladres. Twee adresronden, waarvan één met de gidsnaam erbij: geen eigen domein, geen adres, geen nummer | 2 | A | 2026-09-18 |
+| Glazenwasserij RETRO | Nieuw-Buinen (gem. Borger-Odoorn, DR) | glazenwasserij | GEEN-WEBSITEGROEP. Vestigingsnummer 000046282734 op alleglazenwassers én drimble; het pad bepaalt het register en dit getal draagt de leeftijd niet (1.49). Dwarskade 27. Telefoonboekrecord `t8131479` en een oozo-record, geen eigen domein, geen nummer in de bruikbare laag | 2 | A | 2026-09-18 |
+| Dijkstra Schoonmaakdiensten | Winschoten (gem. Oldambt, GR) | schoonmaak/glazenwasser | GEEN-WEBSITEGROEP, signaalklasse **facebook-only**: `m.facebook.com/pages/Dijkstra-Schoonmaakdiensten/100738592956495/` plus een telefoonboekrecord. Geen eigen domein, geen registergetal, geen nummer. NAAMGENOTEN (1.53): Dijkstra boom en groen (Opende, hovenier) en J. Dijkstra Dienstverlening (Bitgummole, glazenwasser) zijn andere bedrijven | 2 | A | 2026-09-18 |
+| Freelancer RP | Wierum (gem. Noardeast-Fryslân, FR) | gevelreiniging/glasbewassing | GEEN-WEBSITEGROEP. **Het jongste profiel van de dienst:** KvK 94610134 én vestiging 000060067926 uit één TransFirm-pad — 2024, midden in het venster. Twee ronden gaven geen eigen domein, geen adres en geen nummer; de naamronde loopt vol met RP Glasbewassing (Huizen) en RP Cleaning Services (Elsloo), twee andere bedrijven (1.53). Dit is het dossier dat een tweede verzendweg het hardst nodig heeft | 2 | A | 2026-09-18 |
+| Schoonmaakbedrijf Milos | Klazienaveen (gem. Emmen, DR) | schoonmaak/glazenwasser | GEEN-WEBSITEGROEP. Stellingstraat Zuidzijde 49. `schoonmaker.in/klazienaveen/schoonmaakbedrijf-milos/`, cylex `11894660` (een cylex-ID en geen registergetal) en een oozo-record. Geen registergetal, geen nummer, leeftijd niet vastgesteld | 2 | A | 2026-09-18 |
+| Chem Dry Ramaker | Hoogeveen (DR) | schoonmaak/reiniging | GEEN-WEBSITEGROEP. Lindberghstraat 3, 7903 BM. Franchisenaam; `schoonmaker.in/hoogeveen/chem-dry-ramaker/`, workle en schoonmaak.biz, die de zaak in Klazienaveen plaatst terwijl schoonmaker.in Hoogeveen voert — een plaatsbotsing die één van beide gidsen fout heeft (1.40h). Geen registergetal, geen nummer | 2 | A | 2026-09-18 |
+| Diamant Schoonmaakbedrijf | Groningen (GR) | schoonmaak/glazenwasser | GEEN-WEBSITEGROEP. Alleen een stagemarkt-bedrijfsprofiel-URL; `WebFetch` op stagemarkt.nl geeft `EGRESS_BLOCKED`, dus het adresblok van die registerpagina is niet leesbaar. Geen eigen domein, geen registergetal, geen nummer. NAAMGENOOT (1.53): Diamant Dakbedekkingen, Zaandam, KvK 76535193, is een ander bedrijf in een ander vak | 2 | A | 2026-09-18 |
+
+**Te tellen met** `grep -cE '^\|.*\| A \| 2026-09-18 \|$' geen-emailadres.md` — zeven regels,
+en de kop erboven zegt zeven. Alle zeven dragen het woord GEEN-WEBSITEGROEP, te tellen
+met `grep -cE '^\|.*GEEN-WEBSITEGROEP.*\| A \| 2026-09-18 \|$' geen-emailadres.md` — zeven.
+
+**Het quotum van acht is dus niet gehaald, en de grond staat in het dagbestand:** het
+achtste noordelijke bedrijf zonder eigen website dat ik vandaag beoordeelde —
+V.O.F. van Dijk Schone Diensten in Bovensmilde — viel op de leeftijd vóór poort (b),
+met KvK 04039187 in de bruikbare laag. Het telt daarom als leeftijdsdossier en niet
+als bestemmingsdossier; twee gronden voor één rij is een gefaalde telling (1.46).
