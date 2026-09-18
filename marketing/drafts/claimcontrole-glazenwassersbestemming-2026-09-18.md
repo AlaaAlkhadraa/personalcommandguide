@@ -140,9 +140,15 @@ introtekst en heeft wél de FAQ.
 Wat een site kost en hoe die eruitziet, staat gewoon op onze site, met de veelgestelde vragen erbij: https://zevren.nl/website-laten-maken/STADSSLUG?utm_source=outreach&utm_medium=email&utm_campaign=glazenwassers-w38
 ```
 
-De campagnewaarde blijft `glazenwassers-w38` en verandert niet mee met de stad:
-de UTM meet de sectoractie, niet de pagina. De 28 slugs, per lane, uit
-`cities.ts`:
+**De campagnewaarde blijft `glazenwassers-w38` en verandert niet mee met de
+stad.** Een UTM-campagne is één actie, en dit is één actie op 63 dossiers; 28
+campagnewaarden zouden diezelfde actie in 28 stukjes hakken en elk stukje te
+klein maken om iets uit af te lezen. Wie later wil weten wélke stadspagina de
+klik ving, heeft daar geen parameter voor nodig: het landingsadres staat
+sowieso in het rapport. En een `utm_content` erbij zetten mag niet, want de
+directive legt de outreachvorm vast op bron, medium en campagne.
+
+De 28 slugs, per lane, uit `cities.ts`:
 
 | Lane | Provincies | Stadsslugs met een pagina |
 |---|---|---|
