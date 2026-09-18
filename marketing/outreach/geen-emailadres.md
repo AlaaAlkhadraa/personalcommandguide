@@ -1678,3 +1678,18 @@ het telcommando eronder.
 drie hebben een registergetal binnen het venster en missen uitsluitend een
 kanaal — dat is de omgekeerde uitkomst van de zes belregels van dezelfde dienst,
 die een nummer hebben en geen leeftijd.
+## 2026-09-18 — lane B (Overijssel, Gelderland, Flevoland): twee zaken
+
+Twee rijen, en de kop zegt twee. Allebei de geen-websitegroep van 18-09: binnen het venster,
+geen eigen domein, en géén telefoonnummer in de bruikbare laag — dus `geen-emailadres.md` en
+niet `bellijst.md`, want een belregel zonder nummer is geen belregel (1.24). Het quotum van
+acht is met deze twee niet gehaald; de grond staat in `marketing/outreach/2026-09-18-b.md`
+onder "Tekort van de dag".
+
+| Bedrijf | Plaats | Sector | Wat er wel is | Ronden | Lane | Datum |
+|---|---|---|---|---|---|---|
+| Samo Stukadoor | Schalkhaar (gem. Deventer, OV) | stukadoor — GEEN-WEBSITEGROEP | KvK 84115777 / vestigingsnummer 000050248839 (TransFirm-URL), 2021. Bakkerskamp 21, 7433 EJ. TransFirm-, oozo- en infobel-record; alle drie voeren "geen website, geen telefoon, geen e-mail bekend" | 3 | B | 2026-09-18 |
+| Amarant schilderwerken | Zutphen (GLD) | schilder — GEEN-WEBSITEGROEP | KvK 88839567 (TransFirm-pad `888395670000`), 2023. Wagnerstraat 47, 7204 PA. TransFirm-record; `schilder-nu.nl/zutphen` voert de zaak niet met naam-en-nummer in de titel | 2 | B | 2026-09-18 |
+
+**Te tellen met** `grep -cE '^\|.*\| B \| 2026-09-18 \|$' marketing/outreach/geen-emailadres.md` —
+twee regels, en de kop erboven zegt twee.
